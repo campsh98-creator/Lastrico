@@ -1,21 +1,42 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Lastrico — Milano senza sobbalzi",
-  description: "Confronta il percorso più rapido con quello che evita pavé e sanpietrini a Milano.",
-  applicationName: "Lastrico",
-  manifest: "/manifest.webmanifest",
-  appleWebApp: {
-    capable: true,
-    title: "Lastrico",
-    statusBarStyle: "black-translucent",
-  },
-  icons: {
-    icon: "/favicon.svg",
-    apple: "/favicon.svg",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const requestHeaders = await headers();
+  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
+  const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+  const origin = `${protocol}://${host}`;
+  const title = "Lastrico — Milano senza sobbalzi";
+  const description = "Confronta il percorso più rapido con quello che evita pavé e sanpietrini a Milano.";
+  return {
+    title,
+    description,
+    applicationName: "Lastrico",
+    manifest: "/manifest.webmanifest",
+    appleWebApp: {
+      capable: true,
+      title: "Lastrico",
+      statusBarStyle: "black-translucent",
+    },
+    icons: {
+      icon: "/favicon.svg",
+      apple: "/favicon.svg",
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [{ url: `${origin}/og.png`, width: 1664, height: 928, alt: title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${origin}/og.png`],
+    },
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Map as MapLibreMap, GeoJSONSource, StyleSpecification } from "maplibre-gl";
+import type { Map as MapLibreMap, Marker as MapLibreMarker, GeoJSONSource, StyleSpecification } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 type Coordinate = [number, number];
@@ -32,6 +32,21 @@ type RouteResult = {
   distance: number;
   minutes: number;
   paveMeters: number;
+  problemSegments?: Coordinate[][];
+};
+
+type LocationChoice = {
+  label: string;
+  coordinate: Coordinate;
+};
+
+type RouteApiResponse = {
+  fast: Omit<RouteResult, "nodes" | "edges">;
+  safe: Omit<RouteResult, "nodes" | "edges">;
+  problemSegments: Coordinate[][];
+  alternativesAnalyzed: number;
+  surfaceDataAvailable: boolean;
+  dataNotice: string;
 };
 
 const nodes: RoadNode[] = [
@@ -174,7 +189,11 @@ function problemGeoJSON(results: RouteResult[]) {
   return {
     type: "FeatureCollection" as const,
     features: results.flatMap((result) =>
-      result.edges.filter((edge) => isPave(edge.surface)).map((edge) => ({
+      result.problemSegments?.map((coordinates) => ({
+        type: "Feature" as const,
+        properties: { name: "Pavé rilevato", surface: "OSM" },
+        geometry: { type: "LineString" as const, coordinates },
+      })) ?? result.edges.filter((edge) => isPave(edge.surface)).map((edge) => ({
         type: "Feature" as const,
         properties: { name: edge.name, surface: edge.surface },
         geometry: { type: "LineString" as const, coordinates: edgeCoordinates(edge, true) },
@@ -186,15 +205,30 @@ function problemGeoJSON(results: RouteResult[]) {
 export default function Home() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const [start, setStart] = useState("castello");
-  const [end, setEnd] = useState("venezia");
+  const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker }>({});
+  const pickingRef = useRef<"start" | "end" | null>(null);
+  const defaultFast = useMemo(() => route("castello", "venezia"), []);
+  const defaultSafe = useMemo(() => route("castello", "venezia", "strong"), []);
+  const [startLocation, setStartLocation] = useState<LocationChoice>({
+    label: "Castello Sforzesco",
+    coordinate: nodeMap.get("castello")!.coordinate,
+  });
+  const [endLocation, setEndLocation] = useState<LocationChoice>({
+    label: "Porta Venezia",
+    coordinate: nodeMap.get("venezia")!.coordinate,
+  });
+  const [startText, setStartText] = useState(startLocation.label);
+  const [endText, setEndText] = useState(endLocation.label);
   const [avoidance, setAvoidance] = useState<Avoidance>("strong");
-  const [routeKey, setRouteKey] = useState(0);
+  const [fastRoute, setFastRoute] = useState<RouteResult>(defaultFast);
+  const [safeRoute, setSafeRoute] = useState<RouteResult>(defaultSafe);
   const [activeRoute, setActiveRoute] = useState<"safe" | "fast">("safe");
   const [detailsOpen, setDetailsOpen] = useState(false);
-
-  const fastRoute = useMemo(() => route(start, end), [start, end, routeKey]);
-  const safeRoute = useMemo(() => route(start, end, avoidance), [start, end, avoidance, routeKey]);
+  const [picking, setPicking] = useState<"start" | "end" | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState("Demo pronta: cerca un indirizzo o scegli due punti sulla mappa.");
+  const [isLiveResult, setIsLiveResult] = useState(false);
+  const [alternativesAnalyzed, setAlternativesAnalyzed] = useState(2);
   const landmarks = nodes.filter((node) => node.landmark);
   const savedPave = Math.max(0, fastRoute.paveMeters - safeRoute.paveMeters);
 
@@ -215,6 +249,38 @@ export default function Home() {
         element.className = "landmark-dot";
         element.setAttribute("aria-label", landmark.name);
         new Marker({ element }).setLngLat(landmark.coordinate).setPopup(undefined).addTo(map);
+      });
+      const startElement = document.createElement("div");
+      startElement.className = "endpoint-marker start";
+      startElement.setAttribute("aria-label", "Partenza");
+      pointMarkersRef.current.start = new Marker({ element: startElement })
+        .setLngLat(startLocation.coordinate)
+        .addTo(map);
+      const endElement = document.createElement("div");
+      endElement.className = "endpoint-marker end";
+      endElement.setAttribute("aria-label", "Destinazione");
+      pointMarkersRef.current.end = new Marker({ element: endElement })
+        .setLngLat(endLocation.coordinate)
+        .addTo(map);
+      map.on("click", (event) => {
+        const target = pickingRef.current;
+        if (!target) return;
+        const coordinate: Coordinate = [
+          Number(event.lngLat.lng.toFixed(6)),
+          Number(event.lngLat.lat.toFixed(6)),
+        ];
+        const label = `Punto scelto · ${coordinate[1].toFixed(4)}, ${coordinate[0].toFixed(4)}`;
+        if (target === "start") {
+          setStartLocation({ label, coordinate });
+          setStartText(label);
+        } else {
+          setEndLocation({ label, coordinate });
+          setEndText(label);
+        }
+        setPicking(null);
+        pickingRef.current = null;
+        map.getCanvas().style.cursor = "";
+        setStatus(`${target === "start" ? "Partenza" : "Destinazione"} impostata. Ora calcola il percorso.`);
       });
       map.on("load", () => {
         map.addSource("fast-route", { type: "geojson", data: emptyFeatureCollection });
@@ -250,7 +316,6 @@ export default function Home() {
           source: "problem-segments",
           paint: { "line-color": "#e2553f", "line-width": 7, "line-dasharray": [1.2, 1.2] },
         });
-        setRouteKey((key) => key + 1);
       });
       mapRef.current = map;
     });
@@ -260,6 +325,20 @@ export default function Home() {
       mapRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    pickingRef.current = picking;
+    const map = mapRef.current;
+    if (map) map.getCanvas().style.cursor = picking ? "crosshair" : "";
+  }, [picking]);
+
+  useEffect(() => {
+    pointMarkersRef.current.start?.setLngLat(startLocation.coordinate);
+  }, [startLocation]);
+
+  useEffect(() => {
+    pointMarkersRef.current.end?.setLngLat(endLocation.coordinate);
+  }, [endLocation]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -284,8 +363,99 @@ export default function Home() {
   }, []);
 
   function swapLocations() {
-    setStart(end);
-    setEnd(start);
+    const oldStart = startLocation;
+    const oldStartText = startText;
+    setStartLocation(endLocation);
+    setEndLocation(oldStart);
+    setStartText(endText);
+    setEndText(oldStartText);
+    setStatus("Partenza e destinazione invertite. Ricalcola il percorso.");
+  }
+
+  function selectPreset(target: "start" | "end", id: string) {
+    const selected = nodeMap.get(id);
+    if (!selected) return;
+    const location = { label: selected.name, coordinate: selected.coordinate };
+    if (target === "start") {
+      setStartLocation(location);
+      setStartText(location.label);
+    } else {
+      setEndLocation(location);
+      setEndText(location.label);
+    }
+  }
+
+  async function geocode(text: string, current: LocationChoice) {
+    if (text.trim() === current.label) return current;
+    const response = await fetch(`/api/geocode?q=${encodeURIComponent(text.trim())}`);
+    const data = await response.json() as {
+      results?: Array<{ label: string; coordinate: Coordinate }>;
+      error?: string;
+    };
+    if (!response.ok || !data.results?.length) {
+      throw new Error(data.error ?? `Non trovo “${text}” a Milano.`);
+    }
+    return data.results[0];
+  }
+
+  async function calculateRoutes() {
+    if (isLoading) return;
+    setIsLoading(true);
+    setStatus("Cerco i punti e analizzo le alternative stradali…");
+    try {
+      const resolvedStart = await geocode(startText, startLocation);
+      if (startText.trim() !== startLocation.label && endText.trim() !== endLocation.label) {
+        await new Promise((resolve) => setTimeout(resolve, 1100));
+      }
+      const resolvedEnd = await geocode(endText, endLocation);
+      setStartLocation(resolvedStart);
+      setEndLocation(resolvedEnd);
+      setStartText(resolvedStart.label);
+      setEndText(resolvedEnd.label);
+
+      const params = new URLSearchParams({
+        start: resolvedStart.coordinate.join(","),
+        end: resolvedEnd.coordinate.join(","),
+        avoid: avoidance,
+      });
+      const response = await fetch(`/api/routes?${params}`);
+      const data = await response.json() as RouteApiResponse & { error?: string };
+      if (!response.ok || !data.fast || !data.safe) {
+        throw new Error(data.error ?? "Non riesco a calcolare il percorso.");
+      }
+      setFastRoute({ ...data.fast, nodes: [], edges: [], problemSegments: data.problemSegments });
+      setSafeRoute({ ...data.safe, nodes: [], edges: [], problemSegments: data.problemSegments });
+      setAlternativesAnalyzed(data.alternativesAnalyzed);
+      setIsLiveResult(true);
+      setStatus(`${data.dataNotice}. Tempi medi senza traffico live.`);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Qualcosa non ha funzionato. Riprova.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function useCurrentLocation() {
+    if (!navigator.geolocation) {
+      setStatus("La posizione non è disponibile su questo dispositivo.");
+      return;
+    }
+    setStatus("Sto rilevando la tua posizione…");
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const coordinate: Coordinate = [coords.longitude, coords.latitude];
+        if (coordinate[0] < 9.04 || coordinate[0] > 9.31 || coordinate[1] < 45.38 || coordinate[1] > 45.55) {
+          setStatus("La demo copre per ora soltanto l’area di Milano.");
+          return;
+        }
+        const location = { label: "La mia posizione", coordinate };
+        setStartLocation(location);
+        setStartText(location.label);
+        setStatus("Posizione impostata come partenza.");
+      },
+      () => setStatus("Non ho potuto accedere alla posizione."),
+      { enableHighAccuracy: true, timeout: 8000 },
+    );
   }
 
   return (
@@ -297,7 +467,7 @@ export default function Home() {
           <small>milano</small>
         </a>
         <div className="topbar-actions">
-          <span className="pilot-badge"><span /> Dataset pilota</span>
+          <span className="pilot-badge"><span /> Demo Milano live</span>
           <button className="icon-button" aria-label="Apri informazioni" onClick={() => setDetailsOpen(true)}>i</button>
         </div>
       </header>
@@ -313,19 +483,52 @@ export default function Home() {
         </div>
 
         <div className="location-fields">
-          <label>
-            <span><i className="origin-dot" /> Partenza</span>
-            <select value={start} onChange={(event) => setStart(event.target.value)} aria-label="Partenza">
-              {landmarks.map((node) => <option key={node.id} value={node.id} disabled={node.id === end}>{node.name}</option>)}
-            </select>
-          </label>
+          <div className={`location-field ${picking === "start" ? "picking" : ""}`}>
+            <label htmlFor="start-search"><span><i className="origin-dot" /> Partenza</span></label>
+            <div className="search-control">
+              <input
+                id="start-search"
+                value={startText}
+                onChange={(event) => setStartText(event.target.value)}
+                onKeyDown={(event) => { if (event.key === "Enter") calculateRoutes(); }}
+                placeholder="Indirizzo o luogo a Milano"
+                autoComplete="off"
+              />
+              <button type="button" onClick={useCurrentLocation} aria-label="Usa la mia posizione" title="Usa la mia posizione">◎</button>
+            </div>
+            <div className="field-tools">
+              <button type="button" onClick={() => setPicking(picking === "start" ? null : "start")}>
+                {picking === "start" ? "Annulla selezione" : "Scegli sulla mappa"}
+              </button>
+              <select aria-label="Partenza rapida" value="" onChange={(event) => selectPreset("start", event.target.value)}>
+                <option value="">Punti rapidi</option>
+                {landmarks.map((node) => <option key={node.id} value={node.id}>{node.name}</option>)}
+              </select>
+            </div>
+          </div>
           <button className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">⇄</button>
-          <label>
-            <span><i className="destination-dot" /> Destinazione</span>
-            <select value={end} onChange={(event) => setEnd(event.target.value)} aria-label="Destinazione">
-              {landmarks.map((node) => <option key={node.id} value={node.id} disabled={node.id === start}>{node.name}</option>)}
-            </select>
-          </label>
+          <div className={`location-field ${picking === "end" ? "picking" : ""}`}>
+            <label htmlFor="end-search"><span><i className="destination-dot" /> Destinazione</span></label>
+            <div className="search-control">
+              <input
+                id="end-search"
+                value={endText}
+                onChange={(event) => setEndText(event.target.value)}
+                onKeyDown={(event) => { if (event.key === "Enter") calculateRoutes(); }}
+                placeholder="Indirizzo o luogo a Milano"
+                autoComplete="off"
+              />
+            </div>
+            <div className="field-tools">
+              <button type="button" onClick={() => setPicking(picking === "end" ? null : "end")}>
+                {picking === "end" ? "Annulla selezione" : "Scegli sulla mappa"}
+              </button>
+              <select aria-label="Destinazione rapida" value="" onChange={(event) => selectPreset("end", event.target.value)}>
+                <option value="">Punti rapidi</option>
+                {landmarks.map((node) => <option key={node.id} value={node.id}>{node.name}</option>)}
+              </select>
+            </div>
+          </div>
         </div>
 
         <div className="avoid-row">
@@ -342,9 +545,12 @@ export default function Home() {
               <button key={value} className={avoidance === value ? "active" : ""} onClick={() => setAvoidance(value)}>{label}</button>
             ))}
           </div>
-          <button className="calculate-button" onClick={() => setRouteKey((key) => key + 1)}>
-            Calcola percorso <span>→</span>
+          <button className="calculate-button" onClick={calculateRoutes} disabled={isLoading}>
+            {isLoading ? "Calcolo in corso…" : "Calcola percorso"} <span>{isLoading ? "···" : "→"}</span>
           </button>
+        </div>
+        <div className={`planner-status ${isLoading ? "loading" : ""}`} role="status">
+          <i /> {status}
         </div>
       </section>
 
@@ -355,14 +561,19 @@ export default function Home() {
           <span><i className="line fast" /> Più rapido</span>
           <span><i className="line pave" /> Pavé rilevato</span>
         </div>
-        <div className="confidence-pill">Copertura stimata area demo <b>82%</b></div>
+        <div className="confidence-pill">
+          {picking ? `Clicca sulla mappa per impostare ${picking === "start" ? "la partenza" : "la destinazione"}` : isLiveResult ? `${alternativesAnalyzed} alternative analizzate` : "Percorso dimostrativo"}
+          {!picking && <b>{isLiveResult ? "LIVE" : "DEMO"}</b>}
+        </div>
       </section>
 
       <section className="results" aria-label="Confronto percorsi">
         <article className={`route-card recommended ${activeRoute === "safe" ? "selected" : ""}`} onClick={() => setActiveRoute("safe")}>
           <div className="route-card-top">
             <span className="recommendation"><i>✓</i> Consigliato</span>
-            <span className="surface-status clean">Solo asfalto noto</span>
+            <span className={`surface-status ${safeRoute.paveMeters === 0 ? "clean" : "warning"}`}>
+              {safeRoute.paveMeters === 0 ? "Solo asfalto noto" : `${safeRoute.paveMeters} m di pavé`}
+            </span>
           </div>
           <div className="route-title">
             <div>
@@ -394,7 +605,7 @@ export default function Home() {
           <div className="route-metrics">
             <span><small>Distanza</small><b>{fastRoute.distance.toFixed(1)} km</b></span>
             <span><small>Pavé</small><b>{fastRoute.paveMeters} m</b></span>
-            <span><small>Tratti critici</small><b>{fastRoute.edges.filter((edge) => isPave(edge.surface)).length}</b></span>
+            <span><small>Alternative</small><b>{alternativesAnalyzed}</b></span>
           </div>
           <button className="secondary" onClick={(event) => { event.stopPropagation(); setActiveRoute("fast"); }}>Mostra in mappa <span>→</span></button>
         </article>
@@ -404,7 +615,7 @@ export default function Home() {
           <strong>{(savedPave / 1000).toFixed(1)} km</strong>
           <p>di pavé evitato su questo tragitto</p>
           <div className="impact-bar"><i style={{ width: `${Math.min(100, fastRoute.paveMeters ? (savedPave / fastRoute.paveMeters) * 100 : 0)}%` }} /></div>
-          <small>I dati sulla superficie provengono dal dataset dimostrativo basato su attributi OpenStreetMap.</small>
+          <small>{isLiveResult ? "Stima calcolata sulle superfici OSM note. Il traffico in tempo reale non è ancora incluso." : "Esempio iniziale sulla rete pilota. Inserisci due punti e premi Calcola percorso per una stima live."}</small>
         </aside>
       </section>
 
@@ -440,7 +651,7 @@ export default function Home() {
       </section>
 
       <footer>
-        <span className="footer-brand">lastrico <small>prototype 01</small></span>
+        <span className="footer-brand">lastrico <small>prototype 02</small></span>
         <p>Un esperimento per guidare meglio a Milano.</p>
         <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">Dati © OpenStreetMap</a>
       </footer>
@@ -451,8 +662,8 @@ export default function Home() {
             <button className="modal-close" onClick={() => setDetailsOpen(false)} aria-label="Chiudi">×</button>
             <span className="eyebrow">Nota sul prototipo</span>
             <h2 id="about-title">Utile per decidere, onesto sui dati.</h2>
-            <p>Questa demo usa una rete stradale pilota del centro di Milano e una mappa OpenStreetMap. Il motore calcola davvero due percorsi e applica penalità diverse ai segmenti marcati come pavé.</p>
-            <p>Non è ancora un navigatore per la guida reale: prima del test su strada vanno importati tutti gli archi OSM di Milano, verificata la copertura del campo <code>surface</code> e aggiunto un motore di routing stradale completo.</p>
+            <p>Questa demo consente di cercare indirizzi o scegliere liberamente due punti sulla mappa. Il tragitto più rapido è confrontato con le alternative disponibili e i tratti con superficie critica censiti in OpenStreetMap.</p>
+            <p>I tempi sono medi e non includono traffico live. I servizi pubblici gratuiti sono adatti a questa prova con pochi utenti, non a una pubblicazione commerciale: la fase successiva prevede motore di routing, geocoding e dati OSM ospitati in modo dedicato.</p>
             <button className="calculate-button full" onClick={() => setDetailsOpen(false)}>Ho capito</button>
           </section>
         </div>
