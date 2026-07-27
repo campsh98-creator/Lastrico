@@ -1,7 +1,7 @@
 {
   "name": "Lastrico — Milano senza sobbalzi",
   "short_name": "Lastrico",
-  "description": "Percorsi automobilistici che riducono pavé e sanpietrini a Milano.",
+  "description": "Percorsi automobilistici che riducono pavé e sanpietrini a Milano, migliorati dalle segnalazioni della comunità.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f7f6f1",
