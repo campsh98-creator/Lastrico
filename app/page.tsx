@@ -7,6 +7,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 type Coordinate = [number, number];
 type Surface = "asphalt" | "sett" | "cobblestone" | "paving_stones";
 type Avoidance = "balanced" | "strong" | "maximum";
+type TransportMode = "car" | "motorcycle" | "bicycle";
 type ThemeMode = "auto" | "light" | "dark";
 type PickingMode = "start" | "end" | "reportStart" | "reportEnd";
 type ReportKind = "pave" | "rough_cobblestone" | "recently_asphalted" | "wrong_data";
@@ -76,6 +77,13 @@ type RouteApiResponse = {
   hasDistinctAlternative: boolean;
   surfaceDataAvailable: boolean;
   dataNotice: string;
+  transportMode: TransportMode;
+  routingProfile: {
+    provider: string;
+    profile: string;
+    approximate: boolean;
+    notice: string;
+  };
 };
 
 type RoadReport = {
@@ -140,6 +148,16 @@ const edges: RoadEdge[] = [
 
 const nodeMap = new Map(nodes.map((node) => [node.id, node]));
 const isPave = (surface: Surface) => surface !== "asphalt";
+const transportMeta: Record<TransportMode, { label: string; short: string; article: string; safety: string }> = {
+  car: { label: "Auto", short: "AUTO", article: "l’auto", safety: "Non interagire con lo schermo durante la guida" },
+  motorcycle: { label: "Moto", short: "MOTO", article: "la moto", safety: "Non interagire con lo schermo durante la guida" },
+  bicycle: { label: "Bici", short: "BICI", article: "la bici", safety: "Fermati in sicurezza prima di usare lo schermo" },
+};
+const navigationPolicy: Record<TransportMode, { offRouteMeters: number; readings: number; arrivalMeters: number; previewSteps: number }> = {
+  car: { offRouteMeters: 55, readings: 2, arrivalMeters: 35, previewSteps: 80 },
+  motorcycle: { offRouteMeters: 50, readings: 2, arrivalMeters: 30, previewSteps: 90 },
+  bicycle: { offRouteMeters: 38, readings: 3, arrivalMeters: 24, previewSteps: 110 },
+};
 const formatMinutes = (minutes: number) => minutes.toLocaleString("it-IT", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
@@ -298,15 +316,33 @@ function distanceMeters(a: Coordinate, b: Coordinate) {
 }
 
 function closestRouteIndex(coordinates: Coordinate[], position: Coordinate) {
+  if (coordinates.length <= 1) {
+    return { index: 0, distance: coordinates[0] ? distanceMeters(position, coordinates[0]) : 0 };
+  }
   let index = 0;
   let distance = Number.POSITIVE_INFINITY;
-  coordinates.forEach((coordinate, candidateIndex) => {
-    const candidateDistance = distanceMeters(position, coordinate);
+  for (let candidateIndex = 1; candidateIndex < coordinates.length; candidateIndex += 1) {
+    const start = coordinates[candidateIndex - 1];
+    const end = coordinates[candidateIndex];
+    const latitude = position[1] * Math.PI / 180;
+    const scaleX = 111_320 * Math.cos(latitude);
+    const scaleY = 110_540;
+    const px = position[0] * scaleX;
+    const py = position[1] * scaleY;
+    const ax = start[0] * scaleX;
+    const ay = start[1] * scaleY;
+    const bx = end[0] * scaleX;
+    const by = end[1] * scaleY;
+    const dx = bx - ax;
+    const dy = by - ay;
+    const denominator = dx * dx + dy * dy;
+    const ratio = denominator ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / denominator)) : 0;
+    const candidateDistance = Math.hypot(px - (ax + ratio * dx), py - (ay + ratio * dy));
     if (candidateDistance < distance) {
-      index = candidateIndex;
+      index = ratio >= 0.5 ? candidateIndex : candidateIndex - 1;
       distance = candidateDistance;
     }
-  });
+  }
   return { index, distance };
 }
 
@@ -397,9 +433,14 @@ export default function Home() {
   const offRouteReadingsRef = useRef(0);
   const lastSpokenInstructionRef = useRef("");
   const journeyActiveRef = useRef(false);
+  const journeyHeadingRef = useRef(0);
   const selectedRouteRef = useRef<RouteResult | null>(null);
   const endLocationRef = useRef<LocationChoice | null>(null);
   const loadingRef = useRef(false);
+  const transportModeRef = useRef<TransportMode>("car");
+  const transportReadyRef = useRef(false);
+  const activeRouteRef = useRef<"safe" | "fast">("fast");
+  const routeRequestRef = useRef<{ id: number; controller: AbortController } | null>(null);
   const avoidanceReadyRef = useRef(false);
   const defaultFast = useMemo(() => route("castello", "venezia"), []);
   const defaultSafe = useMemo(() => route("castello", "venezia", "strong"), []);
@@ -413,6 +454,7 @@ export default function Home() {
   });
   const [startText, setStartText] = useState("");
   const [endText, setEndText] = useState("");
+  const [transportMode, setTransportMode] = useState<TransportMode>("car");
   const [avoidance, setAvoidance] = useState<Avoidance>("strong");
   const [fastRoute, setFastRoute] = useState<RouteResult>(defaultFast);
   const [safeRoute, setSafeRoute] = useState<RouteResult>(defaultSafe);
@@ -435,6 +477,12 @@ export default function Home() {
   const [isRecalculating, setIsRecalculating] = useState(false);
   const [arrived, setArrived] = useState(false);
   const [lastRecalculatedAt, setLastRecalculatedAt] = useState<string | null>(null);
+  const [routingProfile, setRoutingProfile] = useState<RouteApiResponse["routingProfile"]>({
+    provider: "demo",
+    profile: "car",
+    approximate: false,
+    notice: "Esempio iniziale",
+  });
   const [themeMode, setThemeMode] = useState<ThemeMode>("auto");
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
   const [addressResults, setAddressResults] = useState<GeocodeResult[]>([]);
@@ -454,6 +502,7 @@ export default function Home() {
   const [isSubmittingReport, setIsSubmittingReport] = useState(false);
   const [reportsAvailable, setReportsAvailable] = useState(true);
   const [mapReady, setMapReady] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
   const landmarks = nodes.filter((node) => node.landmark);
   const savedPave = Math.max(0, fastRoute.paveMeters - safeRoute.paveMeters);
   const selectedRoute = activeRoute === "safe" ? safeRoute : fastRoute;
@@ -506,7 +555,12 @@ export default function Home() {
         .addTo(map);
       const vehicleElement = document.createElement("div");
       vehicleElement.className = "vehicle-marker";
-      vehicleElement.setAttribute("aria-label", "Posizione del veicolo");
+      vehicleElement.setAttribute(
+        "aria-label",
+        `Posizione ${transportMeta[transportModeRef.current].label.toLowerCase()}`,
+      );
+      vehicleElement.dataset.testid = "vehicle-marker";
+      vehicleElement.dataset.transport = transportModeRef.current;
       vehicleElement.style.display = "none";
       const accuracyHalo = document.createElement("i");
       const vehicleArrow = document.createElement("span");
@@ -653,6 +707,28 @@ export default function Home() {
   }, [isJourneyActive, selectedRoute]);
 
   useEffect(() => {
+    activeRouteRef.current = activeRoute;
+  }, [activeRoute]);
+
+  useEffect(() => {
+    transportModeRef.current = transportMode;
+    if (!transportReadyRef.current) return;
+    window.localStorage.setItem("lastrico-transport", transportMode);
+    const markerElement = pointMarkersRef.current.vehicle?.getElement();
+    if (markerElement) {
+      markerElement.dataset.transport = transportMode;
+      markerElement.setAttribute(
+        "aria-label",
+        `Posizione ${transportMeta[transportMode].label.toLowerCase()}`,
+      );
+    }
+  }, [transportMode]);
+
+  useEffect(() => {
+    journeyHeadingRef.current = journeyHeading;
+  }, [journeyHeading]);
+
+  useEffect(() => {
     loadingRef.current = isLoading;
   }, [isLoading]);
 
@@ -682,7 +758,14 @@ export default function Home() {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded() || !fastRoute.coordinates.length || !safeRoute.coordinates.length) return;
+    if (!map?.isStyleLoaded()) return;
+    if (!isLiveResult && transportMode !== "car") {
+      (map.getSource("fast-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      (map.getSource("safe-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      (map.getSource("problem-segments") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      return;
+    }
+    if (!fastRoute.coordinates.length || !safeRoute.coordinates.length) return;
     (map.getSource("fast-route") as GeoJSONSource)?.setData(routeGeoJSON(fastRoute));
     (map.getSource("safe-route") as GeoJSONSource)?.setData(
       hasDistinctAlternative ? routeGeoJSON(safeRoute) : emptyFeatureCollection,
@@ -699,7 +782,7 @@ export default function Home() {
       maxZoom: 14.7,
       duration: 650,
     });
-  }, [fastRoute, safeRoute, activeRoute, hasDistinctAlternative]);
+  }, [fastRoute, safeRoute, activeRoute, hasDistinctAlternative, isLiveResult, transportMode]);
 
   useEffect(() => {
     if (!isJourneyActive || !voiceEnabled || !navigationProgress.instruction) return;
@@ -712,7 +795,7 @@ export default function Home() {
     if (journeyMode !== "preview" || !selectedRoute.coordinates.length) return;
     const coordinates = selectedRoute.coordinates;
     let index = 0;
-    const step = Math.max(1, Math.floor(coordinates.length / 80));
+    const step = Math.max(1, Math.floor(coordinates.length / navigationPolicy[transportModeRef.current].previewSteps));
     previewTimerRef.current = window.setInterval(() => {
       index = Math.min(coordinates.length - 1, index + step);
       const position = coordinates[index];
@@ -734,10 +817,34 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const updateNetworkState = () => setIsOnline(navigator.onLine);
+    updateNetworkState();
+    window.addEventListener("online", updateNetworkState);
+    window.addEventListener("offline", updateNetworkState);
+    return () => {
+      window.removeEventListener("online", updateNetworkState);
+      window.removeEventListener("offline", updateNetworkState);
+    };
+  }, []);
+
+  useEffect(() => {
     const savedTheme = window.localStorage.getItem("lastrico-theme");
     if (savedTheme === "auto" || savedTheme === "light" || savedTheme === "dark") {
       window.queueMicrotask(() => setThemeMode(savedTheme));
     }
+  }, []);
+
+  useEffect(() => {
+    const savedTransport = window.localStorage.getItem("lastrico-transport");
+    if (savedTransport === "car" || savedTransport === "motorcycle" || savedTransport === "bicycle") {
+      transportModeRef.current = savedTransport;
+      window.queueMicrotask(() => {
+        setTransportMode(savedTransport);
+        transportReadyRef.current = true;
+      });
+      return;
+    }
+    transportReadyRef.current = true;
   }, []);
 
   useEffect(() => {
@@ -904,11 +1011,23 @@ export default function Home() {
     throw new Error(`Scegli l’indirizzo ${target === "start" ? "di partenza" : "di destinazione"} dall’elenco.`);
   }
 
-  async function calculateRoutes(startOverride?: LocationChoice) {
-    if (loadingRef.current) return;
+  async function calculateRoutes(
+    startOverride?: LocationChoice,
+    options: { mode?: TransportMode; preserveRoute?: "safe" | "fast"; force?: boolean } = {},
+  ) {
+    if (!navigator.onLine) {
+      setStatus("Connessione assente. Mantengo il percorso già disponibile.");
+      return;
+    }
+    if (loadingRef.current && !options.force) return;
+    routeRequestRef.current?.controller.abort();
+    const controller = new AbortController();
+    const requestId = (routeRequestRef.current?.id ?? 0) + 1;
+    routeRequestRef.current = { id: requestId, controller };
+    const requestedMode = options.mode ?? transportModeRef.current;
     loadingRef.current = true;
     setIsLoading(true);
-    setStatus("Cerco i punti e analizzo le alternative stradali…");
+    setStatus(`Calcolo i percorsi per ${transportMeta[requestedMode].article}…`);
     try {
       const resolvedStart = startOverride ?? await geocode(startText, startLocation, "start");
       if (!startOverride && startText.trim() !== startLocation.label && endText.trim() !== endLocation.label) {
@@ -924,27 +1043,71 @@ export default function Home() {
         start: resolvedStart.coordinate.join(","),
         end: resolvedEnd.coordinate.join(","),
         avoid: avoidance,
+        mode: requestedMode,
       });
-      const response = await fetch(`/api/routes?${params}`);
+      const response = await fetch(`/api/routes?${params}`, { signal: controller.signal });
       const data = await response.json() as RouteApiResponse & { error?: string };
       if (!response.ok || !data.fast || !data.safe) {
         throw new Error(data.error ?? "Non riesco a calcolare il percorso.");
       }
+      if (routeRequestRef.current?.id !== requestId || data.transportMode !== requestedMode) return;
       setFastRoute({ ...data.fast, nodes: [], edges: [], problemSegments: data.problemSegments });
       setSafeRoute({ ...data.safe, nodes: [], edges: [], problemSegments: data.problemSegments });
       setAlternativesAnalyzed(data.alternativesAnalyzed);
       setHasDistinctAlternative(data.hasDistinctAlternative);
+      setRoutingProfile(data.routingProfile);
+      setTransportMode(requestedMode);
+      transportModeRef.current = requestedMode;
       setIsLiveResult(true);
       setActivePanel("routes");
-      setActiveRoute(data.hasDistinctAlternative ? "safe" : "fast");
+      const requestedRoute = options.preserveRoute;
+      const nextRoute = requestedRoute === "fast"
+        ? "fast"
+        : data.hasDistinctAlternative ? "safe" : "fast";
+      setActiveRoute(nextRoute);
+      activeRouteRef.current = nextRoute;
       setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
-      setStatus(`${data.dataNotice}. Tempi medi senza traffico live.`);
+      const timingNotice = requestedMode === "bicycle" ? "Tempi stimati senza traffico live" : "Tempi medi senza traffico live";
+      setStatus(`${data.dataNotice}. ${timingNotice}.`);
     } catch (error) {
+      if (controller.signal.aborted) return;
       setStatus(error instanceof Error ? error.message : "Qualcosa non ha funzionato. Riprova.");
     } finally {
-      loadingRef.current = false;
-      setIsLoading(false);
-      setIsRecalculating(false);
+      if (routeRequestRef.current?.id === requestId) {
+        loadingRef.current = false;
+        setIsLoading(false);
+        setIsRecalculating(false);
+      }
+    }
+  }
+
+  function changeTransportMode(nextMode: TransportMode) {
+    if (nextMode === transportModeRef.current || isJourneyActive) return;
+    const shouldRecalculate = isLiveResult || loadingRef.current;
+    const routeKind = activeRouteRef.current;
+    routeRequestRef.current?.controller.abort();
+    transportModeRef.current = nextMode;
+    setTransportMode(nextMode);
+    setIsLiveResult(false);
+    setHasDistinctAlternative(false);
+    setRoutingProfile({
+      provider: "pending",
+      profile: nextMode,
+      approximate: false,
+      notice: "Da calcolare",
+    });
+    const map = mapRef.current;
+    if (map?.isStyleLoaded()) {
+      (map.getSource("fast-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      (map.getSource("safe-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      (map.getSource("problem-segments") as GeoJSONSource)?.setData(emptyFeatureCollection);
+    }
+    if (shouldRecalculate) {
+      setStatus(`Ricalcolo i percorsi per ${transportMeta[nextMode].article}…`);
+      void calculateRoutes(undefined, { mode: nextMode, preserveRoute: routeKind, force: true });
+    } else {
+      setActivePanel("plan");
+      setStatus(`${transportMeta[nextMode].label} selezionata. Inserisci gli indirizzi e calcola.`);
     }
   }
 
@@ -1021,9 +1184,10 @@ export default function Home() {
     const previous = previousJourneyPositionRef.current;
     const inferredHeading = previous && distanceMeters(previous, coordinate) > 4
       ? bearingBetween(previous, coordinate)
-      : journeyHeading;
+      : journeyHeadingRef.current;
     const heading = Number.isFinite(reportedHeading) ? reportedHeading! : inferredHeading;
     previousJourneyPositionRef.current = coordinate;
+    journeyHeadingRef.current = heading;
     setJourneyPosition(coordinate);
     setJourneyAccuracy(accuracy);
     setJourneyHeading(heading);
@@ -1031,26 +1195,31 @@ export default function Home() {
     const routeResult = selectedRouteRef.current;
     const destination = endLocationRef.current;
     if (!routeResult || !destination) return;
-    if (distanceMeters(coordinate, destination.coordinate) <= 35) {
+    const mode = transportModeRef.current;
+    const policy = navigationPolicy[mode];
+    if (distanceMeters(coordinate, destination.coordinate) <= policy.arrivalMeters) {
       finishNavigation(true);
       return;
     }
 
     const progress = getNavigationProgress(routeResult, coordinate);
-    if (progress.offRouteMeters > 55) {
+    if (progress.offRouteMeters > policy.offRouteMeters) {
       offRouteReadingsRef.current += 1;
     } else {
       offRouteReadingsRef.current = 0;
     }
     const now = Date.now();
     const canRecalculate = now - lastJourneyCalculationRef.current >= 15_000;
-    if (offRouteReadingsRef.current >= 2 && canRecalculate && !loadingRef.current) {
+    if (offRouteReadingsRef.current >= policy.readings && canRecalculate && !loadingRef.current) {
       lastJourneyCalculationRef.current = now;
       lastJourneyOriginRef.current = coordinate;
       offRouteReadingsRef.current = 0;
       setIsRecalculating(true);
-      setStatus("Fuori percorso · ricalcolo anti-pavé dalla posizione attuale…");
-      void calculateRoutes({ label: "Posizione GPS live", coordinate });
+      setStatus(`Fuori percorso · ricalcolo per ${transportMeta[mode].article}…`);
+      void calculateRoutes(
+        { label: "Posizione GPS live", coordinate },
+        { mode, preserveRoute: activeRouteRef.current, force: true },
+      );
       return;
     }
 
@@ -1074,14 +1243,17 @@ export default function Home() {
     offRouteReadingsRef.current = 0;
     lastSpokenInstructionRef.current = "";
     void requestWakeLock();
-    speakInstruction(mode === "preview" ? "Anteprima navigazione Lastrico" : "Navigazione Lastrico avviata");
+    const currentTransport = transportMeta[transportModeRef.current];
+    speakInstruction(mode === "preview"
+      ? `Anteprima navigazione Lastrico in ${currentTransport.label.toLowerCase()}`
+      : `Navigazione Lastrico in ${currentTransport.label.toLowerCase()} avviata`);
 
     if (mode === "preview") {
       const coordinates = selectedRoute.coordinates;
       setJourneyPosition(coordinates[0]);
       setJourneyHeading(coordinates.length > 1 ? bearingBetween(coordinates[0], coordinates[1]) : 0);
       setJourneyAccuracy(5);
-      setStatus("ANTEPRIMA · la freccia seguirà il percorso selezionato senza usare il GPS.");
+      setStatus(`ANTEPRIMA ${currentTransport.short} · la freccia seguirà il percorso selezionato senza usare il GPS.`);
       return;
     }
     if (!navigator.geolocation) {
@@ -1150,9 +1322,15 @@ export default function Home() {
 
   function openExternalMap(provider: "apple" | "google" | "waze") {
     const [lng, lat] = endLocation.coordinate;
+    const mode = transportModeRef.current;
+    if (mode === "bicycle" && provider !== "google") {
+      setStatus("Per la bici, in questa beta il fallback verificato è Google Maps.");
+      return;
+    }
+    const googleTravelMode = mode === "bicycle" ? "bicycling" : "driving";
     const urls = {
       apple: `https://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`,
-      google: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`,
+      google: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=${googleTravelMode}`,
       waze: `https://waze.com/ul?ll=${lat}%2C${lng}&navigate=yes`,
     };
     window.open(urls[provider], "_blank", "noopener,noreferrer");
@@ -1247,7 +1425,13 @@ export default function Home() {
               ["routes", "Percorsi"],
               ["community", "Comunità"],
             ] as const).map(([value, label]) => (
-              <button type="button" key={value} className={activePanel === value ? "active" : ""} onClick={() => setActivePanel(value)}>
+              <button
+                type="button"
+                key={value}
+                className={activePanel === value ? "active" : ""}
+                onClick={() => setActivePanel(value)}
+                disabled={value === "routes" && !isLiveResult}
+              >
                 {label}
                 {value === "routes" && isLiveResult && <i />}
               </button>
@@ -1340,6 +1524,31 @@ export default function Home() {
                   <button type="button" onClick={() => setPicking(picking === "end" ? null : "end")}>Arrivo su mappa</button>
                 </div>
 
+                <div className="transport-block">
+                  <span>Come ti muovi?</span>
+                  <div
+                    className="transport-selector"
+                    role="radiogroup"
+                    aria-label="Mezzo di trasporto"
+                    data-testid="transport-selector"
+                  >
+                    {(["car", "motorcycle", "bicycle"] as TransportMode[]).map((mode) => (
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={transportMode === mode}
+                        data-transport={mode}
+                        className={transportMode === mode ? "active" : ""}
+                        disabled={isJourneyActive}
+                        onClick={() => changeTransportMode(mode)}
+                        key={mode}
+                      >
+                        {transportMeta[mode].label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="avoidance-block">
                   <div>
                     <span>Quanto evitare il pavé?</span>
@@ -1364,32 +1573,48 @@ export default function Home() {
             )}
 
             {activePanel === "routes" && (
-              <section className="routes-panel">
+              <section className="routes-panel" data-testid="route-panel" data-transport={transportMode}>
                 <div className="panel-heading routes-heading">
-                  <h2>Percorsi</h2>
+                  <h2>Percorsi in {transportMeta[transportMode].label.toLowerCase()}</h2>
                   <p>{alternativesAnalyzed} alternative{lastRecalculatedAt ? ` · ${lastRecalculatedAt}` : ""}</p>
                 </div>
 
-                {hasDistinctAlternative ? (
-                  <button type="button" className={`route-option safe ${activeRoute === "safe" ? "selected" : ""}`} onClick={() => setActiveRoute("safe")}>
+                <div className="route-options" role="radiogroup" aria-label={`Percorso ${transportMeta[transportMode].label}`}>
+                  {hasDistinctAlternative ? (
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={activeRoute === "safe"}
+                      data-testid="route-option-safe"
+                      className={`route-option safe ${activeRoute === "safe" ? "selected" : ""}`}
+                      onClick={() => setActiveRoute("safe")}
+                    >
+                      <span className="route-radio" />
+                      <span className="route-name"><b>Anti-pavé · {transportMeta[transportMode].label}</b><small>{safeRoute.distance.toFixed(1)} km · {safeRoute.paveMeters} m noti</small></span>
+                      <strong>{formatMinutes(safeRoute.minutes)}<small> min</small></strong>
+                      <em>+{formatMinutes(Math.max(0, safeRoute.minutes - fastRoute.minutes))}</em>
+                    </button>
+                  ) : (
+                    <div className="route-option no-alternative">
+                      <span className="route-radio" />
+                      <span className="route-name"><b>Nessuna deviazione migliore</b><small>Le alternative controllate non riducono il pavé noto</small></span>
+                      <strong>—</strong>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={activeRoute === "fast"}
+                    data-testid="route-option-fast"
+                    className={`route-option fast ${activeRoute === "fast" ? "selected" : ""}`}
+                    onClick={() => setActiveRoute("fast")}
+                  >
                     <span className="route-radio" />
-                    <span className="route-name"><b>Anti-pavé</b><small>{safeRoute.distance.toFixed(1)} km · {safeRoute.paveMeters} m noti</small></span>
-                    <strong>{formatMinutes(safeRoute.minutes)}<small> min</small></strong>
-                    <em>+{formatMinutes(Math.max(0, safeRoute.minutes - fastRoute.minutes))}</em>
+                    <span className="route-name"><b>Più rapido · {transportMeta[transportMode].label}</b><small>{fastRoute.distance.toFixed(1)} km · {fastRoute.paveMeters} m noti</small></span>
+                    <strong>{formatMinutes(fastRoute.minutes)}<small> min</small></strong>
+                    <em>base</em>
                   </button>
-                ) : (
-                  <div className="route-option no-alternative">
-                    <span className="route-radio" />
-                    <span className="route-name"><b>Nessuna deviazione migliore</b><small>Le alternative controllate non riducono il pavé noto</small></span>
-                    <strong>—</strong>
-                  </div>
-                )}
-                <button type="button" className={`route-option fast ${activeRoute === "fast" ? "selected" : ""}`} onClick={() => setActiveRoute("fast")}>
-                  <span className="route-radio" />
-                  <span className="route-name"><b>Più rapido</b><small>{fastRoute.distance.toFixed(1)} km · {fastRoute.paveMeters} m noti</small></span>
-                  <strong>{formatMinutes(fastRoute.minutes)}<small> min</small></strong>
-                  <em>base</em>
-                </button>
+                </div>
 
                 <div className="impact-strip">
                   <div><small>Pavé evitato</small><strong>{savedPave.toLocaleString("it-IT")} m</strong></div>
@@ -1397,9 +1622,13 @@ export default function Home() {
                   <div><small>Dati</small><strong>{isLiveResult ? "OSM" : "Demo"}</strong></div>
                 </div>
 
-                <button type="button" className="journey-button" onClick={() => startNavigation("gps")}>
+                <div className={`profile-note ${routingProfile.approximate ? "warning" : ""}`}>
+                  {routingProfile.notice}
+                </div>
+
+                <button type="button" className="journey-button" data-testid="start-navigation" onClick={() => startNavigation("gps")}>
                   <span>▶</span>
-                  <b>Avvia navigazione</b>
+                  <b>Avvia navigazione in {transportMeta[transportMode].label.toLowerCase()}</b>
                   <small>Segui il percorso Lastrico con GPS e ricalcolo</small>
                 </button>
                 <div className="route-actions">
@@ -1440,10 +1669,11 @@ export default function Home() {
         <section className="map-stage" id="map-stage" aria-label="Mappa dei percorsi">
           <div ref={mapContainer} className="map" />
           {isJourneyActive && (
-            <div className="navigation-hud" aria-label="Navigazione Lastrico">
-              <section className="navigation-instruction" aria-live="polite">
+            <div className="navigation-hud" aria-label="Navigazione Lastrico" data-testid="navigation-hud" data-transport={transportMode}>
+              <section className="navigation-instruction">
                 <div className="navigation-mode">
                   <span>{journeyMode === "preview" ? "ANTEPRIMA" : isRecalculating ? "RICALCOLO" : "GPS LIVE"}</span>
+                  <small>{transportMeta[transportMode].short}</small>
                   <small>{activeRoute === "safe" ? "ANTI-PAVÉ" : "RAPIDO"}</small>
                 </div>
                 <div className="maneuver-glyph" aria-hidden="true">
@@ -1451,7 +1681,7 @@ export default function Home() {
                 </div>
                 <div className="maneuver-copy">
                   <strong>{formatDistance(navigationProgress.instructionDistance)}</strong>
-                  <b>{isRecalculating ? "Ricalcolo anti-pavé…" : navigationProgress.instruction?.text ?? "Segui il percorso Lastrico"}</b>
+                  <b aria-live="polite">{isRecalculating ? `Ricalcolo per ${transportMeta[transportMode].article}…` : navigationProgress.instruction?.text ?? "Segui il percorso Lastrico"}</b>
                   {navigationProgress.instruction?.roadName && <small>{navigationProgress.instruction.roadName}</small>}
                 </div>
               </section>
@@ -1476,12 +1706,14 @@ export default function Home() {
                   <button type="button" className="stop-navigation" onClick={() => finishNavigation()} aria-label="Termina navigazione">Termina</button>
                 </div>
                 <p>
-                  {journeyMode === "preview"
+                  {!isOnline
+                    ? "Connessione assente · continuo sul percorso salvato"
+                    : journeyMode === "preview"
                     ? "Simulazione senza GPS · nessun ricalcolo"
                     : `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`}
                 </p>
               </section>
-              <div className="driving-safety">Non interagire con lo schermo durante la guida</div>
+              <div className="driving-safety">{transportMeta[transportMode].safety}</div>
             </div>
           )}
           <div className="map-top">
@@ -1496,8 +1728,8 @@ export default function Home() {
                   ? journeyMode === "preview" ? "ANTEPRIMA · percorso Lastrico" : "GPS LIVE · percorso Lastrico"
                   : isLiveResult
                     ? hasDistinctAlternative
-                      ? `${alternativesAnalyzed} percorsi · deviazione trovata`
-                      : `${alternativesAnalyzed} percorsi · nessuna deviazione migliore`
+                      ? `${transportMeta[transportMode].short} · ${alternativesAnalyzed} percorsi · deviazione trovata`
+                      : `${transportMeta[transportMode].short} · ${alternativesAnalyzed} percorsi · nessuna deviazione migliore`
                     : "Esempio iniziale"}
             </div>
             {(picking === "reportStart" || picking === "reportEnd") && (
@@ -1510,20 +1742,22 @@ export default function Home() {
             <span><i className="line pave" /> Pavé</span>
             <span><i className="line community" /> Comunità</span>
           </div>
-          <button type="button" className="map-summary" onClick={() => setActivePanel("routes")}>
-            <span className={activeRoute === "safe" ? "summary-route safe" : "summary-route"}>
-              {activeRoute === "safe" ? "Anti-pavé" : "Più rapido"}
-            </span>
-            <strong>{formatMinutes(activeRoute === "safe" ? safeRoute.minutes : fastRoute.minutes)} <small>min</small></strong>
-            <span>{activeRoute === "safe" ? safeRoute.paveMeters : fastRoute.paveMeters} m di pavé noto</span>
-            <b>Dettagli ↑</b>
-          </button>
+          {isLiveResult && (
+            <button type="button" className="map-summary" onClick={() => setActivePanel("routes")}>
+              <span className={activeRoute === "safe" ? "summary-route safe" : "summary-route"}>
+                {transportMeta[transportMode].short} · {activeRoute === "safe" ? "Anti-pavé" : "Più rapido"}
+              </span>
+              <strong>{formatMinutes(activeRoute === "safe" ? safeRoute.minutes : fastRoute.minutes)} <small>min</small></strong>
+              <span>{activeRoute === "safe" ? safeRoute.paveMeters : fastRoute.paveMeters} m di pavé noto</span>
+              <b>Dettagli ↑</b>
+            </button>
+          )}
         </section>
       </div>
 
       <nav className="mobile-nav" aria-label="Navigazione beta">
         <button type="button" className={activePanel === "plan" ? "active" : ""} onClick={() => setActivePanel("plan")}><span>⌖</span>Pianifica</button>
-        <button type="button" className={activePanel === "routes" ? "active" : ""} onClick={() => setActivePanel("routes")}><span>↝</span>Percorsi</button>
+        <button type="button" className={activePanel === "routes" ? "active" : ""} onClick={() => setActivePanel("routes")} disabled={!isLiveResult}><span>↝</span>Percorsi</button>
         <button type="button" className={activePanel === "community" ? "active" : ""} onClick={() => setActivePanel("community")}><span>＋</span>Comunità</button>
       </nav>
 
@@ -1568,16 +1802,20 @@ export default function Home() {
 
       {mapChooserOpen && (
         <div className="modal-backdrop" role="presentation" onClick={() => setMapChooserOpen(false)}>
-          <section className="modal map-app-modal" role="dialog" aria-modal="true" aria-labelledby="map-app-title" onClick={(event) => event.stopPropagation()}>
+          <section className="modal map-app-modal" role="dialog" aria-modal="true" aria-labelledby="map-app-title" data-testid="fallback-modal" onClick={(event) => event.stopPropagation()}>
             <button type="button" className="modal-close" onClick={() => setMapChooserOpen(false)} aria-label="Chiudi">×</button>
-            <span className="eyebrow">Fallback di emergenza</span>
-            <h2 id="map-app-title">Usa un’altra app</h2>
+            <span className="eyebrow">Fallback · {transportMeta[transportMode].label}</span>
+            <h2 id="map-app-title">Apri un’altra app</h2>
             <div className="map-app-grid">
-              <button type="button" onClick={() => openExternalMap("apple")}><b>Mappe</b><small>Apple</small></button>
-              <button type="button" onClick={() => openExternalMap("google")}><b>Google Maps</b><small>Se installata</small></button>
-              <button type="button" onClick={() => openExternalMap("waze")}><b>Waze</b><small>Se installata</small></button>
+              {transportMode !== "bicycle" && (
+                <button type="button" onClick={() => openExternalMap("apple")}><b>Mappe</b><small>Profilo guida</small></button>
+              )}
+              <button type="button" onClick={() => openExternalMap("google")}><b>Google Maps</b><small>{transportMode === "bicycle" ? "Profilo bici" : "Profilo guida"}</small></button>
+              {transportMode !== "bicycle" && (
+                <button type="button" onClick={() => openExternalMap("waze")}><b>Waze</b><small>{transportMode === "motorcycle" ? "Usa il profilo configurato" : "Profilo guida"}</small></button>
+              )}
             </div>
-            <p className="external-map-note">Usalo solo se la navigazione Lastrico non funziona: l’app scelta ricalcola un percorso proprio e può perdere la deviazione anti-pavé.</p>
+            <p className="external-map-note">Usalo solo se Lastrico non funziona: l’app esterna calcolerà un percorso proprio e potrebbe perdere la deviazione anti-pavé.</p>
           </section>
         </div>
       )}
@@ -1653,7 +1891,16 @@ export default function Home() {
             </ol>
             <div className="beta-limit">
               <b>Questa è una beta, non un navigatore certificato.</b>
-              <span>Tempi senza traffico live, copertura pavé incompleta e nessuna interfaccia CarPlay. L’app nativa arriverà dopo la validazione dei percorsi.</span>
+              <span>Servizio gratuito best-effort per pochi tester: tempi senza traffico live, copertura pavé incompleta, disponibilità non garantita e nessuna interfaccia CarPlay.</span>
+            </div>
+            <p className="beta-privacy">
+              Per calcolare e ricalcolare il percorso, partenza, destinazione e posizione usata come nuova partenza vengono trasmesse ai servizi OpenStreetMap/FOSSGIS e possono comparire nei loro log tecnici. Lastrico non salva la posizione continua.
+            </p>
+            <div className="beta-links">
+              <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap · ODbL</a>
+              <a href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noreferrer">Correggi la mappa</a>
+              <a href="https://routing.openstreetmap.de/about.html#privacy" target="_blank" rel="noreferrer">Privacy routing</a>
+              <a href="https://github.com/campsh98-creator/lastrico-milano/issues" target="_blank" rel="noreferrer">Contatta il progetto</a>
             </div>
             <div className="modal-actions">
               <button type="button" className="secondary-action" onClick={shareBeta}>Condividi beta</button>

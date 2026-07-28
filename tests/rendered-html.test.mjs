@@ -38,6 +38,8 @@ test("returns multiple, deduplicated Milan address candidates", async () => {
   const geocode = await readFile(geocodeUrl, "utf8");
 
   assert.match(geocode, /set\("limit", "10"\)/);
+  assert.match(geocode, /NOMINATIM_MIN_INTERVAL_MS = 1_050/);
+  assert.match(geocode, /fetchNominatim/);
   assert.match(geocode, /set\("street", queryWithoutCity\)/);
   assert.match(geocode, /set\("city", "Milano"\)/);
   assert.match(geocode, /toLocaleLowerCase\("it"\)\.trim\(\) !== "milano"/);
@@ -54,18 +56,26 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   const paveData = JSON.parse(paveDataText);
 
   assert.ok(paveData.length > 1000, "the bundled Milan road-surface dataset is unexpectedly small");
-  assert.match(routing, /fetchOsrmRoute\(\[start, end\], true\)/);
+  assert.match(routing, /fetchEngineRoutes\(\[start, end\], mode, true, deadline\)/);
+  assert.match(routing, /fetchValhallaRoutes/);
+  assert.match(routing, /fetchOsrmCarRoutes/);
+  assert.match(routing, /X-Client-Id/);
+  assert.match(routing, /VALHALLA_MIN_INTERVAL_MS = 1_050/);
+  assert.match(routing, /runValhallaLimited/);
+  assert.match(routing, /Cache-Control": "private, no-store"/);
   assert.match(routing, /detourPoints/);
   assert.match(routing, /routesAreEquivalent/);
-  assert.match(routing, /candidate\.paveMeters \+ 20 < fast\.paveMeters/);
+  assert.match(routing, /candidate\.paveMeters \+ policy\.minimumPaveReduction < fast\.paveMeters/);
   assert.match(routing, /hasDistinctAlternative/);
   assert.match(routing, /bundledPave/);
   assert.match(routing, /AbortSignal\.timeout\(3_500\)/);
   assert.match(routing, /candidateDiagnostics/);
   assert.match(routing, /set\("steps", "true"\)/);
   assert.match(routing, /instructions: steps\.map/);
-  assert.match(routing, /instructionText/);
-  assert.match(routing, /semanticDirection/);
+  assert.match(routing, /osrmInstructionText/);
+  assert.match(routing, /osrmSemanticDirection/);
+  assert.match(routing, /decodePolyline6/);
+  assert.match(routing, /travel_mode === "pedestrian"/);
 });
 
 test("offers the three supported navigation apps without misrepresenting their routing", async () => {
@@ -75,7 +85,34 @@ test("offers the three supported navigation apps without misrepresenting their r
   assert.match(page, /maps\.apple\.com/);
   assert.match(page, /google\.com\/maps\/dir/);
   assert.match(page, /waze\.com\/ul/);
-  assert.match(page, /Usalo solo se la navigazione Lastrico non funziona/);
+  assert.match(page, /transportMode !== "bicycle"/);
+  assert.match(page, /travelmode=\$\{googleTravelMode\}/);
+  assert.match(page, /Usalo solo se Lastrico non funziona/);
+});
+
+test("provides real, persistent Auto Moto and Bici product modes", async () => {
+  const [page, css] = await Promise.all([
+    readFile(pageUrl, "utf8"),
+    readFile(cssUrl, "utf8"),
+  ]);
+
+  assert.match(page, /type TransportMode = "car" \| "motorcycle" \| "bicycle"/);
+  assert.match(page, /role="radiogroup"/);
+  assert.match(page, /aria-label="Mezzo di trasporto"/);
+  assert.match(page, /aria-label=\{`Percorso \$\{transportMeta\[transportMode\]\.label\}`\}/);
+  assert.match(page, /data-transport=\{mode\}/);
+  assert.match(page, /localStorage\.setItem\("lastrico-transport"/);
+  assert.match(page, /setTransportMode\(savedTransport\);\s+transportReadyRef\.current = true/);
+  assert.match(page, /mode: requestedMode/);
+  assert.match(page, /data\.transportMode !== requestedMode/);
+  assert.match(page, /routeRequestRef\.current\?\.controller\.abort\(\)/);
+  assert.match(page, /preserveRoute: activeRouteRef\.current/);
+  assert.match(page, /disabled=\{value === "routes" && !isLiveResult\}/);
+  assert.match(page, /navigationPolicy\[mode\]/);
+  assert.match(page, /data-testid="navigation-hud"/);
+  assert.match(page, /Fermati in sicurezza prima di usare lo schermo/);
+  assert.match(css, /\.transport-selector/);
+  assert.match(css, /grid-template-rows: minmax\(0, 62%\) minmax\(0, 38%\)/);
 });
 
 test("supports real in-app foreground navigation with a safe preview", async () => {
@@ -86,11 +123,11 @@ test("supports real in-app foreground navigation with a safe preview", async () 
 
   assert.match(page, /navigator\.geolocation\.watchPosition/);
   assert.match(page, /function getNavigationProgress/);
-  assert.match(page, /offRouteReadingsRef\.current >= 2/);
+  assert.match(page, /offRouteReadingsRef\.current >= policy\.readings/);
   assert.match(page, /15_000/);
   assert.match(page, /startNavigation\("gps"\)/);
   assert.match(page, /startNavigation\("preview"\)/);
-  assert.match(page, /ANTEPRIMA · la freccia seguirà il percorso selezionato senza usare il GPS/);
+  assert.match(page, /ANTEPRIMA \$\{currentTransport\.short\} · la freccia seguirà il percorso selezionato senza usare il GPS/);
   assert.match(page, /speechSynthesis/);
   assert.match(page, /wakeLock/);
   assert.match(page, /Ricentra/);
@@ -117,7 +154,7 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
   assert.match(page, /hour >= 7 && hour < 19/);
   assert.match(page, /lastrico-theme/);
   assert.match(layout, /appleWebApp/);
-  assert.match(serviceWorker, /lastrico-v7/);
+  assert.match(serviceWorker, /lastrico-v9/);
   assert.match(serviceWorker, /self\.skipWaiting\(\)/);
   assert.match(serviceWorker, /self\.clients\.claim\(\)/);
 });

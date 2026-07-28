@@ -185,6 +185,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   letter-spacing: .8px;
   text-transform: uppercase;
 }
+.view-tabs button:disabled,
+.mobile-nav button:disabled { opacity: .42; cursor: not-allowed; }
 .view-tabs button:last-child { border-right: 0; }
 .view-tabs button.active { color: var(--ink); background: var(--white); box-shadow: inset 0 -3px 0 var(--green); }
 .view-tabs button i { position: absolute; top: 8px; right: 16px; width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
@@ -349,6 +351,49 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-weight: 800;
 }
 
+.transport-block {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  margin-top: 7px;
+}
+.transport-block > span {
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 900;
+}
+.transport-selector {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+}
+.transport-selector button {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+}
+.transport-selector button.active {
+  background: var(--green);
+  box-shadow: 0 4px 11px rgba(22, 134, 109, .22);
+  color: white;
+}
+.transport-selector button:focus-visible {
+  outline: 3px solid var(--green-soft);
+  outline-offset: 2px;
+}
+
 .avoidance-block { margin-top: clamp(11px, 1.8vh, 17px); }
 .avoidance-block > div:first-child { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 7px; }
 .avoidance-block span { font-size: 10px; font-weight: 900; }
@@ -427,6 +472,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .impact-strip div:last-child { border-right: 0; }
 .impact-strip small { display: block; color: var(--muted); font-size: 7px; text-transform: uppercase; }
 .impact-strip strong { display: block; margin-top: 3px; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.profile-note {
+  min-height: 20px;
+  display: grid;
+  place-items: center start;
+  margin: -2px 0 7px;
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.profile-note.warning { background: #fff0dc; color: #8b4d13; }
 
 .journey-button {
   display: grid;
@@ -839,6 +899,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .beta-limit b, .beta-limit span { display: block; }
 .beta-limit b { font-size: 10px; }
 .beta-limit span { margin-top: 4px; font-size: 9px; line-height: 1.45; }
+.beta-privacy { margin: 12px 0 0; color: var(--muted); font-size: 9px; line-height: 1.5; }
+.beta-links { display: flex; flex-wrap: wrap; gap: 7px 12px; margin-top: 10px; }
+.beta-links a { color: var(--green); font-size: 9px; font-weight: 800; text-decoration: none; }
 
 :root[data-theme="dark"] .app-bar,
 :root[data-theme="dark"] .mobile-nav {
@@ -885,16 +948,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   }
   .app-bar { grid-template-columns: 1fr auto; padding: env(safe-area-inset-top) 13px 0; gap: 8px; }
   .brand { font-size: 18px; }
+  .brand { min-height: 44px; }
   .brand small { display: none; }
   .brand-mark { width: 20px; height: 20px; }
   .app-bar-status, .share-button { display: none; }
   .app-bar-actions { gap: 5px; }
-  .app-bar-actions button { width: 36px; height: 36px; }
+  .app-bar-actions button { width: 44px; height: 44px; }
   .report-button { padding: 0 10px; }
 
   .app-workspace {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 52%) minmax(0, 48%);
+    grid-template-rows: minmax(0, 62%) minmax(0, 38%);
   }
   .journey-active {
     grid-template-rows: calc(52px + env(safe-area-inset-top)) minmax(0, 1fr);
@@ -920,14 +984,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .compact-field { min-height: 52px; grid-template-rows: 14px 24px; padding: 5px 7px 5px 10px; }
   .compact-locations::before { top: 29px; bottom: 29px; }
   .compact-field input { font-size: 16px; font-weight: 700; }
-  .compact-field button { width: 34px; height: 34px; }
+  .compact-field button { width: 44px; height: 44px; }
   .location-tools { grid-template-columns: 1fr 1fr; margin-top: 6px; }
-  .location-tools button { height: 32px; font-size: 8px; padding: 0 6px; }
-  .avoidance-block { margin-top: 7px; }
+  .location-tools button { min-height: 44px; font-size: 9px; padding: 0 6px; }
+  .transport-block { grid-template-columns: 82px minmax(0, 1fr); margin-top: 5px; }
+  .transport-block > span { font-size: 9px; }
+  .transport-selector button { min-height: 44px; font-size: 9px; }
+  .avoidance-block { margin-top: 5px; }
   .avoidance-block > div:first-child { margin-bottom: 5px; }
   .avoidance-block span { font-size: 9px; }
   .avoidance-block small { display: none; }
-  .segmented button { height: 27px; font-size: 7px; }
+  .segmented button { min-height: 44px; font-size: 9px; }
   .primary-action { min-height: 44px; border-radius: 10px; }
   .micro-disclaimer { margin-top: 4px; font-size: 7px; }
 
@@ -936,9 +1003,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .route-option strong { font-size: 21px; }
   .impact-strip { margin-bottom: 6px; }
   .impact-strip div { padding: 6px; }
+  .profile-note { margin-bottom: 5px; font-size: 9px; }
   .journey-button { padding: 6px 9px; }
   .route-actions { margin-top: 5px; }
-  .route-actions button { min-height: 28px; padding: 0 3px; font-size: 7px; }
+  .route-actions button { min-height: 44px; padding: 0 4px; font-size: 9px; }
   .beta-stats article { padding: 8px 6px; }
   .beta-stats strong { margin-top: 4px; font-size: 20px; }
   .community-links { margin-top: 6px; }
@@ -950,7 +1018,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .map-key span:nth-child(4) { display: none; }
   .map-top { top: 8px; left: 8px; right: 8px; }
   .confidence-pill, .cancel-map-action { padding: 6px 8px; font-size: 7px; }
-  .map-summary { top: 8px; right: 8px; bottom: auto; left: auto; width: auto; min-height: 0; display: flex; gap: 7px; transform: none; padding: 7px 9px; border-radius: 9px; }
+  .map-summary { top: 8px; right: 8px; bottom: auto; left: auto; width: auto; min-height: 44px; display: flex; gap: 7px; transform: none; padding: 7px 9px; border-radius: 9px; }
+  .maplibregl-ctrl-group button { width: 44px; height: 44px; }
   .map-summary > span:nth-of-type(2), .map-summary > b { display: none; }
   .map-summary strong { font-size: 18px; }
   .summary-route { font-size: 7px; }
@@ -1015,8 +1084,20 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .trip-metric strong { font-size: 24px; }
   .trip-metric.wide strong { font-size: 18px; }
   .navigation-controls { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); }
-  .navigation-controls button { min-width: 0; height: 35px; }
+  .navigation-controls button { min-width: 0; min-height: 44px; }
   .driving-safety { bottom: calc(129px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 760px) and (max-height: 700px) {
+  .app-workspace { grid-template-rows: minmax(0, 67%) minmax(0, 33%); }
+  .planner-panel, .routes-panel, .community-panel { padding-top: 7px; padding-bottom: 6px; }
+  .location-tools button { min-height: 44px; }
+  .transport-block { margin-top: 4px; }
+  .avoidance-block { margin-top: 4px; }
+  .route-option { min-height: 52px; }
+  .impact-strip div { padding-block: 5px; }
+  .profile-note { min-height: 17px; padding-block: 2px; }
+  .journey-button { min-height: 44px; }
 }
 
 @media (max-width: 390px), (max-height: 660px) {

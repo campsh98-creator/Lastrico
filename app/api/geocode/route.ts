@@ -1,6 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const MILAN_VIEWBOX = "9.04,45.55,9.31,45.38";
+const NOMINATIM_MIN_INTERVAL_MS = 1_050;
+let nominatimQueue: Promise<void> = Promise.resolve();
+let lastNominatimStartedAt = 0;
+
+async function fetchNominatim(url: URL) {
+  let releaseQueue: () => void = () => undefined;
+  const previousRequest = nominatimQueue;
+  nominatimQueue = new Promise<void>((resolve) => {
+    releaseQueue = resolve;
+  });
+  await previousRequest;
+  try {
+    const waitMs = Math.max(0, NOMINATIM_MIN_INTERVAL_MS - (Date.now() - lastNominatimStartedAt));
+    if (waitMs) await new Promise((resolve) => setTimeout(resolve, waitMs));
+    lastNominatimStartedAt = Date.now();
+    return await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "Accept-Language": "it",
+        "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
+      },
+      signal: AbortSignal.timeout(8_000),
+    });
+  } finally {
+    releaseQueue();
+  }
+}
 
 export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams.get("q")?.trim();
@@ -25,13 +52,7 @@ export async function GET(request: NextRequest) {
   url.searchParams.set("layer", "address,poi");
 
   try {
-    const response = await fetch(url, {
-      headers: {
-        Accept: "application/json",
-        "Accept-Language": "it",
-        "User-Agent": "Lastrico-Milano-Demo/0.2 (OpenStreetMap prototype)",
-      },
-    });
+    const response = await fetchNominatim(url);
     if (!response.ok) throw new Error("Servizio di ricerca non disponibile");
     const data = await response.json() as Array<{
       display_name: string;

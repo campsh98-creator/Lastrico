@@ -1,8 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import bundledPave from "@/data/milan-pave-central.json";
+import {
+  isTransportMode,
+  type RoutingProfileMetadata,
+  type RoutingProviderName,
+  type TransportMode,
+} from "@/lib/routing-types";
 
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
+type SemanticDirection = "left" | "right" | "straight" | "uturn" | "roundabout" | "depart" | "arrive";
+
+type EngineInstruction = {
+  id: string;
+  text: string;
+  roadName: string;
+  distance: number;
+  location: Coordinate;
+  type: string;
+  modifier: string;
+  exit?: number;
+  direction: SemanticDirection;
+};
+
+type EngineRoute = {
+  distance: number;
+  duration: number;
+  coordinates: Coordinate[];
+  instructions: EngineInstruction[];
+  provider: RoutingProviderName;
+  profile: "auto" | "motorcycle" | "bicycle" | "driving";
+};
 
 type OsrmManeuver = {
   type: string;
@@ -26,6 +54,37 @@ type OsrmRoute = {
   legs?: Array<{ steps?: OsrmStep[] }>;
 };
 
+type ValhallaManeuver = {
+  type: number;
+  instruction?: string;
+  verbal_pre_transition_instruction?: string;
+  street_names?: string[];
+  travel_mode?: string;
+  travel_type?: string;
+  length?: number;
+  time?: number;
+  begin_shape_index?: number;
+  end_shape_index?: number;
+  roundabout_exit_count?: number;
+};
+
+type ValhallaLeg = {
+  shape: string;
+  maneuvers?: ValhallaManeuver[];
+};
+
+type ValhallaTrip = {
+  status?: number;
+  status_message?: string;
+  summary?: { time?: number; length?: number };
+  legs?: ValhallaLeg[];
+};
+
+type ValhallaResponse = {
+  trip?: ValhallaTrip;
+  alternates?: Array<ValhallaTrip | { trip?: ValhallaTrip }>;
+};
+
 type PaveWay = {
   id: number;
   tags?: { name?: string; surface?: string; highway?: string };
@@ -40,9 +99,24 @@ type PaveDetail = {
 };
 
 type ScoredRoute = {
-  route: OsrmRoute;
+  route: EngineRoute;
   paveMeters: number;
   source: string;
+};
+
+type ModePolicy = {
+  profile: "auto" | "motorcycle" | "bicycle";
+  surfaceHighways: string;
+  surfaceMatchMeters: number;
+  equivalentDistanceMeters: number;
+  equivalentDurationSeconds: number;
+  equivalentAverageMeters: number;
+  detourMinimumMeters: number;
+  detourMaximumMeters: number;
+  detourDistanceFactor: number;
+  balancedPaveDivisor: number;
+  minimumPaveReduction: number;
+  limits: Record<Avoidance, { factor: number; seconds: number }>;
 };
 
 const MILAN_BOUNDS = {
@@ -50,6 +124,73 @@ const MILAN_BOUNDS = {
   south: 45.38,
   east: 9.31,
   north: 45.55,
+};
+
+const VALHALLA_ENDPOINT = "https://valhalla1.openstreetmap.de/route";
+const VALHALLA_TIMEOUT_MS = 8_000;
+const OSRM_TIMEOUT_MS = 7_000;
+const ROUTE_BUDGET_MS = 18_000;
+const VALHALLA_MIN_INTERVAL_MS = 1_050;
+const MOTOR_HIGHWAYS = "^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track)$";
+const BICYCLE_HIGHWAYS = "^(primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track|cycleway|path|pedestrian|footway)$";
+let valhallaQueue: Promise<void> = Promise.resolve();
+let lastValhallaStartedAt = 0;
+
+const MODE_POLICY: Record<TransportMode, ModePolicy> = {
+  car: {
+    profile: "auto",
+    surfaceHighways: MOTOR_HIGHWAYS,
+    surfaceMatchMeters: 12,
+    equivalentDistanceMeters: 120,
+    equivalentDurationSeconds: 90,
+    equivalentAverageMeters: 32,
+    detourMinimumMeters: 380,
+    detourMaximumMeters: 900,
+    detourDistanceFactor: 0.1,
+    balancedPaveDivisor: 500,
+    minimumPaveReduction: 20,
+    limits: {
+      balanced: { factor: 1.22, seconds: 180 },
+      strong: { factor: 1.42, seconds: 420 },
+      maximum: { factor: 1.7, seconds: 720 },
+    },
+  },
+  motorcycle: {
+    profile: "motorcycle",
+    surfaceHighways: MOTOR_HIGHWAYS,
+    surfaceMatchMeters: 11,
+    equivalentDistanceMeters: 110,
+    equivalentDurationSeconds: 75,
+    equivalentAverageMeters: 30,
+    detourMinimumMeters: 400,
+    detourMaximumMeters: 1_050,
+    detourDistanceFactor: 0.12,
+    balancedPaveDivisor: 330,
+    minimumPaveReduction: 15,
+    limits: {
+      balanced: { factor: 1.28, seconds: 240 },
+      strong: { factor: 1.55, seconds: 540 },
+      maximum: { factor: 1.9, seconds: 900 },
+    },
+  },
+  bicycle: {
+    profile: "bicycle",
+    surfaceHighways: BICYCLE_HIGHWAYS,
+    surfaceMatchMeters: 9,
+    equivalentDistanceMeters: 85,
+    equivalentDurationSeconds: 75,
+    equivalentAverageMeters: 24,
+    detourMinimumMeters: 220,
+    detourMaximumMeters: 650,
+    detourDistanceFactor: 0.09,
+    balancedPaveDivisor: 260,
+    minimumPaveReduction: 12,
+    limits: {
+      balanced: { factor: 1.3, seconds: 300 },
+      strong: { factor: 1.6, seconds: 720 },
+      maximum: { factor: 2.1, seconds: 1_200 },
+    },
+  },
 };
 
 function parseCoordinate(value: string | null): Coordinate | null {
@@ -101,13 +242,14 @@ function headingsAlign(a: Coordinate, b: Coordinate, c: Coordinate, d: Coordinat
   return Math.abs((routeX * wayX + routeY * wayY) / denominator) >= 0.58;
 }
 
-function segmentTouchesPave(a: Coordinate, b: Coordinate, paveWays: Coordinate[][]) {
+function segmentTouchesPave(a: Coordinate, b: Coordinate, paveWays: Coordinate[][], mode: TransportMode) {
   const midpoint: Coordinate = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const matchMeters = MODE_POLICY[mode].surfaceMatchMeters;
   for (const way of paveWays) {
     for (let index = 1; index < way.length; index += 1) {
       if (
         headingsAlign(a, b, way[index - 1], way[index])
-        && pointToSegmentDistance(midpoint, way[index - 1], way[index]) <= 12
+        && pointToSegmentDistance(midpoint, way[index - 1], way[index]) <= matchMeters
       ) {
         return true;
       }
@@ -116,8 +258,8 @@ function segmentTouchesPave(a: Coordinate, b: Coordinate, paveWays: Coordinate[]
   return false;
 }
 
-function scoreRoute(route: OsrmRoute, paveWays: Coordinate[][]) {
-  const coordinates = route.geometry.coordinates;
+function scoreRoute(route: EngineRoute, paveWays: Coordinate[][], mode: TransportMode) {
+  const coordinates = route.coordinates;
   const longitude = coordinates.map(([lng]) => lng);
   const latitude = coordinates.map(([, lat]) => lat);
   const west = Math.min(...longitude) - 0.00035;
@@ -131,13 +273,13 @@ function scoreRoute(route: OsrmRoute, paveWays: Coordinate[][]) {
   for (let index = 1; index < coordinates.length; index += 1) {
     const a = coordinates[index - 1];
     const b = coordinates[index];
-    if (segmentTouchesPave(a, b, relevantWays)) paveMeters += segmentLength(a, b);
+    if (segmentTouchesPave(a, b, relevantWays, mode)) paveMeters += segmentLength(a, b);
   }
   return Math.round(paveMeters);
 }
 
-function sampledCoordinates(route: OsrmRoute) {
-  const coordinates = route.geometry.coordinates;
+function sampledCoordinates(route: EngineRoute) {
+  const coordinates = route.coordinates;
   const step = Math.max(1, Math.floor(coordinates.length / 24));
   const sampled = coordinates.filter((_, index) => index % step === 0);
   if (sampled[sampled.length - 1] !== coordinates[coordinates.length - 1]) {
@@ -146,8 +288,14 @@ function sampledCoordinates(route: OsrmRoute) {
   return sampled;
 }
 
-function routesAreEquivalent(a: OsrmRoute, b: OsrmRoute) {
-  if (Math.abs(a.distance - b.distance) > 120 || Math.abs(a.duration - b.duration) > 90) return false;
+function routesAreEquivalent(a: EngineRoute, b: EngineRoute, mode: TransportMode) {
+  const policy = MODE_POLICY[mode];
+  if (
+    Math.abs(a.distance - b.distance) > policy.equivalentDistanceMeters
+    || Math.abs(a.duration - b.duration) > policy.equivalentDurationSeconds
+  ) {
+    return false;
+  }
   const aSamples = sampledCoordinates(a);
   const bSamples = sampledCoordinates(b);
   const averageDistance = aSamples.reduce((sum, point) => {
@@ -157,22 +305,25 @@ function routesAreEquivalent(a: OsrmRoute, b: OsrmRoute) {
     }, Number.POSITIVE_INFINITY);
     return sum + nearest;
   }, 0) / Math.max(1, aSamples.length);
-  return averageDistance < 32;
+  return averageDistance < policy.equivalentAverageMeters;
 }
 
-function deduplicateRoutes(routes: Array<{ route: OsrmRoute; source: string }>) {
+function deduplicateRoutes(
+  routes: Array<{ route: EngineRoute; source: string }>,
+  mode: TransportMode,
+) {
   return routes.filter((candidate, index, all) =>
-    all.findIndex((existing) => routesAreEquivalent(candidate.route, existing.route)) === index,
+    all.findIndex((existing) => routesAreEquivalent(candidate.route, existing.route, mode)) === index,
   );
 }
 
-function findDetourAnchor(route: OsrmRoute, paveWays: Coordinate[][]) {
-  const coordinates = route.geometry.coordinates;
+function findDetourAnchor(route: EngineRoute, paveWays: Coordinate[][], mode: TransportMode) {
+  const coordinates = route.coordinates;
   let best: { a: Coordinate; b: Coordinate; weight: number } | null = null;
   for (let index = 1; index < coordinates.length; index += 1) {
     const a = coordinates[index - 1];
     const b = coordinates[index];
-    if (!segmentTouchesPave(a, b, paveWays)) continue;
+    if (!segmentTouchesPave(a, b, paveWays, mode)) continue;
     const centrality = 1 - Math.abs(index / coordinates.length - 0.5);
     const weight = segmentLength(a, b) * (0.7 + centrality);
     if (!best || weight > best.weight) best = { a, b, weight };
@@ -200,23 +351,189 @@ function offsetPoint(a: Coordinate, b: Coordinate, offsetMeters: number): Coordi
   return parseCoordinate(candidate.join(","));
 }
 
-async function fetchOsrmRoute(points: Coordinate[], alternatives = false) {
-  const path = points.map(([lng, lat]) => `${lng},${lat}`).join(";");
-  const url = new URL(`https://router.project-osrm.org/route/v1/driving/${path}`);
-  url.searchParams.set("overview", "full");
-  url.searchParams.set("geometries", "geojson");
-  url.searchParams.set("alternatives", alternatives ? "3" : "false");
-  url.searchParams.set("steps", "true");
-  url.searchParams.set("continue_straight", "false");
-  const response = await fetch(url, {
-    headers: { "User-Agent": "Lastrico-Milano-Beta/0.6" },
-  });
-  if (!response.ok) return [];
-  const data = await response.json() as { code: string; routes?: OsrmRoute[] };
-  return data.code === "Ok" ? data.routes ?? [] : [];
+function decodePolyline6(encoded: string): Coordinate[] {
+  const coordinates: Coordinate[] = [];
+  let index = 0;
+  let latitude = 0;
+  let longitude = 0;
+  while (index < encoded.length) {
+    let result = 0;
+    let shift = 0;
+    let byte: number;
+    do {
+      byte = encoded.charCodeAt(index++) - 63;
+      result |= (byte & 0x1f) << shift;
+      shift += 5;
+    } while (byte >= 0x20 && index < encoded.length);
+    latitude += result & 1 ? ~(result >> 1) : result >> 1;
+
+    result = 0;
+    shift = 0;
+    do {
+      byte = encoded.charCodeAt(index++) - 63;
+      result |= (byte & 0x1f) << shift;
+      shift += 5;
+    } while (byte >= 0x20 && index < encoded.length);
+    longitude += result & 1 ? ~(result >> 1) : result >> 1;
+    coordinates.push([longitude / 1e6, latitude / 1e6]);
+  }
+  return coordinates;
 }
 
-function instructionText(step: OsrmStep) {
+function valhallaDirection(type: number): SemanticDirection {
+  if ([1, 2, 3].includes(type)) return "depart";
+  if ([4, 5, 6].includes(type)) return "arrive";
+  if ([26, 27].includes(type)) return "roundabout";
+  if ([9, 10, 11, 18, 20, 23].includes(type)) return "right";
+  if ([14, 15, 16, 19, 21, 24].includes(type)) return "left";
+  if ([12, 13].includes(type)) return "uturn";
+  return "straight";
+}
+
+function valhallaInstructionType(type: number) {
+  if ([1, 2, 3].includes(type)) return "depart";
+  if ([4, 5, 6].includes(type)) return "arrive";
+  if (type === 26) return "roundabout";
+  if (type === 27) return "roundabout exit";
+  if (type === 25) return "merge";
+  if ([18, 19].includes(type)) return "on ramp";
+  if ([20, 21].includes(type)) return "off ramp";
+  return "turn";
+}
+
+function valhallaModifier(direction: SemanticDirection) {
+  if (direction === "left" || direction === "right" || direction === "uturn") return direction;
+  return direction === "straight" ? "straight" : "";
+}
+
+function normalizeValhallaTrip(trip: ValhallaTrip, profile: ModePolicy["profile"]): EngineRoute | null {
+  if (!trip.legs?.length || !trip.summary) return null;
+  const coordinates: Coordinate[] = [];
+  const instructions: EngineInstruction[] = [];
+
+  trip.legs.forEach((leg, legIndex) => {
+    const legCoordinates = decodePolyline6(leg.shape);
+    if (!legCoordinates.length) return;
+    const globalOffset = Math.max(0, coordinates.length - (legIndex > 0 ? 1 : 0));
+    coordinates.push(...(legIndex > 0 ? legCoordinates.slice(1) : legCoordinates));
+    (leg.maneuvers ?? []).forEach((maneuver) => {
+      const direction = valhallaDirection(maneuver.type);
+      const localIndex = Math.min(
+        legCoordinates.length - 1,
+        Math.max(0, maneuver.begin_shape_index ?? 0),
+      );
+      const location = coordinates[Math.min(coordinates.length - 1, globalOffset + localIndex)]
+        ?? legCoordinates[localIndex];
+      const roadName = maneuver.street_names?.[0] ?? "";
+      const type = valhallaInstructionType(maneuver.type);
+      const baseText = maneuver.instruction
+        ?? maneuver.verbal_pre_transition_instruction
+        ?? (direction === "arrive" ? "Sei arrivato a destinazione" : "Segui il percorso");
+      const instructionText = profile === "bicycle" && maneuver.travel_mode === "pedestrian"
+        ? `${baseText} (bici a mano)`
+        : baseText;
+      instructions.push({
+        id: `${instructions.length}-${type}-${location.join(",")}`,
+        text: instructionText,
+        roadName,
+        distance: Math.max(0, (maneuver.length ?? 0) * 1_000),
+        location,
+        type,
+        modifier: valhallaModifier(direction),
+        exit: maneuver.roundabout_exit_count,
+        direction,
+      });
+    });
+  });
+
+  if (coordinates.length < 2) return null;
+  return {
+    distance: Math.max(0, (trip.summary.length ?? 0) * 1_000),
+    duration: Math.max(0, trip.summary.time ?? 0),
+    coordinates,
+    instructions,
+    provider: "valhalla-fossgis",
+    profile,
+  };
+}
+
+function valhallaCostingOptions(mode: TransportMode) {
+  if (mode === "bicycle") {
+    return { bicycle: { bicycle_type: "hybrid", use_roads: 0.35, use_hills: 0.45 } };
+  }
+  if (mode === "motorcycle") {
+    return { motorcycle: { use_highways: 0.35, use_tolls: 0.2, use_trails: 0 } };
+  }
+  return { auto: { use_highways: 0.7, use_tolls: 0.2 } };
+}
+
+async function runValhallaLimited<T>(deadline: number, task: (timeoutMs: number) => Promise<T>) {
+  let releaseQueue = () => undefined;
+  const previousRequest = valhallaQueue;
+  valhallaQueue = new Promise<void>((resolve) => {
+    releaseQueue = resolve;
+  });
+  await previousRequest;
+  try {
+    const waitMs = Math.max(0, VALHALLA_MIN_INTERVAL_MS - (Date.now() - lastValhallaStartedAt));
+    if (waitMs) await new Promise((resolve) => setTimeout(resolve, waitMs));
+    const timeoutMs = Math.min(VALHALLA_TIMEOUT_MS, deadline - Date.now());
+    if (timeoutMs < 500) throw new Error("Budget routing esaurito");
+    lastValhallaStartedAt = Date.now();
+    return await task(timeoutMs);
+  } finally {
+    releaseQueue();
+  }
+}
+
+async function fetchValhallaRoutes(
+  points: Coordinate[],
+  mode: TransportMode,
+  alternatives = false,
+  deadline = Date.now() + ROUTE_BUDGET_MS,
+): Promise<EngineRoute[]> {
+  const profile = MODE_POLICY[mode].profile;
+  try {
+    const response = await runValhallaLimited(deadline, (timeoutMs) =>
+      fetch(VALHALLA_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "X-Client-Id": "lastrico-milano",
+          "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
+        },
+        body: JSON.stringify({
+          locations: points.map(([lon, lat], index) => ({
+            lon,
+            lat,
+            type: index === 0 || index === points.length - 1 ? "break" : "through",
+          })),
+          costing: profile,
+          costing_options: valhallaCostingOptions(mode),
+          units: "kilometers",
+          directions_options: { units: "kilometers", language: "it-IT" },
+          alternates: alternatives ? 2 : 0,
+        }),
+        cache: "no-store",
+        signal: AbortSignal.timeout(timeoutMs),
+      }),
+    );
+    if (!response.ok) return [];
+    const data = await response.json() as ValhallaResponse;
+    const alternateTrips = (data.alternates ?? [])
+      .map((alternate) => "trip" in alternate ? alternate.trip : alternate)
+      .filter((trip): trip is ValhallaTrip => Boolean(trip));
+    return [data.trip, ...alternateTrips]
+      .filter((trip): trip is ValhallaTrip => Boolean(trip))
+      .map((trip) => normalizeValhallaTrip(trip, profile))
+      .filter((route): route is EngineRoute => Boolean(route));
+  } catch {
+    return [];
+  }
+}
+
+function osrmInstructionText(step: OsrmStep) {
   const road = step.name || step.ref || "";
   const onto = road ? ` in ${road}` : "";
   const modifier = step.maneuver.modifier ?? "";
@@ -256,7 +573,7 @@ function instructionText(step: OsrmStep) {
   }
 }
 
-function semanticDirection(step: OsrmStep) {
+function osrmSemanticDirection(step: OsrmStep): SemanticDirection {
   if (step.maneuver.type === "arrive") return "arrive";
   if (step.maneuver.type === "depart") return "depart";
   if (step.maneuver.type === "roundabout" || step.maneuver.type === "rotary") return "roundabout";
@@ -266,23 +583,89 @@ function semanticDirection(step: OsrmStep) {
   return "straight";
 }
 
-function selectSafeRoute(scored: ScoredRoute[], fast: ScoredRoute, avoidance: Avoidance) {
-  const distinct = scored.filter((candidate) => !routesAreEquivalent(candidate.route, fast.route));
-  const limits: Record<Avoidance, { factor: number; seconds: number }> = {
-    balanced: { factor: 1.22, seconds: 180 },
-    strong: { factor: 1.42, seconds: 420 },
-    maximum: { factor: 1.7, seconds: 720 },
+function normalizeOsrmRoute(route: OsrmRoute): EngineRoute {
+  const steps = (route.legs ?? []).flatMap((leg) => leg.steps ?? []);
+  return {
+    distance: route.distance,
+    duration: route.duration,
+    coordinates: route.geometry.coordinates,
+    instructions: steps.map((step, index) => ({
+      id: `${index}-${step.maneuver.type}-${step.maneuver.location.join(",")}`,
+      text: osrmInstructionText(step),
+      roadName: step.name || step.ref || "",
+      distance: step.distance,
+      location: step.maneuver.location,
+      type: step.maneuver.type,
+      modifier: step.maneuver.modifier ?? "",
+      exit: step.maneuver.exit,
+      direction: osrmSemanticDirection(step),
+    })),
+    provider: "osrm-public-fallback",
+    profile: "driving",
   };
-  const limit = limits[avoidance];
+}
+
+async function fetchOsrmCarRoutes(
+  points: Coordinate[],
+  alternatives = false,
+  deadline = Date.now() + ROUTE_BUDGET_MS,
+): Promise<EngineRoute[]> {
+  const path = points.map(([lng, lat]) => `${lng},${lat}`).join(";");
+  const url = new URL(`https://router.project-osrm.org/route/v1/driving/${path}`);
+  url.searchParams.set("overview", "full");
+  url.searchParams.set("geometries", "geojson");
+  url.searchParams.set("alternatives", alternatives ? "3" : "false");
+  url.searchParams.set("steps", "true");
+  url.searchParams.set("continue_straight", "false");
+  try {
+    const timeoutMs = Math.min(OSRM_TIMEOUT_MS, deadline - Date.now());
+    if (timeoutMs < 500) return [];
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    if (!response.ok) return [];
+    const data = await response.json() as { code: string; routes?: OsrmRoute[] };
+    return data.code === "Ok" ? (data.routes ?? []).map(normalizeOsrmRoute) : [];
+  } catch {
+    return [];
+  }
+}
+
+async function fetchEngineRoutes(
+  points: Coordinate[],
+  mode: TransportMode,
+  alternatives = false,
+  deadline = Date.now() + ROUTE_BUDGET_MS,
+) {
+  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline);
+  if (valhallaRoutes.length) return valhallaRoutes;
+  // A generic driving graph is a valid degraded car route, but would be unsafe and
+  // misleading for bicycle or motorcycle mode. Those modes fail explicitly.
+  return mode === "car" ? fetchOsrmCarRoutes(points, alternatives, deadline) : [];
+}
+
+function selectSafeRoute(
+  scored: ScoredRoute[],
+  fast: ScoredRoute,
+  avoidance: Avoidance,
+  mode: TransportMode,
+) {
+  const policy = MODE_POLICY[mode];
+  const distinct = scored.filter((candidate) => !routesAreEquivalent(candidate.route, fast.route, mode));
+  const limit = policy.limits[avoidance];
   const eligible = distinct.filter((candidate) =>
     candidate.route.duration <= fast.route.duration * limit.factor + limit.seconds,
   );
   const reducing = eligible
-    .filter((candidate) => candidate.paveMeters + 20 < fast.paveMeters)
+    .filter((candidate) => candidate.paveMeters + policy.minimumPaveReduction < fast.paveMeters)
     .sort((a, b) => {
       if (avoidance === "balanced") {
-        const scoreA = a.route.duration / 60 + a.paveMeters / 500;
-        const scoreB = b.route.duration / 60 + b.paveMeters / 500;
+        const scoreA = a.route.duration / 60 + a.paveMeters / policy.balancedPaveDivisor;
+        const scoreB = b.route.duration / 60 + b.paveMeters / policy.balancedPaveDivisor;
         return scoreA - scoreB;
       }
       return a.paveMeters - b.paveMeters || a.route.duration - b.route.duration;
@@ -290,56 +673,105 @@ function selectSafeRoute(scored: ScoredRoute[], fast: ScoredRoute, avoidance: Av
   return reducing[0] ?? fast;
 }
 
-function routePayload(route: OsrmRoute, paveMeters: number) {
-  const steps = (route.legs ?? []).flatMap((leg) => leg.steps ?? []);
+function routePayload(route: EngineRoute, paveMeters: number) {
   return {
-    coordinates: route.geometry.coordinates,
-    distance: route.distance / 1000,
+    coordinates: route.coordinates,
+    distance: route.distance / 1_000,
     minutes: route.duration / 60,
     paveMeters,
-    instructions: steps.map((step, index) => ({
-      id: `${index}-${step.maneuver.type}-${step.maneuver.location.join(",")}`,
-      text: instructionText(step),
-      roadName: step.name || step.ref || "",
-      distance: step.distance,
-      location: step.maneuver.location,
-      type: step.maneuver.type,
-      modifier: step.maneuver.modifier ?? "",
-      exit: step.maneuver.exit,
-      direction: semanticDirection(step),
-    })),
+    instructions: route.instructions,
   };
 }
 
+function profileMetadata(
+  mode: TransportMode,
+  fast: EngineRoute,
+  safe: EngineRoute,
+): RoutingProfileMetadata {
+  const fallbackUsed = [fast, safe].some((route) => route.provider === "osrm-public-fallback");
+  const provider = fast.provider === safe.provider ? fast.provider : "mixed";
+  if (mode === "motorcycle") {
+    return {
+      provider,
+      profile: "motorcycle",
+      beta: true,
+      approximate: false,
+      fallbackUsed: false,
+      notice: "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap.",
+    };
+  }
+  if (mode === "bicycle") {
+    return {
+      provider,
+      profile: "bicycle",
+      beta: true,
+      approximate: false,
+      fallbackUsed: false,
+      notice: "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso.",
+    };
+  }
+  return {
+    provider,
+    profile: fast.profile,
+    beta: false,
+    approximate: false,
+    fallbackUsed,
+    notice: fallbackUsed
+      ? "Profilo auto OSRM usato come fallback temporaneo del routing Valhalla."
+      : "Profilo auto Valhalla basato sulla rete OpenStreetMap.",
+  };
+}
+
+function modeUnavailableMessage(mode: TransportMode) {
+  if (mode === "bicycle") {
+    return "Il routing ciclabile gratuito è temporaneamente indisponibile o non trova un collegamento legale. Non userò un percorso auto come sostituto.";
+  }
+  if (mode === "motorcycle") {
+    return "Il profilo moto beta è temporaneamente indisponibile o non trova un collegamento legale. Non userò silenziosamente un percorso auto.";
+  }
+  return "Il routing gratuito è temporaneamente indisponibile. Riprova tra poco.";
+}
+
 export async function GET(request: NextRequest) {
+  const deadline = Date.now() + ROUTE_BUDGET_MS;
   const start = parseCoordinate(request.nextUrl.searchParams.get("start"));
   const end = parseCoordinate(request.nextUrl.searchParams.get("end"));
   const avoidance = (request.nextUrl.searchParams.get("avoid") ?? "strong") as Avoidance;
-  if (!start || !end || !["balanced", "strong", "maximum"].includes(avoidance)) {
-    return NextResponse.json({ error: "Coordinate non valide o fuori Milano." }, { status: 400 });
+  const requestedMode = request.nextUrl.searchParams.get("mode") ?? "car";
+  if (
+    !start
+    || !end
+    || !["balanced", "strong", "maximum"].includes(avoidance)
+    || !isTransportMode(requestedMode)
+  ) {
+    return NextResponse.json(
+      { error: "Coordinate, modalità di trasporto o livello di evitamento non validi." },
+      { status: 400 },
+    );
   }
-
+  const mode = requestedMode;
+  const policy = MODE_POLICY[mode];
   const padding = 0.02;
   const south = Math.max(MILAN_BOUNDS.south, Math.min(start[1], end[1]) - padding);
   const west = Math.max(MILAN_BOUNDS.west, Math.min(start[0], end[0]) - padding);
   const north = Math.min(MILAN_BOUNDS.north, Math.max(start[1], end[1]) + padding);
   const east = Math.min(MILAN_BOUNDS.east, Math.max(start[0], end[0]) + padding);
-  const drivableHighways = "^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track)$";
-  const overpassQuery = `[out:json][timeout:20];way["highway"~"${drivableHighways}"]["surface"~"^(sett|cobblestone|unhewn_cobblestone|paving_stones)$"](${south},${west},${north},${east});out tags geom;`;
+  const overpassQuery = `[out:json][timeout:20];way["highway"~"${policy.surfaceHighways}"]["surface"~"^(sett|cobblestone|unhewn_cobblestone|paving_stones)$"](${south},${west},${north},${east});out tags geom;`;
   const localPave = (bundledPave as PaveDetail[]).filter((way) =>
     way.coordinates.some(([lng, lat]) => lng >= west && lng <= east && lat >= south && lat <= north),
   );
 
   try {
     const [baseRoutes, overpassResponse] = await Promise.all([
-      fetchOsrmRoute([start, end], true),
+      fetchEngineRoutes([start, end], mode, true, deadline),
       fetch("https://overpass-api.de/api/interpreter", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "Lastrico-Milano-Beta/0.6",
+          "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
         },
         body: new URLSearchParams({ data: overpassQuery }),
+        cache: "no-store",
         signal: AbortSignal.timeout(3_500),
       }).catch(() => null),
     ]);
@@ -348,27 +780,46 @@ export async function GET(request: NextRequest) {
     let paveDetails: PaveDetail[] = localPave;
     let dataSource = "archivio OSM locale";
     if (overpassResponse?.ok) {
-      const overpass = await overpassResponse.json() as { elements?: PaveWay[] };
-      const livePave = (overpass.elements ?? [])
-        .filter((way) => way.geometry && way.geometry.length > 1)
-        .map((way) => ({
-          id: way.id,
-          name: way.tags?.name ?? "Strada senza nome",
-          surface: way.tags?.surface ?? "pavé",
-          coordinates: way.geometry!.map((point) => [point.lon, point.lat] as Coordinate),
-        }));
-      if (livePave.length) {
-        const merged = new Map<number, PaveDetail>(paveDetails.map((way) => [way.id, way]));
-        livePave.forEach((way) => merged.set(way.id, way));
-        paveDetails = [...merged.values()];
-        dataSource = "archivio OSM locale + aggiornamento live";
+      try {
+        const overpass = await overpassResponse.json() as { elements?: PaveWay[] };
+        const livePave = (overpass.elements ?? [])
+          .filter((way) => way.geometry && way.geometry.length > 1)
+          .map((way) => ({
+            id: way.id,
+            name: way.tags?.name ?? "Strada senza nome",
+            surface: way.tags?.surface ?? "pavé",
+            coordinates: way.geometry!.map((point) => [point.lon, point.lat] as Coordinate),
+          }));
+        if (livePave.length) {
+          const merged = new Map<number, PaveDetail>(paveDetails.map((way) => [way.id, way]));
+          livePave.forEach((way) => merged.set(way.id, way));
+          paveDetails = [...merged.values()];
+          dataSource = "archivio OSM locale + aggiornamento live";
+        }
+      } catch {
+        dataSource = "archivio OSM locale";
       }
     }
     const paveWays = paveDetails.map((way) => way.coordinates);
 
     const fastestBase = [...baseRoutes].sort((a, b) => a.duration - b.duration)[0];
-    const anchor = findDetourAnchor(fastestBase, paveWays);
-    const baseOffset = Math.max(380, Math.min(900, fastestBase.distance * 0.1));
+    const baseScored: ScoredRoute[] = baseRoutes.map((route, index) => ({
+      route,
+      source: `base-${index + 1}`,
+      paveMeters: scoreRoute(route, paveWays, mode),
+    }));
+    const preliminaryFast = [...baseScored].sort((a, b) => a.route.duration - b.route.duration)[0];
+    const preliminarySafe = selectSafeRoute(baseScored, preliminaryFast, avoidance, mode);
+    const baseAlreadyImproves = !routesAreEquivalent(
+      preliminaryFast.route,
+      preliminarySafe.route,
+      mode,
+    ) && preliminarySafe.paveMeters + policy.minimumPaveReduction < preliminaryFast.paveMeters;
+    const anchor = findDetourAnchor(fastestBase, paveWays, mode);
+    const baseOffset = Math.max(
+      policy.detourMinimumMeters,
+      Math.min(policy.detourMaximumMeters, fastestBase.distance * policy.detourDistanceFactor),
+    );
     const detourPoints = [
       offsetPoint(anchor.a, anchor.b, baseOffset),
       offsetPoint(anchor.a, anchor.b, -baseOffset),
@@ -376,30 +827,55 @@ export async function GET(request: NextRequest) {
       offsetPoint(anchor.a, anchor.b, -baseOffset * 1.55),
     ].filter((point): point is Coordinate => Boolean(point));
 
-    const detourResponses = await Promise.all(
-      detourPoints.map((point) => fetchOsrmRoute([start, point, end])),
-    );
+    const detourResponses: EngineRoute[][] = [];
+    if (!baseAlreadyImproves) {
+      for (const point of detourPoints.slice(0, 3)) {
+        if (deadline - Date.now() < 1_500) break;
+        const routes = await fetchEngineRoutes([start, point, end], mode, false, deadline);
+        detourResponses.push(routes);
+        const provisionalRoutes = [...baseRoutes, ...detourResponses.flat()];
+        const provisionalScored: ScoredRoute[] = provisionalRoutes.map((route, index) => ({
+          route,
+          source: `provisional-${index + 1}`,
+          paveMeters: scoreRoute(route, paveWays, mode),
+        }));
+        const provisionalFast = [...provisionalScored]
+          .sort((a, b) => a.route.duration - b.route.duration)[0];
+        const provisionalSafe = selectSafeRoute(
+          provisionalScored,
+          provisionalFast,
+          avoidance,
+          mode,
+        );
+        if (
+          !routesAreEquivalent(provisionalFast.route, provisionalSafe.route, mode)
+          && provisionalSafe.paveMeters + policy.minimumPaveReduction < provisionalFast.paveMeters
+        ) {
+          break;
+        }
+      }
+    }
     const candidates = deduplicateRoutes([
       ...baseRoutes.map((route, index) => ({ route, source: `base-${index + 1}` })),
       ...detourResponses.flatMap((routes, index) =>
         routes.map((route) => ({ route, source: `detour-${index + 1}` })),
       ),
-    ]);
+    ], mode);
     const scored: ScoredRoute[] = candidates.map((candidate) => ({
       ...candidate,
-      paveMeters: scoreRoute(candidate.route, paveWays),
+      paveMeters: scoreRoute(candidate.route, paveWays, mode),
     }));
     const fast = [...scored].sort((a, b) => a.route.duration - b.route.duration)[0];
-    const safe = selectSafeRoute(scored, fast, avoidance);
-    const hasDistinctAlternative = !routesAreEquivalent(fast.route, safe.route)
-      && safe.paveMeters + 20 < fast.paveMeters;
+    const safe = selectSafeRoute(scored, fast, avoidance, mode);
+    const hasDistinctAlternative = !routesAreEquivalent(fast.route, safe.route, mode)
+      && safe.paveMeters + policy.minimumPaveReduction < fast.paveMeters;
     const routeCountLabel = `${scored.length} ${scored.length === 1 ? "percorso reale" : "percorsi reali"}`;
     const comparedLabel = scored.length === 1 ? "confrontato" : "confrontati";
     const checkedLabel = scored.length === 1 ? "controllato" : "controllati";
 
     const relevantPave = paveDetails
       .filter((way) => {
-        const displayedCoordinates = [...fast.route.geometry.coordinates, ...safe.route.geometry.coordinates];
+        const displayedCoordinates = [...fast.route.coordinates, ...safe.route.coordinates];
         return displayedCoordinates.some((point) =>
           way.coordinates.some((_, index) =>
             index > 0 && pointToSegmentDistance(point, way.coordinates[index - 1], way.coordinates[index]) <= 18,
@@ -408,6 +884,11 @@ export async function GET(request: NextRequest) {
       })
       .slice(0, 70);
 
+    const routingProfile = profileMetadata(mode, fast.route, safe.route);
+    const bicycleCoverageNotice = mode === "bicycle" && dataSource === "archivio OSM locale"
+      ? " La copertura locale dei fondi ciclabili può essere incompleta finché Overpass non risponde."
+      : "";
+
     return NextResponse.json({
       fast: routePayload(fast.route, fast.paveMeters),
       safe: routePayload(safe.route, safe.paveMeters),
@@ -415,24 +896,37 @@ export async function GET(request: NextRequest) {
       alternativesAnalyzed: scored.length,
       hasDistinctAlternative,
       surfaceDataAvailable: paveWays.length > 0,
+      mode,
+      transportMode: mode,
+      routingProfile,
       candidateDiagnostics: scored.map((candidate) => ({
         source: candidate.source,
+        provider: candidate.route.provider,
+        profile: candidate.route.profile,
         distance: Math.round(candidate.route.distance),
         seconds: Math.round(candidate.route.duration),
         paveMeters: candidate.paveMeters,
-        distinctFromFast: !routesAreEquivalent(candidate.route, fast.route),
+        distinctFromFast: !routesAreEquivalent(candidate.route, fast.route, mode),
       })),
-      dataNotice: !paveWays.length
-        ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"
-        : hasDistinctAlternative
-          ? `${routeCountLabel} ${comparedLabel} su ${paveWays.length} tratti critici (${dataSource})`
-          : `${routeCountLabel} ${checkedLabel}: nessuna deviazione riduce il pavé noto (${dataSource})`,
+      dataNotice: (
+        !paveWays.length
+          ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"
+          : hasDistinctAlternative
+            ? `${routeCountLabel} ${comparedLabel} su ${paveWays.length} tratti critici (${dataSource})`
+            : `${routeCountLabel} ${checkedLabel}: nessuna deviazione riduce il pavé noto (${dataSource})`
+      ) + bicycleCoverageNotice,
     }, {
-      headers: { "Cache-Control": "public, max-age=30, s-maxage=120" },
+      headers: {
+        "Cache-Control": "private, no-store",
+      },
     });
   } catch {
     return NextResponse.json(
-      { error: "Il routing gratuito è temporaneamente indisponibile. Riprova tra poco." },
+      {
+        error: modeUnavailableMessage(mode),
+        mode,
+        transportMode: mode,
+      },
       { status: 503 },
     );
   }
