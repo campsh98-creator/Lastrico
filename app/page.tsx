@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { Map as MapLibreMap, Marker as MapLibreMarker, GeoJSONSource, StyleSpecification } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -10,6 +10,23 @@ type Avoidance = "balanced" | "strong" | "maximum";
 type ThemeMode = "auto" | "light" | "dark";
 type PickingMode = "start" | "end" | "reportStart" | "reportEnd";
 type ReportKind = "pave" | "rough_cobblestone" | "recently_asphalted" | "wrong_data";
+type JourneyMode = "gps" | "preview";
+type WakeLockHandle = { release: () => Promise<void>; released?: boolean };
+type NavigatorWithWakeLock = Navigator & {
+  wakeLock?: { request: (type: "screen") => Promise<WakeLockHandle> };
+};
+
+type NavigationInstruction = {
+  id: string;
+  text: string;
+  roadName: string;
+  distance: number;
+  location: Coordinate;
+  type: string;
+  modifier: string;
+  exit?: number;
+  direction: "left" | "right" | "straight" | "uturn" | "roundabout" | "depart" | "arrive";
+};
 
 type RoadNode = {
   id: string;
@@ -36,6 +53,7 @@ type RouteResult = {
   minutes: number;
   paveMeters: number;
   problemSegments?: Coordinate[][];
+  instructions?: NavigationInstruction[];
 };
 
 type LocationChoice = {
@@ -279,14 +297,109 @@ function distanceMeters(a: Coordinate, b: Coordinate) {
   return earthRadius * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
 }
 
+function closestRouteIndex(coordinates: Coordinate[], position: Coordinate) {
+  let index = 0;
+  let distance = Number.POSITIVE_INFINITY;
+  coordinates.forEach((coordinate, candidateIndex) => {
+    const candidateDistance = distanceMeters(position, coordinate);
+    if (candidateDistance < distance) {
+      index = candidateIndex;
+      distance = candidateDistance;
+    }
+  });
+  return { index, distance };
+}
+
+function routeDistanceBetween(coordinates: Coordinate[], from: number, to: number) {
+  let distance = 0;
+  const start = Math.max(0, Math.min(from, to));
+  const end = Math.min(coordinates.length - 1, Math.max(from, to));
+  for (let index = start + 1; index <= end; index += 1) {
+    distance += distanceMeters(coordinates[index - 1], coordinates[index]);
+  }
+  return distance;
+}
+
+function getNavigationProgress(routeResult: RouteResult, position: Coordinate | null) {
+  const coordinates = routeResult.coordinates;
+  const instructions = routeResult.instructions ?? [];
+  if (!coordinates.length) {
+    return {
+      closestIndex: 0,
+      offRouteMeters: 0,
+      remainingMeters: 0,
+      remainingMinutes: 0,
+      instructionDistance: 0,
+      instruction: null as NavigationInstruction | null,
+    };
+  }
+  const closest = position ? closestRouteIndex(coordinates, position) : { index: 0, distance: 0 };
+  const indexedInstructions = instructions.map((instruction) => ({
+    instruction,
+    routeIndex: closestRouteIndex(coordinates, instruction.location).index,
+  }));
+  const next = indexedInstructions.find(({ instruction, routeIndex }, index) =>
+    instruction.type !== "depart" && (routeIndex > closest.index || (index === indexedInstructions.length - 1 && routeIndex >= closest.index)),
+  ) ?? indexedInstructions[indexedInstructions.length - 1];
+  const remainingMeters = routeDistanceBetween(coordinates, closest.index, coordinates.length - 1);
+  const totalGeometryMeters = Math.max(1, routeDistanceBetween(coordinates, 0, coordinates.length - 1));
+  return {
+    closestIndex: closest.index,
+    offRouteMeters: closest.distance,
+    remainingMeters,
+    remainingMinutes: routeResult.minutes * remainingMeters / totalGeometryMeters,
+    instructionDistance: next ? routeDistanceBetween(coordinates, closest.index, next.routeIndex) : remainingMeters,
+    instruction: next?.instruction ?? null,
+  };
+}
+
+function bearingBetween(a: Coordinate, b: Coordinate) {
+  const toRadians = (value: number) => value * Math.PI / 180;
+  const toDegrees = (value: number) => value * 180 / Math.PI;
+  const longitude = toRadians(b[0] - a[0]);
+  const lat1 = toRadians(a[1]);
+  const lat2 = toRadians(b[1]);
+  const y = Math.sin(longitude) * Math.cos(lat2);
+  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(longitude);
+  return (toDegrees(Math.atan2(y, x)) + 360) % 360;
+}
+
+function formatDistance(meters: number) {
+  if (meters < 1000) return `${Math.max(0, Math.round(meters / 10) * 10)} m`;
+  return `${(meters / 1000).toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km`;
+}
+
+function directionGlyph(direction: NavigationInstruction["direction"] | undefined) {
+  const glyphs = {
+    left: "↰",
+    right: "↱",
+    straight: "↑",
+    uturn: "↶",
+    roundabout: "⟳",
+    depart: "↑",
+    arrive: "●",
+  };
+  return direction ? glyphs[direction] : "↑";
+}
+
 export default function Home() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker }>({});
+  const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker; vehicle?: MapLibreMarker }>({});
+  const vehicleArrowRef = useRef<HTMLSpanElement | null>(null);
   const pickingRef = useRef<PickingMode | null>(null);
   const journeyWatchRef = useRef<number | null>(null);
+  const previewTimerRef = useRef<number | null>(null);
+  const wakeLockRef = useRef<WakeLockHandle | null>(null);
   const lastJourneyOriginRef = useRef<Coordinate | null>(null);
   const lastJourneyCalculationRef = useRef(0);
+  const previousJourneyPositionRef = useRef<Coordinate | null>(null);
+  const offRouteReadingsRef = useRef(0);
+  const lastSpokenInstructionRef = useRef("");
+  const journeyActiveRef = useRef(false);
+  const selectedRouteRef = useRef<RouteResult | null>(null);
+  const endLocationRef = useRef<LocationChoice | null>(null);
+  const loadingRef = useRef(false);
   const avoidanceReadyRef = useRef(false);
   const defaultFast = useMemo(() => route("castello", "venezia"), []);
   const defaultSafe = useMemo(() => route("castello", "venezia", "strong"), []);
@@ -313,6 +426,14 @@ export default function Home() {
   const [hasDistinctAlternative, setHasDistinctAlternative] = useState(false);
   const [activePanel, setActivePanel] = useState<"plan" | "routes" | "community">("plan");
   const [isJourneyActive, setIsJourneyActive] = useState(false);
+  const [journeyMode, setJourneyMode] = useState<JourneyMode | null>(null);
+  const [journeyPosition, setJourneyPosition] = useState<Coordinate | null>(null);
+  const [journeyHeading, setJourneyHeading] = useState(0);
+  const [journeyAccuracy, setJourneyAccuracy] = useState<number | null>(null);
+  const [followVehicle, setFollowVehicle] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [isRecalculating, setIsRecalculating] = useState(false);
+  const [arrived, setArrived] = useState(false);
   const [lastRecalculatedAt, setLastRecalculatedAt] = useState<string | null>(null);
   const [themeMode, setThemeMode] = useState<ThemeMode>("auto");
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
@@ -335,6 +456,23 @@ export default function Home() {
   const [mapReady, setMapReady] = useState(false);
   const landmarks = nodes.filter((node) => node.landmark);
   const savedPave = Math.max(0, fastRoute.paveMeters - safeRoute.paveMeters);
+  const selectedRoute = activeRoute === "safe" ? safeRoute : fastRoute;
+  const navigationProgress = useMemo(
+    () => getNavigationProgress(selectedRoute, journeyPosition),
+    [journeyPosition, selectedRoute],
+  );
+  const speakInstruction = useCallback((text: string) => {
+    if (!voiceEnabled || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "it-IT";
+      utterance.rate = 1;
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      // Visual guidance remains available when speech synthesis fails.
+    }
+  }, [voiceEnabled]);
 
   useEffect(() => {
     let cancelled = false;
@@ -366,6 +504,21 @@ export default function Home() {
       pointMarkersRef.current.end = new Marker({ element: endElement })
         .setLngLat(endLocation.coordinate)
         .addTo(map);
+      const vehicleElement = document.createElement("div");
+      vehicleElement.className = "vehicle-marker";
+      vehicleElement.setAttribute("aria-label", "Posizione del veicolo");
+      vehicleElement.style.display = "none";
+      const accuracyHalo = document.createElement("i");
+      const vehicleArrow = document.createElement("span");
+      vehicleArrow.textContent = "▲";
+      vehicleElement.append(accuracyHalo, vehicleArrow);
+      vehicleArrowRef.current = vehicleArrow;
+      pointMarkersRef.current.vehicle = new Marker({ element: vehicleElement, rotationAlignment: "map" })
+        .setLngLat(startLocation.coordinate)
+        .addTo(map);
+      map.on("dragstart", () => {
+        if (journeyActiveRef.current) setFollowVehicle(false);
+      });
       map.on("click", (event) => {
         const target = pickingRef.current;
         if (!target) return;
@@ -491,7 +644,41 @@ export default function Home() {
 
   useEffect(() => {
     pointMarkersRef.current.end?.setLngLat(endLocation.coordinate);
+    endLocationRef.current = endLocation;
   }, [endLocation]);
+
+  useEffect(() => {
+    journeyActiveRef.current = isJourneyActive;
+    selectedRouteRef.current = selectedRoute;
+  }, [isJourneyActive, selectedRoute]);
+
+  useEffect(() => {
+    loadingRef.current = isLoading;
+  }, [isLoading]);
+
+  useEffect(() => {
+    const marker = pointMarkersRef.current.vehicle;
+    const element = marker?.getElement();
+    if (!marker || !element) return;
+    if (!journeyPosition || !isJourneyActive) {
+      element.style.display = "none";
+      return;
+    }
+    element.style.display = "grid";
+    marker.setLngLat(journeyPosition);
+    if (vehicleArrowRef.current) vehicleArrowRef.current.style.transform = `rotate(${journeyHeading}deg)`;
+    element.style.setProperty("--accuracy", `${Math.min(90, Math.max(24, journeyAccuracy ?? 24))}px`);
+    if (followVehicle) {
+      mapRef.current?.easeTo({
+        center: journeyPosition,
+        zoom: 16.6,
+        pitch: 42,
+        bearing: journeyHeading,
+        duration: 650,
+        essential: true,
+      });
+    }
+  }, [journeyPosition, journeyHeading, journeyAccuracy, followVehicle, isJourneyActive]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -503,6 +690,7 @@ export default function Home() {
     (map.getSource("problem-segments") as GeoJSONSource)?.setData(problemGeoJSON([fastRoute]));
     map.setPaintProperty("fast-line", "line-opacity", activeRoute === "fast" ? 1 : 0.46);
     map.setPaintProperty("safe-line", "line-opacity", activeRoute === "safe" ? 1 : 0.52);
+    if (journeyActiveRef.current) return;
     const allCoordinates = [...fastRoute.coordinates, ...safeRoute.coordinates];
     const lngs = allCoordinates.map(([lng]) => lng);
     const lats = allCoordinates.map(([, lat]) => lat);
@@ -512,6 +700,34 @@ export default function Home() {
       duration: 650,
     });
   }, [fastRoute, safeRoute, activeRoute, hasDistinctAlternative]);
+
+  useEffect(() => {
+    if (!isJourneyActive || !voiceEnabled || !navigationProgress.instruction) return;
+    if (lastSpokenInstructionRef.current === navigationProgress.instruction.id) return;
+    lastSpokenInstructionRef.current = navigationProgress.instruction.id;
+    speakInstruction(navigationProgress.instruction.text);
+  }, [isJourneyActive, voiceEnabled, navigationProgress.instruction, speakInstruction]);
+
+  useEffect(() => {
+    if (journeyMode !== "preview" || !selectedRoute.coordinates.length) return;
+    const coordinates = selectedRoute.coordinates;
+    let index = 0;
+    const step = Math.max(1, Math.floor(coordinates.length / 80));
+    previewTimerRef.current = window.setInterval(() => {
+      index = Math.min(coordinates.length - 1, index + step);
+      const position = coordinates[index];
+      const previous = coordinates[Math.max(0, index - step)];
+      setJourneyPosition(position);
+      setJourneyHeading(bearingBetween(previous, position));
+      if (index >= coordinates.length - 1) finishNavigation(true);
+    }, 700);
+    return () => {
+      if (previewTimerRef.current !== null) window.clearInterval(previewTimerRef.current);
+      previewTimerRef.current = null;
+    };
+    // Preview follows the route that was active when it started.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [journeyMode]);
 
   useEffect(() => {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
@@ -552,8 +768,18 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [themeMode, mapReady]);
 
-  useEffect(() => () => {
-    if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
+  useEffect(() => {
+    const reacquireWakeLock = () => {
+      if (document.visibilityState === "visible" && journeyActiveRef.current) void requestWakeLock();
+    };
+    document.addEventListener("visibilitychange", reacquireWakeLock);
+    return () => {
+      document.removeEventListener("visibilitychange", reacquireWakeLock);
+      if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
+      if (previewTimerRef.current !== null) window.clearInterval(previewTimerRef.current);
+      void wakeLockRef.current?.release();
+      window.speechSynthesis?.cancel();
+    };
   }, []);
 
   useEffect(() => {
@@ -679,7 +905,8 @@ export default function Home() {
   }
 
   async function calculateRoutes(startOverride?: LocationChoice) {
-    if (isLoading) return;
+    if (loadingRef.current) return;
+    loadingRef.current = true;
     setIsLoading(true);
     setStatus("Cerco i punti e analizzo le alternative stradali…");
     try {
@@ -715,7 +942,9 @@ export default function Home() {
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Qualcosa non ha funzionato. Riprova.");
     } finally {
+      loadingRef.current = false;
       setIsLoading(false);
+      setIsRecalculating(false);
     }
   }
 
@@ -742,55 +971,158 @@ export default function Home() {
     );
   }
 
-  function stopJourney() {
+  async function requestWakeLock() {
+    const wakeLock = (navigator as NavigatorWithWakeLock).wakeLock;
+    if (!wakeLock || document.visibilityState !== "visible") return;
+    try {
+      wakeLockRef.current = await wakeLock.request("screen");
+    } catch {
+      wakeLockRef.current = null;
+    }
+  }
+
+  function finishNavigation(hasArrived = false) {
+    journeyActiveRef.current = false;
     if (journeyWatchRef.current !== null) {
       navigator.geolocation.clearWatch(journeyWatchRef.current);
       journeyWatchRef.current = null;
     }
+    if (previewTimerRef.current !== null) {
+      window.clearInterval(previewTimerRef.current);
+      previewTimerRef.current = null;
+    }
+    void wakeLockRef.current?.release();
+    wakeLockRef.current = null;
+    window.speechSynthesis?.cancel();
     setIsJourneyActive(false);
+    setJourneyMode(null);
+    setJourneyPosition(null);
+    setJourneyAccuracy(null);
+    setFollowVehicle(true);
+    setArrived(hasArrived);
     lastJourneyOriginRef.current = null;
-    setStatus("Test GPS terminato. La posizione non viene conservata.");
+    previousJourneyPositionRef.current = null;
+    offRouteReadingsRef.current = 0;
+    lastSpokenInstructionRef.current = "";
+    mapRef.current?.easeTo({ pitch: 0, bearing: 0, duration: 450 });
+    if (hasArrived) {
+      speakInstruction("Sei arrivato a destinazione");
+      setStatus("Arrivo raggiunto. Navigazione terminata.");
+    } else {
+      setStatus("Navigazione terminata. La posizione non è stata conservata.");
+    }
   }
 
-  function toggleJourney() {
-    if (isJourneyActive) {
-      stopJourney();
+  function updateJourneyPosition(
+    coordinate: Coordinate,
+    accuracy: number,
+    reportedHeading: number | null,
+  ) {
+    const previous = previousJourneyPositionRef.current;
+    const inferredHeading = previous && distanceMeters(previous, coordinate) > 4
+      ? bearingBetween(previous, coordinate)
+      : journeyHeading;
+    const heading = Number.isFinite(reportedHeading) ? reportedHeading! : inferredHeading;
+    previousJourneyPositionRef.current = coordinate;
+    setJourneyPosition(coordinate);
+    setJourneyAccuracy(accuracy);
+    setJourneyHeading(heading);
+
+    const routeResult = selectedRouteRef.current;
+    const destination = endLocationRef.current;
+    if (!routeResult || !destination) return;
+    if (distanceMeters(coordinate, destination.coordinate) <= 35) {
+      finishNavigation(true);
+      return;
+    }
+
+    const progress = getNavigationProgress(routeResult, coordinate);
+    if (progress.offRouteMeters > 55) {
+      offRouteReadingsRef.current += 1;
+    } else {
+      offRouteReadingsRef.current = 0;
+    }
+    const now = Date.now();
+    const canRecalculate = now - lastJourneyCalculationRef.current >= 15_000;
+    if (offRouteReadingsRef.current >= 2 && canRecalculate && !loadingRef.current) {
+      lastJourneyCalculationRef.current = now;
+      lastJourneyOriginRef.current = coordinate;
+      offRouteReadingsRef.current = 0;
+      setIsRecalculating(true);
+      setStatus("Fuori percorso · ricalcolo anti-pavé dalla posizione attuale…");
+      void calculateRoutes({ label: "Posizione GPS live", coordinate });
+      return;
+    }
+
+    setStatus(`GPS attivo · precisione ±${Math.round(accuracy)} m · ${formatDistance(progress.remainingMeters)} rimanenti.`);
+  }
+
+  function startNavigation(mode: JourneyMode) {
+    if (!isLiveResult || !selectedRoute.coordinates.length) {
+      setStatus("Calcola e seleziona prima un percorso Lastrico.");
+      return;
+    }
+    if (isJourneyActive) finishNavigation();
+    setArrived(false);
+    setFollowVehicle(true);
+    setJourneyMode(mode);
+    setIsJourneyActive(true);
+    journeyActiveRef.current = true;
+    selectedRouteRef.current = selectedRoute;
+    endLocationRef.current = endLocation;
+    lastJourneyCalculationRef.current = 0;
+    offRouteReadingsRef.current = 0;
+    lastSpokenInstructionRef.current = "";
+    void requestWakeLock();
+    speakInstruction(mode === "preview" ? "Anteprima navigazione Lastrico" : "Navigazione Lastrico avviata");
+
+    if (mode === "preview") {
+      const coordinates = selectedRoute.coordinates;
+      setJourneyPosition(coordinates[0]);
+      setJourneyHeading(coordinates.length > 1 ? bearingBetween(coordinates[0], coordinates[1]) : 0);
+      setJourneyAccuracy(5);
+      setStatus("ANTEPRIMA · la freccia seguirà il percorso selezionato senza usare il GPS.");
       return;
     }
     if (!navigator.geolocation) {
-      setStatus("Il GPS non è disponibile su questo dispositivo.");
+      setStatus("Il GPS non è disponibile su questo dispositivo. Puoi usare l’anteprima.");
+      finishNavigation();
       return;
     }
-    setStatus("Attiva il GPS: preparo il percorso dalla tua posizione.");
-    setIsJourneyActive(true);
+    setStatus("Autorizza la posizione precisa: aggancio il GPS al percorso Lastrico…");
     journeyWatchRef.current = navigator.geolocation.watchPosition(
       ({ coords }) => {
         const coordinate: Coordinate = [coords.longitude, coords.latitude];
         if (coordinate[0] < 9.04 || coordinate[0] > 9.31 || coordinate[1] < 45.38 || coordinate[1] > 45.55) {
-          setStatus("Il test GPS della beta copre per ora soltanto Milano.");
+          setStatus("La navigazione della beta copre per ora soltanto Milano.");
           return;
         }
-        const location = { label: "Posizione GPS live", coordinate };
-        setStartLocation(location);
-        setStartText(location.label);
-        const previous = lastJourneyOriginRef.current;
-        const now = Date.now();
-        const movedEnough = !previous || distanceMeters(previous, coordinate) >= 140;
-        const waitedEnough = now - lastJourneyCalculationRef.current >= 20000;
-        if (movedEnough && waitedEnough) {
-          lastJourneyOriginRef.current = coordinate;
-          lastJourneyCalculationRef.current = now;
-          void calculateRoutes(location);
-        } else {
-          setStatus(`GPS attivo · precisione ±${Math.round(coords.accuracy)} m · ricalcolo dopo uno spostamento significativo.`);
+        if (coords.accuracy > 120) {
+          setJourneyAccuracy(coords.accuracy);
+          setStatus(`Segnale GPS debole (±${Math.round(coords.accuracy)} m). Mantengo l’ultimo percorso.`);
+          return;
         }
+        updateJourneyPosition(coordinate, coords.accuracy, coords.heading);
       },
       () => {
-        setIsJourneyActive(false);
-        setStatus("Non riesco ad accedere al GPS. Controlla i permessi di Safari.");
+        finishNavigation();
+        setStatus("GPS non disponibile. Controlla i permessi di Safari oppure usa Anteprima navigazione.");
       },
-      { enableHighAccuracy: true, maximumAge: 3000, timeout: 12000 },
+      { enableHighAccuracy: true, maximumAge: 1500, timeout: 12000 },
     );
+  }
+
+  function recenterNavigation() {
+    setFollowVehicle(true);
+    if (journeyPosition) {
+      mapRef.current?.easeTo({
+        center: journeyPosition,
+        zoom: 16.6,
+        pitch: 42,
+        bearing: journeyHeading,
+        duration: 450,
+      });
+    }
   }
 
   async function shareBeta() {
@@ -1065,14 +1397,15 @@ export default function Home() {
                   <div><small>Dati</small><strong>{isLiveResult ? "OSM" : "Demo"}</strong></div>
                 </div>
 
-                <button type="button" className={`journey-button ${isJourneyActive ? "stop" : ""}`} onClick={toggleJourney}>
-                  <span>{isJourneyActive ? "■" : "▶"}</span>
-                  <b>{isJourneyActive ? "Termina test GPS" : "Avvia test GPS"}</b>
-                  <small>{isJourneyActive ? "La posizione non viene salvata" : "Ricalcolo automatico durante il viaggio"}</small>
+                <button type="button" className="journey-button" onClick={() => startNavigation("gps")}>
+                  <span>▶</span>
+                  <b>Avvia navigazione</b>
+                  <small>Segui il percorso Lastrico con GPS e ricalcolo</small>
                 </button>
                 <div className="route-actions">
+                  <button type="button" onClick={() => startNavigation("preview")}>▷ Anteprima</button>
                   <button type="button" onClick={() => void calculateRoutes()} disabled={isLoading}>↻ Ricalcola</button>
-                  <button type="button" onClick={() => setMapChooserOpen(true)}>Apri in un’altra app ↗</button>
+                  <button type="button" onClick={() => setMapChooserOpen(true)}>Fallback mappe ↗</button>
                 </div>
               </section>
             )}
@@ -1106,6 +1439,51 @@ export default function Home() {
 
         <section className="map-stage" id="map-stage" aria-label="Mappa dei percorsi">
           <div ref={mapContainer} className="map" />
+          {isJourneyActive && (
+            <div className="navigation-hud" aria-label="Navigazione Lastrico">
+              <section className="navigation-instruction" aria-live="polite">
+                <div className="navigation-mode">
+                  <span>{journeyMode === "preview" ? "ANTEPRIMA" : isRecalculating ? "RICALCOLO" : "GPS LIVE"}</span>
+                  <small>{activeRoute === "safe" ? "ANTI-PAVÉ" : "RAPIDO"}</small>
+                </div>
+                <div className="maneuver-glyph" aria-hidden="true">
+                  {directionGlyph(navigationProgress.instruction?.direction)}
+                </div>
+                <div className="maneuver-copy">
+                  <strong>{formatDistance(navigationProgress.instructionDistance)}</strong>
+                  <b>{isRecalculating ? "Ricalcolo anti-pavé…" : navigationProgress.instruction?.text ?? "Segui il percorso Lastrico"}</b>
+                  {navigationProgress.instruction?.roadName && <small>{navigationProgress.instruction.roadName}</small>}
+                </div>
+              </section>
+
+              <section className="navigation-tripbar">
+                <div className="trip-metric"><strong>{Math.max(0, Math.ceil(navigationProgress.remainingMinutes))}</strong><small>min</small></div>
+                <div className="trip-metric wide"><strong>{formatDistance(navigationProgress.remainingMeters)}</strong><small>rimanenti</small></div>
+                <div className="navigation-controls">
+                  <button
+                    type="button"
+                    onClick={() => setVoiceEnabled((current) => {
+                      if (current) window.speechSynthesis?.cancel();
+                      return !current;
+                    })}
+                    aria-label={voiceEnabled ? "Disattiva voce" : "Attiva voce"}
+                  >
+                    {voiceEnabled ? "Voce" : "Muto"}
+                  </button>
+                  <button type="button" onClick={recenterNavigation} aria-label="Ricentra la mappa">
+                    {followVehicle ? "Centrata" : "Ricentra"}
+                  </button>
+                  <button type="button" className="stop-navigation" onClick={() => finishNavigation()} aria-label="Termina navigazione">Termina</button>
+                </div>
+                <p>
+                  {journeyMode === "preview"
+                    ? "Simulazione senza GPS · nessun ricalcolo"
+                    : `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`}
+                </p>
+              </section>
+              <div className="driving-safety">Non interagire con lo schermo durante la guida</div>
+            </div>
+          )}
           <div className="map-top">
             <div className="confidence-pill">
               {picking
@@ -1115,7 +1493,7 @@ export default function Home() {
                     ? "Tocca la fine del tratto"
                     : `Tocca la ${picking === "start" ? "partenza" : "destinazione"}`
                 : isJourneyActive
-                  ? "GPS LIVE · ricalcolo automatico"
+                  ? journeyMode === "preview" ? "ANTEPRIMA · percorso Lastrico" : "GPS LIVE · percorso Lastrico"
                   : isLiveResult
                     ? hasDistinctAlternative
                       ? `${alternativesAnalyzed} percorsi · deviazione trovata`
@@ -1148,6 +1526,14 @@ export default function Home() {
         <button type="button" className={activePanel === "routes" ? "active" : ""} onClick={() => setActivePanel("routes")}><span>↝</span>Percorsi</button>
         <button type="button" className={activePanel === "community" ? "active" : ""} onClick={() => setActivePanel("community")}><span>＋</span>Comunità</button>
       </nav>
+
+      {arrived && (
+        <div className="arrival-banner" role="status">
+          <span>●</span>
+          <div><b>Sei arrivato</b><small>Navigazione Lastrico terminata</small></div>
+          <button type="button" onClick={() => setArrived(false)} aria-label="Chiudi">×</button>
+        </div>
+      )}
 
       {addressSearchTarget && addressResults.length > 0 && (
         <div className="modal-backdrop address-picker-backdrop" role="presentation">
@@ -1184,14 +1570,14 @@ export default function Home() {
         <div className="modal-backdrop" role="presentation" onClick={() => setMapChooserOpen(false)}>
           <section className="modal map-app-modal" role="dialog" aria-modal="true" aria-labelledby="map-app-title" onClick={(event) => event.stopPropagation()}>
             <button type="button" className="modal-close" onClick={() => setMapChooserOpen(false)} aria-label="Chiudi">×</button>
-            <span className="eyebrow">Continua il viaggio</span>
-            <h2 id="map-app-title">Apri la destinazione</h2>
+            <span className="eyebrow">Fallback di emergenza</span>
+            <h2 id="map-app-title">Usa un’altra app</h2>
             <div className="map-app-grid">
               <button type="button" onClick={() => openExternalMap("apple")}><b>Mappe</b><small>Apple</small></button>
               <button type="button" onClick={() => openExternalMap("google")}><b>Google Maps</b><small>Se installata</small></button>
               <button type="button" onClick={() => openExternalMap("waze")}><b>Waze</b><small>Se installata</small></button>
             </div>
-            <p className="external-map-note">L’app scelta riceve la destinazione, ma calcola un proprio percorso: la deviazione anti-pavé resta visibile in Lastrico.</p>
+            <p className="external-map-note">Usalo solo se la navigazione Lastrico non funziona: l’app scelta ricalcola un percorso proprio e può perdere la deviazione anti-pavé.</p>
           </section>
         </div>
       )}

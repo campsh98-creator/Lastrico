@@ -4,10 +4,26 @@ import bundledPave from "@/data/milan-pave-central.json";
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
 
+type OsrmManeuver = {
+  type: string;
+  modifier?: string;
+  location: Coordinate;
+  exit?: number;
+};
+
+type OsrmStep = {
+  distance: number;
+  duration: number;
+  name?: string;
+  ref?: string;
+  maneuver: OsrmManeuver;
+};
+
 type OsrmRoute = {
   distance: number;
   duration: number;
   geometry: { coordinates: Coordinate[] };
+  legs?: Array<{ steps?: OsrmStep[] }>;
 };
 
 type PaveWay = {
@@ -190,7 +206,7 @@ async function fetchOsrmRoute(points: Coordinate[], alternatives = false) {
   url.searchParams.set("overview", "full");
   url.searchParams.set("geometries", "geojson");
   url.searchParams.set("alternatives", alternatives ? "3" : "false");
-  url.searchParams.set("steps", "false");
+  url.searchParams.set("steps", "true");
   url.searchParams.set("continue_straight", "false");
   const response = await fetch(url, {
     headers: { "User-Agent": "Lastrico-Milano-Beta/0.6" },
@@ -198,6 +214,56 @@ async function fetchOsrmRoute(points: Coordinate[], alternatives = false) {
   if (!response.ok) return [];
   const data = await response.json() as { code: string; routes?: OsrmRoute[] };
   return data.code === "Ok" ? data.routes ?? [] : [];
+}
+
+function instructionText(step: OsrmStep) {
+  const road = step.name || step.ref || "";
+  const onto = road ? ` in ${road}` : "";
+  const modifier = step.maneuver.modifier ?? "";
+  const directions: Record<string, string> = {
+    left: `Svolta a sinistra${onto}`,
+    right: `Svolta a destra${onto}`,
+    "slight left": `Tieni leggermente la sinistra${onto}`,
+    "slight right": `Tieni leggermente la destra${onto}`,
+    "sharp left": `Svolta nettamente a sinistra${onto}`,
+    "sharp right": `Svolta nettamente a destra${onto}`,
+    straight: `Prosegui dritto${onto}`,
+    uturn: `Fai inversione a U${onto}`,
+  };
+  switch (step.maneuver.type) {
+    case "depart":
+      return road ? `Parti su ${road}` : "Parti e segui il percorso";
+    case "arrive":
+      return "Sei arrivato a destinazione";
+    case "roundabout":
+    case "rotary":
+      return `Entra nella rotonda${step.maneuver.exit ? ` e prendi l’uscita ${step.maneuver.exit}` : ""}${onto}`;
+    case "merge":
+      return `Immettiti${modifier.includes("left") ? " a sinistra" : modifier.includes("right") ? " a destra" : ""}${onto}`;
+    case "fork":
+      return `Tieni ${modifier.includes("left") ? "la sinistra" : "la destra"}${onto}`;
+    case "on ramp":
+    case "off ramp":
+      return `Prendi la rampa${modifier.includes("left") ? " a sinistra" : modifier.includes("right") ? " a destra" : ""}${onto}`;
+    case "end of road":
+      return directions[modifier] ?? `Alla fine della strada prosegui${onto}`;
+    case "continue":
+    case "new name":
+    case "turn":
+      return directions[modifier] ?? `Continua${onto}`;
+    default:
+      return directions[modifier] ?? `Segui il percorso${onto}`;
+  }
+}
+
+function semanticDirection(step: OsrmStep) {
+  if (step.maneuver.type === "arrive") return "arrive";
+  if (step.maneuver.type === "depart") return "depart";
+  if (step.maneuver.type === "roundabout" || step.maneuver.type === "rotary") return "roundabout";
+  if (step.maneuver.modifier?.includes("left")) return "left";
+  if (step.maneuver.modifier?.includes("right")) return "right";
+  if (step.maneuver.modifier === "uturn") return "uturn";
+  return "straight";
 }
 
 function selectSafeRoute(scored: ScoredRoute[], fast: ScoredRoute, avoidance: Avoidance) {
@@ -225,11 +291,23 @@ function selectSafeRoute(scored: ScoredRoute[], fast: ScoredRoute, avoidance: Av
 }
 
 function routePayload(route: OsrmRoute, paveMeters: number) {
+  const steps = (route.legs ?? []).flatMap((leg) => leg.steps ?? []);
   return {
     coordinates: route.geometry.coordinates,
     distance: route.distance / 1000,
     minutes: route.duration / 60,
     paveMeters,
+    instructions: steps.map((step, index) => ({
+      id: `${index}-${step.maneuver.type}-${step.maneuver.location.join(",")}`,
+      text: instructionText(step),
+      roadName: step.name || step.ref || "",
+      distance: step.distance,
+      location: step.maneuver.location,
+      type: step.maneuver.type,
+      modifier: step.maneuver.modifier ?? "",
+      exit: step.maneuver.exit,
+      direction: semanticDirection(step),
+    })),
   };
 }
 

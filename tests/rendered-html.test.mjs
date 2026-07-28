@@ -62,6 +62,10 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   assert.match(routing, /bundledPave/);
   assert.match(routing, /AbortSignal\.timeout\(3_500\)/);
   assert.match(routing, /candidateDiagnostics/);
+  assert.match(routing, /set\("steps", "true"\)/);
+  assert.match(routing, /instructions: steps\.map/);
+  assert.match(routing, /instructionText/);
+  assert.match(routing, /semanticDirection/);
 });
 
 test("offers the three supported navigation apps without misrepresenting their routing", async () => {
@@ -71,7 +75,30 @@ test("offers the three supported navigation apps without misrepresenting their r
   assert.match(page, /maps\.apple\.com/);
   assert.match(page, /google\.com\/maps\/dir/);
   assert.match(page, /waze\.com\/ul/);
-  assert.match(page, /L’app scelta riceve la destinazione, ma calcola un proprio percorso/);
+  assert.match(page, /Usalo solo se la navigazione Lastrico non funziona/);
+});
+
+test("supports real in-app foreground navigation with a safe preview", async () => {
+  const [page, css] = await Promise.all([
+    readFile(pageUrl, "utf8"),
+    readFile(cssUrl, "utf8"),
+  ]);
+
+  assert.match(page, /navigator\.geolocation\.watchPosition/);
+  assert.match(page, /function getNavigationProgress/);
+  assert.match(page, /offRouteReadingsRef\.current >= 2/);
+  assert.match(page, /15_000/);
+  assert.match(page, /startNavigation\("gps"\)/);
+  assert.match(page, /startNavigation\("preview"\)/);
+  assert.match(page, /ANTEPRIMA · la freccia seguirà il percorso selezionato senza usare il GPS/);
+  assert.match(page, /speechSynthesis/);
+  assert.match(page, /wakeLock/);
+  assert.match(page, /Ricentra/);
+  assert.match(page, /Non interagire con lo schermo durante la guida/);
+  assert.match(page, /Fallback mappe/);
+  assert.match(css, /\.vehicle-marker/);
+  assert.match(css, /\.navigation-hud/);
+  assert.match(css, /\.journey-active \.mobile-nav \{ display: none; \}/);
 });
 
 test("keeps the installed PWA and automatic theme release-ready", async () => {
@@ -90,7 +117,7 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
   assert.match(page, /hour >= 7 && hour < 19/);
   assert.match(page, /lastrico-theme/);
   assert.match(layout, /appleWebApp/);
-  assert.match(serviceWorker, /lastrico-v6/);
+  assert.match(serviceWorker, /lastrico-v7/);
   assert.match(serviceWorker, /self\.skipWaiting\(\)/);
   assert.match(serviceWorker, /self\.clients\.claim\(\)/);
 });
