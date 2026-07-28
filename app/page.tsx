@@ -7,6 +7,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 type Coordinate = [number, number];
 type Surface = "asphalt" | "sett" | "cobblestone" | "paving_stones";
 type Avoidance = "balanced" | "strong" | "maximum";
+type ThemeMode = "auto" | "light" | "dark";
 type PickingMode = "start" | "end" | "reportStart" | "reportEnd";
 type ReportKind = "pave" | "rough_cobblestone" | "recently_asphalted" | "wrong_data";
 
@@ -300,6 +301,8 @@ export default function Home() {
   const [activePanel, setActivePanel] = useState<"plan" | "routes" | "community">("plan");
   const [isJourneyActive, setIsJourneyActive] = useState(false);
   const [lastRecalculatedAt, setLastRecalculatedAt] = useState<string | null>(null);
+  const [themeMode, setThemeMode] = useState<ThemeMode>("auto");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
   const [reports, setReports] = useState<RoadReport[]>([]);
   const [reportStats, setReportStats] = useState<ReportStats>({ total: 0, pending: 0, verified: 0, communityMeters: 0 });
   const [reportStart, setReportStart] = useState<Coordinate | null>(null);
@@ -491,6 +494,41 @@ export default function Home() {
   useEffect(() => {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("lastrico-theme");
+    if (savedTheme === "auto" || savedTheme === "light" || savedTheme === "dark") {
+      setThemeMode(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    const applyTheme = () => {
+      const hour = new Date().getHours();
+      const nextTheme = themeMode === "auto"
+        ? hour >= 7 && hour < 19 ? "light" : "dark"
+        : themeMode;
+      setResolvedTheme(nextTheme);
+      document.documentElement.dataset.theme = nextTheme;
+      document.documentElement.style.colorScheme = nextTheme;
+      document.querySelector('meta[name="theme-color"]')?.setAttribute(
+        "content",
+        nextTheme === "dark" ? "#0b1315" : "#f4f2ec",
+      );
+      window.localStorage.setItem("lastrico-theme", themeMode);
+
+      const map = mapRef.current;
+      if (mapReady && map?.isStyleLoaded()) {
+        map.setPaintProperty("osm", "raster-brightness-max", nextTheme === "dark" ? 0.58 : 1);
+        map.setPaintProperty("osm", "raster-brightness-min", nextTheme === "dark" ? 0.18 : 0);
+        map.setPaintProperty("osm", "raster-saturation", nextTheme === "dark" ? -0.62 : 0);
+        map.setPaintProperty("osm", "raster-contrast", nextTheme === "dark" ? 0.22 : 0);
+      }
+    };
+    applyTheme();
+    const timer = window.setInterval(applyTheme, 60_000);
+    return () => window.clearInterval(timer);
+  }, [themeMode, mapReady]);
 
   useEffect(() => () => {
     if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
@@ -699,6 +737,10 @@ export default function Home() {
     }
   }
 
+  function cycleTheme() {
+    setThemeMode((current) => current === "auto" ? "light" : current === "light" ? "dark" : "auto");
+  }
+
   function openInAppleMaps() {
     const [lng, lat] = endLocation.coordinate;
     window.open(`https://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`, "_blank", "noopener,noreferrer");
@@ -773,15 +815,13 @@ export default function Home() {
         <button className="brand" type="button" onClick={() => setActivePanel("plan")} aria-label="Apri pianificazione">
           <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
           <span>lastrico</span>
-          <small>beta · milano</small>
         </button>
-        <div className="app-bar-status">
-          <span className={isJourneyActive ? "live-dot active" : "live-dot"} />
-          <span>{isJourneyActive ? "GPS e ricalcolo attivi" : "Beta privata"}</span>
-        </div>
         <div className="app-bar-actions">
-          <button type="button" className="share-button" onClick={shareBeta} aria-label="Condividi beta">Condividi</button>
-          <button type="button" className="report-button" onClick={startReport}>+ Pavé</button>
+          <button type="button" className="icon-button theme-button" onClick={cycleTheme} aria-label={`Tema: ${themeMode}`} title={`Tema ${themeMode} · ora ${resolvedTheme}`}>
+            {themeMode === "auto" ? "◐" : themeMode === "light" ? "☀" : "☾"}
+          </button>
+          <button type="button" className="icon-button" onClick={shareBeta} aria-label="Condividi beta" title="Condividi">↗</button>
+          <button type="button" className="report-button" onClick={startReport} aria-label="Segnala pavé" title="Segnala pavé">＋</button>
           <button type="button" className="icon-button" aria-label="Informazioni sulla beta" onClick={() => setDetailsOpen(true)}>i</button>
         </div>
       </header>
@@ -805,9 +845,7 @@ export default function Home() {
             {activePanel === "plan" && (
               <section className="planner-panel">
                 <div className="panel-heading">
-                  <span className="eyebrow">Percorso anti-pavé</span>
-                  <h1>Milano, più liscia.</h1>
-                  <p>Scegli due punti e confronta le alternative in pochi secondi.</p>
+                  <h1>Dove andiamo?</h1>
                 </div>
 
                 <div className="compact-locations">
@@ -868,16 +906,14 @@ export default function Home() {
                   <span>{isLoading ? "Analizzo le strade…" : "Confronta i percorsi"}</span>
                   <b>{isLoading ? "···" : "→"}</b>
                 </button>
-                <p className="micro-disclaimer">Stime senza traffico live · “0 m” non garantisce copertura completa.</p>
               </section>
             )}
 
             {activePanel === "routes" && (
               <section className="routes-panel">
                 <div className="panel-heading routes-heading">
-                  <span className="eyebrow">Confronto pronto</span>
-                  <h2>Scegli come guidare.</h2>
-                  <p>{alternativesAnalyzed} alternative analizzate{lastRecalculatedAt ? ` · aggiornato ${lastRecalculatedAt}` : ""}</p>
+                  <h2>Percorsi</h2>
+                  <p>{alternativesAnalyzed} alternative{lastRecalculatedAt ? ` · ${lastRecalculatedAt}` : ""}</p>
                 </div>
 
                 <button type="button" className={`route-option safe ${activeRoute === "safe" ? "selected" : ""}`} onClick={() => setActiveRoute("safe")}>
@@ -908,16 +944,13 @@ export default function Home() {
                   <button type="button" onClick={() => void calculateRoutes()} disabled={isLoading}>↻ Ricalcola</button>
                   <button type="button" onClick={openInAppleMaps}>Apri arrivo in Mappe ↗</button>
                 </div>
-                <p className="micro-disclaimer">Apple Maps può proporre un tragitto diverso da Lastrico.</p>
               </section>
             )}
 
             {activePanel === "community" && (
               <section className="community-panel">
                 <div className="panel-heading">
-                  <span className="eyebrow">Mappa collaborativa</span>
-                  <h2>Milano migliora insieme.</h2>
-                  <p>Le segnalazioni da verificare sono visibili, ma non influenzano ancora il routing.</p>
+                  <h2>Segnalazioni</h2>
                 </div>
                 <div className="beta-stats">
                   <article><small>Segnalazioni</small><strong>{reportsAvailable ? reportStats.total : "—"}</strong></article>
@@ -932,7 +965,6 @@ export default function Home() {
                   <a href="https://github.com/campsh98-creator/lastrico-milano" target="_blank" rel="noreferrer">Codice su GitHub</a>
                   <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
                 </div>
-                <div className="data-note"><b>Qualità del dato</b><span>Un tratto non censito può comunque essere in pavé. Segnalarlo è parte del test.</span></div>
               </section>
             )}
           </div>
