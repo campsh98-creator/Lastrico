@@ -6,6 +6,8 @@ Lastrico è una PWA sperimentale che confronta il percorso automobilistico più 
 
 La beta permette anche di segnalare tratti mancanti, strade sconnesse, pavimentazioni appena asfaltate ed errori nei dati.
 
+**Ideato e creato da [Domenico Campanella Scali](https://github.com/campsh98-creator).**
+
 **Beta:** [lastrico-milano.cscda39.chatgpt.site](https://lastrico-milano.cscda39.chatgpt.site)
 
 > Lastrico non garantisce un percorso completamente asfaltato. La copertura dipende dai dati disponibili e i tempi non includono il traffico in tempo reale.
@@ -19,6 +21,8 @@ La beta permette anche di segnalare tratti mancanti, strade sconnesse, pavimenta
 - confronto tra percorso rapido e percorso anti-pavé;
 - tre livelli di evitamento;
 - ricalcolo manuale e ricalcolo GPS sperimentale;
+- navigazione GPS in primo piano, separata dalla simulazione automatica;
+- guida vocale facoltativa e persistente, disattivata per impostazione iniziale;
 - metri di pavé conosciuto, minuti e distanza stimati;
 - evidenziazione dei tratti critici;
 - segnalazioni comunitarie persistenti;
@@ -94,6 +98,8 @@ I servizi pubblici di Nominatim, OSRM, Overpass e le tile OpenStreetMap sono ada
 Le segnalazioni nuove vengono salvate come `pending`, restano separate dai dati verificati e non modificano automaticamente il routing.
 
 Lastrico non salva una cronologia continua della posizione GPS.
+
+La navigazione GPS richiede HTTPS, il permesso di posizione precisa e l’app aperta in primo piano. iOS può sospendere la PWA quando lo schermo viene bloccato o quando si passa a un’altra app. Il ricalcolo è sperimentale e richiede una connessione dati.
 
 ## Roadmap
 

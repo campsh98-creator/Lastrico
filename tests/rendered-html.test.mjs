@@ -115,7 +115,7 @@ test("provides real, persistent Auto Moto and Bici product modes", async () => {
   assert.match(css, /grid-template-rows: minmax\(0, 62%\) minmax\(0, 38%\)/);
 });
 
-test("supports real in-app foreground navigation with a safe preview", async () => {
+test("separates real GPS navigation from the automatic route simulation", async () => {
   const [page, css] = await Promise.all([
     readFile(pageUrl, "utf8"),
     readFile(cssUrl, "utf8"),
@@ -123,12 +123,23 @@ test("supports real in-app foreground navigation with a safe preview", async () 
 
   assert.match(page, /navigator\.geolocation\.watchPosition/);
   assert.match(page, /function getNavigationProgress/);
-  assert.match(page, /offRouteReadingsRef\.current >= policy\.readings/);
+  assert.match(page, /evaluateOffRouteReading/);
   assert.match(page, /15_000/);
   assert.match(page, /startNavigation\("gps"\)/);
-  assert.match(page, /startNavigation\("preview"\)/);
-  assert.match(page, /ANTEPRIMA \$\{currentTransport\.short\} · la freccia seguirà il percorso selezionato senza usare il GPS/);
+  assert.match(page, /startNavigation\("simulation"\)/);
+  assert.match(page, /shouldRunSimulationTimer\(journeyMode\)/);
+  assert.match(page, /Avvia con GPS/);
+  assert.match(page, /La freccia segue la tua posizione reale/);
+  assert.match(page, /Simula percorso/);
+  assert.match(page, /Avanzamento automatico · GPS non usato/);
+  assert.doesNotMatch(page, /"preview"|ANTEPRIMA/);
+  assert.match(page, /navigationSessionRef\.current/);
+  assert.match(page, /shouldAcceptGpsReading/);
+  assert.match(page, /routeRequestRef\.current\?\.controller\.abort\(\)/);
   assert.match(page, /speechSynthesis/);
+  assert.match(page, /lastrico-voice/);
+  assert.match(page, /aria-pressed=\{voiceEnabled\}/);
+  assert.match(page, /Voce disattivata/);
   assert.match(page, /wakeLock/);
   assert.match(page, /Ricentra/);
   assert.match(page, /Non interagire con lo schermo durante la guida/);
@@ -154,7 +165,7 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
   assert.match(page, /hour >= 7 && hour < 19/);
   assert.match(page, /lastrico-theme/);
   assert.match(layout, /appleWebApp/);
-  assert.match(serviceWorker, /lastrico-v9/);
+  assert.match(serviceWorker, /lastrico-v10/);
   assert.match(serviceWorker, /self\.skipWaiting\(\)/);
   assert.match(serviceWorker, /self\.clients\.claim\(\)/);
 });

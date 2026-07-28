@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "Se usi o citi Lastrico, cita il progetto e il suo creatore."
+title: "Lastrico — Milano senza sobbalzi"
+type: software
+authors:
+  - family-names: "Campanella Scali"
+    given-names: "Domenico"
+repository-code: "https://github.com/campsh98-creator/lastrico-milano"
+url: "https://lastrico-milano.cscda39.chatgpt.site"
+license: MIT
+version: "0.5.0-beta"
+date-released: "2026-07-29"

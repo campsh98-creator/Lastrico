@@ -2,6 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { Map as MapLibreMap, Marker as MapLibreMarker, GeoJSONSource, StyleSpecification } from "maplibre-gl";
+import {
+  evaluateOffRouteReading,
+  gpsCoordinateMoved,
+  shouldAcceptGpsReading,
+  shouldRunSimulationTimer,
+  type NavigationJourneyMode,
+} from "@/lib/navigation-state";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 type Coordinate = [number, number];
@@ -11,7 +18,8 @@ type TransportMode = "car" | "motorcycle" | "bicycle";
 type ThemeMode = "auto" | "light" | "dark";
 type PickingMode = "start" | "end" | "reportStart" | "reportEnd";
 type ReportKind = "pave" | "rough_cobblestone" | "recently_asphalted" | "wrong_data";
-type JourneyMode = "gps" | "preview";
+type JourneyMode = NavigationJourneyMode;
+type GpsState = "idle" | "requesting" | "live" | "weak" | "offroute" | "recalculating" | "unavailable";
 type WakeLockHandle = { release: () => Promise<void>; released?: boolean };
 type NavigatorWithWakeLock = Navigator & {
   wakeLock?: { request: (type: "screen") => Promise<WakeLockHandle> };
@@ -153,10 +161,16 @@ const transportMeta: Record<TransportMode, { label: string; short: string; artic
   motorcycle: { label: "Moto", short: "MOTO", article: "la moto", safety: "Non interagire con lo schermo durante la guida" },
   bicycle: { label: "Bici", short: "BICI", article: "la bici", safety: "Fermati in sicurezza prima di usare lo schermo" },
 };
-const navigationPolicy: Record<TransportMode, { offRouteMeters: number; readings: number; arrivalMeters: number; previewSteps: number }> = {
-  car: { offRouteMeters: 55, readings: 2, arrivalMeters: 35, previewSteps: 80 },
-  motorcycle: { offRouteMeters: 50, readings: 2, arrivalMeters: 30, previewSteps: 90 },
-  bicycle: { offRouteMeters: 38, readings: 3, arrivalMeters: 24, previewSteps: 110 },
+const navigationPolicy: Record<TransportMode, { offRouteMeters: number; readings: number; arrivalMeters: number; simulationSteps: number }> = {
+  car: { offRouteMeters: 55, readings: 2, arrivalMeters: 35, simulationSteps: 80 },
+  motorcycle: { offRouteMeters: 50, readings: 2, arrivalMeters: 30, simulationSteps: 90 },
+  bicycle: { offRouteMeters: 38, readings: 3, arrivalMeters: 24, simulationSteps: 110 },
+};
+const MILAN_GPS_BOUNDS = {
+  west: 9.04,
+  south: 45.38,
+  east: 9.31,
+  north: 45.55,
 };
 const formatMinutes = (minutes: number) => minutes.toLocaleString("it-IT", {
   minimumFractionDigits: 1,
@@ -425,11 +439,14 @@ export default function Home() {
   const vehicleArrowRef = useRef<HTMLSpanElement | null>(null);
   const pickingRef = useRef<PickingMode | null>(null);
   const journeyWatchRef = useRef<number | null>(null);
-  const previewTimerRef = useRef<number | null>(null);
+  const simulationTimerRef = useRef<number | null>(null);
+  const navigationSessionRef = useRef(0);
+  const journeyModeRef = useRef<JourneyMode | null>(null);
   const wakeLockRef = useRef<WakeLockHandle | null>(null);
   const lastJourneyOriginRef = useRef<Coordinate | null>(null);
   const lastJourneyCalculationRef = useRef(0);
   const previousJourneyPositionRef = useRef<Coordinate | null>(null);
+  const previousJourneyAccuracyRef = useRef<number | null>(null);
   const offRouteReadingsRef = useRef(0);
   const lastSpokenInstructionRef = useRef("");
   const journeyActiveRef = useRef(false);
@@ -439,6 +456,7 @@ export default function Home() {
   const loadingRef = useRef(false);
   const transportModeRef = useRef<TransportMode>("car");
   const transportReadyRef = useRef(false);
+  const voiceReadyRef = useRef(false);
   const activeRouteRef = useRef<"safe" | "fast">("fast");
   const routeRequestRef = useRef<{ id: number; controller: AbortController } | null>(null);
   const avoidanceReadyRef = useRef(false);
@@ -473,7 +491,8 @@ export default function Home() {
   const [journeyHeading, setJourneyHeading] = useState(0);
   const [journeyAccuracy, setJourneyAccuracy] = useState<number | null>(null);
   const [followVehicle, setFollowVehicle] = useState(true);
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [gpsState, setGpsState] = useState<GpsState>("idle");
   const [isRecalculating, setIsRecalculating] = useState(false);
   const [arrived, setArrived] = useState(false);
   const [lastRecalculatedAt, setLastRecalculatedAt] = useState<string | null>(null);
@@ -510,6 +529,30 @@ export default function Home() {
     () => getNavigationProgress(selectedRoute, journeyPosition),
     [journeyPosition, selectedRoute],
   );
+  const navigationModeLabel = journeyMode === "simulation"
+    ? "SIMULAZIONE"
+    : gpsState === "requesting"
+      ? "GPS · AGGANCIO"
+      : gpsState === "weak"
+        ? "GPS DEBOLE"
+        : gpsState === "offroute"
+          ? "FUORI PERCORSO"
+          : gpsState === "recalculating" || isRecalculating
+            ? "RICALCOLO"
+            : "GPS LIVE";
+  const navigationStateDescription = journeyMode === "simulation"
+    ? "Avanzamento automatico · GPS non usato"
+    : !isOnline
+      ? "Connessione assente · continuo sul percorso salvato"
+      : gpsState === "requesting"
+        ? "Ricerca della posizione precisa in corso"
+        : gpsState === "weak"
+          ? `Segnale debole${journeyAccuracy ? ` · ±${Math.round(journeyAccuracy)} m` : ""} · ultimo punto valido`
+          : gpsState === "offroute"
+            ? "Fuori percorso · attendo un fix affidabile"
+            : gpsState === "recalculating" || isRecalculating
+              ? "Fuori percorso · sto calcolando una nuova strada"
+              : `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`;
   const speakInstruction = useCallback((text: string) => {
     if (!voiceEnabled || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
     try {
@@ -522,6 +565,17 @@ export default function Home() {
       // Visual guidance remains available when speech synthesis fails.
     }
   }, [voiceEnabled]);
+  const toggleVoiceGuidance = useCallback(() => {
+    setVoiceEnabled((current) => {
+      if (current) window.speechSynthesis?.cancel();
+      return !current;
+    });
+  }, []);
+
+  function selectActiveRoute(routeKind: "safe" | "fast") {
+    activeRouteRef.current = routeKind;
+    setActiveRoute(routeKind);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -777,8 +831,11 @@ export default function Home() {
     const allCoordinates = [...fastRoute.coordinates, ...safeRoute.coordinates];
     const lngs = allCoordinates.map(([lng]) => lng);
     const lats = allCoordinates.map(([, lat]) => lat);
+    const compactMap = window.innerWidth <= 760;
     map.fitBounds([[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]], {
-      padding: { top: 90, right: 60, bottom: 90, left: 60 },
+      padding: compactMap
+        ? { top: 30, right: 22, bottom: 30, left: 22 }
+        : { top: 90, right: 60, bottom: 90, left: 60 },
       maxZoom: 14.7,
       duration: 650,
     });
@@ -792,11 +849,17 @@ export default function Home() {
   }, [isJourneyActive, voiceEnabled, navigationProgress.instruction, speakInstruction]);
 
   useEffect(() => {
-    if (journeyMode !== "preview" || !selectedRoute.coordinates.length) return;
+    if (!shouldRunSimulationTimer(journeyMode) || !selectedRoute.coordinates.length) return;
     const coordinates = selectedRoute.coordinates;
+    const session = navigationSessionRef.current;
     let index = 0;
-    const step = Math.max(1, Math.floor(coordinates.length / navigationPolicy[transportModeRef.current].previewSteps));
-    previewTimerRef.current = window.setInterval(() => {
+    const step = Math.max(1, Math.floor(coordinates.length / navigationPolicy[transportModeRef.current].simulationSteps));
+    simulationTimerRef.current = window.setInterval(() => {
+      if (
+        !journeyActiveRef.current
+        || journeyModeRef.current !== "simulation"
+        || navigationSessionRef.current !== session
+      ) return;
       index = Math.min(coordinates.length - 1, index + step);
       const position = coordinates[index];
       const previous = coordinates[Math.max(0, index - step)];
@@ -805,10 +868,10 @@ export default function Home() {
       if (index >= coordinates.length - 1) finishNavigation(true);
     }, 700);
     return () => {
-      if (previewTimerRef.current !== null) window.clearInterval(previewTimerRef.current);
-      previewTimerRef.current = null;
+      if (simulationTimerRef.current !== null) window.clearInterval(simulationTimerRef.current);
+      simulationTimerRef.current = null;
     };
-    // Preview follows the route that was active when it started.
+    // Simulation follows the route that was active when it started.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [journeyMode]);
 
@@ -848,6 +911,23 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const savedVoice = window.localStorage.getItem("lastrico-voice");
+    if (savedVoice === "on" || savedVoice === "off") {
+      window.queueMicrotask(() => {
+        setVoiceEnabled(savedVoice === "on");
+        voiceReadyRef.current = true;
+      });
+      return;
+    }
+    voiceReadyRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!voiceReadyRef.current) return;
+    window.localStorage.setItem("lastrico-voice", voiceEnabled ? "on" : "off");
+  }, [voiceEnabled]);
+
+  useEffect(() => {
     const applyTheme = () => {
       const hour = new Date().getHours();
       const nextTheme = themeMode === "auto"
@@ -883,7 +963,7 @@ export default function Home() {
     return () => {
       document.removeEventListener("visibilitychange", reacquireWakeLock);
       if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
-      if (previewTimerRef.current !== null) window.clearInterval(previewTimerRef.current);
+      if (simulationTimerRef.current !== null) window.clearInterval(simulationTimerRef.current);
       void wakeLockRef.current?.release();
       window.speechSynthesis?.cancel();
     };
@@ -1013,9 +1093,21 @@ export default function Home() {
 
   async function calculateRoutes(
     startOverride?: LocationChoice,
-    options: { mode?: TransportMode; preserveRoute?: "safe" | "fast"; force?: boolean } = {},
+    options: {
+      mode?: TransportMode;
+      preserveRoute?: "safe" | "fast";
+      force?: boolean;
+      journeySession?: number;
+    } = {},
   ) {
     if (!navigator.onLine) {
+      if (
+        options.journeySession !== undefined
+        && options.journeySession === navigationSessionRef.current
+      ) {
+        setIsRecalculating(false);
+        setGpsState("offroute");
+      }
       setStatus("Connessione assente. Mantengo il percorso già disponibile.");
       return;
     }
@@ -1025,9 +1117,12 @@ export default function Home() {
     const requestId = (routeRequestRef.current?.id ?? 0) + 1;
     routeRequestRef.current = { id: requestId, controller };
     const requestedMode = options.mode ?? transportModeRef.current;
+    let routeSucceeded = false;
     loadingRef.current = true;
     setIsLoading(true);
-    setStatus(`Calcolo i percorsi per ${transportMeta[requestedMode].article}…`);
+    setStatus(options.journeySession === undefined
+      ? `Calcolo i percorsi per ${transportMeta[requestedMode].article}…`
+      : `Fuori percorso · ricalcolo per ${transportMeta[requestedMode].article}…`);
     try {
       const resolvedStart = startOverride ?? await geocode(startText, startLocation, "start");
       if (!startOverride && startText.trim() !== startLocation.label && endText.trim() !== endLocation.label) {
@@ -1050,7 +1145,17 @@ export default function Home() {
       if (!response.ok || !data.fast || !data.safe) {
         throw new Error(data.error ?? "Non riesco a calcolare il percorso.");
       }
-      if (routeRequestRef.current?.id !== requestId || data.transportMode !== requestedMode) return;
+      if (
+        routeRequestRef.current?.id !== requestId
+        || data.transportMode !== requestedMode
+        || (
+          options.journeySession !== undefined
+          && (
+            !journeyActiveRef.current
+            || options.journeySession !== navigationSessionRef.current
+          )
+        )
+      ) return;
       setFastRoute({ ...data.fast, nodes: [], edges: [], problemSegments: data.problemSegments });
       setSafeRoute({ ...data.safe, nodes: [], edges: [], problemSegments: data.problemSegments });
       setAlternativesAnalyzed(data.alternativesAnalyzed);
@@ -1069,14 +1174,29 @@ export default function Home() {
       setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
       const timingNotice = requestedMode === "bicycle" ? "Tempi stimati senza traffico live" : "Tempi medi senza traffico live";
       setStatus(`${data.dataNotice}. ${timingNotice}.`);
+      routeSucceeded = true;
+      if (options.journeySession !== undefined) setGpsState("live");
     } catch (error) {
       if (controller.signal.aborted) return;
+      if (
+        options.journeySession !== undefined
+        && options.journeySession === navigationSessionRef.current
+      ) {
+        setGpsState("offroute");
+      }
       setStatus(error instanceof Error ? error.message : "Qualcosa non ha funzionato. Riprova.");
     } finally {
       if (routeRequestRef.current?.id === requestId) {
         loadingRef.current = false;
         setIsLoading(false);
         setIsRecalculating(false);
+        if (
+          options.journeySession !== undefined
+          && options.journeySession === navigationSessionRef.current
+          && !routeSucceeded
+        ) {
+          setGpsState("offroute");
+        }
       }
     }
   }
@@ -1146,25 +1266,34 @@ export default function Home() {
 
   function finishNavigation(hasArrived = false) {
     journeyActiveRef.current = false;
+    navigationSessionRef.current += 1;
+    journeyModeRef.current = null;
     if (journeyWatchRef.current !== null) {
       navigator.geolocation.clearWatch(journeyWatchRef.current);
       journeyWatchRef.current = null;
     }
-    if (previewTimerRef.current !== null) {
-      window.clearInterval(previewTimerRef.current);
-      previewTimerRef.current = null;
+    if (simulationTimerRef.current !== null) {
+      window.clearInterval(simulationTimerRef.current);
+      simulationTimerRef.current = null;
     }
+    routeRequestRef.current?.controller.abort();
+    routeRequestRef.current = null;
     void wakeLockRef.current?.release();
     wakeLockRef.current = null;
     window.speechSynthesis?.cancel();
     setIsJourneyActive(false);
     setJourneyMode(null);
+    setGpsState("idle");
+    setIsRecalculating(false);
     setJourneyPosition(null);
     setJourneyAccuracy(null);
+    setJourneyHeading(0);
+    journeyHeadingRef.current = 0;
     setFollowVehicle(true);
     setArrived(hasArrived);
     lastJourneyOriginRef.current = null;
     previousJourneyPositionRef.current = null;
+    previousJourneyAccuracyRef.current = null;
     offRouteReadingsRef.current = 0;
     lastSpokenInstructionRef.current = "";
     mapRef.current?.easeTo({ pitch: 0, bearing: 0, duration: 450 });
@@ -1180,45 +1309,92 @@ export default function Home() {
     coordinate: Coordinate,
     accuracy: number,
     reportedHeading: number | null,
+    reportedSpeed: number | null,
+    session: number,
   ) {
+    if (
+      !journeyActiveRef.current
+      || journeyModeRef.current !== "gps"
+      || session !== navigationSessionRef.current
+    ) return;
     const previous = previousJourneyPositionRef.current;
-    const inferredHeading = previous && distanceMeters(previous, coordinate) > 4
+    const previousAccuracy = previousJourneyAccuracyRef.current ?? accuracy;
+    const headingMovementThreshold = Math.max(
+      6,
+      Math.min(25, Math.max(previousAccuracy, accuracy) * 0.75),
+    );
+    const movedEnoughForHeading = gpsCoordinateMoved(
+      previous,
+      coordinate,
+      distanceMeters,
+      headingMovementThreshold,
+    );
+    const inferredHeading = movedEnoughForHeading && previous
       ? bearingBetween(previous, coordinate)
       : journeyHeadingRef.current;
-    const heading = Number.isFinite(reportedHeading) ? reportedHeading! : inferredHeading;
-    previousJourneyPositionRef.current = coordinate;
+    const movingWithReportedHeading = (
+      Number.isFinite(reportedHeading)
+      && Number.isFinite(reportedSpeed)
+      && reportedSpeed! > 1
+    );
+    const heading = movingWithReportedHeading ? reportedHeading! : inferredHeading;
+    const markerMoved = previous === null
+      || gpsCoordinateMoved(previous, coordinate, distanceMeters, 1);
+    if (markerMoved) {
+      previousJourneyPositionRef.current = coordinate;
+      setJourneyPosition(coordinate);
+    }
+    previousJourneyAccuracyRef.current = accuracy;
     journeyHeadingRef.current = heading;
-    setJourneyPosition(coordinate);
     setJourneyAccuracy(accuracy);
     setJourneyHeading(heading);
+    setGpsState("live");
 
     const routeResult = selectedRouteRef.current;
-    const destination = endLocationRef.current;
-    if (!routeResult || !destination) return;
+    if (!routeResult) return;
     const mode = transportModeRef.current;
     const policy = navigationPolicy[mode];
-    if (distanceMeters(coordinate, destination.coordinate) <= policy.arrivalMeters) {
+    const routeEnd = routeResult.coordinates[routeResult.coordinates.length - 1];
+    const arrivalTolerance = policy.arrivalMeters + Math.min(accuracy, 25);
+    if (routeEnd && distanceMeters(coordinate, routeEnd) <= arrivalTolerance) {
       finishNavigation(true);
       return;
     }
 
     const progress = getNavigationProgress(routeResult, coordinate);
-    if (progress.offRouteMeters > policy.offRouteMeters) {
-      offRouteReadingsRef.current += 1;
-    } else {
-      offRouteReadingsRef.current = 0;
-    }
     const now = Date.now();
-    const canRecalculate = now - lastJourneyCalculationRef.current >= 15_000;
-    if (offRouteReadingsRef.current >= policy.readings && canRecalculate && !loadingRef.current) {
+    const offRouteDecision = evaluateOffRouteReading({
+      currentReadings: offRouteReadingsRef.current,
+      offRouteMeters: progress.offRouteMeters,
+      thresholdMeters: policy.offRouteMeters + Math.min(accuracy, 60),
+      requiredReadings: policy.readings,
+      now,
+      lastCalculationAt: lastJourneyCalculationRef.current,
+      cooldownMs: 15_000,
+      calculationInProgress: loadingRef.current,
+    });
+    offRouteReadingsRef.current = offRouteDecision.readings;
+    if (offRouteDecision.readings > 0) setGpsState("offroute");
+    if (offRouteDecision.shouldRecalculate) {
+      if (!navigator.onLine) {
+        setIsRecalculating(false);
+        setGpsState("offroute");
+        setStatus("Fuori percorso, ma sei offline. Mantengo l’ultimo percorso.");
+        return;
+      }
       lastJourneyCalculationRef.current = now;
       lastJourneyOriginRef.current = coordinate;
-      offRouteReadingsRef.current = 0;
       setIsRecalculating(true);
+      setGpsState("recalculating");
       setStatus(`Fuori percorso · ricalcolo per ${transportMeta[mode].article}…`);
       void calculateRoutes(
         { label: "Posizione GPS live", coordinate },
-        { mode, preserveRoute: activeRouteRef.current, force: true },
+        {
+          mode,
+          preserveRoute: activeRouteRef.current,
+          force: true,
+          journeySession: session,
+        },
       );
       return;
     }
@@ -1232,11 +1408,20 @@ export default function Home() {
       return;
     }
     if (isJourneyActive) finishNavigation();
+    const session = navigationSessionRef.current + 1;
+    navigationSessionRef.current = session;
+    journeyModeRef.current = mode;
     setArrived(false);
     setFollowVehicle(true);
     setJourneyMode(mode);
     setIsJourneyActive(true);
     journeyActiveRef.current = true;
+    setJourneyPosition(null);
+    setJourneyAccuracy(null);
+    setJourneyHeading(0);
+    journeyHeadingRef.current = 0;
+    previousJourneyPositionRef.current = null;
+    previousJourneyAccuracyRef.current = null;
     selectedRouteRef.current = selectedRoute;
     endLocationRef.current = endLocation;
     lastJourneyCalculationRef.current = 0;
@@ -1244,41 +1429,72 @@ export default function Home() {
     lastSpokenInstructionRef.current = "";
     void requestWakeLock();
     const currentTransport = transportMeta[transportModeRef.current];
-    speakInstruction(mode === "preview"
-      ? `Anteprima navigazione Lastrico in ${currentTransport.label.toLowerCase()}`
+    speakInstruction(mode === "simulation"
+      ? `Simulazione del percorso Lastrico in ${currentTransport.label.toLowerCase()}`
       : `Navigazione Lastrico in ${currentTransport.label.toLowerCase()} avviata`);
 
-    if (mode === "preview") {
+    if (mode === "simulation") {
+      setGpsState("idle");
       const coordinates = selectedRoute.coordinates;
       setJourneyPosition(coordinates[0]);
       setJourneyHeading(coordinates.length > 1 ? bearingBetween(coordinates[0], coordinates[1]) : 0);
       setJourneyAccuracy(5);
-      setStatus(`ANTEPRIMA ${currentTransport.short} · la freccia seguirà il percorso selezionato senza usare il GPS.`);
+      setStatus(`SIMULAZIONE ${currentTransport.short} · avanzamento automatico senza GPS.`);
       return;
     }
     if (!navigator.geolocation) {
-      setStatus("Il GPS non è disponibile su questo dispositivo. Puoi usare l’anteprima.");
       finishNavigation();
+      setGpsState("unavailable");
+      setStatus("Il GPS non è disponibile su questo dispositivo. Puoi usare Simula percorso.");
       return;
     }
+    setGpsState("requesting");
     setStatus("Autorizza la posizione precisa: aggancio il GPS al percorso Lastrico…");
     journeyWatchRef.current = navigator.geolocation.watchPosition(
       ({ coords }) => {
+        if (
+          !journeyActiveRef.current
+          || journeyModeRef.current !== "gps"
+          || session !== navigationSessionRef.current
+        ) return;
         const coordinate: Coordinate = [coords.longitude, coords.latitude];
-        if (coordinate[0] < 9.04 || coordinate[0] > 9.31 || coordinate[1] < 45.38 || coordinate[1] > 45.55) {
+        const inMilan = (
+          coordinate[0] >= MILAN_GPS_BOUNDS.west
+          && coordinate[0] <= MILAN_GPS_BOUNDS.east
+          && coordinate[1] >= MILAN_GPS_BOUNDS.south
+          && coordinate[1] <= MILAN_GPS_BOUNDS.north
+        );
+        if (!inMilan) {
+          setGpsState("weak");
           setStatus("La navigazione della beta copre per ora soltanto Milano.");
           return;
         }
-        if (coords.accuracy > 120) {
+        if (!shouldAcceptGpsReading(coordinate, coords.accuracy, MILAN_GPS_BOUNDS)) {
+          setGpsState("weak");
           setJourneyAccuracy(coords.accuracy);
           setStatus(`Segnale GPS debole (±${Math.round(coords.accuracy)} m). Mantengo l’ultimo percorso.`);
           return;
         }
-        updateJourneyPosition(coordinate, coords.accuracy, coords.heading);
+        updateJourneyPosition(
+          coordinate,
+          coords.accuracy,
+          coords.heading,
+          coords.speed,
+          session,
+        );
       },
-      () => {
-        finishNavigation();
-        setStatus("GPS non disponibile. Controlla i permessi di Safari oppure usa Anteprima navigazione.");
+      (error) => {
+        if (session !== navigationSessionRef.current) return;
+        if (error.code === error.PERMISSION_DENIED) {
+          finishNavigation();
+          setGpsState("unavailable");
+          setStatus("Permesso GPS negato. Abilita la posizione in Safari oppure usa Simula percorso.");
+          return;
+        }
+        setGpsState("weak");
+        setStatus(error.code === error.TIMEOUT
+          ? "GPS in attesa: il segnale sta impiegando più tempo del previsto."
+          : "Posizione temporaneamente non disponibile. Mantengo l’ultimo punto valido.");
       },
       { enableHighAccuracy: true, maximumAge: 1500, timeout: 12000 },
     );
@@ -1575,8 +1791,13 @@ export default function Home() {
             {activePanel === "routes" && (
               <section className="routes-panel" data-testid="route-panel" data-transport={transportMode}>
                 <div className="panel-heading routes-heading">
-                  <h2>Percorsi in {transportMeta[transportMode].label.toLowerCase()}</h2>
-                  <p>{alternativesAnalyzed} alternative{lastRecalculatedAt ? ` · ${lastRecalculatedAt}` : ""}</p>
+                  <div>
+                    <h2>Percorsi in {transportMeta[transportMode].label.toLowerCase()}</h2>
+                    <p>{alternativesAnalyzed} alternative{lastRecalculatedAt ? ` · ${lastRecalculatedAt}` : ""}</p>
+                  </div>
+                  <button type="button" onClick={() => void calculateRoutes()} disabled={isLoading}>
+                    {isLoading ? "Calcolo…" : "↻ Ricalcola"}
+                  </button>
                 </div>
 
                 <div className="route-options" role="radiogroup" aria-label={`Percorso ${transportMeta[transportMode].label}`}>
@@ -1587,7 +1808,7 @@ export default function Home() {
                       aria-checked={activeRoute === "safe"}
                       data-testid="route-option-safe"
                       className={`route-option safe ${activeRoute === "safe" ? "selected" : ""}`}
-                      onClick={() => setActiveRoute("safe")}
+                      onClick={() => selectActiveRoute("safe")}
                     >
                       <span className="route-radio" />
                       <span className="route-name"><b>Anti-pavé · {transportMeta[transportMode].label}</b><small>{safeRoute.distance.toFixed(1)} km · {safeRoute.paveMeters} m noti</small></span>
@@ -1607,7 +1828,7 @@ export default function Home() {
                     aria-checked={activeRoute === "fast"}
                     data-testid="route-option-fast"
                     className={`route-option fast ${activeRoute === "fast" ? "selected" : ""}`}
-                    onClick={() => setActiveRoute("fast")}
+                    onClick={() => selectActiveRoute("fast")}
                   >
                     <span className="route-radio" />
                     <span className="route-name"><b>Più rapido · {transportMeta[transportMode].label}</b><small>{fastRoute.distance.toFixed(1)} km · {fastRoute.paveMeters} m noti</small></span>
@@ -1628,12 +1849,19 @@ export default function Home() {
 
                 <button type="button" className="journey-button" data-testid="start-navigation" onClick={() => startNavigation("gps")}>
                   <span>▶</span>
-                  <b>Avvia navigazione in {transportMeta[transportMode].label.toLowerCase()}</b>
-                  <small>Segui il percorso Lastrico con GPS e ricalcolo</small>
+                  <b>Avvia con GPS</b>
+                  <small>La freccia segue la tua posizione reale</small>
                 </button>
                 <div className="route-actions">
-                  <button type="button" onClick={() => startNavigation("preview")}>▷ Anteprima</button>
-                  <button type="button" onClick={() => void calculateRoutes()} disabled={isLoading}>↻ Ricalcola</button>
+                  <button
+                    type="button"
+                    className={voiceEnabled ? "active" : ""}
+                    onClick={toggleVoiceGuidance}
+                    aria-pressed={voiceEnabled}
+                  >
+                    {voiceEnabled ? "🔊 Voce attiva" : "🔇 Voce disattivata"}
+                  </button>
+                  <button type="button" onClick={() => startNavigation("simulation")}>▷ Simula percorso</button>
                   <button type="button" onClick={() => setMapChooserOpen(true)}>Fallback mappe ↗</button>
                 </div>
               </section>
@@ -1672,7 +1900,7 @@ export default function Home() {
             <div className="navigation-hud" aria-label="Navigazione Lastrico" data-testid="navigation-hud" data-transport={transportMode}>
               <section className="navigation-instruction">
                 <div className="navigation-mode">
-                  <span>{journeyMode === "preview" ? "ANTEPRIMA" : isRecalculating ? "RICALCOLO" : "GPS LIVE"}</span>
+                  <span>{navigationModeLabel}</span>
                   <small>{transportMeta[transportMode].short}</small>
                   <small>{activeRoute === "safe" ? "ANTI-PAVÉ" : "RAPIDO"}</small>
                 </div>
@@ -1692,26 +1920,18 @@ export default function Home() {
                 <div className="navigation-controls">
                   <button
                     type="button"
-                    onClick={() => setVoiceEnabled((current) => {
-                      if (current) window.speechSynthesis?.cancel();
-                      return !current;
-                    })}
+                    onClick={toggleVoiceGuidance}
+                    aria-pressed={voiceEnabled}
                     aria-label={voiceEnabled ? "Disattiva voce" : "Attiva voce"}
                   >
-                    {voiceEnabled ? "Voce" : "Muto"}
+                    {voiceEnabled ? "🔊 Voce attiva" : "🔇 Voce spenta"}
                   </button>
                   <button type="button" onClick={recenterNavigation} aria-label="Ricentra la mappa">
                     {followVehicle ? "Centrata" : "Ricentra"}
                   </button>
                   <button type="button" className="stop-navigation" onClick={() => finishNavigation()} aria-label="Termina navigazione">Termina</button>
                 </div>
-                <p>
-                  {!isOnline
-                    ? "Connessione assente · continuo sul percorso salvato"
-                    : journeyMode === "preview"
-                    ? "Simulazione senza GPS · nessun ricalcolo"
-                    : `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`}
-                </p>
+                <p>{navigationStateDescription}</p>
               </section>
               <div className="driving-safety">{transportMeta[transportMode].safety}</div>
             </div>
@@ -1725,7 +1945,7 @@ export default function Home() {
                     ? "Tocca la fine del tratto"
                     : `Tocca la ${picking === "start" ? "partenza" : "destinazione"}`
                 : isJourneyActive
-                  ? journeyMode === "preview" ? "ANTEPRIMA · percorso Lastrico" : "GPS LIVE · percorso Lastrico"
+                  ? `${navigationModeLabel} · percorso Lastrico`
                   : isLiveResult
                     ? hasDistinctAlternative
                       ? `${transportMeta[transportMode].short} · ${alternativesAnalyzed} percorsi · deviazione trovata`
@@ -1895,6 +2115,9 @@ export default function Home() {
             </div>
             <p className="beta-privacy">
               Per calcolare e ricalcolare il percorso, partenza, destinazione e posizione usata come nuova partenza vengono trasmesse ai servizi OpenStreetMap/FOSSGIS e possono comparire nei loro log tecnici. Lastrico non salva la posizione continua.
+            </p>
+            <p className="beta-privacy">
+              Lastrico è un progetto ideato e creato da <strong>Domenico Campanella Scali</strong>.
             </p>
             <div className="beta-links">
               <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap · ODbL</a>

@@ -434,7 +434,20 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .primary-action.compact { width: auto; min-width: 140px; margin: 0; justify-content: center; }
 .micro-disclaimer { margin: 7px 0 0; color: #8b9694; font-size: 8px; line-height: 1.35; text-align: center; }
 
-.routes-heading { margin-bottom: 12px; }
+.routes-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.routes-heading > div { min-width: 0; }
+.routes-heading button {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 8px;
+  font-weight: 900;
+}
+.routes-heading button:disabled { opacity: .5; }
 .route-option {
   width: 100%;
   min-height: 69px;
@@ -517,6 +530,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-weight: 900;
 }
 .route-actions button:disabled { opacity: .5; }
+.route-actions button.active { border-color: var(--green); background: var(--green-soft); color: var(--green-dark); }
 
 .beta-stats { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--border); border-radius: 11px; overflow: hidden; }
 .beta-stats article { padding: 11px 8px; border-right: 1px solid var(--border); background: var(--surface); }
@@ -999,6 +1013,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .micro-disclaimer { margin-top: 4px; font-size: 7px; }
 
   .routes-heading { margin-bottom: 7px; }
+  .routes-heading button { min-height: 44px; }
   .route-option { min-height: 56px; margin-bottom: 5px; padding: 7px 8px; }
   .route-option strong { font-size: 21px; }
   .impact-strip { margin-bottom: 6px; }

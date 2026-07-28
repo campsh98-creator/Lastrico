@@ -13,6 +13,9 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     applicationName: "Lastrico",
+    authors: [{ name: "Domenico Campanella Scali" }],
+    creator: "Domenico Campanella Scali",
+    publisher: "Domenico Campanella Scali",
     manifest: "/manifest.webmanifest",
     appleWebApp: {
       capable: true,
