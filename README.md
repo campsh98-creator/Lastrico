@@ -1,98 +1,122 @@
-# vinext-starter
+# Lastrico — Milano senza sobbalzi
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+![Lastrico social preview](public/og.png)
 
-## Prerequisites
+Lastrico è una PWA sperimentale che confronta il percorso automobilistico più rapido con un’alternativa che riduce le strade in pavé e sanpietrini conosciute a Milano.
 
-- Node.js `>=22.13.0`
+La beta permette anche di segnalare tratti mancanti, strade sconnesse, pavimentazioni appena asfaltate ed errori nei dati.
 
-## Quick Start
+**Beta:** [lastrico-milano.cscda39.chatgpt.site](https://lastrico-milano.cscda39.chatgpt.site)
+
+> Lastrico non garantisce un percorso completamente asfaltato. La copertura dipende dai dati disponibili e i tempi non includono il traffico in tempo reale.
+
+## Cosa funziona
+
+- partenza e destinazione libere;
+- geocoding degli indirizzi nell’area di Milano;
+- selezione dei punti direttamente sulla mappa;
+- posizione GPS come partenza;
+- confronto tra percorso rapido e percorso anti-pavé;
+- tre livelli di evitamento;
+- ricalcolo manuale e ricalcolo GPS sperimentale;
+- metri di pavé conosciuto, minuti e distanza stimati;
+- evidenziazione dei tratti critici;
+- segnalazioni comunitarie persistenti;
+- esportazione CSV dei contributi;
+- installazione su iPhone come web app.
+
+## Prova su iPhone
+
+1. Apri la beta in Safari.
+2. Tocca **Condividi**.
+3. Seleziona **Aggiungi alla schermata Home**.
+4. Attiva **Apri come app web**.
+5. Concedi la posizione soltanto quando avvii un test GPS.
+
+La PWA non compare direttamente sul display CarPlay. Una vera integrazione richiederà un’app iPhone nativa, navigazione turn-by-turn e l’autorizzazione CarPlay Navigation di Apple.
+
+## Architettura
+
+| Area | Tecnologia |
+| --- | --- |
+| Interfaccia | React 19, Next.js/vinext, TypeScript |
+| Mappa | MapLibre GL JS |
+| Dati cartografici | OpenStreetMap |
+| Routing beta | OSRM pubblico |
+| Superfici | Overpass API e tag OSM `surface` |
+| Ricerca indirizzi | Nominatim |
+| Segnalazioni | Cloudflare D1 e Drizzle ORM |
+| Distribuzione | PWA e Cloudflare Worker tramite Sites |
+
+```text
+iPhone / browser
+       │
+       ▼
+Lastrico PWA ──► geocoding
+       │
+       ├──────► alternative OSRM
+       ├──────► superfici Overpass / OSM
+       └──────► segnalazioni D1
+```
+
+## Sviluppo locale
+
+Requisiti:
+
+- Node.js 22.13 o successivo;
+- npm.
 
 ```bash
 npm install
 npm run dev
+```
+
+L’app viene esposta su `http://localhost:3000`.
+
+Per creare la build:
+
+```bash
 npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+Per rigenerare le migrazioni dopo modifiche allo schema:
 
-## Included Shape
-
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```bash
+npm run db:generate
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+Il database D1 locale deve essere inizializzato con la migrazione presente in `drizzle/`. Il binding logico usato dall’app è `DB`.
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+## Limiti della beta gratuita
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+I servizi pubblici di Nominatim, OSRM, Overpass e le tile OpenStreetMap sono adatti soltanto a test con pochi utenti e richieste moderate. Non costituiscono un’infrastruttura commerciale gratuita e illimitata.
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+Le segnalazioni nuove vengono salvate come `pending`, restano separate dai dati verificati e non modificano automaticamente il routing.
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+Lastrico non salva una cronologia continua della posizione GPS.
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+## Roadmap
 
-## Useful Commands
+1. Validare 10–15 tragitti reali a Milano.
+2. Migliorare moderazione e copertura dei dati.
+3. Introdurre istruzioni turn-by-turn e avvisi audio.
+4. Creare l’app iPhone nativa.
+5. Richiedere ad Apple l’entitlement `com.apple.developer.carplay-maps`.
+6. Testare e distribuire l’esperienza CarPlay.
 
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+## Contribuire
 
-## Learn More
+Leggi [CONTRIBUTING.md](CONTRIBUTING.md). Puoi aprire una segnalazione per:
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+- pavé mancante o dato errato;
+- problema di routing;
+- problema dell’interfaccia mobile;
+- proposta per la beta.
+
+## Privacy e sicurezza
+
+Non pubblicare indirizzi personali, targhe, dati di localizzazione precisi riferiti a persone o credenziali. Per problemi di sicurezza segui [SECURITY.md](SECURITY.md).
+
+## Licenza
+
+Codice distribuito con licenza [MIT](LICENSE). I dati OpenStreetMap restano soggetti alla licenza e all’attribuzione dei rispettivi titolari.

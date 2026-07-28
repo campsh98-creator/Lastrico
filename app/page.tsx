@@ -254,11 +254,27 @@ function draftGeoJSON(start: Coordinate | null, end: Coordinate | null) {
   };
 }
 
+function distanceMeters(a: Coordinate, b: Coordinate) {
+  const toRadians = (value: number) => value * Math.PI / 180;
+  const earthRadius = 6371000;
+  const dLat = toRadians(b[1] - a[1]);
+  const dLng = toRadians(b[0] - a[0]);
+  const lat1 = toRadians(a[1]);
+  const lat2 = toRadians(b[1]);
+  const value = Math.sin(dLat / 2) ** 2
+    + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return earthRadius * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+}
+
 export default function Home() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker }>({});
   const pickingRef = useRef<PickingMode | null>(null);
+  const journeyWatchRef = useRef<number | null>(null);
+  const lastJourneyOriginRef = useRef<Coordinate | null>(null);
+  const lastJourneyCalculationRef = useRef(0);
+  const avoidanceReadyRef = useRef(false);
   const defaultFast = useMemo(() => route("castello", "venezia"), []);
   const defaultSafe = useMemo(() => route("castello", "venezia", "strong"), []);
   const [startLocation, setStartLocation] = useState<LocationChoice>({
@@ -281,6 +297,9 @@ export default function Home() {
   const [status, setStatus] = useState("Demo pronta: cerca un indirizzo o scegli due punti sulla mappa.");
   const [isLiveResult, setIsLiveResult] = useState(false);
   const [alternativesAnalyzed, setAlternativesAnalyzed] = useState(2);
+  const [activePanel, setActivePanel] = useState<"plan" | "routes" | "community">("plan");
+  const [isJourneyActive, setIsJourneyActive] = useState(false);
+  const [lastRecalculatedAt, setLastRecalculatedAt] = useState<string | null>(null);
   const [reports, setReports] = useState<RoadReport[]>([]);
   const [reportStats, setReportStats] = useState<ReportStats>({ total: 0, pending: 0, verified: 0, communityMeters: 0 });
   const [reportStart, setReportStart] = useState<Coordinate | null>(null);
@@ -473,6 +492,10 @@ export default function Home() {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
   }, []);
 
+  useEffect(() => () => {
+    if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
+  }, []);
+
   useEffect(() => {
     fetch("/api/reports")
       .then(async (response) => {
@@ -496,6 +519,17 @@ export default function Home() {
     if (!mapReady || !map?.isStyleLoaded()) return;
     (map.getSource("report-draft") as GeoJSONSource)?.setData(draftGeoJSON(reportStart, reportEnd));
   }, [reportStart, reportEnd, mapReady]);
+
+  useEffect(() => {
+    if (!avoidanceReadyRef.current) {
+      avoidanceReadyRef.current = true;
+      return;
+    }
+    if (!isLiveResult || isJourneyActive) return;
+    setStatus("Livello aggiornato: ricalcolo le alternative…");
+    const timer = window.setTimeout(() => void calculateRoutes(), 350);
+    return () => window.clearTimeout(timer);
+  }, [avoidance]);
 
   function swapLocations() {
     const oldStart = startLocation;
@@ -533,13 +567,13 @@ export default function Home() {
     return data.results[0];
   }
 
-  async function calculateRoutes() {
+  async function calculateRoutes(startOverride?: LocationChoice) {
     if (isLoading) return;
     setIsLoading(true);
     setStatus("Cerco i punti e analizzo le alternative stradali…");
     try {
-      const resolvedStart = await geocode(startText, startLocation);
-      if (startText.trim() !== startLocation.label && endText.trim() !== endLocation.label) {
+      const resolvedStart = startOverride ?? await geocode(startText, startLocation);
+      if (!startOverride && startText.trim() !== startLocation.label && endText.trim() !== endLocation.label) {
         await new Promise((resolve) => setTimeout(resolve, 1100));
       }
       const resolvedEnd = await geocode(endText, endLocation);
@@ -562,6 +596,8 @@ export default function Home() {
       setSafeRoute({ ...data.safe, nodes: [], edges: [], problemSegments: data.problemSegments });
       setAlternativesAnalyzed(data.alternativesAnalyzed);
       setIsLiveResult(true);
+      setActivePanel("routes");
+      setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
       setStatus(`${data.dataNotice}. Tempi medi senza traffico live.`);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Qualcosa non ha funzionato. Riprova.");
@@ -593,6 +629,82 @@ export default function Home() {
     );
   }
 
+  function stopJourney() {
+    if (journeyWatchRef.current !== null) {
+      navigator.geolocation.clearWatch(journeyWatchRef.current);
+      journeyWatchRef.current = null;
+    }
+    setIsJourneyActive(false);
+    lastJourneyOriginRef.current = null;
+    setStatus("Test GPS terminato. La posizione non viene conservata.");
+  }
+
+  function toggleJourney() {
+    if (isJourneyActive) {
+      stopJourney();
+      return;
+    }
+    if (!navigator.geolocation) {
+      setStatus("Il GPS non è disponibile su questo dispositivo.");
+      return;
+    }
+    setStatus("Attiva il GPS: preparo il percorso dalla tua posizione.");
+    setIsJourneyActive(true);
+    journeyWatchRef.current = navigator.geolocation.watchPosition(
+      ({ coords }) => {
+        const coordinate: Coordinate = [coords.longitude, coords.latitude];
+        if (coordinate[0] < 9.04 || coordinate[0] > 9.31 || coordinate[1] < 45.38 || coordinate[1] > 45.55) {
+          setStatus("Il test GPS della beta copre per ora soltanto Milano.");
+          return;
+        }
+        const location = { label: "Posizione GPS live", coordinate };
+        setStartLocation(location);
+        setStartText(location.label);
+        const previous = lastJourneyOriginRef.current;
+        const now = Date.now();
+        const movedEnough = !previous || distanceMeters(previous, coordinate) >= 140;
+        const waitedEnough = now - lastJourneyCalculationRef.current >= 20000;
+        if (movedEnough && waitedEnough) {
+          lastJourneyOriginRef.current = coordinate;
+          lastJourneyCalculationRef.current = now;
+          void calculateRoutes(location);
+        } else {
+          setStatus(`GPS attivo · precisione ±${Math.round(coords.accuracy)} m · ricalcolo dopo uno spostamento significativo.`);
+        }
+      },
+      () => {
+        setIsJourneyActive(false);
+        setStatus("Non riesco ad accedere al GPS. Controlla i permessi di Safari.");
+      },
+      { enableHighAccuracy: true, maximumAge: 3000, timeout: 12000 },
+    );
+  }
+
+  async function shareBeta() {
+    const shareData = {
+      title: "Lastrico — Milano senza sobbalzi",
+      text: "Prova la beta che confronta il percorso rapido con quello che riduce il pavé noto a Milano.",
+      url: window.location.href,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        setStatus("Link della beta condiviso.");
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        setStatus("Link della beta copiato.");
+      }
+    } catch {
+      setStatus("Condivisione annullata.");
+    }
+  }
+
+  function openInAppleMaps() {
+    const [lng, lat] = endLocation.coordinate;
+    window.open(`https://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`, "_blank", "noopener,noreferrer");
+    setStatus("Apple Maps può scegliere un percorso diverso da quello anti-pavé.");
+  }
+
   function startReport() {
     setReportStart(null);
     setReportEnd(null);
@@ -601,7 +713,7 @@ export default function Home() {
     setReportNote("");
     setPicking("reportStart");
     setStatus("Clicca il punto iniziale del tratto da segnalare.");
-    document.getElementById("map-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setActivePanel("community");
   }
 
   function cancelReport() {
@@ -656,255 +768,218 @@ export default function Home() {
   }
 
   return (
-    <main className="app-shell">
-      <header className="topbar">
-        <a className="brand" href="#" aria-label="Lastrico home">
+    <main className={`app-shell ${isJourneyActive ? "journey-active" : ""}`}>
+      <header className="app-bar">
+        <button className="brand" type="button" onClick={() => setActivePanel("plan")} aria-label="Apri pianificazione">
           <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
           <span>lastrico</span>
-          <small>milano</small>
-        </a>
-        <div className="topbar-actions">
-          <button className="report-button" onClick={startReport}>Segnala pavé</button>
-          <span className="pilot-badge"><span /> Demo Milano live</span>
-          <button className="icon-button" aria-label="Apri informazioni" onClick={() => setDetailsOpen(true)}>i</button>
+          <small>beta · milano</small>
+        </button>
+        <div className="app-bar-status">
+          <span className={isJourneyActive ? "live-dot active" : "live-dot"} />
+          <span>{isJourneyActive ? "GPS e ricalcolo attivi" : "Beta privata"}</span>
+        </div>
+        <div className="app-bar-actions">
+          <button type="button" className="share-button" onClick={shareBeta} aria-label="Condividi beta">Condividi</button>
+          <button type="button" className="report-button" onClick={startReport}>+ Pavé</button>
+          <button type="button" className="icon-button" aria-label="Informazioni sulla beta" onClick={() => setDetailsOpen(true)}>i</button>
         </div>
       </header>
 
-      <section className="planner">
-        <div className="planner-head">
-          <div>
-            <span className="eyebrow">Percorso urbano intelligente</span>
-            <h1>Milano, senza sobbalzi.</h1>
-            <p>Confronta il tragitto più rapido con quello che riduce pavé e sanpietrini censiti.</p>
-          </div>
-          <span className="milan-chip">MI <b>45°28′N</b></span>
-        </div>
-
-        <div className="location-fields">
-          <div className={`location-field ${picking === "start" ? "picking" : ""}`}>
-            <label htmlFor="start-search"><span><i className="origin-dot" /> Partenza</span></label>
-            <div className="search-control">
-              <input
-                id="start-search"
-                value={startText}
-                onChange={(event) => setStartText(event.target.value)}
-                onKeyDown={(event) => { if (event.key === "Enter") calculateRoutes(); }}
-                placeholder="Indirizzo o luogo a Milano"
-                autoComplete="off"
-              />
-              <button type="button" onClick={useCurrentLocation} aria-label="Usa la mia posizione" title="Usa la mia posizione">◎</button>
-            </div>
-            <div className="field-tools">
-              <button type="button" onClick={() => setPicking(picking === "start" ? null : "start")}>
-                {picking === "start" ? "Annulla selezione" : "Scegli sulla mappa"}
-              </button>
-              <select aria-label="Partenza rapida" value="" onChange={(event) => selectPreset("start", event.target.value)}>
-                <option value="">Punti rapidi</option>
-                {landmarks.map((node) => <option key={node.id} value={node.id}>{node.name}</option>)}
-              </select>
-            </div>
-          </div>
-          <button className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">⇄</button>
-          <div className={`location-field ${picking === "end" ? "picking" : ""}`}>
-            <label htmlFor="end-search"><span><i className="destination-dot" /> Destinazione</span></label>
-            <div className="search-control">
-              <input
-                id="end-search"
-                value={endText}
-                onChange={(event) => setEndText(event.target.value)}
-                onKeyDown={(event) => { if (event.key === "Enter") calculateRoutes(); }}
-                placeholder="Indirizzo o luogo a Milano"
-                autoComplete="off"
-              />
-            </div>
-            <div className="field-tools">
-              <button type="button" onClick={() => setPicking(picking === "end" ? null : "end")}>
-                {picking === "end" ? "Annulla selezione" : "Scegli sulla mappa"}
-              </button>
-              <select aria-label="Destinazione rapida" value="" onChange={(event) => selectPreset("end", event.target.value)}>
-                <option value="">Punti rapidi</option>
-                {landmarks.map((node) => <option key={node.id} value={node.id}>{node.name}</option>)}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div className="avoid-row">
-          <div className="avoid-copy">
-            <span>Livello di evitamento</span>
-            <small>Quanto allungare il tragitto per restare sull’asfalto</small>
-          </div>
-          <div className="segmented" role="group" aria-label="Livello di evitamento">
+      <div className="app-workspace">
+        <aside className="control-panel" aria-label="Pannello percorso">
+          <nav className="view-tabs" aria-label="Sezioni beta">
             {([
-              ["balanced", "Equilibrato"],
-              ["strong", "Forte"],
-              ["maximum", "Massimo"],
-            ] as [Avoidance, string][]).map(([value, label]) => (
-              <button key={value} className={avoidance === value ? "active" : ""} onClick={() => setAvoidance(value)}>{label}</button>
+              ["plan", "Pianifica"],
+              ["routes", "Percorsi"],
+              ["community", "Comunità"],
+            ] as const).map(([value, label]) => (
+              <button type="button" key={value} className={activePanel === value ? "active" : ""} onClick={() => setActivePanel(value)}>
+                {label}
+                {value === "routes" && isLiveResult && <i />}
+              </button>
             ))}
-          </div>
-          <button className="calculate-button" onClick={calculateRoutes} disabled={isLoading}>
-            {isLoading ? "Calcolo in corso…" : "Calcola percorso"} <span>{isLoading ? "···" : "→"}</span>
-          </button>
-        </div>
-        <div className={`planner-status ${isLoading ? "loading" : ""}`} role="status">
-          <i /> {status}
-        </div>
-      </section>
+          </nav>
 
-      <section className="map-stage" id="map-stage" aria-label="Mappa dei percorsi">
-        <div ref={mapContainer} className="map" />
-        <div className="map-key">
-          <span><i className="line safe" /> Anti-pavé</span>
-          <span><i className="line fast" /> Più rapido</span>
-          <span><i className="line pave" /> Pavé rilevato</span>
-          <span><i className="line community" /> Comunità</span>
-        </div>
-        <div className="confidence-pill">
-          {picking
-            ? picking === "reportStart"
-              ? "Clicca l’inizio del tratto"
-              : picking === "reportEnd"
-                ? "Clicca la fine del tratto"
-                : `Clicca sulla mappa per impostare ${picking === "start" ? "la partenza" : "la destinazione"}`
-            : isLiveResult ? `${alternativesAnalyzed} alternative analizzate` : "Percorso dimostrativo"}
-          {!picking && <b>{isLiveResult ? "LIVE" : "DEMO"}</b>}
-        </div>
-        {(picking === "reportStart" || picking === "reportEnd") && (
-          <button className="cancel-map-action" onClick={cancelReport}>Annulla segnalazione</button>
-        )}
-      </section>
+          <div className="panel-content">
+            {activePanel === "plan" && (
+              <section className="planner-panel">
+                <div className="panel-heading">
+                  <span className="eyebrow">Percorso anti-pavé</span>
+                  <h1>Milano, più liscia.</h1>
+                  <p>Scegli due punti e confronta le alternative in pochi secondi.</p>
+                </div>
 
-      <section className="results" aria-label="Confronto percorsi">
-        <article className={`route-card recommended ${activeRoute === "safe" ? "selected" : ""}`} onClick={() => setActiveRoute("safe")}>
-          <div className="route-card-top">
-            <span className="recommendation"><i>✓</i> Consigliato</span>
-            <span className={`surface-status ${safeRoute.paveMeters === 0 ? "clean" : "warning"}`}>
-              {safeRoute.paveMeters === 0 ? "Solo asfalto noto" : `${safeRoute.paveMeters} m di pavé`}
-            </span>
-          </div>
-          <div className="route-title">
-            <div>
-              <span>Anti-pavé</span>
-              <strong>{safeRoute.minutes.toFixed(0)} <small>min</small></strong>
-            </div>
-            <span className="delta">+{Math.max(0, Math.round(safeRoute.minutes - fastRoute.minutes))} min</span>
-          </div>
-          <div className="route-metrics">
-            <span><small>Distanza</small><b>{safeRoute.distance.toFixed(1)} km</b></span>
-            <span><small>Pavé</small><b>{safeRoute.paveMeters} m</b></span>
-            <span><small>Riduzione</small><b>{fastRoute.paveMeters ? Math.round((savedPave / fastRoute.paveMeters) * 100) : 0}%</b></span>
-          </div>
-          <button onClick={(event) => { event.stopPropagation(); setActiveRoute("safe"); }}>Usa questo percorso <span>→</span></button>
-        </article>
+                <div className="compact-locations">
+                  <div className={`compact-field ${picking === "start" ? "picking" : ""}`}>
+                    <i className="origin-dot" />
+                    <label htmlFor="start-search">Partenza</label>
+                    <input
+                      id="start-search"
+                      value={startText}
+                      onChange={(event) => setStartText(event.target.value)}
+                      onKeyDown={(event) => { if (event.key === "Enter") void calculateRoutes(); }}
+                      placeholder="Da dove parti?"
+                      autoComplete="off"
+                    />
+                    <button type="button" onClick={useCurrentLocation} aria-label="Usa posizione GPS">◎</button>
+                  </div>
+                  <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">⇅</button>
+                  <div className={`compact-field ${picking === "end" ? "picking" : ""}`}>
+                    <i className="destination-dot" />
+                    <label htmlFor="end-search">Destinazione</label>
+                    <input
+                      id="end-search"
+                      value={endText}
+                      onChange={(event) => setEndText(event.target.value)}
+                      onKeyDown={(event) => { if (event.key === "Enter") void calculateRoutes(); }}
+                      placeholder="Dove vuoi arrivare?"
+                      autoComplete="off"
+                    />
+                  </div>
+                </div>
 
-        <article className={`route-card ${activeRoute === "fast" ? "selected" : ""}`} onClick={() => setActiveRoute("fast")}>
-          <div className="route-card-top">
-            <span className="quiet-label">Alternativa</span>
-            <span className="surface-status warning">{fastRoute.paveMeters} m di pavé</span>
-          </div>
-          <div className="route-title">
-            <div>
-              <span>Più rapido</span>
-              <strong>{fastRoute.minutes.toFixed(0)} <small>min</small></strong>
-            </div>
-            <span className="delta neutral">Base</span>
-          </div>
-          <div className="route-metrics">
-            <span><small>Distanza</small><b>{fastRoute.distance.toFixed(1)} km</b></span>
-            <span><small>Pavé</small><b>{fastRoute.paveMeters} m</b></span>
-            <span><small>Alternative</small><b>{alternativesAnalyzed}</b></span>
-          </div>
-          <button className="secondary" onClick={(event) => { event.stopPropagation(); setActiveRoute("fast"); }}>Mostra in mappa <span>→</span></button>
-        </article>
+                <div className="location-tools">
+                  <button type="button" onClick={() => setPicking(picking === "start" ? null : "start")}>Partenza su mappa</button>
+                  <button type="button" onClick={() => setPicking(picking === "end" ? null : "end")}>Arrivo su mappa</button>
+                  <select aria-label="Destinazione rapida" value="" onChange={(event) => selectPreset("end", event.target.value)}>
+                    <option value="">Luoghi rapidi</option>
+                    {landmarks.map((node) => <option key={node.id} value={node.id}>{node.name}</option>)}
+                  </select>
+                </div>
 
-        <aside className="impact-card">
-          <span className="eyebrow">Il risultato</span>
-          <strong>{(savedPave / 1000).toFixed(1)} km</strong>
-          <p>di pavé evitato su questo tragitto</p>
-          <div className="impact-bar"><i style={{ width: `${Math.min(100, fastRoute.paveMeters ? (savedPave / fastRoute.paveMeters) * 100 : 0)}%` }} /></div>
-          <small>{isLiveResult ? "Stima calcolata sulle superfici OSM note. Il traffico in tempo reale non è ancora incluso." : "Esempio iniziale sulla rete pilota. Inserisci due punti e premi Calcola percorso per una stima live."}</small>
+                <div className="avoidance-block">
+                  <div>
+                    <span>Quanto evitare il pavé?</span>
+                    <small>Più forte può significare qualche minuto in più.</small>
+                  </div>
+                  <div className="segmented" role="group" aria-label="Livello di evitamento">
+                    {([
+                      ["balanced", "Bilanciato"],
+                      ["strong", "Forte"],
+                      ["maximum", "Massimo"],
+                    ] as [Avoidance, string][]).map(([value, label]) => (
+                      <button type="button" key={value} className={avoidance === value ? "active" : ""} onClick={() => setAvoidance(value)}>{label}</button>
+                    ))}
+                  </div>
+                </div>
+
+                <button type="button" className="primary-action" onClick={() => void calculateRoutes()} disabled={isLoading}>
+                  <span>{isLoading ? "Analizzo le strade…" : "Confronta i percorsi"}</span>
+                  <b>{isLoading ? "···" : "→"}</b>
+                </button>
+                <p className="micro-disclaimer">Stime senza traffico live · “0 m” non garantisce copertura completa.</p>
+              </section>
+            )}
+
+            {activePanel === "routes" && (
+              <section className="routes-panel">
+                <div className="panel-heading routes-heading">
+                  <span className="eyebrow">Confronto pronto</span>
+                  <h2>Scegli come guidare.</h2>
+                  <p>{alternativesAnalyzed} alternative analizzate{lastRecalculatedAt ? ` · aggiornato ${lastRecalculatedAt}` : ""}</p>
+                </div>
+
+                <button type="button" className={`route-option safe ${activeRoute === "safe" ? "selected" : ""}`} onClick={() => setActiveRoute("safe")}>
+                  <span className="route-radio" />
+                  <span className="route-name"><b>Anti-pavé</b><small>{safeRoute.distance.toFixed(1)} km · {safeRoute.paveMeters} m noti</small></span>
+                  <strong>{safeRoute.minutes.toFixed(0)}<small> min</small></strong>
+                  <em>+{Math.max(0, Math.round(safeRoute.minutes - fastRoute.minutes))}</em>
+                </button>
+                <button type="button" className={`route-option fast ${activeRoute === "fast" ? "selected" : ""}`} onClick={() => setActiveRoute("fast")}>
+                  <span className="route-radio" />
+                  <span className="route-name"><b>Più rapido</b><small>{fastRoute.distance.toFixed(1)} km · {fastRoute.paveMeters} m noti</small></span>
+                  <strong>{fastRoute.minutes.toFixed(0)}<small> min</small></strong>
+                  <em>base</em>
+                </button>
+
+                <div className="impact-strip">
+                  <div><small>Pavé evitato</small><strong>{savedPave.toLocaleString("it-IT")} m</strong></div>
+                  <div><small>Riduzione</small><strong>{fastRoute.paveMeters ? Math.round(savedPave / fastRoute.paveMeters * 100) : 0}%</strong></div>
+                  <div><small>Dati</small><strong>{isLiveResult ? "OSM live" : "Demo"}</strong></div>
+                </div>
+
+                <button type="button" className={`journey-button ${isJourneyActive ? "stop" : ""}`} onClick={toggleJourney}>
+                  <span>{isJourneyActive ? "■" : "▶"}</span>
+                  <b>{isJourneyActive ? "Termina test GPS" : "Avvia test GPS"}</b>
+                  <small>{isJourneyActive ? "La posizione non viene salvata" : "Ricalcolo automatico durante il viaggio"}</small>
+                </button>
+                <div className="route-actions">
+                  <button type="button" onClick={() => void calculateRoutes()} disabled={isLoading}>↻ Ricalcola</button>
+                  <button type="button" onClick={openInAppleMaps}>Apri arrivo in Mappe ↗</button>
+                </div>
+                <p className="micro-disclaimer">Apple Maps può proporre un tragitto diverso da Lastrico.</p>
+              </section>
+            )}
+
+            {activePanel === "community" && (
+              <section className="community-panel">
+                <div className="panel-heading">
+                  <span className="eyebrow">Mappa collaborativa</span>
+                  <h2>Milano migliora insieme.</h2>
+                  <p>Le segnalazioni da verificare sono visibili, ma non influenzano ancora il routing.</p>
+                </div>
+                <div className="beta-stats">
+                  <article><small>Segnalazioni</small><strong>{reportsAvailable ? reportStats.total : "—"}</strong></article>
+                  <article><small>Da verificare</small><strong>{reportsAvailable ? reportStats.pending : "—"}</strong></article>
+                  <article><small>Metri mappati</small><strong>{reportsAvailable ? reportStats.communityMeters.toLocaleString("it-IT") : "—"}</strong></article>
+                </div>
+                <button type="button" className="primary-action coral" onClick={startReport}><span>Segnala un tratto</span><b>+</b></button>
+                <div className="community-links">
+                  <button type="button" onClick={shareBeta}>Condividi con un tester</button>
+                  <a href="/api/reports/export" download>Esporta dati CSV</a>
+                  <button type="button" onClick={() => setDetailsOpen(true)}>Come installarla su iPhone</button>
+                  <a href="https://github.com/campsh98-creator/lastrico-milano" target="_blank" rel="noreferrer">Codice su GitHub</a>
+                  <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
+                </div>
+                <div className="data-note"><b>Qualità del dato</b><span>Un tratto non censito può comunque essere in pavé. Segnalarlo è parte del test.</span></div>
+              </section>
+            )}
+          </div>
+
+          <div className={`status-bar ${isLoading ? "loading" : ""}`} role="status">
+            <i /> <span>{status}</span>
+          </div>
         </aside>
-      </section>
 
-      <section className="community-section" aria-labelledby="community-title">
-        <div className="community-heading">
-          <div>
-            <span className="eyebrow">Mappa collaborativa</span>
-            <h2 id="community-title">Milano migliora, una segnalazione alla volta.</h2>
-            <p>Indica un tratto in pavé o una strada appena asfaltata. I contributi restano separati dai dati verificati e non modificano ancora il routing.</p>
+        <section className="map-stage" id="map-stage" aria-label="Mappa dei percorsi">
+          <div ref={mapContainer} className="map" />
+          <div className="map-top">
+            <div className="confidence-pill">
+              {picking
+                ? picking === "reportStart"
+                  ? "Tocca l’inizio del tratto"
+                  : picking === "reportEnd"
+                    ? "Tocca la fine del tratto"
+                    : `Tocca la ${picking === "start" ? "partenza" : "destinazione"}`
+                : isJourneyActive ? "GPS LIVE · ricalcolo automatico" : isLiveResult ? `${alternativesAnalyzed} alternative · dati OSM` : "Esempio iniziale"}
+            </div>
+            {(picking === "reportStart" || picking === "reportEnd") && (
+              <button type="button" className="cancel-map-action" onClick={cancelReport}>Annulla</button>
+            )}
           </div>
-          <button className="community-cta" onClick={startReport}>Segnala un tratto <span>→</span></button>
-        </div>
-        <div className="quality-grid">
-          <article>
-            <small>Segnalazioni</small>
-            <strong>{reportsAvailable ? reportStats.total : "—"}</strong>
-            <p>contributi pubblici caricati nella beta</p>
-          </article>
-          <article>
-            <small>Da verificare</small>
-            <strong>{reportsAvailable ? reportStats.pending : "—"}</strong>
-            <p>visibili in arancione, esclusi dal routing</p>
-          </article>
-          <article>
-            <small>Metri comunitari</small>
-            <strong>{reportsAvailable ? reportStats.communityMeters.toLocaleString("it-IT") : "—"}</strong>
-            <p>stima dei tratti segnalati come pavé</p>
-          </article>
-          <article className="quality-note">
-            <small>Affidabilità</small>
-            <strong>Dato ≠ certezza</strong>
-            <p>Zero metri rilevati può significare superficie non censita. La beta rende esplicita questa incertezza.</p>
-          </article>
-        </div>
-        <div className="community-footer">
-          <div className="community-legend">
-            <span><i className="pending" /> Da verificare</span>
-            <span><i className="verified" /> Verificato</span>
-            <span><i className="asphalted" /> Asfaltato</span>
-            <span><i className="doubtful" /> Dato dubbio</span>
+          <div className="map-key">
+            <span><i className="line safe" /> Anti-pavé</span>
+            <span><i className="line fast" /> Rapido</span>
+            <span><i className="line pave" /> Pavé</span>
+            <span><i className="line community" /> Comunità</span>
           </div>
-          <a href="/api/reports/export" download>Esporta segnalazioni CSV</a>
-        </div>
-      </section>
+          <button type="button" className="map-summary" onClick={() => setActivePanel("routes")}>
+            <span className={activeRoute === "safe" ? "summary-route safe" : "summary-route"}>
+              {activeRoute === "safe" ? "Anti-pavé" : "Più rapido"}
+            </span>
+            <strong>{activeRoute === "safe" ? safeRoute.minutes.toFixed(0) : fastRoute.minutes.toFixed(0)} <small>min</small></strong>
+            <span>{activeRoute === "safe" ? safeRoute.paveMeters : fastRoute.paveMeters} m di pavé noto</span>
+            <b>Dettagli ↑</b>
+          </button>
+        </section>
+      </div>
 
-      <section className="roadmap" id="roadmap">
-        <div className="roadmap-intro">
-          <span className="eyebrow">Dalla demo all’auto</span>
-          <h2>Tre prodotti, un solo motore di percorso.</h2>
-          <p>La PWA valida il bisogno. iPhone porta navigazione e GPS. CarPlay arriva quando il prodotto è pronto per la revisione Apple.</p>
-        </div>
-        <div className="roadmap-grid">
-          <article className="current">
-            <span className="step">01</span>
-            <span className="phase">Ora · MVP</span>
-            <h3>PWA web</h3>
-            <p>Mappa, confronto, penalità del pavé e segnalazioni comunitarie persistenti. Installabile sulla Home di iPhone, non visibile nel display CarPlay.</p>
-            <span className="state ready">Funzionante</span>
-          </article>
-          <article>
-            <span className="step">02</span>
-            <span className="phase">Prossimo · iOS</span>
-            <h3>App iPhone</h3>
-            <p>SwiftUI, GPS in tempo reale, navigazione turn-by-turn, audio e cache. Riutilizza API e logica del routing anti-pavé.</p>
-            <span className="state">Da costruire</span>
-          </article>
-          <article>
-            <span className="step">03</span>
-            <span className="phase">Poi · CarPlay</span>
-            <h3>Navigazione in auto</h3>
-            <p>App nativa, entitlement <code>carplay-maps</code>, <code>CPMapTemplate</code> e approvazione Apple. La PWA da sola non basta.</p>
-            <span className="state">Vincolo Apple</span>
-          </article>
-        </div>
-      </section>
-
-      <footer>
-        <span className="footer-brand">lastrico <small>beta 03</small></span>
-        <p>Un esperimento per guidare meglio a Milano.</p>
-        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">Dati © OpenStreetMap</a>
-      </footer>
+      <nav className="mobile-nav" aria-label="Navigazione beta">
+        <button type="button" className={activePanel === "plan" ? "active" : ""} onClick={() => setActivePanel("plan")}><span>⌖</span>Pianifica</button>
+        <button type="button" className={activePanel === "routes" ? "active" : ""} onClick={() => setActivePanel("routes")}><span>↝</span>Percorsi</button>
+        <button type="button" className={activePanel === "community" ? "active" : ""} onClick={() => setActivePanel("community")}><span>＋</span>Comunità</button>
+      </nav>
 
       {reportModalOpen && reportStart && reportEnd && (
         <div className="modal-backdrop" role="presentation">
@@ -967,11 +1042,22 @@ export default function Home() {
         <div className="modal-backdrop" role="presentation" onClick={() => setDetailsOpen(false)}>
           <section className="modal" role="dialog" aria-modal="true" aria-labelledby="about-title" onClick={(event) => event.stopPropagation()}>
             <button className="modal-close" onClick={() => setDetailsOpen(false)} aria-label="Chiudi">×</button>
-            <span className="eyebrow">Nota sul prototipo</span>
-            <h2 id="about-title">Utile per decidere, onesto sui dati.</h2>
-            <p>Questa demo consente di cercare indirizzi o scegliere liberamente due punti sulla mappa. Il tragitto più rapido è confrontato con le alternative disponibili e i tratti con superficie critica censiti in OpenStreetMap.</p>
-            <p>I tempi sono medi e non includono traffico live. I servizi pubblici gratuiti sono adatti a questa prova con pochi utenti, non a una pubblicazione commerciale: la fase successiva prevede motore di routing, geocoding e dati OSM ospitati in modo dedicato.</p>
-            <button className="calculate-button full" onClick={() => setDetailsOpen(false)}>Ho capito</button>
+            <span className="eyebrow">Beta tester kit</span>
+            <h2 id="about-title">Portala sull’iPhone.</h2>
+            <ol className="install-steps">
+              <li>Apri questa pagina in Safari.</li>
+              <li>Tocca Condividi e “Aggiungi alla schermata Home”.</li>
+              <li>Attiva “Apri come app web”.</li>
+              <li>Consenti il GPS solo quando avvii il test.</li>
+            </ol>
+            <div className="beta-limit">
+              <b>Questa è una beta, non un navigatore certificato.</b>
+              <span>Tempi senza traffico live, copertura pavé incompleta e nessuna interfaccia CarPlay. L’app nativa arriverà dopo la validazione dei percorsi.</span>
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="secondary-action" onClick={shareBeta}>Condividi beta</button>
+              <button type="button" className="primary-action compact" onClick={() => setDetailsOpen(false)}>Inizia il test</button>
+            </div>
           </section>
         </div>
       )}

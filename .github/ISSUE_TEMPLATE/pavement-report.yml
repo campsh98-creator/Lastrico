@@ -1,0 +1,34 @@
+name: Pavé o dato stradale
+description: Segnala un tratto mancante, asfaltato o classificato in modo errato
+title: "[DATO] "
+labels: ["data", "needs-verification"]
+body:
+  - type: markdown
+    attributes:
+      value: "Non inserire indirizzi personali o dati riferiti agli spostamenti di una persona."
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Tipo
+      options:
+        - Pavé mancante
+        - Sanpietrini irregolari
+        - Strada asfaltata recentemente
+        - Dato errato
+    validations:
+      required: true
+  - type: input
+    id: road
+    attributes:
+      label: Via o zona
+      placeholder: "Esempio: Corso ..., tra ... e ..."
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Descrizione e verifica
+      description: Spiega cosa hai osservato e quando.
+    validations:
+      required: true
+

@@ -1,0 +1,37 @@
+name: Feedback beta
+description: Riporta un problema o una proposta sull’esperienza
+title: "[BETA] "
+labels: ["beta-feedback"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Calcolo percorso
+        - Interfaccia iPhone
+        - GPS e ricalcolo
+        - Mappa
+        - Segnalazioni
+        - Installazione PWA
+        - Altro
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Cosa ti aspettavi?
+    validations:
+      required: true
+  - type: textarea
+    id: happened
+    attributes:
+      label: Cosa è successo?
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Dispositivo e browser
+      placeholder: "Esempio: iPhone 15, Safari"
+
