@@ -1338,8 +1338,12 @@ export default function Home() {
       && reportedSpeed! > 1
     );
     const heading = movingWithReportedHeading ? reportedHeading! : inferredHeading;
+    const markerMovementThreshold = Math.max(
+      4,
+      Math.min(15, Math.max(previousAccuracy, accuracy) * 0.35),
+    );
     const markerMoved = previous === null
-      || gpsCoordinateMoved(previous, coordinate, distanceMeters, 1);
+      || gpsCoordinateMoved(previous, coordinate, distanceMeters, markerMovementThreshold);
     if (markerMoved) {
       previousJourneyPositionRef.current = coordinate;
       setJourneyPosition(coordinate);

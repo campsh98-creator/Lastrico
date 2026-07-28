@@ -28,6 +28,7 @@ test("only simulation mode is allowed to run the automatic movement timer", () =
 test("stationary GPS readings do not count as movement", () => {
   const point = [9.1901, 45.4642];
   assert.equal(gpsCoordinateMoved(point, [...point], planarDistance), false);
+  assert.equal(gpsCoordinateMoved(point, [9.190125, 45.4642], planarDistance, 4), false);
   assert.equal(gpsCoordinateMoved(point, [9.1903, 45.4642], planarDistance), true);
 });
 
