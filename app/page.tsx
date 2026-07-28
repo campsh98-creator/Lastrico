@@ -43,6 +43,13 @@ type LocationChoice = {
   coordinate: Coordinate;
 };
 
+type GeocodeResult = LocationChoice & {
+  id: string;
+  primary: string;
+  secondary: string;
+  type: string;
+};
+
 type RouteApiResponse = {
   fast: Omit<RouteResult, "nodes" | "edges">;
   safe: Omit<RouteResult, "nodes" | "edges">;
@@ -303,6 +310,9 @@ export default function Home() {
   const [lastRecalculatedAt, setLastRecalculatedAt] = useState<string | null>(null);
   const [themeMode, setThemeMode] = useState<ThemeMode>("auto");
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  const [addressResults, setAddressResults] = useState<GeocodeResult[]>([]);
+  const [addressSearchTarget, setAddressSearchTarget] = useState<"start" | "end" | null>(null);
+  const [addressSearchLoading, setAddressSearchLoading] = useState(false);
   const [reports, setReports] = useState<RoadReport[]>([]);
   const [reportStats, setReportStats] = useState<ReportStats>({ total: 0, pending: 0, verified: 0, communityMeters: 0 });
   const [reportStart, setReportStart] = useState<Coordinate | null>(null);
@@ -457,6 +467,8 @@ export default function Home() {
       mapRef.current?.remove();
       mapRef.current = null;
     };
+    // MapLibre owns this imperative instance for the component lifetime.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -498,7 +510,7 @@ export default function Home() {
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("lastrico-theme");
     if (savedTheme === "auto" || savedTheme === "light" || savedTheme === "dark") {
-      setThemeMode(savedTheme);
+      window.queueMicrotask(() => setThemeMode(savedTheme));
     }
   }, []);
 
@@ -564,9 +576,13 @@ export default function Home() {
       return;
     }
     if (!isLiveResult || isJourneyActive) return;
-    setStatus("Livello aggiornato: ricalcolo le alternative…");
-    const timer = window.setTimeout(() => void calculateRoutes(), 350);
+    const timer = window.setTimeout(() => {
+      setStatus("Livello aggiornato: ricalcolo le alternative…");
+      void calculateRoutes();
+    }, 350);
     return () => window.clearTimeout(timer);
+    // The recalculation is intentionally triggered only by the avoidance control.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [avoidance]);
 
   function swapLocations() {
@@ -579,10 +595,8 @@ export default function Home() {
     setStatus("Partenza e destinazione invertite. Ricalcola il percorso.");
   }
 
-  function selectPreset(target: "start" | "end", id: string) {
-    const selected = nodeMap.get(id);
-    if (!selected) return;
-    const location = { label: selected.name, coordinate: selected.coordinate };
+  function chooseAddress(target: "start" | "end", result: GeocodeResult) {
+    const location = { label: result.label, coordinate: result.coordinate };
     if (target === "start") {
       setStartLocation(location);
       setStartText(location.label);
@@ -590,19 +604,53 @@ export default function Home() {
       setEndLocation(location);
       setEndText(location.label);
     }
+    setAddressResults([]);
+    setAddressSearchTarget(null);
+    setStatus(`${target === "start" ? "Partenza" : "Destinazione"} confermata.`);
   }
 
-  async function geocode(text: string, current: LocationChoice) {
-    if (text.trim() === current.label) return current;
+  async function fetchAddresses(text: string) {
+    if (text.trim().length < 3) throw new Error("Inserisci almeno tre caratteri.");
     const response = await fetch(`/api/geocode?q=${encodeURIComponent(text.trim())}`);
     const data = await response.json() as {
-      results?: Array<{ label: string; coordinate: Coordinate }>;
+      results?: GeocodeResult[];
       error?: string;
     };
     if (!response.ok || !data.results?.length) {
       throw new Error(data.error ?? `Non trovo “${text}” a Milano.`);
     }
-    return data.results[0];
+    return data.results;
+  }
+
+  async function searchAddresses(target: "start" | "end") {
+    if (addressSearchLoading) return;
+    const text = target === "start" ? startText : endText;
+    setAddressSearchTarget(target);
+    setAddressResults([]);
+    setAddressSearchLoading(true);
+    setStatus(`Cerco “${text.trim()}” in tutta Milano…`);
+    try {
+      const results = await fetchAddresses(text);
+      setAddressResults(results);
+      setStatus(`${results.length} ${results.length === 1 ? "risultato trovato" : "risultati trovati"}: scegli l’indirizzo corretto.`);
+    } catch (error) {
+      setAddressSearchTarget(null);
+      setStatus(error instanceof Error ? error.message : "Ricerca non riuscita.");
+    } finally {
+      setAddressSearchLoading(false);
+    }
+  }
+
+  async function geocode(text: string, current: LocationChoice, target: "start" | "end") {
+    if (text.trim() === current.label) return current;
+    const results = await fetchAddresses(text);
+    if (results.length === 1) {
+      const selected = { label: results[0].label, coordinate: results[0].coordinate };
+      return selected;
+    }
+    setAddressSearchTarget(target);
+    setAddressResults(results);
+    throw new Error(`Scegli l’indirizzo ${target === "start" ? "di partenza" : "di destinazione"} dall’elenco.`);
   }
 
   async function calculateRoutes(startOverride?: LocationChoice) {
@@ -610,11 +658,11 @@ export default function Home() {
     setIsLoading(true);
     setStatus("Cerco i punti e analizzo le alternative stradali…");
     try {
-      const resolvedStart = startOverride ?? await geocode(startText, startLocation);
+      const resolvedStart = startOverride ?? await geocode(startText, startLocation, "start");
       if (!startOverride && startText.trim() !== startLocation.label && endText.trim() !== endLocation.label) {
         await new Promise((resolve) => setTimeout(resolve, 1100));
       }
-      const resolvedEnd = await geocode(endText, endLocation);
+      const resolvedEnd = await geocode(endText, endLocation, "end");
       setStartLocation(resolvedStart);
       setEndLocation(resolvedEnd);
       setStartText(resolvedStart.label);
@@ -849,41 +897,102 @@ export default function Home() {
                 </div>
 
                 <div className="compact-locations">
-                  <div className={`compact-field ${picking === "start" ? "picking" : ""}`}>
-                    <i className="origin-dot" />
-                    <label htmlFor="start-search">Partenza</label>
-                    <input
-                      id="start-search"
-                      value={startText}
-                      onChange={(event) => setStartText(event.target.value)}
-                      onKeyDown={(event) => { if (event.key === "Enter") void calculateRoutes(); }}
-                      placeholder="Da dove parti?"
-                      autoComplete="off"
-                    />
-                    <button type="button" onClick={useCurrentLocation} aria-label="Usa posizione GPS">◎</button>
+                  <div className="field-shell">
+                    <div className={`compact-field ${picking === "start" ? "picking" : ""} ${addressSearchTarget === "start" ? "searching" : ""}`}>
+                      <i className="origin-dot" />
+                      <label htmlFor="start-search">Partenza</label>
+                      <input
+                        id="start-search"
+                        value={startText}
+                        onChange={(event) => {
+                          setStartText(event.target.value);
+                          if (addressSearchTarget === "start") {
+                            setAddressSearchTarget(null);
+                            setAddressResults([]);
+                          }
+                        }}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") {
+                            event.preventDefault();
+                            void searchAddresses("start");
+                          }
+                        }}
+                        placeholder="Via e numero civico"
+                        autoComplete="off"
+                        enterKeyHint="search"
+                        spellCheck={false}
+                        role="combobox"
+                        aria-expanded={addressSearchTarget === "start" && addressResults.length > 0}
+                        aria-controls="start-address-results"
+                      />
+                      <button
+                        type="button"
+                        onClick={startText.trim() !== startLocation.label ? () => void searchAddresses("start") : useCurrentLocation}
+                        aria-label={startText.trim() !== startLocation.label ? "Cerca indirizzo di partenza" : "Usa posizione GPS"}
+                      >
+                        {addressSearchLoading && addressSearchTarget === "start" ? "…" : startText.trim() !== startLocation.label ? "⌕" : "◎"}
+                      </button>
+                    </div>
+                    {addressSearchTarget === "start" && addressResults.length > 0 && (
+                      <div id="start-address-results" className="address-results" role="listbox" aria-label="Indirizzi di partenza">
+                        {addressResults.map((result) => (
+                          <button type="button" role="option" aria-selected="false" key={result.id} onClick={() => chooseAddress("start", result)}>
+                            <b>{result.primary}</b>
+                            <small>{result.secondary || "Milano"}</small>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">⇅</button>
-                  <div className={`compact-field ${picking === "end" ? "picking" : ""}`}>
-                    <i className="destination-dot" />
-                    <label htmlFor="end-search">Destinazione</label>
-                    <input
-                      id="end-search"
-                      value={endText}
-                      onChange={(event) => setEndText(event.target.value)}
-                      onKeyDown={(event) => { if (event.key === "Enter") void calculateRoutes(); }}
-                      placeholder="Dove vuoi arrivare?"
-                      autoComplete="off"
-                    />
+                  <div className="field-shell">
+                    <div className={`compact-field ${picking === "end" ? "picking" : ""} ${addressSearchTarget === "end" ? "searching" : ""}`}>
+                      <i className="destination-dot" />
+                      <label htmlFor="end-search">Destinazione</label>
+                      <input
+                        id="end-search"
+                        value={endText}
+                        onChange={(event) => {
+                          setEndText(event.target.value);
+                          if (addressSearchTarget === "end") {
+                            setAddressSearchTarget(null);
+                            setAddressResults([]);
+                          }
+                        }}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") {
+                            event.preventDefault();
+                            void searchAddresses("end");
+                          }
+                        }}
+                        placeholder="Via e numero civico"
+                        autoComplete="off"
+                        enterKeyHint="search"
+                        spellCheck={false}
+                        role="combobox"
+                        aria-expanded={addressSearchTarget === "end" && addressResults.length > 0}
+                        aria-controls="end-address-results"
+                      />
+                      <button type="button" onClick={() => void searchAddresses("end")} aria-label="Cerca indirizzo di destinazione">
+                        {addressSearchLoading && addressSearchTarget === "end" ? "…" : "⌕"}
+                      </button>
+                    </div>
+                    {addressSearchTarget === "end" && addressResults.length > 0 && (
+                      <div id="end-address-results" className="address-results" role="listbox" aria-label="Indirizzi di destinazione">
+                        {addressResults.map((result) => (
+                          <button type="button" role="option" aria-selected="false" key={result.id} onClick={() => chooseAddress("end", result)}>
+                            <b>{result.primary}</b>
+                            <small>{result.secondary || "Milano"}</small>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="location-tools">
                   <button type="button" onClick={() => setPicking(picking === "start" ? null : "start")}>Partenza su mappa</button>
                   <button type="button" onClick={() => setPicking(picking === "end" ? null : "end")}>Arrivo su mappa</button>
-                  <select aria-label="Destinazione rapida" value="" onChange={(event) => selectPreset("end", event.target.value)}>
-                    <option value="">Luoghi rapidi</option>
-                    {landmarks.map((node) => <option key={node.id} value={node.id}>{node.name}</option>)}
-                  </select>
                 </div>
 
                 <div className="avoidance-block">

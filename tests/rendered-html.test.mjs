@@ -1,91 +1,61 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const developmentPreviewMeta =
-  /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
-const templateRoot = new URL("../", import.meta.url);
-const previewRoot = new URL("../app/_sites-preview/", import.meta.url);
+const pageUrl = new URL("../app/page.tsx", import.meta.url);
+const cssUrl = new URL("../app/globals.css", import.meta.url);
+const geocodeUrl = new URL("../app/api/geocode/route.ts", import.meta.url);
+const layoutUrl = new URL("../app/layout.tsx", import.meta.url);
+const manifestUrl = new URL("../public/manifest.webmanifest", import.meta.url);
+const serviceWorkerUrl = new URL("../public/sw.js", import.meta.url);
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
-
-  return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
-}
-
-test("server-renders the starter loading skeleton", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
-  const html = await response.text();
-  assert.match(html, developmentPreviewMeta);
-  assert.match(html, /<title>Your site is taking shape<\/title>/i);
-  assert.match(html, /Building your site/);
-  assert.match(html, /Your site is taking shape/);
-  assert.match(
-    html,
-    /Your first version will appear here automatically when it’s ready\./,
-  );
-  assert.doesNotMatch(html, /Codex/);
-  assert.match(html, /react-loading-skeleton/);
-  assert.match(html, /role="status"/);
-});
-
-test("keeps the loading skeleton scoped and disposable", async () => {
-  const [preview, css, page, layout, packageJson, files] = await Promise.all([
-    readFile(new URL("SkeletonPreview.tsx", previewRoot), "utf8"),
-    readFile(new URL("preview.css", previewRoot), "utf8"),
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../package.json", import.meta.url), "utf8"),
-    readdir(previewRoot),
+test("keeps the planner iOS-first and free of preset places", async () => {
+  const [page, css] = await Promise.all([
+    readFile(pageUrl, "utf8"),
+    readFile(cssUrl, "utf8"),
   ]);
 
-  assert.deepEqual(files.sort(), ["SkeletonPreview.tsx", "preview.css"]);
-  assert.match(preview, /from "react-loading-skeleton"/);
-  assert.match(preview, /baseColor="#eceae7"/);
-  assert.match(preview, /highlightColor="#f9f8f6"/);
-  assert.match(preview, /duration=\{2\.8\}/);
-  assert.match(preview, /sites-skeleton-search-placeholder/);
-  assert.match(packageJson, /"react-loading-skeleton": "3\.5\.0"/);
+  assert.doesNotMatch(page, /Luoghi rapidi|Destinazione rapida|selectPreset/);
+  assert.match(page, /role="combobox"/);
+  assert.match(page, /role="listbox"/);
+  assert.match(page, /searchAddresses\("start"\)/);
+  assert.match(page, /searchAddresses\("end"\)/);
+  assert.match(page, /enterKeyHint="search"/);
+  assert.match(css, /\.compact-field input \{ font-size: 16px/);
+  assert.match(css, /max-width: 760px\) and \(max-height: 560px/);
+  assert.match(css, /\.map-stage \{ visibility: hidden; \}/);
+  assert.match(css, /html, body \{ width: 100%; height: 100%; overflow: hidden; \}/);
+});
 
-  const shellIndex = preview.indexOf('className="sites-skeleton-shell"');
-  const statusIndex = preview.indexOf('className="sites-skeleton-status"');
-  assert.ok(shellIndex >= 0 && statusIndex > shellIndex);
-  assert.match(css, /position:\s*fixed/);
-  assert.match(css, /inset:\s*0/);
-  assert.match(css, /opacity:\s*0\.52/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.doesNotMatch(css, /#020617|canvas|pets|progress/i);
-  assert.doesNotMatch(
-    preview,
-    /loading-spinner|status-mark|status-progress|canvas|cookie|random/i,
-  );
+test("returns multiple, deduplicated Milan address candidates", async () => {
+  const geocode = await readFile(geocodeUrl, "utf8");
 
-  assert.match(page, /export const metadata:\s*Metadata/);
-  assert.match(page, /"codex-preview": "development"/);
-  assert.match(page, /<SkeletonPreview \/>/);
-  assert.match(layout, /title:\s*"Starter Project"/);
-  assert.doesNotMatch(layout, /codex-preview|_sites-preview|themeColor|\bViewport\b/);
-  assert.doesNotMatch(css, /(^|\s)(html|body)\s*\{/m);
+  assert.match(geocode, /set\("limit", "10"\)/);
+  assert.match(geocode, /set\("street", queryWithoutCity\)/);
+  assert.match(geocode, /set\("city", "Milano"\)/);
+  assert.match(geocode, /toLocaleLowerCase\("it"\)\.trim\(\) !== "milano"/);
+  assert.match(geocode, /const seen = new Set<string>\(\)/);
+  assert.match(geocode, /primary,/);
+  assert.match(geocode, /secondary,/);
+});
 
-  await assert.rejects(
-    access(new URL("public/_sites-preview", templateRoot)),
-  );
+test("keeps the installed PWA and automatic theme release-ready", async () => {
+  const [page, layout, manifestText, serviceWorker] = await Promise.all([
+    readFile(pageUrl, "utf8"),
+    readFile(layoutUrl, "utf8"),
+    readFile(manifestUrl, "utf8"),
+    readFile(serviceWorkerUrl, "utf8"),
+  ]);
+  const manifest = JSON.parse(manifestText);
+
+  assert.equal(manifest.id, "/");
+  assert.equal(manifest.scope, "/");
+  assert.equal(manifest.start_url, "/");
+  assert.equal(manifest.display, "standalone");
+  assert.match(page, /hour >= 7 && hour < 19/);
+  assert.match(page, /lastrico-theme/);
+  assert.match(layout, /appleWebApp/);
+  assert.match(serviceWorker, /lastrico-v5/);
+  assert.match(serviceWorker, /self\.skipWaiting\(\)/);
+  assert.match(serviceWorker, /self\.clients\.claim\(\)/);
 });
