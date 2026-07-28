@@ -55,6 +55,7 @@ type RouteApiResponse = {
   safe: Omit<RouteResult, "nodes" | "edges">;
   problemSegments: Coordinate[][];
   alternativesAnalyzed: number;
+  hasDistinctAlternative: boolean;
   surfaceDataAvailable: boolean;
   dataNotice: string;
 };
@@ -121,6 +122,10 @@ const edges: RoadEdge[] = [
 
 const nodeMap = new Map(nodes.map((node) => [node.id, node]));
 const isPave = (surface: Surface) => surface !== "asphalt";
+const formatMinutes = (minutes: number) => minutes.toLocaleString("it-IT", {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
 
 function edgeCoordinates(edge: RoadEdge, forward: boolean) {
   const start = nodeMap.get(edge.from)!.coordinate;
@@ -293,18 +298,19 @@ export default function Home() {
     label: "Porta Venezia",
     coordinate: nodeMap.get("venezia")!.coordinate,
   });
-  const [startText, setStartText] = useState(startLocation.label);
-  const [endText, setEndText] = useState(endLocation.label);
+  const [startText, setStartText] = useState("");
+  const [endText, setEndText] = useState("");
   const [avoidance, setAvoidance] = useState<Avoidance>("strong");
   const [fastRoute, setFastRoute] = useState<RouteResult>(defaultFast);
   const [safeRoute, setSafeRoute] = useState<RouteResult>(defaultSafe);
-  const [activeRoute, setActiveRoute] = useState<"safe" | "fast">("safe");
+  const [activeRoute, setActiveRoute] = useState<"safe" | "fast">("fast");
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [picking, setPicking] = useState<PickingMode | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState("Demo pronta: cerca un indirizzo o scegli due punti sulla mappa.");
   const [isLiveResult, setIsLiveResult] = useState(false);
   const [alternativesAnalyzed, setAlternativesAnalyzed] = useState(2);
+  const [hasDistinctAlternative, setHasDistinctAlternative] = useState(false);
   const [activePanel, setActivePanel] = useState<"plan" | "routes" | "community">("plan");
   const [isJourneyActive, setIsJourneyActive] = useState(false);
   const [lastRecalculatedAt, setLastRecalculatedAt] = useState<string | null>(null);
@@ -313,6 +319,8 @@ export default function Home() {
   const [addressResults, setAddressResults] = useState<GeocodeResult[]>([]);
   const [addressSearchTarget, setAddressSearchTarget] = useState<"start" | "end" | null>(null);
   const [addressSearchLoading, setAddressSearchLoading] = useState(false);
+  const [addressQuery, setAddressQuery] = useState("");
+  const [mapChooserOpen, setMapChooserOpen] = useState(false);
   const [reports, setReports] = useState<RoadReport[]>([]);
   const [reportStats, setReportStats] = useState<ReportStats>({ total: 0, pending: 0, verified: 0, communityMeters: 0 });
   const [reportStart, setReportStart] = useState<Coordinate | null>(null);
@@ -489,7 +497,9 @@ export default function Home() {
     const map = mapRef.current;
     if (!map?.isStyleLoaded() || !fastRoute.coordinates.length || !safeRoute.coordinates.length) return;
     (map.getSource("fast-route") as GeoJSONSource)?.setData(routeGeoJSON(fastRoute));
-    (map.getSource("safe-route") as GeoJSONSource)?.setData(routeGeoJSON(safeRoute));
+    (map.getSource("safe-route") as GeoJSONSource)?.setData(
+      hasDistinctAlternative ? routeGeoJSON(safeRoute) : emptyFeatureCollection,
+    );
     (map.getSource("problem-segments") as GeoJSONSource)?.setData(problemGeoJSON([fastRoute]));
     map.setPaintProperty("fast-line", "line-opacity", activeRoute === "fast" ? 1 : 0.46);
     map.setPaintProperty("safe-line", "line-opacity", activeRoute === "safe" ? 1 : 0.52);
@@ -501,7 +511,7 @@ export default function Home() {
       maxZoom: 14.7,
       duration: 650,
     });
-  }, [fastRoute, safeRoute, activeRoute]);
+  }, [fastRoute, safeRoute, activeRoute, hasDistinctAlternative]);
 
   useEffect(() => {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
@@ -596,7 +606,8 @@ export default function Home() {
   }
 
   function chooseAddress(target: "start" | "end", result: GeocodeResult) {
-    const location = { label: result.label, coordinate: result.coordinate };
+    const label = addressQuery.trim() || result.label;
+    const location = { label, coordinate: result.coordinate };
     if (target === "start") {
       setStartLocation(location);
       setStartText(location.label);
@@ -606,7 +617,15 @@ export default function Home() {
     }
     setAddressResults([]);
     setAddressSearchTarget(null);
+    setAddressQuery("");
     setStatus(`${target === "start" ? "Partenza" : "Destinazione"} confermata.`);
+  }
+
+  function closeAddressPicker() {
+    setAddressResults([]);
+    setAddressSearchTarget(null);
+    setAddressQuery("");
+    setStatus("Ricerca indirizzo chiusa.");
   }
 
   async function fetchAddresses(text: string) {
@@ -625,6 +644,11 @@ export default function Home() {
   async function searchAddresses(target: "start" | "end") {
     if (addressSearchLoading) return;
     const text = target === "start" ? startText : endText;
+    if (!text.trim()) {
+      setStatus(`Inserisci ${target === "start" ? "la partenza" : "la destinazione"}.`);
+      return;
+    }
+    setAddressQuery(text.trim());
     setAddressSearchTarget(target);
     setAddressResults([]);
     setAddressSearchLoading(true);
@@ -645,9 +669,10 @@ export default function Home() {
     if (text.trim() === current.label) return current;
     const results = await fetchAddresses(text);
     if (results.length === 1) {
-      const selected = { label: results[0].label, coordinate: results[0].coordinate };
+      const selected = { label: text.trim(), coordinate: results[0].coordinate };
       return selected;
     }
+    setAddressQuery(text.trim());
     setAddressSearchTarget(target);
     setAddressResults(results);
     throw new Error(`Scegli l’indirizzo ${target === "start" ? "di partenza" : "di destinazione"} dall’elenco.`);
@@ -681,8 +706,10 @@ export default function Home() {
       setFastRoute({ ...data.fast, nodes: [], edges: [], problemSegments: data.problemSegments });
       setSafeRoute({ ...data.safe, nodes: [], edges: [], problemSegments: data.problemSegments });
       setAlternativesAnalyzed(data.alternativesAnalyzed);
+      setHasDistinctAlternative(data.hasDistinctAlternative);
       setIsLiveResult(true);
       setActivePanel("routes");
+      setActiveRoute(data.hasDistinctAlternative ? "safe" : "fast");
       setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
       setStatus(`${data.dataNotice}. Tempi medi senza traffico live.`);
     } catch (error) {
@@ -789,10 +816,16 @@ export default function Home() {
     setThemeMode((current) => current === "auto" ? "light" : current === "light" ? "dark" : "auto");
   }
 
-  function openInAppleMaps() {
+  function openExternalMap(provider: "apple" | "google" | "waze") {
     const [lng, lat] = endLocation.coordinate;
-    window.open(`https://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`, "_blank", "noopener,noreferrer");
-    setStatus("Apple Maps può scegliere un percorso diverso da quello anti-pavé.");
+    const urls = {
+      apple: `https://maps.apple.com/?daddr=${lat},${lng}&dirflg=d`,
+      google: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`,
+      waze: `https://waze.com/ul?ll=${lat}%2C${lng}&navigate=yes`,
+    };
+    window.open(urls[provider], "_blank", "noopener,noreferrer");
+    setMapChooserOpen(false);
+    setStatus("L’app esterna ricalcolerà il proprio percorso verso la destinazione.");
   }
 
   function startReport() {
@@ -927,22 +960,12 @@ export default function Home() {
                       />
                       <button
                         type="button"
-                        onClick={startText.trim() !== startLocation.label ? () => void searchAddresses("start") : useCurrentLocation}
-                        aria-label={startText.trim() !== startLocation.label ? "Cerca indirizzo di partenza" : "Usa posizione GPS"}
+                        onClick={startText.trim() ? () => void searchAddresses("start") : useCurrentLocation}
+                        aria-label={startText.trim() ? "Cerca indirizzo di partenza" : "Usa posizione GPS"}
                       >
-                        {addressSearchLoading && addressSearchTarget === "start" ? "…" : startText.trim() !== startLocation.label ? "⌕" : "◎"}
+                        {addressSearchLoading && addressSearchTarget === "start" ? "…" : startText.trim() ? "⌕" : "◎"}
                       </button>
                     </div>
-                    {addressSearchTarget === "start" && addressResults.length > 0 && (
-                      <div id="start-address-results" className="address-results" role="listbox" aria-label="Indirizzi di partenza">
-                        {addressResults.map((result) => (
-                          <button type="button" role="option" aria-selected="false" key={result.id} onClick={() => chooseAddress("start", result)}>
-                            <b>{result.primary}</b>
-                            <small>{result.secondary || "Milano"}</small>
-                          </button>
-                        ))}
-                      </div>
-                    )}
                   </div>
                   <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">⇅</button>
                   <div className="field-shell">
@@ -977,16 +1000,6 @@ export default function Home() {
                         {addressSearchLoading && addressSearchTarget === "end" ? "…" : "⌕"}
                       </button>
                     </div>
-                    {addressSearchTarget === "end" && addressResults.length > 0 && (
-                      <div id="end-address-results" className="address-results" role="listbox" aria-label="Indirizzi di destinazione">
-                        {addressResults.map((result) => (
-                          <button type="button" role="option" aria-selected="false" key={result.id} onClick={() => chooseAddress("end", result)}>
-                            <b>{result.primary}</b>
-                            <small>{result.secondary || "Milano"}</small>
-                          </button>
-                        ))}
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -1025,23 +1038,31 @@ export default function Home() {
                   <p>{alternativesAnalyzed} alternative{lastRecalculatedAt ? ` · ${lastRecalculatedAt}` : ""}</p>
                 </div>
 
-                <button type="button" className={`route-option safe ${activeRoute === "safe" ? "selected" : ""}`} onClick={() => setActiveRoute("safe")}>
-                  <span className="route-radio" />
-                  <span className="route-name"><b>Anti-pavé</b><small>{safeRoute.distance.toFixed(1)} km · {safeRoute.paveMeters} m noti</small></span>
-                  <strong>{safeRoute.minutes.toFixed(0)}<small> min</small></strong>
-                  <em>+{Math.max(0, Math.round(safeRoute.minutes - fastRoute.minutes))}</em>
-                </button>
+                {hasDistinctAlternative ? (
+                  <button type="button" className={`route-option safe ${activeRoute === "safe" ? "selected" : ""}`} onClick={() => setActiveRoute("safe")}>
+                    <span className="route-radio" />
+                    <span className="route-name"><b>Anti-pavé</b><small>{safeRoute.distance.toFixed(1)} km · {safeRoute.paveMeters} m noti</small></span>
+                    <strong>{formatMinutes(safeRoute.minutes)}<small> min</small></strong>
+                    <em>+{formatMinutes(Math.max(0, safeRoute.minutes - fastRoute.minutes))}</em>
+                  </button>
+                ) : (
+                  <div className="route-option no-alternative">
+                    <span className="route-radio" />
+                    <span className="route-name"><b>Nessuna deviazione migliore</b><small>Le alternative controllate non riducono il pavé noto</small></span>
+                    <strong>—</strong>
+                  </div>
+                )}
                 <button type="button" className={`route-option fast ${activeRoute === "fast" ? "selected" : ""}`} onClick={() => setActiveRoute("fast")}>
                   <span className="route-radio" />
                   <span className="route-name"><b>Più rapido</b><small>{fastRoute.distance.toFixed(1)} km · {fastRoute.paveMeters} m noti</small></span>
-                  <strong>{fastRoute.minutes.toFixed(0)}<small> min</small></strong>
+                  <strong>{formatMinutes(fastRoute.minutes)}<small> min</small></strong>
                   <em>base</em>
                 </button>
 
                 <div className="impact-strip">
                   <div><small>Pavé evitato</small><strong>{savedPave.toLocaleString("it-IT")} m</strong></div>
                   <div><small>Riduzione</small><strong>{fastRoute.paveMeters ? Math.round(savedPave / fastRoute.paveMeters * 100) : 0}%</strong></div>
-                  <div><small>Dati</small><strong>{isLiveResult ? "OSM live" : "Demo"}</strong></div>
+                  <div><small>Dati</small><strong>{isLiveResult ? "OSM" : "Demo"}</strong></div>
                 </div>
 
                 <button type="button" className={`journey-button ${isJourneyActive ? "stop" : ""}`} onClick={toggleJourney}>
@@ -1051,7 +1072,7 @@ export default function Home() {
                 </button>
                 <div className="route-actions">
                   <button type="button" onClick={() => void calculateRoutes()} disabled={isLoading}>↻ Ricalcola</button>
-                  <button type="button" onClick={openInAppleMaps}>Apri arrivo in Mappe ↗</button>
+                  <button type="button" onClick={() => setMapChooserOpen(true)}>Apri in un’altra app ↗</button>
                 </div>
               </section>
             )}
@@ -1093,14 +1114,20 @@ export default function Home() {
                   : picking === "reportEnd"
                     ? "Tocca la fine del tratto"
                     : `Tocca la ${picking === "start" ? "partenza" : "destinazione"}`
-                : isJourneyActive ? "GPS LIVE · ricalcolo automatico" : isLiveResult ? `${alternativesAnalyzed} alternative · dati OSM` : "Esempio iniziale"}
+                : isJourneyActive
+                  ? "GPS LIVE · ricalcolo automatico"
+                  : isLiveResult
+                    ? hasDistinctAlternative
+                      ? `${alternativesAnalyzed} percorsi · deviazione trovata`
+                      : `${alternativesAnalyzed} percorsi · nessuna deviazione migliore`
+                    : "Esempio iniziale"}
             </div>
             {(picking === "reportStart" || picking === "reportEnd") && (
               <button type="button" className="cancel-map-action" onClick={cancelReport}>Annulla</button>
             )}
           </div>
           <div className="map-key">
-            <span><i className="line safe" /> Anti-pavé</span>
+            {hasDistinctAlternative && <span><i className="line safe" /> Anti-pavé</span>}
             <span><i className="line fast" /> Rapido</span>
             <span><i className="line pave" /> Pavé</span>
             <span><i className="line community" /> Comunità</span>
@@ -1109,7 +1136,7 @@ export default function Home() {
             <span className={activeRoute === "safe" ? "summary-route safe" : "summary-route"}>
               {activeRoute === "safe" ? "Anti-pavé" : "Più rapido"}
             </span>
-            <strong>{activeRoute === "safe" ? safeRoute.minutes.toFixed(0) : fastRoute.minutes.toFixed(0)} <small>min</small></strong>
+            <strong>{formatMinutes(activeRoute === "safe" ? safeRoute.minutes : fastRoute.minutes)} <small>min</small></strong>
             <span>{activeRoute === "safe" ? safeRoute.paveMeters : fastRoute.paveMeters} m di pavé noto</span>
             <b>Dettagli ↑</b>
           </button>
@@ -1121,6 +1148,53 @@ export default function Home() {
         <button type="button" className={activePanel === "routes" ? "active" : ""} onClick={() => setActivePanel("routes")}><span>↝</span>Percorsi</button>
         <button type="button" className={activePanel === "community" ? "active" : ""} onClick={() => setActivePanel("community")}><span>＋</span>Comunità</button>
       </nav>
+
+      {addressSearchTarget && addressResults.length > 0 && (
+        <div className="modal-backdrop address-picker-backdrop" role="presentation">
+          <section className="modal address-picker" role="dialog" aria-modal="true" aria-labelledby="address-picker-title">
+            <button type="button" className="modal-close" onClick={closeAddressPicker} aria-label="Chiudi">×</button>
+            <span className="eyebrow">{addressSearchTarget === "start" ? "Partenza" : "Destinazione"}</span>
+            <h2 id="address-picker-title">Scegli l’indirizzo</h2>
+            <p className="address-query">Risultati per “{addressQuery}”</p>
+            <div
+              id={addressSearchTarget === "start" ? "start-address-results" : "end-address-results"}
+              className="address-picker-results"
+              role="listbox"
+              aria-label={addressSearchTarget === "start" ? "Indirizzi di partenza" : "Indirizzi di destinazione"}
+            >
+              {addressResults.map((result) => (
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected="false"
+                  key={result.id}
+                  onClick={() => chooseAddress(addressSearchTarget, result)}
+                >
+                  <b>{result.primary}</b>
+                  <small>{result.secondary || "Milano"}</small>
+                </button>
+              ))}
+            </div>
+            <button type="button" className="secondary-action address-cancel" onClick={closeAddressPicker}>Annulla</button>
+          </section>
+        </div>
+      )}
+
+      {mapChooserOpen && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setMapChooserOpen(false)}>
+          <section className="modal map-app-modal" role="dialog" aria-modal="true" aria-labelledby="map-app-title" onClick={(event) => event.stopPropagation()}>
+            <button type="button" className="modal-close" onClick={() => setMapChooserOpen(false)} aria-label="Chiudi">×</button>
+            <span className="eyebrow">Continua il viaggio</span>
+            <h2 id="map-app-title">Apri la destinazione</h2>
+            <div className="map-app-grid">
+              <button type="button" onClick={() => openExternalMap("apple")}><b>Mappe</b><small>Apple</small></button>
+              <button type="button" onClick={() => openExternalMap("google")}><b>Google Maps</b><small>Se installata</small></button>
+              <button type="button" onClick={() => openExternalMap("waze")}><b>Waze</b><small>Se installata</small></button>
+            </div>
+            <p className="external-map-note">L’app scelta riceve la destinazione, ma calcola un proprio percorso: la deviazione anti-pavé resta visibile in Lastrico.</p>
+          </section>
+        </div>
+      )}
 
       {reportModalOpen && reportStart && reportEnd && (
         <div className="modal-backdrop" role="presentation">

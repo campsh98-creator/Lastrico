@@ -401,6 +401,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .route-option.selected { border-color: var(--green); background: var(--green-soft); box-shadow: inset 3px 0 0 var(--green); }
 .route-option.fast.selected { border-color: var(--ink-2); background: var(--surface); box-shadow: inset 3px 0 0 var(--ink-2); }
+.route-option.no-alternative {
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  border-style: dashed;
+  background: var(--surface);
+  color: var(--muted);
+}
 .route-radio { width: 12px; height: 12px; border: 2px solid #aab5b2; border-radius: 50%; }
 .route-option.selected .route-radio { border: 3px solid white; background: var(--green); box-shadow: 0 0 0 2px var(--green); }
 .route-option.fast.selected .route-radio { background: var(--ink-2); box-shadow: 0 0 0 2px var(--ink-2); }
@@ -583,6 +589,52 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .modal h2 { font-size: 38px; }
 .modal p { color: var(--muted); font-size: 11px; line-height: 1.55; }
 .modal-close { position: absolute; top: 11px; right: 14px; border: 0; background: transparent; color: var(--muted); font-size: 25px; }
+.address-picker { width: min(520px, 100%); overflow: hidden; }
+.address-query { margin: 5px 0 13px; }
+.address-picker-results {
+  max-height: min(390px, 54dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface-2);
+  -webkit-overflow-scrolling: touch;
+}
+.address-picker-results button {
+  width: 100%;
+  min-height: 58px;
+  display: block;
+  padding: 11px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+.address-picker-results button:last-child { border-bottom: 0; }
+.address-picker-results button:active { background: var(--green-soft); }
+.address-picker-results b { display: block; font-size: 12px; }
+.address-picker-results small { display: block; margin-top: 5px; color: var(--muted); font-size: 9px; }
+.address-cancel { width: 100%; margin-top: 10px; }
+.map-app-modal { width: min(480px, 100%); }
+.map-app-grid { display: grid; gap: 7px; margin-top: 17px; }
+.map-app-grid button {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--ink);
+  text-align: left;
+}
+.map-app-grid b { font-size: 12px; }
+.map-app-grid small { color: var(--muted); font-size: 9px; }
+.external-map-note { margin: 13px 0 0; }
 .report-modal { width: min(660px, 100%); }
 .report-modal fieldset { margin: 16px 0 0; padding: 0; border: 0; }
 .report-modal legend, .report-text-fields label > span {
@@ -746,6 +798,16 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
   .modal { padding: 28px 18px 20px; border-radius: 16px; }
   .modal h2 { font-size: 31px; }
+  .address-picker-backdrop { place-items: end center; padding: 0; }
+  .address-picker {
+    width: 100%;
+    max-height: min(82dvh, 690px);
+    padding: 24px 14px calc(14px + env(safe-area-inset-bottom));
+    border-radius: 20px 20px 0 0;
+  }
+  .address-picker h2 { margin-top: 5px; font-size: 29px; }
+  .address-picker-results { max-height: 48dvh; }
+  .map-app-modal { padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
   .report-kind-grid, .report-text-fields { grid-template-columns: 1fr; }
   .report-kind-grid label { min-height: 52px; }
 }
