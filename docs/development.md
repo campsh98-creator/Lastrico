@@ -1,50 +1,92 @@
-# Sviluppo
+# Development
 
-## Requisiti e avvio
+## Requirements and local server
 
-- Node.js 22.13 o successivo;
+- Node.js 22.13 or later;
 - npm;
-- un browser moderno.
+- a modern browser.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-La beta locale è disponibile su `http://localhost:3000`.
+The local beta is available at `http://localhost:3000`.
 
-## Verifiche
+## Required checks
 
 ```bash
 npm run lint
 npm test
 ```
 
-`npm test` crea una build pulita ed esegue i test Node. Prima di una pull request verifica
-anche almeno un viewport desktop e i viewport mobile 320×568, 393×852 e 568×320.
+`npm test` creates a clean build and runs the Node test suite. Before opening a pull request,
+also verify a desktop viewport and the 320×568, 393×852, and 568×320 mobile viewports.
+Changes to navigation, GPS, routing, or layout need behaviour-level evidence rather than a
+successful compilation alone.
 
-## Cambiare una funzionalità
+## Changing a feature
 
-1. Apri o collega una issue.
-2. Crea un branch breve, per esempio `feature/directions-sheet`.
-3. Per una funzionalità di prodotto, aggiungi prima un prompt esecutivo in `outputs/`.
-4. Mantieni la logica pura in `lib/` e passa callback espliciti ai componenti.
-5. Aggiungi test di regressione.
-6. Esegui lint, test, verifica mobile e descrivi l’esito nella pull request.
+1. Open or link an issue with scope, out-of-scope items, acceptance criteria, and a
+   validation plan.
+2. Create a focused branch such as `feature/directions-sheet`.
+3. For a product feature, add an execution prompt under `outputs/` before implementation.
+4. Keep pure logic in `lib/` and pass explicit callbacks to components where practical.
+5. Add regression tests.
+6. Verify each affected mode: car, motorcycle, and bicycle.
+7. Run lint, tests, desktop and mobile checks, then document results and limitations in the
+   pull request.
 
-## Database
+## Database and community reports
 
-Le segnalazioni usano Drizzle e il binding D1 `DB`. Dopo una modifica allo schema:
+Reports use Drizzle and the D1 binding `DB`. After changing the schema:
 
 ```bash
 npm run db:generate
 ```
 
-Non committare database locali, dump, token o coordinate personali. Le nuove segnalazioni
-devono restare `pending` finché un processo di moderazione non le rende `verified`.
+Never commit a local database, production dump, token, personal coordinate, licence plate,
+or travel history. New reports remain `pending` until moderation marks them `verified`.
+Unverified reports must not affect routing.
 
-## Routing e provider
+## Routing and providers
 
-Le API pubbliche usate nella beta hanno capacità e policy limitate. Conserva timeout, cache,
-attribuzioni e fallback. Un controllo visivo deve modificare davvero il parametro di routing
-che dichiara di controllare.
+Public beta APIs have limited capacity and usage policies. Preserve timeouts, caching,
+attribution, rate limits, and explicit fallback behaviour. A visual control must change the
+routing parameter it claims to control.
+
+Routing must remain mode-specific. Never hide provider failure by substituting an automobile
+route for a bicycle or motorcycle request. Document degraded behaviour and remember that a
+route based on known surface data is not a safety certification.
+
+## Road-surface data
+
+Every dataset or correction needs:
+
+- a source and compatible licence;
+- geographic scope and generation or observation date;
+- an explanation of classification and confidence;
+- deduplication and geometry validation;
+- OpenStreetMap attribution when derived from OSM;
+- tests that prevent missing data from being interpreted as a known smooth surface.
+
+Use public road segments or municipality-level descriptions in evidence. Do not include a
+person's home address or identifiable movement history.
+
+## Regional expansion
+
+Milan is the current beta area. Product copy may describe future expansion, but code and
+documentation must not claim support for a new area before geocoding, routing,
+road-surface data, GPS, report boundaries, mobile behaviour, and production smoke tests
+have passed for that region.
+
+## Pull request evidence
+
+Describe:
+
+- linked issue and user-visible outcome;
+- affected travel modes and regions;
+- automated and manual checks;
+- privacy, safety, accessibility, data-provenance, provider, and moderation impact;
+- known limitations and rollback considerations;
+- screenshots or recordings for visual changes, with sensitive data removed.

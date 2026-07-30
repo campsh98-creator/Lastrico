@@ -15,6 +15,7 @@ const reportExportUrl = new URL("../app/api/reports/export/route.ts", import.met
 const directionsSheetUrl = new URL("../components/navigation/DirectionsSheet.tsx", import.meta.url);
 const communityPanelUrl = new URL("../components/reports/CommunityPanel.tsx", import.meta.url);
 const mapRouteStyleUrl = new URL("../lib/map-route-style.ts", import.meta.url);
+const readmeUrl = new URL("../README.md", import.meta.url);
 
 test("keeps the planner iOS-first and free of preset places", async () => {
   const [page, css] = await Promise.all([
@@ -178,6 +179,12 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
   assert.equal(manifest.scope, "/");
   assert.equal(manifest.start_url, "/");
   assert.equal(manifest.display, "standalone");
+  assert.equal(manifest.name, "Lastrico — Road-surface-aware navigation");
+  assert.match(manifest.description, /cars, motorcycles, and bicycles/);
+  assert.match(manifest.description, /currently limited to Milan/);
+  assert.match(layout, /Lastrico — Road-surface-aware navigation/);
+  assert.match(layout, /cars, motorcycles, and bicycles/);
+  assert.doesNotMatch(layout, /evita pavé|Milano senza sobbalzi/);
   assert.match(page, /hour >= 7 && hour < 19/);
   assert.match(page, /lastrico-theme/);
   assert.match(layout, /appleWebApp/);
@@ -186,6 +193,19 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
   assert.match(serviceWorker, /self\.clients\.claim\(\)/);
   assert.match(serviceWorker, /url\.pathname\.startsWith\("\/api\/"\)/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
+});
+
+test("positions Lastrico generically without overstating safety or current coverage", async () => {
+  const readme = await readFile(readmeUrl, "utf8");
+
+  assert.match(readme, /^# Lastrico$/m);
+  assert.match(readme, /cars, motorcycles, and bicycles/);
+  assert.match(readme, /current tested beta coverage is limited to Milan/i);
+  assert.match(readme, /current beta interface is in Italian/i);
+  assert.match(readme, /does not guarantee route safety, prevent accidents/i);
+  assert.match(readme, /Zero known exposure does not mean a hazard-free route/);
+  assert.match(readme, /## Contributing/);
+  assert.doesNotMatch(readme, /safe route|safest route|accident-free/i);
 });
 
 test("uses a vector basemap and keeps the selected route visually dominant", async () => {

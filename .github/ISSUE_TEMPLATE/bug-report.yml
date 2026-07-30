@@ -1,45 +1,72 @@
-name: Bug
-description: Segnala un comportamento riproducibile dell’app o del sito.
+name: Bug report
+description: Report reproducible behaviour in the application or website.
 title: "[Bug] "
 labels:
   - bug
 body:
   - type: markdown
     attributes:
-      value: Grazie. Non inserire indirizzi personali, coordinate riferite a persone o credenziali.
+      value: "Thank you. Do not include home addresses, personal coordinates, licence plates, travel histories, credentials, or other sensitive data."
   - type: textarea
     id: description
     attributes:
-      label: Cosa è successo?
-      placeholder: Descrivi il problema e il risultato atteso.
+      label: What happened?
+      description: Describe the actual and expected behaviour.
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Passi per riprodurlo
-      placeholder: "1. Apri…\n2. Tocca…\n3. Osserva…"
+      label: Steps to reproduce
+      placeholder: "1. Open…\n2. Select…\n3. Observe…"
     validations:
       required: true
   - type: dropdown
     id: area
     attributes:
-      label: Area
+      label: Product area
       options:
-        - Navigazione
-        - Pianificazione e routing
-        - Segnalazioni
-        - Mappa
-        - Installazione PWA
-        - Altro
+        - Navigation
+        - Planning and routing
+        - Community reports
+        - Map
+        - PWA installation
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Travel mode
+      options:
+        - Car
+        - Motorcycle
+        - Bicycle
+        - All modes
+        - Not applicable
     validations:
       required: true
   - type: input
+    id: region
+    attributes:
+      label: Region or municipality
+      description: Give only a public area relevant to the bug; do not provide a home address.
+      placeholder: "Example: Milan"
+  - type: input
     id: environment
     attributes:
-      label: Dispositivo e browser
-      placeholder: "Esempio: iPhone 15, iOS 19, Safari"
+      label: Device and browser
+      placeholder: "Example: iPhone 15, iOS 19, Safari"
   - type: textarea
     id: evidence
     attributes:
-      label: Screenshot o log privi di dati sensibili
+      label: Non-sensitive screenshots or logs
+      description: Remove coordinates, credentials, identifiers, and personal information.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed personal locations, credentials, licence plates, and identifiable travel data.
+          required: true

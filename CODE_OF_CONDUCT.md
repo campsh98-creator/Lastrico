@@ -1,10 +1,45 @@
-# Codice di condotta
+# Code of Conduct
 
-Vogliamo una comunità collaborativa, rispettosa e utile.
+## Our commitment
 
-Sono benvenuti contributi tecnici, segnalazioni stradali, feedback e critiche motivate. Non sono accettati molestie, discriminazioni, minacce, pubblicazione di dati personali o contenuti deliberatamente falsi.
+We are committed to providing a welcoming, respectful, and harassment-free community for
+everyone, regardless of background, identity, experience, ability, or level of technical
+knowledge.
 
-Le discussioni devono restare focalizzate sul prodotto e sulle evidenze. I maintainer possono modificare o rimuovere contenuti contrari a questi principi e limitare la partecipazione di chi li viola ripetutamente.
+## Expected behaviour
 
-Segnala comportamenti problematici attraverso i canali privati del maintainer, senza pubblicare informazioni sensibili in una issue.
+Community members are expected to:
 
+- communicate with empathy, patience, and respect;
+- keep criticism focused on ideas, evidence, and product outcomes;
+- welcome questions and constructive disagreement;
+- respect privacy and never publish personal or sensitive location information;
+- acknowledge mistakes and help repair their impact;
+- follow project safety, data-provenance, and licensing rules.
+
+## Unacceptable behaviour
+
+Harassment, discrimination, threats, intimidation, sexualised attention, deliberate
+misinformation, impersonation, doxxing, and publication of another person's private data
+are not accepted. Repeated disruption, bad-faith safety claims, or knowingly fabricated road
+reports are also unacceptable.
+
+## Scope
+
+This policy applies in repository discussions, issues, pull requests, reviews, project
+events, and any space where a person represents Lastrico.
+
+## Reporting and enforcement
+
+Do not report conduct incidents in a public issue. Contact the maintainer privately through
+the private contact method listed on the
+[maintainer's GitHub profile](https://github.com/campsh98-creator). Include only the minimum
+information needed to investigate and do not forward sensitive material unnecessarily.
+
+Maintainers will handle reports as confidentially as practical, review conflicts of
+interest, and respond proportionately. Possible actions include a private clarification,
+warning, removal of content, temporary participation restriction, or permanent ban.
+Retaliation against a reporter or participant in an investigation is prohibited.
+
+Project maintainers are responsible for clarifying and enforcing this policy. Enforcement
+decisions may be reconsidered when new evidence is available.

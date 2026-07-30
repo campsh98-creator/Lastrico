@@ -1,7 +1,10 @@
-# Attribuzione
+# Attribution Notice
 
-Lastrico è stato ideato e creato da Domenico Campanella Scali nel 2026.
+Lastrico was conceived and created by Domenico Campanella Scali in 2026.
 
-Il codice originale del progetto è distribuito con licenza MIT. Conservare l’avviso di copyright e la licenza nelle copie o nelle parti sostanziali del software.
+The project's original code is distributed under the MIT License. Keep the copyright notice
+and licence with copies or substantial portions of the software.
 
-I dati cartografici e stradali provengono da OpenStreetMap e restano soggetti alla relativa licenza ODbL e agli obblighi di attribuzione. MapLibre, Valhalla, OSRM e le altre dipendenze conservano le rispettive licenze e titolarità.
+Map and road data comes from OpenStreetMap and remains subject to the ODbL and applicable
+attribution requirements. MapLibre, Valhalla, OSRM, and other dependencies retain their
+respective licences and ownership.

@@ -1,139 +1,161 @@
-# Lastrico — Milano senza sobbalzi
+# Lastrico
 
-![Lastrico social preview](public/og.png)
+Lastrico is an experimental, open-source, road-surface-aware navigation PWA. It compares
+routes for cars, motorcycles, and bicycles using known road-surface data so people can make
+more informed choices and reduce estimated exposure to rough or uneven streets.
 
-Lastrico è una PWA sperimentale che confronta il percorso automobilistico più rapido con un’alternativa che riduce le strade in pavé e sanpietrini conosciute a Milano.
+**Created by [Domenico Campanella Scali](https://github.com/campsh98-creator).**
 
-La beta permette anche di segnalare tratti mancanti, strade sconnesse, pavimentazioni appena asfaltate ed errori nei dati.
+**Current beta:** [lastrico-milano.cscda39.chatgpt.site](https://lastrico-milano.cscda39.chatgpt.site)
 
-**Ideato e creato da [Domenico Campanella Scali](https://github.com/campsh98-creator).**
+> The current tested beta coverage is limited to Milan. Milan is the first coverage area, not
+> part of the product name or a limit of the long-term architecture.
 
-**Beta:** [lastrico-milano.cscda39.chatgpt.site](https://lastrico-milano.cscda39.chatgpt.site)
+> **Safety notice:** Lastrico does not guarantee route safety, prevent accidents, or replace
+> road signs, traffic rules, rider judgement, or certified navigation. Surface data may be
+> incomplete or outdated. Zero known exposure does not mean a hazard-free route.
 
-> Lastrico non garantisce un percorso completamente asfaltato. La copertura dipende dai dati disponibili e i tempi non includono il traffico in tempo reale.
+## Supported travel modes
 
-## Cosa funziona
+Lastrico exposes three real routing modes rather than relabelling one car route:
 
-- partenza e destinazione libere;
-- geocoding degli indirizzi nell’area di Milano;
-- selezione dei punti direttamente sulla mappa;
-- posizione GPS come partenza;
-- confronto tra percorso rapido e percorso anti-pavé;
-- tre livelli di evitamento;
-- ricalcolo manuale e ricalcolo GPS sperimentale;
-- navigazione GPS in primo piano, separata dalla simulazione automatica;
-- elenco completo delle svolte con manovra corrente evidenziata;
-- guida vocale facoltativa e persistente, disattivata per impostazione iniziale;
-- metri di pavé conosciuto, minuti e distanza stimati;
-- evidenziazione dei tratti critici;
-- segnalazioni comunitarie persistenti con revisione prima della pubblicazione;
-- esportazione CSV dei soli contributi verificati;
-- installazione su iPhone come web app.
+- **Car:** Valhalla auto routing with a temporary public OSRM car fallback.
+- **Motorcycle:** Valhalla's experimental motorcycle profile; access rules depend on
+  OpenStreetMap data.
+- **Bicycle:** Valhalla bicycle routing; it never silently substitutes a car route.
 
-## Prova su iPhone
+Provider availability, legal access data, surface coverage, and route quality vary by mode.
+Users remain responsible for weather, closures, vehicle suitability, traffic rules, and
+immediate road conditions.
 
-1. Apri la beta in Safari.
-2. Tocca **Condividi**.
-3. Seleziona **Aggiungi alla schermata Home**.
-4. Attiva **Apri come app web**.
-5. Concedi la posizione soltanto quando avvii un test GPS.
+## What works today
 
-La PWA non compare direttamente sul display CarPlay. Una vera integrazione richiederà un’app iPhone nativa, navigazione turn-by-turn e l’autorizzazione CarPlay Navigation di Apple.
+- free-form start and destination within the current Milan beta area;
+- address search and direct point selection on the map;
+- GPS position as the starting point;
+- comparison between the fastest route and a lower rough-surface-exposure alternative;
+- three surface-avoidance preferences;
+- manual recalculation and experimental GPS rerouting;
+- foreground GPS navigation, kept separate from automatic route simulation;
+- a complete turn list with the current manoeuvre highlighted;
+- optional persistent voice guidance, disabled by default;
+- estimated known rough-surface exposure, travel time, and distance;
+- highlighted surface segments;
+- persistent community reports reviewed before publication;
+- CSV export containing verified contributions only;
+- installation on iPhone as a web app.
 
-## Architettura
+The current beta interface is in Italian. Repository documentation and collaboration happen
+in English; interface localisation is tracked separately.
 
-| Area | Tecnologia |
+## Try the beta on iPhone
+
+1. Open the beta in Safari.
+2. Tap **Share**.
+3. Select **Add to Home Screen**.
+4. Enable **Open as Web App**.
+5. Grant location access only when starting a GPS test.
+
+The PWA does not appear on the CarPlay display. A real CarPlay integration would require a
+native iPhone app, production-grade turn-by-turn navigation, and Apple's CarPlay Navigation
+entitlement.
+
+## Architecture
+
+| Area | Technology |
 | --- | --- |
-| Interfaccia | React 19, Next.js/vinext, TypeScript |
-| Mappa | MapLibre GL JS con stile vettoriale OpenFreeMap |
-| Dati cartografici | OpenStreetMap e OpenFreeMap |
-| Routing beta | Valhalla pubblico con fallback OSRM per auto |
-| Superfici | dataset OSM incluso e tag `surface` |
-| Ricerca indirizzi | Nominatim |
-| Segnalazioni | Cloudflare D1 e Drizzle ORM |
-| Distribuzione | PWA e Cloudflare Worker tramite Sites |
+| Interface | React 19, Next.js/vinext, TypeScript |
+| Map | MapLibre GL JS with an OpenFreeMap vector style |
+| Map data | OpenStreetMap and OpenFreeMap |
+| Beta routing | Public Valhalla; OSRM fallback for cars only |
+| Road surfaces | Bundled OSM-derived dataset and `surface` tags |
+| Address search | Nominatim |
+| Community reports | Cloudflare D1 and Drizzle ORM |
+| Delivery | PWA and Cloudflare Worker through Sites |
 
 ```text
 iPhone / browser
        │
        ▼
-Lastrico PWA ──► geocoding Nominatim
+Lastrico PWA ──► Nominatim geocoding
        │
-       ├──────► alternative Valhalla / OSRM
-       ├──────► superfici OSM incluse
-       └──────► segnalazioni D1
+       ├──────► Valhalla / OSRM alternatives
+       ├──────► bundled OSM surface data
+       └──────► moderated D1 reports
 ```
 
-## Sviluppo locale
+See [architecture](docs/architecture.md), [development](docs/development.md),
+[governance](GOVERNANCE.md), and the [roadmap](ROADMAP.md) for more detail.
 
-Requisiti:
+## Local development
 
-- Node.js 22.13 o successivo;
+Requirements:
+
+- Node.js 22.13 or later;
 - npm.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-L’app viene esposta su `http://localhost:3000`.
+The local app is available at `http://localhost:3000`.
 
-Per creare la build:
-
-```bash
-npm run build
-```
-
-Per eseguire tutte le verifiche:
+Run all required checks:
 
 ```bash
 npm run lint
 npm test
 ```
 
-Approfondimenti: [architettura](docs/architecture.md), [sviluppo](docs/development.md),
-[governance](GOVERNANCE.md) e [roadmap](ROADMAP.md).
-
-Per rigenerare le migrazioni dopo modifiche allo schema:
+After changing the database schema, regenerate migrations with:
 
 ```bash
 npm run db:generate
 ```
 
-Il database D1 locale deve essere inizializzato con la migrazione presente in `drizzle/`. Il binding logico usato dall’app è `DB`.
+The local D1 database must use the migration in `drizzle/`. The application's logical binding
+is named `DB`.
 
-## Limiti della beta gratuita
+## Free beta limitations
 
-I servizi pubblici di Nominatim, Valhalla, OSRM e OpenFreeMap sono adatti soltanto a test con pochi utenti e richieste moderate. Non costituiscono un’infrastruttura commerciale gratuita e illimitata.
+The public Nominatim, Valhalla, OSRM, and OpenFreeMap services are suitable only for a small
+beta with moderate request volume. They are not free, unlimited commercial infrastructure.
+Travel times do not include live traffic.
 
-Le segnalazioni nuove vengono salvate come `pending`, non sono esposte dall’API pubblica o dal CSV finché non vengono verificate e non modificano automaticamente il routing.
-Le note inviate servono alla moderazione e non vengono pubblicate nell’API o nel CSV.
+New community reports are stored as `pending`. They are not exposed through the public API or
+CSV and do not affect routing until they have been verified. Moderation notes are not
+published.
 
-Lastrico non salva una cronologia continua della posizione GPS.
+Lastrico does not store a continuous GPS location history. GPS navigation requires HTTPS,
+precise-location permission, a data connection, and the app open in the foreground. iOS may
+suspend a PWA when the screen is locked or another app is opened.
 
-La navigazione GPS richiede HTTPS, il permesso di posizione precisa e l’app aperta in primo piano. iOS può sospendere la PWA quando lo schermo viene bloccato o quando si passa a un’altra app. Il ricalcolo è sperimentale e richiede una connessione dati.
+## Contributing
 
-## Roadmap
+Contributions are welcome in code, routing, road-surface data, accessibility, documentation,
+testing, and localisation. Start with [CONTRIBUTING.md](CONTRIBUTING.md), check existing
+[issues](https://github.com/campsh98-creator/Lastrico/issues), use the
+[guided issue templates](https://github.com/campsh98-creator/Lastrico/issues/new/choose),
+and look for `good first issue` or `help wanted`.
 
-Le priorità correnti sono la validazione su strada, la qualità dei dati, la moderazione, i
-test mobile e soltanto in seguito un’esperienza iPhone nativa. Leggi [ROADMAP.md](ROADMAP.md)
-per il dettaglio.
+Useful contribution areas include:
 
-## Contribuire
+- correcting missing or inaccurate road-surface data;
+- improving mode-specific routing without hiding provider limitations;
+- testing mobile navigation and accessibility;
+- documenting reproducible bugs without personal travel data;
+- extending verified geographic coverage without coupling the product identity to one city.
 
-Leggi [CONTRIBUTING.md](CONTRIBUTING.md). Il codice è pubblico nel repository
-[campsh98-creator/Lastrico](https://github.com/campsh98-creator/Lastrico). Puoi aprire una
-segnalazione per:
+Before opening a pull request, run `npm run lint` and `npm test`, test relevant mobile
+viewports, and describe both the evidence and remaining limitations. OpenStreetMap-derived
+data contributions must retain the required attribution and comply with the ODbL.
 
-- pavé mancante o dato errato;
-- problema di routing;
-- problema dell’interfaccia mobile;
-- proposta per la beta.
+Never publish home addresses, live or identifiable location histories, licence plates,
+credentials, or production data in an issue or pull request. Report vulnerabilities through
+the private process described in [SECURITY.md](SECURITY.md).
 
-## Privacy e sicurezza
+## Licence
 
-Non pubblicare indirizzi personali, targhe, dati di localizzazione precisi riferiti a persone o credenziali. Per problemi di sicurezza segui [SECURITY.md](SECURITY.md).
-
-## Licenza
-
-Codice distribuito con licenza [MIT](LICENSE). I dati OpenStreetMap restano soggetti alla licenza e all’attribuzione dei rispettivi titolari.
+The code is released under the [MIT License](LICENSE). OpenStreetMap-derived data remains
+subject to its applicable licence and attribution requirements.

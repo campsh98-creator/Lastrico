@@ -1,34 +1,55 @@
 # Roadmap
 
-La roadmap indica direzioni di lavoro, non promesse di consegna.
+This roadmap describes intended directions, not delivery promises.
 
-## Beta pubblica
+## Stable beta
 
-- validare su strada 10–15 tragitti rappresentativi a Milano;
-- rendere affidabili elenco svolte, ricalcolo e feedback GPS;
-- introdurre moderazione ripetibile delle segnalazioni;
-- misurare copertura e qualità dei dati di superficie;
-- migliorare accessibilità e test automatici mobile.
+- validate representative journeys for cars, motorcycles, and bicycles;
+- make turn instructions, rerouting, and GPS feedback reliable;
+- establish repeatable moderation for community reports;
+- measure road-surface data coverage and quality;
+- improve accessibility and automated mobile testing;
+- keep safety and data limitations visible throughout the experience.
 
-## Dati e comunità
+## Regional coverage
 
-- collegare una segnalazione al segmento stradale corretto, non soltanto a una linea;
-- pubblicare solo contributi verificati e una provenienza trasparente;
-- aggiungere strumenti di revisione e risoluzione dei conflitti;
-- proporre upstream a OpenStreetMap le correzioni adatte.
+- validate Milan and nearby municipalities as the first beta region;
+- separate regional boundaries, geocoding, datasets, and attribution from the product's
+  general identity;
+- document and implement a city/region adapter before adding distant areas;
+- evaluate Rome and other municipalities only after region-specific data, routing, GPS,
+  mobile, and production checks exist;
+- never present planned coverage as currently supported coverage.
 
-## Infrastruttura
+## Data and community
 
-- definire limiti e cache per i servizi cartografici;
-- aggiungere osservabilità senza tracciare gli spostamenti degli utenti;
-- valutare provider o istanze gestite prima di aumentare il traffico;
-- documentare backup, ripristino e migrazioni D1.
+- connect a report to the correct road segment rather than only to a line;
+- publish only verified contributions with transparent provenance;
+- add review and conflict-resolution tools;
+- measure confidence and freshness without treating missing data as a smooth road;
+- propose suitable corrections upstream to OpenStreetMap.
 
-## Esperienza nativa
+## Routing and safety
 
-- prototipo iPhone con navigazione in primo piano;
-- valutazione tecnica e di sicurezza per CarPlay;
-- eventuale richiesta dell’entitlement Apple solo dopo una beta mobile stabile.
+- evaluate rough-surface exposure as one signal alongside legal and mode-appropriate
+  routing;
+- improve mode-specific behaviour for cars, motorcycles, and bicycles;
+- document provider limitations and degraded behaviour;
+- test route progress, arrival, GPS loss, and rerouting without claiming safety
+  certification.
 
-Consulta le issue con etichette `good first issue`, `help wanted`, `data`, `navigation` e
-`ux` per attività circoscritte.
+## Infrastructure
+
+- define limits and caches for mapping services;
+- add observability without tracking users' journeys;
+- evaluate providers or managed instances before increasing traffic;
+- document D1 backup, restore, and migration procedures.
+
+## Native experience
+
+- prototype foreground iPhone navigation;
+- assess technical and road-safety requirements for CarPlay;
+- consider requesting Apple's entitlement only after a stable mobile beta.
+
+See issues labelled `good first issue`, `help wanted`, `data`, `navigation`, and `ux` for
+focused work.

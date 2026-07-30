@@ -1,83 +1,86 @@
-# Modello dati del pavé
+# Road-surface data model
 
-## Dataset corrente
+## Current dataset
 
-`data/milan-pave-central.json` è un estratto locale di geometrie OpenStreetMap usato come
-base resiliente quando Overpass non risponde.
+`data/milan-pave-central.json` is a local OpenStreetMap geometry extract used as a resilient
+fallback when Overpass is unavailable. The filename describes the current snapshot, not the
+long-term product identity.
 
-Baseline del 30 luglio 2026:
+Baseline on July 30, 2026:
 
-- 1.530 way con ID univoco;
-- 6.948 coordinate;
-- nessuna geometria con meno di due punti;
+- 1,530 ways with unique IDs;
+- 6,948 coordinates;
+- no geometry with fewer than two points;
 - 942 `sett`;
 - 521 `paving_stones`;
 - 52 `cobblestone`;
-- 15 `unhewn_cobblestone`.
-- circa 71,07 km di geometrie;
-- 210 way senza nome;
-- nessun ID, segmento esatto o geometria esatta duplicata;
-- nessuna coordinata invalida o fuori dall’area della beta.
+- 15 `unhewn_cobblestone`;
+- approximately 71.07 km of geometry;
+- 210 unnamed ways;
+- no duplicate ID, exact segment, or exact geometry;
+- no invalid coordinate outside the current dataset checks.
 
-Ogni record contiene attualmente `id`, `name`, `surface` e `coordinates`. L’ID è quello della
-way OSM; il nome può mancare all’origine ed essere normalizzato come strada senza nome.
+Each record currently contains `id`, `name`, `surface`, and `coordinates`. The ID is the OSM
+way ID. Missing names are normalised to an unnamed-road label.
 
-Sei geometrie chiudono un anello. La way OSM `313266346` ripete internamente una coordinata
-senza chiudersi e la way `4011978` contiene un salto di circa 331 metri: sono anomalie da
-verificare alla fonte, non corrette automaticamente.
+Six geometries close a loop. OSM way `313266346` repeats an internal coordinate without
+closing, and way `4011978` contains a jump of about 331 metres. These require source
+verification and are not corrected automatically.
 
-## Classificazione proposta
+## Proposed classification
 
-| Stato | Significato | Uso nel routing |
+| State | Meaning | Routing use |
 | --- | --- | --- |
-| `confirmed_pave` | OSM dichiara `sett`, `cobblestone` o `unhewn_cobblestone` | penalità piena |
-| `probable_pave` | OSM dichiara `paving_stones`, materiale eterogeneo | penalità pesata |
-| `confirmed_not_pave` | fonte verificata dichiara fondo non pavé | nessuna penalità |
-| `unknown` | dato assente o non interpretabile | nessuna penalità, copertura ridotta |
+| `confirmed_rough` | explicit `sett`, `cobblestone`, or `unhewn_cobblestone` evidence | full configured weight |
+| `probable_rough` | `paving_stones` or another heterogeneous surface | weighted exposure |
+| `confirmed_smooth` | a verified source identifies a smooth surface | no rough-surface weight |
+| `unknown` | missing or uninterpretable evidence | no invented weight; lower coverage |
 
-`unknown` non deve mai essere trasformato automaticamente in pavé.
+`unknown` must never be automatically converted to rough, smooth, asphalt, or safe.
 
-## Confidenza
+## Confidence
 
-La confidenza è separata dalla classe:
+Confidence is separate from the class:
 
-- `high`: geometria valida e classificazione esplicita verificata;
-- `medium`: classificazione OSM esplicita ma potenzialmente eterogenea;
-- `low`: dato comunitario non ancora verificato o stima;
-- `unknown`: nessuna evidenza disponibile.
+- `high`: valid geometry and an explicitly verified classification;
+- `medium`: explicit OSM classification that may still vary in practice;
+- `low`: an unverified community report or estimate;
+- `unknown`: no available evidence.
 
-Il dataset locale corrente non contiene data di estrazione, versione dello schema o data di
-verifica per singola way. Fino a una rigenerazione tracciabile, `sett`, `cobblestone` e
-`unhewn_cobblestone` sono trattati come confidenza media; `paving_stones` come probabile a
-confidenza media. Non vengono inventate date di aggiornamento.
+The current local dataset does not contain extraction time, schema version, or a per-way
+verification date. Until a traceable regeneration exists, `sett`, `cobblestone`, and
+`unhewn_cobblestone` are medium-confidence confirmed evidence; `paving_stones` is probable
+evidence at medium confidence. No update dates are invented.
 
-## Validazione richiesta
+## Required validation
 
-- coordinate finite e nell’area supportata;
-- almeno due punti distinti per geometria;
-- ID univoco;
-- superficie inclusa nell’elenco normalizzato;
-- segmenti di lunghezza non nulla e salti geografici sospetti segnalati;
-- duplicati geometrici separati dai duplicati di ID;
-- versione dello schema e provenienza presenti alla prossima generazione del dataset.
+- finite coordinates inside the declared extraction area;
+- at least two distinct points per geometry;
+- unique OSM IDs;
+- surface in the normalised set;
+- non-zero segments and flagged geographic jumps;
+- geometric duplicates distinct from ID duplicates;
+- schema version and provenance on the next generation;
+- confidence and route coverage reported separately.
 
-## Metriche restituite dal routing
+## Routing metrics
 
-Per ogni candidato sono necessarie:
+Each candidate should expose:
 
-- distanza e durata;
-- metri e percentuale di pavé;
-- deviazione rispetto al più rapido;
-- copertura nota della superficie;
-- confidenza aggregata;
-- provider e profilo.
+- distance and duration;
+- estimated known rough-surface metres and percentage;
+- deviation from the fastest candidate;
+- assessed, partially assessed, and unknown distance;
+- aggregated match confidence;
+- dataset version;
+- provider and profile.
 
-Le percentuali devono essere calcolate sulla distanza della geometria e indicate come stime:
-la qualità dipende dalla corrispondenza tra geometria del router e geometria OSM.
+Percentages are estimates derived by matching router geometry with OSM geometry. Zero known
+exposure does not mean a hazard-free route or a fully assessed surface.
 
-## Aggiornamenti live e contributi
+## Updates and contributions
 
-Overpass può aggiornare in memoria le way per ID durante la pianificazione. Non modifica il
-file locale. Le segnalazioni della comunità restano separate e non cambiano automaticamente
-la classificazione finché non sono verificate. Una futura pipeline di rigenerazione dovrà
-salvare query, timestamp, conteggi, validazione e hash del dataset.
+Overpass may enrich ways in memory during planning but does not alter the local file.
+Community reports remain separate and do not automatically change route classification
+before verification. A future generation pipeline must store its query, timestamp,
+replication sequence, counts, validation report, licence attribution, and dataset hash.

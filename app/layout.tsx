@@ -1,14 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { headers } from "next/headers";
 import "./globals.css";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
-  const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const origin = `${protocol}://${host}`;
-  const title = "Lastrico — Milano senza sobbalzi";
-  const description = "Confronta il percorso più rapido con quello che evita pavé e sanpietrini a Milano.";
+export function generateMetadata(): Metadata {
+  const title = "Lastrico — Road-surface-aware navigation";
+  const description = "Compare routes for cars, motorcycles, and bicycles using known road-surface data. Experimental beta coverage is currently limited to Milan.";
   return {
     title,
     description,
@@ -30,13 +25,11 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: `${origin}/og.png`, width: 1672, height: 941, alt: title }],
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       title,
       description,
-      images: [`${origin}/og.png`],
     },
   };
 }

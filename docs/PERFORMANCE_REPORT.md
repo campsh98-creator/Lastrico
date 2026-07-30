@@ -1,91 +1,91 @@
-# Rapporto prestazioni della navigazione
+# Navigation performance report
 
-Data: 30 luglio 2026  
-Ambiente iniziale: macOS, Node.js locale, build di produzione vinext/Vite
+Date: July 30, 2026
+Initial environment: macOS, local Node.js, vinext/Vite production build
 
-## Metodo
+## Method
 
-Le misure sono separate in:
+Measurements are separated into:
 
-1. controlli locali riproducibili (lint, build e test);
-2. tempi server esposti dalla risposta di routing;
-3. tempi client per richiesta, parsing/applicazione e aggiornamento della mappa;
-4. verifica browser su desktop e viewport mobili;
-5. sessione simulata prolungata con conteggio di richieste e timer.
+1. reproducible local checks;
+2. server timings exposed by routing responses;
+3. client request, parsing/application, and map-update timings;
+4. browser verification on desktop and mobile viewports;
+5. prolonged simulated navigation with request and timer checks.
 
-I tempi dei provider pubblici non vengono presentati come garanzie. Le misure di rete devono
-riportare data, percorso, modalità e numero di campioni.
+Public-provider timings are not guarantees. Network measurements must record the date, route,
+travel mode, and sample count without logging personal addresses or coordinates.
 
-## Baseline prima delle correzioni
+## Baseline before fixes
 
-| Controllo | Risultato |
+| Check | Result |
 | --- | ---: |
-| `npm run lint` | superato, 3,76 s |
-| `npm test` | superato, 3,65 s |
-| Test automatici | 24/24 |
+| `npm run lint` | passed, 3.76 s |
+| `npm test` | passed, 3.65 s |
+| Automated tests | 24/24 |
 | Client references | 374 ms |
 | Server references | 150 ms |
 | RSC build | 416 ms |
 | Client environment | 539 ms |
 | SSR build | 462 ms |
 
-Il build segnala chunk client oltre 500 kB minificati. Il valore è coerente con MapLibre e
-con l’ampio componente client, ma resta un limite da monitorare.
+The build reported client chunks above 500 kB after minification. MapLibre and the large
+client coordinator explain part of this size, but it remains a limitation to monitor.
 
-La baseline applicativa non separa ancora in modo strutturato preparazione, rete, scoring e
-rendering. Questa assenza è essa stessa un risultato dell’audit: le correzioni introdurranno
-misure monotone senza includere indirizzi o coordinate nei log.
+The original application baseline did not structurally separate preparation, network,
+scoring, and rendering time. The fixes introduced monotonic measurements without placing
+addresses or coordinates in logs.
 
-## Obiettivi misurabili
+## Measurable goals
 
-- Una deviazione confermata produce una sola richiesta autorevole.
-- Nessuna risposta obsoleta modifica la rotta attiva.
-- Il percorso esistente non scompare durante il ricalcolo.
-- Nessun timer o watch GPS rimane attivo dopo la fine della sessione.
-- Nessun valore residuo o ETA diventa negativo.
-- La sessione simulata prolungata termina senza crescita continua di timer o richieste.
+- One confirmed deviation produces one authoritative request.
+- No stale response changes the active route.
+- The existing route stays visible during recalculation.
+- No timer or GPS watch remains after a session ends.
+- Remaining values and ETA never become negative.
+- A prolonged simulation ends without continuous timer or request growth.
 
-## Risultati dopo le correzioni
+## Results after fixes
 
-### Micro-benchmark locale
+### Local micro-benchmark
 
-Indice superficie costruito una volta sull’intero snapshot da 1.530 way:
+The surface index was built once over the full 1,530-way snapshot:
 
-| Misura | Risultato |
+| Measurement | Result |
 | --- | ---: |
-| Costruzione indice, 1.023 celle | 6,851 ms |
-| Score sintetico 50 punti, p95 su 30 iterazioni | 3,473 ms |
-| Score sintetico 200 punti, p95 su 30 iterazioni | 1,097 ms |
-| Score sintetico 500 punti, p95 su 30 iterazioni | 0,950 ms |
+| Index build, 1,023 cells | 6.851 ms |
+| Synthetic 50-point score, p95 over 30 iterations | 3.473 ms |
+| Synthetic 200-point score, p95 over 30 iterations | 1.097 ms |
+| Synthetic 500-point score, p95 over 30 iterations | 0.950 ms |
 
-Il percorso sintetico mantiene approssimativamente la stessa lunghezza al variare dei punti;
-serve a misurare l’effetto della densità della geometria, non la latenza di rete. La baseline
-equivalente senza indice misurava 21 ms per 50 punti, 88,5 ms per 200 e 221 ms per 500.
+The synthetic route keeps approximately the same overall length as point density changes.
+It measures geometry-density cost rather than network latency. The equivalent unindexed
+baseline measured 21 ms for 50 points, 88.5 ms for 200, and 221 ms for 500.
 
-Modello progresso con 5.000 punti e 100 istruzioni:
+Progress model with 5,000 points and 100 instructions:
 
-| Misura | Risultato |
+| Measurement | Result |
 | --- | ---: |
-| Precalcolo | 18,073 ms |
-| Aggiornamento mediano | 0,131 ms |
-| Aggiornamento p95 | 0,231 ms |
+| Precomputation | 18.073 ms |
+| Median update | 0.131 ms |
+| p95 update | 0.231 ms |
 
-### Verifica browser
+### Browser verification
 
-- Desktop: ricerca indirizzi, selezione risultati e percorso reale completati.
-- Percorso Duomo → Porta Venezia: 5 candidati reali, nessun errore console applicativo.
-- Viewport verificate: 393×852, 320×568 e 568×320.
-- Interazioni principali presenti anche nei layout compatti; a 320×568 e in orizzontale il
-  pannello richiede scorrimento per raggiungere tutti i controlli.
-- Sessione simulata mobile di circa 73 secondi: completata automaticamente, messaggio di
-  arrivo mostrato, nessun errore browser.
+- Desktop address search, result selection, and a real route completed.
+- Duomo to Porta Venezia returned five real candidates with no application console error.
+- Viewports checked: 393×852, 320×568, and 568×320.
+- Primary interactions remained available on compact layouts; the panel requires scrolling
+  at 320×568 and in landscape.
+- A roughly 73-second mobile simulation completed automatically, displayed arrival, and
+  produced no browser error.
 
-Il campione di routing usa provider pubblici e non costituisce un SLA. Il controllo GPS reale
-su strada resta necessario prima di dichiarare la navigazione pronta per uso generale.
+The routing sample uses public providers and is not an SLA. Real on-road GPS validation
+remains necessary before claiming general navigation readiness.
 
-### Stato finale dei controlli locali
+### Final local checks
 
-- lint superato;
-- build superata;
-- 35 test su 35 superati;
-- resta l’avviso non bloccante sui chunk client oltre 500 kB minificati.
+- lint passed;
+- build passed;
+- 36 automated tests passed;
+- the non-blocking warning about client chunks above 500 kB remains.

@@ -1,7 +1,7 @@
 {
-  "name": "Lastrico — Milano senza sobbalzi",
+  "name": "Lastrico — Road-surface-aware navigation",
   "short_name": "Lastrico",
-  "description": "Confronta percorsi, riduci il pavé noto, prova il ricalcolo GPS e migliora la mappa comunitaria di Milano.",
+  "description": "Compare routes for cars, motorcycles, and bicycles using known road-surface data. Experimental beta coverage is currently limited to Milan.",
   "id": "/",
   "start_url": "/",
   "scope": "/",

@@ -1,108 +1,100 @@
-# Audit iniziale — stabilità della navigazione
+# Initial audit — navigation stability
 
-Data della baseline: 30 luglio 2026  
+Baseline date: July 30, 2026
 Branch: `fix/navigation-stability-and-performance`
 
-## Stato verificato
+## Verified baseline
 
-- Lint: superato.
-- Build: superata.
-- Test automatici: 24 su 24 superati.
-- Avviso di build: alcuni chunk client superano 500 kB minificati.
-- La rotta precedente rimane visibile durante un ricalcolo.
-- Le risposte di routing hanno già un identificatore locale e vengono scartate se appartengono
-  a una sessione di navigazione terminata.
+- Lint passed.
+- Build passed.
+- 24 of 24 automated tests passed.
+- Build warning: some minified client chunks exceed 500 kB.
+- The previous route remains visible during recalculation.
+- Routing responses already have a local identifier and are discarded after their
+  navigation session ends.
 
-## Problemi prioritari
+## Priority findings
 
-### P0 — Stato asincrono del ricalcolo non completamente centralizzato
+### P0 — Recalculation state was not fully centralised
 
-`app/page.tsx` coordina in un unico componente richiesta HTTP, abort, sessione, cooldown,
-stato GPS, messaggi e sostituzione della rotta. Le protezioni esistenti sono utili, ma la
-combinazione di più ref e flag rende difficile dimostrare che ogni transizione sia atomica.
-Mancano test diretti per timeout, retry, risposta obsoleta e un solo ricalcolo autorevole.
+`app/page.tsx` coordinated HTTP requests, aborts, sessions, cooldowns, GPS state, messages,
+and route replacement in one component. Existing guards were useful, but multiple refs and
+flags made atomic transitions difficult to prove. Direct coverage for timeouts, retries,
+stale responses, and single-authority recalculation was missing.
 
-Condizione di chiusura: controller puro e testato con ID monotono, sessione, cooldown,
-timeout, retry limitato e scarto esplicito delle risposte obsolete.
+Closure condition: a pure, tested controller with monotonic IDs, session checks, cooldown,
+timeout, limited retry, and explicit stale-response rejection.
 
-### P0 — Letture GPS prive di controllo temporale e di velocità plausibile
+### P0 — GPS readings lacked time and plausible-speed validation
 
-La lettura viene filtrata per coordinate, accuratezza e area di Milano, ma il timestamp della
-posizione non partecipa alla decisione. Un fix vecchio o un salto incompatibile col tempo
-trascorso può quindi essere accettato. Il limite di 250 metri applicato al conteggio percorso
-riduce il danno contabile, ma non impedisce al marker di saltare.
+Readings were filtered by coordinates, accuracy, and the beta area, but their timestamps
+were not part of the decision. Old fixes or physically implausible jumps could be accepted.
 
-Condizione di chiusura: rifiuto di letture stale/duplicate e dei salti fisicamente
-implausibili, senza bloccare movimento valido.
+Closure condition: reject stale, duplicate, or implausible readings without blocking valid
+movement.
 
-### P1 — Camera aggiornata a ogni variazione React
+### P1 — Camera updated on every React change
 
-Posizione, heading e accuratezza possono invocare `easeTo` con una nuova animazione da 650 ms.
-Se i fix arrivano più rapidamente dell’animazione, le transizioni si sovrappongono e possono
-produrre jitter. Non esiste ancora una macchina a stati esplicita per overview, follow,
-controllo manuale, ricentraggio e arrivo.
+Position, heading, and accuracy could each invoke a new 650 ms `easeTo` animation. Faster
+fixes could overlap these transitions and cause jitter.
 
-Condizione di chiusura: politica camera centralizzata, aggiornamenti limitati e transizioni
-testabili.
+Closure condition: a central camera policy with bounded updates and testable transitions.
 
-### P1 — Stile del percorso dipendente dal ciclo iniziale della mappa
+### P1 — Route style depended on the initial map lifecycle
 
-Sorgenti, layer e token visivi sono creati direttamente nel componente. Colori e larghezze
-sono ripetuti tra creazione e selezione. Lo stile non dispone ancora di un ripristino
-idempotente dopo un eventuale reload di MapLibre.
+Sources, layers, colours, and widths were created directly inside the component and repeated
+between initialisation and selection.
 
-Condizione di chiusura: token e builder centralizzati, rotta attiva verde con casing ad alto
-contrasto, installazione idempotente e test di persistenza.
+Closure condition: central tokens and an idempotent route style with a green, high-contrast
+active route.
 
-### P1 — Scoring pavé costoso e con confidenza implicita
+### P1 — Surface scoring was expensive and its confidence was implicit
 
-Ogni segmento della rotta viene confrontato con tutti i segmenti pavé ritenuti rilevanti.
-La provenienza OSM è comunicata, ma ogni geometria locale ha di fatto lo stesso peso e la
-risposta non espone percentuale nota, copertura o confidenza. `unknown` non viene marcato
-come pavé, correttamente, ma non è misurato separatamente.
+Every route segment was compared with all relevant known rough-surface segments. OSM
+provenance was stated, but local geometries effectively had the same weight and the response
+did not expose route coverage separately from match confidence.
 
-Condizione di chiusura: indice spaziale leggero, modello di confidenza dichiarato e
-diagnostica per candidato con percentuale, deviazione e copertura nota.
+Closure condition: a spatial index, an explicit confidence model, and candidate diagnostics
+covering percentage, deviation, and known evidence.
 
-### P2 — Componente principale molto concentrato
+### P2 — Main component remains concentrated
 
-`app/page.tsx` supera 99 kB e contiene pianificazione, mappa, GPS, voce, segnalazioni e
-rendering. Questo aumenta il rischio di regressioni e contribuisce al chunk client grande.
+`app/page.tsx` exceeds 99 kB and contains planning, mapping, GPS, voice, reporting, and
+rendering. This raises regression risk and contributes to a large client chunk.
 
-Condizione di chiusura per questa fase: estrarre soltanto logica pura e configurazioni ad alto
-valore, senza riscrittura generale dell’interfaccia.
+Closure condition for this phase: extract only high-value pure logic and configuration
+without rewriting the whole interface.
 
-## Limiti della verifica iniziale
+## Initial verification limits
 
-- La precisione GPS reale richiede prove su dispositivo e all’aperto.
-- I provider pubblici Valhalla, OSRM e Overpass hanno latenza e disponibilità esterne.
-- La beta non usa traffico in tempo reale.
-- La copertura del fondo stradale dipende dalla qualità dei dati OpenStreetMap disponibili.
+- Real GPS accuracy requires outdoor, on-device testing.
+- Public Valhalla, OSRM, and Overpass providers have external latency and availability.
+- The beta does not use live traffic.
+- Road-condition coverage depends on available OpenStreetMap evidence.
 
-## Correzioni integrate nel branch
+## Fixes integrated on the branch
 
-- ID richiesta monotono, timeout client e scarto latest-wins anche prima delle mutazioni di
-  indirizzi e rotta.
-- Abort propagato dalla richiesta server ai provider esterni e ai tentativi di deviazione.
-- Budget Valhalla ridotto per riservare spazio al fallback auto OSRM.
-- Fix GPS filtrati per timestamp, duplicazione e velocità plausibile; sequenze di arrivo e
-  deviazione azzerate quando il fix non è affidabile.
-- Camera di navigazione limitata per tempo, movimento e variazione di heading.
-- Progresso continuo lungo il segmento con distanze cumulative e istruzioni preindicizzate.
-- Token di rotta centralizzati: attiva verde, pienamente opaca e con outline ad alto
-  contrasto.
-- Scoring parziale a campioni con indice spaziale, cache per candidato e peso ridotto per
+- Monotonic request IDs, client timeout, and latest-wins checks before address or route
+  mutations.
+- Abort propagation from the server request to external providers and detour attempts.
+- A reserved budget for the car OSRM fallback.
+- GPS filtering by timestamp, duplication, and plausible speed; arrival and deviation
+  sequences reset after unreliable readings.
+- Camera updates bounded by time, movement, and heading change.
+- Continuous segment progress using cumulative distances and pre-indexed instructions.
+- Central route style tokens with an opaque green active route and high-contrast outline.
+- Sampled partial surface scoring with a spatial index, candidate cache, and lower weight for
   `paving_stones`.
-- Risposta di routing arricchita con percentuale, confidenza, feature abbinate, deviazione e
-  tempi interni.
+- Routing diagnostics extended with percentages, confidence, matched features, deviation,
+  and internal timing.
 
-## Rischi residui dichiarati
+## Declared residual risks
 
-- La coda Valhalla resta condivisa nell’istanza e non implementa ancora una vera priorità tra
-  planner e navigazione di utenti diversi.
-- Il matching del progresso scansiona i segmenti una volta per fix: è sotto il budget nel
-  benchmark, ma non è ancora un indice spaziale stateful con isteresi sugli incroci.
-- Il dataset locale non include ancora timestamp OSM, query di generazione e tag `highway`.
-- La mappa base non è disponibile offline, mentre geometria e pannello possono conservare
-  l’ultimo percorso in memoria.
-- Il chunk client oltre 500 kB richiede un lavoro separato di code splitting.
+- The Valhalla queue remains shared within an instance and does not prioritise navigation
+  over planning across users.
+- Progress matching scans route segments once per fix. It meets the benchmark but is not yet
+  a stateful spatial matcher with intersection hysteresis.
+- The local dataset still lacks an OSM timestamp, generation query, and `highway` tags.
+- The basemap is not available offline, although the route geometry and panel can retain the
+  last in-memory route.
+- The client chunk above 500 kB requires a separate code-splitting task.
