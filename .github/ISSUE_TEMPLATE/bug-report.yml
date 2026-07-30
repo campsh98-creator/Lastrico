@@ -1,0 +1,45 @@
+name: Bug
+description: Segnala un comportamento riproducibile dell’app o del sito.
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Grazie. Non inserire indirizzi personali, coordinate riferite a persone o credenziali.
+  - type: textarea
+    id: description
+    attributes:
+      label: Cosa è successo?
+      placeholder: Descrivi il problema e il risultato atteso.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passi per riprodurlo
+      placeholder: "1. Apri…\n2. Tocca…\n3. Osserva…"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Navigazione
+        - Pianificazione e routing
+        - Segnalazioni
+        - Mappa
+        - Installazione PWA
+        - Altro
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Dispositivo e browser
+      placeholder: "Esempio: iPhone 15, iOS 19, Safari"
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshot o log privi di dati sensibili

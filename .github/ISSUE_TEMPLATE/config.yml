@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Vulnerabilità di sicurezza
+    url: https://github.com/campsh98-creator/lastrico-milano/security/advisories/new
+    about: Non pubblicare vulnerabilità o dati sensibili in una issue.

@@ -20,7 +20,7 @@ async function fetchNominatim(url: URL) {
       headers: {
         Accept: "application/json",
         "Accept-Language": "it",
-        "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
+        "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
       },
       signal: AbortSignal.timeout(8_000),
     });

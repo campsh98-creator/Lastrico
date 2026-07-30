@@ -10,6 +10,10 @@ const paveDataUrl = new URL("../data/milan-pave-central.json", import.meta.url);
 const layoutUrl = new URL("../app/layout.tsx", import.meta.url);
 const manifestUrl = new URL("../public/manifest.webmanifest", import.meta.url);
 const serviceWorkerUrl = new URL("../public/sw.js", import.meta.url);
+const reportsUrl = new URL("../app/api/reports/route.ts", import.meta.url);
+const reportExportUrl = new URL("../app/api/reports/export/route.ts", import.meta.url);
+const directionsSheetUrl = new URL("../components/navigation/DirectionsSheet.tsx", import.meta.url);
+const communityPanelUrl = new URL("../components/reports/CommunityPanel.tsx", import.meta.url);
 
 test("keeps the planner iOS-first and free of preset places", async () => {
   const [page, css] = await Promise.all([
@@ -173,7 +177,7 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
   assert.match(page, /hour >= 7 && hour < 19/);
   assert.match(page, /lastrico-theme/);
   assert.match(layout, /appleWebApp/);
-  assert.match(serviceWorker, /lastrico-v11/);
+  assert.match(serviceWorker, /lastrico-v12/);
   assert.match(serviceWorker, /self\.skipWaiting\(\)/);
   assert.match(serviceWorker, /self\.clients\.claim\(\)/);
   assert.match(serviceWorker, /url\.pathname\.startsWith\("\/api\/"\)/);
@@ -188,4 +192,43 @@ test("uses a vector basemap and keeps the selected route visually dominant", asy
   assert.match(page, /map\.setPaintProperty\(selectedLine, "line-color", "#00a878"\)/);
   assert.match(page, /map\.setPaintProperty\(selectedLine, "line-width", 8\)/);
   assert.match(page, /map\.moveLayer\(selectedLine, "problem-line"\)/);
+});
+
+test("keeps directions and road reporting as separate explicit interactions", async () => {
+  const [page, directionsSheet, communityPanel, css] = await Promise.all([
+    readFile(pageUrl, "utf8"),
+    readFile(directionsSheetUrl, "utf8"),
+    readFile(communityPanelUrl, "utf8"),
+    readFile(cssUrl, "utf8"),
+  ]);
+
+  assert.match(page, /data-testid="directions-trigger"/);
+  assert.match(page, /aria-label="Mostra tutte le svolte del percorso"/);
+  assert.match(page, /setDirectionsOpen\(true\)/);
+  assert.match(page, /setPickingMode\("reportStart"\)/);
+  assert.match(page, /termina la navigazione prima di segnalare/i);
+  assert.match(page, /aria-label="Segnala una strada"/);
+  assert.match(directionsSheet, /data-testid="directions-sheet"/);
+  assert.match(directionsSheet, /aria-current=\{state === "current" \? "step"/);
+  assert.match(directionsSheet, /window\.addEventListener\("keydown"/);
+  assert.match(communityPanel, /Segnala una strada/);
+  assert.match(communityPanel, /I dati in revisione non modificano i percorsi/);
+  assert.match(css, /\.navigation-instruction[\s\S]*pointer-events: auto/);
+});
+
+test("publishes only verified community reports and neutralizes CSV formulas", async () => {
+  const [reportsApi, exportApi] = await Promise.all([
+    readFile(reportsUrl, "utf8"),
+    readFile(reportExportUrl, "utf8"),
+  ]);
+
+  assert.match(reportsApi, /where\(eq\(roadReports\.status, "verified"\)\)/);
+  assert.match(reportsApi, /reports: verifiedReports/);
+  assert.match(reportsApi, /RATE_LIMIT_MAX_REPORTS = 5/);
+  assert.match(reportsApi, /status: 429/);
+  assert.match(reportsApi, /Questo tratto è già stato segnalato di recente/);
+  assert.doesNotMatch(reportsApi.match(/function publicReport[\s\S]*?\n\}/)?.[0] ?? "", /note:|nickname:/);
+  assert.match(exportApi, /eq\(roadReports\.status, "verified"\)/);
+  assert.match(exportApi, /\[\\u0000-\\u0020\]\*\[=\+\\-@\]/);
+  assert.doesNotMatch(exportApi.match(/const header = \[[\s\S]*?\];/)?.[0] ?? "", /note|nickname/);
 });

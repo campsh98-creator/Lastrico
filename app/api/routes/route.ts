@@ -502,7 +502,7 @@ async function fetchValhallaRoutes(
           "Content-Type": "application/json",
           "Accept": "application/json",
           "X-Client-Id": "lastrico-milano",
-          "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
+          "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
         },
         body: JSON.stringify({
           locations: points.map(([lon, lat], index) => ({
@@ -623,7 +623,7 @@ async function fetchOsrmCarRoutes(
     if (timeoutMs < 500) return [];
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
+        "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
       },
       cache: "no-store",
       signal: AbortSignal.timeout(timeoutMs),
@@ -772,7 +772,7 @@ export async function GET(request: NextRequest) {
             method: "POST",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
-              "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
+              "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
             },
             body: new URLSearchParams({ data: overpassQuery }),
             cache: "no-store",

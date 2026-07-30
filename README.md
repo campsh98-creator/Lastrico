@@ -22,11 +22,12 @@ La beta permette anche di segnalare tratti mancanti, strade sconnesse, pavimenta
 - tre livelli di evitamento;
 - ricalcolo manuale e ricalcolo GPS sperimentale;
 - navigazione GPS in primo piano, separata dalla simulazione automatica;
+- elenco completo delle svolte con manovra corrente evidenziata;
 - guida vocale facoltativa e persistente, disattivata per impostazione iniziale;
 - metri di pavé conosciuto, minuti e distanza stimati;
 - evidenziazione dei tratti critici;
-- segnalazioni comunitarie persistenti;
-- esportazione CSV dei contributi;
+- segnalazioni comunitarie persistenti con revisione prima della pubblicazione;
+- esportazione CSV dei soli contributi verificati;
 - installazione su iPhone come web app.
 
 ## Prova su iPhone
@@ -44,10 +45,10 @@ La PWA non compare direttamente sul display CarPlay. Una vera integrazione richi
 | Area | Tecnologia |
 | --- | --- |
 | Interfaccia | React 19, Next.js/vinext, TypeScript |
-| Mappa | MapLibre GL JS |
-| Dati cartografici | OpenStreetMap |
-| Routing beta | OSRM pubblico |
-| Superfici | Overpass API e tag OSM `surface` |
+| Mappa | MapLibre GL JS con stile vettoriale OpenFreeMap |
+| Dati cartografici | OpenStreetMap e OpenFreeMap |
+| Routing beta | Valhalla pubblico con fallback OSRM per auto |
+| Superfici | dataset OSM incluso e tag `surface` |
 | Ricerca indirizzi | Nominatim |
 | Segnalazioni | Cloudflare D1 e Drizzle ORM |
 | Distribuzione | PWA e Cloudflare Worker tramite Sites |
@@ -56,10 +57,10 @@ La PWA non compare direttamente sul display CarPlay. Una vera integrazione richi
 iPhone / browser
        │
        ▼
-Lastrico PWA ──► geocoding
+Lastrico PWA ──► geocoding Nominatim
        │
-       ├──────► alternative OSRM
-       ├──────► superfici Overpass / OSM
+       ├──────► alternative Valhalla / OSRM
+       ├──────► superfici OSM incluse
        └──────► segnalazioni D1
 ```
 
@@ -83,6 +84,16 @@ Per creare la build:
 npm run build
 ```
 
+Per eseguire tutte le verifiche:
+
+```bash
+npm run lint
+npm test
+```
+
+Approfondimenti: [architettura](docs/architecture.md), [sviluppo](docs/development.md),
+[governance](GOVERNANCE.md) e [roadmap](ROADMAP.md).
+
 Per rigenerare le migrazioni dopo modifiche allo schema:
 
 ```bash
@@ -93,9 +104,10 @@ Il database D1 locale deve essere inizializzato con la migrazione presente in `d
 
 ## Limiti della beta gratuita
 
-I servizi pubblici di Nominatim, OSRM, Overpass e le tile OpenStreetMap sono adatti soltanto a test con pochi utenti e richieste moderate. Non costituiscono un’infrastruttura commerciale gratuita e illimitata.
+I servizi pubblici di Nominatim, Valhalla, OSRM e OpenFreeMap sono adatti soltanto a test con pochi utenti e richieste moderate. Non costituiscono un’infrastruttura commerciale gratuita e illimitata.
 
-Le segnalazioni nuove vengono salvate come `pending`, restano separate dai dati verificati e non modificano automaticamente il routing.
+Le segnalazioni nuove vengono salvate come `pending`, non sono esposte dall’API pubblica o dal CSV finché non vengono verificate e non modificano automaticamente il routing.
+Le note inviate servono alla moderazione e non vengono pubblicate nell’API o nel CSV.
 
 Lastrico non salva una cronologia continua della posizione GPS.
 
@@ -103,16 +115,15 @@ La navigazione GPS richiede HTTPS, il permesso di posizione precisa e l’app ap
 
 ## Roadmap
 
-1. Validare 10–15 tragitti reali a Milano.
-2. Migliorare moderazione e copertura dei dati.
-3. Introdurre istruzioni turn-by-turn e avvisi audio.
-4. Creare l’app iPhone nativa.
-5. Richiedere ad Apple l’entitlement `com.apple.developer.carplay-maps`.
-6. Testare e distribuire l’esperienza CarPlay.
+Le priorità correnti sono la validazione su strada, la qualità dei dati, la moderazione, i
+test mobile e soltanto in seguito un’esperienza iPhone nativa. Leggi [ROADMAP.md](ROADMAP.md)
+per il dettaglio.
 
 ## Contribuire
 
-Leggi [CONTRIBUTING.md](CONTRIBUTING.md). Puoi aprire una segnalazione per:
+Leggi [CONTRIBUTING.md](CONTRIBUTING.md). Il repository GitHub pubblico è in preparazione;
+fino alla pubblicazione la beta resta consultabile dal link sopra. Potrai aprire una
+segnalazione per:
 
 - pavé mancante o dato errato;
 - problema di routing;

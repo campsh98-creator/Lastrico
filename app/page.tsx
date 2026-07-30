@@ -12,6 +12,18 @@ import {
   smoothHeading,
   type NavigationJourneyMode,
 } from "@/lib/navigation-state";
+import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
+import { CommunityPanel } from "@/components/reports/CommunityPanel";
+import {
+  directionGlyph,
+  type NavigationInstruction,
+} from "@/lib/navigation-instructions";
+import {
+  reportKindMeta,
+  type ReportKind,
+  type ReportStats,
+  type RoadReport,
+} from "@/lib/reporting";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 type Coordinate = [number, number];
@@ -20,24 +32,11 @@ type Avoidance = "balanced" | "strong" | "maximum";
 type TransportMode = "car" | "motorcycle" | "bicycle";
 type ThemeMode = "auto" | "light" | "dark";
 type PickingMode = "start" | "end" | "reportStart" | "reportEnd";
-type ReportKind = "pave" | "rough_cobblestone" | "recently_asphalted" | "wrong_data";
 type JourneyMode = NavigationJourneyMode;
 type GpsState = "idle" | "requesting" | "live" | "weak" | "offroute" | "recalculating" | "unavailable";
 type WakeLockHandle = { release: () => Promise<void>; released?: boolean };
 type NavigatorWithWakeLock = Navigator & {
   wakeLock?: { request: (type: "screen") => Promise<WakeLockHandle> };
-};
-
-type NavigationInstruction = {
-  id: string;
-  text: string;
-  roadName: string;
-  distance: number;
-  location: Coordinate;
-  type: string;
-  modifier: string;
-  exit?: number;
-  direction: "left" | "right" | "straight" | "uturn" | "roundabout" | "depart" | "arrive";
 };
 
 type RoadNode = {
@@ -95,26 +94,6 @@ type RouteApiResponse = {
     approximate: boolean;
     notice: string;
   };
-};
-
-type RoadReport = {
-  id: number;
-  start: Coordinate;
-  end: Coordinate;
-  kind: ReportKind;
-  severity: number;
-  note: string;
-  nickname: string;
-  status: "pending" | "verified";
-  createdAt: string;
-  lengthMeters: number;
-};
-
-type ReportStats = {
-  total: number;
-  pending: number;
-  verified: number;
-  communityMeters: number;
 };
 
 const nodes: RoadNode[] = [
@@ -301,11 +280,18 @@ function reportsGeoJSON(reports: RoadReport[]) {
 function draftGeoJSON(start: Coordinate | null, end: Coordinate | null) {
   return {
     type: "FeatureCollection" as const,
-    features: start && end ? [{
-      type: "Feature" as const,
-      properties: {},
-      geometry: { type: "LineString" as const, coordinates: [start, end] },
-    }] : [],
+    features: [
+      ...(start ? [{
+        type: "Feature" as const,
+        properties: { role: "start" },
+        geometry: { type: "Point" as const, coordinates: start },
+      }] : []),
+      ...(start && end ? [{
+        type: "Feature" as const,
+        properties: { role: "segment" },
+        geometry: { type: "LineString" as const, coordinates: [start, end] },
+      }] : []),
+    ],
   };
 }
 
@@ -418,25 +404,13 @@ function formatArrivalTime(remainingMinutes: number) {
   });
 }
 
-function directionGlyph(direction: NavigationInstruction["direction"] | undefined) {
-  const glyphs = {
-    left: "↰",
-    right: "↱",
-    straight: "↑",
-    uturn: "↶",
-    roundabout: "⟳",
-    depart: "↑",
-    arrive: "●",
-  };
-  return direction ? glyphs[direction] : "↑";
-}
-
 export default function Home() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker; vehicle?: MapLibreMarker }>({});
   const vehicleArrowRef = useRef<HTMLSpanElement | null>(null);
   const pickingRef = useRef<PickingMode | null>(null);
+  const directionsTriggerRef = useRef<HTMLButtonElement>(null);
   const journeyWatchRef = useRef<number | null>(null);
   const simulationTimerRef = useRef<number | null>(null);
   const navigationSessionRef = useRef(0);
@@ -512,6 +486,7 @@ export default function Home() {
   const [addressQuery, setAddressQuery] = useState("");
   const [mapChooserOpen, setMapChooserOpen] = useState(false);
   const [reports, setReports] = useState<RoadReport[]>([]);
+  const [reportsLoading, setReportsLoading] = useState(true);
   const [reportStats, setReportStats] = useState<ReportStats>({ total: 0, pending: 0, verified: 0, communityMeters: 0 });
   const [reportStart, setReportStart] = useState<Coordinate | null>(null);
   const [reportEnd, setReportEnd] = useState<Coordinate | null>(null);
@@ -519,9 +494,10 @@ export default function Home() {
   const [reportKind, setReportKind] = useState<ReportKind>("pave");
   const [reportSeverity, setReportSeverity] = useState(2);
   const [reportNote, setReportNote] = useState("");
-  const [reportNickname, setReportNickname] = useState("");
   const [isSubmittingReport, setIsSubmittingReport] = useState(false);
+  const [reportSubmitError, setReportSubmitError] = useState("");
   const [reportsAvailable, setReportsAvailable] = useState(true);
+  const [directionsOpen, setDirectionsOpen] = useState(false);
   const [mapReady, setMapReady] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const landmarks = nodes.filter((node) => node.landmark);
@@ -582,6 +558,18 @@ export default function Home() {
     activeRouteRef.current = routeKind;
     setActiveRoute(routeKind);
   }
+
+  const setPickingMode = useCallback((mode: PickingMode | null) => {
+    pickingRef.current = mode;
+    setPicking(mode);
+    const map = mapRef.current;
+    if (map) map.getCanvas().style.cursor = mode ? "crosshair" : "";
+  }, []);
+
+  const closeDirections = useCallback(() => {
+    setDirectionsOpen(false);
+    window.queueMicrotask(() => directionsTriggerRef.current?.focus());
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -658,18 +646,17 @@ export default function Home() {
         } else if (target === "reportStart") {
           setReportStart(coordinate);
           setReportEnd(null);
-          setPicking("reportEnd");
-          pickingRef.current = "reportEnd";
+          setPickingMode("reportEnd");
           setStatus("Ora clicca il punto finale del tratto da segnalare.");
           return;
         } else {
           setReportEnd(coordinate);
+          setPickingMode(null);
           setReportModalOpen(true);
           setStatus("Descrivi il tratto selezionato e invia la segnalazione.");
+          return;
         }
-        setPicking(null);
-        pickingRef.current = null;
-        map.getCanvas().style.cursor = "";
+        setPickingMode(null);
         if (target === "start" || target === "end") {
           setStatus(`${target === "start" ? "Partenza" : "Destinazione"} impostata. Ora calcola il percorso.`);
         }
@@ -715,20 +702,14 @@ export default function Home() {
           type: "line",
           source: "community-reports",
           paint: {
-            "line-color": [
-              "case",
-              ["==", ["get", "status"], "verified"],
-              "#c43f2b",
-              ["match", ["get", "kind"],
-                "recently_asphalted", "#16886e",
-                "wrong_data", "#748083",
-                "rough_cobblestone", "#d84a35",
-                "#e59a2f",
-              ],
+            "line-color": ["match", ["get", "kind"],
+              "recently_asphalted", "#16886e",
+              "wrong_data", "#748083",
+              "rough_cobblestone", "#d84a35",
+              "#e59a2f",
             ],
             "line-width": ["match", ["get", "severity"], 3, 8, 2, 6, 4],
             "line-opacity": 0.9,
-            "line-dasharray": [2, 1.2],
           },
         });
         map.addLayer({
@@ -739,6 +720,18 @@ export default function Home() {
             "line-color": "#122023",
             "line-width": 7,
             "line-dasharray": [1, 1],
+          },
+        });
+        map.addLayer({
+          id: "report-draft-start",
+          type: "circle",
+          source: "report-draft",
+          filter: ["==", ["geometry-type"], "Point"],
+          paint: {
+            "circle-radius": 9,
+            "circle-color": "#122023",
+            "circle-stroke-color": "#ffffff",
+            "circle-stroke-width": 4,
           },
         });
         setMapReady(true);
@@ -1012,7 +1005,8 @@ export default function Home() {
         setReportStats(data.stats);
         setReportsAvailable(true);
       })
-      .catch(() => setReportsAvailable(false));
+      .catch(() => setReportsAvailable(false))
+      .finally(() => setReportsLoading(false));
   }, []);
 
   useEffect(() => {
@@ -1317,6 +1311,7 @@ export default function Home() {
     wakeLockRef.current = null;
     window.speechSynthesis?.cancel();
     setIsJourneyActive(false);
+    setDirectionsOpen(false);
     setJourneyMode(null);
     setGpsState("idle");
     setIsRecalculating(false);
@@ -1469,6 +1464,12 @@ export default function Home() {
       return;
     }
     if (isJourneyActive) finishNavigation();
+    setPickingMode(null);
+    setReportModalOpen(false);
+    setReportStart(null);
+    setReportEnd(null);
+    setReportSubmitError("");
+    setDirectionsOpen(false);
     const session = navigationSessionRef.current + 1;
     navigationSessionRef.current = session;
     journeyModeRef.current = mode;
@@ -1618,21 +1619,29 @@ export default function Home() {
   }
 
   function startReport() {
+    if (isJourneyActive) {
+      setStatus("Per sicurezza, termina la navigazione prima di segnalare una strada.");
+      return;
+    }
+    setDirectionsOpen(false);
     setReportStart(null);
     setReportEnd(null);
     setReportKind("pave");
     setReportSeverity(2);
     setReportNote("");
-    setPicking("reportStart");
+    setReportSubmitError("");
+    setReportModalOpen(false);
+    setPickingMode("reportStart");
     setStatus("Clicca il punto iniziale del tratto da segnalare.");
     setActivePanel("community");
   }
 
   function cancelReport() {
-    setPicking(null);
+    setPickingMode(null);
     setReportStart(null);
     setReportEnd(null);
     setReportModalOpen(false);
+    setReportSubmitError("");
     setStatus("Segnalazione annullata.");
   }
 
@@ -1640,6 +1649,7 @@ export default function Home() {
     event.preventDefault();
     if (!reportStart || !reportEnd || isSubmittingReport) return;
     setIsSubmittingReport(true);
+    setReportSubmitError("");
     try {
       const response = await fetch("/api/reports", {
         method: "POST",
@@ -1650,30 +1660,30 @@ export default function Home() {
           kind: reportKind,
           severity: reportSeverity,
           note: reportNote,
-          nickname: reportNickname,
           website: "",
         }),
       });
       const data = await response.json() as { report?: RoadReport; error?: string };
       if (!response.ok || !data.report) throw new Error(data.error ?? "Salvataggio non riuscito.");
       const created = data.report;
-      setReports((current) => [created, ...current]);
-      setReportStats((current) => ({
-        total: current.total + 1,
-        pending: current.pending + 1,
-        verified: current.verified,
-        communityMeters: current.communityMeters + (
-          created.kind === "pave" || created.kind === "rough_cobblestone" ? created.lengthMeters : 0
-        ),
-      }));
-      setReportsAvailable(true);
       setReportModalOpen(false);
+      setPickingMode(null);
       setReportStart(null);
       setReportEnd(null);
       setReportNote("");
-      setStatus("Segnalazione ricevuta: resterà visibile come dato da verificare.");
+      if (reportsAvailable) {
+        setReportStats((current) => ({
+          total: current.total + 1,
+          pending: current.pending + 1,
+          verified: current.verified,
+          communityMeters: current.communityMeters,
+        }));
+      }
+      setStatus(`Segnalazione #${created.id} ricevuta: sarà pubblicata sulla mappa solo dopo la verifica.`);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Non è stato possibile salvare la segnalazione.");
+      const message = error instanceof Error ? error.message : "Non è stato possibile salvare la segnalazione.";
+      setReportSubmitError(message);
+      setStatus(message);
     } finally {
       setIsSubmittingReport(false);
     }
@@ -1691,7 +1701,17 @@ export default function Home() {
             {themeMode === "auto" ? "◐" : themeMode === "light" ? "☀" : "☾"}
           </button>
           <button type="button" className="icon-button" onClick={shareBeta} aria-label="Condividi beta" title="Condividi">↗</button>
-          <button type="button" className="report-button" onClick={startReport} aria-label="Segnala pavé" title="Segnala pavé">＋</button>
+          <button
+            type="button"
+            className="report-button"
+            onClick={startReport}
+            aria-label="Segnala una strada"
+            title={isJourneyActive ? "Termina la navigazione per segnalare" : "Segnala una strada"}
+            disabled={isJourneyActive}
+          >
+            <span aria-hidden="true">⚠</span>
+            <b>Segnala</b>
+          </button>
           <button type="button" className="icon-button" aria-label="Informazioni sulla beta" onClick={() => setDetailsOpen(true)}>i</button>
         </div>
       </header>
@@ -1799,8 +1819,8 @@ export default function Home() {
                 </div>
 
                 <div className="location-tools">
-                  <button type="button" onClick={() => setPicking(picking === "start" ? null : "start")}>Partenza su mappa</button>
-                  <button type="button" onClick={() => setPicking(picking === "end" ? null : "end")}>Arrivo su mappa</button>
+                  <button type="button" onClick={() => setPickingMode(picking === "start" ? null : "start")}>Partenza su mappa</button>
+                  <button type="button" onClick={() => setPickingMode(picking === "end" ? null : "end")}>Arrivo su mappa</button>
                 </div>
 
                 <div className="transport-block">
@@ -1932,24 +1952,15 @@ export default function Home() {
             )}
 
             {activePanel === "community" && (
-              <section className="community-panel">
-                <div className="panel-heading">
-                  <h2>Segnalazioni</h2>
-                </div>
-                <div className="beta-stats">
-                  <article><small>Segnalazioni</small><strong>{reportsAvailable ? reportStats.total : "—"}</strong></article>
-                  <article><small>Da verificare</small><strong>{reportsAvailable ? reportStats.pending : "—"}</strong></article>
-                  <article><small>Metri mappati</small><strong>{reportsAvailable ? reportStats.communityMeters.toLocaleString("it-IT") : "—"}</strong></article>
-                </div>
-                <button type="button" className="primary-action coral" onClick={startReport}><span>Segnala un tratto</span><b>+</b></button>
-                <div className="community-links">
-                  <button type="button" onClick={shareBeta}>Condividi con un tester</button>
-                  <a href="/api/reports/export" download>Esporta dati CSV</a>
-                  <button type="button" onClick={() => setDetailsOpen(true)}>Come installarla su iPhone</button>
-                  <a href="https://github.com/campsh98-creator/lastrico-milano" target="_blank" rel="noreferrer">Codice su GitHub</a>
-                  <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>
-                </div>
-              </section>
+              <CommunityPanel
+                loading={reportsLoading}
+                onOpenDetails={() => setDetailsOpen(true)}
+                onShare={shareBeta}
+                onStartReport={startReport}
+                reports={reports}
+                reportsAvailable={reportsAvailable}
+                stats={reportStats}
+              />
             )}
           </div>
 
@@ -1962,7 +1973,16 @@ export default function Home() {
           <div ref={mapContainer} className="map" />
           {isJourneyActive && (
             <div className="navigation-hud" aria-label="Navigazione Lastrico" data-testid="navigation-hud" data-transport={transportMode}>
-              <section className="navigation-instruction">
+              <button
+                ref={directionsTriggerRef}
+                type="button"
+                className="navigation-instruction"
+                onClick={() => setDirectionsOpen(true)}
+                aria-expanded={directionsOpen}
+                aria-controls="directions-sheet"
+                aria-label="Mostra tutte le svolte del percorso"
+                data-testid="directions-trigger"
+              >
                 <div className="navigation-mode">
                   <span>{navigationModeLabel}</span>
                   <small>{transportMeta[transportMode].short}</small>
@@ -1975,8 +1995,9 @@ export default function Home() {
                   <strong>{formatDistance(navigationProgress.instructionDistance)}</strong>
                   <b aria-live="polite">{isRecalculating ? `Ricalcolo per ${transportMeta[transportMode].article}…` : navigationProgress.instruction?.text ?? "Segui il percorso Lastrico"}</b>
                   {navigationProgress.instruction?.roadName && <small>{navigationProgress.instruction.roadName}</small>}
+                  <span className="directions-hint">Tutte le svolte</span>
                 </div>
-              </section>
+              </button>
 
               <section className="navigation-tripbar">
                 <div className="trip-metric"><strong>{Math.max(0, Math.ceil(navigationProgress.remainingMinutes))}</strong><small>min</small></div>
@@ -2026,7 +2047,7 @@ export default function Home() {
             {hasDistinctAlternative && <span><i className="line safe" /> Anti-pavé</span>}
             <span><i className="line fast" /> Rapido</span>
             <span><i className="line pave" /> Pavé</span>
-            <span><i className="line community" /> Comunità</span>
+            <span><i className="line community" /> Segnalazioni verificate</span>
           </div>
           {isLiveResult && (
             <button type="button" className="map-summary" onClick={() => setActivePanel("routes")}>
@@ -2040,6 +2061,18 @@ export default function Home() {
           )}
         </section>
       </div>
+
+      {directionsOpen && isJourneyActive && (
+        <DirectionsSheet
+          currentInstructionId={navigationProgress.instruction?.id}
+          destinationLabel={endLocation.label}
+          instructions={selectedRoute.instructions ?? []}
+          onClose={closeDirections}
+          remainingDistance={formatDistance(navigationProgress.remainingMeters)}
+          remainingMinutes={navigationProgress.remainingMinutes}
+          routeLabel={`${activeRoute === "safe" ? "Anti-pavé" : "Più rapido"} · ${transportMeta[transportMode].label}`}
+        />
+      )}
 
       <nav className="mobile-nav" aria-label="Navigazione beta">
         <button type="button" className={activePanel === "plan" ? "active" : ""} onClick={() => setActivePanel("plan")}><span>⌖</span>Pianifica</button>
@@ -2107,55 +2140,84 @@ export default function Home() {
       )}
 
       {reportModalOpen && reportStart && reportEnd && (
-        <div className="modal-backdrop" role="presentation">
-          <form className="modal report-modal" role="dialog" aria-modal="true" aria-labelledby="report-title" onSubmit={submitReport}>
+        <div className="modal-backdrop" role="presentation" onClick={cancelReport}>
+          <form
+            className="modal report-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="report-title"
+            onSubmit={submitReport}
+            onClick={(event) => event.stopPropagation()}
+          >
             <button type="button" className="modal-close" onClick={cancelReport} aria-label="Chiudi">×</button>
             <span className="eyebrow">Contributo comunitario</span>
-            <h2 id="report-title">Com’è questo tratto?</h2>
-            <p>La segnalazione sarà pubblica ma resterà marcata come “da verificare”. Non raccogliamo email o posizione continua.</p>
+            <h2 id="report-title">Descrivi il fondo stradale</h2>
+            <p>Il contributo entra in revisione e diventa pubblico sulla mappa solo dopo la verifica. Non raccogliamo email né la posizione continua.</p>
+            <div className="report-segment-summary">
+              <span aria-hidden="true">↔</span>
+              <div>
+                <b>Tratto selezionato</b>
+                <small>{Math.round(distanceMeters(reportStart, reportEnd)).toLocaleString("it-IT")} m stimati tra i punti · coordinate associate solo a questa segnalazione.</small>
+              </div>
+            </div>
 
             <fieldset>
               <legend>Tipo di segnalazione</legend>
               <div className="report-kind-grid">
-                {([
-                  ["pave", "Pavé", "Blocchi o cubetti regolari"],
-                  ["rough_cobblestone", "Sanpietrini irregolari", "Fondo sconnesso o molto ruvido"],
-                  ["recently_asphalted", "Asfaltata", "Strada rifatta recentemente"],
-                  ["wrong_data", "Dato errato", "La mappa non corrisponde"],
-                ] as [ReportKind, string, string][]).map(([value, label, description]) => (
+                {(Object.entries(reportKindMeta) as [ReportKind, (typeof reportKindMeta)[ReportKind]][]).map(([value, meta]) => (
                   <label key={value} className={reportKind === value ? "selected" : ""}>
-                    <input type="radio" name="kind" value={value} checked={reportKind === value} onChange={() => setReportKind(value)} />
-                    <span><b>{label}</b><small>{description}</small></span>
+                    <input
+                      type="radio"
+                      name="kind"
+                      value={value}
+                      checked={reportKind === value}
+                      onChange={() => {
+                        setReportKind(value);
+                        setReportSeverity(value === "pave" || value === "rough_cobblestone" ? 2 : 1);
+                      }}
+                    />
+                    <i aria-hidden="true">{meta.icon}</i>
+                    <span><b>{meta.label}</b><small>{meta.description}</small></span>
                   </label>
                 ))}
               </div>
             </fieldset>
 
-            <fieldset>
-              <legend>Livello di disagio</legend>
-              <div className="severity-control">
-                {[1, 2, 3].map((value) => (
-                  <button key={value} type="button" className={reportSeverity === value ? "active" : ""} onClick={() => setReportSeverity(value)}>
-                    {value === 1 ? "Basso" : value === 2 ? "Medio" : "Alto"}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
+            {(reportKind === "pave" || reportKind === "rough_cobblestone") && (
+              <fieldset>
+                <legend>Impatto sul comfort</legend>
+                <div className="severity-control">
+                  {[1, 2, 3].map((value) => (
+                    <button key={value} type="button" className={reportSeverity === value ? "active" : ""} onClick={() => setReportSeverity(value)}>
+                      {value === 1 ? "Basso" : value === 2 ? "Medio" : "Alto"}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+            )}
 
             <div className="report-text-fields">
               <label>
-                <span>Nota facoltativa</span>
-                <textarea value={reportNote} maxLength={280} onChange={(event) => setReportNote(event.target.value)} placeholder="Es. molto sconnesso vicino al semaforo…" />
-              </label>
-              <label>
-                <span>Nickname facoltativo</span>
-                <input value={reportNickname} maxLength={40} onChange={(event) => setReportNickname(event.target.value)} placeholder="Come vuoi apparire" />
+                <span>{reportKind === "wrong_data" ? "Correzione richiesta" : "Nota per la verifica (facoltativa)"}</span>
+                <textarea
+                  value={reportNote}
+                  maxLength={280}
+                  required={reportKind === "wrong_data"}
+                  minLength={reportKind === "wrong_data" ? 8 : undefined}
+                  onChange={(event) => setReportNote(event.target.value)}
+                  placeholder={reportKind === "wrong_data"
+                    ? "Spiega quale dato della mappa deve essere corretto…"
+                    : "Es. molto sconnesso vicino al semaforo…"}
+                />
+                <small>La nota aiuta la moderazione e non viene pubblicata nell’API o nel CSV.</small>
               </label>
             </div>
 
+            {reportSubmitError && <p className="report-submit-error" role="alert">{reportSubmitError}</p>}
+
             <div className="report-actions">
               <button type="button" className="secondary-action" onClick={cancelReport}>Annulla</button>
-              <button type="submit" className="calculate-button" disabled={isSubmittingReport}>
+              <button type="submit" className="report-submit-button" disabled={isSubmittingReport}>
                 {isSubmittingReport ? "Invio…" : "Invia segnalazione"}
               </button>
             </div>

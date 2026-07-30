@@ -1,9 +1,10 @@
-import { asc, ne } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { getDb } from "../../../../db";
 import { roadReports } from "../../../../db/schema";
 
 function csvCell(value: string | number) {
-  const text = String(value);
+  const raw = String(value);
+  const text = /^[\u0000-\u0020]*[=+\-@]/.test(raw) ? `'${raw}` : raw;
   return `"${text.replaceAll('"', '""')}"`;
 }
 
@@ -12,19 +13,18 @@ export async function GET() {
     const rows = await getDb()
       .select()
       .from(roadReports)
-      .where(ne(roadReports.status, "rejected"))
-      .orderBy(asc(roadReports.createdAt), asc(roadReports.id))
-      .limit(2000);
+      .where(eq(roadReports.status, "verified"))
+      .orderBy(asc(roadReports.createdAt), asc(roadReports.id));
 
     const header = [
       "id", "start_lng", "start_lat", "end_lng", "end_lat",
-      "kind", "severity", "note", "nickname", "status", "created_at",
+      "kind", "severity", "status", "created_at",
     ];
     const lines = [
       header.map(csvCell).join(","),
       ...rows.map((row) => [
         row.id, row.startLng, row.startLat, row.endLng, row.endLat,
-        row.kind, row.severity, row.note, row.nickname, row.status, row.createdAt,
+        row.kind, row.severity, row.status, row.createdAt,
       ].map(csvCell).join(",")),
     ];
 
