@@ -6,6 +6,11 @@ import {
   type RoutingProviderName,
   type TransportMode,
 } from "@/lib/routing-types";
+import {
+  createSurfaceIndex,
+  scoreSurfaceExposure,
+  type SurfaceScore,
+} from "@/lib/cobblestone-scoring";
 
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
@@ -101,6 +106,8 @@ type PaveDetail = {
 type ScoredRoute = {
   route: EngineRoute;
   paveMeters: number;
+  riskMeters: number;
+  surfaceScore: SurfaceScore;
   source: string;
 };
 
@@ -257,26 +264,6 @@ function segmentTouchesPave(a: Coordinate, b: Coordinate, paveWays: Coordinate[]
     }
   }
   return false;
-}
-
-function scoreRoute(route: EngineRoute, paveWays: Coordinate[][], mode: TransportMode) {
-  const coordinates = route.coordinates;
-  const longitude = coordinates.map(([lng]) => lng);
-  const latitude = coordinates.map(([, lat]) => lat);
-  const west = Math.min(...longitude) - 0.00035;
-  const east = Math.max(...longitude) + 0.00035;
-  const south = Math.min(...latitude) - 0.00035;
-  const north = Math.max(...latitude) + 0.00035;
-  const relevantWays = paveWays.filter((way) =>
-    way.some(([lng, lat]) => lng >= west && lng <= east && lat >= south && lat <= north),
-  );
-  let paveMeters = 0;
-  for (let index = 1; index < coordinates.length; index += 1) {
-    const a = coordinates[index - 1];
-    const b = coordinates[index];
-    if (segmentTouchesPave(a, b, relevantWays, mode)) paveMeters += segmentLength(a, b);
-  }
-  return Math.round(paveMeters);
 }
 
 function sampledCoordinates(route: EngineRoute) {
@@ -468,7 +455,27 @@ function valhallaCostingOptions(mode: TransportMode) {
   return { auto: { use_highways: 0.7, use_tolls: 0.2 } };
 }
 
-async function runValhallaLimited<T>(deadline: number, task: (timeoutMs: number) => Promise<T>) {
+function combinedTimeoutSignal(signal: AbortSignal, timeoutMs: number) {
+  return AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]);
+}
+
+async function abortableDelay(milliseconds: number, signal: AbortSignal) {
+  if (signal.aborted) throw signal.reason;
+  await new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(resolve, milliseconds);
+    signal.addEventListener("abort", () => {
+      clearTimeout(timer);
+      reject(signal.reason);
+    }, { once: true });
+  });
+}
+
+async function runValhallaLimited<T>(
+  deadline: number,
+  signal: AbortSignal,
+  reserveMs: number,
+  task: (timeoutMs: number) => Promise<T>,
+) {
   let releaseQueue = () => undefined;
   const previousRequest = valhallaQueue;
   valhallaQueue = new Promise<void>((resolve) => {
@@ -476,9 +483,10 @@ async function runValhallaLimited<T>(deadline: number, task: (timeoutMs: number)
   });
   await previousRequest;
   try {
+    if (signal.aborted) throw signal.reason;
     const waitMs = Math.max(0, VALHALLA_MIN_INTERVAL_MS - (Date.now() - lastValhallaStartedAt));
-    if (waitMs) await new Promise((resolve) => setTimeout(resolve, waitMs));
-    const timeoutMs = Math.min(VALHALLA_TIMEOUT_MS, deadline - Date.now());
+    if (waitMs) await abortableDelay(waitMs, signal);
+    const timeoutMs = Math.min(VALHALLA_TIMEOUT_MS, deadline - Date.now() - reserveMs);
     if (timeoutMs < 500) throw new Error("Budget routing esaurito");
     lastValhallaStartedAt = Date.now();
     return await task(timeoutMs);
@@ -492,10 +500,15 @@ async function fetchValhallaRoutes(
   mode: TransportMode,
   alternatives = false,
   deadline = Date.now() + ROUTE_BUDGET_MS,
+  signal: AbortSignal = new AbortController().signal,
 ): Promise<EngineRoute[]> {
   const profile = MODE_POLICY[mode].profile;
   try {
-    const response = await runValhallaLimited(deadline, (timeoutMs) =>
+    const response = await runValhallaLimited(
+      deadline,
+      signal,
+      mode === "car" ? 1_500 : 0,
+      (timeoutMs) =>
       fetch(VALHALLA_ENDPOINT, {
         method: "POST",
         headers: {
@@ -517,7 +530,7 @@ async function fetchValhallaRoutes(
           alternates: alternatives ? 2 : 0,
         }),
         cache: "no-store",
-        signal: AbortSignal.timeout(timeoutMs),
+        signal: combinedTimeoutSignal(signal, timeoutMs),
       }),
     );
     if (!response.ok) return [];
@@ -610,6 +623,7 @@ async function fetchOsrmCarRoutes(
   points: Coordinate[],
   alternatives = false,
   deadline = Date.now() + ROUTE_BUDGET_MS,
+  signal: AbortSignal = new AbortController().signal,
 ): Promise<EngineRoute[]> {
   const path = points.map(([lng, lat]) => `${lng},${lat}`).join(";");
   const url = new URL(`https://router.project-osrm.org/route/v1/driving/${path}`);
@@ -626,7 +640,7 @@ async function fetchOsrmCarRoutes(
         "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
       },
       cache: "no-store",
-      signal: AbortSignal.timeout(timeoutMs),
+      signal: combinedTimeoutSignal(signal, timeoutMs),
     });
     if (!response.ok) return [];
     const data = await response.json() as { code: string; routes?: OsrmRoute[] };
@@ -641,12 +655,13 @@ async function fetchEngineRoutes(
   mode: TransportMode,
   alternatives = false,
   deadline = Date.now() + ROUTE_BUDGET_MS,
+  signal: AbortSignal = new AbortController().signal,
 ) {
-  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline);
+  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline, signal);
   if (valhallaRoutes.length) return valhallaRoutes;
   // A generic driving graph is a valid degraded car route, but would be unsafe and
   // misleading for bicycle or motorcycle mode. Those modes fail explicitly.
-  return mode === "car" ? fetchOsrmCarRoutes(points, alternatives, deadline) : [];
+  return mode === "car" ? fetchOsrmCarRoutes(points, alternatives, deadline, signal) : [];
 }
 
 function selectSafeRoute(
@@ -662,24 +677,28 @@ function selectSafeRoute(
     candidate.route.duration <= fast.route.duration * limit.factor + limit.seconds,
   );
   const reducing = eligible
-    .filter((candidate) => candidate.paveMeters + policy.minimumPaveReduction < fast.paveMeters)
+    .filter((candidate) => candidate.riskMeters + policy.minimumPaveReduction <= fast.riskMeters)
     .sort((a, b) => {
       if (avoidance === "balanced") {
-        const scoreA = a.route.duration / 60 + a.paveMeters / policy.balancedPaveDivisor;
-        const scoreB = b.route.duration / 60 + b.paveMeters / policy.balancedPaveDivisor;
+        const scoreA = a.route.duration / 60 + a.riskMeters / policy.balancedPaveDivisor;
+        const scoreB = b.route.duration / 60 + b.riskMeters / policy.balancedPaveDivisor;
         return scoreA - scoreB;
       }
-      return a.paveMeters - b.paveMeters || a.route.duration - b.route.duration;
+      return a.riskMeters - b.riskMeters || a.route.duration - b.route.duration;
     });
   return reducing[0] ?? fast;
 }
 
-function routePayload(route: EngineRoute, paveMeters: number) {
+function routePayload(route: EngineRoute, surfaceScore: SurfaceScore) {
   return {
     coordinates: route.coordinates,
     distance: route.distance / 1_000,
     minutes: route.duration / 60,
-    paveMeters,
+    paveMeters: surfaceScore.paveMeters,
+    pavePercent: surfaceScore.pavePercent,
+    surfaceConfidence: surfaceScore.confidence,
+    confirmedPaveMeters: surfaceScore.confirmedMeters,
+    probablePaveMeters: surfaceScore.probableMeters,
     instructions: route.instructions,
   };
 }
@@ -734,6 +753,7 @@ function modeUnavailableMessage(mode: TransportMode) {
 }
 
 export async function GET(request: NextRequest) {
+  const calculationStartedAt = performance.now();
   const navigationRequest = request.nextUrl.searchParams.get("navigation") === "1";
   const deadline = Date.now() + (navigationRequest ? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS);
   const start = parseCoordinate(request.nextUrl.searchParams.get("start"));
@@ -765,7 +785,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const [baseRoutes, overpassResponse] = await Promise.all([
-      fetchEngineRoutes([start, end], mode, true, deadline),
+      fetchEngineRoutes([start, end], mode, true, deadline, request.signal),
       navigationRequest
         ? Promise.resolve(null)
         : fetch("https://overpass-api.de/api/interpreter", {
@@ -776,9 +796,10 @@ export async function GET(request: NextRequest) {
             },
             body: new URLSearchParams({ data: overpassQuery }),
             cache: "no-store",
-            signal: AbortSignal.timeout(3_500),
+            signal: combinedTimeoutSignal(request.signal, 650),
           }).catch(() => null),
     ]);
+    const baseRoutingReadyAt = performance.now();
     if (!baseRoutes.length) throw new Error("Nessun percorso");
 
     let paveDetails: PaveDetail[] = localPave;
@@ -805,20 +826,40 @@ export async function GET(request: NextRequest) {
       }
     }
     const paveWays = paveDetails.map((way) => way.coordinates);
+    const surfaceIndex = createSurfaceIndex(paveDetails);
+    const scoreCache = new Map<EngineRoute, SurfaceScore>();
+    const scoreCandidate = (route: EngineRoute) => {
+      const cached = scoreCache.get(route);
+      if (cached) return cached;
+      const score = scoreSurfaceExposure(
+        route.coordinates,
+        surfaceIndex,
+        policy.surfaceMatchMeters,
+      );
+      scoreCache.set(route, score);
+      return score;
+    };
+    const scoredCandidate = (route: EngineRoute, source: string): ScoredRoute => {
+      const surfaceScore = scoreCandidate(route);
+      return {
+        route,
+        source,
+        paveMeters: surfaceScore.paveMeters,
+        riskMeters: surfaceScore.weightedPaveMeters,
+        surfaceScore,
+      };
+    };
 
     const fastestBase = [...baseRoutes].sort((a, b) => a.duration - b.duration)[0];
-    const baseScored: ScoredRoute[] = baseRoutes.map((route, index) => ({
-      route,
-      source: `base-${index + 1}`,
-      paveMeters: scoreRoute(route, paveWays, mode),
-    }));
+    const baseScored: ScoredRoute[] = baseRoutes.map((route, index) =>
+      scoredCandidate(route, `base-${index + 1}`));
     const preliminaryFast = [...baseScored].sort((a, b) => a.route.duration - b.route.duration)[0];
     const preliminarySafe = selectSafeRoute(baseScored, preliminaryFast, avoidance, mode);
     const baseAlreadyImproves = !routesAreEquivalent(
       preliminaryFast.route,
       preliminarySafe.route,
       mode,
-    ) && preliminarySafe.paveMeters + policy.minimumPaveReduction < preliminaryFast.paveMeters;
+    ) && preliminarySafe.riskMeters + policy.minimumPaveReduction <= preliminaryFast.riskMeters;
     const anchor = findDetourAnchor(fastestBase, paveWays, mode);
     const baseOffset = Math.max(
       policy.detourMinimumMeters,
@@ -835,14 +876,18 @@ export async function GET(request: NextRequest) {
     if (!baseAlreadyImproves) {
       for (const point of detourPoints.slice(0, navigationRequest ? 1 : 3)) {
         if (deadline - Date.now() < 1_500) break;
-        const routes = await fetchEngineRoutes([start, point, end], mode, false, deadline);
+        if (request.signal.aborted) break;
+        const routes = await fetchEngineRoutes(
+          [start, point, end],
+          mode,
+          false,
+          deadline,
+          request.signal,
+        );
         detourResponses.push(routes);
         const provisionalRoutes = [...baseRoutes, ...detourResponses.flat()];
-        const provisionalScored: ScoredRoute[] = provisionalRoutes.map((route, index) => ({
-          route,
-          source: `provisional-${index + 1}`,
-          paveMeters: scoreRoute(route, paveWays, mode),
-        }));
+        const provisionalScored: ScoredRoute[] = provisionalRoutes.map((route, index) =>
+          scoredCandidate(route, `provisional-${index + 1}`));
         const provisionalFast = [...provisionalScored]
           .sort((a, b) => a.route.duration - b.route.duration)[0];
         const provisionalSafe = selectSafeRoute(
@@ -853,7 +898,7 @@ export async function GET(request: NextRequest) {
         );
         if (
           !routesAreEquivalent(provisionalFast.route, provisionalSafe.route, mode)
-          && provisionalSafe.paveMeters + policy.minimumPaveReduction < provisionalFast.paveMeters
+          && provisionalSafe.riskMeters + policy.minimumPaveReduction <= provisionalFast.riskMeters
         ) {
           break;
         }
@@ -865,14 +910,12 @@ export async function GET(request: NextRequest) {
         routes.map((route) => ({ route, source: `detour-${index + 1}` })),
       ),
     ], mode);
-    const scored: ScoredRoute[] = candidates.map((candidate) => ({
-      ...candidate,
-      paveMeters: scoreRoute(candidate.route, paveWays, mode),
-    }));
+    const scored: ScoredRoute[] = candidates.map((candidate) =>
+      scoredCandidate(candidate.route, candidate.source));
     const fast = [...scored].sort((a, b) => a.route.duration - b.route.duration)[0];
     const safe = selectSafeRoute(scored, fast, avoidance, mode);
     const hasDistinctAlternative = !routesAreEquivalent(fast.route, safe.route, mode)
-      && safe.paveMeters + policy.minimumPaveReduction < fast.paveMeters;
+      && safe.riskMeters + policy.minimumPaveReduction <= fast.riskMeters;
     const routeCountLabel = `${scored.length} ${scored.length === 1 ? "percorso reale" : "percorsi reali"}`;
     const comparedLabel = scored.length === 1 ? "confrontato" : "confrontati";
     const checkedLabel = scored.length === 1 ? "controllato" : "controllati";
@@ -892,18 +935,26 @@ export async function GET(request: NextRequest) {
     const bicycleCoverageNotice = mode === "bicycle" && dataSource === "archivio OSM locale"
       ? " La copertura locale dei fondi ciclabili può essere incompleta finché Overpass non risponde."
       : "";
+    const calculationCompletedAt = performance.now();
 
     return NextResponse.json({
-      fast: routePayload(fast.route, fast.paveMeters),
-      safe: routePayload(safe.route, safe.paveMeters),
+      fast: routePayload(fast.route, fast.surfaceScore),
+      safe: routePayload(safe.route, safe.surfaceScore),
       problemSegments: relevantPave.map((way) => way.coordinates),
       alternativesAnalyzed: scored.length,
       hasDistinctAlternative,
-      surfaceDataAvailable: paveWays.length > 0,
+      surfaceDataAvailable: (
+        fast.surfaceScore.matchedFeatures + safe.surfaceScore.matchedFeatures
+      ) > 0,
       mode,
       transportMode: mode,
       routingProfile,
       calculationMode: navigationRequest ? "navigation" : "planner",
+      performance: {
+        routingAndSurfaceDataMs: Math.round(baseRoutingReadyAt - calculationStartedAt),
+        candidateGenerationAndScoringMs: Math.round(calculationCompletedAt - baseRoutingReadyAt),
+        totalMs: Math.round(calculationCompletedAt - calculationStartedAt),
+      },
       candidateDiagnostics: scored.map((candidate) => ({
         source: candidate.source,
         provider: candidate.route.provider,
@@ -911,14 +962,24 @@ export async function GET(request: NextRequest) {
         distance: Math.round(candidate.route.distance),
         seconds: Math.round(candidate.route.duration),
         paveMeters: candidate.paveMeters,
+        pavePercent: candidate.surfaceScore.pavePercent,
+        weightedPaveMeters: candidate.riskMeters,
+        surfaceConfidence: candidate.surfaceScore.confidence,
+        matchedSurfaceFeatures: candidate.surfaceScore.matchedFeatures,
+        detourPercent: fast.route.duration > 0
+          ? Math.round(((candidate.route.duration / fast.route.duration) - 1) * 1_000) / 10
+          : 0,
         distinctFromFast: !routesAreEquivalent(candidate.route, fast.route, mode),
       })),
       dataNotice: (
         !paveWays.length
           ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"
           : hasDistinctAlternative
-            ? `${routeCountLabel} ${comparedLabel} su ${paveWays.length} tratti critici (${dataSource})`
-            : `${routeCountLabel} ${checkedLabel}: nessuna deviazione riduce il pavé noto (${dataSource})`
+            ? `${routeCountLabel} ${comparedLabel}; ${Math.max(
+                fast.surfaceScore.matchedFeatures,
+                safe.surfaceScore.matchedFeatures,
+              )} way OSM abbinate al percorso (${dataSource})`
+            : `${routeCountLabel} ${checkedLabel}: nessuna deviazione riduce l’esposizione nota (${dataSource})`
       ) + bicycleCoverageNotice,
     }, {
       headers: {

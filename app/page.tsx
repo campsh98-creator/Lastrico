@@ -5,9 +5,11 @@ import type { Map as MapLibreMap, Marker as MapLibreMarker, GeoJSONSource } from
 import {
   estimateArrivalTimestamp,
   evaluateOffRouteReading,
+  evaluateTimedGpsReading,
   gpsCoordinateMoved,
-  shouldAcceptGpsReading,
+  shouldApplyRouteResponse,
   shouldRunSimulationTimer,
+  shouldUpdateNavigationCamera,
   smoothGpsCoordinate,
   smoothHeading,
   type NavigationJourneyMode,
@@ -24,6 +26,12 @@ import {
   type ReportStats,
   type RoadReport,
 } from "@/lib/reporting";
+import { routePaint } from "@/lib/map-route-style";
+import {
+  buildRouteProgressModel,
+  calculateRouteProgress,
+  type RouteProgressModel,
+} from "@/lib/route-progress";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 type Coordinate = [number, number];
@@ -307,80 +315,6 @@ function distanceMeters(a: Coordinate, b: Coordinate) {
   return earthRadius * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
 }
 
-function closestRouteIndex(coordinates: Coordinate[], position: Coordinate) {
-  if (coordinates.length <= 1) {
-    return { index: 0, distance: coordinates[0] ? distanceMeters(position, coordinates[0]) : 0 };
-  }
-  let index = 0;
-  let distance = Number.POSITIVE_INFINITY;
-  for (let candidateIndex = 1; candidateIndex < coordinates.length; candidateIndex += 1) {
-    const start = coordinates[candidateIndex - 1];
-    const end = coordinates[candidateIndex];
-    const latitude = position[1] * Math.PI / 180;
-    const scaleX = 111_320 * Math.cos(latitude);
-    const scaleY = 110_540;
-    const px = position[0] * scaleX;
-    const py = position[1] * scaleY;
-    const ax = start[0] * scaleX;
-    const ay = start[1] * scaleY;
-    const bx = end[0] * scaleX;
-    const by = end[1] * scaleY;
-    const dx = bx - ax;
-    const dy = by - ay;
-    const denominator = dx * dx + dy * dy;
-    const ratio = denominator ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / denominator)) : 0;
-    const candidateDistance = Math.hypot(px - (ax + ratio * dx), py - (ay + ratio * dy));
-    if (candidateDistance < distance) {
-      index = ratio >= 0.5 ? candidateIndex : candidateIndex - 1;
-      distance = candidateDistance;
-    }
-  }
-  return { index, distance };
-}
-
-function routeDistanceBetween(coordinates: Coordinate[], from: number, to: number) {
-  let distance = 0;
-  const start = Math.max(0, Math.min(from, to));
-  const end = Math.min(coordinates.length - 1, Math.max(from, to));
-  for (let index = start + 1; index <= end; index += 1) {
-    distance += distanceMeters(coordinates[index - 1], coordinates[index]);
-  }
-  return distance;
-}
-
-function getNavigationProgress(routeResult: RouteResult, position: Coordinate | null) {
-  const coordinates = routeResult.coordinates;
-  const instructions = routeResult.instructions ?? [];
-  if (!coordinates.length) {
-    return {
-      closestIndex: 0,
-      offRouteMeters: 0,
-      remainingMeters: 0,
-      remainingMinutes: 0,
-      instructionDistance: 0,
-      instruction: null as NavigationInstruction | null,
-    };
-  }
-  const closest = position ? closestRouteIndex(coordinates, position) : { index: 0, distance: 0 };
-  const indexedInstructions = instructions.map((instruction) => ({
-    instruction,
-    routeIndex: closestRouteIndex(coordinates, instruction.location).index,
-  }));
-  const next = indexedInstructions.find(({ instruction, routeIndex }, index) =>
-    instruction.type !== "depart" && (routeIndex > closest.index || (index === indexedInstructions.length - 1 && routeIndex >= closest.index)),
-  ) ?? indexedInstructions[indexedInstructions.length - 1];
-  const remainingMeters = routeDistanceBetween(coordinates, closest.index, coordinates.length - 1);
-  const totalGeometryMeters = Math.max(1, routeDistanceBetween(coordinates, 0, coordinates.length - 1));
-  return {
-    closestIndex: closest.index,
-    offRouteMeters: closest.distance,
-    remainingMeters,
-    remainingMinutes: routeResult.minutes * remainingMeters / totalGeometryMeters,
-    instructionDistance: next ? routeDistanceBetween(coordinates, closest.index, next.routeIndex) : remainingMeters,
-    instruction: next?.instruction ?? null,
-  };
-}
-
 function bearingBetween(a: Coordinate, b: Coordinate) {
   const toRadians = (value: number) => value * Math.PI / 180;
   const toDegrees = (value: number) => value * 180 / Math.PI;
@@ -420,6 +354,7 @@ export default function Home() {
   const lastJourneyCalculationRef = useRef(0);
   const previousJourneyPositionRef = useRef<Coordinate | null>(null);
   const previousJourneyAccuracyRef = useRef<number | null>(null);
+  const previousJourneyTimestampRef = useRef<number | null>(null);
   const offRouteReadingsRef = useRef(0);
   const lastSpokenInstructionRef = useRef("");
   const arrivalReadingsRef = useRef(0);
@@ -427,6 +362,7 @@ export default function Home() {
   const journeyActiveRef = useRef(false);
   const journeyHeadingRef = useRef(0);
   const selectedRouteRef = useRef<RouteResult | null>(null);
+  const selectedRouteModelRef = useRef<RouteProgressModel<NavigationInstruction> | null>(null);
   const endLocationRef = useRef<LocationChoice | null>(null);
   const loadingRef = useRef(false);
   const transportModeRef = useRef<TransportMode>("car");
@@ -434,6 +370,10 @@ export default function Home() {
   const voiceReadyRef = useRef(false);
   const activeRouteRef = useRef<"safe" | "fast">("fast");
   const routeRequestRef = useRef<{ id: number; controller: AbortController } | null>(null);
+  const routeRequestCounterRef = useRef(0);
+  const cameraLastUpdateRef = useRef(0);
+  const cameraLastCenterRef = useRef<Coordinate | null>(null);
+  const cameraLastHeadingRef = useRef(0);
   const avoidanceReadyRef = useRef(false);
   const defaultFast = useMemo(() => route("castello", "venezia"), []);
   const defaultSafe = useMemo(() => route("castello", "venezia", "strong"), []);
@@ -503,9 +443,17 @@ export default function Home() {
   const landmarks = nodes.filter((node) => node.landmark);
   const savedPave = Math.max(0, fastRoute.paveMeters - safeRoute.paveMeters);
   const selectedRoute = activeRoute === "safe" ? safeRoute : fastRoute;
+  const selectedRouteModel = useMemo(
+    () => buildRouteProgressModel(
+      selectedRoute.coordinates,
+      selectedRoute.instructions ?? [],
+      distanceMeters,
+    ),
+    [selectedRoute],
+  );
   const navigationProgress = useMemo(
-    () => getNavigationProgress(selectedRoute, journeyPosition),
-    [journeyPosition, selectedRoute],
+    () => calculateRouteProgress(selectedRouteModel, journeyPosition, selectedRoute.minutes),
+    [journeyPosition, selectedRoute.minutes, selectedRouteModel],
   );
   const navigationModeLabel = journeyMode === "simulation"
     ? "SIMULAZIONE"
@@ -662,6 +610,7 @@ export default function Home() {
         }
       });
       map.on("load", () => {
+        const alternativePaint = routePaint("alternative");
         map.addSource("fast-route", { type: "geojson", data: emptyFeatureCollection });
         map.addSource("safe-route", { type: "geojson", data: emptyFeatureCollection });
         map.addSource("problem-segments", { type: "geojson", data: emptyFeatureCollection });
@@ -671,25 +620,25 @@ export default function Home() {
           id: "fast-outline",
           type: "line",
           source: "fast-route",
-          paint: { "line-color": "#ffffff", "line-width": 9, "line-opacity": 0.78 },
+          paint: alternativePaint.outline,
         });
         map.addLayer({
           id: "fast-line",
           type: "line",
           source: "fast-route",
-          paint: { "line-color": "#64748b", "line-width": 4, "line-opacity": 0.42 },
+          paint: alternativePaint.line,
         });
         map.addLayer({
           id: "safe-outline",
           type: "line",
           source: "safe-route",
-          paint: { "line-color": "#ffffff", "line-width": 9, "line-opacity": 0.78 },
+          paint: alternativePaint.outline,
         });
         map.addLayer({
           id: "safe-line",
           type: "line",
           source: "safe-route",
-          paint: { "line-color": "#64748b", "line-width": 4, "line-opacity": 0.42 },
+          paint: alternativePaint.line,
         });
         map.addLayer({
           id: "problem-line",
@@ -765,7 +714,8 @@ export default function Home() {
   useEffect(() => {
     journeyActiveRef.current = isJourneyActive;
     selectedRouteRef.current = selectedRoute;
-  }, [isJourneyActive, selectedRoute]);
+    selectedRouteModelRef.current = selectedRouteModel;
+  }, [isJourneyActive, selectedRoute, selectedRouteModel]);
 
   useEffect(() => {
     activeRouteRef.current = activeRoute;
@@ -805,15 +755,28 @@ export default function Home() {
     marker.setLngLat(journeyPosition);
     if (vehicleArrowRef.current) vehicleArrowRef.current.style.transform = `rotate(${journeyHeading}deg)`;
     element.style.setProperty("--accuracy", `${Math.min(90, Math.max(24, journeyAccuracy ?? 24))}px`);
-    if (followVehicle) {
+    const now = performance.now();
+    if (followVehicle && shouldUpdateNavigationCamera({
+      mode: "navigation-following",
+      now,
+      lastUpdatedAt: cameraLastUpdateRef.current,
+      previousCenter: cameraLastCenterRef.current,
+      center: journeyPosition,
+      previousHeading: cameraLastHeadingRef.current,
+      heading: journeyHeading,
+      distanceMeters,
+    })) {
       mapRef.current?.easeTo({
         center: journeyPosition,
         zoom: 16.6,
         pitch: 42,
         bearing: journeyHeading,
         duration: 650,
-        essential: true,
+        essential: false,
       });
+      cameraLastUpdateRef.current = now;
+      cameraLastCenterRef.current = journeyPosition;
+      cameraLastHeadingRef.current = journeyHeading;
     }
   }, [journeyPosition, journeyHeading, journeyAccuracy, followVehicle, isJourneyActive]);
 
@@ -837,16 +800,16 @@ export default function Home() {
     const secondaryRoute = activeRoute === "fast" ? "safe" : "fast";
     const secondaryLine = `${secondaryRoute}-line`;
     const secondaryOutline = `${secondaryRoute}-outline`;
-    map.setPaintProperty(selectedLine, "line-color", "#00a878");
-    map.setPaintProperty(selectedLine, "line-width", 8);
-    map.setPaintProperty(selectedLine, "line-opacity", 1);
-    map.setPaintProperty(selectedOutline, "line-width", 12);
-    map.setPaintProperty(selectedOutline, "line-opacity", 0.96);
-    map.setPaintProperty(secondaryLine, "line-color", "#64748b");
-    map.setPaintProperty(secondaryLine, "line-width", 4);
-    map.setPaintProperty(secondaryLine, "line-opacity", 0.38);
-    map.setPaintProperty(secondaryOutline, "line-width", 7);
-    map.setPaintProperty(secondaryOutline, "line-opacity", 0.58);
+    const activePaint = routePaint("active");
+    const alternativePaint = routePaint("alternative");
+    Object.entries(activePaint.line).forEach(([property, value]) =>
+      map.setPaintProperty(selectedLine, property, value));
+    Object.entries(activePaint.outline).forEach(([property, value]) =>
+      map.setPaintProperty(selectedOutline, property, value));
+    Object.entries(alternativePaint.line).forEach(([property, value]) =>
+      map.setPaintProperty(secondaryLine, property, value));
+    Object.entries(alternativePaint.outline).forEach(([property, value]) =>
+      map.setPaintProperty(secondaryOutline, property, value));
     map.moveLayer(selectedOutline, "problem-line");
     map.moveLayer(selectedLine, "problem-line");
     if (journeyActiveRef.current) return;
@@ -991,6 +954,7 @@ export default function Home() {
       document.removeEventListener("visibilitychange", reacquireWakeLock);
       if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
       if (simulationTimerRef.current !== null) window.clearInterval(simulationTimerRef.current);
+      routeRequestRef.current?.controller.abort();
       void wakeLockRef.current?.release();
       window.speechSynthesis?.cancel();
     };
@@ -1069,9 +1033,9 @@ export default function Home() {
     setStatus("Ricerca indirizzo chiusa.");
   }
 
-  async function fetchAddresses(text: string) {
+  async function fetchAddresses(text: string, signal?: AbortSignal) {
     if (text.trim().length < 3) throw new Error("Inserisci almeno tre caratteri.");
-    const response = await fetch(`/api/geocode?q=${encodeURIComponent(text.trim())}`);
+    const response = await fetch(`/api/geocode?q=${encodeURIComponent(text.trim())}`, { signal });
     const data = await response.json() as {
       results?: GeocodeResult[];
       error?: string;
@@ -1106,9 +1070,14 @@ export default function Home() {
     }
   }
 
-  async function geocode(text: string, current: LocationChoice, target: "start" | "end") {
+  async function geocode(
+    text: string,
+    current: LocationChoice,
+    target: "start" | "end",
+    signal?: AbortSignal,
+  ) {
     if (text.trim() === current.label) return current;
-    const results = await fetchAddresses(text);
+    const results = await fetchAddresses(text, signal);
     if (results.length === 1) {
       const selected = { label: results[0].label, coordinate: results[0].coordinate };
       return selected;
@@ -1142,8 +1111,13 @@ export default function Home() {
     if (loadingRef.current && !options.force) return;
     routeRequestRef.current?.controller.abort();
     const controller = new AbortController();
-    const requestId = (routeRequestRef.current?.id ?? 0) + 1;
+    const requestId = routeRequestCounterRef.current + 1;
+    routeRequestCounterRef.current = requestId;
     routeRequestRef.current = { id: requestId, controller };
+    const requestTimeout = window.setTimeout(
+      () => controller.abort(new DOMException("Tempo di calcolo esaurito", "TimeoutError")),
+      options.journeySession === undefined ? 20_000 : 8_000,
+    );
     const requestedMode = options.mode ?? transportModeRef.current;
     let routeSucceeded = false;
     loadingRef.current = true;
@@ -1152,11 +1126,25 @@ export default function Home() {
       ? `Calcolo i percorsi per ${transportMeta[requestedMode].article}…`
       : `Fuori percorso · ricalcolo per ${transportMeta[requestedMode].article}…`);
     try {
-      const resolvedStart = startOverride ?? await geocode(startText, startLocation, "start");
+      const resolvedStart = startOverride
+        ?? await geocode(startText, startLocation, "start", controller.signal);
       if (!startOverride && startText.trim() !== startLocation.label && endText.trim() !== endLocation.label) {
-        await new Promise((resolve) => setTimeout(resolve, 1100));
+        await new Promise<void>((resolve, reject) => {
+          const timer = window.setTimeout(resolve, 250);
+          controller.signal.addEventListener("abort", () => {
+            window.clearTimeout(timer);
+            reject(controller.signal.reason);
+          }, { once: true });
+        });
       }
-      const resolvedEnd = await geocode(endText, endLocation, "end");
+      const resolvedEnd = await geocode(endText, endLocation, "end", controller.signal);
+      if (!shouldApplyRouteResponse(
+        routeRequestRef.current?.id ?? -1,
+        requestId,
+        navigationSessionRef.current,
+        options.journeySession ?? null,
+        journeyActiveRef.current,
+      )) return;
       setStartLocation(resolvedStart);
       setEndLocation(resolvedEnd);
       setStartText(resolvedStart.label);
@@ -1175,15 +1163,14 @@ export default function Home() {
         throw new Error(data.error ?? "Non riesco a calcolare il percorso.");
       }
       if (
-        routeRequestRef.current?.id !== requestId
-        || data.transportMode !== requestedMode
-        || (
-          options.journeySession !== undefined
-          && (
-            !journeyActiveRef.current
-            || options.journeySession !== navigationSessionRef.current
-          )
+        !shouldApplyRouteResponse(
+          routeRequestRef.current?.id ?? -1,
+          requestId,
+          navigationSessionRef.current,
+          options.journeySession ?? null,
+          journeyActiveRef.current,
         )
+        || data.transportMode !== requestedMode
       ) return;
       setFastRoute({ ...data.fast, nodes: [], edges: [], problemSegments: data.problemSegments });
       setSafeRoute({ ...data.safe, nodes: [], edges: [], problemSegments: data.problemSegments });
@@ -1206,7 +1193,15 @@ export default function Home() {
       routeSucceeded = true;
       if (options.journeySession !== undefined) setGpsState("live");
     } catch (error) {
-      if (controller.signal.aborted) return;
+      if (controller.signal.aborted) {
+        if (
+          controller.signal.reason instanceof DOMException
+          && controller.signal.reason.name === "TimeoutError"
+        ) {
+          setStatus("Il calcolo sta impiegando troppo tempo. Mantengo l’ultimo percorso.");
+        }
+        return;
+      }
       if (
         options.journeySession !== undefined
         && options.journeySession === navigationSessionRef.current
@@ -1215,6 +1210,7 @@ export default function Home() {
       }
       setStatus(error instanceof Error ? error.message : "Qualcosa non ha funzionato. Riprova.");
     } finally {
+      window.clearTimeout(requestTimeout);
       if (routeRequestRef.current?.id === requestId) {
         loadingRef.current = false;
         setIsLoading(false);
@@ -1324,10 +1320,14 @@ export default function Home() {
     lastJourneyOriginRef.current = null;
     previousJourneyPositionRef.current = null;
     previousJourneyAccuracyRef.current = null;
+    previousJourneyTimestampRef.current = null;
     offRouteReadingsRef.current = 0;
     arrivalReadingsRef.current = 0;
     journeyTravelledMetersRef.current = 0;
     lastSpokenInstructionRef.current = "";
+    cameraLastUpdateRef.current = 0;
+    cameraLastCenterRef.current = null;
+    cameraLastHeadingRef.current = 0;
     mapRef.current?.easeTo({ pitch: 0, bearing: 0, duration: 450 });
     if (hasArrived) {
       speakInstruction("Sei arrivato a destinazione");
@@ -1399,12 +1399,13 @@ export default function Home() {
     setGpsState("live");
 
     const routeResult = selectedRouteRef.current;
-    if (!routeResult) return;
+    const routeModel = selectedRouteModelRef.current;
+    if (!routeResult || !routeModel) return;
     const mode = transportModeRef.current;
     const policy = navigationPolicy[mode];
     const routeEnd = routeResult.coordinates[routeResult.coordinates.length - 1];
     const arrivalTolerance = policy.arrivalMeters + Math.min(accuracy, 25);
-    const progress = getNavigationProgress(routeResult, filteredCoordinate);
+    const progress = calculateRouteProgress(routeModel, filteredCoordinate, routeResult.minutes);
     const minimumTravelBeforeArrival = Math.min(80, routeResult.distance * 100);
     const isArrivalReading = Boolean(
       routeEnd
@@ -1484,13 +1485,18 @@ export default function Home() {
     journeyHeadingRef.current = 0;
     previousJourneyPositionRef.current = null;
     previousJourneyAccuracyRef.current = null;
+    previousJourneyTimestampRef.current = null;
     selectedRouteRef.current = selectedRoute;
+    selectedRouteModelRef.current = selectedRouteModel;
     endLocationRef.current = endLocation;
     lastJourneyCalculationRef.current = 0;
     offRouteReadingsRef.current = 0;
     arrivalReadingsRef.current = 0;
     journeyTravelledMetersRef.current = 0;
     lastSpokenInstructionRef.current = "";
+    cameraLastUpdateRef.current = 0;
+    cameraLastCenterRef.current = null;
+    cameraLastHeadingRef.current = 0;
     void requestWakeLock();
     const currentTransport = transportMeta[transportModeRef.current];
     speakInstruction(mode === "simulation"
@@ -1515,7 +1521,7 @@ export default function Home() {
     setGpsState("requesting");
     setStatus("Autorizza la posizione precisa: aggancio il GPS al percorso Lastrico…");
     journeyWatchRef.current = navigator.geolocation.watchPosition(
-      ({ coords }) => {
+      ({ coords, timestamp }) => {
         if (
           !journeyActiveRef.current
           || journeyModeRef.current !== "gps"
@@ -1533,12 +1539,28 @@ export default function Home() {
           setStatus("La navigazione della beta copre per ora soltanto Milano.");
           return;
         }
-        if (!shouldAcceptGpsReading(coordinate, coords.accuracy, MILAN_GPS_BOUNDS)) {
+        const timedReading = evaluateTimedGpsReading({
+          coordinate,
+          accuracy: coords.accuracy,
+          timestamp,
+          now: Date.now(),
+          previousCoordinate: previousJourneyPositionRef.current,
+          previousTimestamp: previousJourneyTimestampRef.current,
+          bounds: MILAN_GPS_BOUNDS,
+          distanceMeters,
+          maximumSpeedMetersPerSecond: transportModeRef.current === "bicycle" ? 22 : 70,
+        });
+        if (!timedReading.accepted) {
+          offRouteReadingsRef.current = 0;
+          arrivalReadingsRef.current = 0;
           setGpsState("weak");
           setJourneyAccuracy(coords.accuracy);
-          setStatus(`Segnale GPS debole (±${Math.round(coords.accuracy)} m). Mantengo l’ultimo percorso.`);
+          setStatus(timedReading.reason === "invalid"
+            ? `Segnale GPS debole (±${Math.round(coords.accuracy)} m). Mantengo l’ultimo percorso.`
+            : "Posizione GPS non affidabile o non recente. Mantengo l’ultimo punto valido.");
           return;
         }
+        previousJourneyTimestampRef.current = timestamp;
         updateJourneyPosition(
           coordinate,
           coords.accuracy,
@@ -1549,6 +1571,8 @@ export default function Home() {
       },
       (error) => {
         if (session !== navigationSessionRef.current) return;
+        offRouteReadingsRef.current = 0;
+        arrivalReadingsRef.current = 0;
         if (error.code === error.PERMISSION_DENIED) {
           finishNavigation();
           setGpsState("unavailable");

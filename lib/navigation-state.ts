@@ -25,6 +25,47 @@ export type OffRouteReadingResult = {
   shouldRecalculate: boolean;
 };
 
+export type TimedGpsReadingInput = {
+  coordinate: Coordinate;
+  accuracy: number;
+  timestamp: number;
+  now: number;
+  previousCoordinate: Coordinate | null;
+  previousTimestamp: number | null;
+  bounds: MilanBounds;
+  distanceMeters: (a: Coordinate, b: Coordinate) => number;
+  maximumAccuracy?: number;
+  maximumAgeMs?: number;
+  maximumSpeedMetersPerSecond?: number;
+};
+
+export type TimedGpsReadingResult = {
+  accepted: boolean;
+  reason: "accepted" | "invalid" | "stale" | "duplicate" | "implausible";
+};
+
+export type CameraMode =
+  | "overview"
+  | "following"
+  | "navigation-following"
+  | "manual-control"
+  | "recentering"
+  | "arrival";
+
+export type CameraUpdateInput = {
+  mode: CameraMode;
+  now: number;
+  lastUpdatedAt: number;
+  previousCenter: Coordinate | null;
+  center: Coordinate;
+  previousHeading: number;
+  heading: number;
+  distanceMeters: (a: Coordinate, b: Coordinate) => number;
+  minimumIntervalMs?: number;
+  minimumMovementMeters?: number;
+  minimumHeadingDegrees?: number;
+};
+
 export function shouldRunSimulationTimer(mode: NavigationJourneyMode | null) {
   return mode === "simulation";
 }
@@ -83,9 +124,73 @@ export function shouldAcceptGpsReading(
   );
 }
 
+export function evaluateTimedGpsReading(input: TimedGpsReadingInput): TimedGpsReadingResult {
+  if (!shouldAcceptGpsReading(
+    input.coordinate,
+    input.accuracy,
+    input.bounds,
+    input.maximumAccuracy ?? 120,
+  )) {
+    return { accepted: false, reason: "invalid" };
+  }
+  const maximumAgeMs = input.maximumAgeMs ?? 8_000;
+  if (
+    !Number.isFinite(input.timestamp)
+    || input.timestamp > input.now + 1_000
+    || input.now - input.timestamp > maximumAgeMs
+  ) {
+    return { accepted: false, reason: "stale" };
+  }
+  if (input.previousTimestamp !== null && input.timestamp <= input.previousTimestamp) {
+    return { accepted: false, reason: "duplicate" };
+  }
+  if (input.previousCoordinate && input.previousTimestamp !== null) {
+    const elapsedSeconds = Math.max(0.001, (input.timestamp - input.previousTimestamp) / 1_000);
+    const movement = input.distanceMeters(input.previousCoordinate, input.coordinate);
+    const uncertainty = Math.max(8, input.accuracy * 1.5);
+    const plausibleDistance = uncertainty
+      + elapsedSeconds * (input.maximumSpeedMetersPerSecond ?? 70);
+    if (movement > plausibleDistance) {
+      return { accepted: false, reason: "implausible" };
+    }
+  }
+  return { accepted: true, reason: "accepted" };
+}
+
+export function shouldApplyRouteResponse(
+  activeRequestId: number,
+  responseRequestId: number,
+  activeSessionId: number,
+  responseSessionId: number | null,
+  journeyActive: boolean,
+) {
+  return activeRequestId === responseRequestId
+    && (
+      responseSessionId === null
+      || (journeyActive && activeSessionId === responseSessionId)
+    );
+}
+
+export function shouldUpdateNavigationCamera(input: CameraUpdateInput) {
+  if (
+    input.mode === "overview"
+    || input.mode === "manual-control"
+    || input.mode === "arrival"
+  ) return false;
+  if (input.mode === "recentering") return true;
+  const elapsed = input.now - input.lastUpdatedAt;
+  if (elapsed < (input.minimumIntervalMs ?? 450)) return false;
+  const movement = input.previousCenter
+    ? input.distanceMeters(input.previousCenter, input.center)
+    : Number.POSITIVE_INFINITY;
+  const headingDelta = Math.abs(((input.heading - input.previousHeading + 540) % 360) - 180);
+  return movement >= (input.minimumMovementMeters ?? 3)
+    || headingDelta >= (input.minimumHeadingDegrees ?? 6);
+}
+
 export function evaluateOffRouteReading(input: OffRouteReadingInput): OffRouteReadingResult {
   const nextReadings = input.offRouteMeters > input.thresholdMeters
-    ? input.currentReadings + 1
+    ? Math.min(input.requiredReadings, input.currentReadings + 1)
     : 0;
   const cooldownComplete = input.now - input.lastCalculationAt >= input.cooldownMs;
   const shouldRecalculate = (

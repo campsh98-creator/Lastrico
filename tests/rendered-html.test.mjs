@@ -14,6 +14,7 @@ const reportsUrl = new URL("../app/api/reports/route.ts", import.meta.url);
 const reportExportUrl = new URL("../app/api/reports/export/route.ts", import.meta.url);
 const directionsSheetUrl = new URL("../components/navigation/DirectionsSheet.tsx", import.meta.url);
 const communityPanelUrl = new URL("../components/reports/CommunityPanel.tsx", import.meta.url);
+const mapRouteStyleUrl = new URL("../lib/map-route-style.ts", import.meta.url);
 
 test("keeps the planner iOS-first and free of preset places", async () => {
   const [page, css] = await Promise.all([
@@ -60,7 +61,7 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   const paveData = JSON.parse(paveDataText);
 
   assert.ok(paveData.length > 1000, "the bundled Milan road-surface dataset is unexpectedly small");
-  assert.match(routing, /fetchEngineRoutes\(\[start, end\], mode, true, deadline\)/);
+  assert.match(routing, /fetchEngineRoutes\(\[start, end\], mode, true, deadline, request\.signal\)/);
   assert.match(routing, /navigationRequest \? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS/);
   assert.match(routing, /navigationRequest\s+\? Promise\.resolve\(null\)/);
   assert.match(routing, /navigationRequest \? 1 : 3/);
@@ -72,10 +73,12 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   assert.match(routing, /Cache-Control": "private, no-store"/);
   assert.match(routing, /detourPoints/);
   assert.match(routing, /routesAreEquivalent/);
-  assert.match(routing, /candidate\.paveMeters \+ policy\.minimumPaveReduction < fast\.paveMeters/);
+  assert.match(routing, /candidate\.riskMeters \+ policy\.minimumPaveReduction <= fast\.riskMeters/);
   assert.match(routing, /hasDistinctAlternative/);
   assert.match(routing, /bundledPave/);
-  assert.match(routing, /AbortSignal\.timeout\(3_500\)/);
+  assert.match(routing, /combinedTimeoutSignal\(request\.signal, 650\)/);
+  assert.match(routing, /createSurfaceIndex/);
+  assert.match(routing, /scoreSurfaceExposure/);
   assert.match(routing, /candidateDiagnostics/);
   assert.match(routing, /set\("steps", "true"\)/);
   assert.match(routing, /instructions: steps\.map/);
@@ -129,7 +132,7 @@ test("separates real GPS navigation from the automatic route simulation", async 
   ]);
 
   assert.match(page, /navigator\.geolocation\.watchPosition/);
-  assert.match(page, /function getNavigationProgress/);
+  assert.match(page, /calculateRouteProgress/);
   assert.match(page, /smoothGpsCoordinate/);
   assert.match(page, /smoothHeading/);
   assert.match(page, /formatArrivalTime/);
@@ -146,7 +149,8 @@ test("separates real GPS navigation from the automatic route simulation", async 
   assert.match(page, /Avanzamento automatico · GPS non usato/);
   assert.doesNotMatch(page, /"preview"|ANTEPRIMA/);
   assert.match(page, /navigationSessionRef\.current/);
-  assert.match(page, /shouldAcceptGpsReading/);
+  assert.match(page, /evaluateTimedGpsReading/);
+  assert.match(page, /shouldApplyRouteResponse/);
   assert.match(page, /routeRequestRef\.current\?\.controller\.abort\(\)/);
   assert.match(page, /speechSynthesis/);
   assert.match(page, /lastrico-voice/);
@@ -185,12 +189,16 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
 });
 
 test("uses a vector basemap and keeps the selected route visually dominant", async () => {
-  const page = await readFile(pageUrl, "utf8");
+  const [page, routeStyle] = await Promise.all([
+    readFile(pageUrl, "utf8"),
+    readFile(mapRouteStyleUrl, "utf8"),
+  ]);
 
   assert.match(page, /https:\/\/tiles\.openfreemap\.org\/styles\/liberty/);
   assert.doesNotMatch(page, /https:\/\/tile\.openstreetmap\.org/);
-  assert.match(page, /map\.setPaintProperty\(selectedLine, "line-color", "#00a878"\)/);
-  assert.match(page, /map\.setPaintProperty\(selectedLine, "line-width", 8\)/);
+  assert.match(page, /routePaint\("active"\)/);
+  assert.match(routeStyle, /color: "#00a878"/);
+  assert.match(routeStyle, /width: 8/);
   assert.match(page, /map\.moveLayer\(selectedLine, "problem-line"\)/);
 });
 

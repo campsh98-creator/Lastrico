@@ -2,10 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   evaluateOffRouteReading,
+  evaluateTimedGpsReading,
   estimateArrivalTimestamp,
   gpsCoordinateMoved,
   shouldAcceptGpsReading,
+  shouldApplyRouteResponse,
   shouldRunSimulationTimer,
+  shouldUpdateNavigationCamera,
   smoothGpsCoordinate,
   smoothHeading,
 } from "../lib/navigation-state.ts";
@@ -113,4 +116,62 @@ test("an on-route reading clears accumulated off-route noise", () => {
     cooldownMs: 15_000,
     calculationInProgress: false,
   }), { readings: 0, shouldRecalculate: false });
+});
+
+test("timed GPS readings reject stale, duplicate and implausible fixes", () => {
+  const base = {
+    coordinate: [9.1902, 45.4642],
+    accuracy: 8,
+    timestamp: 20_000,
+    now: 20_500,
+    previousCoordinate: [9.19, 45.4642],
+    previousTimestamp: 19_000,
+    bounds,
+    distanceMeters: planarDistance,
+  };
+  assert.deepEqual(evaluateTimedGpsReading(base), { accepted: true, reason: "accepted" });
+  assert.equal(evaluateTimedGpsReading({ ...base, timestamp: 10_000 }).reason, "stale");
+  assert.equal(evaluateTimedGpsReading({ ...base, timestamp: 19_000 }).reason, "duplicate");
+  assert.equal(evaluateTimedGpsReading({
+    ...base,
+    coordinate: [9.21, 45.48],
+  }).reason, "implausible");
+});
+
+test("only the latest route response from the active session may apply", () => {
+  assert.equal(shouldApplyRouteResponse(7, 7, 3, null, false), true);
+  assert.equal(shouldApplyRouteResponse(7, 6, 3, null, false), false);
+  assert.equal(shouldApplyRouteResponse(7, 7, 3, 3, true), true);
+  assert.equal(shouldApplyRouteResponse(7, 7, 4, 3, true), false);
+  assert.equal(shouldApplyRouteResponse(7, 7, 3, 3, false), false);
+});
+
+test("navigation camera is throttled but recentering remains immediate", () => {
+  const base = {
+    mode: "navigation-following",
+    now: 10_000,
+    lastUpdatedAt: 9_800,
+    previousCenter: [9.19, 45.4642],
+    center: [9.1902, 45.4642],
+    previousHeading: 359,
+    heading: 2,
+    distanceMeters: planarDistance,
+  };
+  assert.equal(shouldUpdateNavigationCamera(base), false);
+  assert.equal(shouldUpdateNavigationCamera({ ...base, now: 10_500 }), true);
+  assert.equal(shouldUpdateNavigationCamera({ ...base, mode: "manual-control", now: 10_500 }), false);
+  assert.equal(shouldUpdateNavigationCamera({ ...base, mode: "recentering" }), true);
+});
+
+test("off-route accumulation is capped while cooldown is active", () => {
+  assert.deepEqual(evaluateOffRouteReading({
+    currentReadings: 3,
+    offRouteMeters: 80,
+    thresholdMeters: 55,
+    requiredReadings: 3,
+    now: 12_000,
+    lastCalculationAt: 10_000,
+    cooldownMs: 15_000,
+    calculationInProgress: false,
+  }), { readings: 3, shouldRecalculate: false });
 });
