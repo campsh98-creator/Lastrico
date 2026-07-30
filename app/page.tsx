@@ -1977,6 +1977,7 @@ export default function Home() {
 
             {activePanel === "community" && (
               <CommunityPanel
+                githubUrl="https://github.com/campsh98-creator/Lastrico"
                 loading={reportsLoading}
                 onOpenDetails={() => setDetailsOpen(true)}
                 onShare={shareBeta}
@@ -2275,7 +2276,7 @@ export default function Home() {
               <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap · ODbL</a>
               <a href="https://www.openstreetmap.org/fixthemap" target="_blank" rel="noreferrer">Correggi la mappa</a>
               <a href="https://routing.openstreetmap.de/about.html#privacy" target="_blank" rel="noreferrer">Privacy routing</a>
-              <a href="https://github.com/campsh98-creator/lastrico-milano/issues" target="_blank" rel="noreferrer">Contatta il progetto</a>
+              <a href="https://github.com/campsh98-creator/Lastrico/issues" target="_blank" rel="noreferrer">Contatta il progetto</a>
             </div>
             <div className="modal-actions">
               <button type="button" className="secondary-action" onClick={shareBeta}>Condividi beta</button>

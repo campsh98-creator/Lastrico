@@ -47,5 +47,45 @@ misure monotone senza includere indirizzi o coordinate nei log.
 
 ## Risultati dopo le correzioni
 
-Da compilare soltanto con misure riproducibili al termine dell’implementazione.
+### Micro-benchmark locale
 
+Indice superficie costruito una volta sull’intero snapshot da 1.530 way:
+
+| Misura | Risultato |
+| --- | ---: |
+| Costruzione indice, 1.023 celle | 6,851 ms |
+| Score sintetico 50 punti, p95 su 30 iterazioni | 3,473 ms |
+| Score sintetico 200 punti, p95 su 30 iterazioni | 1,097 ms |
+| Score sintetico 500 punti, p95 su 30 iterazioni | 0,950 ms |
+
+Il percorso sintetico mantiene approssimativamente la stessa lunghezza al variare dei punti;
+serve a misurare l’effetto della densità della geometria, non la latenza di rete. La baseline
+equivalente senza indice misurava 21 ms per 50 punti, 88,5 ms per 200 e 221 ms per 500.
+
+Modello progresso con 5.000 punti e 100 istruzioni:
+
+| Misura | Risultato |
+| --- | ---: |
+| Precalcolo | 18,073 ms |
+| Aggiornamento mediano | 0,131 ms |
+| Aggiornamento p95 | 0,231 ms |
+
+### Verifica browser
+
+- Desktop: ricerca indirizzi, selezione risultati e percorso reale completati.
+- Percorso Duomo → Porta Venezia: 5 candidati reali, nessun errore console applicativo.
+- Viewport verificate: 393×852, 320×568 e 568×320.
+- Interazioni principali presenti anche nei layout compatti; a 320×568 e in orizzontale il
+  pannello richiede scorrimento per raggiungere tutti i controlli.
+- Sessione simulata mobile di circa 73 secondi: completata automaticamente, messaggio di
+  arrivo mostrato, nessun errore browser.
+
+Il campione di routing usa provider pubblici e non costituisce un SLA. Il controllo GPS reale
+su strada resta necessario prima di dichiarare la navigazione pronta per uso generale.
+
+### Stato finale dei controlli locali
+
+- lint superato;
+- build superata;
+- 35 test su 35 superati;
+- resta l’avviso non bloccante sui chunk client oltre 500 kB minificati.

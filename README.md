@@ -121,8 +121,8 @@ per il dettaglio.
 
 ## Contribuire
 
-Leggi [CONTRIBUTING.md](CONTRIBUTING.md). Il repository GitHub pubblico è in preparazione;
-fino alla pubblicazione la beta resta consultabile dal link sopra. Potrai aprire una
+Leggi [CONTRIBUTING.md](CONTRIBUTING.md). Il codice è pubblico nel repository
+[campsh98-creator/Lastrico](https://github.com/campsh98-creator/Lastrico). Puoi aprire una
 segnalazione per:
 
 - pavé mancante o dato errato;

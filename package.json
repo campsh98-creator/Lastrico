@@ -7,10 +7,10 @@
   "homepage": "https://lastrico-milano.cscda39.chatgpt.site",
   "repository": {
     "type": "git",
-    "url": "https://github.com/campsh98-creator/lastrico-milano.git"
+    "url": "https://github.com/campsh98-creator/Lastrico.git"
   },
   "bugs": {
-    "url": "https://github.com/campsh98-creator/lastrico-milano/issues"
+    "url": "https://github.com/campsh98-creator/Lastrico/issues"
   },
   "engines": {
     "node": ">=22.13.0"

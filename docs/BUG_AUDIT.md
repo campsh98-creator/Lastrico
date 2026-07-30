@@ -79,3 +79,30 @@ valore, senza riscrittura generale dell’interfaccia.
 - La beta non usa traffico in tempo reale.
 - La copertura del fondo stradale dipende dalla qualità dei dati OpenStreetMap disponibili.
 
+## Correzioni integrate nel branch
+
+- ID richiesta monotono, timeout client e scarto latest-wins anche prima delle mutazioni di
+  indirizzi e rotta.
+- Abort propagato dalla richiesta server ai provider esterni e ai tentativi di deviazione.
+- Budget Valhalla ridotto per riservare spazio al fallback auto OSRM.
+- Fix GPS filtrati per timestamp, duplicazione e velocità plausibile; sequenze di arrivo e
+  deviazione azzerate quando il fix non è affidabile.
+- Camera di navigazione limitata per tempo, movimento e variazione di heading.
+- Progresso continuo lungo il segmento con distanze cumulative e istruzioni preindicizzate.
+- Token di rotta centralizzati: attiva verde, pienamente opaca e con outline ad alto
+  contrasto.
+- Scoring parziale a campioni con indice spaziale, cache per candidato e peso ridotto per
+  `paving_stones`.
+- Risposta di routing arricchita con percentuale, confidenza, feature abbinate, deviazione e
+  tempi interni.
+
+## Rischi residui dichiarati
+
+- La coda Valhalla resta condivisa nell’istanza e non implementa ancora una vera priorità tra
+  planner e navigazione di utenti diversi.
+- Il matching del progresso scansiona i segmenti una volta per fix: è sotto il budget nel
+  benchmark, ma non è ancora un indice spaziale stateful con isteresi sugli incroci.
+- Il dataset locale non include ancora timestamp OSM, query di generazione e tag `highway`.
+- La mappa base non è disponibile offline, mentre geometria e pannello possono conservare
+  l’ultimo percorso in memoria.
+- Il chunk client oltre 500 kB richiede un lavoro separato di code splitting.

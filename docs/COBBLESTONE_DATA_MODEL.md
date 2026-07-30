@@ -14,9 +14,17 @@ Baseline del 30 luglio 2026:
 - 521 `paving_stones`;
 - 52 `cobblestone`;
 - 15 `unhewn_cobblestone`.
+- circa 71,07 km di geometrie;
+- 210 way senza nome;
+- nessun ID, segmento esatto o geometria esatta duplicata;
+- nessuna coordinata invalida o fuori dall’area della beta.
 
 Ogni record contiene attualmente `id`, `name`, `surface` e `coordinates`. L’ID è quello della
 way OSM; il nome può mancare all’origine ed essere normalizzato come strada senza nome.
+
+Sei geometrie chiudono un anello. La way OSM `313266346` ripete internamente una coordinata
+senza chiudersi e la way `4011978` contiene un salto di circa 331 metri: sono anomalie da
+verificare alla fonte, non corrette automaticamente.
 
 ## Classificazione proposta
 
@@ -73,4 +81,3 @@ Overpass può aggiornare in memoria le way per ID durante la pianificazione. Non
 file locale. Le segnalazioni della comunità restano separate e non cambiano automaticamente
 la classificazione finché non sono verificate. Una futura pipeline di rigenerazione dovrà
 salvare query, timestamp, conteggi, validazione e hash del dataset.
-
