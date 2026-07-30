@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 160" role="img" aria-labelledby="title">
+  <title id="title">Motia provisional wordmark with adaptive path</title>
+  <rect width="620" height="160" rx="20" fill="#F6F1E7"/>
+  <path d="M34 116 L34 57 Q34 42 48 52 L79 89 Q87 100 96 86 L120 50 Q130 37 139 53 L139 106 Q139 114 147 114"
+        fill="none" stroke="#0D8B73" stroke-width="15" stroke-linecap="round"
+        stroke-linejoin="round"/>
+  <text x="186" y="108" fill="#132A2A" font-family="Arial, Helvetica, sans-serif"
+        font-size="78" font-weight="700" letter-spacing="1">MOTIA</text>
+</svg>

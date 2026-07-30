@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Motia refined continuous adaptive path mark</title>
+  <rect width="128" height="128" rx="28" fill="#F6F1E7"/>
+  <path d="M21 91 L21 43 Q21 31 32 39 L57 69 Q64 78 71 67 L91 38 Q99 27 106 40 L106 83 Q106 89 112 89"
+        fill="none" stroke="#0D8B73" stroke-width="13" stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>
