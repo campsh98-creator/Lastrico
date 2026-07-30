@@ -1,5 +1,7 @@
 # Lastrico
 
+![Lastrico logo concept](public/brand/lastrico-logo-concept-v1.png)
+
 Lastrico is an experimental, open-source, road-surface-aware navigation PWA. It compares
 routes for cars, motorcycles, and bicycles using known road-surface data so people can make
 more informed choices and reduce estimated exposure to rough or uneven streets.
@@ -14,6 +16,23 @@ more informed choices and reduce estimated exposure to rough or uneven streets.
 > **Safety notice:** Lastrico does not guarantee route safety, prevent accidents, or replace
 > road signs, traffic rules, rider judgement, or certified navigation. Surface data may be
 > incomplete or outdated. Zero known exposure does not mean a hazard-free route.
+
+## Long-term vision
+
+Lastrico aims to become an Italy-wide road-intelligence layer that compares more than
+estimated arrival time. Future route choices may consider verified hazards, surface quality,
+road class, closures, lighting evidence, weather, reliability, comfort, vehicle suitability,
+data confidence, and explicit user preferences.
+
+A planned conversational interface could translate requests such as “prefer major,
+well-lit roads and accept 30 extra minutes” into visible, bounded preferences. The language
+model would not generate or control the route: legal constraints, candidate generation, and
+ranking would remain deterministic and testable.
+
+Italy-wide hazard coverage, native applications, Apple CarPlay, Android Auto, live data, and
+conversational preferences are **not implemented today**. See the
+[concise business plan](docs/BUSINESS_PLAN.md), [roadmap](ROADMAP.md), and
+[brand concept](docs/BRAND_CONCEPT.md).
 
 ## Supported travel modes
 

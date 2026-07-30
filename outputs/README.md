@@ -5,6 +5,9 @@ records because they document decisions that produced the current beta.
 
 | Prompt | Language | Status |
 | --- | --- | --- |
+| `prompt-github-english-default-branch.md` | English | active |
+| `prompt-logo-brand-system.md` | English | active |
+| `prompt-business-plan-national-road-intelligence.md` | English | active |
 | `prompt-open-source-positioning.md` | English | active |
 | `prompt-nearby-milan-coverage.md` | English | active |
 | `prompt-estensione-mappe-milano-pioltello.md` | Italian | superseded |
