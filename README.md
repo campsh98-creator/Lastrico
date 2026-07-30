@@ -1,10 +1,19 @@
-# Lastrico
+# Lastrico by Motia
 
 ![Lastrico logo concept](public/brand/lastrico-logo-concept-v1.png)
 
-Lastrico is an experimental, open-source, road-surface-aware navigation PWA. It compares
+Lastrico is the first product under the proposed **Motia** mobility-intelligence vision.
+It is an experimental, open-source, road-surface-aware navigation PWA that compares
 routes for cars, motorcycles, and bicycles using known road-surface data so people can make
 more informed choices and reduce estimated exposure to rough or uneven streets.
+
+**Motia — Routes shaped around you.**<br>
+**Lastrico by Motia — Smoother roads. Smarter routes.**
+
+Motia Routing Intelligence is the planned preference, road-condition, ranking, and
+explanation platform; Motia Routing Engine is the future API direction. Neither is a
+production service today. The current product evidence remains the Lastrico beta described
+below.
 
 **Created by [Domenico Campanella Scali](https://github.com/campsh98-creator).**
 
@@ -31,8 +40,12 @@ ranking would remain deterministic and testable.
 
 Italy-wide hazard coverage, native applications, Apple CarPlay, Android Auto, live data, and
 conversational preferences are **not implemented today**. See the
-[concise business plan](docs/BUSINESS_PLAN.md), [roadmap](ROADMAP.md), and
-[brand concept](docs/BRAND_CONCEPT.md).
+[Motia investor working draft](docs/business-plan/final/MOTIA_BUSINESS_PLAN_2026_2029.pdf),
+[editable DOCX](docs/business-plan/final/MOTIA_BUSINESS_PLAN_2026_2029.docx),
+[financial model](financials/MOTIA_FINANCIAL_MODEL.xlsx),
+[product roadmap](docs/product/LASTRICO_PRODUCT_ROADMAP.md), and
+[brand architecture](docs/brand/BRAND_ARCHITECTURE.md). The original
+[concise Lastrico plan](docs/BUSINESS_PLAN.md) remains available as product history.
 
 ## Supported travel modes
 

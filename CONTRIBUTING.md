@@ -1,8 +1,14 @@
 # Contributing to Lastrico
 
-Thank you for helping improve Lastrico. Lastrico is an open-source, multimodal navigation
-project for cars, motorcycles, and bicycles. Milan is the current beta coverage area, but
-the project is designed to support additional municipalities and regions over time.
+Thank you for helping improve Lastrico by Motia. Lastrico is the first open-source product
+under the proposed Motia mobility-intelligence vision: a multimodal navigation project for
+cars, motorcycles, and bicycles. Milan is the current tested beta coverage area, but the
+product architecture is designed to support additional municipalities and regions over time.
+
+Technical and non-technical contributors are equally welcome. See the
+[contributor onboarding guide](docs/community/CONTRIBUTOR_ONBOARDING.md) for guided paths and
+the [open-source strategy](docs/community/OPEN_SOURCE_STRATEGY.md) for the boundary between
+public collaboration, verified data, and future hosted services.
 
 ## Your first contribution
 
@@ -21,6 +27,11 @@ Useful contribution areas include code, routing, road-surface data, accessibilit
 documentation, testing, localisation, and mobile UX. A contribution does not need to add a
 large feature: a reproducible bug report, a test, or a well-sourced data correction can be
 valuable.
+
+Strategic Motia documents are working drafts, not proof that planned capabilities exist.
+Contributions must preserve the distinction between the current Lastrico beta, conditional
+roadmap targets, and long-term company vision. Founder biography, finance, legal,
+fundraising, market, and trademark statements require the validation marked in those files.
 
 ## Local setup
 
@@ -91,6 +102,10 @@ Community reports are not verified data by default. New reports remain `pending`
 moderation. They must not alter routing automatically. Data derived from OpenStreetMap must
 retain OpenStreetMap attribution and comply with the ODbL. Do not submit scraped,
 proprietary, or otherwise incompatible data.
+
+People who do not use GitHub should be able to contribute through guided in-product reporting,
+local validation sessions, interviews, accessibility testing, and community partner
+workflows. Maintainers must not require a public technical profile for those paths.
 
 ## Definition of done
 

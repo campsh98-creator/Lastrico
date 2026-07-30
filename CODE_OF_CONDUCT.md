@@ -26,8 +26,9 @@ reports are also unacceptable.
 
 ## Scope
 
-This policy applies in repository discussions, issues, pull requests, reviews, project
-events, and any space where a person represents Lastrico.
+This policy applies in repository discussions, issues, pull requests, reviews, field
+validation, community reporting, project events, and any space where a person represents
+Lastrico, Motia, or an affiliated working group.
 
 ## Reporting and enforcement
 
@@ -43,3 +44,8 @@ Retaliation against a reporter or participant in an investigation is prohibited.
 
 Project maintainers are responsible for clarifying and enforcing this policy. Enforcement
 decisions may be reconsidered when new evidence is available.
+
+Road-condition disagreement must be handled as an evidence and data-quality question, not a
+personal dispute. Contributors may correct or appeal a report without harassment, pressure,
+or retaliation. Participation, investment interest, and positive product feedback never
+create an exemption from this policy.
