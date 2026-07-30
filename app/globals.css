@@ -676,7 +676,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   left: 50%;
   width: min(680px, calc(100% - 28px));
   display: grid;
-  grid-template-columns: 76px 1fr auto;
+  grid-template-columns: 76px minmax(100px, 1fr) 92px auto;
   align-items: center;
   gap: 10px;
   padding: 12px 14px 10px;
@@ -693,6 +693,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .trip-metric strong { font: 500 29px/1 Georgia, serif; }
 .trip-metric small { display: block; margin-top: 3px; color: var(--muted); font-size: 7px; text-transform: uppercase; }
 .trip-metric.wide strong { font-size: 21px; }
+.trip-metric.eta strong { font-size: 20px; }
 .navigation-controls { display: flex; gap: 6px; }
 .navigation-controls button {
   min-width: 58px;
@@ -1091,13 +1092,15 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .navigation-tripbar {
     bottom: calc(8px + env(safe-area-inset-bottom));
     width: calc(100% - 16px);
-    grid-template-columns: 58px 1fr;
+    grid-template-columns: 58px minmax(0, 1fr) 82px;
     gap: 8px;
     padding: 9px 10px 8px;
     border-radius: 14px;
   }
   .trip-metric strong { font-size: 24px; }
   .trip-metric.wide strong { font-size: 18px; }
+  .trip-metric.eta { padding-right: 0; border-right: 0; }
+  .trip-metric.eta strong { font-size: 17px; }
   .navigation-controls { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); }
   .navigation-controls button { min-width: 0; min-height: 44px; }
   .driving-safety { bottom: calc(129px + env(safe-area-inset-bottom)); }
@@ -1127,9 +1130,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (max-width: 760px) and (max-height: 560px) {
   .app-workspace { grid-template-rows: minmax(0, 1fr) 0; }
   .map-stage { visibility: hidden; }
+  .panel-content { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
   .panel-heading { display: none; }
   .planner-panel, .routes-panel, .community-panel { padding-top: 8px; }
   .address-results { max-height: 42dvh; }
+  .map-picking-active {
+    grid-template-rows: calc(52px + env(safe-area-inset-top)) minmax(0, 1fr);
+  }
+  .map-picking-active .app-workspace { grid-template-rows: 1fr; }
+  .map-picking-active .control-panel,
+  .map-picking-active .mobile-nav { display: none; }
+  .map-picking-active .map-stage { grid-row: 1; visibility: visible; }
   .journey-active .app-workspace { grid-template-rows: 1fr; }
   .journey-active .map-stage { visibility: visible; }
   .journey-active .navigation-instruction { min-height: 86px; }

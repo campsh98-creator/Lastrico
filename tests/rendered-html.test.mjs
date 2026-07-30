@@ -24,7 +24,7 @@ test("keeps the planner iOS-first and free of preset places", async () => {
   assert.match(page, /role="listbox"/);
   assert.match(page, /className="modal address-picker"/);
   assert.match(page, /Scegli l’indirizzo/);
-  assert.match(page, /const label = addressQuery\.trim\(\) \|\| result\.label/);
+  assert.match(page, /const label = result\.label/);
   assert.match(page, /searchAddresses\("start"\)/);
   assert.match(page, /searchAddresses\("end"\)/);
   assert.match(page, /enterKeyHint="search"/);
@@ -57,6 +57,9 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
 
   assert.ok(paveData.length > 1000, "the bundled Milan road-surface dataset is unexpectedly small");
   assert.match(routing, /fetchEngineRoutes\(\[start, end\], mode, true, deadline\)/);
+  assert.match(routing, /navigationRequest \? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS/);
+  assert.match(routing, /navigationRequest\s+\? Promise\.resolve\(null\)/);
+  assert.match(routing, /navigationRequest \? 1 : 3/);
   assert.match(routing, /fetchValhallaRoutes/);
   assert.match(routing, /fetchOsrmCarRoutes/);
   assert.match(routing, /X-Client-Id/);
@@ -123,6 +126,11 @@ test("separates real GPS navigation from the automatic route simulation", async 
 
   assert.match(page, /navigator\.geolocation\.watchPosition/);
   assert.match(page, /function getNavigationProgress/);
+  assert.match(page, /smoothGpsCoordinate/);
+  assert.match(page, /smoothHeading/);
+  assert.match(page, /formatArrivalTime/);
+  assert.match(page, /arrivo stimato/);
+  assert.match(page, /arrivalReadingsRef\.current >= 2/);
   assert.match(page, /evaluateOffRouteReading/);
   assert.match(page, /15_000/);
   assert.match(page, /startNavigation\("gps"\)/);
@@ -165,7 +173,19 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
   assert.match(page, /hour >= 7 && hour < 19/);
   assert.match(page, /lastrico-theme/);
   assert.match(layout, /appleWebApp/);
-  assert.match(serviceWorker, /lastrico-v10/);
+  assert.match(serviceWorker, /lastrico-v11/);
   assert.match(serviceWorker, /self\.skipWaiting\(\)/);
   assert.match(serviceWorker, /self\.clients\.claim\(\)/);
+  assert.match(serviceWorker, /url\.pathname\.startsWith\("\/api\/"\)/);
+  assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
+});
+
+test("uses a vector basemap and keeps the selected route visually dominant", async () => {
+  const page = await readFile(pageUrl, "utf8");
+
+  assert.match(page, /https:\/\/tiles\.openfreemap\.org\/styles\/liberty/);
+  assert.doesNotMatch(page, /https:\/\/tile\.openstreetmap\.org/);
+  assert.match(page, /map\.setPaintProperty\(selectedLine, "line-color", "#00a878"\)/);
+  assert.match(page, /map\.setPaintProperty\(selectedLine, "line-width", 8\)/);
+  assert.match(page, /map\.moveLayer\(selectedLine, "problem-line"\)/);
 });

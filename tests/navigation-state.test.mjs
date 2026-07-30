@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   evaluateOffRouteReading,
+  estimateArrivalTimestamp,
   gpsCoordinateMoved,
   shouldAcceptGpsReading,
   shouldRunSimulationTimer,
+  smoothGpsCoordinate,
+  smoothHeading,
 } from "../lib/navigation-state.ts";
 
 const bounds = {
@@ -30,6 +33,29 @@ test("stationary GPS readings do not count as movement", () => {
   assert.equal(gpsCoordinateMoved(point, [...point], planarDistance), false);
   assert.equal(gpsCoordinateMoved(point, [9.190125, 45.4642], planarDistance, 4), false);
   assert.equal(gpsCoordinateMoved(point, [9.1903, 45.4642], planarDistance), true);
+});
+
+test("GPS smoothing trusts accurate readings more than noisy readings", () => {
+  const previous = [9.19, 45.46];
+  const current = [9.191, 45.461];
+  const accurate = smoothGpsCoordinate(previous, current, 5);
+  const noisy = smoothGpsCoordinate(previous, current, 100);
+
+  assert.ok(accurate[0] > noisy[0]);
+  assert.ok(accurate[1] > noisy[1]);
+  assert.deepEqual(smoothGpsCoordinate(null, current, 10), current);
+});
+
+test("heading smoothing crosses north using the shortest arc", () => {
+  assert.equal(Math.round(smoothHeading(350, 10, 0.5)), 0);
+  assert.equal(Math.round(smoothHeading(10, 350, 0.5)), 0);
+  assert.equal(Math.round(smoothHeading(90, 180, 0.5)), 135);
+});
+
+test("arrival timestamp never moves into the past for negative remaining time", () => {
+  const now = 1_000_000;
+  assert.equal(estimateArrivalTimestamp(now, 12.5), now + 750_000);
+  assert.equal(estimateArrivalTimestamp(now, -3), now);
 });
 
 test("GPS readings must be accurate and inside the Milan beta bounds", () => {

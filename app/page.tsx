@@ -1,12 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import type { Map as MapLibreMap, Marker as MapLibreMarker, GeoJSONSource, StyleSpecification } from "maplibre-gl";
+import type { Map as MapLibreMap, Marker as MapLibreMarker, GeoJSONSource } from "maplibre-gl";
 import {
+  estimateArrivalTimestamp,
   evaluateOffRouteReading,
   gpsCoordinateMoved,
   shouldAcceptGpsReading,
   shouldRunSimulationTimer,
+  smoothGpsCoordinate,
+  smoothHeading,
   type NavigationJourneyMode,
 } from "@/lib/navigation-state";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -244,18 +247,7 @@ const emptyFeatureCollection = {
   features: [],
 };
 
-const mapStyle: StyleSpecification = {
-  version: 8,
-  sources: {
-    osm: {
-      type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-      tileSize: 256,
-      attribution: "© OpenStreetMap contributors",
-    },
-  },
-  layers: [{ id: "osm", type: "raster", source: "osm" }],
-};
+const mapStyle = "https://tiles.openfreemap.org/styles/liberty";
 
 function routeGeoJSON(result: RouteResult) {
   return {
@@ -419,6 +411,13 @@ function formatDistance(meters: number) {
   return `${(meters / 1000).toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km`;
 }
 
+function formatArrivalTime(remainingMinutes: number) {
+  return new Date(estimateArrivalTimestamp(Date.now(), remainingMinutes)).toLocaleTimeString("it-IT", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 function directionGlyph(direction: NavigationInstruction["direction"] | undefined) {
   const glyphs = {
     left: "↰",
@@ -449,6 +448,8 @@ export default function Home() {
   const previousJourneyAccuracyRef = useRef<number | null>(null);
   const offRouteReadingsRef = useRef(0);
   const lastSpokenInstructionRef = useRef("");
+  const arrivalReadingsRef = useRef(0);
+  const journeyTravelledMetersRef = useRef(0);
   const journeyActiveRef = useRef(false);
   const journeyHeadingRef = useRef(0);
   const selectedRouteRef = useRef<RouteResult | null>(null);
@@ -492,6 +493,7 @@ export default function Home() {
   const [journeyAccuracy, setJourneyAccuracy] = useState<number | null>(null);
   const [followVehicle, setFollowVehicle] = useState(true);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [voiceAvailable, setVoiceAvailable] = useState(false);
   const [gpsState, setGpsState] = useState<GpsState>("idle");
   const [isRecalculating, setIsRecalculating] = useState(false);
   const [arrived, setArrived] = useState(false);
@@ -566,11 +568,15 @@ export default function Home() {
     }
   }, [voiceEnabled]);
   const toggleVoiceGuidance = useCallback(() => {
+    if (!voiceAvailable) {
+      setStatus("La guida vocale non è disponibile su questo dispositivo.");
+      return;
+    }
     setVoiceEnabled((current) => {
       if (current) window.speechSynthesis?.cancel();
       return !current;
     });
-  }, []);
+  }, [voiceAvailable]);
 
   function selectActiveRoute(routeKind: "safe" | "fast") {
     activeRouteRef.current = routeKind;
@@ -589,6 +595,14 @@ export default function Home() {
         attributionControl: true,
       });
       map.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
+      map.on("styleimagemissing", ({ id }) => {
+        if (!map.hasImage(id)) {
+          map.addImage(id, { width: 1, height: 1, data: new Uint8Array([0, 0, 0, 0]) });
+        }
+      });
+      map.once("error", () => {
+        if (!cancelled) setStatus("La mappa non è disponibile. Il percorso resta consultabile nei dettagli.");
+      });
       landmarks.forEach((landmark) => {
         const element = document.createElement("div");
         element.className = "landmark-dot";
@@ -670,25 +684,25 @@ export default function Home() {
           id: "fast-outline",
           type: "line",
           source: "fast-route",
-          paint: { "line-color": "#ffffff", "line-width": 8, "line-opacity": 0.82 },
+          paint: { "line-color": "#ffffff", "line-width": 9, "line-opacity": 0.78 },
         });
         map.addLayer({
           id: "fast-line",
           type: "line",
           source: "fast-route",
-          paint: { "line-color": "#334155", "line-width": 4, "line-opacity": 0.88 },
+          paint: { "line-color": "#64748b", "line-width": 4, "line-opacity": 0.42 },
         });
         map.addLayer({
           id: "safe-outline",
           type: "line",
           source: "safe-route",
-          paint: { "line-color": "#ffffff", "line-width": 10, "line-opacity": 0.95 },
+          paint: { "line-color": "#ffffff", "line-width": 9, "line-opacity": 0.78 },
         });
         map.addLayer({
           id: "safe-line",
           type: "line",
           source: "safe-route",
-          paint: { "line-color": "#16886e", "line-width": 6, "line-opacity": 0.96 },
+          paint: { "line-color": "#64748b", "line-width": 4, "line-opacity": 0.42 },
         });
         map.addLayer({
           id: "problem-line",
@@ -825,8 +839,23 @@ export default function Home() {
       hasDistinctAlternative ? routeGeoJSON(safeRoute) : emptyFeatureCollection,
     );
     (map.getSource("problem-segments") as GeoJSONSource)?.setData(problemGeoJSON([fastRoute]));
-    map.setPaintProperty("fast-line", "line-opacity", activeRoute === "fast" ? 1 : 0.46);
-    map.setPaintProperty("safe-line", "line-opacity", activeRoute === "safe" ? 1 : 0.52);
+    const selectedLine = `${activeRoute}-line`;
+    const selectedOutline = `${activeRoute}-outline`;
+    const secondaryRoute = activeRoute === "fast" ? "safe" : "fast";
+    const secondaryLine = `${secondaryRoute}-line`;
+    const secondaryOutline = `${secondaryRoute}-outline`;
+    map.setPaintProperty(selectedLine, "line-color", "#00a878");
+    map.setPaintProperty(selectedLine, "line-width", 8);
+    map.setPaintProperty(selectedLine, "line-opacity", 1);
+    map.setPaintProperty(selectedOutline, "line-width", 12);
+    map.setPaintProperty(selectedOutline, "line-opacity", 0.96);
+    map.setPaintProperty(secondaryLine, "line-color", "#64748b");
+    map.setPaintProperty(secondaryLine, "line-width", 4);
+    map.setPaintProperty(secondaryLine, "line-opacity", 0.38);
+    map.setPaintProperty(secondaryOutline, "line-width", 7);
+    map.setPaintProperty(secondaryOutline, "line-opacity", 0.58);
+    map.moveLayer(selectedOutline, "problem-line");
+    map.moveLayer(selectedLine, "problem-line");
     if (journeyActiveRef.current) return;
     const allCoordinates = [...fastRoute.coordinates, ...safeRoute.coordinates];
     const lngs = allCoordinates.map(([lng]) => lng);
@@ -839,7 +868,7 @@ export default function Home() {
       maxZoom: 14.7,
       duration: 650,
     });
-  }, [fastRoute, safeRoute, activeRoute, hasDistinctAlternative, isLiveResult, transportMode]);
+  }, [fastRoute, safeRoute, activeRoute, hasDistinctAlternative, isLiveResult, transportMode, mapReady]);
 
   useEffect(() => {
     if (!isJourneyActive || !voiceEnabled || !navigationProgress.instruction) return;
@@ -877,6 +906,9 @@ export default function Home() {
 
   useEffect(() => {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+    window.queueMicrotask(() => {
+      setVoiceAvailable("speechSynthesis" in window && "SpeechSynthesisUtterance" in window);
+    });
   }, []);
 
   useEffect(() => {
@@ -944,10 +976,12 @@ export default function Home() {
 
       const map = mapRef.current;
       if (mapReady && map?.isStyleLoaded()) {
-        map.setPaintProperty("osm", "raster-brightness-max", nextTheme === "dark" ? 0.58 : 1);
-        map.setPaintProperty("osm", "raster-brightness-min", nextTheme === "dark" ? 0.18 : 0);
-        map.setPaintProperty("osm", "raster-saturation", nextTheme === "dark" ? -0.62 : 0);
-        map.setPaintProperty("osm", "raster-contrast", nextTheme === "dark" ? 0.22 : 0);
+        if (map.getLayer("osm")) {
+          map.setPaintProperty("osm", "raster-brightness-max", nextTheme === "dark" ? 0.58 : 1);
+          map.setPaintProperty("osm", "raster-brightness-min", nextTheme === "dark" ? 0.18 : 0);
+          map.setPaintProperty("osm", "raster-saturation", nextTheme === "dark" ? -0.62 : 0);
+          map.setPaintProperty("osm", "raster-contrast", nextTheme === "dark" ? 0.22 : 0);
+        }
       }
     };
     applyTheme();
@@ -1019,7 +1053,7 @@ export default function Home() {
   }
 
   function chooseAddress(target: "start" | "end", result: GeocodeResult) {
-    const label = addressQuery.trim() || result.label;
+    const label = result.label;
     const location = { label, coordinate: result.coordinate };
     if (target === "start") {
       setStartLocation(location);
@@ -1082,7 +1116,7 @@ export default function Home() {
     if (text.trim() === current.label) return current;
     const results = await fetchAddresses(text);
     if (results.length === 1) {
-      const selected = { label: text.trim(), coordinate: results[0].coordinate };
+      const selected = { label: results[0].label, coordinate: results[0].coordinate };
       return selected;
     }
     setAddressQuery(text.trim());
@@ -1140,6 +1174,7 @@ export default function Home() {
         avoid: avoidance,
         mode: requestedMode,
       });
+      if (options.journeySession !== undefined) params.set("navigation", "1");
       const response = await fetch(`/api/routes?${params}`, { signal: controller.signal });
       const data = await response.json() as RouteApiResponse & { error?: string };
       if (!response.ok || !data.fast || !data.safe) {
@@ -1295,6 +1330,8 @@ export default function Home() {
     previousJourneyPositionRef.current = null;
     previousJourneyAccuracyRef.current = null;
     offRouteReadingsRef.current = 0;
+    arrivalReadingsRef.current = 0;
+    journeyTravelledMetersRef.current = 0;
     lastSpokenInstructionRef.current = "";
     mapRef.current?.easeTo({ pitch: 0, bearing: 0, duration: 450 });
     if (hasArrived) {
@@ -1337,16 +1374,28 @@ export default function Home() {
       && Number.isFinite(reportedSpeed)
       && reportedSpeed! > 1
     );
-    const heading = movingWithReportedHeading ? reportedHeading! : inferredHeading;
+    const headingTarget = movingWithReportedHeading ? reportedHeading! : inferredHeading;
+    const heading = smoothHeading(
+      journeyHeadingRef.current,
+      headingTarget,
+      movingWithReportedHeading ? 0.46 : 0.32,
+    );
+    const filteredCoordinate = smoothGpsCoordinate(previous, coordinate, accuracy);
     const markerMovementThreshold = Math.max(
       4,
       Math.min(15, Math.max(previousAccuracy, accuracy) * 0.35),
     );
     const markerMoved = previous === null
-      || gpsCoordinateMoved(previous, coordinate, distanceMeters, markerMovementThreshold);
+      || gpsCoordinateMoved(previous, filteredCoordinate, distanceMeters, markerMovementThreshold);
     if (markerMoved) {
-      previousJourneyPositionRef.current = coordinate;
-      setJourneyPosition(coordinate);
+      if (previous) {
+        journeyTravelledMetersRef.current += Math.min(
+          250,
+          distanceMeters(previous, filteredCoordinate),
+        );
+      }
+      previousJourneyPositionRef.current = filteredCoordinate;
+      setJourneyPosition(filteredCoordinate);
     }
     previousJourneyAccuracyRef.current = accuracy;
     journeyHeadingRef.current = heading;
@@ -1360,12 +1409,20 @@ export default function Home() {
     const policy = navigationPolicy[mode];
     const routeEnd = routeResult.coordinates[routeResult.coordinates.length - 1];
     const arrivalTolerance = policy.arrivalMeters + Math.min(accuracy, 25);
-    if (routeEnd && distanceMeters(coordinate, routeEnd) <= arrivalTolerance) {
+    const progress = getNavigationProgress(routeResult, filteredCoordinate);
+    const minimumTravelBeforeArrival = Math.min(80, routeResult.distance * 100);
+    const isArrivalReading = Boolean(
+      routeEnd
+      && distanceMeters(filteredCoordinate, routeEnd) <= arrivalTolerance
+      && progress.remainingMeters <= arrivalTolerance * 1.5
+      && journeyTravelledMetersRef.current >= minimumTravelBeforeArrival
+    );
+    arrivalReadingsRef.current = isArrivalReading ? arrivalReadingsRef.current + 1 : 0;
+    if (arrivalReadingsRef.current >= 2) {
       finishNavigation(true);
       return;
     }
 
-    const progress = getNavigationProgress(routeResult, coordinate);
     const now = Date.now();
     const offRouteDecision = evaluateOffRouteReading({
       currentReadings: offRouteReadingsRef.current,
@@ -1387,12 +1444,12 @@ export default function Home() {
         return;
       }
       lastJourneyCalculationRef.current = now;
-      lastJourneyOriginRef.current = coordinate;
+      lastJourneyOriginRef.current = filteredCoordinate;
       setIsRecalculating(true);
       setGpsState("recalculating");
       setStatus(`Fuori percorso · ricalcolo per ${transportMeta[mode].article}…`);
       void calculateRoutes(
-        { label: "Posizione GPS live", coordinate },
+        { label: "Posizione GPS live", coordinate: filteredCoordinate },
         {
           mode,
           preserveRoute: activeRouteRef.current,
@@ -1430,6 +1487,8 @@ export default function Home() {
     endLocationRef.current = endLocation;
     lastJourneyCalculationRef.current = 0;
     offRouteReadingsRef.current = 0;
+    arrivalReadingsRef.current = 0;
+    journeyTravelledMetersRef.current = 0;
     lastSpokenInstructionRef.current = "";
     void requestWakeLock();
     const currentTransport = transportMeta[transportModeRef.current];
@@ -1621,7 +1680,7 @@ export default function Home() {
   }
 
   return (
-    <main className={`app-shell ${isJourneyActive ? "journey-active" : ""}`}>
+    <main className={`app-shell ${isJourneyActive ? "journey-active" : ""} ${picking ? "map-picking-active" : ""}`}>
       <header className="app-bar">
         <button className="brand" type="button" onClick={() => setActivePanel("plan")} aria-label="Apri pianificazione">
           <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
@@ -1862,8 +1921,9 @@ export default function Home() {
                     className={voiceEnabled ? "active" : ""}
                     onClick={toggleVoiceGuidance}
                     aria-pressed={voiceEnabled}
+                    disabled={!voiceAvailable}
                   >
-                    {voiceEnabled ? "🔊 Voce attiva" : "🔇 Voce disattivata"}
+                    {!voiceAvailable ? "Voce non disponibile" : voiceEnabled ? "🔊 Voce attiva" : "🔇 Voce disattivata"}
                   </button>
                   <button type="button" onClick={() => startNavigation("simulation")}>▷ Simula percorso</button>
                   <button type="button" onClick={() => setMapChooserOpen(true)}>Fallback mappe ↗</button>
@@ -1921,14 +1981,16 @@ export default function Home() {
               <section className="navigation-tripbar">
                 <div className="trip-metric"><strong>{Math.max(0, Math.ceil(navigationProgress.remainingMinutes))}</strong><small>min</small></div>
                 <div className="trip-metric wide"><strong>{formatDistance(navigationProgress.remainingMeters)}</strong><small>rimanenti</small></div>
+                <div className="trip-metric eta"><strong>{formatArrivalTime(navigationProgress.remainingMinutes)}</strong><small>arrivo stimato</small></div>
                 <div className="navigation-controls">
                   <button
                     type="button"
                     onClick={toggleVoiceGuidance}
                     aria-pressed={voiceEnabled}
                     aria-label={voiceEnabled ? "Disattiva voce" : "Attiva voce"}
+                    disabled={!voiceAvailable}
                   >
-                    {voiceEnabled ? "🔊 Voce attiva" : "🔇 Voce spenta"}
+                    {!voiceAvailable ? "Voce non disponibile" : voiceEnabled ? "🔊 Voce attiva" : "🔇 Voce spenta"}
                   </button>
                   <button type="button" onClick={recenterNavigation} aria-label="Ricentra la mappa">
                     {followVehicle ? "Centrata" : "Ricentra"}

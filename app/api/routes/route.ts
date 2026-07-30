@@ -130,6 +130,7 @@ const VALHALLA_ENDPOINT = "https://valhalla1.openstreetmap.de/route";
 const VALHALLA_TIMEOUT_MS = 8_000;
 const OSRM_TIMEOUT_MS = 7_000;
 const ROUTE_BUDGET_MS = 18_000;
+const NAVIGATION_ROUTE_BUDGET_MS = 5_500;
 const VALHALLA_MIN_INTERVAL_MS = 1_050;
 const MOTOR_HIGHWAYS = "^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track)$";
 const BICYCLE_HIGHWAYS = "^(primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track|cycleway|path|pedestrian|footway)$";
@@ -733,7 +734,8 @@ function modeUnavailableMessage(mode: TransportMode) {
 }
 
 export async function GET(request: NextRequest) {
-  const deadline = Date.now() + ROUTE_BUDGET_MS;
+  const navigationRequest = request.nextUrl.searchParams.get("navigation") === "1";
+  const deadline = Date.now() + (navigationRequest ? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS);
   const start = parseCoordinate(request.nextUrl.searchParams.get("start"));
   const end = parseCoordinate(request.nextUrl.searchParams.get("end"));
   const avoidance = (request.nextUrl.searchParams.get("avoid") ?? "strong") as Avoidance;
@@ -764,16 +766,18 @@ export async function GET(request: NextRequest) {
   try {
     const [baseRoutes, overpassResponse] = await Promise.all([
       fetchEngineRoutes([start, end], mode, true, deadline),
-      fetch("https://overpass-api.de/api/interpreter", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
-        },
-        body: new URLSearchParams({ data: overpassQuery }),
-        cache: "no-store",
-        signal: AbortSignal.timeout(3_500),
-      }).catch(() => null),
+      navigationRequest
+        ? Promise.resolve(null)
+        : fetch("https://overpass-api.de/api/interpreter", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "User-Agent": "Lastrico-Milano-Beta/0.8 (+https://lastrico-milano.cscda39.chatgpt.site)",
+            },
+            body: new URLSearchParams({ data: overpassQuery }),
+            cache: "no-store",
+            signal: AbortSignal.timeout(3_500),
+          }).catch(() => null),
     ]);
     if (!baseRoutes.length) throw new Error("Nessun percorso");
 
@@ -829,7 +833,7 @@ export async function GET(request: NextRequest) {
 
     const detourResponses: EngineRoute[][] = [];
     if (!baseAlreadyImproves) {
-      for (const point of detourPoints.slice(0, 3)) {
+      for (const point of detourPoints.slice(0, navigationRequest ? 1 : 3)) {
         if (deadline - Date.now() < 1_500) break;
         const routes = await fetchEngineRoutes([start, point, end], mode, false, deadline);
         detourResponses.push(routes);
@@ -899,6 +903,7 @@ export async function GET(request: NextRequest) {
       mode,
       transportMode: mode,
       routingProfile,
+      calculationMode: navigationRequest ? "navigation" : "planner",
       candidateDiagnostics: scored.map((candidate) => ({
         source: candidate.source,
         provider: candidate.route.provider,

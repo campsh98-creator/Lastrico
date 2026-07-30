@@ -1,4 +1,4 @@
-const CACHE = "lastrico-v10";
+const CACHE = "lastrico-v11";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -15,15 +15,22 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        if (new URL(event.request.url).origin === self.location.origin) {
+        const cacheControl = response.headers.get("Cache-Control") ?? "";
+        if (response.ok && !cacheControl.includes("no-store")) {
           const copy = response.clone();
           caches.open(CACHE).then((cache) => cache.put(event.request, copy));
         }
         return response;
       })
-      .catch(() => caches.match(event.request).then((cached) => cached || caches.match("/"))),
+      .catch(() => caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+        if (event.request.mode === "navigate") return caches.match("/");
+        return Response.error();
+      })),
   );
 });
