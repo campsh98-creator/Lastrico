@@ -1,30 +1,54 @@
 # Governance
 
-Lastrico è un progetto open source in fase beta. Il maintainer iniziale e release owner è
+Lastrico is an open-source project in beta. Its initial maintainer and release owner is
 [Domenico Campanella Scali](AUTHORS.md).
 
-## Come vengono prese le decisioni
+## Decision process
 
-- Le correzioni piccole e reversibili vengono discusse nella pull request.
-- Le modifiche a routing, privacy, sicurezza durante la guida o modello dei dati richiedono
-  prima una issue con alternative e impatto.
-- Il maintainer cerca il consenso fra i partecipanti. Quando non è possibile, decide in base
-  ai principi documentati in `CONTRIBUTING.md` e motiva la scelta pubblicamente.
-- Una funzionalità non è considerata rilasciata finché lint, test, build, verifica mobile e
-  smoke test della beta non sono completati.
+- Small, reversible corrections are discussed in their pull request.
+- Changes to routing, privacy, road safety, supported travel modes, regional coverage, or
+  the data model require an issue that documents alternatives, impact, and validation.
+- Significant or difficult-to-reverse decisions should use a public design proposal linked
+  from the issue. The resulting decision and rationale remain discoverable in the issue or
+  project documentation.
+- Maintainers seek consensus. When consensus is not possible, the release owner decides
+  using the principles in `CONTRIBUTING.md` and explains the decision publicly.
+- A feature is not released until lint, tests, build, relevant mobile verification,
+  deployment, and beta smoke testing are complete.
 
-## Ruoli
+## Roles
 
-- **Contributor:** propone issue, dati, documentazione o codice.
-- **Reviewer:** ha dimostrato conoscenza dell’area e aiuta a verificare le pull request.
-- **Maintainer:** può unire modifiche, gestire release e moderare segnalazioni.
+- **Contributor:** proposes issues, data, documentation, tests, design, or code.
+- **Reviewer:** has demonstrated knowledge of an area and helps verify focused pull
+  requests.
+- **Maintainer:** can merge changes, manage releases, moderate reports, and enforce project
+  policies.
+- **Release owner:** coordinates integration and makes the final release decision.
 
-I ruoli si guadagnano con contributi utili e comportamento coerente con il
-`CODE_OF_CONDUCT.md`. Il progetto attribuisce i contributori nella cronologia Git e, quando
-appropriato, in `AUTHORS.md` o nelle note di rilascio.
+Roles are earned through useful contributions, reliable review, and conduct consistent with
+the [Code of Conduct](CODE_OF_CONDUCT.md). A contributor may ask in a public issue to take on
+review responsibility after sustained work in an area. Maintainer status requires an
+existing maintainer's approval and documented repository access.
 
-## Licenze e dati
+Contributors are credited through Git history and pull requests and, when appropriate, in
+`AUTHORS.md` or release notes.
 
-Contribuendo si accetta che il codice sia distribuito con licenza MIT. Dati e geometrie
-derivati da OpenStreetMap conservano attribuzione e condizioni ODbL applicabili. Non inviare
-dati personali, dump di produzione o materiale senza una licenza compatibile.
+## Regional and product scope
+
+Lastrico's identity is not tied to one city. Milan is the current beta coverage area.
+Support for another municipality or region must not be announced until routing,
+road-surface data, GPS boundaries, mobile behaviour, and production checks pass for that
+area. Cars, motorcycles, and bicycles must be evaluated independently.
+
+## Licences and data
+
+By contributing code, contributors agree that it is distributed under the MIT License.
+OpenStreetMap-derived data and geometry retain applicable ODbL attribution and conditions.
+Do not submit personal data, production dumps, unverifiable road claims, or material with an
+incompatible licence.
+
+## Security and conduct
+
+Security vulnerabilities follow [SECURITY.md](SECURITY.md). Community behaviour follows the
+[Code of Conduct](CODE_OF_CONDUCT.md). Private reports are handled by a maintainer without a
+conflict of interest whenever practical.

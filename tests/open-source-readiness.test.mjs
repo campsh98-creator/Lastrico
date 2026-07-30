@@ -5,7 +5,7 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-test("documents contribution, governance, security and architecture", async () => {
+test("documents the English contribution, governance, security and architecture flow", async () => {
   const [readme, contributing, governance, roadmap, security, architecture, development] = await Promise.all([
     read("README.md"),
     read("CONTRIBUTING.md"),
@@ -16,13 +16,15 @@ test("documents contribution, governance, security and architecture", async () =
     read("docs/development.md"),
   ]);
 
-  assert.match(readme, /licenza \[MIT\]/i);
+  assert.match(readme, /\[MIT (?:License|licence)\]\(LICENSE\)/i);
+  assert.match(readme, /cars, motorcycles, and bicycles/i);
+  assert.match(readme, /current tested beta coverage is limited to Milan/i);
   assert.match(contributing, /npm run lint/);
   assert.match(contributing, /npm test/);
-  assert.match(governance, /processo|decisioni/i);
-  assert.match(roadmap, /Beta pubblica/);
-  assert.match(security, /privat/i);
-  assert.match(architecture, /Flusso delle segnalazioni/);
+  assert.match(governance, /Decision process/);
+  assert.match(roadmap, /Regional coverage/);
+  assert.match(security, /private GitHub Security Advisory/i);
+  assert.match(architecture, /Community report flow/);
   assert.match(development, /320×568/);
 });
 

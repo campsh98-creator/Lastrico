@@ -1,28 +1,69 @@
-name: Proposta
-description: Proponi un miglioramento circoscritto per Lastrico.
-title: "[Proposta] "
+name: Feature request
+description: Propose a focused improvement to Lastrico.
+title: "[Feature] "
 labels:
   - enhancement
 body:
   - type: textarea
     id: problem
     attributes:
-      label: Problema da risolvere
-      description: Descrivi il bisogno prima della soluzione.
+      label: Problem
+      description: Describe the need before proposing a solution.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed scope
+      description: State what is in scope and what is explicitly out of scope.
     validations:
       required: true
   - type: textarea
     id: proposal
     attributes:
-      label: Soluzione proposta
+      label: Proposed solution and alternatives
+      description: Explain the preferred approach and meaningful alternatives.
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Travel mode
+      options:
+        - Car
+        - Motorcycle
+        - Bicycle
+        - Multiple or all modes
+        - Not applicable
+    validations:
+      required: true
+  - type: input
+    id: region
+    attributes:
+      label: Region or municipality
+      description: Leave blank for city-independent proposals.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria and validation
+      description: Describe observable outcomes, tests, and manual evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Safety, privacy, data, accessibility, and provider impact
+      description: Write "None identified" only after considering each area.
     validations:
       required: true
   - type: checkboxes
     id: principles
     attributes:
-      label: Verifiche
+      label: Product principles
       options:
-        - label: La proposta mantiene Lastrico come esperienza di navigazione primaria.
+        - label: The proposal keeps Lastrico's selected route and in-app navigation as the primary experience.
           required: true
-        - label: La proposta non richiede la raccolta di dati personali non necessari.
+        - label: The proposal does not require unnecessary personal data.
+          required: true
+        - label: The proposal does not claim to guarantee safety or prevent accidents.
           required: true

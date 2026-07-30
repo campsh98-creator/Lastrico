@@ -1,11 +1,14 @@
-# Autori
+# Authors
 
-## Creatore e maintainer
+## Creator and initial maintainer
 
-- Domenico Campanella Scali — ideazione, direzione del prodotto e sviluppo iniziale
+- Domenico Campanella Scali — concept, product direction, and initial development
 
-## Contributori
+## Contributors
 
-I contributori successivi sono riconosciuti nella cronologia Git e nelle pull request del progetto.
+Subsequent contributors are credited through the project's Git history and pull requests.
+Significant continuing contributions may also be recognised in this file or in release
+notes.
 
-L’inclusione in questo file descrive l’attribuzione del progetto; i diritti sul codice restano regolati dalla licenza MIT e dagli eventuali diritti dei singoli contributori.
+Inclusion in this file records project attribution. Rights to code remain governed by the
+MIT License and any applicable rights of individual contributors.

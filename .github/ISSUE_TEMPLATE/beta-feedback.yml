@@ -1,37 +1,64 @@
-name: Feedback beta
-description: Riporta un problema o una proposta sull’esperienza
-title: "[BETA] "
-labels: ["beta-feedback"]
+name: Beta feedback
+description: Share structured feedback about the current beta experience.
+title: "[Beta] "
+labels:
+  - beta-feedback
 body:
+  - type: markdown
+    attributes:
+      value: "Milan is the current beta area. Do not publish a home address, live location, licence plate, credentials, or identifiable travel history."
   - type: dropdown
     id: area
     attributes:
-      label: Area
+      label: Product area
       options:
-        - Calcolo percorso
-        - Interfaccia iPhone
-        - GPS e ricalcolo
-        - Mappa
-        - Segnalazioni
-        - Installazione PWA
-        - Altro
+        - Route calculation
+        - Mobile interface
+        - GPS and rerouting
+        - Map
+        - Community reports
+        - PWA installation
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Travel mode
+      options:
+        - Car
+        - Motorcycle
+        - Bicycle
+        - All modes
+        - Not applicable
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Cosa ti aspettavi?
+      label: What did you expect?
     validations:
       required: true
   - type: textarea
     id: happened
     attributes:
-      label: Cosa è successo?
+      label: What happened?
     validations:
       required: true
   - type: input
+    id: region
+    attributes:
+      label: Region or municipality
+      placeholder: "Example: Milan"
+  - type: input
     id: device
     attributes:
-      label: Dispositivo e browser
-      placeholder: "Esempio: iPhone 15, Safari"
-
+      label: Device and browser
+      placeholder: "Example: iPhone 15, Safari"
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed personal locations, credentials, licence plates, and identifiable travel data.
+          required: true

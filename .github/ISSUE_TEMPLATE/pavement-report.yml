@@ -1,34 +1,74 @@
-name: Pavé o dato stradale
-description: Segnala un tratto mancante, asfaltato o classificato in modo errato
-title: "[DATO] "
-labels: ["data", "needs-verification"]
+name: Road-surface data
+description: Report a missing, resurfaced, or incorrectly classified public road segment.
+title: "[Data] "
+labels:
+  - data
+  - needs-verification
 body:
   - type: markdown
     attributes:
-      value: "Non inserire indirizzi personali o dati riferiti agli spostamenti di una persona."
+      value: "Community observations are not verified automatically and do not immediately change routing. Do not publish personal locations, licence plates, or identifiable travel histories."
   - type: dropdown
     id: kind
     attributes:
-      label: Tipo
+      label: Observation type
       options:
-        - Pavé mancante
-        - Sanpietrini irregolari
-        - Strada asfaltata recentemente
-        - Dato errato
+        - Missing rough or block-paved surface
+        - Irregular cobblestone surface
+        - Recently resurfaced road
+        - Incorrect classification or geometry
+        - Other verifiable surface condition
+    validations:
+      required: true
+  - type: input
+    id: region
+    attributes:
+      label: Municipality or region
+      placeholder: "Example: Milan"
     validations:
       required: true
   - type: input
     id: road
     attributes:
-      label: Via o zona
-      placeholder: "Esempio: Corso ..., tra ... e ..."
+      label: Public road or segment
+      placeholder: "Example: public road name, between two public intersections"
     validations:
       required: true
+  - type: input
+    id: observed
+    attributes:
+      label: Observation or source date
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+  - type: checkboxes
+    id: modes
+    attributes:
+      label: Relevant travel modes
+      options:
+        - label: Car
+        - label: Motorcycle
+        - label: Bicycle
   - type: textarea
     id: evidence
     attributes:
-      label: Descrizione e verifica
-      description: Spiega cosa hai osservato e quando.
+      label: Description and non-sensitive evidence
+      description: Explain what was observed and how another person can verify it. Remove faces, licence plates, homes, and personal movement data.
     validations:
       required: true
-
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Source, provenance, and licence
+      description: Identify your own observation or a public source and confirm its licence is compatible. OpenStreetMap-derived material must retain ODbL attribution.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: This report concerns a public road segment and contains no personal location or travel history.
+          required: true
+        - label: I understand that maintainers must verify the report before it can affect published data or routing.
+          required: true
