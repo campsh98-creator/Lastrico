@@ -4,6 +4,15 @@
 /node_modules
 /.pnp
 .pnp.*
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
