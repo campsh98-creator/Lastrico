@@ -118,7 +118,7 @@ See [architecture](docs/architecture.md), [development](docs/development.md),
 
 Requirements:
 
-- Node.js 22.13 or later;
+- Node.js 24 or later;
 - npm.
 
 ```bash

@@ -2,7 +2,7 @@
 
 ## Requirements and local server
 
-- Node.js 22.13 or later;
+- Node.js 24 or later;
 - npm;
 - a modern browser.
 

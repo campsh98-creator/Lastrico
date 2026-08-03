@@ -86,7 +86,9 @@ test("runs locked CI and automated dependency updates", async () => {
   ]);
   const packageJson = JSON.parse(packageText);
 
-  assert.match(ci, /node-version: 22\.13\.0/);
+  assert.match(ci, /actions\/checkout@v7/);
+  assert.match(ci, /actions\/setup-node@v7/);
+  assert.match(ci, /node-version: 24/);
   assert.match(ci, /npm ci/);
   assert.match(ci, /npm run lint/);
   assert.match(ci, /npm test/);
