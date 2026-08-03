@@ -24,13 +24,13 @@ estimated arrival time. Future route choices may consider verified hazards, surf
 road class, closures, lighting evidence, weather, reliability, comfort, vehicle suitability,
 data confidence, and explicit user preferences.
 
-A planned conversational interface could translate requests such as “prefer major,
-well-lit roads and accept 30 extra minutes” into visible, bounded preferences. The language
-model would not generate or control the route: legal constraints, candidate generation, and
-ranking would remain deterministic and testable.
+A future conversational interface could extend the same model to requests such as “prefer
+major, well-lit roads and accept 30 extra minutes” while keeping the interpreted preferences
+visible and bounded. Legal constraints, candidate generation, and ranking would remain
+deterministic and testable.
 
 Italy-wide hazard coverage, native applications, Apple CarPlay, Android Auto, live data, and
-conversational preferences are **not implemented today**. See the
+general hazard, traffic, or weather prompting are **not implemented today**. See the
 [concise business plan](docs/BUSINESS_PLAN.md), [roadmap](ROADMAP.md), and
 [brand concept](docs/BRAND_CONCEPT.md).
 
@@ -54,6 +54,8 @@ immediate road conditions.
 - GPS position as the starting point;
 - comparison between the fastest route and a lower rough-surface-exposure alternative;
 - three surface-avoidance preferences;
+- an experimental local prompt interpreter for bounded Italian and English requests about
+  cobblestone avoidance and maximum extra travel time;
 - manual recalculation and experimental GPS rerouting;
 - foreground GPS navigation, kept separate from automatic route simulation;
 - a complete turn list with the current manoeuvre highlighted;
@@ -66,6 +68,12 @@ immediate road conditions.
 
 The current beta interface is in Italian. Repository documentation and collaboration happen
 in English; interface localisation is tracked separately.
+
+The prompt interpreter is a deterministic, rule-based beta feature, not an AI or language
+model. Applying an understood request changes the routing preferences used for recalculation.
+Prompt text stays in the browser and is not sent to a third party. The interpreter does not
+yet understand general road hazards, traffic, weather, lighting, or unrestricted natural
+language.
 
 ## Try the beta on iPhone
 

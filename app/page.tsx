@@ -28,6 +28,10 @@ import {
 } from "@/lib/reporting";
 import { routePaint } from "@/lib/map-route-style";
 import {
+  parsePromptRoutePreferences,
+  type PromptRoutePreferenceResult,
+} from "@/lib/prompt-route-preferences";
+import {
   buildRouteProgressModel,
   calculateRouteProgress,
   type RouteProgressModel,
@@ -166,6 +170,13 @@ const formatMinutes = (minutes: number) => minutes.toLocaleString("it-IT", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 });
+
+function promptErrorCopy(result: PromptRoutePreferenceResult) {
+  if (result.status === "empty") return "Scrivi come vuoi gestire pavé e tempo extra.";
+  if (result.status === "conflict") return "La richiesta contiene preferenze in conflitto o più limiti di tempo.";
+  if (result.status === "invalid") return "Usa un limite intero compreso tra 1 e 30 minuti.";
+  return "Questa demo comprende solo pavé, priorità al percorso rapido e minuti extra.";
+}
 
 function edgeCoordinates(edge: RoadEdge, forward: boolean) {
   const start = nodeMap.get(edge.from)!.coordinate;
@@ -375,6 +386,7 @@ export default function Home() {
   const cameraLastCenterRef = useRef<Coordinate | null>(null);
   const cameraLastHeadingRef = useRef(0);
   const avoidanceReadyRef = useRef(false);
+  const promptPreferredRouteRef = useRef<"fast" | null>(null);
   const defaultFast = useMemo(() => route("castello", "venezia"), []);
   const defaultSafe = useMemo(() => route("castello", "venezia", "strong"), []);
   const [startLocation, setStartLocation] = useState<LocationChoice>({
@@ -389,6 +401,9 @@ export default function Home() {
   const [endText, setEndText] = useState("");
   const [transportMode, setTransportMode] = useState<TransportMode>("car");
   const [avoidance, setAvoidance] = useState<Avoidance>("strong");
+  const [maxExtraMinutes, setMaxExtraMinutes] = useState<number | null>(null);
+  const [routePrompt, setRoutePrompt] = useState("");
+  const [promptInterpretation, setPromptInterpretation] = useState<PromptRoutePreferenceResult | null>(null);
   const [fastRoute, setFastRoute] = useState<RouteResult>(defaultFast);
   const [safeRoute, setSafeRoute] = useState<RouteResult>(defaultSafe);
   const [activeRoute, setActiveRoute] = useState<"safe" | "fast">("fast");
@@ -996,9 +1011,34 @@ export default function Home() {
       void calculateRoutes();
     }, 350);
     return () => window.clearTimeout(timer);
-    // The recalculation is intentionally triggered only by the avoidance control.
+    // Recalculate only when an implemented route preference changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [avoidance]);
+  }, [avoidance, maxExtraMinutes]);
+
+  function setManualAvoidance(value: Avoidance) {
+    promptPreferredRouteRef.current = null;
+    setPromptInterpretation(null);
+    setMaxExtraMinutes(null);
+    setAvoidance(value);
+  }
+
+  function interpretRoutePrompt(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const interpretation = parsePromptRoutePreferences(routePrompt);
+    setPromptInterpretation(interpretation);
+  }
+
+  function applyInterpretedRoutePrompt() {
+    const interpretation = promptInterpretation;
+    if (!interpretation || interpretation.status !== "valid" || !interpretation.preferences) return;
+    promptPreferredRouteRef.current = interpretation.preferences.avoidance === "balanced"
+      && interpretation.preferences.maxExtraMinutes === null
+      ? "fast"
+      : null;
+    setAvoidance(interpretation.preferences.avoidance);
+    setMaxExtraMinutes(interpretation.preferences.maxExtraMinutes);
+    setStatus("Preferenza interpretata localmente e applicata al calcolo del percorso.");
+  }
 
   function swapLocations() {
     const oldStart = startLocation;
@@ -1076,6 +1116,7 @@ export default function Home() {
     target: "start" | "end",
     signal?: AbortSignal,
   ) {
+    if (!text.trim()) return current;
     if (text.trim() === current.label) return current;
     const results = await fetchAddresses(text, signal);
     if (results.length === 1) {
@@ -1156,6 +1197,9 @@ export default function Home() {
         avoid: avoidance,
         mode: requestedMode,
       });
+      if (maxExtraMinutes !== null) {
+        params.set("maxExtraMinutes", String(maxExtraMinutes));
+      }
       if (options.journeySession !== undefined) params.set("navigation", "1");
       const response = await fetch(`/api/routes?${params}`, { signal: controller.signal });
       const data = await response.json() as RouteApiResponse & { error?: string };
@@ -1184,7 +1228,9 @@ export default function Home() {
       const requestedRoute = options.preserveRoute;
       const nextRoute = requestedRoute === "fast"
         ? "fast"
-        : data.hasDistinctAlternative ? "safe" : "fast";
+        : promptPreferredRouteRef.current === "fast"
+          ? "fast"
+          : data.hasDistinctAlternative ? "safe" : "fast";
       setActiveRoute(nextRoute);
       activeRouteRef.current = nextRoute;
       setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
@@ -1883,10 +1929,48 @@ export default function Home() {
                       ["strong", "Forte"],
                       ["maximum", "Massimo"],
                     ] as [Avoidance, string][]).map(([value, label]) => (
-                      <button type="button" key={value} className={avoidance === value ? "active" : ""} onClick={() => setAvoidance(value)}>{label}</button>
+                      <button type="button" key={value} className={avoidance === value ? "active" : ""} onClick={() => setManualAvoidance(value)}>{label}</button>
                     ))}
                   </div>
                 </div>
+
+                <form className="route-prompt" onSubmit={interpretRoutePrompt} data-testid="route-prompt-demo">
+                  <label htmlFor="route-preference-prompt">
+                    <span>Descrivi la tua preferenza <b>demo</b></span>
+                    <small>Interprete locale, non AI: comprende solo pavé e minuti extra.</small>
+                  </label>
+                  <div className="route-prompt-entry">
+                    <textarea
+                      id="route-preference-prompt"
+                      value={routePrompt}
+                      onChange={(event) => {
+                        setRoutePrompt(event.target.value);
+                        setPromptInterpretation(null);
+                      }}
+                      placeholder="Es. Evita il pavé anche con massimo 8 minuti in più"
+                      rows={2}
+                      maxLength={180}
+                    />
+                    <button type="submit">Interpreta</button>
+                  </div>
+                  {promptInterpretation && (
+                    <div className={promptInterpretation.status === "valid" ? "prompt-result valid" : "prompt-result error"}>
+                      <p role={promptInterpretation.status === "valid" ? "status" : "alert"}>
+                        {promptInterpretation.status === "valid" && promptInterpretation.preferences
+                          ? `${promptInterpretation.preferences.avoidance === "maximum" ? "Evitamento massimo" : promptInterpretation.preferences.avoidance === "strong" ? "Evitamento forte" : "Priorità al percorso rapido"}${promptInterpretation.preferences.maxExtraMinutes === null ? "" : ` · massimo +${promptInterpretation.preferences.maxExtraMinutes} min`}`
+                          : promptErrorCopy(promptInterpretation)}
+                      </p>
+                      {promptInterpretation.recognizedConstraints.length > 0 && (
+                        <small className="prompt-constraints">
+                          Riconosciuto: {promptInterpretation.recognizedConstraints.map((constraint) => String(constraint.value)).join(" · ")}
+                        </small>
+                      )}
+                      {promptInterpretation.status === "valid" && (
+                        <button type="button" onClick={applyInterpretedRoutePrompt}>Applica al percorso</button>
+                      )}
+                    </div>
+                  )}
+                </form>
 
                 <button type="button" className="primary-action" onClick={() => void calculateRoutes()} disabled={isLoading}>
                   <span>{isLoading ? "Analizzo le strade…" : "Confronta i percorsi"}</span>

@@ -26,6 +26,7 @@ test("keeps the planner iOS-first and free of preset places", async () => {
   assert.doesNotMatch(page, /Luoghi rapidi|Destinazione rapida|selectPreset/);
   assert.match(page, /const \[startText, setStartText\] = useState\(""\)/);
   assert.match(page, /const \[endText, setEndText\] = useState\(""\)/);
+  assert.match(page, /if \(!text\.trim\(\)\) return current/);
   assert.match(page, /role="combobox"/);
   assert.match(page, /role="listbox"/);
   assert.match(page, /className="modal address-picker"/);
@@ -87,6 +88,24 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   assert.match(routing, /osrmSemanticDirection/);
   assert.match(routing, /decodePolyline6/);
   assert.match(routing, /travel_mode === "pedestrian"/);
+  assert.match(routing, /parseExtraMinutes/);
+  assert.match(routing, /routeFitsExtraMinutes/);
+  assert.match(routing, /budgetExcludedLowerExposureRoute/);
+});
+
+test("turns a bounded local prompt into real route preferences", async () => {
+  const page = await readFile(pageUrl, "utf8");
+  const routing = await readFile(routingUrl, "utf8");
+
+  assert.match(page, /data-testid="route-prompt-demo"/);
+  assert.match(page, /parsePromptRoutePreferences/);
+  assert.match(page, /promptInterpretation\.status === "valid"/);
+  assert.match(page, /Applica al percorso/);
+  assert.match(page, /params\.set\("maxExtraMinutes"/);
+  assert.match(page, /promptPreferredRouteRef\.current === "fast"/);
+  assert.match(page, /Interprete locale, non AI/);
+  assert.match(routing, /maximumExtraMinutes/);
+  assert.match(routing, /appliedPreferences/);
 });
 
 test("offers the three supported navigation apps without misrepresenting their routing", async () => {

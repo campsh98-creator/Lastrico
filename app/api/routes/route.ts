@@ -11,6 +11,7 @@ import {
   scoreSurfaceExposure,
   type SurfaceScore,
 } from "@/lib/cobblestone-scoring";
+import { parseExtraMinutes, routeFitsExtraMinutes } from "@/lib/route-time-budget";
 
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
@@ -669,12 +670,14 @@ function selectSafeRoute(
   fast: ScoredRoute,
   avoidance: Avoidance,
   mode: TransportMode,
+  maximumExtraMinutes: number | null,
 ) {
   const policy = MODE_POLICY[mode];
   const distinct = scored.filter((candidate) => !routesAreEquivalent(candidate.route, fast.route, mode));
   const limit = policy.limits[avoidance];
   const eligible = distinct.filter((candidate) =>
-    candidate.route.duration <= fast.route.duration * limit.factor + limit.seconds,
+    candidate.route.duration <= fast.route.duration * limit.factor + limit.seconds
+    && routeFitsExtraMinutes(candidate.route.duration, fast.route.duration, maximumExtraMinutes),
   );
   const reducing = eligible
     .filter((candidate) => candidate.riskMeters + policy.minimumPaveReduction <= fast.riskMeters)
@@ -759,11 +762,13 @@ export async function GET(request: NextRequest) {
   const start = parseCoordinate(request.nextUrl.searchParams.get("start"));
   const end = parseCoordinate(request.nextUrl.searchParams.get("end"));
   const avoidance = (request.nextUrl.searchParams.get("avoid") ?? "strong") as Avoidance;
+  const maximumExtraMinutes = parseExtraMinutes(request.nextUrl.searchParams.get("maxExtraMinutes"));
   const requestedMode = request.nextUrl.searchParams.get("mode") ?? "car";
   if (
     !start
     || !end
     || !["balanced", "strong", "maximum"].includes(avoidance)
+    || maximumExtraMinutes === undefined
     || !isTransportMode(requestedMode)
   ) {
     return NextResponse.json(
@@ -854,7 +859,13 @@ export async function GET(request: NextRequest) {
     const baseScored: ScoredRoute[] = baseRoutes.map((route, index) =>
       scoredCandidate(route, `base-${index + 1}`));
     const preliminaryFast = [...baseScored].sort((a, b) => a.route.duration - b.route.duration)[0];
-    const preliminarySafe = selectSafeRoute(baseScored, preliminaryFast, avoidance, mode);
+    const preliminarySafe = selectSafeRoute(
+      baseScored,
+      preliminaryFast,
+      avoidance,
+      mode,
+      maximumExtraMinutes,
+    );
     const baseAlreadyImproves = !routesAreEquivalent(
       preliminaryFast.route,
       preliminarySafe.route,
@@ -895,6 +906,7 @@ export async function GET(request: NextRequest) {
           provisionalFast,
           avoidance,
           mode,
+          maximumExtraMinutes,
         );
         if (
           !routesAreEquivalent(provisionalFast.route, provisionalSafe.route, mode)
@@ -913,9 +925,19 @@ export async function GET(request: NextRequest) {
     const scored: ScoredRoute[] = candidates.map((candidate) =>
       scoredCandidate(candidate.route, candidate.source));
     const fast = [...scored].sort((a, b) => a.route.duration - b.route.duration)[0];
-    const safe = selectSafeRoute(scored, fast, avoidance, mode);
+    const safe = selectSafeRoute(scored, fast, avoidance, mode, maximumExtraMinutes);
     const hasDistinctAlternative = !routesAreEquivalent(fast.route, safe.route, mode)
       && safe.riskMeters + policy.minimumPaveReduction <= fast.riskMeters;
+    const budgetExcludedLowerExposureRoute = maximumExtraMinutes !== null
+      && !hasDistinctAlternative
+      && scored.some((candidate) =>
+        !routesAreEquivalent(candidate.route, fast.route, mode)
+        && candidate.riskMeters + policy.minimumPaveReduction <= fast.riskMeters
+        && !routeFitsExtraMinutes(
+          candidate.route.duration,
+          fast.route.duration,
+          maximumExtraMinutes,
+        ));
     const routeCountLabel = `${scored.length} ${scored.length === 1 ? "percorso reale" : "percorsi reali"}`;
     const comparedLabel = scored.length === 1 ? "confrontato" : "confrontati";
     const checkedLabel = scored.length === 1 ? "controllato" : "controllati";
@@ -950,6 +972,10 @@ export async function GET(request: NextRequest) {
       transportMode: mode,
       routingProfile,
       calculationMode: navigationRequest ? "navigation" : "planner",
+      appliedPreferences: {
+        avoidance,
+        maximumExtraMinutes,
+      },
       performance: {
         routingAndSurfaceDataMs: Math.round(baseRoutingReadyAt - calculationStartedAt),
         candidateGenerationAndScoringMs: Math.round(calculationCompletedAt - baseRoutingReadyAt),
@@ -974,6 +1000,8 @@ export async function GET(request: NextRequest) {
       dataNotice: (
         !paveWays.length
           ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"
+          : budgetExcludedLowerExposureRoute
+            ? `Nessuna deviazione con meno pavé rispetta il limite di +${maximumExtraMinutes} minuti: mantengo il percorso rapido`
           : hasDistinctAlternative
             ? `${routeCountLabel} ${comparedLabel}; ${Math.max(
                 fast.surfaceScore.matchedFeatures,
