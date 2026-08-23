@@ -108,6 +108,26 @@ test("turns a bounded local prompt into real route preferences", async () => {
   assert.match(routing, /appliedPreferences/);
 });
 
+test("keeps mobile route controls reachable and blocks stale navigation", async () => {
+  const [page, css, layout, routing] = await Promise.all([
+    readFile(pageUrl, "utf8"),
+    readFile(cssUrl, "utf8"),
+    readFile(layoutUrl, "utf8"),
+    readFile(routingUrl, "utf8"),
+  ]);
+
+  assert.match(css, /@media \(max-width: 760px\)[\s\S]*?\.panel-content \{[\s\S]*?overflow-y: auto/);
+  assert.match(css, /@media \(max-height: 560px\)[\s\S]*?overflow-y: auto/);
+  assert.match(css, /\.journey-button:disabled/);
+  assert.match(layout, /viewportFit: "cover"/);
+  assert.match(page, /const \[routeReady, setRouteReady\] = useState\(false\)/);
+  assert.match(page, /shouldApplyPlannerRouteResponse/);
+  assert.match(page, /routePreferencesMatch\(requestedPreferences, data\.appliedPreferences\)/);
+  assert.match(page, /disabled=\{!routeReady \|\| isLoading\}/);
+  assert.match(page, /Ricalcola per navigare/);
+  assert.match(routing, /routeProblemSegments/);
+});
+
 test("offers the three supported navigation apps without misrepresenting their routing", async () => {
   const page = await readFile(pageUrl, "utf8");
 

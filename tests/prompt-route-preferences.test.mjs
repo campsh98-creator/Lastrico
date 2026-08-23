@@ -29,6 +29,14 @@ test("supports an Italian cobblestone preference and minute budget", () => {
   assert.deepEqual(parsed.preferences, { avoidance: "strong", maxExtraMinutes: 12 });
 });
 
+test("recognises common sanpietrino spelling variants", () => {
+  for (const prompt of ["Evita i sanpietrini", "Evita il sanpietrino", "Evita i sampietrini", "Evita il sampietrino"]) {
+    const parsed = parsePromptRoutePreferences(prompt);
+    assert.equal(parsed.status, "valid", prompt);
+    assert.equal(parsed.preferences?.avoidance, "maximum", prompt);
+  }
+});
+
 test("supports Italian fastest-route wording with accents", () => {
   const parsed = parsePromptRoutePreferences("Voglio il percorso più rapido");
   assert.equal(parsed.status, "valid");
@@ -53,6 +61,12 @@ test("rejects unsupported constraints even when a supported constraint is presen
 
 test("rejects conflicting fastest and avoidance instructions", () => {
   const parsed = parsePromptRoutePreferences("Avoid cobblestones but prefer the fastest route");
+  assert.equal(parsed.status, "conflict");
+  assert.equal(parsed.preferences, null);
+});
+
+test("rejects a meaningless extra-time budget on fastest-route requests", () => {
+  const parsed = parsePromptRoutePreferences("Percorso più rapido con massimo 5 minuti in più");
   assert.equal(parsed.status, "conflict");
   assert.equal(parsed.preferences, null);
 });

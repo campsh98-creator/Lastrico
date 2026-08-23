@@ -91,10 +91,14 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
   model: RouteProgressModel<T>,
   position: ProgressCoordinate | null,
   totalMinutes: number,
+  previousProgressMeters: number | null = null,
 ) {
-  const located = position
+  const projected = position
     ? projectOnSegment(model.coordinates, position, model.cumulativeMeters)
     : { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 };
+  const located = previousProgressMeters === null || projected.progressMeters >= previousProgressMeters - 25
+    ? projected
+    : { ...projected, progressMeters: Math.max(0, previousProgressMeters - 25) };
   const remainingMeters = Math.max(0, model.totalMeters - located.progressMeters);
   const next = model.instructions.find(({ instruction, progressMeters }) =>
     instruction.type !== "depart" && progressMeters + 2 >= located.progressMeters)
@@ -114,4 +118,3 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
     instruction: next?.instruction ?? null,
   };
 }
-

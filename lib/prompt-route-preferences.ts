@@ -23,7 +23,7 @@ export type PromptRoutePreferenceResult = {
 export const PROMPT_EXTRA_MINUTES_MIN = 1;
 export const PROMPT_EXTRA_MINUTES_MAX = 30;
 
-const SURFACE_PATTERN = /\b(?:cobblestones?|cobble|paving stones?|pave|sampietrini?|lastricato|lastricati|lastricata|lastricate)\b/;
+const SURFACE_PATTERN = /\b(?:cobblestones?|cobble|paving stones?|pave|sanpietrin[io]|sampietrin[io]|lastricato|lastricati|lastricata|lastricate)\b/;
 const FASTEST_PATTERN = /\b(?:fastest|quickest|piu veloce|piu rapido|piu rapida|percorso veloce|percorso rapido|priorita al tempo)\b/;
 const STRONG_PATTERN = /\b(?:strong|forte|prefer|preferisco|preferirei|reduce|riduci|ridurre|limit|limita|limitare|fewer|meno)\b/;
 const MAXIMUM_PATTERN = /\b(?:maximum|maximize|maximise|massimo|completely|completo|completamente|always|sempre|avoid|avoids|avoiding|evita|evitare|senza|at all costs|a tutti i costi|as much as possible|il piu possibile|even if|anche se)\b/;
@@ -151,6 +151,15 @@ export function parsePromptRoutePreferences(input: unknown): PromptRoutePreferen
     return result(
       "conflict",
       "Choose either the fastest route or a cobblestone-avoidance preference, not both.",
+      recognizedConstraints,
+      0.35,
+    );
+  }
+
+  if (requestsFastest && minuteBudget.state === "valid") {
+    return result(
+      "conflict",
+      "A fastest-route preference cannot use an extra-time budget.",
       recognizedConstraints,
       0.35,
     );

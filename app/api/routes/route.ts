@@ -477,10 +477,10 @@ async function runValhallaLimited<T>(
   reserveMs: number,
   task: (timeoutMs: number) => Promise<T>,
 ) {
-  let releaseQueue = () => undefined;
+  let releaseQueue: () => void = () => {};
   const previousRequest = valhallaQueue;
   valhallaQueue = new Promise<void>((resolve) => {
-    releaseQueue = resolve;
+    releaseQueue = () => resolve();
   });
   await previousRequest;
   try {
@@ -692,7 +692,11 @@ function selectSafeRoute(
   return reducing[0] ?? fast;
 }
 
-function routePayload(route: EngineRoute, surfaceScore: SurfaceScore) {
+function routePayload(
+  route: EngineRoute,
+  surfaceScore: SurfaceScore,
+  problemSegments: Coordinate[][] = [],
+) {
   return {
     coordinates: route.coordinates,
     distance: route.distance / 1_000,
@@ -703,6 +707,7 @@ function routePayload(route: EngineRoute, surfaceScore: SurfaceScore) {
     confirmedPaveMeters: surfaceScore.confirmedMeters,
     probablePaveMeters: surfaceScore.probableMeters,
     instructions: route.instructions,
+    problemSegments,
   };
 }
 
@@ -958,10 +963,17 @@ export async function GET(request: NextRequest) {
       ? " La copertura locale dei fondi ciclabili può essere incompleta finché Overpass non risponde."
       : "";
     const calculationCompletedAt = performance.now();
+    const routeProblemSegments = (route: EngineRoute) => relevantPave
+      .filter((way) => route.coordinates.some((point) =>
+        way.coordinates.some((_, index) =>
+          index > 0 && pointToSegmentDistance(point, way.coordinates[index - 1], way.coordinates[index]) <= 18,
+        ),
+      ))
+      .map((way) => way.coordinates);
 
     return NextResponse.json({
-      fast: routePayload(fast.route, fast.surfaceScore),
-      safe: routePayload(safe.route, safe.surfaceScore),
+      fast: routePayload(fast.route, fast.surfaceScore, routeProblemSegments(fast.route)),
+      safe: routePayload(safe.route, safe.surfaceScore, routeProblemSegments(safe.route)),
       problemSegments: relevantPave.map((way) => way.coordinates),
       alternativesAnalyzed: scored.length,
       hasDistinctAlternative,

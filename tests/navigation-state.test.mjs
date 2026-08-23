@@ -7,6 +7,7 @@ import {
   gpsCoordinateMoved,
   shouldAcceptGpsReading,
   shouldApplyRouteResponse,
+  shouldBeginNavigation,
   shouldRunSimulationTimer,
   shouldUpdateNavigationCamera,
   smoothGpsCoordinate,
@@ -29,6 +30,11 @@ test("only simulation mode is allowed to run the automatic movement timer", () =
   assert.equal(shouldRunSimulationTimer("simulation"), true);
   assert.equal(shouldRunSimulationTimer("gps"), false);
   assert.equal(shouldRunSimulationTimer(null), false);
+});
+
+test("navigation start is idempotent while a journey is already active", () => {
+  assert.equal(shouldBeginNavigation(false), true);
+  assert.equal(shouldBeginNavigation(true), false);
 });
 
 test("stationary GPS readings do not count as movement", () => {

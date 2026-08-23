@@ -8,6 +8,7 @@ import {
   evaluateTimedGpsReading,
   gpsCoordinateMoved,
   shouldApplyRouteResponse,
+  shouldBeginNavigation,
   shouldRunSimulationTimer,
   shouldUpdateNavigationCamera,
   smoothGpsCoordinate,
@@ -32,6 +33,12 @@ import {
   type PromptRoutePreferenceResult,
 } from "@/lib/prompt-route-preferences";
 import {
+  isNavigableRouteGeometry,
+  routePreferencesMatch,
+  shouldApplyPlannerRouteResponse,
+  type RoutePreferences,
+} from "@/lib/route-request-state";
+import {
   buildRouteProgressModel,
   calculateRouteProgress,
   type RouteProgressModel,
@@ -45,7 +52,7 @@ type TransportMode = "car" | "motorcycle" | "bicycle";
 type ThemeMode = "auto" | "light" | "dark";
 type PickingMode = "start" | "end" | "reportStart" | "reportEnd";
 type JourneyMode = NavigationJourneyMode;
-type GpsState = "idle" | "requesting" | "live" | "weak" | "offroute" | "recalculating" | "unavailable";
+type GpsState = "idle" | "requesting" | "live" | "weak" | "offroute" | "recalculating" | "outside" | "temporarily-unavailable" | "unavailable";
 type WakeLockHandle = { release: () => Promise<void>; released?: boolean };
 type NavigatorWithWakeLock = Navigator & {
   wakeLock?: { request: (type: "screen") => Promise<WakeLockHandle> };
@@ -100,6 +107,10 @@ type RouteApiResponse = {
   surfaceDataAvailable: boolean;
   dataNotice: string;
   transportMode: TransportMode;
+  appliedPreferences: {
+    avoidance: Avoidance;
+    maximumExtraMinutes: number | null;
+  };
   routingProfile: {
     provider: string;
     profile: string;
@@ -361,6 +372,7 @@ export default function Home() {
   const navigationSessionRef = useRef(0);
   const journeyModeRef = useRef<JourneyMode | null>(null);
   const wakeLockRef = useRef<WakeLockHandle | null>(null);
+  const wakeLockPendingSessionRef = useRef<number | null>(null);
   const lastJourneyOriginRef = useRef<Coordinate | null>(null);
   const lastJourneyCalculationRef = useRef(0);
   const previousJourneyPositionRef = useRef<Coordinate | null>(null);
@@ -370,6 +382,7 @@ export default function Home() {
   const lastSpokenInstructionRef = useRef("");
   const arrivalReadingsRef = useRef(0);
   const journeyTravelledMetersRef = useRef(0);
+  const lastRouteProgressRef = useRef(0);
   const journeyActiveRef = useRef(false);
   const journeyHeadingRef = useRef(0);
   const selectedRouteRef = useRef<RouteResult | null>(null);
@@ -380,12 +393,13 @@ export default function Home() {
   const transportReadyRef = useRef(false);
   const voiceReadyRef = useRef(false);
   const activeRouteRef = useRef<"safe" | "fast">("fast");
-  const routeRequestRef = useRef<{ id: number; controller: AbortController } | null>(null);
+  const routeRequestRef = useRef<{ id: number; revision: number; controller: AbortController } | null>(null);
   const routeRequestCounterRef = useRef(0);
+  const plannerRevisionRef = useRef(0);
+  const navigationPreferencesRef = useRef<RoutePreferences>({ avoidance: "strong", maxExtraMinutes: null });
   const cameraLastUpdateRef = useRef(0);
   const cameraLastCenterRef = useRef<Coordinate | null>(null);
   const cameraLastHeadingRef = useRef(0);
-  const avoidanceReadyRef = useRef(false);
   const promptPreferredRouteRef = useRef<"fast" | null>(null);
   const defaultFast = useMemo(() => route("castello", "venezia"), []);
   const defaultSafe = useMemo(() => route("castello", "venezia", "strong"), []);
@@ -412,6 +426,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState("Demo pronta: cerca un indirizzo o scegli due punti sulla mappa.");
   const [isLiveResult, setIsLiveResult] = useState(false);
+  const [routeReady, setRouteReady] = useState(false);
   const [alternativesAnalyzed, setAlternativesAnalyzed] = useState(2);
   const [hasDistinctAlternative, setHasDistinctAlternative] = useState(false);
   const [activePanel, setActivePanel] = useState<"plan" | "routes" | "community">("plan");
@@ -467,33 +482,37 @@ export default function Home() {
     [selectedRoute],
   );
   const navigationProgress = useMemo(
-    () => calculateRouteProgress(selectedRouteModel, journeyPosition, selectedRoute.minutes),
-    [journeyPosition, selectedRoute.minutes, selectedRouteModel],
+    () => calculateRouteProgress(
+      selectedRouteModel,
+      journeyPosition,
+      selectedRoute.minutes,
+      isJourneyActive ? lastRouteProgressRef.current : null,
+    ),
+    [isJourneyActive, journeyPosition, selectedRoute.minutes, selectedRouteModel],
   );
-  const navigationModeLabel = journeyMode === "simulation"
-    ? "SIMULAZIONE"
-    : gpsState === "requesting"
-      ? "GPS · AGGANCIO"
-      : gpsState === "weak"
-        ? "GPS DEBOLE"
-        : gpsState === "offroute"
-          ? "FUORI PERCORSO"
-          : gpsState === "recalculating" || isRecalculating
-            ? "RICALCOLO"
-            : "GPS LIVE";
-  const navigationStateDescription = journeyMode === "simulation"
-    ? "Avanzamento automatico · GPS non usato"
-    : !isOnline
-      ? "Connessione assente · continuo sul percorso salvato"
-      : gpsState === "requesting"
-        ? "Ricerca della posizione precisa in corso"
-        : gpsState === "weak"
-          ? `Segnale debole${journeyAccuracy ? ` · ±${Math.round(journeyAccuracy)} m` : ""} · ultimo punto valido`
-          : gpsState === "offroute"
-            ? "Fuori percorso · attendo un fix affidabile"
-            : gpsState === "recalculating" || isRecalculating
-              ? "Fuori percorso · sto calcolando una nuova strada"
-              : `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`;
+  const navigationModeLabel = (() => {
+    if (journeyMode === "simulation") return "SIMULAZIONE";
+    if (gpsState === "recalculating" || isRecalculating) return "RICALCOLO";
+    if (gpsState === "requesting") return "GPS · AGGANCIO";
+    if (gpsState === "weak") return "GPS DEBOLE";
+    if (gpsState === "outside") return "FUORI AREA BETA";
+    if (gpsState === "temporarily-unavailable") return "GPS IN ATTESA";
+    if (gpsState === "offroute") return "FUORI PERCORSO";
+    return "GPS LIVE";
+  })();
+  const navigationStateDescription = (() => {
+    if (journeyMode === "simulation") return "Avanzamento automatico · GPS non usato";
+    if (!isOnline) return "Connessione assente · continuo sul percorso salvato";
+    if (gpsState === "recalculating" || isRecalculating) return "Fuori percorso · sto calcolando una nuova strada";
+    if (gpsState === "requesting") return "Ricerca della posizione precisa in corso";
+    if (gpsState === "weak") {
+      return `Segnale debole${journeyAccuracy ? ` · ±${Math.round(journeyAccuracy)} m` : ""} · ultimo punto valido`;
+    }
+    if (gpsState === "outside") return "Posizione fuori dall’area coperta dalla beta di Milano";
+    if (gpsState === "temporarily-unavailable") return "Posizione temporaneamente non disponibile · ultimo punto valido";
+    if (gpsState === "offroute") return "Fuori percorso · attendo un fix affidabile";
+    return `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`;
+  })();
   const speakInstruction = useCallback((text: string) => {
     if (!voiceEnabled || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
     try {
@@ -513,12 +532,21 @@ export default function Home() {
     }
     setVoiceEnabled((current) => {
       if (current) window.speechSynthesis?.cancel();
+      else lastSpokenInstructionRef.current = "";
       return !current;
     });
   }, [voiceAvailable]);
 
   function selectActiveRoute(routeKind: "safe" | "fast") {
     activeRouteRef.current = routeKind;
+    const nextSelectedRoute = routeKind === "safe" ? safeRoute : fastRoute;
+    selectedRouteRef.current = nextSelectedRoute;
+    selectedRouteModelRef.current = buildRouteProgressModel(
+      nextSelectedRoute.coordinates,
+      nextSelectedRoute.instructions ?? [],
+      distanceMeters,
+    );
+    lastRouteProgressRef.current = 0;
     setActiveRoute(routeKind);
   }
 
@@ -543,7 +571,6 @@ export default function Home() {
         style: mapStyle,
         center: [9.1905, 45.4685],
         zoom: 13.5,
-        attributionControl: true,
       });
       map.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
       map.on("styleimagemissing", ({ id }) => {
@@ -601,9 +628,11 @@ export default function Home() {
         ];
         const label = `Punto scelto · ${coordinate[1].toFixed(4)}, ${coordinate[0].toFixed(4)}`;
         if (target === "start") {
+          invalidateRouteIntent();
           setStartLocation({ label, coordinate });
           setStartText(label);
         } else if (target === "end") {
+          invalidateRouteIntent();
           setEndLocation({ label, coordinate });
           setEndText(label);
         } else if (target === "reportStart") {
@@ -631,6 +660,23 @@ export default function Home() {
         map.addSource("problem-segments", { type: "geojson", data: emptyFeatureCollection });
         map.addSource("community-reports", { type: "geojson", data: emptyFeatureCollection });
         map.addSource("report-draft", { type: "geojson", data: emptyFeatureCollection });
+        map.addSource("theme-overlay", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "Polygon",
+              coordinates: [[[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]]],
+            },
+          },
+        });
+        map.addLayer({
+          id: "theme-overlay",
+          type: "fill",
+          source: "theme-overlay",
+          paint: { "fill-color": "#071315", "fill-opacity": 0 },
+        });
         map.addLayer({
           id: "fast-outline",
           type: "line",
@@ -809,7 +855,7 @@ export default function Home() {
     (map.getSource("safe-route") as GeoJSONSource)?.setData(
       hasDistinctAlternative ? routeGeoJSON(safeRoute) : emptyFeatureCollection,
     );
-    (map.getSource("problem-segments") as GeoJSONSource)?.setData(problemGeoJSON([fastRoute]));
+    (map.getSource("problem-segments") as GeoJSONSource)?.setData(problemGeoJSON([selectedRoute]));
     const selectedLine = `${activeRoute}-line`;
     const selectedOutline = `${activeRoute}-outline`;
     const secondaryRoute = activeRoute === "fast" ? "safe" : "fast";
@@ -827,7 +873,7 @@ export default function Home() {
       map.setPaintProperty(secondaryOutline, property, value));
     map.moveLayer(selectedOutline, "problem-line");
     map.moveLayer(selectedLine, "problem-line");
-    if (journeyActiveRef.current) return;
+    if (!shouldBeginNavigation(journeyActiveRef.current)) return;
     const allCoordinates = [...fastRoute.coordinates, ...safeRoute.coordinates];
     const lngs = allCoordinates.map(([lng]) => lng);
     const lats = allCoordinates.map(([, lat]) => lat);
@@ -839,7 +885,7 @@ export default function Home() {
       maxZoom: 14.7,
       duration: 650,
     });
-  }, [fastRoute, safeRoute, activeRoute, hasDistinctAlternative, isLiveResult, transportMode, mapReady]);
+  }, [fastRoute, safeRoute, selectedRoute, activeRoute, hasDistinctAlternative, isLiveResult, transportMode, mapReady]);
 
   useEffect(() => {
     if (!isJourneyActive || !voiceEnabled || !navigationProgress.instruction) return;
@@ -947,6 +993,9 @@ export default function Home() {
 
       const map = mapRef.current;
       if (mapReady && map?.isStyleLoaded()) {
+        if (map.getLayer("theme-overlay")) {
+          map.setPaintProperty("theme-overlay", "fill-opacity", nextTheme === "dark" ? 0.48 : 0);
+        }
         if (map.getLayer("osm")) {
           map.setPaintProperty("osm", "raster-brightness-max", nextTheme === "dark" ? 0.58 : 1);
           map.setPaintProperty("osm", "raster-brightness-min", nextTheme === "dark" ? 0.18 : 0);
@@ -1000,26 +1049,27 @@ export default function Home() {
     (map.getSource("report-draft") as GeoJSONSource)?.setData(draftGeoJSON(reportStart, reportEnd));
   }, [reportStart, reportEnd, mapReady]);
 
-  useEffect(() => {
-    if (!avoidanceReadyRef.current) {
-      avoidanceReadyRef.current = true;
-      return;
-    }
-    if (!isLiveResult || isJourneyActive) return;
-    const timer = window.setTimeout(() => {
-      setStatus("Livello aggiornato: ricalcolo le alternative…");
-      void calculateRoutes();
-    }, 350);
-    return () => window.clearTimeout(timer);
-    // Recalculate only when an implemented route preference changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [avoidance, maxExtraMinutes]);
+  function invalidateRouteIntent() {
+    plannerRevisionRef.current += 1;
+    setRouteReady(false);
+    routeRequestRef.current?.controller.abort();
+    routeRequestRef.current = null;
+    loadingRef.current = false;
+    setIsLoading(false);
+  }
 
   function setManualAvoidance(value: Avoidance) {
+    const nextPreferences: RoutePreferences = { avoidance: value, maxExtraMinutes: null };
+    const shouldRecalculate = isLiveResult && !isJourneyActive;
+    invalidateRouteIntent();
     promptPreferredRouteRef.current = null;
     setPromptInterpretation(null);
     setMaxExtraMinutes(null);
     setAvoidance(value);
+    if (shouldRecalculate) {
+      setStatus("Livello aggiornato: ricalcolo le alternative…");
+      void calculateRoutes(undefined, { force: true, preferences: nextPreferences });
+    }
   }
 
   function interpretRoutePrompt(event: FormEvent<HTMLFormElement>) {
@@ -1035,14 +1085,22 @@ export default function Home() {
       && interpretation.preferences.maxExtraMinutes === null
       ? "fast"
       : null;
-    setAvoidance(interpretation.preferences.avoidance);
-    setMaxExtraMinutes(interpretation.preferences.maxExtraMinutes);
-    setStatus("Preferenza interpretata localmente e applicata al calcolo del percorso.");
+    const nextPreferences: RoutePreferences = {
+      avoidance: interpretation.preferences.avoidance,
+      maxExtraMinutes: interpretation.preferences.maxExtraMinutes,
+    };
+    invalidateRouteIntent();
+    setAvoidance(nextPreferences.avoidance);
+    setMaxExtraMinutes(nextPreferences.maxExtraMinutes);
+    if (promptPreferredRouteRef.current === "fast") selectActiveRoute("fast");
+    setStatus("Preferenza applicata: ricalcolo il percorso…");
+    void calculateRoutes(undefined, { force: true, preferences: nextPreferences });
   }
 
   function swapLocations() {
     const oldStart = startLocation;
     const oldStartText = startText;
+    invalidateRouteIntent();
     setStartLocation(endLocation);
     setEndLocation(oldStart);
     setStartText(endText);
@@ -1053,6 +1111,7 @@ export default function Home() {
   function chooseAddress(target: "start" | "end", result: GeocodeResult) {
     const label = result.label;
     const location = { label, coordinate: result.coordinate };
+    invalidateRouteIntent();
     if (target === "start") {
       setStartLocation(location);
       setStartText(location.label);
@@ -1136,6 +1195,7 @@ export default function Home() {
       preserveRoute?: "safe" | "fast";
       force?: boolean;
       journeySession?: number;
+      preferences?: RoutePreferences;
     } = {},
   ) {
     if (!navigator.onLine) {
@@ -1153,8 +1213,10 @@ export default function Home() {
     routeRequestRef.current?.controller.abort();
     const controller = new AbortController();
     const requestId = routeRequestCounterRef.current + 1;
+    const requestedRevision = plannerRevisionRef.current;
+    const requestedPreferences = options.preferences ?? { avoidance, maxExtraMinutes };
     routeRequestCounterRef.current = requestId;
-    routeRequestRef.current = { id: requestId, controller };
+    routeRequestRef.current = { id: requestId, revision: requestedRevision, controller };
     const requestTimeout = window.setTimeout(
       () => controller.abort(new DOMException("Tempo di calcolo esaurito", "TimeoutError")),
       options.journeySession === undefined ? 20_000 : 8_000,
@@ -1163,6 +1225,7 @@ export default function Home() {
     let routeSucceeded = false;
     loadingRef.current = true;
     setIsLoading(true);
+    if (options.journeySession === undefined) setRouteReady(false);
     setStatus(options.journeySession === undefined
       ? `Calcolo i percorsi per ${transportMeta[requestedMode].article}…`
       : `Fuori percorso · ricalcolo per ${transportMeta[requestedMode].article}…`);
@@ -1185,7 +1248,12 @@ export default function Home() {
         navigationSessionRef.current,
         options.journeySession ?? null,
         journeyActiveRef.current,
-      )) return;
+      ) || !shouldApplyPlannerRouteResponse({
+        activeRequestId: routeRequestRef.current?.id ?? -1,
+        responseRequestId: requestId,
+        activeRevision: plannerRevisionRef.current,
+        responseRevision: requestedRevision,
+      }) || (options.journeySession === undefined && journeyActiveRef.current)) return;
       setStartLocation(resolvedStart);
       setEndLocation(resolvedEnd);
       setStartText(resolvedStart.label);
@@ -1194,11 +1262,11 @@ export default function Home() {
       const params = new URLSearchParams({
         start: resolvedStart.coordinate.join(","),
         end: resolvedEnd.coordinate.join(","),
-        avoid: avoidance,
+        avoid: requestedPreferences.avoidance,
         mode: requestedMode,
       });
-      if (maxExtraMinutes !== null) {
-        params.set("maxExtraMinutes", String(maxExtraMinutes));
+      if (requestedPreferences.maxExtraMinutes !== null) {
+        params.set("maxExtraMinutes", String(requestedPreferences.maxExtraMinutes));
       }
       if (options.journeySession !== undefined) params.set("navigation", "1");
       const response = await fetch(`/api/routes?${params}`, { signal: controller.signal });
@@ -1215,15 +1283,30 @@ export default function Home() {
           journeyActiveRef.current,
         )
         || data.transportMode !== requestedMode
+        || !shouldApplyPlannerRouteResponse({
+          activeRequestId: routeRequestRef.current?.id ?? -1,
+          responseRequestId: requestId,
+          activeRevision: plannerRevisionRef.current,
+          responseRevision: requestedRevision,
+        })
+        || !routePreferencesMatch(requestedPreferences, data.appliedPreferences)
+        || (options.journeySession === undefined && journeyActiveRef.current)
       ) return;
-      setFastRoute({ ...data.fast, nodes: [], edges: [], problemSegments: data.problemSegments });
-      setSafeRoute({ ...data.safe, nodes: [], edges: [], problemSegments: data.problemSegments });
+      const nextFastRoute = { ...data.fast, nodes: [], edges: [] };
+      const nextSafeRoute = { ...data.safe, nodes: [], edges: [] };
+      if (
+        !isNavigableRouteGeometry(nextFastRoute.coordinates)
+        || !isNavigableRouteGeometry(nextSafeRoute.coordinates)
+      ) throw new Error("Il percorso ricevuto non contiene una geometria navigabile.");
+      setFastRoute(nextFastRoute);
+      setSafeRoute(nextSafeRoute);
       setAlternativesAnalyzed(data.alternativesAnalyzed);
       setHasDistinctAlternative(data.hasDistinctAlternative);
       setRoutingProfile(data.routingProfile);
       setTransportMode(requestedMode);
       transportModeRef.current = requestedMode;
       setIsLiveResult(true);
+      setRouteReady(true);
       setActivePanel("routes");
       const requestedRoute = options.preserveRoute;
       const nextRoute = requestedRoute === "fast"
@@ -1233,6 +1316,13 @@ export default function Home() {
           : data.hasDistinctAlternative ? "safe" : "fast";
       setActiveRoute(nextRoute);
       activeRouteRef.current = nextRoute;
+      const nextSelectedRoute = nextRoute === "safe" ? nextSafeRoute : nextFastRoute;
+      selectedRouteRef.current = nextSelectedRoute;
+      selectedRouteModelRef.current = buildRouteProgressModel(
+        nextSelectedRoute.coordinates,
+        nextSelectedRoute.instructions ?? [],
+        distanceMeters,
+      );
       setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
       const timingNotice = requestedMode === "bicycle" ? "Tempi stimati senza traffico live" : "Tempi medi senza traffico live";
       setStatus(`${data.dataNotice}. ${timingNotice}.`);
@@ -1276,7 +1366,8 @@ export default function Home() {
     if (nextMode === transportModeRef.current || isJourneyActive) return;
     const shouldRecalculate = isLiveResult || loadingRef.current;
     const routeKind = activeRouteRef.current;
-    routeRequestRef.current?.controller.abort();
+    const currentPreferences = { avoidance, maxExtraMinutes };
+    invalidateRouteIntent();
     transportModeRef.current = nextMode;
     setTransportMode(nextMode);
     setIsLiveResult(false);
@@ -1295,7 +1386,12 @@ export default function Home() {
     }
     if (shouldRecalculate) {
       setStatus(`Ricalcolo i percorsi per ${transportMeta[nextMode].article}…`);
-      void calculateRoutes(undefined, { mode: nextMode, preserveRoute: routeKind, force: true });
+      void calculateRoutes(undefined, {
+        mode: nextMode,
+        preserveRoute: routeKind,
+        force: true,
+        preferences: currentPreferences,
+      });
     } else {
       setActivePanel("plan");
       setStatus(`${transportMeta[nextMode].label} selezionata. Inserisci gli indirizzi e calcola.`);
@@ -1316,6 +1412,7 @@ export default function Home() {
           return;
         }
         const location = { label: "La mia posizione", coordinate };
+        invalidateRouteIntent();
         setStartLocation(location);
         setStartText(location.label);
         setStatus("Posizione impostata come partenza.");
@@ -1325,13 +1422,26 @@ export default function Home() {
     );
   }
 
-  async function requestWakeLock() {
+  async function requestWakeLock(session = navigationSessionRef.current) {
     const wakeLock = (navigator as NavigatorWithWakeLock).wakeLock;
-    if (!wakeLock || document.visibilityState !== "visible") return;
+    if (
+      !wakeLock
+      || document.visibilityState !== "visible"
+      || (wakeLockRef.current && !wakeLockRef.current.released)
+      || wakeLockPendingSessionRef.current === session
+    ) return;
+    wakeLockPendingSessionRef.current = session;
     try {
-      wakeLockRef.current = await wakeLock.request("screen");
+      const handle = await wakeLock.request("screen");
+      if (!journeyActiveRef.current || session !== navigationSessionRef.current) {
+        await handle.release();
+        return;
+      }
+      wakeLockRef.current = handle;
     } catch {
       wakeLockRef.current = null;
+    } finally {
+      if (wakeLockPendingSessionRef.current === session) wakeLockPendingSessionRef.current = null;
     }
   }
 
@@ -1349,10 +1459,13 @@ export default function Home() {
     }
     routeRequestRef.current?.controller.abort();
     routeRequestRef.current = null;
+    loadingRef.current = false;
     void wakeLockRef.current?.release();
     wakeLockRef.current = null;
+    wakeLockPendingSessionRef.current = null;
     window.speechSynthesis?.cancel();
     setIsJourneyActive(false);
+    setIsLoading(false);
     setDirectionsOpen(false);
     setJourneyMode(null);
     setGpsState("idle");
@@ -1370,6 +1483,7 @@ export default function Home() {
     offRouteReadingsRef.current = 0;
     arrivalReadingsRef.current = 0;
     journeyTravelledMetersRef.current = 0;
+    lastRouteProgressRef.current = 0;
     lastSpokenInstructionRef.current = "";
     cameraLastUpdateRef.current = 0;
     cameraLastCenterRef.current = null;
@@ -1442,7 +1556,7 @@ export default function Home() {
     journeyHeadingRef.current = heading;
     setJourneyAccuracy(accuracy);
     setJourneyHeading(heading);
-    setGpsState("live");
+    if (!isRecalculating) setGpsState("live");
 
     const routeResult = selectedRouteRef.current;
     const routeModel = selectedRouteModelRef.current;
@@ -1451,7 +1565,13 @@ export default function Home() {
     const policy = navigationPolicy[mode];
     const routeEnd = routeResult.coordinates[routeResult.coordinates.length - 1];
     const arrivalTolerance = policy.arrivalMeters + Math.min(accuracy, 25);
-    const progress = calculateRouteProgress(routeModel, filteredCoordinate, routeResult.minutes);
+    const progress = calculateRouteProgress(
+      routeModel,
+      filteredCoordinate,
+      routeResult.minutes,
+      lastRouteProgressRef.current,
+    );
+    lastRouteProgressRef.current = progress.routeProgressMeters;
     const minimumTravelBeforeArrival = Math.min(80, routeResult.distance * 100);
     const isArrivalReading = Boolean(
       routeEnd
@@ -1477,7 +1597,7 @@ export default function Home() {
       calculationInProgress: loadingRef.current,
     });
     offRouteReadingsRef.current = offRouteDecision.readings;
-    if (offRouteDecision.readings > 0) setGpsState("offroute");
+    if (offRouteDecision.readings > 0 && !isRecalculating) setGpsState("offroute");
     if (offRouteDecision.shouldRecalculate) {
       if (!navigator.onLine) {
         setIsRecalculating(false);
@@ -1497,20 +1617,23 @@ export default function Home() {
           preserveRoute: activeRouteRef.current,
           force: true,
           journeySession: session,
+          preferences: navigationPreferencesRef.current,
         },
       );
       return;
     }
 
-    setStatus(`GPS attivo · precisione ±${Math.round(accuracy)} m · ${formatDistance(progress.remainingMeters)} rimanenti.`);
+    if (!isRecalculating) {
+      setStatus(`GPS attivo · precisione ±${Math.round(accuracy)} m · ${formatDistance(progress.remainingMeters)} rimanenti.`);
+    }
   }
 
   function startNavigation(mode: JourneyMode) {
-    if (!isLiveResult || !selectedRoute.coordinates.length) {
-      setStatus("Calcola e seleziona prima un percorso Lastrico.");
+    if (!routeReady || !isLiveResult || !isNavigableRouteGeometry(selectedRoute.coordinates)) {
+      setStatus("Ricalcola il percorso corrente prima di avviare la navigazione.");
       return;
     }
-    if (isJourneyActive) finishNavigation();
+    if (journeyActiveRef.current) return;
     setPickingMode(null);
     setReportModalOpen(false);
     setReportStart(null);
@@ -1539,11 +1662,13 @@ export default function Home() {
     offRouteReadingsRef.current = 0;
     arrivalReadingsRef.current = 0;
     journeyTravelledMetersRef.current = 0;
+    lastRouteProgressRef.current = 0;
     lastSpokenInstructionRef.current = "";
     cameraLastUpdateRef.current = 0;
     cameraLastCenterRef.current = null;
     cameraLastHeadingRef.current = 0;
-    void requestWakeLock();
+    navigationPreferencesRef.current = { avoidance, maxExtraMinutes };
+    void requestWakeLock(session);
     const currentTransport = transportMeta[transportModeRef.current];
     speakInstruction(mode === "simulation"
       ? `Simulazione del percorso Lastrico in ${currentTransport.label.toLowerCase()}`
@@ -1581,7 +1706,9 @@ export default function Home() {
           && coordinate[1] <= MILAN_GPS_BOUNDS.north
         );
         if (!inMilan) {
-          setGpsState("weak");
+          offRouteReadingsRef.current = 0;
+          arrivalReadingsRef.current = 0;
+          setGpsState("outside");
           setStatus("La navigazione della beta copre per ora soltanto Milano.");
           return;
         }
@@ -1625,7 +1752,7 @@ export default function Home() {
           setStatus("Permesso GPS negato. Abilita la posizione in Safari oppure usa Simula percorso.");
           return;
         }
-        setGpsState("weak");
+        setGpsState("temporarily-unavailable");
         setStatus(error.code === error.TIMEOUT
           ? "GPS in attesa: il segnale sta impiegando più tempo del previsto."
           : "Posizione temporaneamente non disponibile. Mantengo l’ultimo punto valido.");
@@ -1823,6 +1950,7 @@ export default function Home() {
                         id="start-search"
                         value={startText}
                         onChange={(event) => {
+                          invalidateRouteIntent();
                           setStartText(event.target.value);
                           if (addressSearchTarget === "start") {
                             setAddressSearchTarget(null);
@@ -1861,6 +1989,7 @@ export default function Home() {
                         id="end-search"
                         value={endText}
                         onChange={(event) => {
+                          invalidateRouteIntent();
                           setEndText(event.target.value);
                           if (addressSearchTarget === "end") {
                             setAddressSearchTarget(null);
@@ -2038,10 +2167,16 @@ export default function Home() {
                   {routingProfile.notice}
                 </div>
 
-                <button type="button" className="journey-button" data-testid="start-navigation" onClick={() => startNavigation("gps")}>
+                <button
+                  type="button"
+                  className="journey-button"
+                  data-testid="start-navigation"
+                  onClick={() => startNavigation("gps")}
+                  disabled={!routeReady || isLoading}
+                >
                   <span>▶</span>
-                  <b>Avvia con GPS</b>
-                  <small>La freccia segue la tua posizione reale</small>
+                  <b>{routeReady ? "Avvia con GPS" : "Ricalcola per navigare"}</b>
+                  <small>{routeReady ? "La freccia segue la tua posizione reale" : "Il percorso mostrato non è più aggiornato"}</small>
                 </button>
                 <div className="route-actions">
                   <button
@@ -2053,7 +2188,7 @@ export default function Home() {
                   >
                     {!voiceAvailable ? "Voce non disponibile" : voiceEnabled ? "🔊 Voce attiva" : "🔇 Voce disattivata"}
                   </button>
-                  <button type="button" onClick={() => startNavigation("simulation")}>▷ Simula percorso</button>
+                  <button type="button" onClick={() => startNavigation("simulation")} disabled={!routeReady || isLoading}>▷ Simula percorso</button>
                   <button type="button" onClick={() => setMapChooserOpen(true)}>Fallback mappe ↗</button>
                 </div>
               </section>

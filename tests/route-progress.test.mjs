@@ -37,3 +37,16 @@ test("instruction distance uses precomputed progress and never becomes negative"
   assert.ok(afterTurn.instructionDistance >= 0);
 });
 
+test("progress does not jump backwards at a self-intersection", () => {
+  const coordinates = [
+    [9.18, 45.46],
+    [9.19, 45.47],
+    [9.20, 45.46],
+    [9.19, 45.47],
+    [9.18, 45.48],
+  ];
+  const model = buildRouteProgressModel(coordinates, [], meters);
+  const advanced = calculateRouteProgress(model, [9.195, 45.465], 10);
+  const crossing = calculateRouteProgress(model, [9.19, 45.47], 10, advanced.routeProgressMeters);
+  assert.ok(crossing.routeProgressMeters >= advanced.routeProgressMeters - 25);
+});

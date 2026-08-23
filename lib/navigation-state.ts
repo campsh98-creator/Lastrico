@@ -70,6 +70,10 @@ export function shouldRunSimulationTimer(mode: NavigationJourneyMode | null) {
   return mode === "simulation";
 }
 
+export function shouldBeginNavigation(journeyAlreadyActive: boolean) {
+  return !journeyAlreadyActive;
+}
+
 export function gpsCoordinateMoved(
   previous: Coordinate | null,
   current: Coordinate,
