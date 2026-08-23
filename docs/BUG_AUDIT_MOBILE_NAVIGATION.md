@@ -12,7 +12,7 @@ Starting commit: `2ccc452d67fe090a00fd96d6fb390735f4e98cf0`
 | P1 | Editing an endpoint left the previous route navigable | `isLiveResult` meant only that a route had succeeded sometime in the past | Fixed with separate `routeReady`; every route-defining edit invalidates navigation immediately |
 | P1 | Repeated start could create more than one GPS watcher | Start checked asynchronous React state rather than the synchronous journey ref | Fixed with idempotent synchronous guard |
 | P1 | Stopping during reroute could leave routing permanently loading | Teardown removed the request identity before its `finally` block could clear loading | Fixed by resetting request/loading/recalculation state in navigation teardown |
-| P1 | Progress could jump backwards at a self-intersection | Map matching always selected the globally nearest segment without continuity | Fixed with bounded backward tolerance and a retained journey progress anchor |
+| P1 | Progress could jump backwards at a self-intersection | Map matching always selected the globally nearest segment without continuity | Fixed with a monotonic journey progress anchor, including 20 repeated readings at one crossing |
 | P1 | Planner CTA was clipped at 375×812 after prompt expansion | Fixed panel height combined with `overflow:hidden` | Fixed with native panel scrolling on mobile and short-height layouts |
 | P2 | GPS CTA was clipped in 812×375 landscape | Short-height scrolling rule applied only below 760px width | Fixed with width-independent short-height scrolling |
 | P2 | A GPS fix outside Milano appeared as weak signal | GPS state model combined different causes | Fixed with explicit outside-area and temporarily-unavailable states |
@@ -49,4 +49,3 @@ Starting commit: `2ccc452d67fe090a00fd96d6fb390735f4e98cf0`
 - Background/foreground suspension and Wake Lock behavior on iOS.
 - Physical off-route recalculation, arrival detection and spoken instructions.
 - Safe-area layout with real browser chrome and Home Indicator.
-

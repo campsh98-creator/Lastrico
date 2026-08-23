@@ -895,8 +895,9 @@ export default function Home() {
   }, [isJourneyActive, voiceEnabled, navigationProgress.instruction, speakInstruction]);
 
   useEffect(() => {
-    if (!shouldRunSimulationTimer(journeyMode) || !selectedRoute.coordinates.length) return;
-    const coordinates = selectedRoute.coordinates;
+    const simulationRoute = selectedRouteRef.current;
+    if (!shouldRunSimulationTimer(journeyMode) || !simulationRoute?.coordinates.length) return;
+    const coordinates = simulationRoute.coordinates;
     const session = navigationSessionRef.current;
     let index = 0;
     const step = Math.max(1, Math.floor(coordinates.length / navigationPolicy[transportModeRef.current].simulationSteps));
@@ -1629,7 +1630,9 @@ export default function Home() {
   }
 
   function startNavigation(mode: JourneyMode) {
-    if (!routeReady || !isLiveResult || !isNavigableRouteGeometry(selectedRoute.coordinates)) {
+    const routeForJourney = selectedRouteRef.current ?? selectedRoute;
+    const modelForJourney = selectedRouteModelRef.current ?? selectedRouteModel;
+    if (!routeReady || !isLiveResult || !isNavigableRouteGeometry(routeForJourney.coordinates)) {
       setStatus("Ricalcola il percorso corrente prima di avviare la navigazione.");
       return;
     }
@@ -1655,8 +1658,8 @@ export default function Home() {
     previousJourneyPositionRef.current = null;
     previousJourneyAccuracyRef.current = null;
     previousJourneyTimestampRef.current = null;
-    selectedRouteRef.current = selectedRoute;
-    selectedRouteModelRef.current = selectedRouteModel;
+    selectedRouteRef.current = routeForJourney;
+    selectedRouteModelRef.current = modelForJourney;
     endLocationRef.current = endLocation;
     lastJourneyCalculationRef.current = 0;
     offRouteReadingsRef.current = 0;
@@ -1676,7 +1679,7 @@ export default function Home() {
 
     if (mode === "simulation") {
       setGpsState("idle");
-      const coordinates = selectedRoute.coordinates;
+      const coordinates = routeForJourney.coordinates;
       setJourneyPosition(coordinates[0]);
       setJourneyHeading(coordinates.length > 1 ? bearingBetween(coordinates[0], coordinates[1]) : 0);
       setJourneyAccuracy(5);

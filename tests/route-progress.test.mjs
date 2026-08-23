@@ -47,6 +47,10 @@ test("progress does not jump backwards at a self-intersection", () => {
   ];
   const model = buildRouteProgressModel(coordinates, [], meters);
   const advanced = calculateRouteProgress(model, [9.195, 45.465], 10);
-  const crossing = calculateRouteProgress(model, [9.19, 45.47], 10, advanced.routeProgressMeters);
-  assert.ok(crossing.routeProgressMeters >= advanced.routeProgressMeters - 25);
+  let anchoredProgress = advanced.routeProgressMeters;
+  for (let reading = 0; reading < 20; reading += 1) {
+    const crossing = calculateRouteProgress(model, [9.19, 45.47], 10, anchoredProgress);
+    assert.ok(crossing.routeProgressMeters >= anchoredProgress);
+    anchoredProgress = crossing.routeProgressMeters;
+  }
 });
