@@ -1318,6 +1318,7 @@ export default function Home() {
       setActiveRoute(nextRoute);
       activeRouteRef.current = nextRoute;
       const nextSelectedRoute = nextRoute === "safe" ? nextSafeRoute : nextFastRoute;
+      lastRouteProgressRef.current = 0;
       selectedRouteRef.current = nextSelectedRoute;
       selectedRouteModelRef.current = buildRouteProgressModel(
         nextSelectedRoute.coordinates,

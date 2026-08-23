@@ -127,6 +127,7 @@ test("keeps mobile route controls reachable and blocks stale navigation", async 
   assert.match(page, /Ricalcola per navigare/);
   assert.match(page, /const routeForJourney = selectedRouteRef\.current \?\? selectedRoute/);
   assert.match(page, /const simulationRoute = selectedRouteRef\.current/);
+  assert.match(page, /lastRouteProgressRef\.current = 0;\s+selectedRouteRef\.current = nextSelectedRoute/);
   assert.match(routing, /routeProblemSegments/);
 });
 

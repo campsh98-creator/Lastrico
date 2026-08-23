@@ -50,7 +50,17 @@ test("progress does not jump backwards at a self-intersection", () => {
   let anchoredProgress = advanced.routeProgressMeters;
   for (let reading = 0; reading < 20; reading += 1) {
     const crossing = calculateRouteProgress(model, [9.19, 45.47], 10, anchoredProgress);
-    assert.ok(crossing.routeProgressMeters >= anchoredProgress);
+    assert.equal(crossing.routeProgressMeters, anchoredProgress);
     anchoredProgress = crossing.routeProgressMeters;
   }
+  assert.equal(anchoredProgress, advanced.routeProgressMeters);
+});
+
+test("a replacement route starts with a fresh progress anchor", () => {
+  const replacementCoordinates = [[9.19, 45.46], [9.191, 45.46]];
+  const replacementModel = buildRouteProgressModel(replacementCoordinates, [], meters);
+  const resetAnchor = 0;
+  const firstFix = calculateRouteProgress(replacementModel, replacementCoordinates[0], 4, resetAnchor);
+  assert.equal(firstFix.routeProgressMeters, 0);
+  assert.equal(firstFix.remainingMeters, replacementModel.totalMeters);
 });
