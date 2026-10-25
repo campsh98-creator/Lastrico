@@ -1,13 +1,14 @@
 import { and, desc, eq, ne, sql } from "drizzle-orm";
 import { getDb } from "../../../db";
 import { roadReports } from "../../../db/schema";
+import { createReportQuota, readReportJson, ReportInputError, validateReportShape } from "../../../lib/report-request";
 
 const kinds = ["pave", "rough_cobblestone", "recently_asphalted", "wrong_data"] as const;
 const MILAN = { west: 9.04, south: 45.38, east: 9.31, north: 45.55 };
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REPORTS = 5;
 const MAX_BODY_BYTES = 8_000;
-const reportSubmissionWindows = new Map<string, { count: number; resetAt: number }>();
+const consumeQuota = createReportQuota(RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX_REPORTS);
 
 async function hashedClientKey(request: Request) {
   const ip = request.headers.get("cf-connecting-ip");
@@ -20,27 +21,7 @@ async function hashedClientKey(request: Request) {
 }
 
 async function consumeReportQuota(request: Request) {
-  const key = await hashedClientKey(request);
-  if (!key) return { allowed: true, retryAfterSeconds: 0 };
-  const now = Date.now();
-  const current = reportSubmissionWindows.get(key);
-  if (!current || current.resetAt <= now) {
-    reportSubmissionWindows.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return { allowed: true, retryAfterSeconds: 0 };
-  }
-  if (current.count >= RATE_LIMIT_MAX_REPORTS) {
-    return {
-      allowed: false,
-      retryAfterSeconds: Math.max(1, Math.ceil((current.resetAt - now) / 1000)),
-    };
-  }
-  current.count += 1;
-  if (reportSubmissionWindows.size > 5_000) {
-    for (const [candidateKey, window] of reportSubmissionWindows) {
-      if (window.resetAt <= now) reportSubmissionWindows.delete(candidateKey);
-    }
-  }
-  return { allowed: true, retryAfterSeconds: 0 };
+  return consumeQuota(await hashedClientKey(request), Date.now());
 }
 
 function validCoordinate(value: unknown, axis: "lng" | "lat") {
@@ -124,12 +105,8 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const contentType = request.headers.get("content-type") ?? "";
-    const contentLength = Number(request.headers.get("content-length") ?? "0");
     if (!contentType.toLowerCase().startsWith("application/json")) {
       return Response.json({ error: "Invia la segnalazione in formato JSON." }, { status: 415 });
-    }
-    if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) {
-      return Response.json({ error: "La segnalazione è troppo grande." }, { status: 413 });
     }
     const quota = await consumeReportQuota(request);
     if (!quota.allowed) {
@@ -138,14 +115,8 @@ export async function POST(request: Request) {
         { status: 429, headers: { "Retry-After": String(quota.retryAfterSeconds) } },
       );
     }
-    const payload = await request.json() as {
-      start?: [number, number];
-      end?: [number, number];
-      kind?: typeof kinds[number];
-      severity?: number;
-      note?: string;
-      website?: string;
-    };
+    const payload = await readReportJson(request, MAX_BODY_BYTES);
+    validateReportShape(payload);
 
     if (payload.website) {
       return Response.json({ error: "Segnalazione non valida." }, { status: 400 });
@@ -160,11 +131,12 @@ export async function POST(request: Request) {
     ) {
       return Response.json({ error: "Seleziona un tratto valido nell’area di Milano." }, { status: 400 });
     }
-    if (!payload.kind || !kinds.includes(payload.kind)) {
+    if (typeof payload.kind !== "string" || !kinds.includes(payload.kind as typeof kinds[number])) {
       return Response.json({ error: "Scegli un tipo di segnalazione." }, { status: 400 });
     }
-    const discomfortKind = payload.kind === "pave" || payload.kind === "rough_cobblestone";
-    if (discomfortKind && (!Number.isInteger(payload.severity) || payload.severity! < 1 || payload.severity! > 3)) {
+    const kind = payload.kind as typeof kinds[number];
+    const discomfortKind = kind === "pave" || kind === "rough_cobblestone";
+    if (discomfortKind && (typeof payload.severity !== "number" || !Number.isInteger(payload.severity) || payload.severity < 1 || payload.severity > 3)) {
       return Response.json({ error: "Il livello di disagio deve essere tra 1 e 3." }, { status: 400 });
     }
 
@@ -188,7 +160,7 @@ export async function POST(request: Request) {
         eq(roadReports.startLat, start[1]),
         eq(roadReports.endLng, end[0]),
         eq(roadReports.endLat, end[1]),
-        eq(roadReports.kind, payload.kind),
+        eq(roadReports.kind, kind),
         ne(roadReports.status, "rejected"),
         sql`${roadReports.createdAt} >= datetime('now', '-10 minutes')`,
       ))
@@ -203,8 +175,8 @@ export async function POST(request: Request) {
         startLat: start[1],
         endLng: end[0],
         endLat: end[1],
-        kind: payload.kind,
-        severity: discomfortKind ? payload.severity! : 1,
+        kind,
+        severity: discomfortKind ? payload.severity as number : 1,
         note,
         nickname: "",
         status: "pending",
@@ -212,7 +184,10 @@ export async function POST(request: Request) {
       .returning();
 
     return Response.json({ report: publicReport(created) }, { status: 201 });
-  } catch {
+  } catch (error) {
+    if (error instanceof ReportInputError) {
+      return Response.json({ error: error.message }, { status: error.status });
+    }
     return Response.json({ error: "Non è stato possibile salvare la segnalazione." }, { status: 500 });
   }
 }

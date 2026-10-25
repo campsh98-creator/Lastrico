@@ -23,3 +23,14 @@ test("enforces the budget relative to the fastest route", () => {
   assert.equal(routeFitsExtraMinutes(1_081, 600, 8), false);
   assert.equal(routeFitsExtraMinutes(600, 600, 0), true);
 });
+
+test("invalid metrics or constraints never qualify as a route within budget", () => {
+  for (const invalid of [NaN, Infinity, -1]) {
+    assert.equal(routeFitsExtraMinutes(invalid, 600, null), false);
+    assert.equal(routeFitsExtraMinutes(600, invalid, 8), false);
+    assert.equal(routeFitsExtraMinutes(600, 600, invalid), false);
+  }
+  assert.equal(routeFitsExtraMinutes(600, 600, MAX_EXTRA_MINUTES_LIMIT + 1), false);
+  assert.equal(routeFitsExtraMinutes(630, 600, 0.5), true);
+  assert.equal(routeFitsExtraMinutes(630.001, 600, 0.5), false);
+});

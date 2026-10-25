@@ -14,6 +14,10 @@ export function routeFitsExtraMinutes(
   fastestDurationSeconds: number,
   maximumExtraMinutes: number | null,
 ) {
+  if (!Number.isFinite(candidateDurationSeconds) || candidateDurationSeconds < 0
+    || !Number.isFinite(fastestDurationSeconds) || fastestDurationSeconds < 0) return false;
   if (maximumExtraMinutes === null) return true;
+  if (!Number.isFinite(maximumExtraMinutes) || maximumExtraMinutes < 0
+    || maximumExtraMinutes > MAX_EXTRA_MINUTES_LIMIT) return false;
   return candidateDurationSeconds <= fastestDurationSeconds + maximumExtraMinutes * 60;
 }

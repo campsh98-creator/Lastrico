@@ -2142,7 +2142,7 @@ export default function Home() {
                   ) : (
                     <div className="route-option no-alternative">
                       <span className="route-radio" />
-                      <span className="route-name"><b>Nessuna deviazione migliore</b><small>Le alternative controllate non riducono il pavé noto</small></span>
+                      <span className="route-name"><b>Nessuna deviazione migliore</b><small>Nessuna alternativa con meno pavé entro i vincoli scelti</small></span>
                       <strong>—</strong>
                     </div>
                   )}

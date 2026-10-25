@@ -1,38 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createGeocodeFetcher, validMilanGeocodeResult } from "../../../lib/geocoding";
 
 const MILAN_VIEWBOX = "9.04,45.55,9.31,45.38";
 const NOMINATIM_MIN_INTERVAL_MS = 1_050;
-let nominatimQueue: Promise<void> = Promise.resolve();
-let lastNominatimStartedAt = 0;
-
-async function fetchNominatim(url: URL) {
-  let releaseQueue: () => void = () => undefined;
-  const previousRequest = nominatimQueue;
-  nominatimQueue = new Promise<void>((resolve) => {
-    releaseQueue = resolve;
-  });
-  await previousRequest;
-  try {
-    const waitMs = Math.max(0, NOMINATIM_MIN_INTERVAL_MS - (Date.now() - lastNominatimStartedAt));
-    if (waitMs) await new Promise((resolve) => setTimeout(resolve, waitMs));
-    lastNominatimStartedAt = Date.now();
-    return await fetch(url, {
-      headers: {
-        Accept: "application/json",
-        "Accept-Language": "it",
-        "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
-      },
-      signal: AbortSignal.timeout(8_000),
-    });
-  } finally {
-    releaseQueue();
-  }
-}
+const fetchNominatim = createGeocodeFetcher({ minimumIntervalMs: NOMINATIM_MIN_INTERVAL_MS });
+// Bound upstream query size while allowing complete street/POI names and addresses.
+const MAX_QUERY_CHARACTERS = 300;
 
 export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams.get("q")?.trim();
   if (!query || query.length < 3) {
     return NextResponse.json({ error: "Inserisci almeno tre caratteri." }, { status: 400 });
+  }
+
+  if (query.length > MAX_QUERY_CHARACTERS) {
+    return NextResponse.json({ error: "L’indirizzo non può superare 300 caratteri." }, { status: 400 });
   }
 
   const url = new URL("https://nominatim.openstreetmap.org/search");
@@ -52,37 +34,11 @@ export async function GET(request: NextRequest) {
   url.searchParams.set("layer", "address,poi");
 
   try {
-    const response = await fetchNominatim(url);
-    if (!response.ok) throw new Error("Servizio di ricerca non disponibile");
-    const data = await response.json() as Array<{
-      display_name: string;
-      lat: string;
-      lon: string;
-      place_id: number;
-      name?: string;
-      type?: string;
-      addresstype?: string;
-      address?: {
-        house_number?: string;
-        road?: string;
-        pedestrian?: string;
-        footway?: string;
-        amenity?: string;
-        shop?: string;
-        tourism?: string;
-        neighbourhood?: string;
-        suburb?: string;
-        quarter?: string;
-        city_district?: string;
-        postcode?: string;
-        city?: string;
-        town?: string;
-        municipality?: string;
-      };
-    }>;
+    const data = await fetchNominatim(url, request.signal);
+    if (!Array.isArray(data)) throw new Error("Risposta indirizzi non valida");
     const seen = new Set<string>();
     return NextResponse.json({
-      results: data.flatMap((item) => {
+      results: data.filter(validMilanGeocodeResult).flatMap((item) => {
         const address = item.address ?? {};
         const city = address.city ?? address.town ?? address.municipality ?? "";
         if (city.toLocaleLowerCase("it").trim() !== "milano") return [];

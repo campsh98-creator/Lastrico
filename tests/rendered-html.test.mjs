@@ -5,6 +5,7 @@ import test from "node:test";
 const pageUrl = new URL("../app/page.tsx", import.meta.url);
 const cssUrl = new URL("../app/globals.css", import.meta.url);
 const geocodeUrl = new URL("../app/api/geocode/route.ts", import.meta.url);
+const providersUrl = new URL("../lib/routing-providers.ts", import.meta.url);
 const routingUrl = new URL("../app/api/routes/route.ts", import.meta.url);
 const paveDataUrl = new URL("../data/milan-pave-central.json", import.meta.url);
 const layoutUrl = new URL("../app/layout.tsx", import.meta.url);
@@ -56,9 +57,10 @@ test("returns multiple, deduplicated Milan address candidates", async () => {
 });
 
 test("actively builds and scores genuine anti-pave alternatives", async () => {
-  const [routing, paveDataText] = await Promise.all([
+  const [routing, paveDataText, providers] = await Promise.all([
     readFile(routingUrl, "utf8"),
     readFile(paveDataUrl, "utf8"),
+    readFile(providersUrl, "utf8"),
   ]);
   const paveData = JSON.parse(paveDataText);
 
@@ -67,11 +69,11 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   assert.match(routing, /navigationRequest \? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS/);
   assert.match(routing, /navigationRequest\s+\? Promise\.resolve\(null\)/);
   assert.match(routing, /navigationRequest \? 1 : 3/);
-  assert.match(routing, /fetchValhallaRoutes/);
-  assert.match(routing, /fetchOsrmCarRoutes/);
-  assert.match(routing, /X-Client-Id/);
-  assert.match(routing, /VALHALLA_MIN_INTERVAL_MS = 1_050/);
-  assert.match(routing, /runValhallaLimited/);
+  assert.match(providers, /fetchValhallaRoutes/);
+  assert.match(providers, /fetchOsrmCarRoutes/);
+  assert.match(providers, /X-Client-Id/);
+  assert.match(providers, /VALHALLA_MIN_INTERVAL_MS = 1_050/);
+  assert.match(providers, /runValhallaLimited/);
   assert.match(routing, /Cache-Control": "private, no-store"/);
   assert.match(routing, /detourPoints/);
   assert.match(routing, /routesAreEquivalent/);
@@ -82,12 +84,12 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   assert.match(routing, /createSurfaceIndex/);
   assert.match(routing, /scoreSurfaceExposure/);
   assert.match(routing, /candidateDiagnostics/);
-  assert.match(routing, /set\("steps", "true"\)/);
-  assert.match(routing, /instructions: steps\.map/);
-  assert.match(routing, /osrmInstructionText/);
-  assert.match(routing, /osrmSemanticDirection/);
-  assert.match(routing, /decodePolyline6/);
-  assert.match(routing, /travel_mode === "pedestrian"/);
+  assert.match(providers, /set\("steps", "true"\)/);
+  assert.match(providers, /instructions: steps\.map/);
+  assert.match(providers, /osrmInstructionText/);
+  assert.match(providers, /osrmSemanticDirection/);
+  assert.match(providers, /decodePolyline6/);
+  assert.match(providers, /travel_mode === "pedestrian"/);
   assert.match(routing, /parseExtraMinutes/);
   assert.match(routing, /routeFitsExtraMinutes/);
   assert.match(routing, /budgetExcludedLowerExposureRoute/);

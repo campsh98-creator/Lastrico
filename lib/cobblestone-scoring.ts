@@ -19,6 +19,14 @@ export type SurfaceScore = {
   confirmedMeters: number;
   probableMeters: number;
   pavePercent: number;
+  /** Distance without matched surface evidence, never assumed smooth. */
+  unknownMeters: number;
+  matchedCoveragePercent: number;
+  /** Category weight among matched rough surfaces; not data reliability. */
+  classificationConfidence: number;
+  /** Verification and freshness metadata are not available in the current dataset. */
+  dataConfidence: null;
+  /** @deprecated Category-weight alias of classificationConfidence. */
   confidence: number;
   matchedFeatures: number;
 };
@@ -91,8 +99,20 @@ function cellKey(x: number, y: number) {
 }
 
 export function createSurfaceIndex(features: SurfaceFeature[], cellSize = 0.001): SurfaceIndex {
+  if (!Number.isFinite(cellSize) || cellSize <= 0) {
+    throw new RangeError("Surface index cell size must be finite and positive");
+  }
   const cells = new Map<string, IndexedSurfaceSegment[]>();
   for (const feature of features) {
+    if (
+      !Number.isFinite(feature.id)
+      || !Object.hasOwn(SURFACE_WEIGHT, feature.surface)
+      || !Array.isArray(feature.coordinates)
+      || !feature.coordinates.every((point) => Array.isArray(point)
+        && point.length === 2
+        && Number.isFinite(point[0]) && Math.abs(point[0]) <= 180
+        && Number.isFinite(point[1]) && Math.abs(point[1]) <= 90)
+    ) continue;
     for (let index = 1; index < feature.coordinates.length; index += 1) {
       const segment = {
         id: feature.id,
@@ -172,15 +192,19 @@ export function scoreSurfaceExposure(
       ];
       let best: IndexedSurfaceSegment | null = null;
       let bestWeight = 0;
+      let bestDistance = Infinity;
       for (const candidate of nearbySegments(index, midpoint, matchMeters)) {
         const weight = SURFACE_WEIGHT[candidate.surface] ?? 0;
+        const distance = pointToSegmentDistance(midpoint, candidate.a, candidate.b);
         if (
-          weight > bestWeight
+          weight > 0
+          && (distance < bestDistance || (distance === bestDistance && weight > bestWeight))
           && headingsAlign(sampleA, sampleB, candidate.a, candidate.b)
-          && pointToSegmentDistance(midpoint, candidate.a, candidate.b) <= matchMeters
+          && distance <= matchMeters
         ) {
           best = candidate;
           bestWeight = weight;
+          bestDistance = distance;
         }
       }
       if (!best) continue;
@@ -194,13 +218,20 @@ export function scoreSurfaceExposure(
   const confidence = paveMeters > 0
     ? (confirmedMeters + probableMeters * 0.65) / paveMeters
     : 0;
+  const roundedPaveMeters = Math.min(Math.round(totalMeters), Math.round(paveMeters));
+  const coveragePercent = totalMeters > 0 ? Math.round((paveMeters / totalMeters) * 1_000) / 10 : 0;
+  const classificationConfidence = Math.round(confidence * 100) / 100;
   return {
-    paveMeters: Math.min(Math.round(totalMeters), Math.round(paveMeters)),
+    paveMeters: roundedPaveMeters,
     weightedPaveMeters: Math.round(weightedPaveMeters),
     confirmedMeters: Math.round(confirmedMeters),
     probableMeters: Math.round(probableMeters),
-    pavePercent: totalMeters > 0 ? Math.round((paveMeters / totalMeters) * 1_000) / 10 : 0,
-    confidence: Math.round(confidence * 100) / 100,
+    pavePercent: coveragePercent,
+    unknownMeters: Math.round(totalMeters) - roundedPaveMeters,
+    matchedCoveragePercent: coveragePercent,
+    classificationConfidence,
+    dataConfidence: null,
+    confidence: classificationConfidence,
     matchedFeatures: matched.size,
   };
 }

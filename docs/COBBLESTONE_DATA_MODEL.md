@@ -52,6 +52,43 @@ verification date. Until a traceable regeneration exists, `sett`, `cobblestone`,
 `unhewn_cobblestone` are medium-confidence confirmed evidence; `paving_stones` is probable
 evidence at medium confidence. No update dates are invented.
 
+The implemented numeric `classificationConfidence` is the distance-weighted category weight
+among matched rough segments (`1` for explicit cobblestone classes, `0.65` for
+`paving_stones`). It describes the classification used by the ranking model, not the
+probability that the route is correctly mapped, current, smooth, or safe. The existing
+`confidence` score and API `surfaceConfidence` remain compatibility aliases for this value.
+`dataConfidence` is `null`: the available verification and freshness metadata do not support
+a numeric reliability estimate. A category weight of `1` must not be displayed as 100%
+route-data reliability.
+
+## Implemented matching and uncertainty
+
+The scorer samples route geometry in pieces no longer than approximately 12 metres. For
+each midpoint it chooses the nearest aligned supported surface segment within the existing
+mode-specific tolerance (car: 12 m, motorcycle: 11 m, bicycle: 9 m). Equal-distance matches
+use the larger category weight. Each sample contributes at most once, including when source
+geometries overlap. This prevents a rougher parallel road from overriding a directly matched
+road merely because its category has a higher weight.
+
+The alignment threshold remains an absolute direction cosine of `0.58`. Geometry alone
+cannot distinguish an isolated nearby parallel road within the tolerance, or establish legal
+access to that road. Tightening tolerances without ground-truth comparison could instead
+drop valid matches; road identity and topology matching remain separate work.
+
+`unknownMeters` is the rounded route-geometry length minus estimated matched rough metres.
+`matchedCoveragePercent` reports the matched fraction of that geometry. Because the current
+index contains only rough-surface classes, this percentage equals `pavePercent`; it does not
+measure regional OSM completeness. Unsupported surface classes are not assessed by this
+scorer. With no matching evidence, the entire route remains unknown, even when known rough
+exposure is zero. Empty or stationary geometry produces zero distance and zero coverage,
+with data reliability still unknown.
+
+The API exposes these metrics as `unknownSurfaceMeters`, `surfaceCoveragePercent`,
+`surfaceClassificationConfidence`, and `surfaceDataConfidence`, alongside existing fields.
+Malformed coordinates, unsupported classes, and invalid feature IDs are excluded before
+indexing; invalid grid sizes are rejected. Coordinate validation does not establish the
+accuracy or freshness of otherwise valid source geometry.
+
 ## Required validation
 
 - finite coordinates inside the declared extraction area;

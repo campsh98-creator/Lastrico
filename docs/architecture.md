@@ -7,8 +7,8 @@
 | UI | planning, routes, navigation, community | `app/page.tsx`, `components/` |
 | GPS state | reading filters, heading, off-route state, simulation | `lib/navigation-state.ts` |
 | Instructions | manoeuvre types and pure helpers | `lib/navigation-instructions.ts` |
-| Routing | alternatives, providers, road-surface scoring | `app/api/routes/route.ts` |
-| Surfaces | bundled OSM dataset and classification | `data/milan-pave-central.json`, `app/api/routes/route.ts` |
+| Routing | orchestration and mode policies; provider validation; candidate equivalence | `app/api/routes/route.ts`, `lib/routing-providers.ts`, `lib/route-candidates.ts` |
+| Surfaces | bundled OSM dataset, spatial matching and unknown coverage | `data/milan-pave-central.json`, `lib/cobblestone-scoring.ts` |
 | Reports | validation, privacy, persistence, export | `app/api/reports/`, `lib/reporting.ts`, `db/` |
 | Map | MapLibre rendering and GeoJSON sources | `app/page.tsx` |
 | Hosting | Worker, D1, and Sites configuration | `.openai/hosting.json`, `db/`, `drizzle/` |
@@ -64,3 +64,21 @@ Lastrico does not store a continuous GPS history. Coordinates used for routing m
 to the external providers disclosed in the interface. Do not add location telemetry,
 persistent identifiers, or personal data without an explicit, documented decision and an
 appropriate privacy review.
+
+## Local hardening boundaries
+
+Provider adapters reject malformed candidate metrics, geometry and manoeuvres before scoring.
+Serialized Valhalla/geocoding waits include cancellation and request deadlines; throttling
+remains per Worker isolate, not a global service quota. Deduplication compares route geometry
+in both directions, preserves endpoint orientation and retains the fastest equivalent route
+as the reference for the user's hard extra-time limit. Existing mode-specific detour policies
+are unchanged. Extra detour calls are skipped when the fastest route has insufficient known
+exposure to meet the existing minimum-reduction threshold.
+
+All local surface ways remain available to scoring even if a candidate leaves the smaller
+live-query rectangle. Unmatched distance is unknown; category weighting is distinct from
+verification/freshness confidence. See [surface model](COBBLESTONE_DATA_MODEL.md).
+
+Geocoding and report input boundaries are independently tested in `lib/geocoding.ts` and
+`lib/report-request.ts`. Reports remain pending and cannot affect routing before verification.
+The public JSON route fields remain compatible; coverage fields are additive.
