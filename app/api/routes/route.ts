@@ -8,6 +8,7 @@ import {
 import {
   createSurfaceIndex,
   scoreSurfaceExposure,
+  type SurfaceIndex,
   type SurfaceScore,
 } from "@/lib/cobblestone-scoring";
 import {
@@ -277,6 +278,8 @@ function routePayload(
     surfaceCoveragePercent: surfaceScore.matchedCoveragePercent,
     confirmedPaveMeters: surfaceScore.confirmedMeters,
     probablePaveMeters: surfaceScore.probableMeters,
+    smoothSurfaceMeters: surfaceScore.smoothMeters ?? 0,
+    cyclewayMeters: surfaceScore.cyclewayMeters ?? 0,
     instructions: route.instructions,
     problemSegments,
   };
@@ -329,6 +332,14 @@ function modeUnavailableMessage(mode: TransportMode) {
     return "Il profilo moto beta è temporaneamente indisponibile o non trova un collegamento legale. Non userò silenziosamente un percorso auto.";
   }
   return "Il routing gratuito è temporaneamente indisponibile. Riprova tra poco.";
+}
+
+let cachedBaseIndex: SurfaceIndex | null = null;
+function getBaseSurfaceIndex(): SurfaceIndex {
+  if (!cachedBaseIndex) {
+    cachedBaseIndex = createSurfaceIndex(bundledPave as PaveDetail[]);
+  }
+  return cachedBaseIndex;
 }
 
 export async function GET(request: NextRequest) {
@@ -415,7 +426,9 @@ export async function GET(request: NextRequest) {
       }
     }
     const paveWays = paveDetails.map((way) => way.coordinates);
-    const surfaceIndex = createSurfaceIndex(paveDetails);
+    const surfaceIndex = paveDetails === localPave
+      ? getBaseSurfaceIndex()
+      : createSurfaceIndex(paveDetails);
     const scoreCache = new Map<EngineRoute, SurfaceScore>();
     const scoreCandidate = (route: EngineRoute) => {
       const cached = scoreCache.get(route);
@@ -586,6 +599,8 @@ export async function GET(request: NextRequest) {
         surfaceDataConfidence: candidate.surfaceScore.dataConfidence,
         unknownSurfaceMeters: candidate.surfaceScore.unknownMeters,
         surfaceCoveragePercent: candidate.surfaceScore.matchedCoveragePercent,
+        smoothSurfaceMeters: candidate.surfaceScore.smoothMeters ?? 0,
+        cyclewayMeters: candidate.surfaceScore.cyclewayMeters ?? 0,
         matchedSurfaceFeatures: candidate.surfaceScore.matchedFeatures,
         detourPercent: fast.route.duration > 0
           ? Math.round(((candidate.route.duration / fast.route.duration) - 1) * 1_000) / 10

@@ -111,4 +111,8 @@ test("known local surfaces remain scored when a candidate leaves the endpoint qu
   const data = await response.json();
   assert.ok(data.fast.paveMeters > 100);
   assert.ok(data.fast.probablePaveMeters > 100);
+  assert.equal(typeof data.fast.smoothSurfaceMeters, "number");
+  assert.equal(typeof data.fast.cyclewayMeters, "number");
+  assert.equal(typeof data.candidateDiagnostics[0].smoothSurfaceMeters, "number");
+  assert.equal(typeof data.candidateDiagnostics[0].cyclewayMeters, "number");
 });

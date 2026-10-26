@@ -29,6 +29,8 @@ export type SurfaceScore = {
   /** @deprecated Category-weight alias of classificationConfidence. */
   confidence: number;
   matchedFeatures: number;
+  smoothMeters?: number;
+  cyclewayMeters?: number;
 };
 
 export type SurfaceIndex = {

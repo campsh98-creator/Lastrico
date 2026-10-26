@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "2.0.0",
+  "datasetVersion": "2026.10.26-mil-central",
+  "generatedAt": "2026-10-26T00:12:20.389Z",
+  "area": {
+    "zoneId": "MIL_CENTRAL",
+    "description": "Milan Pilot Area (Central & Inner Ring)",
+    "bounds": {
+      "west": 9.04,
+      "south": 45.38,
+      "east": 9.31,
+      "north": 45.55
+    }
+  },
+  "sources": [
+    {
+      "type": "osm",
+      "name": "OpenStreetMap",
+      "license": "ODbL-1.0",
+      "licenseUrl": "https://opendatacommons.org/licenses/odbl/1.0/",
+      "attribution": "© OpenStreetMap contributors",
+      "snapshotDate": "2026-07-30T00:00:00Z"
+    }
+  ],
+  "statistics": {
+    "totalSegments": 5453,
+    "totalWays": 1545,
+    "totalLengthMeters": 81179,
+    "surfaceBreakdownMeters": {
+      "confirmed_rough": 45554,
+      "probable_rough": 26072,
+      "confirmed_smooth": 8183,
+      "unpaved_loose": 331,
+      "unknown": 1039
+    },
+    "smoothnessBreakdownMeters": {
+      "excellent": 1324,
+      "good": 4646,
+      "intermediate": 1327,
+      "bad": 1901,
+      "very_bad": 0,
+      "horrible": 0,
+      "very_horrible": 0,
+      "impassable": 0,
+      "unknown": 71981
+    },
+    "cyclingCoverageMeters": 3583,
+    "embeddedRailsMeters": 2612
+  },
+  "checksums": {
+    "datasetSha256": "9f349966f41e5c2eec89f29f368a1d18b36a6a2e0db1b9dec6f039616e8c6752"
+  },
+  "validation": {
+    "validWays": 1545,
+    "invalidWays": 0,
+    "flaggedJumpsOver250m": 11,
+    "validationErrors": []
+  }
+}
