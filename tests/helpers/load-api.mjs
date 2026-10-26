@@ -11,7 +11,8 @@ export async function loadApi(relativePath) {
     if (specifier === "next/server") return `from "${new URL("node_modules/next/server.js", root).href}"`;
     if (specifier.startsWith("@/")) {
       const target = new URL(specifier.slice(2), root);
-      return specifier.endsWith(".json") ? `from "${target.href}" with { type: "json" }` : `from "${target.href}.ts"`;
+      return specifier.endsWith(".json") ? `from "${target.href}" with { type: "json" }`
+        : /\.(mjs|js|ts)$/.test(specifier) ? `from "${target.href}"` : `from "${target.href}.ts"`;
     }
     if (specifier.startsWith(".")) return `from "${new URL(specifier + ".ts", file).href}"`;
     return original;

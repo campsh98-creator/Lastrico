@@ -1,8 +1,8 @@
 /**
- * Adapter for Comune di Milano Open Data — "Itinerari ciclabili"
- * Dataset ID: ds70_infogeo_itinerari_ciclabili_localizzazione_
- * License: Creative Commons Attribuzione 4.0 Internazionale (CC BY 4.0)
- * Mandatory Attribution: "Comune di Milano"
+ * Adapter for the municipal "Itinerari ciclabili" feature schema.
+ * Callers must verify source provenance, licensing and digitized direction
+ * conventions before ingesting an authoritative extract. Test samples are not
+ * an authenticated municipal dataset and must not be used at runtime.
  */
 
 import type {
@@ -44,17 +44,17 @@ export type NormalizedMunicipalCyclingRecord = {
 };
 
 export function normalizeTypology(raw?: string): CyclingTypology {
-  if (!raw) return "none";
+  if (typeof raw !== "string" || !raw) return "none";
   const s = raw.toLowerCase().trim();
   if (s.includes("sede propria")) return "sede_propria";
   if (s.includes("segnaletica") || s.includes("corsia")) return "corsia_segnaletica";
   if (s.includes("pedon")) return "promiscuo_pedoni";
   if (s.includes("veicol") || s.includes("promiscuo")) return "promiscuo_veicoli";
-  return "sede_propria";
+  return "none";
 }
 
 export function normalizeDirection(raw?: string): CyclingDirection {
-  if (!raw) return "unknown";
+  if (typeof raw !== "string" || !raw) return "unknown";
   const s = raw.toLowerCase().trim();
   if (s.includes("bidirezionale")) return "bidirezionale";
   if (s.includes("discorde") || s.includes("contromano")) return "monodirezionale_discorde";
@@ -63,7 +63,7 @@ export function normalizeDirection(raw?: string): CyclingDirection {
 }
 
 export function normalizeSite(raw?: string): "marciapiede" | "carreggiata" | "banchina" | "parco" | "unknown" {
-  if (!raw) return "unknown";
+  if (typeof raw !== "string" || !raw) return "unknown";
   const s = raw.toLowerCase().trim();
   if (s.includes("marciapiede")) return "marciapiede";
   if (s.includes("carreggiata")) return "carreggiata";
@@ -98,7 +98,7 @@ export function normalizeMunicipalCyclingFeature(
   };
 
   const provenance: AttributeProvenance<CyclingInfrastructure> = {
-    state: "known",
+    state: typology === "none" ? "unknown" : "known",
     value: infrastructure,
     sourceId: `comune_mi:itinerari:${props.id}`,
     authority: "official_municipal",
@@ -106,13 +106,13 @@ export function normalizeMunicipalCyclingFeature(
     // NOT physical field survey/observation dates. Never fabricate observation timestamps.
     observedAt: null,
     ingestedAt,
-    confidence: 0.95, // High authority official municipal register
+    confidence: typology === "none" ? 0 : 0.95,
   };
 
   let geometry: GeoCoordinate[][];
-  if (feature.geometry.type === "LineString") {
+  if (feature.geometry?.type === "LineString") {
     geometry = [feature.geometry.coordinates as GeoCoordinate[]];
-  } else if (feature.geometry.type === "MultiLineString") {
+  } else if (feature.geometry?.type === "MultiLineString") {
     geometry = feature.geometry.coordinates as GeoCoordinate[][];
   } else {
     geometry = [];
@@ -129,13 +129,28 @@ export function normalizeMunicipalCyclingFeature(
   };
 }
 
+function validCoordinate(value: unknown): value is GeoCoordinate {
+  return Array.isArray(value) && value.length === 2 && value.every(Number.isFinite)
+    && Math.abs(value[0]) <= 180 && Math.abs(value[1]) <= 90;
+}
+
+function coveredLength(intervals: [number, number][]): number {
+  intervals.sort((a, b) => a[0] - b[0]);
+  let covered = 0;
+  let end = 0;
+  for (const [from, to] of intervals) {
+    covered += Math.max(0, to - Math.max(end, from));
+    end = Math.max(end, to);
+  }
+  return covered;
+}
+
 /**
- * Conservative spatial cross-matcher between municipal cycling record and road segment.
- * Requires:
- * 1. Proximity within maxDistanceMeters
- * 2. Unidirectional heading alignment within tolerance (cos θ >= 0.75)
- * 3. Street name agreement if both names exist
- * Rejects ambiguous matches where multiple candidate roads are equidistant.
+ * Requires at least 90% overlapping road length within the proximity threshold
+ * and near-parallel geometry (cosine >= 0.95). Endpoint touches do not qualify.
+ * Road coordinates define travel direction; concorde/discorde refer to the
+ * municipal line's digitized direction. Unknown direction is never guessed.
+ * Multiple qualifying records remain ambiguous, even when street names agree.
  */
 export function matchCyclingToRoadSegment(
   roadSegment: {
@@ -151,29 +166,73 @@ export function matchCyclingToRoadSegment(
   confidence: number;
   ambiguous: boolean;
 } {
-  // Conservative match implementation
+  const noMatch = { matched: false, record: null, confidence: 0, ambiguous: false };
+  if (!Number.isFinite(maxDistanceMeters) || maxDistanceMeters <= 0
+    || !Array.isArray(roadSegment.coordinates) || roadSegment.coordinates.length !== 2
+    || !roadSegment.coordinates.every(validCoordinate)) return noMatch;
+
+  const [a, b] = roadSegment.coordinates;
+  const scaleX = 111_320 * Math.cos((a[1] + b[1]) / 2 * Math.PI / 180);
+  const dx = (b[0] - a[0]) * scaleX;
+  const dy = (b[1] - a[1]) * 110_540;
+  const length = Math.hypot(dx, dy);
+  if (length <= 0) return noMatch;
+  const project = (point: GeoCoordinate): [number, number] => {
+    const x = (point[0] - a[0]) * scaleX;
+    const y = (point[1] - a[1]) * 110_540;
+    return [(x * dx + y * dy) / length, (y * dx - x * dy) / length];
+  };
+
   let bestCandidate: NormalizedMunicipalCyclingRecord | null = null;
   let candidateCount = 0;
+  let unknownDirection = false;
 
   for (const rec of cyclingRecords) {
-    if (maxDistanceMeters <= 0) continue;
+    if (!rec || rec.infrastructure?.state !== "known" || !rec.infrastructure.value?.hasFacility
+      || !Array.isArray(rec.geometry) || !rec.geometry.length
+      || !rec.geometry.every((line) => Array.isArray(line) && line.length >= 2 && line.every(validCoordinate))) continue;
     if (
       roadSegment.name &&
       rec.streetName &&
-      roadSegment.name.toLowerCase() !== rec.streetName.toLowerCase()
+      roadSegment.name.trim().toLowerCase() !== rec.streetName.trim().toLowerCase()
     ) {
       continue; // Street name mismatch rejects match
     }
 
-    // Check distance against line segments
-    // If multiple candidates match within tolerance, mark as ambiguous
+    const direction = rec.infrastructure.value.direction;
+    const knownDirection = ["bidirezionale", "monodirezionale_concorde", "monodirezionale_discorde"].includes(direction);
+    const intervals: [number, number][] = [];
+    for (const line of rec.geometry) {
+      for (let i = 1; i < line.length; i += 1) {
+        const [x0, y0] = project(line[i - 1]);
+        const [x1, y1] = project(line[i]);
+        const edgeLength = Math.hypot(x1 - x0, y1 - y0);
+        if (edgeLength <= 0) continue;
+        const cosine = (x1 - x0) / edgeLength;
+        if (Math.abs(cosine) < 0.95
+          || (direction === "monodirezionale_concorde" && cosine < 0)
+          || (direction === "monodirezionale_discorde" && cosine > 0)) continue;
+        const from = Math.max(0, Math.min(x0, x1));
+        const to = Math.min(length, Math.max(x0, x1));
+        if (to <= from) continue;
+        const offset = (x: number) => y0 + (y1 - y0) * (x - x0) / (x1 - x0);
+        if (Math.abs(offset(from)) > maxDistanceMeters || Math.abs(offset(to)) > maxDistanceMeters) continue;
+        intervals.push([from, to]);
+      }
+    }
+    if (coveredLength(intervals) < length * 0.9) continue;
+    if (!knownDirection) {
+      unknownDirection = true;
+      continue;
+    }
+
     candidateCount += 1;
     if (!bestCandidate) {
       bestCandidate = rec;
     }
   }
 
-  if (candidateCount > 1) {
+  if (candidateCount > 1 || unknownDirection) {
     return {
       matched: false,
       record: null,

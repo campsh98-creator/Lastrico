@@ -1,0 +1,66 @@
+{
+  "provider": "OpenStreetMap API 0.6",
+  "bounds": {
+    "west": 9.18,
+    "south": 45.455,
+    "east": 9.2,
+    "north": 45.475
+  },
+  "selection": "All ways with a highway tag, including missing/unknown surface; four map tiles, deduplicated by OSM way ID. This is a small city-centre pilot, not all Milan.",
+  "temporalScope": "Four sequential live API responses, not an atomic historical snapshot; original element versions and edit timestamps preserved.",
+  "sources": [
+    {
+      "file": "milan-pilot-sw.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.18,45.455,9.19,45.465",
+      "bbox": [
+        9.18,
+        45.455,
+        9.19,
+        45.465
+      ],
+      "retrievedAt": "2026-10-26T00:44:35.823656+00:00",
+      "serverDate": "Mon, 26 Oct 2026 00:44:35 GMT",
+      "sha256": "2d7746ccd086573151a8d49202c445b4c1a84c27af9a3abee039dd78d4de3bdd"
+    },
+    {
+      "file": "milan-pilot-se.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.19,45.455,9.2,45.465",
+      "bbox": [
+        9.19,
+        45.455,
+        9.2,
+        45.465
+      ],
+      "retrievedAt": "2026-10-26T00:44:38.031299+00:00",
+      "serverDate": "Mon, 26 Oct 2026 00:44:37 GMT",
+      "sha256": "fbd49010e52500665ada059fda71364a26f1838fb21daeebe848bdc312e852c8"
+    },
+    {
+      "file": "milan-pilot-nw.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.18,45.465,9.19,45.475",
+      "bbox": [
+        9.18,
+        45.465,
+        9.19,
+        45.475
+      ],
+      "retrievedAt": "2026-10-26T00:44:40.986242+00:00",
+      "serverDate": "Mon, 26 Oct 2026 00:44:39 GMT",
+      "sha256": "7cc07a40d1f121f677d5dcc621a15171c20c4ec6f004298a45caad5973c79b79"
+    },
+    {
+      "file": "milan-pilot-ne.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.19,45.465,9.2,45.475",
+      "bbox": [
+        9.19,
+        45.465,
+        9.2,
+        45.475
+      ],
+      "retrievedAt": "2026-10-26T00:44:43.832077+00:00",
+      "serverDate": "Mon, 26 Oct 2026 00:44:42 GMT",
+      "sha256": "bc36bc582b9171a775ce5d63be05c793b5ab470cc7bf7262c1451e976725d4cb"
+    }
+  ],
+  "networkSha256": "3ea4c0a8325b66019673777fc2334bd00d11127310de96c8df2ea91111f58b5c"
+}

@@ -20,13 +20,15 @@ export type RoadIntelligenceScore = {
   probableMeters: number;
   /** Distance on confirmed smooth surfaces (asphalt, concrete) */
   smoothMeters: number;
+  /** Distance on known loose/unpaved surfaces, distinct from smooth or rough stone */
+  unpavedMeters: number;
   /** Percentage of route on rough surface [0 - 100] */
   pavePercent: number;
   /** Percentage of route on smooth surface [0 - 100] */
   smoothPercent: number;
   /** Distance without direct surface evidence. Never assumed smooth! */
   unknownMeters: number;
-  /** Percentage of route with known surface evidence (rough or smooth) */
+  /** Percentage of route with known surface evidence (rough, smooth or unpaved) */
   matchedCoveragePercent: number;
   /** Distance along dedicated or segregated cycling infrastructure */
   cyclewayMeters: number;
@@ -36,6 +38,8 @@ export type RoadIntelligenceScore = {
   classificationConfidence: number;
   dataConfidence: null;
   matchedSegments: number;
+  /** Distinct source ways contributing known surface evidence. */
+  matchedFeatures: number;
   /** Count of ambiguous matches detected (e.g. parallel candidate within 2m) */
   ambiguousMatchesCount: number;
 };
@@ -173,11 +177,13 @@ export function scoreRoadIntelligence(
   let confirmedMeters = 0;
   let probableMeters = 0;
   let smoothMeters = 0;
+  let unpavedMeters = 0;
   let cyclewayMeters = 0;
   let embeddedRailsMeters = 0;
   let totalMeters = 0;
   let ambiguousMatchesCount = 0;
   const matched = new Set<string>();
+  const matchedFeatures = new Set<string>();
 
   for (let rIndex = 1; rIndex < coordinates.length; rIndex += 1) {
     const a = coordinates[rIndex - 1];
@@ -207,14 +213,10 @@ export function scoreRoadIntelligence(
       let best: RoadSegmentRecord | null = null;
       let bestDistance = Infinity;
       let bestWeight = 0;
-      let candidateCountWithin2m = 0;
+      let nearestRejected = Infinity;
+      const alignedCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
 
       for (const candidate of nearbySegments(index, midpoint, matchMeters)) {
-        // Highway class filtering for vehicles vs footway/pedestrian
-        if (mode !== "bicycle" && (candidate.highwayClass === "footway" || candidate.highwayClass === "pedestrian")) {
-          continue; // Vehicles cannot traverse footways/pedestrian areas
-        }
-
         const distance = pointToSegmentDistance(
           midpoint,
           candidate.coordinates[0],
@@ -223,25 +225,22 @@ export function scoreRoadIntelligence(
 
         if (distance > matchMeters) continue;
 
-        // Unidirectional alignment check for oneway segments
-        const isAligned = headingsAlign(
+        const geometricallyAligned = headingsAlign(
           sampleA,
           sampleB,
           candidate.coordinates[0],
           candidate.coordinates[1],
-          candidate.isOneway,
         );
-
-        if (!isAligned) continue;
-
-        const isDifferentRoad =
-          best !== null &&
-          ((candidate.osmWayId !== null && best.osmWayId !== null && candidate.osmWayId !== best.osmWayId) ||
-           (candidate.name !== null && best.name !== null && candidate.name !== best.name));
-
-        if (isDifferentRoad && Math.abs(distance - bestDistance) <= 2.0) {
-          candidateCountWithin2m += 1;
+        if (!geometricallyAligned) continue;
+        const allowed = candidate.modeAccess?.[mode] ?? (mode === "bicycle" ? candidate.isBicycleAllowed : candidate.isMotorAllowed);
+        const direction = candidate.modeDirections?.[mode] ?? (candidate.isOneway ? "forward" : "both");
+        const [start, end] = direction === "backward" ? [...candidate.coordinates].reverse() : candidate.coordinates;
+        if (!allowed || direction === "unknown" || !headingsAlign(sampleA, sampleB, start, end, direction !== "both")) {
+          nearestRejected = Math.min(nearestRejected, distance);
+          continue;
         }
+
+        alignedCandidates.push({ segment: candidate, distance });
 
         const weight = candidate.roughnessWeight;
         if (
@@ -254,13 +253,28 @@ export function scoreRoadIntelligence(
         }
       }
 
-      if (candidateCountWithin2m > 0) {
+      // Reject a closer prohibited road rather than transferring its route samples
+      // to an accessible parallel road with unrelated surface evidence.
+      if (!best || nearestRejected <= bestDistance + 0.000001) continue;
+
+      // Compare against the final nearest road, not a temporary leader in index order.
+      const selected = best;
+      if (alignedCandidates.some(({ segment, distance }) =>
+        Math.abs(distance - bestDistance) <= 2 &&
+        ((segment.osmWayId !== null && selected.osmWayId !== null && segment.osmWayId !== selected.osmWayId) ||
+         (segment.name !== null && selected.name !== null && segment.name !== selected.name)),
+      )) {
         ambiguousMatchesCount += 1;
       }
 
-      if (!best) continue;
+      const grade = (segment: RoadSegmentRecord) => `${segment.rawTags?.layer ?? "0"}:${segment.rawTags?.bridge ?? "no"}:${segment.rawTags?.tunnel ?? "no"}`;
+      if (alignedCandidates.some(({ segment, distance }) =>
+        Math.abs(distance - bestDistance) <= 2 && grade(segment) !== grade(selected),
+      )) continue; // Route geometry alone cannot resolve vertically separated roads.
 
-      matched.add(best.segmentHash);
+      const sourceKey = best.osmWayId === null ? best.segmentHash : `osm:${best.osmWayId}`;
+      matched.add(`${sourceKey}:${best.segmentHash}`);
+      if (best.surfaceCategory !== "unknown") matchedFeatures.add(sourceKey);
 
       if (best.surfaceCategory === "confirmed_rough") {
         paveMeters += sampleLength;
@@ -272,6 +286,8 @@ export function scoreRoadIntelligence(
         probableMeters += sampleLength;
       } else if (best.surfaceCategory === "confirmed_smooth") {
         smoothMeters += sampleLength;
+      } else if (best.surfaceCategory === "unpaved_loose") {
+        unpavedMeters += sampleLength;
       }
 
       if (best.cycling?.value?.hasFacility) {
@@ -286,15 +302,16 @@ export function scoreRoadIntelligence(
   const roundedTotal = Math.round(totalMeters);
   const roundedPave = Math.min(roundedTotal, Math.round(paveMeters));
   const roundedSmooth = Math.min(roundedTotal - roundedPave, Math.round(smoothMeters));
-  const assessedMeters = roundedPave + roundedSmooth;
+  const roundedUnpaved = Math.min(roundedTotal - roundedPave - roundedSmooth, Math.round(unpavedMeters));
+  const assessedMeters = roundedPave + roundedSmooth + roundedUnpaved;
   const unknownMeters = Math.max(0, roundedTotal - assessedMeters);
 
   const pavePercent = roundedTotal > 0 ? Math.round((roundedPave / roundedTotal) * 1000) / 10 : 0;
   const smoothPercent = roundedTotal > 0 ? Math.round((roundedSmooth / roundedTotal) * 1000) / 10 : 0;
   const matchedCoveragePercent = roundedTotal > 0 ? Math.round((assessedMeters / roundedTotal) * 1000) / 10 : 0;
 
-  const confidence = roundedPave > 0
-    ? (confirmedMeters + probableMeters * 0.65) / roundedPave
+  const confidence = paveMeters > 0
+    ? Math.max(0, Math.min(1, (confirmedMeters + probableMeters * 0.65) / paveMeters))
     : (roundedSmooth > 0 ? 1.0 : 0.0);
 
   return {
@@ -304,6 +321,7 @@ export function scoreRoadIntelligence(
     confirmedMeters: Math.round(confirmedMeters),
     probableMeters: Math.round(probableMeters),
     smoothMeters: roundedSmooth,
+    unpavedMeters: roundedUnpaved,
     pavePercent,
     smoothPercent,
     unknownMeters,
@@ -313,6 +331,7 @@ export function scoreRoadIntelligence(
     classificationConfidence: Math.round(confidence * 100) / 100,
     dataConfidence: null,
     matchedSegments: matched.size,
+    matchedFeatures: matchedFeatures.size,
     ambiguousMatchesCount,
   };
 }

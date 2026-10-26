@@ -44,6 +44,9 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    // The OSM archive is large. Enable Vite's JSON SSR fast path instead of
+    // parsing the expanded data module through the JavaScript transformer.
+    json: { stringify: true, namedExports: false },
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
       : undefined,

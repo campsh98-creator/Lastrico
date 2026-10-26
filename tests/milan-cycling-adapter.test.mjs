@@ -8,7 +8,7 @@ import {
   normalizeTypology,
 } from "../lib/adapters/milan-cycling-adapter.ts";
 
-const officialCyclingUrl = new URL("../data/cycling/milan-itinerari-ciclabili-official.json", import.meta.url);
+const sampleCyclingUrl = new URL("./fixtures/municipal-cycling-unverified-samples.json", import.meta.url);
 
 test("normalizeMunicipalCyclingFeature maps typologies and retains strict surface neutrality", () => {
   const sampleMunicipalFeature = {
@@ -53,14 +53,13 @@ test("normalizeMunicipalCyclingFeature maps typologies and retains strict surfac
   assert.equal(normalized.infrastructure.confidence, 0.95);
 });
 
-test("official Milan cycling dataset parses correctly with CC-BY-4.0 licensing and provenance", async () => {
-  const raw = await readFile(officialCyclingUrl, "utf8");
+test("quarantined municipal samples exercise parsing without claiming verified provenance", async () => {
+  const raw = await readFile(sampleCyclingUrl, "utf8");
   const dataset = JSON.parse(raw);
 
   assert.equal(dataset.type, "FeatureCollection");
-  assert.equal(dataset.name, "ds60_bike_ciclabili");
-  assert.equal(dataset.metadata.license, "CC-BY-4.0");
-  assert.equal(dataset.metadata.attribution, "Comune di Milano");
+  assert.equal(dataset.metadata.fixture, true);
+  assert.equal(dataset.metadata.authoritative, false);
   assert.ok(dataset.features.length >= 5);
 
   for (const feature of dataset.features) {
@@ -100,7 +99,7 @@ test("matchCyclingToRoadSegment rejects ambiguous matches when multiple candidat
     municipalId: "1",
     streetName: "Corso Venezia",
     geometry: [[[9.182, 45.465], [9.184, 45.466]]],
-    infrastructure: { state: "known", value: {}, confidence: 0.9 },
+    infrastructure: { state: "known", value: { hasFacility: true, direction: "bidirezionale" }, confidence: 0.9 },
     site: "carreggiata",
     completionYear: 2020,
     lengthMeters: 200,
@@ -110,7 +109,7 @@ test("matchCyclingToRoadSegment rejects ambiguous matches when multiple candidat
     municipalId: "2",
     streetName: "Corso Venezia",
     geometry: [[[9.182, 45.4651], [9.184, 45.4661]]],
-    infrastructure: { state: "known", value: {}, confidence: 0.9 },
+    infrastructure: { state: "known", value: { hasFacility: true, direction: "bidirezionale" }, confidence: 0.9 },
     site: "marciapiede",
     completionYear: 2022,
     lengthMeters: 200,

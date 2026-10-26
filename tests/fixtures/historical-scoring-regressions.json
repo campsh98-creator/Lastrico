@@ -1,0 +1,934 @@
+{
+  "description": "Historical regression geometry from 99a86e9. Test-only snapshot; not authoritative current road data.",
+  "short": {
+    "segmentHash": "091f154fb819058b",
+    "osmWayId": 286609083,
+    "name": "Via Giuseppe Ripamonti",
+    "coordinates": [
+      [
+        9.1968337,
+        45.4509353
+      ],
+      [
+        9.1968369,
+        45.4509232
+      ]
+    ],
+    "lengthMeters": 1.360678624069433,
+    "bearing": 169.48964788348735,
+    "highwayClass": "residential",
+    "isOneway": false,
+    "isMotorAllowed": true,
+    "isBicycleAllowed": true,
+    "embeddedRails": false,
+    "surface": {
+      "state": "known",
+      "value": "sett",
+      "sourceId": "osm:way:286609083",
+      "authority": "osm_curated",
+      "observedAt": null,
+      "ingestedAt": "2026-10-26T00:00:00Z",
+      "confidence": 1
+    },
+    "smoothness": {
+      "state": "unknown",
+      "value": "unknown",
+      "sourceId": "osm:way:286609083",
+      "authority": "osm_curated",
+      "observedAt": null,
+      "ingestedAt": "2026-10-26T00:00:00Z",
+      "confidence": 0
+    },
+    "cycling": {
+      "state": "unknown",
+      "value": {
+        "hasFacility": false,
+        "typology": "none",
+        "direction": "bidirezionale",
+        "surface": null,
+        "source": "none"
+      },
+      "sourceId": "osm:way:286609083",
+      "authority": "osm_curated",
+      "observedAt": null,
+      "ingestedAt": "2026-10-26T00:00:00Z",
+      "confidence": 0
+    },
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
+    "rawTags": {}
+  },
+  "nearby": [
+    {
+      "segmentHash": "012b1f487a740e5d",
+      "osmWayId": 286242733,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1780867,
+          45.4657397
+        ],
+        [
+          9.1781261,
+          45.4657393
+        ]
+      ],
+      "lengthMeters": 3.076381466459729,
+      "bearing": 90.82932129479616,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "06deee10965fb0bb",
+      "osmWayId": 286242733,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1779027,
+          45.4657749
+        ],
+        [
+          9.1779707,
+          45.4657598
+        ]
+      ],
+      "lengthMeters": 5.565152007822893,
+      "bearing": 107.5689562346264,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "1d927ddf7ee75036",
+      "osmWayId": 145018315,
+      "name": "Largo Enzo Tortora",
+      "coordinates": [
+        [
+          9.1777843,
+          45.4658054
+        ],
+        [
+          9.1779904,
+          45.4656801
+        ]
+      ],
+      "lengthMeters": 21.23096808453509,
+      "bearing": 130.92051976616187,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "32f346f82b6a9138",
+      "osmWayId": 273714456,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1784279,
+          45.4657551
+        ],
+        [
+          9.1783184,
+          45.4657627
+        ]
+      ],
+      "lengthMeters": 8.590135051426294,
+      "bearing": 275.65180988561457,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "3c64c40ab15ef756",
+      "osmWayId": 145018315,
+      "name": "Largo Enzo Tortora",
+      "coordinates": [
+        [
+          9.1779904,
+          45.4656801
+        ],
+        [
+          9.1780244,
+          45.4656499
+        ]
+      ],
+      "lengthMeters": 4.265036498838085,
+      "bearing": 141.70592383804058,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "7e9781c3659833b5",
+      "osmWayId": 145018316,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1782029,
+          45.4657787
+        ],
+        [
+          9.1778071,
+          45.4658768
+        ]
+      ],
+      "lengthMeters": 32.74860232339858,
+      "bearing": 289.4636091961738,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:145018316",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:145018316",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:145018316",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "84c9af27f6647f9a",
+      "osmWayId": 145018315,
+      "name": "Largo Enzo Tortora",
+      "coordinates": [
+        [
+          9.1780244,
+          45.4656499
+        ],
+        [
+          9.1780713,
+          45.4656113
+        ]
+      ],
+      "lengthMeters": 5.6225784706987785,
+      "bearing": 139.56425206657497,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "88fb1343a877b9be",
+      "osmWayId": 26702701,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1775585,
+          45.4658997
+        ],
+        [
+          9.1777843,
+          45.4658054
+        ]
+      ],
+      "lengthMeters": 20.480036794354707,
+      "bearing": 120.77261348957632,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:26702701",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:26702701",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:26702701",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "9131d9983120f1ac",
+      "osmWayId": 273714456,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1783184,
+          45.4657627
+        ],
+        [
+          9.1782029,
+          45.4657787
+        ]
+      ],
+      "lengthMeters": 9.189200581120595,
+      "bearing": 281.17331183493997,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "99e7e0d2b90fb7fa",
+      "osmWayId": 145018316,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1778071,
+          45.4658768
+        ],
+        [
+          9.1773713,
+          45.4659916
+        ]
+      ],
+      "lengthMeters": 36.31343536025421,
+      "bearing": 290.5865367082076,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:145018316",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:145018316",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:145018316",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "9b1e4e5ba9eea945",
+      "osmWayId": 273714456,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1789886,
+          45.465732
+        ],
+        [
+          9.1784279,
+          45.4657551
+        ]
+      ],
+      "lengthMeters": 43.849760548742054,
+      "bearing": 273.3620579803249,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:273714456",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "b919b60c1bd73cec",
+      "osmWayId": 286242733,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1777843,
+          45.4658054
+        ],
+        [
+          9.1779027,
+          45.4657749
+        ]
+      ],
+      "lengthMeters": 9.839440986705332,
+      "bearing": 110.1683138728514,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "c7b340bc8f276ac7",
+      "osmWayId": 286242733,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1781261,
+          45.4657393
+        ],
+        [
+          9.1782029,
+          45.4657787
+        ]
+      ],
+      "lengthMeters": 7.410816734155045,
+      "bearing": 53.81482203170174,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "fcd39509ce16b099",
+      "osmWayId": 145018315,
+      "name": "Largo Enzo Tortora",
+      "coordinates": [
+        [
+          9.1780713,
+          45.4656113
+        ],
+        [
+          9.1781129,
+          45.4655329
+        ]
+      ],
+      "lengthMeters": 9.254933843475532,
+      "bearing": 159.58781967913274,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:145018315",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    },
+    {
+      "segmentHash": "ff9d16ea5ec3d2d3",
+      "osmWayId": 286242733,
+      "name": "Corso Magenta",
+      "coordinates": [
+        [
+          9.1779707,
+          45.4657598
+        ],
+        [
+          9.1780867,
+          45.4657397
+        ]
+      ],
+      "lengthMeters": 9.324996047856828,
+      "bearing": 103.87785319511988,
+      "highwayClass": "residential",
+      "isOneway": false,
+      "isMotorAllowed": true,
+      "isBicycleAllowed": true,
+      "embeddedRails": false,
+      "surface": {
+        "state": "known",
+        "value": "sett",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 1
+      },
+      "smoothness": {
+        "state": "unknown",
+        "value": "unknown",
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "cycling": {
+        "state": "unknown",
+        "value": {
+          "hasFacility": false,
+          "typology": "none",
+          "direction": "bidirezionale",
+          "surface": null,
+          "source": "none"
+        },
+        "sourceId": "osm:way:286242733",
+        "authority": "osm_curated",
+        "observedAt": null,
+        "ingestedAt": "2026-10-26T00:00:00Z",
+        "confidence": 0
+      },
+      "surfaceCategory": "confirmed_rough",
+      "roughnessWeight": 1,
+      "rawTags": {}
+    }
+  ],
+  "targetHash": "012b1f487a740e5d"
+}

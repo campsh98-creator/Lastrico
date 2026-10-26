@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { NextRequest } from "next/server.js";
-import bundledSurfaces from "../data/milan-pave-central.json" with { type: "json" };
+import bundledSurfaces from "../data/surfaces/milan-central.json" with { type: "json" };
 import { loadApi, encodePolyline } from "./helpers/load-api.mjs";
 
 const { GET } = await loadApi("app/api/routes/route.ts");
 const points = [[9.29, 45.53], [9.295, 45.53]];
 const detour = [points[0], [9.29, 45.531], [9.295, 45.531], points[1]];
-const roughWay = { id: 900000001, tags: { surface: "sett", name: "Fixture" }, geometry: points.map(([lon, lat]) => ({ lon, lat })) };
+const roughWay = { id: 900000001, tags: { highway: "residential", surface: "sett", name: "Fixture" }, geometry: points.map(([lon, lat]) => ({ lon, lat })) };
 const trip = (coordinates, time) => ({
   status: 0, summary: { length: 1, time },
   legs: [{ shape: encodePolyline(coordinates), maneuvers: [
@@ -103,16 +103,57 @@ test("navigation and all modes preserve profiles, preferences and usable instruc
 
 
 test("known local surfaces remain scored when a candidate leaves the endpoint query rectangle", async (t) => {
-  const way = bundledSurfaces[0];
+  const way = bundledSurfaces.find((segment) => segment.surfaceCategory === "probable_rough"
+    && segment.isMotorAllowed && segment.lengthMeters > 20
+    && segment.coordinates.every(([lon]) => lon < points[0][0] - 0.02));
+  assert.ok(way);
   assert.ok(way.coordinates.every(([lon]) => lon < points[0][0] - 0.02));
   fixtures(t, [trip([points[0], ...way.coordinates, points[1]], 1800)], []);
   const response = await GET(request());
   assert.equal(response.status, 200);
   const data = await response.json();
-  assert.ok(data.fast.paveMeters > 100);
-  assert.ok(data.fast.probablePaveMeters > 100);
+  assert.ok(data.fast.paveMeters > 10);
+  assert.ok(data.fast.probablePaveMeters > 10);
   assert.equal(typeof data.fast.smoothSurfaceMeters, "number");
   assert.equal(typeof data.fast.cyclewayMeters, "number");
   assert.equal(typeof data.candidateDiagnostics[0].smoothSurfaceMeters, "number");
   assert.equal(typeof data.candidateDiagnostics[0].cyclewayMeters, "number");
+});
+
+test("real handler measures smooth and cycling exposure from live OSM attributes", async (t) => {
+  const calls = fixtures(t, [trip(points, 60)], [{
+    ...roughWay, tags: { highway: "residential", surface: "asphalt", cycleway: "lane" },
+  }]);
+  const response = await GET(request({ mode: "bicycle", maxExtraMinutes: "0" }));
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.ok(data.fast.smoothSurfaceMeters > 300);
+  assert.equal(data.fast.cyclewayMeters, data.fast.smoothSurfaceMeters);
+  assert.equal(data.fast.unknownSurfaceMeters, 0);
+  assert.equal(data.fast.surfaceCoveragePercent, 100);
+  assert.equal(data.fast.paveMeters, 0);
+  assert.equal(data.surfaceDataAvailable, true);
+  assert.equal(data.candidateDiagnostics[0].smoothSurfaceMeters, data.fast.smoothSurfaceMeters);
+  const query = new URLSearchParams(calls.find((call) => call.url.includes("overpass")).init.body).get("data");
+  assert.ok(!query.includes('["surface"'), "updates must include unknown/smooth surfaces, not only rough roads");
+});
+
+test("handler does not classify generic paved as confirmed smooth", async (t) => {
+  fixtures(t, [trip(points, 60)], [{ ...roughWay, tags: { highway: "residential", surface: "paved" } }]);
+  const data = await (await GET(request())).json();
+  assert.equal(data.fast.smoothSurfaceMeters, 0);
+  assert.equal(data.fast.surfaceCoveragePercent, 0);
+  assert.ok(data.fast.unknownSurfaceMeters > 300);
+});
+
+test("handler honors bicycle counterflow without assigning restricted cycle tracks to cars", async (t) => {
+  const reversed = [...points].reverse();
+  fixtures(t, [trip(reversed, 60)], [{
+    ...roughWay, tags: { highway: "cycleway", surface: "asphalt", oneway: "yes", "oneway:bicycle": "no" },
+  }]);
+  const bicycle = await (await GET(request({ mode: "bicycle", start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
+  assert.ok(bicycle.fast.smoothSurfaceMeters > 300);
+  const car = await (await GET(request({ start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
+  assert.equal(car.fast.smoothSurfaceMeters, 0);
+  assert.ok(car.fast.unknownSurfaceMeters > 300);
 });

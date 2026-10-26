@@ -45,6 +45,7 @@ export function validateCoordinates(coordinates, bounds = MILAN_BOUNDS) {
 
     if (i > 0) {
       const prev = coordinates[i - 1];
+      if (!Array.isArray(prev) || prev.length !== 2 || !prev.every(Number.isFinite)) continue;
       const dist = geographicDistance(prev, point);
       if (dist === 0) {
         errors.push(`Zero-length segment between vertex ${i - 1} and ${i}`);

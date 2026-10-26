@@ -17,6 +17,7 @@ import {
 } from "@/lib/navigation-state";
 import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
 import { CommunityPanel } from "@/components/reports/CommunityPanel";
+import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import {
   directionGlyph,
   type NavigationInstruction,
@@ -82,6 +83,17 @@ type RouteResult = {
   distance: number;
   minutes: number;
   paveMeters: number;
+  pavePercent?: number;
+  smoothSurfaceMeters?: number;
+  surfaceTotalMeters?: number;
+  unpavedSurfaceMeters?: number;
+  surfaceSource?: "osm" | "demo";
+  cyclewayMeters?: number;
+  unknownSurfaceMeters?: number;
+  surfaceCoveragePercent?: number;
+  confirmedPaveMeters?: number;
+  probablePaveMeters?: number;
+  surfaceConfidence?: number;
   problemSegments?: Coordinate[][];
   instructions?: NavigationInstruction[];
 };
@@ -241,13 +253,29 @@ function route(start: string, end: string, avoidance?: Avoidance): RouteResult {
     const segment = edgeCoordinates(step.edge, step.forward);
     return index === 0 ? segment : segment.slice(1);
   });
+  const distance = steps.reduce((sum, step) => sum + step.edge.distance, 0);
+  const minutes = steps.reduce((sum, step) => sum + step.edge.minutes, 0);
+  const totalMeters = Math.round(distance * 1000);
+  const paveMeters = Math.round(steps.filter((step) => isPave(step.edge.surface)).reduce((sum, step) => sum + step.edge.distance, 0) * 1000);
+  const smoothSurfaceMeters = Math.round(steps.filter((step) => step.edge.surface === "asphalt").reduce((sum, step) => sum + step.edge.distance, 0) * 1000);
+  const unknownSurfaceMeters = Math.max(0, totalMeters - paveMeters - smoothSurfaceMeters);
+  const pavePercent = totalMeters > 0 ? Math.round((paveMeters / totalMeters) * 1000) / 10 : 0;
+  const surfaceCoveragePercent = totalMeters > 0 ? Math.round(((paveMeters + smoothSurfaceMeters) / totalMeters) * 1000) / 10 : 0;
   return {
     nodes: pathNodes,
     edges: steps.map((step) => step.edge),
     coordinates,
-    distance: steps.reduce((sum, step) => sum + step.edge.distance, 0),
-    minutes: steps.reduce((sum, step) => sum + step.edge.minutes, 0),
-    paveMeters: Math.round(steps.filter((step) => isPave(step.edge.surface)).reduce((sum, step) => sum + step.edge.distance, 0) * 1000),
+    distance,
+    minutes,
+    paveMeters,
+    pavePercent,
+    smoothSurfaceMeters,
+    surfaceTotalMeters: totalMeters,
+    unpavedSurfaceMeters: 0,
+    surfaceSource: "demo",
+    cyclewayMeters: 0,
+    unknownSurfaceMeters,
+    surfaceCoveragePercent,
   };
 }
 
@@ -2166,6 +2194,13 @@ export default function Home() {
                   <div><small>Riduzione</small><strong>{fastRoute.paveMeters ? Math.round(savedPave / fastRoute.paveMeters * 100) : 0}%</strong></div>
                   <div><small>Dati</small><strong>{isLiveResult ? "OSM" : "Demo"}</strong></div>
                 </div>
+
+                <SurfaceBreakdown
+                  route={selectedRoute}
+                  isLiveResult={isLiveResult}
+                  activeRoute={activeRoute}
+                  transportMode={transportMode}
+                />
 
                 <div className={`profile-note ${routingProfile.approximate ? "warning" : ""}`}>
                   {routingProfile.notice}

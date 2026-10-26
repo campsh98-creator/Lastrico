@@ -7,7 +7,7 @@ const cssUrl = new URL("../app/globals.css", import.meta.url);
 const geocodeUrl = new URL("../app/api/geocode/route.ts", import.meta.url);
 const providersUrl = new URL("../lib/routing-providers.ts", import.meta.url);
 const routingUrl = new URL("../app/api/routes/route.ts", import.meta.url);
-const paveDataUrl = new URL("../data/milan-pave-central.json", import.meta.url);
+const paveDataUrl = new URL("../data/surfaces/milan-central.json", import.meta.url);
 const layoutUrl = new URL("../app/layout.tsx", import.meta.url);
 const manifestUrl = new URL("../public/manifest.webmanifest", import.meta.url);
 const serviceWorkerUrl = new URL("../public/sw.js", import.meta.url);
@@ -64,7 +64,7 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   ]);
   const paveData = JSON.parse(paveDataText);
 
-  assert.ok(paveData.length > 1000, "the bundled Milan road-surface dataset is unexpectedly small");
+  assert.ok(paveData.length > 0, "the bundled road-intelligence dataset must not be empty");
   assert.match(routing, /fetchEngineRoutes\(\[start, end\], mode, true, deadline, request\.signal\)/);
   assert.match(routing, /navigationRequest \? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS/);
   assert.match(routing, /navigationRequest\s+\? Promise\.resolve\(null\)/);
@@ -79,10 +79,10 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   assert.match(routing, /routesAreEquivalent/);
   assert.match(routing, /candidate\.riskMeters \+ policy\.minimumPaveReduction <= fast\.riskMeters/);
   assert.match(routing, /hasDistinctAlternative/);
-  assert.match(routing, /bundledPave/);
+  assert.match(routing, /bundledRoads/);
   assert.match(routing, /combinedTimeoutSignal\(request\.signal, 650\)/);
-  assert.match(routing, /createSurfaceIndex/);
-  assert.match(routing, /scoreSurfaceExposure/);
+  assert.match(routing, /createRoadIntelligenceIndex/);
+  assert.match(routing, /scoreRoadIntelligence/);
   assert.match(routing, /candidateDiagnostics/);
   assert.match(providers, /set\("steps", "true"\)/);
   assert.match(providers, /instructions: steps\.map/);
@@ -303,4 +303,47 @@ test("publishes only verified community reports and neutralizes CSV formulas", a
   assert.match(exportApi, /eq\(roadReports\.status, "verified"\)/);
   assert.match(exportApi, /\[\\u0000-\\u0020\]\*\[=\+\\-@\]/);
   assert.doesNotMatch(exportApi.match(/const header = \[[\s\S]*?\];/)?.[0] ?? "", /note|nickname/);
+});
+
+test("exposes Road Intelligence metrics in route details with honest unknown-surface disclaimers", async () => {
+  const [page, css, panel] = await Promise.all([
+    readFile(pageUrl, "utf8"),
+    readFile(cssUrl, "utf8"),
+    readFile(new URL("../components/SurfaceBreakdown.tsx", import.meta.url), "utf8"),
+  ]);
+
+  // RouteResult supports enriched Road Intelligence fields
+  assert.match(page, /smoothSurfaceMeters\?: number/);
+  assert.match(page, /cyclewayMeters\?: number/);
+  assert.match(page, /unknownSurfaceMeters\?: number/);
+  assert.match(page, /surfaceCoveragePercent\?: number/);
+
+  assert.match(page, /<SurfaceBreakdown/);
+  assert.match(page, /route=\{selectedRoute\}/);
+
+  // Semantic styling remains in the shared component; rendering and arithmetic
+  // are verified against the real API handler in surface-breakdown.test.mjs.
+  assert.match(panel, /data-testid="surface-breakdown"/);
+  assert.match(panel, /data-testid="metric-smooth"/);
+  assert.match(panel, /Liscio noto/);
+  assert.match(panel, /data-testid="metric-rough"/);
+  assert.match(panel, /Pavé noto/);
+  assert.match(panel, /data-testid="metric-unknown"/);
+  assert.match(panel, /Non verificato/);
+  assert.match(panel, /data-testid="metric-cycleway"/);
+  assert.match(panel, /Infrastruttura ciclabile/);
+  assert.match(panel, /l’assenza di pavé noto non garantisce fondo liscio o sicuro/);
+  assert.match(panel, /Dati simulati per la demo/);
+
+  // Styling for surface intelligence cards and indicators
+  assert.match(css, /\.surface-breakdown\s*\{/);
+  assert.match(css, /\.surface-breakdown-heading\s*\{/);
+  assert.match(css, /\.surface-breakdown-grid\s*\{/);
+  assert.match(css, /\.surface-metric-cell\s*\{/);
+  assert.match(css, /\.surface-indicator\.smooth\s*\{/);
+  assert.match(css, /\.surface-indicator\.rough\s*\{/);
+  assert.match(css, /\.surface-indicator\.unknown\s*\{/);
+  assert.match(css, /\.surface-indicator\.cycleway\s*\{/);
+  assert.match(css, /\.surface-cycle-strip\s*\{/);
+  assert.match(css, /\.surface-disclaimer\s*\{/);
 });

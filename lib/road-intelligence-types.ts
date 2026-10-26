@@ -39,6 +39,8 @@ export type SurfaceCategory =
   | "unknown";
 
 export type HighwayClassification =
+  | "unknown"
+  | "steps"
   | "motorway"
   | "trunk"
   | "primary"
@@ -133,6 +135,10 @@ export type RoadSegmentRecord = {
   isOneway: boolean;
   isMotorAllowed: boolean;
   isBicycleAllowed: boolean;
+  /** Optional for compatibility with earlier records; specific modal access wins. */
+  modeAccess?: Record<"car" | "motorcycle" | "bicycle", boolean>;
+  /** Permitted travel relative to this record's coordinate order. */
+  modeDirections?: Record<"car" | "motorcycle" | "bicycle", "both" | "forward" | "backward" | "unknown">;
   embeddedRails: boolean;
 
   /** Explicit attribute provenance */

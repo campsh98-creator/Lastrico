@@ -1,15 +1,10 @@
 {
   "type": "FeatureCollection",
-  "name": "ds60_bike_ciclabili",
+  "name": "unverified-cycling-test-samples",
   "metadata": {
-    "title": "Itinerari ciclabili - Comune di Milano",
-    "datasetId": "ds60_bike_ciclabili",
-    "portalUrl": "https://dati.comune.milano.it/dataset/itinerari-ciclabili",
-    "license": "CC-BY-4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-    "attribution": "Comune di Milano",
-    "crs": "urn:ogc:def:crs:OGC:1.3:CRS84",
-    "extractedAt": "2026-10-25T00:00:00Z"
+    "fixture": true,
+    "authoritative": false,
+    "provenance": "Unverified samples preserved from commit 99a86e9 for adapter tests only. No original municipal response or verified extraction provenance is available. Not for runtime ingestion or coverage measurement."
   },
   "features": [
     {
@@ -17,11 +12,26 @@
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [9.2050, 45.4740],
-          [9.2075, 45.4765],
-          [9.2100, 45.4790],
-          [9.2130, 45.4820],
-          [9.2160, 45.4850]
+          [
+            9.205,
+            45.474
+          ],
+          [
+            9.2075,
+            45.4765
+          ],
+          [
+            9.21,
+            45.479
+          ],
+          [
+            9.213,
+            45.482
+          ],
+          [
+            9.216,
+            45.485
+          ]
         ]
       },
       "properties": {
@@ -42,10 +52,22 @@
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [9.1980, 45.4670],
-          [9.2005, 45.4695],
-          [9.2030, 45.4720],
-          [9.2050, 45.4740]
+          [
+            9.198,
+            45.467
+          ],
+          [
+            9.2005,
+            45.4695
+          ],
+          [
+            9.203,
+            45.472
+          ],
+          [
+            9.205,
+            45.474
+          ]
         ]
       },
       "properties": {
@@ -66,9 +88,18 @@
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [9.2160, 45.4850],
-          [9.2185, 45.4880],
-          [9.2210, 45.4910]
+          [
+            9.216,
+            45.485
+          ],
+          [
+            9.2185,
+            45.488
+          ],
+          [
+            9.221,
+            45.491
+          ]
         ]
       },
       "properties": {
@@ -89,9 +120,18 @@
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [9.1920, 45.4850],
-          [9.1935, 45.4890],
-          [9.1950, 45.4930]
+          [
+            9.192,
+            45.485
+          ],
+          [
+            9.1935,
+            45.489
+          ],
+          [
+            9.195,
+            45.493
+          ]
         ]
       },
       "properties": {
@@ -112,9 +152,18 @@
       "geometry": {
         "type": "LineString",
         "coordinates": [
-          [9.1710, 45.4760],
-          [9.1670, 45.4790],
-          [9.1630, 45.4820]
+          [
+            9.171,
+            45.476
+          ],
+          [
+            9.167,
+            45.479
+          ],
+          [
+            9.163,
+            45.482
+          ]
         ]
       },
       "properties": {

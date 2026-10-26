@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import bundledPave from "@/data/milan-pave-central.json";
+import bundledRoads from "@/data/surfaces/milan-central.json";
+import type { RoadSegmentRecord } from "@/lib/road-intelligence-types";
+import { normalizeOsmFeature } from "@/scripts/osm/normalize.mjs";
 import {
   isTransportMode,
   type RoutingProfileMetadata,
   type TransportMode,
 } from "@/lib/routing-types";
 import {
-  createSurfaceIndex,
-  scoreSurfaceExposure,
-  type SurfaceIndex,
-  type SurfaceScore,
-} from "@/lib/cobblestone-scoring";
+  createRoadIntelligenceIndex,
+  scoreRoadIntelligence,
+  type RoadIntelligenceIndex,
+  type RoadIntelligenceScore,
+} from "@/lib/road-intelligence-scoring";
 import {
   combinedTimeoutSignal,
   fetchEngineRoutes,
@@ -24,9 +26,10 @@ import { routesAreEquivalent as equivalentRoutes, deduplicateRoutes as uniqueRou
 
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
+type SurfaceScore = RoadIntelligenceScore & { confidence: number };
 type PaveWay = {
   id: number;
-  tags?: { name?: string; surface?: string; highway?: string };
+  tags?: Record<string, string>;
   geometry?: Array<{ lat: number; lon: number }>;
 };
 
@@ -279,6 +282,9 @@ function routePayload(
     confirmedPaveMeters: surfaceScore.confirmedMeters,
     probablePaveMeters: surfaceScore.probableMeters,
     smoothSurfaceMeters: surfaceScore.smoothMeters ?? 0,
+    surfaceTotalMeters: surfaceScore.totalMeters,
+    unpavedSurfaceMeters: surfaceScore.unpavedMeters,
+    surfaceSource: "osm" as const,
     cyclewayMeters: surfaceScore.cyclewayMeters ?? 0,
     instructions: route.instructions,
     problemSegments,
@@ -334,10 +340,22 @@ function modeUnavailableMessage(mode: TransportMode) {
   return "Il routing gratuito è temporaneamente indisponibile. Riprova tra poco.";
 }
 
-let cachedBaseIndex: SurfaceIndex | null = null;
-function getBaseSurfaceIndex(): SurfaceIndex {
+const localRoads = bundledRoads as unknown as RoadSegmentRecord[];
+function roughDetails(segments: RoadSegmentRecord[]): PaveDetail[] {
+  return segments.filter((segment) => segment.osmWayId !== null &&
+    (segment.surfaceCategory === "confirmed_rough" || segment.surfaceCategory === "probable_rough"))
+    .map((segment) => ({
+      id: segment.osmWayId!,
+      name: segment.name ?? "Strada senza nome",
+      surface: segment.surface.value ?? "unknown",
+      coordinates: segment.coordinates,
+    }));
+}
+const localPave = roughDetails(localRoads);
+let cachedBaseIndex: RoadIntelligenceIndex | null = null;
+function getBaseSurfaceIndex(): RoadIntelligenceIndex {
   if (!cachedBaseIndex) {
-    cachedBaseIndex = createSurfaceIndex(bundledPave as PaveDetail[]);
+    cachedBaseIndex = createRoadIntelligenceIndex(localRoads);
   }
   return cachedBaseIndex;
 }
@@ -370,9 +388,8 @@ export async function GET(request: NextRequest) {
   const west = Math.max(MILAN_BOUNDS.west, Math.min(start[0], end[0]) - padding);
   const north = Math.min(MILAN_BOUNDS.north, Math.max(start[1], end[1]) + padding);
   const east = Math.min(MILAN_BOUNDS.east, Math.max(start[0], end[0]) + padding);
-  const overpassQuery = `[out:json][timeout:20];way["highway"~"${policy.surfaceHighways}"]["surface"~"^(sett|cobblestone|unhewn_cobblestone|paving_stones)$"](${south},${west},${north},${east});out tags geom;`;
+  const overpassQuery = `[out:json][timeout:20];way["highway"~"${policy.surfaceHighways}"](${south},${west},${north},${east});out tags geom;`;
   // Candidates may leave the endpoint rectangle; score against the full local snapshot.
-  const localPave = bundledPave as PaveDetail[];
 
   try {
     const [baseRoutes, overpassResponse] = await Promise.all([
@@ -393,32 +410,31 @@ export async function GET(request: NextRequest) {
     const baseRoutingReadyAt = performance.now();
     if (!baseRoutes.length) throw new Error("Nessun percorso");
 
+    let roads = localRoads;
     let paveDetails: PaveDetail[] = localPave;
     let dataSource = "archivio OSM locale";
     if (overpassResponse?.ok) {
       try {
         const overpass = await overpassResponse.json() as { elements?: PaveWay[] };
-        const livePave = (overpass.elements ?? [])
+        // A surface-unfiltered update can invalidate stale rough/smooth evidence.
+        const liveWays = (Array.isArray(overpass.elements) ? overpass.elements : [])
           .filter((way) =>
             way && Number.isSafeInteger(way.id) && way.id > 0
-            && typeof way.tags?.surface === "string"
-            && ["sett", "cobblestone", "unhewn_cobblestone", "paving_stones"].includes(way.tags.surface)
+            && way.tags && typeof way.tags.highway === "string"
+            && Object.values(way.tags).every((value) => typeof value === "string")
             && Array.isArray(way.geometry) && way.geometry.length > 1
             && way.geometry.every((point) => point
               && typeof point.lon === "number" && typeof point.lat === "number"
               && Number.isFinite(point.lon) && Number.isFinite(point.lat)
               && point.lon >= MILAN_BOUNDS.west && point.lon <= MILAN_BOUNDS.east
-              && point.lat >= MILAN_BOUNDS.south && point.lat <= MILAN_BOUNDS.north))
-          .map((way) => ({
-            id: way.id,
-            name: typeof way.tags?.name === "string" ? way.tags.name : "Strada senza nome",
-            surface: way.tags?.surface ?? "pavé",
-            coordinates: way.geometry!.map((point) => [point.lon, point.lat] as Coordinate),
-          }));
-        if (livePave.length) {
-          const merged = new Map<number, PaveDetail>(paveDetails.map((way) => [way.id, way]));
-          livePave.forEach((way) => merged.set(way.id, way));
-          paveDetails = [...merged.values()];
+              && point.lat >= MILAN_BOUNDS.south && point.lat <= MILAN_BOUNDS.north));
+        if (liveWays.length) {
+          const ingestedAt = new Date().toISOString();
+          const liveSegments = liveWays.flatMap((way) =>
+            normalizeOsmFeature(way, { ingestedAt }).segments) as RoadSegmentRecord[];
+          const replacedIds = new Set(liveSegments.map((segment) => segment.osmWayId));
+          roads = [...localRoads.filter((segment) => !replacedIds.has(segment.osmWayId)), ...liveSegments];
+          paveDetails = roughDetails(roads);
           dataSource = "archivio OSM locale + aggiornamento live";
         }
       } catch {
@@ -426,18 +442,20 @@ export async function GET(request: NextRequest) {
       }
     }
     const paveWays = paveDetails.map((way) => way.coordinates);
-    const surfaceIndex = paveDetails === localPave
+    const surfaceIndex = roads === localRoads
       ? getBaseSurfaceIndex()
-      : createSurfaceIndex(paveDetails);
+      : createRoadIntelligenceIndex(roads);
     const scoreCache = new Map<EngineRoute, SurfaceScore>();
     const scoreCandidate = (route: EngineRoute) => {
       const cached = scoreCache.get(route);
       if (cached) return cached;
-      const score = scoreSurfaceExposure(
+      const intelligence = scoreRoadIntelligence(
         route.coordinates,
         surfaceIndex,
         policy.surfaceMatchMeters,
+        mode,
       );
+      const score: SurfaceScore = { ...intelligence, confidence: intelligence.classificationConfidence };
       scoreCache.set(route, score);
       return score;
     };
@@ -600,6 +618,8 @@ export async function GET(request: NextRequest) {
         unknownSurfaceMeters: candidate.surfaceScore.unknownMeters,
         surfaceCoveragePercent: candidate.surfaceScore.matchedCoveragePercent,
         smoothSurfaceMeters: candidate.surfaceScore.smoothMeters ?? 0,
+        surfaceTotalMeters: candidate.surfaceScore.totalMeters,
+        unpavedSurfaceMeters: candidate.surfaceScore.unpavedMeters,
         cyclewayMeters: candidate.surfaceScore.cyclewayMeters ?? 0,
         matchedSurfaceFeatures: candidate.surfaceScore.matchedFeatures,
         detourPercent: fast.route.duration > 0
@@ -608,7 +628,7 @@ export async function GET(request: NextRequest) {
         distinctFromFast: !routesAreEquivalent(candidate.route, fast.route, mode),
       })),
       dataNotice: (
-        !paveWays.length
+        fast.surfaceScore.matchedFeatures + safe.surfaceScore.matchedFeatures === 0
           ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"
           : budgetExcludedLowerExposureRoute
             ? `Nessuna deviazione con meno pavé rispetta il limite di +${maximumExtraMinutes} minuti: mantengo il percorso rapido`

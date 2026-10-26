@@ -224,6 +224,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   flex-direction: column;
   padding: clamp(15px, 2.2vh, 23px) 20px 14px;
 }
+/* Keep metrics and their uncertainty notice visible; scroll the route panel
+   instead of shrinking its overflow-hidden cards on compact screens. */
+.routes-panel { overflow-y: auto; overscroll-behavior: contain; }
+.routes-panel > * { flex-shrink: 0; }
 .panel-heading { margin-bottom: clamp(12px, 1.8vh, 19px); }
 .eyebrow {
   display: block;
@@ -557,6 +561,149 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .impact-strip div:last-child { border-right: 0; }
 .impact-strip small { display: block; color: var(--muted); font-size: 7px; text-transform: uppercase; }
 .impact-strip strong { display: block; margin-top: 3px; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.surface-breakdown {
+  margin: 0 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.surface-breakdown-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px 4px;
+  border-bottom: 1px solid var(--border);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--metric-label);
+}
+
+.surface-breakdown-heading em {
+  font-style: normal;
+  font-size: 7.5px;
+  color: var(--metric-accent);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.surface-breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--surface);
+}
+
+.surface-metric-cell {
+  min-width: 0;
+  padding: 7px 6px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.surface-metric-cell:last-child {
+  border-right: 0;
+}
+
+.surface-metric-cell .metric-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--metric-label);
+  margin-bottom: 2px;
+}
+
+.surface-indicator {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.surface-indicator.smooth {
+  background: var(--green);
+}
+
+.surface-indicator.rough {
+  background: var(--coral);
+}
+
+.surface-indicator.unknown {
+  background: var(--amber);
+}
+
+.surface-indicator.cycleway {
+  background: var(--metric-accent);
+}
+
+.surface-metric-cell strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--metric-value);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.surface-metric-cell .surface-pct {
+  display: block;
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.surface-cycle-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 8px;
+}
+
+.surface-cycle-strip-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--metric-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 7px;
+}
+
+.surface-cycle-strip strong {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--metric-value);
+  font-variant-numeric: tabular-nums;
+}
+
+.surface-cycle-strip em {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 8px;
+  margin-left: 4px;
+}
+
+.surface-disclaimer {
+  padding: 5px 8px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 7.5px;
+  line-height: 1.25;
+  color: var(--muted);
+}
 
 .profile-note {
   min-height: 20px;
@@ -1285,6 +1432,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .route-option strong { font-size: 21px; }
   .impact-strip { margin-bottom: 6px; }
   .impact-strip div { padding: 6px; }
+  .surface-breakdown { margin-bottom: 6px; }
+  .surface-metric-cell { padding: 6px 5px; }
+  .surface-metric-cell strong { font-size: 10.5px; }
+  .surface-cycle-strip { padding: 4px 6px; }
+  .surface-disclaimer { padding: 4px 6px; font-size: 7px; }
   .profile-note { margin-bottom: 5px; font-size: 9px; }
   .journey-button { padding: 6px 9px; }
   .route-actions { margin-top: 5px; }
@@ -1399,6 +1551,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .avoidance-block { margin-top: 4px; }
   .route-option { min-height: 52px; }
   .impact-strip div { padding-block: 5px; }
+  .surface-breakdown { margin-bottom: 5px; }
+  .surface-metric-cell { padding: 4px 4px; }
+  .surface-disclaimer { padding: 3px 5px; }
   .profile-note { min-height: 17px; padding-block: 2px; }
   .journey-button { min-height: 44px; }
 }

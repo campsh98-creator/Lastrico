@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
-import { readFile, rm } from "node:fs/promises";
+import { readFile, rm, mkdtemp } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import test from "node:test";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { runIngestion } from "../scripts/osm/ingest.mjs";
 
 const datasetUrl = new URL("../data/surfaces/milan-central.json", import.meta.url);
@@ -34,16 +36,17 @@ test("manifest matches dataset cryptographic SHA-256 and invariants", async () =
   }
 });
 
-test("re-running ingestion produces strictly reproducible output and checksum", async () => {
-  const tmpDir = new URL("../data/surfaces/.tmp-test", import.meta.url).pathname;
+test("re-running ingestion produces strictly reproducible output and checksum", async (t) => {
+  const tmpDir = await mkdtemp(join(tmpdir(), "lastrico-ingestion-"));
+  t.after(() => rm(tmpDir, { recursive: true, force: true }));
+  const currentManifest = JSON.parse(await readFile(manifestUrl, "utf8"));
   const result = await runIngestion({
-    ingestedAt: "2026-10-26T00:00:00Z",
-    datasetVersion: "2026.10.26-mil-central",
+    ingestedAt: currentManifest.generatedAt,
+    datasetVersion: currentManifest.datasetVersion,
     outputDir: tmpDir,
     outputDatasetPath: `${tmpDir}/test.json`,
     outputManifestPath: `${tmpDir}/test.manifest.json`,
   });
-  const currentManifest = JSON.parse(await readFile(manifestUrl, "utf8"));
   assert.equal(result.checksum, currentManifest.checksums.datasetSha256);
-  await rm(tmpDir, { recursive: true, force: true });
+  assert.equal(await readFile(result.manifestPath, "utf8"), await readFile(manifestUrl, "utf8"));
 });

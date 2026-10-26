@@ -125,9 +125,12 @@ test("vehicular scoring ignores footway and pedestrian segments", () => {
   assert.equal(carScore.paveMeters, 0);
   assert.ok(carScore.unknownMeters > 0);
 
-  // Bicycle score considers the infrastructure if allowed
+  // A forbidden bicycle segment must not be treated as available infrastructure.
   const biciScore = scoreRoadIntelligence(sampleRoute, index, 12, "bicycle");
-  assert.ok(biciScore.paveMeters > 0);
+  assert.equal(biciScore.paveMeters, 0);
+  assert.equal(biciScore.unknownMeters, biciScore.totalMeters);
+  const allowedIndex = createRoadIntelligenceIndex([{ ...footwaySegment, isBicycleAllowed: true }]);
+  assert.ok(scoreRoadIntelligence(sampleRoute, allowedIndex, 12, "bicycle").paveMeters > 0);
 });
 
 test("zero-coverage route remains 100% unknown and is never assumed smooth", () => {

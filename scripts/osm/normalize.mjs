@@ -78,30 +78,60 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   };
 
   // 3. Highway Classification
-  const rawHighway = (tags.highway || "residential").trim().toLowerCase();
-  const highwayClass = HIGHWAY_MAP[rawHighway] || "residential";
+  const rawHighway = (tags.highway || "").trim().toLowerCase();
+  const highwayClass = Object.hasOwn(HIGHWAY_MAP, rawHighway) ? HIGHWAY_MAP[rawHighway] : "unknown";
 
   // 4. Directionality & Modal Access
-  const onewayTag = (tags.oneway || "").trim().toLowerCase();
-  const isOneway = onewayTag === "yes" || onewayTag === "1" || onewayTag === "true" || onewayTag === "-1";
+  const onewayTag = (tags.oneway || (tags.junction === "roundabout" ? "yes" : "")).trim().toLowerCase();
+  const isOneway = ["yes", "1", "true", "-1"].includes(onewayTag);
   const isReversed = onewayTag === "-1";
 
-  const isMotorAllowed = !["cycleway", "footway", "pedestrian", "path"].includes(highwayClass) &&
-    tags.motor_vehicle !== "no" &&
-    tags.vehicle !== "no" &&
-    tags.access !== "no";
+  // More specific modal tags override generic access. Unrecognised restrictions
+  // remain unavailable for matching; this is not a replacement routing graph.
+  const allowedValues = new Set(["yes", "designated", "permissive", "destination", "customers", "delivery"]);
+  function access(keys, defaultAllowed) {
+    for (const key of keys) {
+      if (tags[`${key}:conditional`]) return false;
+      if (tags[key]) return allowedValues.has(tags[key].trim().toLowerCase());
+    }
+    return defaultAllowed;
+  }
+  const defaultMotor = !["unknown", "steps", "cycleway", "footway", "pedestrian", "path"].includes(highwayClass);
+  const modeAccess = {
+    car: access(["motorcar", "motor_vehicle", "vehicle", "access"], defaultMotor),
+    motorcycle: access(["motorcycle", "motor_vehicle", "vehicle", "access"], defaultMotor),
+    bicycle: access(["bicycle", "vehicle", "access"], !["unknown", "steps", "motorway", "footway", "pedestrian"].includes(highwayClass)),
+  };
+  const isMotorAllowed = modeAccess.car || modeAccess.motorcycle;
+  const isBicycleAllowed = modeAccess.bicycle;
 
-  const isBicycleAllowed = tags.bicycle !== "no" &&
-    tags.access !== "no" &&
-    highwayClass !== "motorway";
+  function direction(keys, fallback) {
+    if ([...keys, "oneway"].some((key) => tags[`${key}:conditional`])) return "unknown";
+    const value = keys.map((key) => tags[key]).find((value) => value !== undefined) ?? fallback;
+    const normalized = String(value).trim().toLowerCase();
+    let result = ["no", "0", "false", ""].includes(normalized) ? "both"
+      : normalized === "-1" ? "backward" : ["yes", "1", "true"].includes(normalized) ? "forward" : "unknown";
+    if (result === "unknown") return result;
+    if (isReversed && result !== "both") result = result === "forward" ? "backward" : "forward";
+    return result;
+  }
+  const oppositeCycleway = ["cycleway", "cycleway:left", "cycleway:right", "cycleway:both"]
+    .some((key) => ["opposite", "opposite_lane", "opposite_track"].includes(tags[key]));
+  const modeDirections = {
+    car: direction(["oneway:motorcar", "oneway:motor_vehicle", "oneway:vehicle"], onewayTag),
+    motorcycle: direction(["oneway:motorcycle", "oneway:motor_vehicle", "oneway:vehicle"], onewayTag),
+    bicycle: direction(["oneway:bicycle", "oneway:vehicle"], oppositeCycleway ? "no" : onewayTag),
+  };
 
   // 5. Cycling Infrastructure
-  const cyclewayTag = tags.cycleway || tags["cycleway:right"] || tags["cycleway:left"] || tags["cycleway:both"];
+  const cyclewayValues = [tags.cycleway, tags["cycleway:right"], tags["cycleway:left"], tags["cycleway:both"]];
+  // 'separate' refers to another mapped way, not a facility on this road.
+  const cyclewayTag = cyclewayValues.find((value) => ["track", "lane", "opposite_track", "opposite_lane"].includes(value));
   const isCyclewayWay = highwayClass === "cycleway";
-  const hasCycleway = isCyclewayWay || Boolean(cyclewayTag && cyclewayTag !== "no");
+  const hasCycleway = isCyclewayWay || Boolean(cyclewayTag);
 
   let cyclingTypology = "none";
-  if (isCyclewayWay || cyclewayTag === "track") {
+  if (isCyclewayWay || cyclewayTag === "track" || cyclewayTag === "opposite_track") {
     cyclingTypology = "sede_propria";
   } else if (cyclewayTag === "lane" || cyclewayTag === "opposite_lane") {
     cyclingTypology = "corsia_segnaletica";
@@ -112,7 +142,9 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   const cyclingInfrastructure = {
     hasFacility: hasCycleway,
     typology: cyclingTypology,
-    direction: isOneway ? "monodirezionale_concorde" : "bidirezionale",
+    direction: modeDirections.bicycle === "both" ? "bidirezionale"
+      : modeDirections.bicycle === "forward" ? "monodirezionale_concorde"
+        : modeDirections.bicycle === "backward" ? "monodirezionale_discorde" : "unknown",
     surface: tags["cycleway:surface"] ? (SURFACE_MATERIAL_MAP[tags["cycleway:surface"].toLowerCase()] || null) : null,
     source: hasCycleway ? "osm" : "none",
   };
@@ -157,6 +189,8 @@ export function normalizeOsmFeature(rawWay, options = {}) {
       isOneway,
       isMotorAllowed,
       isBicycleAllowed,
+      modeAccess,
+      modeDirections,
       embeddedRails,
       surface: surfaceProvenance,
       smoothness: smoothnessProvenance,

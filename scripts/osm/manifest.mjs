@@ -2,14 +2,16 @@
  * Manifest generator for Road Intelligence datasets
  */
 import { createHash } from "node:crypto";
-import { MILAN_BOUNDS } from "./config.mjs";
+
 
 export function generateManifest({
   datasetVersion,
   datasetBuffer,
   segments,
   waysCount,
-  sourceDate = "2026-10-25T00:00:00Z",
+  sourceDate,
+  provenance,
+  generatedAt,
 }) {
   const sha256 = createHash("sha256").update(datasetBuffer).digest("hex");
 
@@ -66,11 +68,12 @@ export function generateManifest({
   return {
     schemaVersion: "2.0.0",
     datasetVersion,
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     area: {
-      zoneId: "MIL_CENTRAL",
-      description: "Milan Pilot Area (Central & Inner Ring)",
-      bounds: MILAN_BOUNDS,
+      zoneId: "MIL_CENTRE_PILOT",
+      description: "Milan city-centre pilot only (9.18–9.20 E, 45.455–45.475 N)",
+      bounds: provenance.bounds,
+      denominator: "Sum of linear highway-way centreline edges (area=yes polygons excluded) clipped to the pilot bounds, including unknown surface; each OSM way retained once. Separate mapped carriageways count separately; not lane-km, municipal extent, or citywide road coverage.",
     },
     sources: [
       {
@@ -80,10 +83,14 @@ export function generateManifest({
         licenseUrl: "https://opendatacommons.org/licenses/odbl/1.0/",
         attribution: "© OpenStreetMap contributors",
         snapshotDate: sourceDate,
+        snapshotDateMeaning: "Last response retrieval time; this is not an atomic historical OSM snapshot",
+        sha256: provenance.networkSha256,
+        acquisition: provenance,
       },
     ],
     statistics: {
       totalSegments: segments.length,
+      uniqueGeometryHashes: new Set(segments.map((segment) => segment.segmentHash)).size,
       totalWays: waysCount,
       totalLengthMeters: Math.round(totalLengthMeters),
       surfaceBreakdownMeters,

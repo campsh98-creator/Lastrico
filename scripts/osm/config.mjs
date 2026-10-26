@@ -34,7 +34,8 @@ export const SURFACE_CATEGORY_MAP = {
   paving_stones: "probable_rough",
   asphalt: "confirmed_smooth",
   concrete: "confirmed_smooth",
-  paved: "confirmed_smooth",
+  // Paved is a broad class that also includes paving stones; it is not smooth evidence.
+  paved: "unknown",
   unpaved: "unpaved_loose",
   compacted: "unpaved_loose",
   gravel: "unpaved_loose",
@@ -90,4 +91,6 @@ export const HIGHWAY_MAP = {
   footway: "footway",
   path: "path",
   track: "track",
+  steps: "steps",
+  road: "unknown",
 };
