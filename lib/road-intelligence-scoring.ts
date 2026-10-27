@@ -42,6 +42,9 @@ export type RoadIntelligenceScore = {
   matchedFeatures: number;
   /** Count of ambiguous matches detected (e.g. parallel candidate within 2m) */
   ambiguousMatchesCount: number;
+  /** Close, unambiguous geometry with explicit forbidden access or known wrong-way travel.
+   * Zero is not a legal-route certification; turn and conditional restrictions stay with the provider. */
+  confirmedRestrictionMeters: number;
 };
 
 export type RoadIntelligenceIndex = {
@@ -166,6 +169,63 @@ function nearbySegments(
   return found;
 }
 
+type TransportMode = "car" | "motorcycle" | "bicycle";
+const ACCESS_KEYS: Record<TransportMode, string[]> = {
+  car: ["motorcar", "motor_vehicle", "vehicle", "access"],
+  motorcycle: ["motorcycle", "motor_vehicle", "vehicle", "access"],
+  bicycle: ["bicycle", "vehicle", "access"],
+};
+
+// Restriction evidence is intentionally narrower than surface matching. Unknown
+// access, destination access and dismount cannot be turned into a prohibition.
+function explicitlyRestricted(segment: RoadSegmentRecord, a: GeoCoordinate, b: GeoCoordinate, mode: TransportMode) {
+  const tags = segment.rawTags;
+  if (!tags) return false;
+  for (const key of ACCESS_KEYS[mode]) {
+    if (tags[`${key}:conditional`] || tags[`${key}:forward`] || tags[`${key}:backward`]) return false;
+    const value = tags[key]?.trim().toLowerCase();
+    if (value) {
+      if (value === "no" || (value === "private" && tags.service?.trim().toLowerCase() !== "driveway")) return true;
+      break; // A more specific permission overrides a generic prohibition.
+    }
+  }
+
+  if (!segment.modeAccess?.[mode]) return false;
+  // Side-specific cycling direction exceptions need graph semantics that this
+  // geometric check does not have. Do not infer a confirmed violation from them.
+  if (mode === "bicycle" && Object.keys(tags).some((key) =>
+    key.startsWith("cycleway:") && (key.includes("oneway") || key.includes("conditional")),
+  )) return false;
+  const direction = segment.modeDirections?.[mode];
+  if (direction !== "forward" && direction !== "backward") return false;
+  const [start, end] = direction === "backward"
+    ? [segment.coordinates[1], segment.coordinates[0]] : segment.coordinates;
+  return !headingsAlign(a, b, start, end, true);
+}
+
+function restrictionSample(
+  candidates: { segment: RoadSegmentRecord; distance: number }[],
+  a: GeoCoordinate,
+  b: GeoCoordinate,
+  mode: TransportMode,
+) {
+  const sorted = [...candidates].sort((x, y) => x.distance - y.distance);
+  const nearest = sorted[0];
+  if (!nearest || nearest.distance > 3 || nearest.segment.osmWayId === null) return false;
+  const segment = nearest.segment;
+  const grade = (road: RoadSegmentRecord) => `${road.rawTags?.layer ?? "0"}:${road.rawTags?.bridge ?? "no"}:${road.rawTags?.tunnel ?? "no"}`;
+  if (sorted.some((other) => other.distance <= nearest.distance + 2
+    && (other.segment.osmWayId !== segment.osmWayId || grade(other.segment) !== grade(segment)))) return false;
+  const [c, d] = segment.coordinates;
+  if (pointToSegmentDistance(a, c, d) > 3 || pointToSegmentDistance(b, c, d) > 3) return false;
+  const scaleX = metersPerLongitude((a[1] + b[1]) / 2);
+  const rx = (b[0] - a[0]) * scaleX, ry = (b[1] - a[1]) * 110_540;
+  const sx = (d[0] - c[0]) * scaleX, sy = (d[1] - c[1]) * 110_540;
+  const denominator = Math.hypot(rx, ry) * Math.hypot(sx, sy);
+  if (!denominator || Math.abs((rx * sx + ry * sy) / denominator) < 0.98) return false;
+  return explicitlyRestricted(segment, a, b, mode);
+}
+
 export function scoreRoadIntelligence(
   coordinates: GeoCoordinate[],
   index: RoadIntelligenceIndex,
@@ -182,6 +242,7 @@ export function scoreRoadIntelligence(
   let embeddedRailsMeters = 0;
   let totalMeters = 0;
   let ambiguousMatchesCount = 0;
+  let confirmedRestrictionMeters = 0;
   const matched = new Set<string>();
   const matchedFeatures = new Set<string>();
 
@@ -215,6 +276,7 @@ export function scoreRoadIntelligence(
       let bestWeight = 0;
       let nearestRejected = Infinity;
       const alignedCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
+      const geometricCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
 
       for (const candidate of nearbySegments(index, midpoint, matchMeters)) {
         const distance = pointToSegmentDistance(
@@ -232,6 +294,7 @@ export function scoreRoadIntelligence(
           candidate.coordinates[1],
         );
         if (!geometricallyAligned) continue;
+        geometricCandidates.push({ segment: candidate, distance });
         const allowed = candidate.modeAccess?.[mode] ?? (mode === "bicycle" ? candidate.isBicycleAllowed : candidate.isMotorAllowed);
         const direction = candidate.modeDirections?.[mode] ?? (candidate.isOneway ? "forward" : "both");
         const [start, end] = direction === "backward" ? [...candidate.coordinates].reverse() : candidate.coordinates;
@@ -251,6 +314,10 @@ export function scoreRoadIntelligence(
           bestDistance = distance;
           bestWeight = weight;
         }
+      }
+
+      if (restrictionSample(geometricCandidates, sampleA, sampleB, mode)) {
+        confirmedRestrictionMeters += sampleLength;
       }
 
       // Reject a closer prohibited road rather than transferring its route samples
@@ -333,5 +400,6 @@ export function scoreRoadIntelligence(
     matchedSegments: matched.size,
     matchedFeatures: matchedFeatures.size,
     ambiguousMatchesCount,
+    confirmedRestrictionMeters: confirmedRestrictionMeters > 0 ? Math.max(1, Math.round(confirmedRestrictionMeters)) : 0,
   };
 }

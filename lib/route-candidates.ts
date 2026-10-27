@@ -55,14 +55,20 @@ export function routesAreEquivalent(a: EngineRoute, b: EngineRoute, policy: Equi
     Math.abs(a.distance - b.distance) > policy.equivalentDistanceMeters
     || Math.abs(a.duration - b.duration) > policy.equivalentDurationSeconds
   ) return false;
+  return routesShareCorridor(a, b, policy.equivalentAverageMeters);
+}
+
+/** Physical diversity must not depend on provider travel-time or distance estimates. */
+export function routesShareCorridor(a: EngineRoute, b: EngineRoute, toleranceMeters: number) {
+  if (a.coordinates.length < 2 || b.coordinates.length < 2) return false;
   // Matching geometry in reverse is not the same journey.
-  if (distanceToSegment(a.coordinates[0], b.coordinates[0], b.coordinates[0]) >= policy.equivalentAverageMeters
-    || distanceToSegment(a.coordinates[a.coordinates.length - 1], b.coordinates[b.coordinates.length - 1], b.coordinates[b.coordinates.length - 1]) >= policy.equivalentAverageMeters) return false;
+  if (distanceToSegment(a.coordinates[0], b.coordinates[0], b.coordinates[0]) >= toleranceMeters
+    || distanceToSegment(a.coordinates[a.coordinates.length - 1], b.coordinates[b.coordinates.length - 1], b.coordinates[b.coordinates.length - 1]) >= toleranceMeters) return false;
   // Both directions matter: one route may cover a subset of the other.
   return Math.max(
     averageDistance(sampleGeometry(a.coordinates), b.coordinates),
     averageDistance(sampleGeometry(b.coordinates), a.coordinates),
-  ) < policy.equivalentAverageMeters;
+  ) < toleranceMeters;
 }
 
 export function deduplicateRoutes<T extends { route: EngineRoute }>(routes: T[], policy: EquivalencePolicy): T[] {

@@ -22,6 +22,8 @@ export type EngineRoute = {
   instructions: EngineInstruction[];
   provider: RoutingProviderName;
   profile: "auto" | "motorcycle" | "bicycle" | "driving";
+  /** Exact provider maneuver shapes, used only for graph-aligned cost factors. */
+  maneuverShapes?: Coordinate[][];
 };
 
 type OsrmManeuver = {
@@ -80,6 +82,7 @@ export const NAVIGATION_ROUTE_BUDGET_MS = 5_500;
 const VALHALLA_MIN_INTERVAL_MS = 1_050;
 let valhallaQueue: Promise<void> = Promise.resolve();
 let lastValhallaStartedAt = 0;
+let lastValhallaFetch: typeof fetch | null = null;
 
 export const ROUTING_PROFILES = { car: "auto", motorcycle: "motorcycle", bicycle: "bicycle" } as const;
 
@@ -231,6 +234,7 @@ function normalizeValhallaTrip(trip: ValhallaTrip, profile: typeof ROUTING_PROFI
   if (!trip.legs?.length || !trip.summary) return null;
   const coordinates: Coordinate[] = [];
   const instructions: EngineInstruction[] = [];
+  const maneuverShapes: Coordinate[][] = [];
 
   for (const [legIndex, leg] of trip.legs.entries()) {
     const legCoordinates = decodePolyline6(leg.shape);
@@ -240,6 +244,10 @@ function normalizeValhallaTrip(trip: ValhallaTrip, profile: typeof ROUTING_PROFI
     const globalOffset = Math.max(0, coordinates.length - (legIndex > 0 ? 1 : 0));
     coordinates.push(...(legIndex > 0 ? legCoordinates.slice(1) : legCoordinates));
     (leg.maneuvers ?? []).forEach((maneuver) => {
+      if (maneuver.begin_shape_index !== undefined && maneuver.end_shape_index !== undefined
+        && maneuver.end_shape_index > maneuver.begin_shape_index) {
+        maneuverShapes.push(legCoordinates.slice(maneuver.begin_shape_index, maneuver.end_shape_index + 1));
+      }
       const direction = valhallaDirection(maneuver.type);
       const localIndex = Math.min(
         legCoordinates.length - 1,
@@ -279,6 +287,7 @@ function normalizeValhallaTrip(trip: ValhallaTrip, profile: typeof ROUTING_PROFI
     instructions,
     provider: "valhalla-fossgis",
     profile,
+    maneuverShapes,
   };
 }
 
@@ -331,6 +340,10 @@ async function runValhallaLimited<T>(
   valhallaQueue = previousRequest.then(() => currentTurn);
   try {
     await waitWithSignal(previousRequest, queueSignal);
+    if (lastValhallaFetch !== globalThis.fetch) {
+      lastValhallaFetch = globalThis.fetch;
+      lastValhallaStartedAt = 0;
+    }
     const waitMs = Math.max(0, VALHALLA_MIN_INTERVAL_MS - (Date.now() - lastValhallaStartedAt));
     if (waitMs) await abortableDelay(waitMs, queueSignal);
     queueSignal.throwIfAborted();
@@ -349,6 +362,7 @@ async function fetchValhallaRoutes(
   alternatives = false,
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
+  linearCostFactors?: { shape: string; factor: number }[],
 ): Promise<EngineRoute[]> {
   const profile = ROUTING_PROFILES[mode];
   try {
@@ -373,6 +387,9 @@ async function fetchValhallaRoutes(
           })),
           costing: profile,
           costing_options: valhallaCostingOptions(mode),
+          ...(linearCostFactors && linearCostFactors.length > 0
+            ? { linear_cost_factors: linearCostFactors }
+            : {}),
           units: "kilometers",
           directions_options: { units: "kilometers", language: "it-IT" },
           alternates: alternatives ? 2 : 0,
@@ -386,6 +403,17 @@ async function fetchValhallaRoutes(
   } catch {
     return [];
   }
+}
+
+export async function fetchValhallaCustomizedRoute(
+  points: Coordinate[],
+  mode: TransportMode,
+  linearCostFactors: { shape: string; factor: number }[],
+  deadline = Date.now() + ROUTE_BUDGET_MS,
+  signal: AbortSignal = new AbortController().signal,
+): Promise<EngineRoute | null> {
+  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, linearCostFactors);
+  return routes[0] ?? null;
 }
 
 function osrmInstructionText(step: OsrmStep) {
