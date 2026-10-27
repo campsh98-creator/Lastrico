@@ -1028,11 +1028,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-weight: 900;
 }
 .navigation-controls .stop-navigation { border-color: var(--coral); background: var(--coral); color: white; }
-.navigation-tripbar p {
+.navigation-tripbar p,
+.navigation-diagnostics {
   grid-column: 1 / -1;
   margin: 0;
   color: var(--muted);
   font-size: 7px;
+  font-variant-numeric: tabular-nums;
   text-align: center;
 }
 .driving-safety {

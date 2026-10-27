@@ -31,6 +31,7 @@ export type TimedGpsReadingInput = {
   timestamp: number;
   now: number;
   previousCoordinate: Coordinate | null;
+  previousAccuracy?: number | null;
   previousTimestamp: number | null;
   bounds: MilanBounds;
   distanceMeters: (a: Coordinate, b: Coordinate) => number;
@@ -39,9 +40,55 @@ export type TimedGpsReadingInput = {
   maximumSpeedMetersPerSecond?: number;
 };
 
-export type TimedGpsReadingResult = {
-  accepted: boolean;
-  reason: "accepted" | "invalid" | "stale" | "duplicate" | "implausible";
+export type TimedGpsReadingResult =
+  | { accepted: true; reason: "accepted" }
+  | { accepted: false; reason: "invalid" | "stale" | "duplicate" | "implausible" };
+
+export type GpsSignalStallInput = {
+  journeyActive: boolean;
+  mode: NavigationJourneyMode | null;
+  now: number;
+  sessionStartedAt: number;
+  lastValidFixAt: number | null;
+  acquireTimeoutMs?: number;
+  stallThresholdMs?: number;
+};
+
+export type GpsSignalStallResult = {
+  stalled: boolean;
+  reason: "ok" | "acquire-timeout" | "signal-lost";
+  silentDurationMs: number;
+};
+
+export type NavigationDiagnosticEvent =
+  | { type: "fix-accepted" }
+  | { type: "fix-rejected"; reason: "invalid" | "stale" | "duplicate" | "implausible" | "outside" }
+  | { type: "off-route" }
+  | { type: "reroute-start" }
+  | { type: "reroute-success" }
+  | { type: "reroute-failure" }
+  | { type: "signal-loss" }
+  | { type: "permission-denied" }
+  | { type: "foreground-resume" }
+  | { type: "wake-lock"; active: boolean };
+
+export type NavigationDiagnostics = {
+  acceptedFixes: number;
+  rejectedFixes: {
+    invalid: number;
+    stale: number;
+    duplicate: number;
+    implausible: number;
+    outside: number;
+  };
+  offRouteEvents: number;
+  rerouteAttempts: number;
+  rerouteSuccesses: number;
+  rerouteFailures: number;
+  signalLossCount: number;
+  permissionDeniedCount: number;
+  foregroundResumes: number;
+  wakeLockActive: boolean;
 };
 
 export type CameraMode =
@@ -151,7 +198,10 @@ export function evaluateTimedGpsReading(input: TimedGpsReadingInput): TimedGpsRe
   if (input.previousCoordinate && input.previousTimestamp !== null) {
     const elapsedSeconds = Math.max(0.001, (input.timestamp - input.previousTimestamp) / 1_000);
     const movement = input.distanceMeters(input.previousCoordinate, input.coordinate);
-    const uncertainty = Math.max(8, input.accuracy * 1.5);
+    const prevUncertainty = Number.isFinite(input.previousAccuracy) && (input.previousAccuracy as number) > 0
+      ? (input.previousAccuracy as number) * 1.25
+      : 0;
+    const uncertainty = Math.max(8, input.accuracy * 1.5 + prevUncertainty);
     const plausibleDistance = uncertainty
       + elapsedSeconds * (input.maximumSpeedMetersPerSecond ?? 70);
     if (movement > plausibleDistance) {
@@ -159,6 +209,94 @@ export function evaluateTimedGpsReading(input: TimedGpsReadingInput): TimedGpsRe
     }
   }
   return { accepted: true, reason: "accepted" };
+}
+
+export function evaluateGpsSignalStall(input: GpsSignalStallInput): GpsSignalStallResult {
+  if (!input.journeyActive || input.mode !== "gps") {
+    return { stalled: false, reason: "ok", silentDurationMs: 0 };
+  }
+  const acquireTimeoutMs = input.acquireTimeoutMs ?? 12_000;
+  const stallThresholdMs = input.stallThresholdMs ?? 15_000;
+  if (input.lastValidFixAt === null) {
+    const silentDurationMs = Math.max(0, input.now - input.sessionStartedAt);
+    return {
+      stalled: silentDurationMs >= acquireTimeoutMs,
+      reason: silentDurationMs >= acquireTimeoutMs ? "acquire-timeout" : "ok",
+      silentDurationMs,
+    };
+  }
+  const silentDurationMs = Math.max(0, input.now - input.lastValidFixAt);
+  return {
+    stalled: silentDurationMs >= stallThresholdMs,
+    reason: silentDurationMs >= stallThresholdMs ? "signal-lost" : "ok",
+    silentDurationMs,
+  };
+}
+
+export function createNavigationDiagnostics(): NavigationDiagnostics {
+  return {
+    acceptedFixes: 0,
+    rejectedFixes: {
+      invalid: 0,
+      stale: 0,
+      duplicate: 0,
+      implausible: 0,
+      outside: 0,
+    },
+    offRouteEvents: 0,
+    rerouteAttempts: 0,
+    rerouteSuccesses: 0,
+    rerouteFailures: 0,
+    signalLossCount: 0,
+    permissionDeniedCount: 0,
+    foregroundResumes: 0,
+    wakeLockActive: false,
+  };
+}
+
+export function recordNavigationDiagnosticEvent(
+  current: NavigationDiagnostics,
+  event: NavigationDiagnosticEvent,
+): NavigationDiagnostics {
+  switch (event.type) {
+    case "fix-accepted":
+      return { ...current, acceptedFixes: current.acceptedFixes + 1 };
+    case "fix-rejected":
+      return {
+        ...current,
+        rejectedFixes: {
+          ...current.rejectedFixes,
+          [event.reason]: current.rejectedFixes[event.reason] + 1,
+        },
+      };
+    case "off-route":
+      return { ...current, offRouteEvents: current.offRouteEvents + 1 };
+    case "reroute-start":
+      return { ...current, rerouteAttempts: current.rerouteAttempts + 1 };
+    case "reroute-success":
+      return { ...current, rerouteSuccesses: current.rerouteSuccesses + 1 };
+    case "reroute-failure":
+      return { ...current, rerouteFailures: current.rerouteFailures + 1 };
+    case "signal-loss":
+      return { ...current, signalLossCount: current.signalLossCount + 1 };
+    case "permission-denied":
+      return { ...current, permissionDeniedCount: current.permissionDeniedCount + 1 };
+    case "foreground-resume":
+      return { ...current, foregroundResumes: current.foregroundResumes + 1 };
+    case "wake-lock":
+      return { ...current, wakeLockActive: event.active };
+  }
+}
+
+export function formatNavigationDiagnosticsSummary(diagnostics: NavigationDiagnostics): string {
+  const rejectedTotal = Object.values(diagnostics.rejectedFixes).reduce((sum, count) => sum + count, 0);
+  const rerouteSummary = diagnostics.rerouteAttempts > 0
+    ? ` · Ricalcoli ${diagnostics.rerouteSuccesses}/${diagnostics.rerouteAttempts}`
+    : "";
+  const signalSummary = diagnostics.signalLossCount > 0
+    ? ` · Perdite segnale ${diagnostics.signalLossCount}`
+    : "";
+  return `Fix GPS ${diagnostics.acceptedFixes} ok (${rejectedTotal} scartati)${rerouteSummary}${signalSummary}`;
 }
 
 export function shouldApplyRouteResponse(

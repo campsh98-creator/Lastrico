@@ -64,3 +64,53 @@ test("a replacement route starts with a fresh progress anchor", () => {
   assert.equal(firstFix.routeProgressMeters, 0);
   assert.equal(firstFix.remainingMeters, replacementModel.totalMeters);
 });
+
+test("looping route preserves monotonic instruction progress and does not jump ahead or freeze on second pass", () => {
+  const loopCoordinates = [
+    [9.19, 45.46],
+    [9.19, 45.462], // crossing point (first pass ~222m)
+    [9.192, 45.462],
+    [9.192, 45.464],
+    [9.19, 45.464],
+    [9.19, 45.462], // crossing point (second pass ~834m)
+    [9.188, 45.462],
+  ];
+  const instructions = [
+    { id: "depart", type: "depart", location: [9.19, 45.46] },
+    { id: "turn-1", type: "turn", location: [9.19, 45.462] },
+    { id: "turn-2", type: "turn", location: [9.192, 45.462] },
+    { id: "turn-3", type: "turn", location: [9.19, 45.462] },
+    { id: "arrive", type: "arrive", location: [9.188, 45.462] },
+  ];
+  const model = buildRouteProgressModel(loopCoordinates, instructions, meters);
+
+  for (let idx = 1; idx < model.instructions.length; idx += 1) {
+    assert.ok(
+      model.instructions[idx].progressMeters >= model.instructions[idx - 1].progressMeters,
+      `Instruction ${model.instructions[idx].id} should be monotonic`,
+    );
+  }
+
+  // On the first pass approaching [9.19, 45.462], a slight westward GPS jitter [9.1899, 45.462]
+  // is geometrically on the final westward leg (~840m), but must stay on the first pass (~222m).
+  const firstPassApproach = calculateRouteProgress(model, [9.19, 45.4615], 10, 150);
+  const jitterNearCrossing = calculateRouteProgress(
+    model,
+    [9.1899, 45.462],
+    10,
+    firstPassApproach.routeProgressMeters,
+  );
+  assert.ok(jitterNearCrossing.routeProgressMeters < 300);
+
+  // On the second pass approaching from [9.19, 45.464] -> [9.19, 45.462] -> [9.188, 45.462],
+  // progress must advance smoothly along the final leg instead of snapping back to the first pass.
+  const secondPassBeforeCrossing = calculateRouteProgress(model, [9.19, 45.4625], 10, 750);
+  const secondPassAfterCrossing = calculateRouteProgress(
+    model,
+    [9.189, 45.462],
+    10,
+    secondPassBeforeCrossing.routeProgressMeters,
+  );
+  assert.ok(secondPassAfterCrossing.routeProgressMeters > secondPassBeforeCrossing.routeProgressMeters);
+  assert.equal(secondPassAfterCrossing.instruction.id, "arrive");
+});

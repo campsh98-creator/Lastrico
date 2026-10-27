@@ -3,16 +3,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { Map as MapLibreMap, Marker as MapLibreMarker, GeoJSONSource } from "maplibre-gl";
 import {
+  createNavigationDiagnostics,
   estimateArrivalTimestamp,
+  evaluateGpsSignalStall,
   evaluateOffRouteReading,
   evaluateTimedGpsReading,
+  formatNavigationDiagnosticsSummary,
   gpsCoordinateMoved,
+  recordNavigationDiagnosticEvent,
   shouldApplyRouteResponse,
   shouldBeginNavigation,
   shouldRunSimulationTimer,
   shouldUpdateNavigationCamera,
   smoothGpsCoordinate,
   smoothHeading,
+  type NavigationDiagnosticEvent,
+  type NavigationDiagnostics,
   type NavigationJourneyMode,
 } from "@/lib/navigation-state";
 import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
@@ -417,6 +423,11 @@ export default function Home() {
   const selectedRouteModelRef = useRef<RouteProgressModel<NavigationInstruction> | null>(null);
   const endLocationRef = useRef<LocationChoice | null>(null);
   const loadingRef = useRef(false);
+  const recalculatingRef = useRef(false);
+  const voiceEnabledRef = useRef(false);
+  const navigationStartedAtRef = useRef(0);
+  const lastValidGpsFixAtRef = useRef<number | null>(null);
+  const gpsStallReportedRef = useRef(false);
   const transportModeRef = useRef<TransportMode>("car");
   const transportReadyRef = useRef(false);
   const voiceReadyRef = useRef(false);
@@ -498,6 +509,10 @@ export default function Home() {
   const [directionsOpen, setDirectionsOpen] = useState(false);
   const [mapReady, setMapReady] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [navigationDiagnostics, setNavigationDiagnostics] = useState<NavigationDiagnostics>(() => createNavigationDiagnostics());
+  const recordDiagnostic = useCallback((event: NavigationDiagnosticEvent) => {
+    setNavigationDiagnostics((current) => recordNavigationDiagnosticEvent(current, event));
+  }, []);
   const landmarks = nodes.filter((node) => node.landmark);
   const savedPave = Math.max(0, fastRoute.paveMeters - safeRoute.paveMeters);
   const selectedRoute = activeRoute === "safe" ? safeRoute : fastRoute;
@@ -542,7 +557,7 @@ export default function Home() {
     return `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`;
   })();
   const speakInstruction = useCallback((text: string) => {
-    if (!voiceEnabled || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
+    if (!voiceEnabledRef.current || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
     try {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
@@ -552,16 +567,18 @@ export default function Home() {
     } catch {
       // Visual guidance remains available when speech synthesis fails.
     }
-  }, [voiceEnabled]);
+  }, []);
   const toggleVoiceGuidance = useCallback(() => {
     if (!voiceAvailable) {
       setStatus("La guida vocale non è disponibile su questo dispositivo.");
       return;
     }
     setVoiceEnabled((current) => {
+      const next = !current;
+      voiceEnabledRef.current = next;
       if (current) window.speechSynthesis?.cancel();
       else lastSpokenInstructionRef.current = "";
-      return !current;
+      return next;
     });
   }, [voiceAvailable]);
 
@@ -991,6 +1008,7 @@ export default function Home() {
   useEffect(() => {
     const savedVoice = window.localStorage.getItem("lastrico-voice");
     if (savedVoice === "on" || savedVoice === "off") {
+      voiceEnabledRef.current = savedVoice === "on";
       window.queueMicrotask(() => {
         setVoiceEnabled(savedVoice === "on");
         voiceReadyRef.current = true;
@@ -1001,6 +1019,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    voiceEnabledRef.current = voiceEnabled;
     if (!voiceReadyRef.current) return;
     window.localStorage.setItem("lastrico-voice", voiceEnabled ? "on" : "off");
   }, [voiceEnabled]);
@@ -1039,8 +1058,39 @@ export default function Home() {
   }, [themeMode, mapReady]);
 
   useEffect(() => {
+    if (!isJourneyActive || journeyMode !== "gps") return;
+    const timer = window.setInterval(() => {
+      const stall = evaluateGpsSignalStall({
+        journeyActive: journeyActiveRef.current,
+        mode: journeyModeRef.current,
+        now: Date.now(),
+        sessionStartedAt: navigationStartedAtRef.current,
+        lastValidFixAt: lastValidGpsFixAtRef.current,
+      });
+      if (!stall.stalled) {
+        gpsStallReportedRef.current = false;
+        return;
+      }
+      if (!gpsStallReportedRef.current && !recalculatingRef.current) {
+        gpsStallReportedRef.current = true;
+        recordDiagnostic({ type: "signal-loss" });
+        setGpsState("temporarily-unavailable");
+        setStatus(stall.reason === "acquire-timeout"
+          ? "GPS in attesa: verifica di essere all’aperto e di aver concesso la posizione precisa."
+          : "Segnale GPS assente da alcuni secondi · mantengo l’ultimo punto valido.");
+      }
+    }, 3_000);
+    return () => window.clearInterval(timer);
+  }, [isJourneyActive, journeyMode, recordDiagnostic]);
+
+  useEffect(() => {
     const reacquireWakeLock = () => {
-      if (document.visibilityState === "visible" && journeyActiveRef.current) void requestWakeLock();
+      if (document.visibilityState === "visible" && journeyActiveRef.current) {
+        void requestWakeLock();
+        if (journeyModeRef.current === "gps") {
+          recordDiagnostic({ type: "foreground-resume" });
+        }
+      }
     };
     document.addEventListener("visibilitychange", reacquireWakeLock);
     return () => {
@@ -1051,6 +1101,7 @@ export default function Home() {
       void wakeLockRef.current?.release();
       window.speechSynthesis?.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -1232,8 +1283,10 @@ export default function Home() {
         options.journeySession !== undefined
         && options.journeySession === navigationSessionRef.current
       ) {
+        recalculatingRef.current = false;
         setIsRecalculating(false);
         setGpsState("offroute");
+        recordDiagnostic({ type: "reroute-failure" });
       }
       setStatus("Connessione assente. Mantengo il percorso già disponibile.");
       return;
@@ -1270,7 +1323,9 @@ export default function Home() {
           }, { once: true });
         });
       }
-      const resolvedEnd = await geocode(endText, endLocation, "end", controller.signal);
+      const resolvedEnd = options.journeySession !== undefined
+        ? (endLocationRef.current ?? endLocation)
+        : await geocode(endText, endLocation, "end", controller.signal);
       if (!shouldApplyRouteResponse(
         routeRequestRef.current?.id ?? -1,
         requestId,
@@ -1283,10 +1338,12 @@ export default function Home() {
         activeRevision: plannerRevisionRef.current,
         responseRevision: requestedRevision,
       }) || (options.journeySession === undefined && journeyActiveRef.current)) return;
-      setStartLocation(resolvedStart);
-      setEndLocation(resolvedEnd);
-      setStartText(resolvedStart.label);
-      setEndText(resolvedEnd.label);
+      if (options.journeySession === undefined) {
+        setStartLocation(resolvedStart);
+        setEndLocation(resolvedEnd);
+        setStartText(resolvedStart.label);
+        setEndText(resolvedEnd.label);
+      }
 
       const params = new URLSearchParams({
         start: resolvedStart.coordinate.join(","),
@@ -1353,11 +1410,27 @@ export default function Home() {
         nextSelectedRoute.instructions ?? [],
         distanceMeters,
       );
+      if (options.journeySession !== undefined) {
+        offRouteReadingsRef.current = 0;
+        arrivalReadingsRef.current = 0;
+        if (previousJourneyPositionRef.current && selectedRouteModelRef.current) {
+          lastRouteProgressRef.current = calculateRouteProgress(
+            selectedRouteModelRef.current,
+            previousJourneyPositionRef.current,
+            nextSelectedRoute.minutes,
+            0,
+          ).routeProgressMeters;
+        }
+      }
       setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
       const timingNotice = requestedMode === "bicycle" ? "Tempi stimati senza traffico live" : "Tempi medi senza traffico live";
       setStatus(`${data.dataNotice}. ${timingNotice}.`);
       routeSucceeded = true;
-      if (options.journeySession !== undefined) setGpsState("live");
+      if (options.journeySession !== undefined) {
+        recalculatingRef.current = false;
+        recordDiagnostic({ type: "reroute-success" });
+        setGpsState("live");
+      }
     } catch (error) {
       if (controller.signal.aborted) {
         if (
@@ -1372,6 +1445,7 @@ export default function Home() {
         options.journeySession !== undefined
         && options.journeySession === navigationSessionRef.current
       ) {
+        recalculatingRef.current = false;
         setGpsState("offroute");
       }
       setStatus(error instanceof Error ? error.message : "Qualcosa non ha funzionato. Riprova.");
@@ -1379,6 +1453,7 @@ export default function Home() {
       window.clearTimeout(requestTimeout);
       if (routeRequestRef.current?.id === requestId) {
         loadingRef.current = false;
+        recalculatingRef.current = false;
         setIsLoading(false);
         setIsRecalculating(false);
         if (
@@ -1386,6 +1461,7 @@ export default function Home() {
           && options.journeySession === navigationSessionRef.current
           && !routeSucceeded
         ) {
+          recordDiagnostic({ type: "reroute-failure" });
           setGpsState("offroute");
         }
       }
@@ -1468,8 +1544,10 @@ export default function Home() {
         return;
       }
       wakeLockRef.current = handle;
+      recordDiagnostic({ type: "wake-lock", active: true });
     } catch {
       wakeLockRef.current = null;
+      recordDiagnostic({ type: "wake-lock", active: false });
     } finally {
       if (wakeLockPendingSessionRef.current === session) wakeLockPendingSessionRef.current = null;
     }
@@ -1477,6 +1555,7 @@ export default function Home() {
 
   function finishNavigation(hasArrived = false) {
     journeyActiveRef.current = false;
+    recalculatingRef.current = false;
     navigationSessionRef.current += 1;
     journeyModeRef.current = null;
     if (journeyWatchRef.current !== null) {
@@ -1506,10 +1585,14 @@ export default function Home() {
     journeyHeadingRef.current = 0;
     setFollowVehicle(true);
     setArrived(hasArrived);
+    setNavigationDiagnostics(createNavigationDiagnostics());
     lastJourneyOriginRef.current = null;
     previousJourneyPositionRef.current = null;
     previousJourneyAccuracyRef.current = null;
     previousJourneyTimestampRef.current = null;
+    navigationStartedAtRef.current = 0;
+    lastValidGpsFixAtRef.current = null;
+    gpsStallReportedRef.current = false;
     offRouteReadingsRef.current = 0;
     arrivalReadingsRef.current = 0;
     journeyTravelledMetersRef.current = 0;
@@ -1586,7 +1669,7 @@ export default function Home() {
     journeyHeadingRef.current = heading;
     setJourneyAccuracy(accuracy);
     setJourneyHeading(heading);
-    if (!isRecalculating) setGpsState("live");
+    if (!recalculatingRef.current) setGpsState("live");
 
     const routeResult = selectedRouteRef.current;
     const routeModel = selectedRouteModelRef.current;
@@ -1616,8 +1699,9 @@ export default function Home() {
     }
 
     const now = Date.now();
+    const previousOffRouteReadings = offRouteReadingsRef.current;
     const offRouteDecision = evaluateOffRouteReading({
-      currentReadings: offRouteReadingsRef.current,
+      currentReadings: previousOffRouteReadings,
       offRouteMeters: progress.offRouteMeters,
       thresholdMeters: policy.offRouteMeters + Math.min(accuracy, 60),
       requiredReadings: policy.readings,
@@ -1627,18 +1711,25 @@ export default function Home() {
       calculationInProgress: loadingRef.current,
     });
     offRouteReadingsRef.current = offRouteDecision.readings;
-    if (offRouteDecision.readings > 0 && !isRecalculating) setGpsState("offroute");
+    if (previousOffRouteReadings === 0 && offRouteDecision.readings > 0) {
+      recordDiagnostic({ type: "off-route" });
+    }
+    if (offRouteDecision.readings > 0 && !recalculatingRef.current) setGpsState("offroute");
     if (offRouteDecision.shouldRecalculate) {
       if (!navigator.onLine) {
+        recalculatingRef.current = false;
         setIsRecalculating(false);
         setGpsState("offroute");
+        recordDiagnostic({ type: "reroute-failure" });
         setStatus("Fuori percorso, ma sei offline. Mantengo l’ultimo percorso.");
         return;
       }
       lastJourneyCalculationRef.current = now;
       lastJourneyOriginRef.current = filteredCoordinate;
+      recalculatingRef.current = true;
       setIsRecalculating(true);
       setGpsState("recalculating");
+      recordDiagnostic({ type: "reroute-start" });
       setStatus(`Fuori percorso · ricalcolo per ${transportMeta[mode].article}…`);
       void calculateRoutes(
         { label: "Posizione GPS live", coordinate: filteredCoordinate },
@@ -1653,7 +1744,7 @@ export default function Home() {
       return;
     }
 
-    if (!isRecalculating) {
+    if (!recalculatingRef.current) {
       setStatus(`GPS attivo · precisione ±${Math.round(accuracy)} m · ${formatDistance(progress.remainingMeters)} rimanenti.`);
     }
   }
@@ -1675,6 +1766,11 @@ export default function Home() {
     const session = navigationSessionRef.current + 1;
     navigationSessionRef.current = session;
     journeyModeRef.current = mode;
+    recalculatingRef.current = false;
+    navigationStartedAtRef.current = Date.now();
+    lastValidGpsFixAtRef.current = null;
+    gpsStallReportedRef.current = false;
+    setNavigationDiagnostics(createNavigationDiagnostics());
     setArrived(false);
     setFollowVehicle(true);
     setJourneyMode(mode);
@@ -1740,16 +1836,19 @@ export default function Home() {
         if (!inMilan) {
           offRouteReadingsRef.current = 0;
           arrivalReadingsRef.current = 0;
+          recordDiagnostic({ type: "fix-rejected", reason: "outside" });
           setGpsState("outside");
           setStatus("La navigazione della beta copre per ora soltanto Milano.");
           return;
         }
+        const now = Date.now();
         const timedReading = evaluateTimedGpsReading({
           coordinate,
           accuracy: coords.accuracy,
           timestamp,
-          now: Date.now(),
+          now,
           previousCoordinate: previousJourneyPositionRef.current,
+          previousAccuracy: previousJourneyAccuracyRef.current,
           previousTimestamp: previousJourneyTimestampRef.current,
           bounds: MILAN_GPS_BOUNDS,
           distanceMeters,
@@ -1758,6 +1857,7 @@ export default function Home() {
         if (!timedReading.accepted) {
           offRouteReadingsRef.current = 0;
           arrivalReadingsRef.current = 0;
+          recordDiagnostic({ type: "fix-rejected", reason: timedReading.reason });
           setGpsState("weak");
           setJourneyAccuracy(coords.accuracy);
           setStatus(timedReading.reason === "invalid"
@@ -1766,6 +1866,9 @@ export default function Home() {
           return;
         }
         previousJourneyTimestampRef.current = timestamp;
+        lastValidGpsFixAtRef.current = now;
+        gpsStallReportedRef.current = false;
+        recordDiagnostic({ type: "fix-accepted" });
         updateJourneyPosition(
           coordinate,
           coords.accuracy,
@@ -1780,10 +1883,12 @@ export default function Home() {
         arrivalReadingsRef.current = 0;
         if (error.code === error.PERMISSION_DENIED) {
           finishNavigation();
+          recordDiagnostic({ type: "permission-denied" });
           setGpsState("unavailable");
           setStatus("Permesso GPS negato. Abilita la posizione in Safari oppure usa Simula percorso.");
           return;
         }
+        recordDiagnostic({ type: "signal-loss" });
         setGpsState("temporarily-unavailable");
         setStatus(error.code === error.TIMEOUT
           ? "GPS in attesa: il segnale sta impiegando più tempo del previsto."
@@ -2302,6 +2407,11 @@ export default function Home() {
                   <button type="button" className="stop-navigation" onClick={() => finishNavigation()} aria-label="Termina navigazione">Termina</button>
                 </div>
                 <p>{navigationStateDescription}</p>
+                {journeyMode === "gps" && (
+                  <small className="navigation-diagnostics" data-testid="navigation-diagnostics">
+                    {formatNavigationDiagnosticsSummary(navigationDiagnostics)}
+                  </small>
+                )}
               </section>
               <div className="driving-safety">{transportMeta[transportMode].safety}</div>
             </div>

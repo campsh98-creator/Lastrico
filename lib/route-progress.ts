@@ -23,6 +23,8 @@ function projectOnSegment(
   coordinates: ProgressCoordinate[],
   position: ProgressCoordinate,
   cumulativeMeters: number[],
+  anchorProgressMeters: number | null = null,
+  minProgressMeters: number | null = null,
 ): LocatedProgress {
   if (coordinates.length <= 1) {
     return { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 };
@@ -33,6 +35,8 @@ function projectOnSegment(
     offRouteMeters: Number.POSITIVE_INFINITY,
     progressMeters: 0,
   };
+  let bestWindow: LocatedProgress | null = null;
+  let bestFromMin: LocatedProgress | null = null;
   const latitude = position[1] * Math.PI / 180;
   const scaleX = 111_320 * Math.cos(latitude);
   const scaleY = 110_540;
@@ -52,15 +56,46 @@ function projectOnSegment(
       ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / denominator))
       : 0;
     const distance = Math.hypot(px - (ax + ratio * dx), py - (ay + ratio * dy));
+    const segmentMeters = cumulativeMeters[index] - cumulativeMeters[index - 1];
+    const progressMeters = cumulativeMeters[index - 1] + segmentMeters * ratio;
+    const candidate: LocatedProgress = {
+      segmentIndex: index - 1,
+      ratio,
+      offRouteMeters: distance,
+      progressMeters,
+    };
     if (distance < best.offRouteMeters) {
-      const segmentMeters = cumulativeMeters[index] - cumulativeMeters[index - 1];
-      best = {
-        segmentIndex: index - 1,
-        ratio,
-        offRouteMeters: distance,
-        progressMeters: cumulativeMeters[index - 1] + segmentMeters * ratio,
-      };
+      best = candidate;
     }
+    if (
+      anchorProgressMeters !== null
+      && progressMeters >= anchorProgressMeters - 35
+      && progressMeters <= anchorProgressMeters + 160
+      && (!bestWindow || distance < bestWindow.offRouteMeters)
+    ) {
+      bestWindow = candidate;
+    }
+    if (
+      minProgressMeters !== null
+      && progressMeters + 5 >= minProgressMeters
+      && (!bestFromMin || distance < bestFromMin.offRouteMeters)
+    ) {
+      bestFromMin = candidate;
+    }
+  }
+  if (minProgressMeters !== null && bestFromMin && bestFromMin.offRouteMeters <= 30) {
+    return {
+      ...bestFromMin,
+      progressMeters: Math.max(minProgressMeters, bestFromMin.progressMeters),
+    };
+  }
+  if (
+    anchorProgressMeters !== null
+    && bestWindow
+    && bestWindow.offRouteMeters <= 40
+    && bestWindow.offRouteMeters <= best.offRouteMeters + 25
+  ) {
+    return bestWindow;
   }
   return best;
 }
@@ -76,14 +111,26 @@ export function buildRouteProgressModel<T extends ProgressInstruction>(
       cumulativeMeters[index - 1] + distanceMeters(coordinates[index - 1], coordinates[index]),
     );
   }
+  let minInstructionProgress = 0;
   return {
     coordinates,
     cumulativeMeters,
     totalMeters: cumulativeMeters[cumulativeMeters.length - 1] ?? 0,
-    instructions: instructions.map((instruction) => ({
-      instruction,
-      progressMeters: projectOnSegment(coordinates, instruction.location, cumulativeMeters).progressMeters,
-    })),
+    instructions: instructions.map((instruction) => {
+      const projected = projectOnSegment(
+        coordinates,
+        instruction.location,
+        cumulativeMeters,
+        null,
+        minInstructionProgress,
+      );
+      const progressMeters = Math.max(minInstructionProgress, projected.progressMeters);
+      minInstructionProgress = progressMeters;
+      return {
+        instruction,
+        progressMeters,
+      };
+    }),
   };
 }
 
@@ -94,7 +141,7 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
   previousProgressMeters: number | null = null,
 ) {
   const projected = position
-    ? projectOnSegment(model.coordinates, position, model.cumulativeMeters)
+    ? projectOnSegment(model.coordinates, position, model.cumulativeMeters, previousProgressMeters)
     : { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 };
   const located = previousProgressMeters === null || projected.progressMeters >= previousProgressMeters
     ? projected

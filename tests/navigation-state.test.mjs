@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  createNavigationDiagnostics,
+  evaluateGpsSignalStall,
   evaluateOffRouteReading,
   evaluateTimedGpsReading,
   estimateArrivalTimestamp,
+  formatNavigationDiagnosticsSummary,
   gpsCoordinateMoved,
+  recordNavigationDiagnosticEvent,
   shouldAcceptGpsReading,
   shouldApplyRouteResponse,
   shouldBeginNavigation,
@@ -180,4 +184,98 @@ test("off-route accumulation is capped while cooldown is active", () => {
     cooldownMs: 15_000,
     calculationInProgress: false,
   }), { readings: 3, shouldRecalculate: false });
+});
+
+test("coarse-to-fine GPS lock transition is accepted while accurate teleportation is rejected", () => {
+  const coarseFix = [9.19, 45.4642];
+  const fineFix = [9.1911, 45.4642]; // ~85.8m apart
+  const base = {
+    coordinate: fineFix,
+    accuracy: 6,
+    timestamp: 21_000,
+    now: 21_100,
+    previousCoordinate: coarseFix,
+    previousTimestamp: 20_000,
+    bounds,
+    distanceMeters: planarDistance,
+    maximumSpeedMetersPerSecond: 15,
+  };
+
+  assert.deepEqual(
+    evaluateTimedGpsReading({ ...base, previousAccuracy: 95 }),
+    { accepted: true, reason: "accepted" },
+  );
+  assert.deepEqual(
+    evaluateTimedGpsReading({ ...base, previousAccuracy: 6 }),
+    { accepted: false, reason: "implausible" },
+  );
+});
+
+test("GPS signal stall detector distinguishes initial acquire timeout from live signal loss", () => {
+  assert.deepEqual(evaluateGpsSignalStall({
+    journeyActive: false,
+    mode: "gps",
+    now: 30_000,
+    sessionStartedAt: 10_000,
+    lastValidFixAt: null,
+  }), { stalled: false, reason: "ok", silentDurationMs: 0 });
+
+  assert.deepEqual(evaluateGpsSignalStall({
+    journeyActive: true,
+    mode: "simulation",
+    now: 30_000,
+    sessionStartedAt: 10_000,
+    lastValidFixAt: null,
+  }), { stalled: false, reason: "ok", silentDurationMs: 0 });
+
+  assert.deepEqual(evaluateGpsSignalStall({
+    journeyActive: true,
+    mode: "gps",
+    now: 18_000,
+    sessionStartedAt: 10_000,
+    lastValidFixAt: null,
+  }), { stalled: false, reason: "ok", silentDurationMs: 8_000 });
+
+  assert.deepEqual(evaluateGpsSignalStall({
+    journeyActive: true,
+    mode: "gps",
+    now: 22_500,
+    sessionStartedAt: 10_000,
+    lastValidFixAt: null,
+  }), { stalled: true, reason: "acquire-timeout", silentDurationMs: 12_500 });
+
+  assert.deepEqual(evaluateGpsSignalStall({
+    journeyActive: true,
+    mode: "gps",
+    now: 46_000,
+    sessionStartedAt: 10_000,
+    lastValidFixAt: 30_000,
+  }), { stalled: true, reason: "signal-lost", silentDurationMs: 16_000 });
+});
+
+test("privacy-safe navigation diagnostics count lifecycle events without storing coordinates", () => {
+  let state = createNavigationDiagnostics();
+  state = recordNavigationDiagnosticEvent(state, { type: "fix-accepted" });
+  state = recordNavigationDiagnosticEvent(state, { type: "fix-rejected", reason: "stale" });
+  state = recordNavigationDiagnosticEvent(state, { type: "fix-rejected", reason: "implausible" });
+  state = recordNavigationDiagnosticEvent(state, { type: "signal-loss" });
+  state = recordNavigationDiagnosticEvent(state, { type: "foreground-resume" });
+  state = recordNavigationDiagnosticEvent(state, { type: "reroute-start" });
+  state = recordNavigationDiagnosticEvent(state, { type: "reroute-failure" });
+  state = recordNavigationDiagnosticEvent(state, { type: "reroute-start" });
+  state = recordNavigationDiagnosticEvent(state, { type: "reroute-success" });
+
+  assert.equal(state.acceptedFixes, 1);
+  assert.equal(state.rejectedFixes.stale, 1);
+  assert.equal(state.rejectedFixes.implausible, 1);
+  assert.equal(state.signalLossCount, 1);
+  assert.equal(state.foregroundResumes, 1);
+  assert.equal(state.rerouteAttempts, 2);
+  assert.equal(state.rerouteSuccesses, 1);
+  assert.equal(state.rerouteFailures, 1);
+  assert.equal("coordinate" in state, false);
+  assert.equal(
+    formatNavigationDiagnosticsSummary(state),
+    "Fix GPS 1 ok (2 scartati) · Ricalcoli 1/2 · Perdite segnale 1",
+  );
 });
