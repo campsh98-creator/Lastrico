@@ -53,7 +53,10 @@ test("hard budget uses fastest duplicate even if provider lists the slower route
 });
 
 test("exact budget boundary admits the lower known exposure route and reports unknown coverage", async (t) => {
-  const calls = fixtures(t, [trip(points, 660), trip(points, 600), trip(detour, 750)]);
+  const calls = fixtures(t, [trip(points, 660), trip(points, 600), trip(detour, 750)], [roughWay, {
+    ...roughWay, id: 900000002, tags: { highway: "residential", surface: "asphalt" },
+    geometry: detour.slice(1, 3).map(([lon, lat]) => ({ lon, lat })),
+  }]);
   const response = await GET(request({ maxExtraMinutes: "2.5" }));
   assert.equal(response.status, 200);
   const data = await response.json();
@@ -156,4 +159,25 @@ test("handler honors bicycle counterflow without assigning restricted cycle trac
   const car = await (await GET(request({ start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
   assert.equal(car.fast.smoothSurfaceMeters, 0);
   assert.ok(car.fast.unknownSurfaceMeters > 300);
+});
+
+test("skips redundant waypoint detour requests when surface-aware Valhalla already returns a distinct corridor", async (t) => {
+  now += 100_000;
+  t.mock.method(Date, "now", () => now);
+  const valhallaCalls = [];
+  t.mock.method(globalThis, "fetch", async (url, init) => {
+    now += 2_000;
+    if (String(url).includes("overpass")) return Response.json({ elements: [roughWay] });
+    const body = JSON.parse(init.body);
+    valhallaCalls.push(body);
+    if (Array.isArray(body.linear_cost_factors)) {
+      return Response.json({ trip: trip(detour, 750), alternates: [] });
+    }
+    return Response.json({ trip: trip(points, 600), alternates: [] });
+  });
+  const response = await GET(request({ maxExtraMinutes: "2" }));
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.equal(data.hasDistinctAlternative, false);
+  assert.equal(valhallaCalls.length, 2, "must not fire 3 extra waypoint detours after a distinct surface-aware corridor");
 });

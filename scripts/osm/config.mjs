@@ -11,12 +11,18 @@ export const MILAN_BOUNDS = {
 
 export const SURFACE_MATERIAL_MAP = {
   sett: "sett",
+  "cobblestone:flattened": "sett",
+  "cobblestone:flattened:large_stone": "sett",
+  milanese_paving: "sett",
   cobblestone: "cobblestone",
   unhewn_cobblestone: "unhewn_cobblestone",
+  pebblestone: "cobblestone",
   paving_stones: "paving_stones",
   "paving_stones:lanes": "paving_stones",
   asphalt: "asphalt",
   concrete: "concrete",
+  "concrete:plates": "concrete",
+  "concrete:lanes": "concrete",
   paved: "paved",
   unpaved: "unpaved",
   compacted: "compacted",

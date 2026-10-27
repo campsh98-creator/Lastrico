@@ -63,6 +63,18 @@ test("generic paved does not become evidence of a smooth surface", () => {
   assert.equal(normalized.surfaceCategory, "unknown");
 });
 
+test("authentic Milan stone and concrete surface tags map to verified categories", () => {
+  const coords = [[9.19, 45.46], [9.191, 45.46]];
+  for (const surface of ["cobblestone:flattened", "cobblestone:flattened:large_stone", "milanese_paving", "pebblestone"]) {
+    const normalized = normalizeOsmFeature({ id: 10, tags: { highway: "residential", surface }, coordinates: coords });
+    assert.equal(normalized.surfaceCategory, "confirmed_rough", `expected ${surface} to be confirmed_rough`);
+  }
+  for (const surface of ["concrete:plates", "concrete:lanes"]) {
+    const normalized = normalizeOsmFeature({ id: 11, tags: { highway: "residential", surface }, coordinates: coords });
+    assert.equal(normalized.surfaceCategory, "confirmed_smooth", `expected ${surface} to be confirmed_smooth`);
+  }
+});
+
 test("ingestion records malformed vertices as invalid ways rather than crashing during deduplication", async (t) => {
   const dir = await mkdtemp(join(tmpdir(), "lastrico-invalid-source-"));
   t.after(() => rm(dir, { recursive: true, force: true }));

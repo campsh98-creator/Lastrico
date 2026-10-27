@@ -72,6 +72,20 @@ test("conditional or unresolved access and direction cannot imply permitted trav
   assert.equal(score(way({ junction: "roundabout" }), "car", true).matchedCoveragePercent, 0);
 });
 
+test("explicit mode-specific oneway overrides generic conditional oneway without leaking to cars", () => {
+  const segments = way({
+    oneway: "yes",
+    "oneway:conditional": "no @ (00:00-06:00)",
+    "oneway:motorcycle": "no",
+    "oneway:bicycle": "no",
+  });
+  assert.equal(score(segments, "car").matchedCoveragePercent, 0);
+  assert.equal(score(segments, "motorcycle").matchedCoveragePercent, 100);
+  assert.equal(score(segments, "motorcycle", true).matchedCoveragePercent, 100);
+  assert.equal(score(segments, "bicycle").matchedCoveragePercent, 100);
+  assert.equal(score(segments, "bicycle", true).matchedCoveragePercent, 100);
+});
+
 test("separately mapped cycleways are not counted as facilities on a motor road", () => {
   for (const cycleway of ["no", "separate", "unknown_value", "shared_lane"]) {
     assert.equal(score(way({ cycleway })).cyclewayMeters, 0);

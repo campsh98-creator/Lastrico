@@ -21,8 +21,14 @@ import {
   type EngineRoute,
 } from "@/lib/routing-providers";
 import { parseExtraMinutes, routeFitsExtraMinutes } from "@/lib/route-time-budget";
+import {
+  extractRoughSlices,
+  buildLinearCostFactors,
+} from "@/lib/surface-aware-routing";
+import { fetchValhallaCustomizedRoute } from "@/lib/routing-providers";
 
-import { routesAreEquivalent as equivalentRoutes, deduplicateRoutes as uniqueRoutes } from "@/lib/route-candidates";
+import { routesShareCorridor, deduplicateRoutes as uniqueRoutes } from "@/lib/route-candidates";
+import { fastestLegalCandidate, isLegalCandidate, selectOptimizedRoute } from "@/lib/route-optimization";
 
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
@@ -177,37 +183,105 @@ function headingsAlign(a: Coordinate, b: Coordinate, c: Coordinate, d: Coordinat
   return Math.abs((routeX * wayX + routeY * wayY) / denominator) >= 0.58;
 }
 
-function segmentTouchesPave(a: Coordinate, b: Coordinate, paveWays: Coordinate[][], mode: TransportMode) {
+type PaveSegmentEntry = {
+  wayIndex: number;
+  a: Coordinate;
+  b: Coordinate;
+};
+
+type PaveSpatialIndex = {
+  cellSize: number;
+  cells: Map<string, PaveSegmentEntry[]>;
+};
+
+function paveCellKey(cellX: number, cellY: number) {
+  return `${cellX}:${cellY}`;
+}
+
+function createPaveSpatialIndex(details: PaveDetail[], cellSize = 0.001): PaveSpatialIndex {
+  const cells = new Map<string, PaveSegmentEntry[]>();
+  const padLon = 0.0003;
+  const padLat = 0.0002;
+  details.forEach((way, wayIndex) => {
+    for (let index = 1; index < way.coordinates.length; index += 1) {
+      const a = way.coordinates[index - 1];
+      const b = way.coordinates[index];
+      const entry: PaveSegmentEntry = { wayIndex, a, b };
+      const minCellX = Math.floor((Math.min(a[0], b[0]) - padLon) / cellSize);
+      const maxCellX = Math.floor((Math.max(a[0], b[0]) + padLon) / cellSize);
+      const minCellY = Math.floor((Math.min(a[1], b[1]) - padLat) / cellSize);
+      const maxCellY = Math.floor((Math.max(a[1], b[1]) + padLat) / cellSize);
+      for (let cx = minCellX; cx <= maxCellX; cx += 1) {
+        for (let cy = minCellY; cy <= maxCellY; cy += 1) {
+          const key = paveCellKey(cx, cy);
+          const bucket = cells.get(key);
+          if (bucket) {
+            bucket.push(entry);
+          } else {
+            cells.set(key, [entry]);
+          }
+        }
+      }
+    }
+  });
+  return { cellSize, cells };
+}
+
+function filterNearPaveDetails(
+  coordinates: Coordinate[],
+  details: PaveDetail[],
+  paveIndex: PaveSpatialIndex,
+  maxDistanceMeters = 18,
+): PaveDetail[] {
+  const matchedWayIndices = new Set<number>();
+  for (const point of coordinates) {
+    const bucket = paveIndex.cells.get(
+      paveCellKey(Math.floor(point[0] / paveIndex.cellSize), Math.floor(point[1] / paveIndex.cellSize)),
+    );
+    if (!bucket) continue;
+    for (const seg of bucket) {
+      if (matchedWayIndices.has(seg.wayIndex)) continue;
+      if (pointToSegmentDistance(point, seg.a, seg.b) <= maxDistanceMeters) {
+        matchedWayIndices.add(seg.wayIndex);
+      }
+    }
+  }
+  return details.filter((_, index) => matchedWayIndices.has(index));
+}
+
+function segmentTouchesPave(a: Coordinate, b: Coordinate, paveIndex: PaveSpatialIndex, mode: TransportMode) {
   const midpoint: Coordinate = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
   const matchMeters = MODE_POLICY[mode].surfaceMatchMeters;
-  for (const way of paveWays) {
-    for (let index = 1; index < way.length; index += 1) {
-      if (
-        headingsAlign(a, b, way[index - 1], way[index])
-        && pointToSegmentDistance(midpoint, way[index - 1], way[index]) <= matchMeters
-      ) {
-        return true;
-      }
+  const bucket = paveIndex.cells.get(
+    paveCellKey(Math.floor(midpoint[0] / paveIndex.cellSize), Math.floor(midpoint[1] / paveIndex.cellSize)),
+  );
+  if (!bucket) return false;
+  for (const seg of bucket) {
+    if (
+      headingsAlign(a, b, seg.a, seg.b)
+      && pointToSegmentDistance(midpoint, seg.a, seg.b) <= matchMeters
+    ) {
+      return true;
     }
   }
   return false;
 }
 
 function routesAreEquivalent(a: EngineRoute, b: EngineRoute, mode: TransportMode) {
-  return equivalentRoutes(a, b, MODE_POLICY[mode]);
+  return routesShareCorridor(a, b, MODE_POLICY[mode].equivalentAverageMeters);
 }
 
 function deduplicateRoutes(routes: Array<{ route: EngineRoute; source: string }>, mode: TransportMode) {
   return uniqueRoutes(routes, MODE_POLICY[mode]);
 }
 
-function findDetourAnchor(route: EngineRoute, paveWays: Coordinate[][], mode: TransportMode) {
+function findDetourAnchor(route: EngineRoute, paveIndex: PaveSpatialIndex, mode: TransportMode) {
   const coordinates = route.coordinates;
   let best: { a: Coordinate; b: Coordinate; weight: number } | null = null;
   for (let index = 1; index < coordinates.length; index += 1) {
     const a = coordinates[index - 1];
     const b = coordinates[index];
-    if (!segmentTouchesPave(a, b, paveWays, mode)) continue;
+    if (!segmentTouchesPave(a, b, paveIndex, mode)) continue;
     const centrality = 1 - Math.abs(index / coordinates.length - 0.5);
     const weight = segmentLength(a, b) * (0.7 + centrality);
     if (!best || weight > best.weight) best = { a, b, weight };
@@ -242,24 +316,8 @@ function selectSafeRoute(
   mode: TransportMode,
   maximumExtraMinutes: number | null,
 ) {
-  const policy = MODE_POLICY[mode];
-  const distinct = scored.filter((candidate) => !routesAreEquivalent(candidate.route, fast.route, mode));
-  const limit = policy.limits[avoidance];
-  const eligible = distinct.filter((candidate) =>
-    candidate.route.duration <= fast.route.duration * limit.factor + limit.seconds
-    && routeFitsExtraMinutes(candidate.route.duration, fast.route.duration, maximumExtraMinutes),
-  );
-  const reducing = eligible
-    .filter((candidate) => candidate.riskMeters + policy.minimumPaveReduction <= fast.riskMeters)
-    .sort((a, b) => {
-      if (avoidance === "balanced") {
-        const scoreA = a.route.duration / 60 + a.riskMeters / policy.balancedPaveDivisor;
-        const scoreB = b.route.duration / 60 + b.riskMeters / policy.balancedPaveDivisor;
-        return scoreA - scoreB;
-      }
-      return a.riskMeters - b.riskMeters || a.route.duration - b.route.duration;
-    });
-  return reducing[0] ?? fast;
+  return selectOptimizedRoute(scored, fast, mode, avoidance, maximumExtraMinutes, MODE_POLICY[mode],
+    (a, b) => routesAreEquivalent(a, b, mode)).safe;
 }
 
 function routePayload(
@@ -353,6 +411,15 @@ function roughDetails(segments: RoadSegmentRecord[]): PaveDetail[] {
 }
 const localPave = roughDetails(localRoads);
 let cachedBaseIndex: RoadIntelligenceIndex | null = null;
+let cachedBasePaveIndex: PaveSpatialIndex | null = null;
+let lastOverpassSnapshot: {
+  key: string;
+  roads: RoadSegmentRecord[];
+  paveDetails: PaveDetail[];
+  paveIndex: PaveSpatialIndex;
+  surfaceIndex: RoadIntelligenceIndex;
+} | null = null;
+
 function getBaseSurfaceIndex(): RoadIntelligenceIndex {
   if (!cachedBaseIndex) {
     cachedBaseIndex = createRoadIntelligenceIndex(localRoads);
@@ -360,9 +427,17 @@ function getBaseSurfaceIndex(): RoadIntelligenceIndex {
   return cachedBaseIndex;
 }
 
+function getBasePaveIndex(): PaveSpatialIndex {
+  if (!cachedBasePaveIndex) {
+    cachedBasePaveIndex = createPaveSpatialIndex(localPave);
+  }
+  return cachedBasePaveIndex;
+}
+
 export async function GET(request: NextRequest) {
   const calculationStartedAt = performance.now();
   const navigationRequest = request.nextUrl.searchParams.get("navigation") === "1";
+  const surfaceAwarePoc = request.nextUrl.searchParams.get("poc") === "surface-aware";
   const deadline = Date.now() + (navigationRequest ? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS);
   const start = parseCoordinate(request.nextUrl.searchParams.get("start"));
   const end = parseCoordinate(request.nextUrl.searchParams.get("end"));
@@ -412,6 +487,8 @@ export async function GET(request: NextRequest) {
 
     let roads = localRoads;
     let paveDetails: PaveDetail[] = localPave;
+    let paveIndex: PaveSpatialIndex | null = null;
+    let liveSurfaceIndex: RoadIntelligenceIndex | null = null;
     let dataSource = "archivio OSM locale";
     if (overpassResponse?.ok) {
       try {
@@ -429,22 +506,39 @@ export async function GET(request: NextRequest) {
               && point.lon >= MILAN_BOUNDS.west && point.lon <= MILAN_BOUNDS.east
               && point.lat >= MILAN_BOUNDS.south && point.lat <= MILAN_BOUNDS.north));
         if (liveWays.length) {
-          const ingestedAt = new Date().toISOString();
-          const liveSegments = liveWays.flatMap((way) =>
-            normalizeOsmFeature(way, { ingestedAt }).segments) as RoadSegmentRecord[];
-          const replacedIds = new Set(liveSegments.map((segment) => segment.osmWayId));
-          roads = [...localRoads.filter((segment) => !replacedIds.has(segment.osmWayId)), ...liveSegments];
-          paveDetails = roughDetails(roads);
+          const snapshotKey = JSON.stringify(liveWays);
+          if (lastOverpassSnapshot?.key === snapshotKey) {
+            roads = lastOverpassSnapshot.roads;
+            paveDetails = lastOverpassSnapshot.paveDetails;
+            paveIndex = lastOverpassSnapshot.paveIndex;
+            liveSurfaceIndex = lastOverpassSnapshot.surfaceIndex;
+          } else {
+            const ingestedAt = new Date().toISOString();
+            const liveSegments = liveWays.flatMap((way) =>
+              normalizeOsmFeature(way, { ingestedAt }).segments) as RoadSegmentRecord[];
+            const replacedIds = new Set(liveSegments.map((segment) => segment.osmWayId));
+            roads = [...localRoads.filter((segment) => !replacedIds.has(segment.osmWayId)), ...liveSegments];
+            paveDetails = roughDetails(roads);
+            paveIndex = createPaveSpatialIndex(paveDetails);
+            liveSurfaceIndex = createRoadIntelligenceIndex(roads);
+            lastOverpassSnapshot = {
+              key: snapshotKey,
+              roads,
+              paveDetails,
+              paveIndex,
+              surfaceIndex: liveSurfaceIndex,
+            };
+          }
           dataSource = "archivio OSM locale + aggiornamento live";
         }
       } catch {
         dataSource = "archivio OSM locale";
       }
     }
-    const paveWays = paveDetails.map((way) => way.coordinates);
+    const activePaveIndex = paveIndex ?? getBasePaveIndex();
     const surfaceIndex = roads === localRoads
       ? getBaseSurfaceIndex()
-      : createRoadIntelligenceIndex(roads);
+      : (liveSurfaceIndex ?? createRoadIntelligenceIndex(roads));
     const scoreCache = new Map<EngineRoute, SurfaceScore>();
     const scoreCandidate = (route: EngineRoute) => {
       const cached = scoreCache.get(route);
@@ -470,10 +564,11 @@ export async function GET(request: NextRequest) {
       };
     };
 
-    const fastestBase = [...baseRoutes].sort((a, b) => a.duration - b.duration)[0];
     const baseScored: ScoredRoute[] = baseRoutes.map((route, index) =>
       scoredCandidate(route, `base-${index + 1}`));
-    const preliminaryFast = [...baseScored].sort((a, b) => a.route.duration - b.route.duration)[0];
+    const preliminaryFast = fastestLegalCandidate(baseScored, mode);
+    if (!preliminaryFast) throw new Error("Nessun percorso compatibile con le restrizioni note");
+    const fastestBase = preliminaryFast.route;
     const preliminarySafe = selectSafeRoute(
       baseScored,
       preliminaryFast,
@@ -487,9 +582,54 @@ export async function GET(request: NextRequest) {
       mode,
     ) && preliminarySafe.riskMeters + policy.minimumPaveReduction <= preliminaryFast.riskMeters;
     const detourResponses: EngineRoute[][] = [];
-    // No candidate can reduce known exposure when the fastest has none.
-    if (!baseAlreadyImproves && preliminaryFast.riskMeters >= policy.minimumPaveReduction) {
-      const anchor = findDetourAnchor(fastestBase, paveWays, mode);
+    let surfaceAwareDirectRoute: EngineRoute | null = null;
+    let surfaceAwareDirectMetrics: { roughSlicesCount: number; penalizedMeters: number } | null = null;
+
+    const canGenerate = !baseAlreadyImproves && maximumExtraMinutes !== 0
+      && preliminaryFast.riskMeters >= policy.minimumPaveReduction;
+    // One bounded provider-cost attempt in planner; navigation keeps its existing latency budget.
+    if (canGenerate && (!navigationRequest || surfaceAwarePoc)
+      && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
+      && deadline - Date.now() >= 4_000) {
+      const isSegmentRough = (prev: Coordinate, curr: Coordinate) => {
+        let end = curr;
+        if (segmentLength(prev, curr) < 1) {
+          const dx = curr[0] - prev[0];
+          const dy = curr[1] - prev[1];
+          const len = Math.hypot(dx, dy) || 1;
+          end = [prev[0] + (dx / len) * 0.00002, prev[1] + (dy / len) * 0.00002];
+        }
+        const mid: Coordinate = [(prev[0] + end[0]) / 2, (prev[1] + end[1]) / 2];
+        return scoreRoadIntelligence([prev, mid, end], surfaceIndex, policy.surfaceMatchMeters, mode).paveMeters > 0;
+      };
+      const roughSlices = fastestBase.maneuverShapes?.length
+        ? fastestBase.maneuverShapes.flatMap((shape) => extractRoughSlices(shape, isSegmentRough, 25))
+        : extractRoughSlices(fastestBase.coordinates, isSegmentRough, 25);
+      const { factors, totalPenalizedMeters } = buildLinearCostFactors(roughSlices, 15.0);
+      if (factors.length > 0) {
+        surfaceAwareDirectMetrics = {
+          roughSlicesCount: factors.length,
+          penalizedMeters: totalPenalizedMeters,
+        };
+        surfaceAwareDirectRoute = await fetchValhallaCustomizedRoute(
+          [start, end],
+          mode,
+          factors,
+          Math.min(deadline - 2_000, Date.now() + 3_500),
+          request.signal,
+        );
+      }
+    }
+
+    const directScored = surfaceAwareDirectRoute
+      ? [...baseScored, scoredCandidate(surfaceAwareDirectRoute, "surface-aware-valhalla")] : baseScored;
+    const directFast = fastestLegalCandidate(directScored, mode)!;
+    const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes);
+    const directProducedDistinctRoute = surfaceAwareDirectRoute !== null
+      && !routesAreEquivalent(surfaceAwareDirectRoute, fastestBase, mode);
+    // Retain waypoint fallback if the provider rejects factors or fails to produce a distinct corridor.
+    if (canGenerate && directSafe === directFast && !directProducedDistinctRoute) {
+      const anchor = findDetourAnchor(fastestBase, activePaveIndex, mode);
       const baseOffset = Math.max(
         policy.detourMinimumMeters,
         Math.min(policy.detourMaximumMeters, fastestBase.distance * policy.detourDistanceFactor),
@@ -511,11 +651,14 @@ export async function GET(request: NextRequest) {
           request.signal,
         );
         detourResponses.push(routes);
-        const provisionalRoutes = [...baseRoutes, ...detourResponses.flat()];
+        const provisionalRoutes = [
+          ...baseRoutes,
+          ...(surfaceAwareDirectRoute ? [surfaceAwareDirectRoute] : []),
+          ...detourResponses.flat(),
+        ];
         const provisionalScored: ScoredRoute[] = provisionalRoutes.map((route, index) =>
           scoredCandidate(route, `provisional-${index + 1}`));
-        const provisionalFast = [...provisionalScored]
-          .sort((a, b) => a.route.duration - b.route.duration)[0];
+        const provisionalFast = fastestLegalCandidate(provisionalScored, mode)!;
         const provisionalSafe = selectSafeRoute(
           provisionalScored,
           provisionalFast,
@@ -533,20 +676,25 @@ export async function GET(request: NextRequest) {
     }
     const candidates = deduplicateRoutes([
       ...baseRoutes.map((route, index) => ({ route, source: `base-${index + 1}` })),
+      ...(surfaceAwareDirectRoute ? [{ route: surfaceAwareDirectRoute, source: "surface-aware-valhalla" }] : []),
       ...detourResponses.flatMap((routes, index) =>
         routes.map((route) => ({ route, source: `detour-${index + 1}` })),
       ),
-    ], mode);
+    ].filter((candidate) => isLegalCandidate(scoredCandidate(candidate.route, candidate.source), mode)), mode);
     const scored: ScoredRoute[] = candidates.map((candidate) =>
       scoredCandidate(candidate.route, candidate.source));
-    const fast = [...scored].sort((a, b) => a.route.duration - b.route.duration)[0];
-    const safe = selectSafeRoute(scored, fast, avoidance, mode, maximumExtraMinutes);
+    const fast = fastestLegalCandidate(scored, mode);
+    if (!fast) throw new Error("Nessun percorso compatibile con le restrizioni note");
+    const selection = selectOptimizedRoute(scored, fast, mode, avoidance, maximumExtraMinutes, policy,
+      (a, b) => routesAreEquivalent(a, b, mode));
+    const safe = selection.safe;
     const hasDistinctAlternative = !routesAreEquivalent(fast.route, safe.route, mode)
       && safe.riskMeters + policy.minimumPaveReduction <= fast.riskMeters;
     const budgetExcludedLowerExposureRoute = maximumExtraMinutes !== null
       && !hasDistinctAlternative
       && scored.some((candidate) =>
-        !routesAreEquivalent(candidate.route, fast.route, mode)
+        isLegalCandidate(candidate, mode)
+        && !routesAreEquivalent(candidate.route, fast.route, mode)
         && candidate.riskMeters + policy.minimumPaveReduction <= fast.riskMeters
         && !routeFitsExtraMinutes(
           candidate.route.duration,
@@ -557,33 +705,28 @@ export async function GET(request: NextRequest) {
     const comparedLabel = scored.length === 1 ? "confrontato" : "confrontati";
     const checkedLabel = scored.length === 1 ? "controllato" : "controllati";
 
-    const relevantPave = paveDetails
-      .filter((way) => {
-        const displayedCoordinates = [...fast.route.coordinates, ...safe.route.coordinates];
-        return displayedCoordinates.some((point) =>
-          way.coordinates.some((_, index) =>
-            index > 0 && pointToSegmentDistance(point, way.coordinates[index - 1], way.coordinates[index]) <= 18,
-          ),
-        );
-      })
-      .slice(0, 70);
+    const displayedCoordinates = fast.route === safe.route
+      ? fast.route.coordinates
+      : [...fast.route.coordinates, ...safe.route.coordinates];
+    const relevantPave = filterNearPaveDetails(displayedCoordinates, paveDetails, activePaveIndex, 18).slice(0, 70);
+    const relevantPaveIndex = createPaveSpatialIndex(relevantPave);
+    const routeProblemSegments = (route: EngineRoute) =>
+      filterNearPaveDetails(route.coordinates, relevantPave, relevantPaveIndex, 18)
+        .map((way) => way.coordinates);
+    const fastProblemSegments = routeProblemSegments(fast.route);
+    const safeProblemSegments = safe.route === fast.route
+      ? fastProblemSegments
+      : routeProblemSegments(safe.route);
 
     const routingProfile = profileMetadata(mode, fast.route, safe.route);
     const bicycleCoverageNotice = mode === "bicycle" && dataSource === "archivio OSM locale"
       ? " La copertura locale dei fondi ciclabili può essere incompleta finché Overpass non risponde"
       : "";
     const calculationCompletedAt = performance.now();
-    const routeProblemSegments = (route: EngineRoute) => relevantPave
-      .filter((way) => route.coordinates.some((point) =>
-        way.coordinates.some((_, index) =>
-          index > 0 && pointToSegmentDistance(point, way.coordinates[index - 1], way.coordinates[index]) <= 18,
-        ),
-      ))
-      .map((way) => way.coordinates);
 
     return NextResponse.json({
-      fast: routePayload(fast.route, fast.surfaceScore, routeProblemSegments(fast.route)),
-      safe: routePayload(safe.route, safe.surfaceScore, routeProblemSegments(safe.route)),
+      fast: routePayload(fast.route, fast.surfaceScore, fastProblemSegments),
+      safe: routePayload(safe.route, safe.surfaceScore, safeProblemSegments),
       problemSegments: relevantPave.map((way) => way.coordinates),
       alternativesAnalyzed: scored.length,
       hasDistinctAlternative,
@@ -603,7 +746,16 @@ export async function GET(request: NextRequest) {
         candidateGenerationAndScoringMs: Math.round(calculationCompletedAt - baseRoutingReadyAt),
         totalMs: Math.round(calculationCompletedAt - calculationStartedAt),
       },
+      optimization: {
+        strategy: "pareto-conservative-unknown",
+        frontierSize: selection.frontier.length,
+        unknownMeterPenalty: 1,
+        directCandidateGenerated: surfaceAwareDirectRoute !== null,
+      },
       candidateDiagnostics: scored.map((candidate) => ({
+        eligibleModeAndAccess: isLegalCandidate(candidate, mode),
+        confirmedRestrictionMeters: candidate.surfaceScore.confirmedRestrictionMeters,
+        paretoOptimal: selection.frontier.includes(candidate),
         source: candidate.source,
         provider: candidate.route.provider,
         profile: candidate.route.profile,
@@ -627,6 +779,15 @@ export async function GET(request: NextRequest) {
           : 0,
         distinctFromFast: !routesAreEquivalent(candidate.route, fast.route, mode),
       })),
+      ...(surfaceAwarePoc ? {
+        surfaceAwarePoc: {
+          attempted: true,
+          applied: scored.some((c) => c.source === "surface-aware-valhalla" && c.route === safe.route),
+          candidateGenerated: surfaceAwareDirectRoute !== null,
+          penalizedMeters: surfaceAwareDirectMetrics?.penalizedMeters ?? 0,
+          roughSlicesCount: surfaceAwareDirectMetrics?.roughSlicesCount ?? 0,
+        },
+      } : {}),
       dataNotice: (
         fast.surfaceScore.matchedFeatures + safe.surfaceScore.matchedFeatures === 0
           ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"
@@ -637,7 +798,7 @@ export async function GET(request: NextRequest) {
                 fast.surfaceScore.matchedFeatures,
                 safe.surfaceScore.matchedFeatures,
               )} way OSM abbinate al percorso (${dataSource})`
-            : `${routeCountLabel} ${checkedLabel}: nessuna deviazione riduce l’esposizione nota (${dataSource})`
+            : `${routeCountLabel} ${checkedLabel}: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (${dataSource})`
       ) + bicycleCoverageNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
     }, {
       headers: {

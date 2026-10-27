@@ -998,12 +998,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:1317124554",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1029,8 +1029,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "surface": "pebblestone"
@@ -4440,8 +4440,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -4467,7 +4467,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -4978,12 +4978,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:295416534",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -5009,8 +5009,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "permissive",
       "cycling_width": "good",
@@ -14345,12 +14345,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040138",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -14376,8 +14376,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -15757,8 +15757,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -15784,7 +15784,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -18009,8 +18009,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -18036,7 +18036,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -29439,12 +29439,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -29470,8 +29470,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -35430,12 +35430,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227570",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -35461,8 +35461,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -36398,8 +36398,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -36425,7 +36425,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -57314,8 +57314,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -57341,7 +57341,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -58461,12 +58461,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274982739",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -58492,8 +58492,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -59591,12 +59591,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:44602943",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -59622,8 +59622,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -81604,12 +81604,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227567",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -81635,8 +81635,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -85929,12 +85929,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227473",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -85960,8 +85960,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -93082,12 +93082,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "concrete",
       "sourceId": "osm:way:240865835",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -93113,7 +93113,7 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
+    "surfaceCategory": "confirmed_smooth",
     "roughnessWeight": 0,
     "rawTags": {
       "comment": "access possible only when the underground station is open",
@@ -95351,12 +95351,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227529",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -95382,8 +95382,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -96986,12 +96986,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -97017,8 +97017,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -105741,12 +105741,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274938344",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -105772,8 +105772,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -107736,12 +107736,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:273969562",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -107767,8 +107767,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "access": "no",
       "bicycle": "yes",
@@ -109077,12 +109077,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:275513670",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -109108,8 +109108,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "residential",
       "lit": "yes",
@@ -116896,12 +116896,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:727040780",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -116927,8 +116927,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "permissive",
       "cycling_width": "good",
@@ -118763,12 +118763,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:40492136",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -118794,8 +118794,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -134643,8 +134643,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -134670,7 +134670,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -136141,12 +136141,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:172824078",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -136172,8 +136172,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -137354,7 +137354,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -149259,12 +149259,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -149290,8 +149290,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -155486,12 +155486,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:289022596",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -155517,8 +155517,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -162193,8 +162193,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -162220,7 +162220,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -190176,12 +190176,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040138",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -190207,8 +190207,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -197178,12 +197178,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227529",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -197209,8 +197209,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -198017,12 +198017,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:280485837",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -198048,8 +198048,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -199790,12 +199790,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274948067",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -199821,8 +199821,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -203859,12 +203859,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227597",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -203890,8 +203890,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "permissive",
       "covered": "yes",
@@ -205456,12 +205456,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:295416534",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -205487,8 +205487,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "permissive",
       "cycling_width": "good",
@@ -213499,12 +213499,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227529",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -213530,8 +213530,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -217940,12 +217940,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:727040780",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -217971,8 +217971,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "permissive",
       "cycling_width": "good",
@@ -231261,8 +231261,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -231288,7 +231288,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -238205,12 +238205,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:168553894",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -238236,8 +238236,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -238726,12 +238726,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:280485837",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -238757,8 +238757,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -253852,7 +253852,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -274846,12 +274846,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:172824078",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -274877,8 +274877,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -280756,12 +280756,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:185168100",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -280787,8 +280787,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "access": "no",
       "bicycle": "yes",
@@ -288403,7 +288403,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -289737,7 +289737,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -305495,12 +305495,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:280485837",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -305526,8 +305526,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -309766,12 +309766,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:295416535",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -309797,8 +309797,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -327885,12 +327885,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:44602943",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -327916,8 +327916,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -332058,12 +332058,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:40492136",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -332089,8 +332089,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -332291,12 +332291,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:172824078",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -332322,8 +332322,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -339586,12 +339586,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:275480568",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -339617,8 +339617,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "residential",
       "lanes": "1",
@@ -358433,12 +358433,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:396875175",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -358464,8 +358464,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -364714,12 +364714,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274982739",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -364745,8 +364745,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -368534,12 +368534,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:40492136",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -368565,8 +368565,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -375637,12 +375637,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:27745992",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -375668,8 +375668,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -379104,12 +379104,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:396875175",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -379135,8 +379135,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -395639,8 +395639,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -395666,7 +395666,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -399154,12 +399154,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:295416535",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -399185,8 +399185,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -400962,12 +400962,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:27745990",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -400993,8 +400993,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -410845,12 +410845,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:27745992",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -410876,8 +410876,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -414601,7 +414601,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -416194,12 +416194,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:289022596",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -416225,8 +416225,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -419939,8 +419939,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -419966,7 +419966,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -420926,12 +420926,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227576",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -420957,8 +420957,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -425222,12 +425222,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227473",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -425253,8 +425253,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -428758,18 +428758,18 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274985649",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -428785,7 +428785,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -428795,8 +428795,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "narrow",
       "highway": "residential",
@@ -431365,7 +431365,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -432584,12 +432584,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274948067",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -432615,8 +432615,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -438570,12 +438570,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:27745992",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -438601,8 +438601,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -439824,8 +439824,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -439851,7 +439851,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -440752,12 +440752,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:566072399",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -440783,8 +440783,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "comment:it": "sul lato Nord parcheggio consentito solo alle biciclette del bike-sharing, disposte perpendicolarmente alla strada",
       "highway": "residential",
@@ -449442,7 +449442,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -452119,12 +452119,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227576",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -452150,8 +452150,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -455012,12 +455012,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:396875175",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -455043,8 +455043,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -459813,7 +459813,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -463689,8 +463689,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -463716,7 +463716,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -470117,8 +470117,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -470144,7 +470144,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -472366,12 +472366,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:168553894",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -472397,8 +472397,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -478429,12 +478429,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:280485834",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -478460,8 +478460,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -481703,12 +481703,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227570",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -481734,8 +481734,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -487621,12 +487621,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -487652,8 +487652,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -494122,12 +494122,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -494153,8 +494153,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -508539,12 +508539,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274982739",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -508570,8 +508570,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -512298,12 +512298,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040138",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -512329,8 +512329,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -519893,12 +519893,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:295416535",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -519924,8 +519924,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -539099,12 +539099,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:40492136",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -539130,8 +539130,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -543911,7 +543911,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -546021,12 +546021,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227473",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -546052,8 +546052,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -546697,8 +546697,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -546724,7 +546724,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -555516,12 +555516,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227480",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -555547,8 +555547,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -560963,12 +560963,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:165990907",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -560994,8 +560994,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "comment:it": "Istituto Tecnico Statale e per Geometri Carlo Cattaneo",
       "cycling_width": "critical",
@@ -564291,12 +564291,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:185168100",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -564322,8 +564322,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "access": "no",
       "bicycle": "yes",
@@ -601077,12 +601077,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -601108,8 +601108,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -608949,8 +608949,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -608976,7 +608976,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -623524,12 +623524,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:294986388",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -623555,8 +623555,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -626941,12 +626941,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:232703081",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -626972,8 +626972,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -630585,8 +630585,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -630612,7 +630612,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -654229,12 +654229,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:185168100",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -654260,8 +654260,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "access": "no",
       "bicycle": "yes",
@@ -659262,12 +659262,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:27625555",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -659293,8 +659293,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -682197,8 +682197,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -682224,7 +682224,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -683463,12 +683463,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:320733614",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -683494,8 +683494,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -697621,12 +697621,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040137",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -697652,8 +697652,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -700182,12 +700182,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040137",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -700213,8 +700213,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -701085,12 +701085,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040137",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -701116,8 +701116,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -705401,12 +705401,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:183874239",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -705432,8 +705432,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -711848,7 +711848,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -712676,12 +712676,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:295416535",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -712707,8 +712707,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -713191,12 +713191,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:197249315",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -713222,8 +713222,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -717665,12 +717665,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274416161",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -717696,8 +717696,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "access": "no",
       "bicycle": "yes",
@@ -721473,12 +721473,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:286603671",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -721504,8 +721504,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "access:forward": "yes",
       "alt_name": "Via Lamarmora",
@@ -724249,12 +724249,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:27745990",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -724280,8 +724280,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -731906,7 +731906,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -749844,8 +749844,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -749871,7 +749871,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -754856,12 +754856,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:396875175",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -754887,8 +754887,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -765965,12 +765965,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:503252712",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -765996,8 +765996,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -768940,8 +768940,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -768967,7 +768967,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -779023,12 +779023,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274948067",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -779054,8 +779054,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -787576,12 +787576,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:295416535",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -787607,8 +787607,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -789899,12 +789899,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -789930,8 +789930,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -790841,12 +790841,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274938344",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -790872,8 +790872,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -791811,12 +791811,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:286603671",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -791842,8 +791842,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "access:forward": "yes",
       "alt_name": "Via Lamarmora",
@@ -792889,12 +792889,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:1507933664",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -792920,8 +792920,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -797572,12 +797572,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -797603,8 +797603,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -798246,12 +798246,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:396875175",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -798277,8 +798277,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -810821,8 +810821,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -810848,7 +810848,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -822800,8 +822800,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -822827,7 +822827,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -827179,8 +827179,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -827206,7 +827206,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -831037,12 +831037,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:27745990",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -831068,8 +831068,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -837529,12 +837529,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -837560,8 +837560,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -838805,12 +838805,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:275480568",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -838836,8 +838836,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "residential",
       "lanes": "1",
@@ -843334,12 +843334,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:279157868",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -843365,8 +843365,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "residential",
       "lanes": "1",
@@ -845904,12 +845904,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227473",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -845935,8 +845935,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -863659,12 +863659,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:1152376072",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -863690,8 +863690,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -885504,7 +885504,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -895009,8 +895009,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -895036,7 +895036,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -899727,18 +899727,18 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274985649",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -899754,7 +899754,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -899764,8 +899764,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "narrow",
       "highway": "residential",
@@ -903308,12 +903308,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227567",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -903339,8 +903339,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -903695,12 +903695,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040138",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -903726,8 +903726,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -906257,12 +906257,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:727040780",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -906288,8 +906288,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "permissive",
       "cycling_width": "good",
@@ -914476,8 +914476,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -914503,7 +914503,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -924362,8 +924362,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -924389,7 +924389,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -929844,12 +929844,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274948067",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -929875,8 +929875,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -938313,12 +938313,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:275480569",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -938344,8 +938344,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "comment:it": "sul lato Nord parcheggio consentito solo alle biciclette del bike-sharing, disposte perpendicolarmente alla strada",
       "highway": "residential",
@@ -942399,12 +942399,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227576",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -942430,8 +942430,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -966528,7 +966528,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -970497,8 +970497,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -970524,7 +970524,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -979517,12 +979517,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:43016041",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -979548,8 +979548,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "residential",
       "lanes": "1",
@@ -984131,12 +984131,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274938344",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -984162,8 +984162,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -986452,12 +986452,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227529",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -986483,8 +986483,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -992628,12 +992628,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:37335879",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -992659,8 +992659,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "permissive",
       "cycling_width": "good",
@@ -998726,12 +998726,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:295416535",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -998757,8 +998757,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -1002850,12 +1002850,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:320733614",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1002881,8 +1002881,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -1007798,12 +1007798,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:43016041",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1007829,8 +1007829,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "residential",
       "lanes": "1",
@@ -1009838,12 +1009838,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:275480568",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1009869,8 +1009869,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "residential",
       "lanes": "1",
@@ -1010885,8 +1010885,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -1010912,7 +1010912,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1022935,12 +1022935,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:27625555",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1022966,8 +1022966,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -1029975,12 +1029975,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040117",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1030006,8 +1030006,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "bridge": "yes",
@@ -1043133,12 +1043133,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:44602944",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1043164,8 +1043164,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -1045129,12 +1045129,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "concrete",
       "sourceId": "osm:way:240865838",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1045160,7 +1045160,7 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
+    "surfaceCategory": "confirmed_smooth",
     "roughnessWeight": 0,
     "rawTags": {
       "conveying": "no",
@@ -1047686,12 +1047686,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:279157867",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1047717,8 +1047717,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -1057712,8 +1057712,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -1057739,7 +1057739,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1059317,8 +1059317,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -1059344,7 +1059344,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1062319,12 +1062319,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227570",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1062350,8 +1062350,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -1075866,12 +1075866,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:418040137",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1075897,8 +1075897,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -1079448,12 +1079448,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:275513670",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1079479,8 +1079479,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "residential",
       "lit": "yes",
@@ -1084683,12 +1084683,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:280485837",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1084714,8 +1084714,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -1092539,12 +1092539,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:727040780",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1092570,8 +1092570,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "permissive",
       "cycling_width": "good",
@@ -1098644,12 +1098644,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:280485834",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1098675,8 +1098675,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -1102303,8 +1102303,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -1102330,7 +1102330,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1104392,12 +1104392,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:27745990",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1104423,8 +1104423,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "highway": "footway",
       "lit": "yes",
@@ -1112793,12 +1112793,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:275480569",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1112824,8 +1112824,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "comment:it": "sul lato Nord parcheggio consentito solo alle biciclette del bike-sharing, disposte perpendicolarmente alla strada",
       "highway": "residential",
@@ -1120390,12 +1120390,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:168553865",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1120421,8 +1120421,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -1134089,12 +1134089,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227480",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1134120,8 +1134120,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -1144345,12 +1144345,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274982739",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1144376,8 +1144376,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -1153566,12 +1153566,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227473",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1153597,8 +1153597,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -1157652,12 +1157652,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:137975785",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1157683,8 +1157683,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -1177363,7 +1177363,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -1185190,12 +1185190,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:183874239",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1185221,8 +1185221,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -1204538,12 +1204538,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274982739",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1204569,8 +1204569,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -1209904,12 +1209904,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:731898431",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1209935,8 +1209935,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "bridge": "yes",
@@ -1212587,12 +1212587,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227570",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1212618,8 +1212618,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -1212892,7 +1212892,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -1213949,12 +1213949,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:232703081",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1213980,8 +1213980,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -1215312,12 +1215312,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227570",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1215343,8 +1215343,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -1226121,12 +1226121,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "cobblestone",
       "sourceId": "osm:way:40492136",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1226152,8 +1226152,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "highway": "footway",
@@ -1231898,12 +1231898,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274982739",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1231929,8 +1231929,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "critical",
       "highway": "residential",
@@ -1240268,12 +1240268,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:23227529",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1240299,8 +1240299,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "designated",
       "cycling_width": "good",
@@ -1242147,7 +1242147,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -1246634,12 +1246634,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1246665,8 +1246665,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -1252462,12 +1252462,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:289022596",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1252493,8 +1252493,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -1267370,12 +1267370,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:168553894",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1267401,8 +1267401,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "sufficient",
       "highway": "residential",
@@ -1278838,12 +1278838,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:183874239",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1278869,8 +1278869,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "mean",
       "fixme": "check access",
@@ -1281260,12 +1281260,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1281291,8 +1281291,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",
@@ -1291872,18 +1291872,18 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274985649",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1291899,7 +1291899,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1291909,8 +1291909,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "cycling_width": "narrow",
       "highway": "residential",
@@ -1296200,12 +1296200,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:274948067",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1296231,8 +1296231,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "bicycle": "yes",
       "cycling_width": "good",
@@ -1299914,8 +1299914,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -1299941,7 +1299941,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1304015,8 +1304015,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -1304042,7 +1304042,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1308116,7 +1308116,7 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
+      "motorcycle": "both",
       "bicycle": "unknown"
     },
     "embeddedRails": false,
@@ -1322427,12 +1322427,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:165990907",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1322458,8 +1322458,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "comment:it": "Istituto Tecnico Statale e per Geometri Carlo Cattaneo",
       "cycling_width": "critical",
@@ -1327510,8 +1327510,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -1327537,7 +1327537,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1339010,8 +1339010,8 @@
     },
     "modeDirections": {
       "car": "unknown",
-      "motorcycle": "unknown",
-      "bicycle": "unknown"
+      "motorcycle": "both",
+      "bicycle": "both"
     },
     "embeddedRails": false,
     "surface": {
@@ -1339037,7 +1339037,7 @@
       "value": {
         "hasFacility": false,
         "typology": "none",
-        "direction": "unknown",
+        "direction": "bidirezionale",
         "surface": null,
         "source": "none"
       },
@@ -1346713,12 +1346713,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:286603671",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1346744,8 +1346744,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "access:forward": "yes",
       "alt_name": "Via Lamarmora",
@@ -1351207,12 +1351207,12 @@
     "embeddedRails": false,
     "surface": {
       "state": "known",
-      "value": "other",
+      "value": "sett",
       "sourceId": "osm:way:291652154",
       "authority": "osm_curated",
       "observedAt": null,
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
-      "confidence": 0
+      "confidence": 1
     },
     "smoothness": {
       "state": "unknown",
@@ -1351238,8 +1351238,8 @@
       "ingestedAt": "2026-10-26T00:44:43.832077+00:00",
       "confidence": 0
     },
-    "surfaceCategory": "unknown",
-    "roughnessWeight": 0,
+    "surfaceCategory": "confirmed_rough",
+    "roughnessWeight": 1,
     "rawTags": {
       "alt_name": "Corso Vittorio Emanuele II",
       "bicycle": "dismount",

@@ -1,0 +1,432 @@
+{
+  "version": "after",
+  "generatedAt": "2026-10-27T22:35:52.016Z",
+  "handlerSha256": "201cc90471eee8df3f454c769493d04db51ae34733afc6258d2bd644cc472014",
+  "surfaceDatasetSha256": "5c28a094c2265473eda999532833740c22259123f6660e7e33bf4808633a96d3",
+  "conditions": {
+    "avoid": "strong",
+    "maxExtraMinutes": 5,
+    "navigation": false,
+    "overpass": "disabled; fixed archived pilot",
+    "liveAcquisition": false,
+    "timing": "Captured HTTP durations replayed in real time; local scoring and provider queue measured afresh. Single observation, not service latency percentile."
+  },
+  "rows": [
+    {
+      "case": "castello-missori",
+      "mode": "car",
+      "start": [
+        9.1838,
+        45.4697
+      ],
+      "end": [
+        9.1922,
+        45.456
+      ],
+      "status": 200,
+      "fastSeconds": 731.981,
+      "selectedSeconds": 731.981,
+      "extraSeconds": 0,
+      "roughMeters": 475,
+      "fastRoughMeters": 475,
+      "roughReductionMeters": 0,
+      "unknownMeters": 1719,
+      "unknownPercent": 49.00228050171037,
+      "hasDistinctAlternative": false,
+      "candidates": 4,
+      "distinctCandidates": 3,
+      "selectedGeometrySha256": "bf3bbdfa1bcab4c4fa492c5f142ffce51a130495e104e7708b21ce7eb7a082dc",
+      "elapsedMs": 2654.7077500000014,
+      "performance": {
+        "routingAndSurfaceDataMs": 502,
+        "candidateGenerationAndScoringMs": 2143,
+        "totalMs": 2645
+      },
+      "calls": [
+        {
+          "key": "f71c27f4e506fdd0a40ffe71f5027e712fa2526e3226083647ca414f74391b41",
+          "cached": true,
+          "elapsedMs": 491.2655830000001,
+          "status": 200,
+          "error": null
+        },
+        {
+          "key": "e6bf5e4b4bdcefa76a76bb450c289c1bc48e583eeffa6a93d9c6b0f7069839f0",
+          "cached": true,
+          "elapsedMs": 1445.6428329999999,
+          "status": 200,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "castello-missori",
+      "mode": "motorcycle",
+      "start": [
+        9.1838,
+        45.4697
+      ],
+      "end": [
+        9.1922,
+        45.456
+      ],
+      "status": 200,
+      "fastSeconds": 731.981,
+      "selectedSeconds": 731.981,
+      "extraSeconds": 0,
+      "roughMeters": 475,
+      "fastRoughMeters": 475,
+      "roughReductionMeters": 0,
+      "unknownMeters": 1719,
+      "unknownPercent": 49.00228050171037,
+      "hasDistinctAlternative": false,
+      "candidates": 4,
+      "distinctCandidates": 3,
+      "selectedGeometrySha256": "bf3bbdfa1bcab4c4fa492c5f142ffce51a130495e104e7708b21ce7eb7a082dc",
+      "elapsedMs": 1231.702874999999,
+      "performance": {
+        "routingAndSurfaceDataMs": 210,
+        "candidateGenerationAndScoringMs": 1015,
+        "totalMs": 1225
+      },
+      "calls": [
+        {
+          "key": "47dd053f32bf3ffc503b10d39ed9f24b24baca6e4849660a3fccb1d75a40dab2",
+          "cached": true,
+          "elapsedMs": 206.15395799999988,
+          "status": 200,
+          "error": null
+        },
+        {
+          "key": "511cdac353345b2fc697892f8c697790c7e21a6bde1df2d79a81d1bf6ef68722",
+          "cached": true,
+          "elapsedMs": 135.14758299999994,
+          "status": 200,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "castello-missori",
+      "mode": "bicycle",
+      "start": [
+        9.1838,
+        45.4697
+      ],
+      "end": [
+        9.1922,
+        45.456
+      ],
+      "status": 200,
+      "fastSeconds": 561.243,
+      "selectedSeconds": 561.243,
+      "extraSeconds": 0,
+      "roughMeters": 1587,
+      "fastRoughMeters": 1587,
+      "roughReductionMeters": 0,
+      "unknownMeters": 97,
+      "unknownPercent": 3.6603773584905657,
+      "hasDistinctAlternative": false,
+      "candidates": 4,
+      "distinctCandidates": 3,
+      "selectedGeometrySha256": "81d4efaff1741d258a9d2d69934a3cad947e11b9c202d0bfd6e7e7db2f6da7ab",
+      "elapsedMs": 2677.9229579999956,
+      "performance": {
+        "routingAndSurfaceDataMs": 1223,
+        "candidateGenerationAndScoringMs": 1450,
+        "totalMs": 2673
+      },
+      "calls": [
+        {
+          "key": "b4831e5b74b4134e626b2d48678dbae640c6485c705ee90beca1bb8f309d855b",
+          "cached": true,
+          "elapsedMs": 335.29741699999977,
+          "status": 200,
+          "error": null
+        },
+        {
+          "key": "0a563a95539bbc8db68c65d8c96397175cadea7fc906ddd7574221e2463685d3",
+          "cached": true,
+          "elapsedMs": 715.6840830000001,
+          "status": 200,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "san-babila-cordusio",
+      "mode": "car",
+      "start": [
+        9.1982,
+        45.4667
+      ],
+      "end": [
+        9.1861,
+        45.4658
+      ],
+      "status": 200,
+      "fastSeconds": 371.953,
+      "selectedSeconds": 371.953,
+      "extraSeconds": 0,
+      "roughMeters": 295,
+      "fastRoughMeters": 295,
+      "roughReductionMeters": 0,
+      "unknownMeters": 368,
+      "unknownPercent": 25.379310344827587,
+      "hasDistinctAlternative": false,
+      "candidates": 3,
+      "distinctCandidates": 2,
+      "selectedGeometrySha256": "0d41160f148ff5a9f260469e816a66e62981f7899c9528681821f0daa272d98a",
+      "elapsedMs": 1520.2999580000032,
+      "performance": {
+        "routingAndSurfaceDataMs": 650,
+        "candidateGenerationAndScoringMs": 869,
+        "totalMs": 1519
+      },
+      "calls": [
+        {
+          "key": "e3e1982b8749b64b48dfa945d6cccd44e66606c65a572fc9804fc83b8eb3e0c1",
+          "cached": true,
+          "elapsedMs": 342.9764159999995,
+          "status": 200,
+          "error": null
+        },
+        {
+          "key": "ada9eea75c7c98d74028a2624ede7df6e8cd9a138bb9174b95a28e90d4433c04",
+          "cached": true,
+          "elapsedMs": 119.38929199999984,
+          "status": 200,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "san-babila-cordusio",
+      "mode": "motorcycle",
+      "start": [
+        9.1982,
+        45.4667
+      ],
+      "end": [
+        9.1861,
+        45.4658
+      ],
+      "status": 200,
+      "fastSeconds": 277.149,
+      "selectedSeconds": 277.149,
+      "extraSeconds": 0,
+      "roughMeters": 288,
+      "fastRoughMeters": 288,
+      "roughReductionMeters": 0,
+      "unknownMeters": 6,
+      "unknownPercent": 0.5509641873278237,
+      "hasDistinctAlternative": false,
+      "candidates": 3,
+      "distinctCandidates": 2,
+      "selectedGeometrySha256": "e5beab7a44143a1cd00680a0fa31f5c706754ff7efc95e34b32aab243082ae59",
+      "elapsedMs": 2468.2784170000014,
+      "performance": {
+        "routingAndSurfaceDataMs": 1140,
+        "candidateGenerationAndScoringMs": 1323,
+        "totalMs": 2463
+      },
+      "calls": [
+        {
+          "key": "70ca6850a443a35a241b0f72952f9e645d335c5286c68cfa4cf9043983348709",
+          "cached": true,
+          "elapsedMs": 255.46441700000105,
+          "status": 200,
+          "error": null
+        },
+        {
+          "key": "e4d346e89835ec2944b68b406be6eb23b14839f6d89ea51b17672341d57e27bc",
+          "cached": true,
+          "elapsedMs": 412.3196659999994,
+          "status": 200,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "san-babila-cordusio",
+      "mode": "bicycle",
+      "start": [
+        9.1982,
+        45.4667
+      ],
+      "end": [
+        9.1861,
+        45.4658
+      ],
+      "status": 200,
+      "fastSeconds": 366.02,
+      "selectedSeconds": 399.598,
+      "extraSeconds": 33.57799999999999,
+      "roughMeters": 484,
+      "fastRoughMeters": 972,
+      "roughReductionMeters": 488,
+      "unknownMeters": 153,
+      "unknownPercent": 9.085510688836104,
+      "hasDistinctAlternative": true,
+      "candidates": 2,
+      "distinctCandidates": 1,
+      "selectedGeometrySha256": "f9557074588423a08aeb1eb8d1bae114f72ee5011d240ed8e884115a84084628",
+      "elapsedMs": 898.0362920000043,
+      "performance": {
+        "routingAndSurfaceDataMs": 796,
+        "candidateGenerationAndScoringMs": 98,
+        "totalMs": 895
+      },
+      "calls": [
+        {
+          "key": "736a64342d911b3520387f9a5c32c1aa2eac01dbd829596a3947bc2d43b36806",
+          "cached": true,
+          "elapsedMs": 260.7256670000006,
+          "status": 200,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "brera-santa-sofia",
+      "mode": "car",
+      "start": [
+        9.1889,
+        45.4722
+      ],
+      "end": [
+        9.1885,
+        45.4562
+      ],
+      "status": 200,
+      "fastSeconds": 782.276,
+      "selectedSeconds": 782.276,
+      "extraSeconds": 0,
+      "roughMeters": 674,
+      "fastRoughMeters": 674,
+      "roughReductionMeters": 0,
+      "unknownMeters": 1744,
+      "unknownPercent": 46.13756613756614,
+      "hasDistinctAlternative": false,
+      "candidates": 2,
+      "distinctCandidates": 1,
+      "selectedGeometrySha256": "baec6d17f2f88ddfb2f5bce547fccfd22f56210adfe4009cea51af8d13fecc6d",
+      "elapsedMs": 2107.0420000000013,
+      "performance": {
+        "routingAndSurfaceDataMs": 868,
+        "candidateGenerationAndScoringMs": 1236,
+        "totalMs": 2104
+      },
+      "calls": [
+        {
+          "key": "873f7053b30b6baad1abddaa2cfbf5e18c732a79ecf235f0fc98587e92c0741b",
+          "cached": true,
+          "elapsedMs": 185.09395900000163,
+          "status": 200,
+          "error": null
+        },
+        {
+          "key": "15150d71c364c765cc75ab0651d641f15d9f444484bbc57e69123c6449808a1a",
+          "cached": true,
+          "elapsedMs": 340.075291000001,
+          "status": 200,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "brera-santa-sofia",
+      "mode": "motorcycle",
+      "start": [
+        9.1889,
+        45.4722
+      ],
+      "end": [
+        9.1885,
+        45.4562
+      ],
+      "status": 200,
+      "fastSeconds": 782.276,
+      "selectedSeconds": 782.276,
+      "extraSeconds": 0,
+      "roughMeters": 674,
+      "fastRoughMeters": 674,
+      "roughReductionMeters": 0,
+      "unknownMeters": 1744,
+      "unknownPercent": 46.13756613756614,
+      "hasDistinctAlternative": false,
+      "candidates": 4,
+      "distinctCandidates": 3,
+      "selectedGeometrySha256": "baec6d17f2f88ddfb2f5bce547fccfd22f56210adfe4009cea51af8d13fecc6d",
+      "elapsedMs": 2059.430124999999,
+      "performance": {
+        "routingAndSurfaceDataMs": 981,
+        "candidateGenerationAndScoringMs": 1073,
+        "totalMs": 2055
+      },
+      "calls": [
+        {
+          "key": "c0c09ed97e16b163f065b43837e79ab0573e937baa98c408871892d41c909c8e",
+          "cached": true,
+          "elapsedMs": 302.10983300000225,
+          "status": 200,
+          "error": null
+        },
+        {
+          "key": "62cc3e3b1856fe22a4a6e9f6232bfdf2baf5ced14414cce2fad956b0c47c5ba9",
+          "cached": true,
+          "elapsedMs": 288.1149580000056,
+          "status": 200,
+          "error": null
+        }
+      ]
+    },
+    {
+      "case": "brera-santa-sofia",
+      "mode": "bicycle",
+      "start": [
+        9.1889,
+        45.4722
+      ],
+      "end": [
+        9.1885,
+        45.4562
+      ],
+      "status": 200,
+      "fastSeconds": 630.509,
+      "selectedSeconds": 630.509,
+      "extraSeconds": 0,
+      "roughMeters": 86,
+      "fastRoughMeters": 86,
+      "roughReductionMeters": 0,
+      "unknownMeters": 416,
+      "unknownPercent": 14.227086183310533,
+      "hasDistinctAlternative": false,
+      "candidates": 2,
+      "distinctCandidates": 1,
+      "selectedGeometrySha256": "669c322323f6576e1a2e8f53127d9961f158ec3ce9ea7d9c8917a74b1f28f040",
+      "elapsedMs": 2421.6046659999993,
+      "performance": {
+        "routingAndSurfaceDataMs": 941,
+        "candidateGenerationAndScoringMs": 1479,
+        "totalMs": 2420
+      },
+      "calls": [
+        {
+          "key": "0a1fa5f2d1dd56ef35030f0cfdf58241b5026f4fe8cfb41846053559223a64cc",
+          "cached": true,
+          "elapsedMs": 218.19895800000086,
+          "status": 200,
+          "error": null
+        },
+        {
+          "key": "0e436948c09c71335f285dec21051cf31f8810d93f29f24ae9527b745bf22258",
+          "cached": true,
+          "elapsedMs": 614.5625419999997,
+          "status": 200,
+          "error": null
+        }
+      ]
+    }
+  ]
+}

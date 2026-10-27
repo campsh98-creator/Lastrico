@@ -106,9 +106,19 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   const isBicycleAllowed = modeAccess.bicycle;
 
   function direction(keys, fallback) {
-    if ([...keys, "oneway"].some((key) => tags[`${key}:conditional`])) return "unknown";
-    const value = keys.map((key) => tags[key]).find((value) => value !== undefined) ?? fallback;
-    const normalized = String(value).trim().toLowerCase();
+    for (const key of keys) {
+      if (tags[`${key}:conditional`]) return "unknown";
+      if (tags[key] !== undefined) {
+        const normalized = String(tags[key]).trim().toLowerCase();
+        let result = ["no", "0", "false", ""].includes(normalized) ? "both"
+          : normalized === "-1" ? "backward" : ["yes", "1", "true"].includes(normalized) ? "forward" : "unknown";
+        if (result === "unknown") return result;
+        if (isReversed && result !== "both") result = result === "forward" ? "backward" : "forward";
+        return result;
+      }
+    }
+    if (tags["oneway:conditional"]) return "unknown";
+    const normalized = String(fallback).trim().toLowerCase();
     let result = ["no", "0", "false", ""].includes(normalized) ? "both"
       : normalized === "-1" ? "backward" : ["yes", "1", "true"].includes(normalized) ? "forward" : "unknown";
     if (result === "unknown") return result;

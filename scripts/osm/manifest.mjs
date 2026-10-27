@@ -71,7 +71,7 @@ export function generateManifest({
     generatedAt,
     area: {
       zoneId: "MIL_CENTRE_PILOT",
-      description: "Milan city-centre pilot only (9.18–9.20 E, 45.455–45.475 N)",
+      description: `Milan city-centre pilot only (${provenance.bounds.west}–${provenance.bounds.east} E, ${provenance.bounds.south}–${provenance.bounds.north} N)`,
       bounds: provenance.bounds,
       denominator: "Sum of linear highway-way centreline edges (area=yes polygons excluded) clipped to the pilot bounds, including unknown surface; each OSM way retained once. Separate mapped carriageways count separately; not lane-km, municipal extent, or citywide road coverage.",
     },

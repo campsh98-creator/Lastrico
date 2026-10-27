@@ -4,7 +4,7 @@
   "generatedAt": "2026-10-26T00:44:43.832077+00:00",
   "area": {
     "zoneId": "MIL_CENTRE_PILOT",
-    "description": "Milan city-centre pilot only (9.18–9.20 E, 45.455–45.475 N)",
+    "description": "Milan city-centre pilot only (9.18–9.2 E, 45.455–45.475 N)",
     "bounds": {
       "west": 9.18,
       "south": 45.455,
@@ -97,11 +97,11 @@
     "totalWays": 5482,
     "totalLengthMeters": 221272,
     "surfaceBreakdownMeters": {
-      "confirmed_rough": 24395,
+      "confirmed_rough": 26575,
       "probable_rough": 34188,
-      "confirmed_smooth": 86342,
+      "confirmed_smooth": 86350,
       "unpaved_loose": 6260,
-      "unknown": 70088
+      "unknown": 67901
     },
     "smoothnessBreakdownMeters": {
       "excellent": 2433,
@@ -118,7 +118,7 @@
     "embeddedRailsMeters": 0
   },
   "checksums": {
-    "datasetSha256": "15e3cc7893fd8f72404be88062f3c591e9ba494c51c9d21f9feafacfffc36841"
+    "datasetSha256": "5c28a094c2265473eda999532833740c22259123f6660e7e33bf4808633a96d3"
   },
   "validation": {
     "excludedAreaWays": 65,
