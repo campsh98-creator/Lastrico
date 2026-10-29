@@ -1,0 +1,689 @@
+{
+  "request": {
+    "area": "roccella",
+    "start": "16.3982404,38.3237581",
+    "end": "16.405331,38.3210373",
+    "mode": "bicycle",
+    "avoid": "strong",
+    "maxExtraMinutes": "5",
+    "navigation": "1"
+  },
+  "status": 200,
+  "elapsedMs": 1034.4072080000005,
+  "payload": {
+    "area": "roccella",
+    "fast": {
+      "coordinates": [
+        [
+          16.39824,
+          38.323758
+        ],
+        [
+          16.398318,
+          38.323829
+        ],
+        [
+          16.398763,
+          38.324183
+        ],
+        [
+          16.398961,
+          38.324244
+        ],
+        [
+          16.399393,
+          38.324111
+        ],
+        [
+          16.399864,
+          38.323908
+        ],
+        [
+          16.400355,
+          38.323696
+        ],
+        [
+          16.400712,
+          38.323438
+        ],
+        [
+          16.400837,
+          38.323348
+        ],
+        [
+          16.401026,
+          38.323211
+        ],
+        [
+          16.401112,
+          38.323149
+        ],
+        [
+          16.401664,
+          38.322692
+        ],
+        [
+          16.401877,
+          38.322515
+        ],
+        [
+          16.401917,
+          38.322482
+        ],
+        [
+          16.401977,
+          38.322433
+        ],
+        [
+          16.40203,
+          38.322389
+        ],
+        [
+          16.40223,
+          38.322205
+        ],
+        [
+          16.402357,
+          38.32209
+        ],
+        [
+          16.402383,
+          38.322066
+        ],
+        [
+          16.402458,
+          38.321997
+        ],
+        [
+          16.402574,
+          38.321904
+        ],
+        [
+          16.402877,
+          38.321656
+        ],
+        [
+          16.402967,
+          38.321651
+        ],
+        [
+          16.403171,
+          38.3216
+        ],
+        [
+          16.403349,
+          38.321526
+        ],
+        [
+          16.403455,
+          38.321466
+        ],
+        [
+          16.403636,
+          38.321362
+        ],
+        [
+          16.40369,
+          38.321381
+        ],
+        [
+          16.403867,
+          38.321451
+        ],
+        [
+          16.404321,
+          38.321696
+        ],
+        [
+          16.404518,
+          38.321789
+        ],
+        [
+          16.404714,
+          38.321865
+        ],
+        [
+          16.404899,
+          38.321562
+        ],
+        [
+          16.405103,
+          38.321625
+        ],
+        [
+          16.405145,
+          38.321546
+        ],
+        [
+          16.405145,
+          38.321532
+        ],
+        [
+          16.405153,
+          38.321506
+        ],
+        [
+          16.405255,
+          38.321238
+        ],
+        [
+          16.405302,
+          38.321116
+        ],
+        [
+          16.405313,
+          38.321087
+        ],
+        [
+          16.405331,
+          38.321037
+        ]
+      ],
+      "distance": 0.844,
+      "minutes": 2.5566833333333334,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 651,
+      "surfaceCoveragePercent": 23,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 194,
+      "surfaceTotalMeters": 845,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-16.39824,38.323758",
+          "text": "Pedala verso nord-est su Via Cannolaro.",
+          "roadName": "Via Cannolaro",
+          "distance": 84,
+          "location": [
+            16.39824,
+            38.323758
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-16.398961,38.324244",
+          "text": "Mantieni la destra su Via Trastevere.",
+          "roadName": "Via Trastevere",
+          "distance": 451,
+          "location": [
+            16.398961,
+            38.324244
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "2-turn-16.402877,38.321656",
+          "text": "Mantieni la sinistra su Via Porto.",
+          "roadName": "Via Porto",
+          "distance": 75,
+          "location": [
+            16.402877,
+            38.321656
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "3-turn-16.403636,38.321362",
+          "text": "Svolta a sinistra su Via Cappelleri/SS106/E 90.",
+          "roadName": "Via Cappelleri",
+          "distance": 110,
+          "location": [
+            16.403636,
+            38.321362
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "4-turn-16.404714,38.321865",
+          "text": "Svolta a destra su Piazza San Vittorio.",
+          "roadName": "Piazza San Vittorio",
+          "distance": 57,
+          "location": [
+            16.404714,
+            38.321865
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "5-turn-16.405103,38.321625",
+          "text": "Svolta a destra.",
+          "roadName": "",
+          "distance": 68,
+          "location": [
+            16.405103,
+            38.321625
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "6-arrive-16.405331,38.321037",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            16.405331,
+            38.321037
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "safe": {
+      "coordinates": [
+        [
+          16.39824,
+          38.323758
+        ],
+        [
+          16.398318,
+          38.323829
+        ],
+        [
+          16.398763,
+          38.324183
+        ],
+        [
+          16.398961,
+          38.324244
+        ],
+        [
+          16.399393,
+          38.324111
+        ],
+        [
+          16.399864,
+          38.323908
+        ],
+        [
+          16.400355,
+          38.323696
+        ],
+        [
+          16.400712,
+          38.323438
+        ],
+        [
+          16.400837,
+          38.323348
+        ],
+        [
+          16.401026,
+          38.323211
+        ],
+        [
+          16.401112,
+          38.323149
+        ],
+        [
+          16.401664,
+          38.322692
+        ],
+        [
+          16.401877,
+          38.322515
+        ],
+        [
+          16.401917,
+          38.322482
+        ],
+        [
+          16.401977,
+          38.322433
+        ],
+        [
+          16.40203,
+          38.322389
+        ],
+        [
+          16.40223,
+          38.322205
+        ],
+        [
+          16.402357,
+          38.32209
+        ],
+        [
+          16.402383,
+          38.322066
+        ],
+        [
+          16.402458,
+          38.321997
+        ],
+        [
+          16.402574,
+          38.321904
+        ],
+        [
+          16.402877,
+          38.321656
+        ],
+        [
+          16.402967,
+          38.321651
+        ],
+        [
+          16.403171,
+          38.3216
+        ],
+        [
+          16.403349,
+          38.321526
+        ],
+        [
+          16.403455,
+          38.321466
+        ],
+        [
+          16.403636,
+          38.321362
+        ],
+        [
+          16.40369,
+          38.321381
+        ],
+        [
+          16.403867,
+          38.321451
+        ],
+        [
+          16.404321,
+          38.321696
+        ],
+        [
+          16.404518,
+          38.321789
+        ],
+        [
+          16.404714,
+          38.321865
+        ],
+        [
+          16.404899,
+          38.321562
+        ],
+        [
+          16.405103,
+          38.321625
+        ],
+        [
+          16.405145,
+          38.321546
+        ],
+        [
+          16.405145,
+          38.321532
+        ],
+        [
+          16.405153,
+          38.321506
+        ],
+        [
+          16.405255,
+          38.321238
+        ],
+        [
+          16.405302,
+          38.321116
+        ],
+        [
+          16.405313,
+          38.321087
+        ],
+        [
+          16.405331,
+          38.321037
+        ]
+      ],
+      "distance": 0.844,
+      "minutes": 2.5566833333333334,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 651,
+      "surfaceCoveragePercent": 23,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 194,
+      "surfaceTotalMeters": 845,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-16.39824,38.323758",
+          "text": "Pedala verso nord-est su Via Cannolaro.",
+          "roadName": "Via Cannolaro",
+          "distance": 84,
+          "location": [
+            16.39824,
+            38.323758
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-16.398961,38.324244",
+          "text": "Mantieni la destra su Via Trastevere.",
+          "roadName": "Via Trastevere",
+          "distance": 451,
+          "location": [
+            16.398961,
+            38.324244
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "2-turn-16.402877,38.321656",
+          "text": "Mantieni la sinistra su Via Porto.",
+          "roadName": "Via Porto",
+          "distance": 75,
+          "location": [
+            16.402877,
+            38.321656
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "3-turn-16.403636,38.321362",
+          "text": "Svolta a sinistra su Via Cappelleri/SS106/E 90.",
+          "roadName": "Via Cappelleri",
+          "distance": 110,
+          "location": [
+            16.403636,
+            38.321362
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "4-turn-16.404714,38.321865",
+          "text": "Svolta a destra su Piazza San Vittorio.",
+          "roadName": "Piazza San Vittorio",
+          "distance": 57,
+          "location": [
+            16.404714,
+            38.321865
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "5-turn-16.405103,38.321625",
+          "text": "Svolta a destra.",
+          "roadName": "",
+          "distance": 68,
+          "location": [
+            16.405103,
+            38.321625
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "6-arrive-16.405331,38.321037",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            16.405331,
+            38.321037
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "problemSegments": [],
+    "alternativesAnalyzed": 3,
+    "hasDistinctAlternative": false,
+    "surfaceDataAvailable": true,
+    "mode": "bicycle",
+    "transportMode": "bicycle",
+    "routingProfile": {
+      "provider": "valhalla-fossgis",
+      "profile": "bicycle",
+      "beta": true,
+      "approximate": false,
+      "fallbackUsed": false,
+      "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+    },
+    "calculationMode": "navigation",
+    "appliedPreferences": {
+      "avoidance": "strong",
+      "maximumExtraMinutes": 5
+    },
+    "performance": {
+      "routingAndSurfaceDataMs": 1030,
+      "candidateGenerationAndScoringMs": 4,
+      "totalMs": 1034
+    },
+    "optimization": {
+      "strategy": "pareto-conservative-unknown",
+      "frontierSize": 1,
+      "unknownMeterPenalty": 1,
+      "directCandidateGenerated": false
+    },
+    "candidateDiagnostics": [
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-1",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 844,
+        "seconds": 153,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 651,
+        "surfaceCoveragePercent": 23,
+        "smoothSurfaceMeters": 194,
+        "surfaceTotalMeters": 845,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 2,
+        "detourPercent": 0,
+        "distinctFromFast": false
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "paretoOptimal": false,
+        "source": "base-2",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 915,
+        "seconds": 166,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 791,
+        "surfaceCoveragePercent": 13.5,
+        "smoothSurfaceMeters": 123,
+        "surfaceTotalMeters": 914,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 2,
+        "detourPercent": 8.2,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "paretoOptimal": false,
+        "source": "base-3",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 1100,
+        "seconds": 218,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 1013,
+        "surfaceCoveragePercent": 7.7,
+        "smoothSurfaceMeters": 84,
+        "surfaceTotalMeters": 1097,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 1,
+        "detourPercent": 41.9,
+        "distinctFromFast": true
+      }
+    ],
+    "dataNotice": "3 percorsi reali controllati: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale) La copertura locale dei fondi ciclabili può essere incompleta finché Overpass non risponde. I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
+  },
+  "calls": [
+    {
+      "key": "37b47b13f41d91bae5fffb218828217d4c86f3b7d048cf547175cd9a1111a18a",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 145.15500000000065
+    }
+  ]
+}

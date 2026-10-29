@@ -1,0 +1,363 @@
+{
+  "area": {
+    "zoneId": "ROCCELLA_PILOT",
+    "description": "Roccella Ionica operational pilot (16.36–16.44 E, 38.29–38.35 N), not an administrative boundary",
+    "bounds": {
+      "west": 16.36,
+      "south": 38.29,
+      "east": 16.44,
+      "north": 38.35
+    },
+    "denominator": "Sum of linear highway-way centreline edges (area=yes polygons excluded) clipped to the pilot bounds, including unknown surface; each OSM way retained once. Separate mapped carriageways count separately; not lane-km, municipal extent, or citywide road coverage."
+  },
+  "totalMeters": 176541.76827212045,
+  "ways": 1052,
+  "segments": 8105,
+  "classifiedPercent": 22.357554999167206,
+  "categories": {
+    "unknown": {
+      "meters": 137071.3453341788,
+      "percent": 77.6424450008328
+    },
+    "confirmed_smooth": {
+      "meters": 30920.510548077073,
+      "percent": 17.514558084869964
+    },
+    "unpaved_loose": {
+      "meters": 8159.98692424071,
+      "percent": 4.622128238606376
+    },
+    "probable_rough": {
+      "meters": 389.9254656240514,
+      "percent": 0.22086867569096882
+    }
+  },
+  "cyclingPercent": 1.6362013996119404,
+  "classes": {
+    "residential": {
+      "meters": 11759.0317424145,
+      "knownMeters": 346.6008700262413
+    },
+    "track": {
+      "meters": 48906.55330733983,
+      "knownMeters": 8670.633734430936
+    },
+    "unclassified": {
+      "meters": 61859.74508721838,
+      "knownMeters": 1783.8244227087723
+    },
+    "footway": {
+      "meters": 8319.347100993851,
+      "knownMeters": 664.5785495435589
+    },
+    "tertiary": {
+      "meters": 3321.7722872139684,
+      "knownMeters": 3321.7722872139684
+    },
+    "service": {
+      "meters": 11516.426322475445,
+      "knownMeters": 0
+    },
+    "cycleway": {
+      "meters": 2888.578883368103,
+      "knownMeters": 0
+    },
+    "steps": {
+      "meters": 256.98270010231596,
+      "knownMeters": 0
+    },
+    "primary": {
+      "meters": 316.5831025257888,
+      "knownMeters": 316.5831025257888
+    },
+    "trunk": {
+      "meters": 15425.917397026064,
+      "knownMeters": 15425.917397026064
+    },
+    "secondary": {
+      "meters": 7532.234618559942,
+      "knownMeters": 7532.234618559942
+    },
+    "path": {
+      "meters": 800.4215287392939,
+      "knownMeters": 0
+    },
+    "pedestrian": {
+      "meters": 3638.1741941432347,
+      "knownMeters": 1408.2779559065382
+    }
+  },
+  "validation": {
+    "excludedAreaWays": 8,
+    "validWays": 1052,
+    "invalidWays": 0,
+    "flaggedJumpsOver250m": 16,
+    "validationErrors": []
+  },
+  "bytes": {
+    "archive": 711807,
+    "normalized": 13528398,
+    "compact": 1201601
+  },
+  "checksums": {
+    "datasetSha256": "57da5fa77701e0caa9bcaa4115a87c622ed7239a3dca0663c435dad59d2e62d5",
+    "compactSha256": "a298371f8e441d32cb618e051a8d9670f782ccc0a678d9277b4a82521e1c5246"
+  },
+  "sourcePlaces": [
+    {
+      "id": 198372956,
+      "type": "way",
+      "tags": {
+        "name": "Roccella Ionica",
+        "operator": "Enel Distribuzione",
+        "operator:wikidata": "Q3725215",
+        "power": "substation",
+        "ref:terna": "NNAPROCN",
+        "substation": "distribution",
+        "voltage": "150000"
+      },
+      "coordinate": null
+    },
+    {
+      "id": 465886150,
+      "type": "way",
+      "tags": {
+        "cables": "3",
+        "frequency": "50",
+        "name": "Roccella Ionica-Caulonia-Stilo",
+        "power": "line",
+        "ref": "23.045",
+        "voltage": "150000",
+        "wires": "single"
+      },
+      "coordinate": null
+    },
+    {
+      "id": 567110746,
+      "type": "way",
+      "tags": {
+        "cables": "3",
+        "fixme": "name,ref,operator",
+        "frequency": "50",
+        "name": "Roccella Ionica-Locri",
+        "power": "line",
+        "ref": "23.035",
+        "voltage": "150000",
+        "wires": "single"
+      },
+      "coordinate": null
+    },
+    {
+      "id": 39609,
+      "type": "relation",
+      "tags": {
+        "admin_level": "8",
+        "boundary": "administrative",
+        "name": "Roccella Ionica",
+        "population": "6165",
+        "population:date": "2026-08-27",
+        "postal_code": "89047",
+        "ref:catasto": "H456",
+        "ref:ISTAT": "080067",
+        "type": "boundary",
+        "wikidata": "Q54642",
+        "wikipedia": "it:Roccella Ionica"
+      },
+      "coordinate": null
+    },
+    {
+      "id": 13638570260,
+      "type": "node",
+      "tags": {
+        "brand": "FisioCenter",
+        "contact:mobile": "+39 391 797 9592",
+        "email": "info@fisioterapiaroccella.it",
+        "healthcare": "physiotherapist",
+        "healthcare:speciality": "osteopathy",
+        "name": "FisioCenter Roccella - Osteopatia e Fisioterapia",
+        "operator": "Dott. Domenico Carnà",
+        "website": "https://www.fisioterapiaroccella.it",
+        "wheelchair": "yes"
+      },
+      "coordinate": [
+        16.3957014,
+        38.3232478
+      ]
+    },
+    {
+      "id": 198372958,
+      "type": "way",
+      "tags": {
+        "cables": "3",
+        "fixme": "name,ref,operator",
+        "frequency": "50",
+        "name": "Roccella Ionica-Locri",
+        "power": "line",
+        "ref": "23.035",
+        "voltage": "150000",
+        "wires": "single"
+      },
+      "coordinate": null
+    },
+    {
+      "id": 67275470,
+      "type": "node",
+      "tags": {
+        "alt_name": "Roccella Jonica",
+        "gfoss_id": "6787",
+        "name": "Roccella Ionica",
+        "place": "village",
+        "population": "6762",
+        "postal_code": "89047",
+        "source": "geodati.gfoss.it",
+        "wikidata": "Q54642",
+        "wikipedia": "it:Roccella Ionica"
+      },
+      "coordinate": [
+        16.400907,
+        38.321976
+      ]
+    },
+    {
+      "id": 1782680543,
+      "type": "node",
+      "tags": {
+        "name": "Roccella Jonica",
+        "operator": "Rete Ferroviaria Italiana",
+        "operator:short": "RFI",
+        "operator:wikidata": "Q1060049",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "ref": "3",
+        "train": "yes"
+      },
+      "coordinate": [
+        16.4069194,
+        38.3219399
+      ]
+    },
+    {
+      "id": 1875154533,
+      "type": "node",
+      "tags": {
+        "name": "Roccella Jonica",
+        "operator": "Rete Ferroviaria Italiana",
+        "operator:short": "RFI",
+        "operator:wikidata": "Q1060049",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "ref": "1",
+        "train": "yes"
+      },
+      "coordinate": [
+        16.406863,
+        38.3220443
+      ]
+    },
+    {
+      "id": 2970055228,
+      "type": "node",
+      "tags": {
+        "highway": "bus_stop",
+        "local_ref": "285",
+        "name": "Roccella Jonica",
+        "public_transport": "platform"
+      },
+      "coordinate": [
+        16.406756,
+        38.3224111
+      ]
+    },
+    {
+      "id": 3140886091,
+      "type": "node",
+      "tags": {
+        "name": "Roccella Jonica",
+        "operator": "Rete Ferroviaria Italiana",
+        "operator:short": "RFI",
+        "operator:wikidata": "Q1060049",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "ref": "2",
+        "train": "yes"
+      },
+      "coordinate": [
+        16.4068768,
+        38.3220114
+      ]
+    },
+    {
+      "id": 9254103173,
+      "type": "node",
+      "tags": {
+        "name": "Roccella Jonica",
+        "operator": "Rete Ferroviaria Italiana",
+        "operator:short": "RFI",
+        "operator:wikidata": "Q1060049",
+        "public_transport": "station",
+        "railway": "station",
+        "source": "https://github.com/trainline-eu/stations",
+        "train": "yes",
+        "uic_ref": "8311847",
+        "website": "https://www.rfi.it/it/stazioni/roccella-jonica.html",
+        "wikidata": "Q16609738",
+        "wikimedia_commons": "Category:Roccella_Ionica_train_station",
+        "wikipedia": "it:Stazione di Roccella Jonica"
+      },
+      "coordinate": [
+        16.4068881,
+        38.3220326
+      ]
+    },
+    {
+      "id": 11039952530,
+      "type": "node",
+      "tags": {
+        "addr:city": "Roccella Ionica",
+        "addr:street": "Via Città",
+        "contact:facebook": "https://www.facebook.com/CastelloRoccella/?locale=it_IT",
+        "museum": "local",
+        "name": "MUSMIR Museo Multimediale Immersivo di Roccella Jonica",
+        "source": "https://www.citynow.it/roccella-jonica-nuovo-museo-multimediale-immersivo/",
+        "start_date": "2023-07-15",
+        "tourism": "museum",
+        "website": "http://www.visitroccella.it/musmir/"
+      },
+      "coordinate": [
+        16.4074013,
+        38.3256094
+      ]
+    },
+    {
+      "id": 221672618,
+      "type": "way",
+      "tags": {
+        "landuse": "cemetery",
+        "name": "Cimitero di Roccella Jonica",
+        "wikidata": "Q110953704"
+      },
+      "coordinate": null
+    },
+    {
+      "id": 258582587,
+      "type": "way",
+      "tags": {
+        "building": "train_station",
+        "name": "Roccella Jonica",
+        "operator": "Rete Ferroviaria Italiana",
+        "operator:short": "RFI",
+        "operator:wikidata": "Q1060049"
+      },
+      "coordinate": null
+    },
+    {
+      "id": 971085335,
+      "type": "way",
+      "tags": {
+        "leisure": "beach_resort",
+        "name": "Lido Roccella"
+      },
+      "coordinate": null
+    }
+  ]
+}

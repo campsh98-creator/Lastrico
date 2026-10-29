@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createGeocodeFetcher, validMilanGeocodeResult } from "../../../lib/geocoding";
+import { createGeocodeFetcher, validAreaGeocodeResult } from "../../../lib/geocoding";
 
-const MILAN_VIEWBOX = "9.04,45.55,9.31,45.38";
+import { PILOT_AREAS, isPilotAreaId } from "../../../lib/pilot-areas";
 const NOMINATIM_MIN_INTERVAL_MS = 1_050;
 const fetchNominatim = createGeocodeFetcher({ minimumIntervalMs: NOMINATIM_MIN_INTERVAL_MS });
 // Bound upstream query size while allowing complete street/POI names and addresses.
 const MAX_QUERY_CHARACTERS = 300;
 
 export async function GET(request: NextRequest) {
+  const areaId = request.nextUrl.searchParams.get("area") ?? "milan";
+  if (!isPilotAreaId(areaId)) return NextResponse.json({ error: "Area pilota non valida." }, { status: 400 });
+  const pilot = PILOT_AREAS[areaId];
   const query = request.nextUrl.searchParams.get("q")?.trim();
   if (!query || query.length < 3) {
     return NextResponse.json({ error: "Inserisci almeno tre caratteri." }, { status: 400 });
@@ -18,17 +21,21 @@ export async function GET(request: NextRequest) {
   }
 
   const url = new URL("https://nominatim.openstreetmap.org/search");
-  const queryWithoutCity = query.replace(/,?\s*milano\s*$/i, "").trim();
+  const queryWithoutCity = query.replace(pilot.id === "milan" ? /,?\s*milano\s*$/i : /,?\s*roccella [ij]onica\s*$/i, "").trim();
   if (/\d/.test(queryWithoutCity)) {
     url.searchParams.set("street", queryWithoutCity);
-    url.searchParams.set("city", "Milano");
+    if (pilot.id === "milan") {
+      url.searchParams.set("city", "Milano");
+    } else {
+      url.searchParams.set("city", pilot.name);
+    }
   } else {
-    url.searchParams.set("q", query.toLowerCase().includes("milano") ? query : `${query}, Milano`);
+    url.searchParams.set("q", query.toLowerCase().includes(pilot.name.toLowerCase()) ? query : `${query}, ${pilot.name}`);
   }
   url.searchParams.set("format", "jsonv2");
   url.searchParams.set("limit", "10");
   url.searchParams.set("countrycodes", "it");
-  url.searchParams.set("viewbox", MILAN_VIEWBOX);
+  url.searchParams.set("viewbox", `${pilot.bounds.west},${pilot.bounds.north},${pilot.bounds.east},${pilot.bounds.south}`);
   url.searchParams.set("bounded", "1");
   url.searchParams.set("addressdetails", "1");
   url.searchParams.set("layer", "address,poi");
@@ -38,10 +45,10 @@ export async function GET(request: NextRequest) {
     if (!Array.isArray(data)) throw new Error("Risposta indirizzi non valida");
     const seen = new Set<string>();
     return NextResponse.json({
-      results: data.filter(validMilanGeocodeResult).flatMap((item) => {
+      results: data.filter((item) => validAreaGeocodeResult(item, pilot.bounds)).flatMap((item) => {
         const address = item.address ?? {};
         const city = address.city ?? address.town ?? address.municipality ?? "";
-        if (city.toLocaleLowerCase("it").trim() !== "milano") return [];
+        if (pilot.id === "milan" && city.toLocaleLowerCase("it").trim() !== "milano") return [];
         const road = address.road ?? address.pedestrian ?? address.footway;
         const place = item.name ?? address.amenity ?? address.shop ?? address.tourism;
         const streetAddress = [road, address.house_number].filter(Boolean).join(" ");

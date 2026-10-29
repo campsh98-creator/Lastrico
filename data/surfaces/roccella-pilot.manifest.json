@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "2.0.0",
+  "datasetVersion": "osm-api-roccella-2026-10-29",
+  "generatedAt": "2026-10-29T14:32:35.310Z",
+  "area": {
+    "zoneId": "ROCCELLA_PILOT",
+    "description": "Roccella Ionica operational pilot (16.36–16.44 E, 38.29–38.35 N), not an administrative boundary",
+    "bounds": {
+      "west": 16.36,
+      "south": 38.29,
+      "east": 16.44,
+      "north": 38.35
+    },
+    "denominator": "Sum of linear highway-way centreline edges (area=yes polygons excluded) clipped to the pilot bounds, including unknown surface; each OSM way retained once. Separate mapped carriageways count separately; not lane-km, municipal extent, or citywide road coverage."
+  },
+  "sources": [
+    {
+      "type": "osm",
+      "name": "OpenStreetMap",
+      "license": "ODbL-1.0",
+      "licenseUrl": "https://opendatacommons.org/licenses/odbl/1.0/",
+      "attribution": "© OpenStreetMap contributors",
+      "snapshotDate": "2026-10-29T14:32:35.310Z",
+      "snapshotDateMeaning": "Last response retrieval time; this is not an atomic historical OSM snapshot",
+      "sha256": "b481cf049ec820ed094d3e5d183d675021d0b0adba5b91581afe92aa2b06448f",
+      "acquisition": {
+        "provider": "OpenStreetMap API 0.6",
+        "bounds": {
+          "west": 16.36,
+          "south": 38.29,
+          "east": 16.44,
+          "north": 38.35
+        },
+        "selection": "All highway ways returned by four map requests; linear geometry clipped to operational pilot bounds. Includes town, historic streets, marina and local connecting roads; not an administrative boundary or field completeness claim.",
+        "temporalScope": "Four sequential live API responses, not an atomic historical snapshot; original element versions and edit timestamps preserved.",
+        "sources": [
+          {
+            "file": "roccella-pilot-sw.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=16.36,38.29,16.4,38.32",
+            "bbox": [
+              16.36,
+              38.29,
+              16.4,
+              38.32
+            ],
+            "retrievedAt": "2026-10-29T14:32:33.598Z",
+            "serverDate": "Thu, 29 Oct 2026 14:32:33 GMT",
+            "sha256": "aba10e783a4f5ce291ea2a747f30fe9060c1329aaaf864d4ab494bbb87ebd4e9"
+          },
+          {
+            "file": "roccella-pilot-se.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=16.4,38.29,16.44,38.32",
+            "bbox": [
+              16.4,
+              38.29,
+              16.44,
+              38.32
+            ],
+            "retrievedAt": "2026-10-29T14:32:33.804Z",
+            "serverDate": "Thu, 29 Oct 2026 14:32:34 GMT",
+            "sha256": "43a95a78131b9e4ee8be510d58bb890caabadcd2f5e2a6eff3d4be6f561b3392"
+          },
+          {
+            "file": "roccella-pilot-nw.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=16.36,38.32,16.4,38.35",
+            "bbox": [
+              16.36,
+              38.32,
+              16.4,
+              38.35
+            ],
+            "retrievedAt": "2026-10-29T14:32:34.361Z",
+            "serverDate": "Thu, 29 Oct 2026 14:32:34 GMT",
+            "sha256": "50479840f057bbed1092b378610efa80d8b707840eb8a4a836ad234d28762d46"
+          },
+          {
+            "file": "roccella-pilot-ne.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=16.4,38.32,16.44,38.35",
+            "bbox": [
+              16.4,
+              38.32,
+              16.44,
+              38.35
+            ],
+            "retrievedAt": "2026-10-29T14:32:35.310Z",
+            "serverDate": "Thu, 29 Oct 2026 14:32:35 GMT",
+            "sha256": "67b19f94d7944fb261483b04b3021b76de1c023533edf5c2a83b2846d82f804c"
+          }
+        ],
+        "networkSha256": "b481cf049ec820ed094d3e5d183d675021d0b0adba5b91581afe92aa2b06448f"
+      }
+    }
+  ],
+  "statistics": {
+    "totalSegments": 8105,
+    "uniqueGeometryHashes": 8105,
+    "totalWays": 1052,
+    "totalLengthMeters": 176542,
+    "surfaceBreakdownMeters": {
+      "confirmed_rough": 0,
+      "probable_rough": 390,
+      "confirmed_smooth": 30921,
+      "unpaved_loose": 8160,
+      "unknown": 137071
+    },
+    "smoothnessBreakdownMeters": {
+      "excellent": 7373,
+      "good": 0,
+      "intermediate": 0,
+      "bad": 0,
+      "very_bad": 0,
+      "horrible": 0,
+      "very_horrible": 0,
+      "impassable": 0,
+      "unknown": 169168
+    },
+    "cyclingCoverageMeters": 2889,
+    "embeddedRailsMeters": 0,
+    "compactBytes": 1201601,
+    "tileCount": 40
+  },
+  "checksums": {
+    "datasetSha256": "57da5fa77701e0caa9bcaa4115a87c622ed7239a3dca0663c435dad59d2e62d5",
+    "compactSha256": "a298371f8e441d32cb618e051a8d9670f782ccc0a678d9277b4a82521e1c5246"
+  },
+  "validation": {
+    "excludedAreaWays": 8,
+    "validWays": 1052,
+    "invalidWays": 0,
+    "flaggedJumpsOver250m": 16,
+    "validationErrors": []
+  }
+}

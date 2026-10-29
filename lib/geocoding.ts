@@ -74,6 +74,10 @@ export type NominatimResult = {
 };
 
 export function validMilanGeocodeResult(value: unknown): value is NominatimResult {
+  return validAreaGeocodeResult(value, { west: 9.04, south: 45.38, east: 9.31, north: 45.55 });
+}
+
+export function validAreaGeocodeResult(value: unknown, bounds: { west: number; south: number; east: number; north: number }): value is NominatimResult {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const item = value as Record<string, unknown>;
   if (typeof item.display_name !== "string" || typeof item.place_id !== "number" || !Number.isFinite(item.place_id)) return false;
@@ -81,7 +85,7 @@ export function validMilanGeocodeResult(value: unknown): value is NominatimResul
   const longitude = Number(item.lon);
   const latitude = Number(item.lat);
   if (!Number.isFinite(longitude) || !Number.isFinite(latitude)
-    || longitude < 9.04 || longitude > 9.31 || latitude < 45.38 || latitude > 45.55) return false;
+    || longitude < bounds.west || longitude > bounds.east || latitude < bounds.south || latitude > bounds.north) return false;
   for (const field of ["name", "type", "addresstype"]) {
     if (item[field] !== undefined && typeof item[field] !== "string") return false;
   }

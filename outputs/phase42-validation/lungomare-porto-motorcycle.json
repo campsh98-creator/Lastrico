@@ -1,0 +1,389 @@
+{
+  "request": {
+    "area": "roccella",
+    "start": "16.4115851,38.3228264",
+    "end": "16.4286643,38.3279552",
+    "mode": "motorcycle",
+    "avoid": "strong",
+    "maxExtraMinutes": "5"
+  },
+  "status": 200,
+  "elapsedMs": 1009.2984589999996,
+  "payload": {
+    "area": "roccella",
+    "fast": {
+      "coordinates": [
+        [
+          16.411585,
+          38.322826
+        ],
+        [
+          16.4117,
+          38.322861
+        ],
+        [
+          16.412141,
+          38.322986
+        ],
+        [
+          16.412717,
+          38.323186
+        ],
+        [
+          16.412965,
+          38.323301
+        ],
+        [
+          16.413247,
+          38.323473
+        ],
+        [
+          16.413624,
+          38.323662
+        ],
+        [
+          16.41397,
+          38.323798
+        ],
+        [
+          16.41495,
+          38.324131
+        ],
+        [
+          16.416077,
+          38.324513
+        ],
+        [
+          16.416338,
+          38.324597
+        ],
+        [
+          16.416437,
+          38.324629
+        ],
+        [
+          16.417357,
+          38.324895
+        ],
+        [
+          16.418832,
+          38.325311
+        ],
+        [
+          16.419762,
+          38.325562
+        ],
+        [
+          16.420097,
+          38.325662
+        ],
+        [
+          16.421026,
+          38.325928
+        ],
+        [
+          16.421407,
+          38.326032
+        ],
+        [
+          16.423651,
+          38.326678
+        ],
+        [
+          16.425418,
+          38.327178
+        ],
+        [
+          16.426744,
+          38.327462
+        ],
+        [
+          16.428447,
+          38.327876
+        ],
+        [
+          16.428664,
+          38.327955
+        ]
+      ],
+      "distance": 1.602,
+      "minutes": 3.43505,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 0,
+      "surfaceCoveragePercent": 100,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 1600,
+      "surfaceTotalMeters": 1600,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-16.411585,38.322826",
+          "text": "Guida verso est su Lungomare Sisinio Zito.",
+          "roadName": "Lungomare Sisinio Zito",
+          "distance": 1602,
+          "location": [
+            16.411585,
+            38.322826
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-arrive-16.428664,38.327955",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            16.428664,
+            38.327955
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "safe": {
+      "coordinates": [
+        [
+          16.411585,
+          38.322826
+        ],
+        [
+          16.4117,
+          38.322861
+        ],
+        [
+          16.412141,
+          38.322986
+        ],
+        [
+          16.412717,
+          38.323186
+        ],
+        [
+          16.412965,
+          38.323301
+        ],
+        [
+          16.413247,
+          38.323473
+        ],
+        [
+          16.413624,
+          38.323662
+        ],
+        [
+          16.41397,
+          38.323798
+        ],
+        [
+          16.41495,
+          38.324131
+        ],
+        [
+          16.416077,
+          38.324513
+        ],
+        [
+          16.416338,
+          38.324597
+        ],
+        [
+          16.416437,
+          38.324629
+        ],
+        [
+          16.417357,
+          38.324895
+        ],
+        [
+          16.418832,
+          38.325311
+        ],
+        [
+          16.419762,
+          38.325562
+        ],
+        [
+          16.420097,
+          38.325662
+        ],
+        [
+          16.421026,
+          38.325928
+        ],
+        [
+          16.421407,
+          38.326032
+        ],
+        [
+          16.423651,
+          38.326678
+        ],
+        [
+          16.425418,
+          38.327178
+        ],
+        [
+          16.426744,
+          38.327462
+        ],
+        [
+          16.428447,
+          38.327876
+        ],
+        [
+          16.428664,
+          38.327955
+        ]
+      ],
+      "distance": 1.602,
+      "minutes": 3.43505,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 0,
+      "surfaceCoveragePercent": 100,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 1600,
+      "surfaceTotalMeters": 1600,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-16.411585,38.322826",
+          "text": "Guida verso est su Lungomare Sisinio Zito.",
+          "roadName": "Lungomare Sisinio Zito",
+          "distance": 1602,
+          "location": [
+            16.411585,
+            38.322826
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-arrive-16.428664,38.327955",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            16.428664,
+            38.327955
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "problemSegments": [],
+    "alternativesAnalyzed": 2,
+    "hasDistinctAlternative": false,
+    "surfaceDataAvailable": true,
+    "mode": "motorcycle",
+    "transportMode": "motorcycle",
+    "routingProfile": {
+      "provider": "valhalla-fossgis",
+      "profile": "motorcycle",
+      "beta": true,
+      "approximate": false,
+      "fallbackUsed": false,
+      "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+    },
+    "calculationMode": "planner",
+    "appliedPreferences": {
+      "avoidance": "strong",
+      "maximumExtraMinutes": 5
+    },
+    "performance": {
+      "routingAndSurfaceDataMs": 1005,
+      "candidateGenerationAndScoringMs": 4,
+      "totalMs": 1009
+    },
+    "optimization": {
+      "strategy": "pareto-conservative-unknown",
+      "frontierSize": 1,
+      "unknownMeterPenalty": 1,
+      "directCandidateGenerated": false
+    },
+    "candidateDiagnostics": [
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-1",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 1602,
+        "seconds": 206,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 0,
+        "surfaceCoveragePercent": 100,
+        "smoothSurfaceMeters": 1600,
+        "surfaceTotalMeters": 1600,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 1,
+        "detourPercent": 0,
+        "distinctFromFast": false
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "paretoOptimal": false,
+        "source": "base-2",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 2024,
+        "seconds": 256,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 317,
+        "surfaceCoveragePercent": 84.3,
+        "smoothSurfaceMeters": 1706,
+        "surfaceTotalMeters": 2023,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 9,
+        "detourPercent": 24.1,
+        "distinctFromFast": true
+      }
+    ],
+    "dataNotice": "2 percorsi reali controllati: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
+  },
+  "calls": [
+    {
+      "key": "8d1d3d775858891ee4d4682f01620edaf4d9357ea246a6082e7be3ddf7e78a26",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 83.47045799999978
+    }
+  ]
+}

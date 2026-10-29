@@ -1,0 +1,993 @@
+{
+  "generatedAt": "2026-10-29T14:59:45.823Z",
+  "runMode": "capture-missing-real-provider-responses",
+  "surfaceMode": "authentic local compact archive; Overpass deliberately unavailable",
+  "handlerSha256": "1b1c3420a6b82cf786a70dc262499b179a18090c27790defa5d66a1dfaebd7da",
+  "compactSha256": "a298371f8e441d32cb618e051a8d9670f782ccc0a678d9277b4a82521e1c5246",
+  "heapMiB": {
+    "beforeHandlerImport": 19.90204620361328,
+    "afterHandlerImport": 39.61741638183594,
+    "end": 46.806671142578125
+  },
+  "offRouteSoftwareTrigger": true,
+  "requests": 15,
+  "newlyCaptured": 12,
+  "missingCaptures": [],
+  "results": [
+    {
+      "id": "lungomare",
+      "mode": "car",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 415.12850000000003,
+      "fast": {
+        "seconds": 99.361,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 99.361,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 1,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "auto",
+        "beta": false,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "672e8da0a04b3f6bd6a8530fc584a92cd62363e088b5c6c0a458e42401d9759d",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 374.566542
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 597.3702011868065,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "lungomare",
+      "mode": "motorcycle",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 794.140333,
+      "fast": {
+        "seconds": 99.361,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 99.361,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 1,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "087570bb7f9ac1d064f0494d82d246c85238f1c97c0c705b0c211f1627f2237a",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 145.86354200000005
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 597.3702011868065,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "lungomare",
+      "mode": "bicycle",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 1068.162292,
+      "fast": {
+        "seconds": 159.426,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 159.426,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 2,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "770b2edb09491710b1b1625f81d8fcab67aff5beb8761fc558cc9ba32af27762",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 163.24908300000016
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 597.3702011868065,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "borgo-garibaldi",
+      "mode": "car",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 1043.955125,
+      "fast": {
+        "seconds": 157.139,
+        "distanceMeters": 610,
+        "roughMeters": 0,
+        "smoothMeters": 0,
+        "unpavedMeters": 0,
+        "unknownMeters": 610,
+        "surfaceTotalMeters": 610,
+        "knownCoveragePercent": 0,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 157.139,
+        "distanceMeters": 610,
+        "roughMeters": 0,
+        "smoothMeters": 0,
+        "unpavedMeters": 0,
+        "unknownMeters": 610,
+        "surfaceTotalMeters": 610,
+        "knownCoveragePercent": 0,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 3,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "auto",
+        "beta": false,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "742f0529fed15192ca2fadbf86c20e7f9403bc521e129ed231c8efd1c33a8781",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 143.46629099999973
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 272.23809025163905,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "borgo-garibaldi",
+      "mode": "motorcycle",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 1053.6130419999995,
+      "fast": {
+        "seconds": 157.139,
+        "distanceMeters": 610,
+        "roughMeters": 0,
+        "smoothMeters": 0,
+        "unpavedMeters": 0,
+        "unknownMeters": 610,
+        "surfaceTotalMeters": 610,
+        "knownCoveragePercent": 0,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 157.139,
+        "distanceMeters": 610,
+        "roughMeters": 0,
+        "smoothMeters": 0,
+        "unpavedMeters": 0,
+        "unknownMeters": 610,
+        "surfaceTotalMeters": 610,
+        "knownCoveragePercent": 0,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 3,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "978ccbfa54467839dcf596c8d1d35bffd00d053224c3e4e7033662b3e0becc49",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 157.50662499999999
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 272.23809025163905,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "borgo-garibaldi",
+      "mode": "bicycle",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 1013.7099170000001,
+      "fast": {
+        "seconds": 153.398,
+        "distanceMeters": 610,
+        "roughMeters": 0,
+        "smoothMeters": 0,
+        "unpavedMeters": 0,
+        "unknownMeters": 610,
+        "surfaceTotalMeters": 610,
+        "knownCoveragePercent": 0,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 153.398,
+        "distanceMeters": 610,
+        "roughMeters": 0,
+        "smoothMeters": 0,
+        "unpavedMeters": 0,
+        "unknownMeters": 610,
+        "surfaceTotalMeters": 610,
+        "knownCoveragePercent": 0,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 1,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "fa831bd9797712bb8a0b62717de8a77478dac97c7c2041d7d456668ad618a6c0",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 126.59812499999953
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 272.23809025163905,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "lungomare-porto",
+      "mode": "car",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 1212.5122089999995,
+      "fast": {
+        "seconds": 206.103,
+        "distanceMeters": 1602,
+        "roughMeters": 0,
+        "smoothMeters": 1600,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 1600,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 206.103,
+        "distanceMeters": 1602,
+        "roughMeters": 0,
+        "smoothMeters": 1600,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 1600,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 2,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "auto",
+        "beta": false,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "236b935860993b931bfff5e344b80b0f1d6fd2f4319fe563fe9e833feb031fd7",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 111.34725000000071
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 469.81762964999916,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "lungomare-porto",
+      "mode": "motorcycle",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 937.9751669999996,
+      "fast": {
+        "seconds": 206.103,
+        "distanceMeters": 1602,
+        "roughMeters": 0,
+        "smoothMeters": 1600,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 1600,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 206.103,
+        "distanceMeters": 1602,
+        "roughMeters": 0,
+        "smoothMeters": 1600,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 1600,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 2,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "8d1d3d775858891ee4d4682f01620edaf4d9357ea246a6082e7be3ddf7e78a26",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 83.47045799999978
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 469.81762964999916,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "lungomare-porto",
+      "mode": "bicycle",
+      "navigation": false,
+      "status": 200,
+      "elapsedMs": 1050.7246670000004,
+      "fast": {
+        "seconds": 319.455,
+        "distanceMeters": 1602,
+        "roughMeters": 0,
+        "smoothMeters": 1600,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 1600,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 319.455,
+        "distanceMeters": 1602,
+        "roughMeters": 0,
+        "smoothMeters": 1600,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 1600,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 2,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "883dc83481ef7c1f74f7c5568f760394ced60ca579e63cf58206a95c9d53ba2d",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 82.33941700000105
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 469.81762964999916,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "navigation",
+      "mode": "car",
+      "navigation": true,
+      "status": 200,
+      "elapsedMs": 1352.2613329999986,
+      "fast": {
+        "seconds": 99.361,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 99.361,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 1,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "auto",
+        "beta": false,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "672e8da0a04b3f6bd6a8530fc584a92cd62363e088b5c6c0a458e42401d9759d",
+          "cached": true,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 374.566542
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 597.3702011868065,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "reroute",
+      "mode": "car",
+      "navigation": true,
+      "status": 200,
+      "elapsedMs": 809.6482500000002,
+      "fast": {
+        "seconds": 149.89,
+        "distanceMeters": 838,
+        "roughMeters": 0,
+        "smoothMeters": 330,
+        "unpavedMeters": 0,
+        "unknownMeters": 509,
+        "surfaceTotalMeters": 839,
+        "knownCoveragePercent": 39.3,
+        "cyclingMeters": 0,
+        "instructions": 6
+      },
+      "safe": {
+        "seconds": 149.89,
+        "distanceMeters": 838,
+        "roughMeters": 0,
+        "smoothMeters": 330,
+        "unpavedMeters": 0,
+        "unknownMeters": 509,
+        "surfaceTotalMeters": 839,
+        "knownCoveragePercent": 39.3,
+        "cyclingMeters": 0,
+        "instructions": 6
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 3,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "auto",
+        "beta": false,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "c01d1d26825b1fdb39548141c4bcfa883e94dc3b1a2190c7c004ace328d21bdb",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 138.51695800000016
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 483.2614256221398,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Mantieni la destra su Via Trastevere."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "navigation",
+      "mode": "motorcycle",
+      "navigation": true,
+      "status": 200,
+      "elapsedMs": 1053.2922089999993,
+      "fast": {
+        "seconds": 99.361,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 99.361,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 1,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "087570bb7f9ac1d064f0494d82d246c85238f1c97c0c705b0c211f1627f2237a",
+          "cached": true,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 145.86354200000005
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 597.3702011868065,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "reroute",
+      "mode": "motorcycle",
+      "navigation": true,
+      "status": 200,
+      "elapsedMs": 1037.0838749999984,
+      "fast": {
+        "seconds": 149.89,
+        "distanceMeters": 838,
+        "roughMeters": 0,
+        "smoothMeters": 330,
+        "unpavedMeters": 0,
+        "unknownMeters": 509,
+        "surfaceTotalMeters": 839,
+        "knownCoveragePercent": 39.3,
+        "cyclingMeters": 0,
+        "instructions": 6
+      },
+      "safe": {
+        "seconds": 149.89,
+        "distanceMeters": 838,
+        "roughMeters": 0,
+        "smoothMeters": 330,
+        "unpavedMeters": 0,
+        "unknownMeters": 509,
+        "surfaceTotalMeters": 839,
+        "knownCoveragePercent": 39.3,
+        "cyclingMeters": 0,
+        "instructions": 6
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 3,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "17bd3cce50043ed154ee9560c1652745d9b13ed703c71fce9a57905da18bdfee",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 132.28900000000067
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 483.2614256221398,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Mantieni la destra su Via Trastevere."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "navigation",
+      "mode": "bicycle",
+      "navigation": true,
+      "status": 200,
+      "elapsedMs": 1074.246583,
+      "fast": {
+        "seconds": 159.426,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "safe": {
+        "seconds": 159.426,
+        "distanceMeters": 771,
+        "roughMeters": 0,
+        "smoothMeters": 770,
+        "unpavedMeters": 0,
+        "unknownMeters": 0,
+        "surfaceTotalMeters": 770,
+        "knownCoveragePercent": 100,
+        "cyclingMeters": 0,
+        "instructions": 2
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 2,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "770b2edb09491710b1b1625f81d8fcab67aff5beb8761fc558cc9ba32af27762",
+          "cached": true,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 163.24908300000016
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 597.3702011868065,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Sei arrivato a destinazione."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    },
+    {
+      "id": "reroute",
+      "mode": "bicycle",
+      "navigation": true,
+      "status": 200,
+      "elapsedMs": 1033.2584589999988,
+      "fast": {
+        "seconds": 153.401,
+        "distanceMeters": 844,
+        "roughMeters": 0,
+        "smoothMeters": 194,
+        "unpavedMeters": 0,
+        "unknownMeters": 651,
+        "surfaceTotalMeters": 845,
+        "knownCoveragePercent": 23,
+        "cyclingMeters": 0,
+        "instructions": 7
+      },
+      "safe": {
+        "seconds": 153.401,
+        "distanceMeters": 844,
+        "roughMeters": 0,
+        "smoothMeters": 194,
+        "unpavedMeters": 0,
+        "unknownMeters": 651,
+        "surfaceTotalMeters": 845,
+        "knownCoveragePercent": 23,
+        "cyclingMeters": 0,
+        "instructions": 7
+      },
+      "hasDistinctAlternative": false,
+      "alternativesAnalyzed": 3,
+      "routingProfile": {
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "beta": true,
+        "approximate": false,
+        "fallbackUsed": false,
+        "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+      },
+      "error": null,
+      "calls": [
+        {
+          "key": "37b47b13f41d91bae5fffb218828217d4c86f3b7d048cf547175cd9a1111a18a",
+          "cached": false,
+          "status": 200,
+          "error": null,
+          "elapsedMs": 145.15500000000065
+        }
+      ],
+      "navigationSoftware": {
+        "gpsAccepted": true,
+        "progressStart": 0,
+        "progressMid": 497.69461428924535,
+        "remainingAtArrival": 0,
+        "currentInstructionAtStart": "Mantieni la destra su Via Trastevere."
+      },
+      "invariants": {
+        "exactMode": true,
+        "correctProfile": true,
+        "timeBudget": true,
+        "measuredCategories": true,
+        "instructionsPresent": true
+      }
+    }
+  ]
+}

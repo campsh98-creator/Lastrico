@@ -1,0 +1,350 @@
+{
+  "request": {
+    "area": "roccella",
+    "start": "16.3971873,38.3184131",
+    "end": "16.405331,38.3210373",
+    "mode": "bicycle",
+    "avoid": "strong",
+    "maxExtraMinutes": "5",
+    "navigation": "1"
+  },
+  "status": 200,
+  "elapsedMs": 1077.5959579999999,
+  "payload": {
+    "area": "roccella",
+    "fast": {
+      "coordinates": [
+        [
+          16.397187,
+          38.318413
+        ],
+        [
+          16.3974,
+          38.31844
+        ],
+        [
+          16.397471,
+          38.318468
+        ],
+        [
+          16.3994,
+          38.319043
+        ],
+        [
+          16.400418,
+          38.319356
+        ],
+        [
+          16.401178,
+          38.319606
+        ],
+        [
+          16.401318,
+          38.31965
+        ],
+        [
+          16.402119,
+          38.319929
+        ],
+        [
+          16.403112,
+          38.320296
+        ],
+        [
+          16.403505,
+          38.320461
+        ],
+        [
+          16.403549,
+          38.32048
+        ],
+        [
+          16.403748,
+          38.320578
+        ],
+        [
+          16.403885,
+          38.320628
+        ],
+        [
+          16.403979,
+          38.320658
+        ],
+        [
+          16.404497,
+          38.320799
+        ],
+        [
+          16.404788,
+          38.320891
+        ],
+        [
+          16.405094,
+          38.320973
+        ],
+        [
+          16.405331,
+          38.321037
+        ]
+      ],
+      "distance": 0.771,
+      "minutes": 2.6571,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 0,
+      "surfaceCoveragePercent": 100,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 770,
+      "surfaceTotalMeters": 770,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-16.397187,38.318413",
+          "text": "Pedala verso est su Lungomare Sisinio Zito.",
+          "roadName": "Lungomare Sisinio Zito",
+          "distance": 771,
+          "location": [
+            16.397187,
+            38.318413
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-arrive-16.405331,38.321037",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            16.405331,
+            38.321037
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "safe": {
+      "coordinates": [
+        [
+          16.397187,
+          38.318413
+        ],
+        [
+          16.3974,
+          38.31844
+        ],
+        [
+          16.397471,
+          38.318468
+        ],
+        [
+          16.3994,
+          38.319043
+        ],
+        [
+          16.400418,
+          38.319356
+        ],
+        [
+          16.401178,
+          38.319606
+        ],
+        [
+          16.401318,
+          38.31965
+        ],
+        [
+          16.402119,
+          38.319929
+        ],
+        [
+          16.403112,
+          38.320296
+        ],
+        [
+          16.403505,
+          38.320461
+        ],
+        [
+          16.403549,
+          38.32048
+        ],
+        [
+          16.403748,
+          38.320578
+        ],
+        [
+          16.403885,
+          38.320628
+        ],
+        [
+          16.403979,
+          38.320658
+        ],
+        [
+          16.404497,
+          38.320799
+        ],
+        [
+          16.404788,
+          38.320891
+        ],
+        [
+          16.405094,
+          38.320973
+        ],
+        [
+          16.405331,
+          38.321037
+        ]
+      ],
+      "distance": 0.771,
+      "minutes": 2.6571,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 0,
+      "surfaceCoveragePercent": 100,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 770,
+      "surfaceTotalMeters": 770,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-16.397187,38.318413",
+          "text": "Pedala verso est su Lungomare Sisinio Zito.",
+          "roadName": "Lungomare Sisinio Zito",
+          "distance": 771,
+          "location": [
+            16.397187,
+            38.318413
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-arrive-16.405331,38.321037",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            16.405331,
+            38.321037
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "problemSegments": [],
+    "alternativesAnalyzed": 2,
+    "hasDistinctAlternative": false,
+    "surfaceDataAvailable": true,
+    "mode": "bicycle",
+    "transportMode": "bicycle",
+    "routingProfile": {
+      "provider": "valhalla-fossgis",
+      "profile": "bicycle",
+      "beta": true,
+      "approximate": false,
+      "fallbackUsed": false,
+      "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+    },
+    "calculationMode": "navigation",
+    "appliedPreferences": {
+      "avoidance": "strong",
+      "maximumExtraMinutes": 5
+    },
+    "performance": {
+      "routingAndSurfaceDataMs": 1075,
+      "candidateGenerationAndScoringMs": 2,
+      "totalMs": 1077
+    },
+    "optimization": {
+      "strategy": "pareto-conservative-unknown",
+      "frontierSize": 1,
+      "unknownMeterPenalty": 1,
+      "directCandidateGenerated": false
+    },
+    "candidateDiagnostics": [
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-1",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 771,
+        "seconds": 159,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 0,
+        "surfaceCoveragePercent": 100,
+        "smoothSurfaceMeters": 770,
+        "surfaceTotalMeters": 770,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 1,
+        "detourPercent": 0,
+        "distinctFromFast": false
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "paretoOptimal": false,
+        "source": "base-2",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 959,
+        "seconds": 197,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 222,
+        "surfaceCoveragePercent": 76.8,
+        "smoothSurfaceMeters": 736,
+        "surfaceTotalMeters": 958,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 2,
+        "detourPercent": 23.3,
+        "distinctFromFast": true
+      }
+    ],
+    "dataNotice": "2 percorsi reali controllati: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale) La copertura locale dei fondi ciclabili può essere incompleta finché Overpass non risponde. I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
+  },
+  "calls": [
+    {
+      "key": "770b2edb09491710b1b1625f81d8fcab67aff5beb8761fc558cc9ba32af27762",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 163.24908300000016
+    }
+  ]
+}

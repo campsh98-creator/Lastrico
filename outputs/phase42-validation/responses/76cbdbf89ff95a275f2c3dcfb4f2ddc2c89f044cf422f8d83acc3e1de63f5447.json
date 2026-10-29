@@ -1,0 +1,11 @@
+{
+  "request": {
+    "url": "https://router.project-osrm.org/route/v1/driving/16.4115851,38.3228264;16.4286643,38.3279552?overview=full&geometries=geojson&alternatives=3&steps=true&continue_straight=false",
+    "method": "GET",
+    "body": null
+  },
+  "key": "76cbdbf89ff95a275f2c3dcfb4f2ddc2c89f044cf422f8d83acc3e1de63f5447",
+  "retrievedAt": "2026-10-29T14:58:04.473Z",
+  "elapsedMs": 2.3649999999997817,
+  "error": "TypeError: fetch failed"
+}

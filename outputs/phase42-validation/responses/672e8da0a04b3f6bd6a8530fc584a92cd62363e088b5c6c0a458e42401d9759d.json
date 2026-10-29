@@ -1,0 +1,13 @@
+{
+  "request": {
+    "url": "https://valhalla1.openstreetmap.de/route",
+    "method": "POST",
+    "body": "{\"locations\":[{\"lon\":16.3971873,\"lat\":38.3184131,\"type\":\"break\"},{\"lon\":16.405331,\"lat\":38.3210373,\"type\":\"break\"}],\"costing\":\"auto\",\"costing_options\":{\"auto\":{\"use_highways\":0.7,\"use_tolls\":0.2}},\"units\":\"kilometers\",\"directions_options\":{\"units\":\"kilometers\",\"language\":\"it-IT\"},\"alternates\":2}"
+  },
+  "key": "672e8da0a04b3f6bd6a8530fc584a92cd62363e088b5c6c0a458e42401d9759d",
+  "retrievedAt": "2026-10-29T14:59:31.206Z",
+  "status": 200,
+  "elapsedMs": 374.566542,
+  "body": "{\"trip\":{\"locations\":[{\"type\":\"break\",\"lat\":38.318413,\"lon\":16.397187,\"original_index\":0},{\"type\":\"break\",\"lat\":38.321037,\"lon\":16.405331,\"original_index\":1}],\"legs\":[{\"maneuvers\":[{\"type\":1,\"instruction\":\"Guida verso est su Lungomare Sisinio Zito.\",\"verbal_succinct_transition_instruction\":\"Guida verso est.\",\"verbal_pre_transition_instruction\":\"Guida verso est su Lungomare Sisinio Zito.\",\"verbal_post_transition_instruction\":\"Continua per 800 metri.\",\"street_names\":[\"Lungomare Sisinio Zito\"],\"bearing_after\":81,\"time\":99.361,\"length\":0.771,\"cost\":101.443,\"begin_shape_index\":0,\"end_shape_index\":17,\"travel_mode\":\"drive\",\"travel_type\":\"car\"},{\"type\":4,\"instruction\":\"Sei arrivato a destinazione.\",\"verbal_transition_alert_instruction\":\"Arriverai a destinazione.\",\"verbal_pre_transition_instruction\":\"Sei arrivato a destinazione.\",\"bearing_before\":71,\"time\":0.0,\"length\":0.0,\"cost\":0.0,\"begin_shape_index\":17,\"end_shape_index\":17,\"travel_mode\":\"drive\",\"travel_type\":\"car\"}],\"summary\":{\"has_time_restrictions\":false,\"has_toll\":false,\"has_highway\":false,\"has_ferry\":false,\"min_lat\":38.318413,\"min_lon\":16.397187,\"max_lat\":38.321037,\"max_lon\":16.405331,\"time\":99.361,\"length\":0.771,\"cost\":101.443},\"shape\":\"yswahAewxg^u@iLw@mC}b@qwBqRs~@sNon@wAwGmPaq@}Ua}@iIqWe@wAcEmKcBqG{@{DyGk_@wDeQcDcR_CyM\"}],\"summary\":{\"has_time_restrictions\":false,\"has_toll\":false,\"has_highway\":false,\"has_ferry\":false,\"min_lat\":38.318413,\"min_lon\":16.397187,\"max_lat\":38.321037,\"max_lon\":16.405331,\"time\":99.361,\"length\":0.771,\"cost\":101.443},\"status_message\":\"Found route between points\",\"status\":0,\"units\":\"kilometers\",\"language\":\"it-IT\"}}",
+  "bodySha256": "14b14c10563f9e4cb654795c24d2cf61bbb67fa6de947f7ee58b6d3dfdddd221"
+}

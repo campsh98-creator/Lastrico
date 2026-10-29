@@ -1,0 +1,55 @@
+{
+  "coordinateProvenance": "Original coordinates of genuine OSM highway ways retained in data/roccella-road-network.json, not fabricated routes. Provider must compute route geometry.",
+  "routes": [
+    {
+      "id": "lungomare",
+      "start": [
+        16.3971873,
+        38.3184131
+      ],
+      "end": [
+        16.405331,
+        38.3210373
+      ],
+      "sourceWays": [
+        291614934
+      ]
+    },
+    {
+      "id": "borgo-garibaldi",
+      "start": [
+        16.3989612,
+        38.3242437
+      ],
+      "end": [
+        16.4049363,
+        38.3269985
+      ],
+      "sourceWays": [
+        32638548
+      ]
+    },
+    {
+      "id": "lungomare-porto",
+      "start": [
+        16.4115851,
+        38.3228264
+      ],
+      "end": [
+        16.4286643,
+        38.3279552
+      ],
+      "sourceWays": [
+        289565434
+      ]
+    }
+  ],
+  "reroute": {
+    "start": [
+      16.3982404,
+      38.3237581
+    ],
+    "sourceWay": 246157488,
+    "meaning": "Independent actual road point on Via Giovanni XXIII, deviated from lungomare route; software call models new GPS origin, not a physical device trace."
+  }
+}

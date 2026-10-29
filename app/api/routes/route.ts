@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import bundledRoads from "@/data/surfaces/milan-central.json";
+import { getSpatialRoadStore } from "@/lib/spatial-road-store";
+import { areaForCoordinate, coordinateInArea } from "@/lib/pilot-areas";
 import type { RoadSegmentRecord } from "@/lib/road-intelligence-types";
 import { normalizeOsmFeature } from "@/scripts/osm/normalize.mjs";
 import {
@@ -68,12 +69,7 @@ type ModePolicy = {
   limits: Record<Avoidance, { factor: number; seconds: number }>;
 };
 
-const MILAN_BOUNDS = {
-  west: 9.04,
-  south: 45.38,
-  east: 9.31,
-  north: 45.55,
-};
+
 
 const MOTOR_HIGHWAYS = "^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track)$";
 const BICYCLE_HIGHWAYS = "^(primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track|cycleway|path|pedestrian|footway)$";
@@ -138,7 +134,7 @@ function parseCoordinate(value: string | null): Coordinate | null {
   if (parts.length !== 2 || parts.some((part) => !part.trim())) return null;
   const [lng, lat] = parts.map(Number);
   if (!Number.isFinite(lng) || !Number.isFinite(lat)) return null;
-  if (lng < MILAN_BOUNDS.west || lng > MILAN_BOUNDS.east || lat < MILAN_BOUNDS.south || lat > MILAN_BOUNDS.north) return null;
+  if (!areaForCoordinate([lng, lat])) return null;
   return [lng, lat];
 }
 
@@ -398,7 +394,7 @@ function modeUnavailableMessage(mode: TransportMode) {
   return "Il routing gratuito è temporaneamente indisponibile. Riprova tra poco.";
 }
 
-const localRoads = bundledRoads as unknown as RoadSegmentRecord[];
+// bundledRoads: loaded spatially via spatialRoadStore to eliminate memory bottleneck
 function roughDetails(segments: RoadSegmentRecord[]): PaveDetail[] {
   return segments.filter((segment) => segment.osmWayId !== null &&
     (segment.surfaceCategory === "confirmed_rough" || segment.surfaceCategory === "probable_rough"))
@@ -409,9 +405,6 @@ function roughDetails(segments: RoadSegmentRecord[]): PaveDetail[] {
       coordinates: segment.coordinates,
     }));
 }
-const localPave = roughDetails(localRoads);
-let cachedBaseIndex: RoadIntelligenceIndex | null = null;
-let cachedBasePaveIndex: PaveSpatialIndex | null = null;
 let lastOverpassSnapshot: {
   key: string;
   roads: RoadSegmentRecord[];
@@ -420,20 +413,6 @@ let lastOverpassSnapshot: {
   surfaceIndex: RoadIntelligenceIndex;
 } | null = null;
 
-function getBaseSurfaceIndex(): RoadIntelligenceIndex {
-  if (!cachedBaseIndex) {
-    cachedBaseIndex = createRoadIntelligenceIndex(localRoads);
-  }
-  return cachedBaseIndex;
-}
-
-function getBasePaveIndex(): PaveSpatialIndex {
-  if (!cachedBasePaveIndex) {
-    cachedBasePaveIndex = createPaveSpatialIndex(localPave);
-  }
-  return cachedBasePaveIndex;
-}
-
 export async function GET(request: NextRequest) {
   const calculationStartedAt = performance.now();
   const navigationRequest = request.nextUrl.searchParams.get("navigation") === "1";
@@ -441,12 +420,16 @@ export async function GET(request: NextRequest) {
   const deadline = Date.now() + (navigationRequest ? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS);
   const start = parseCoordinate(request.nextUrl.searchParams.get("start"));
   const end = parseCoordinate(request.nextUrl.searchParams.get("end"));
+  const area = start ? areaForCoordinate(start) : undefined;
+  const requestedArea = request.nextUrl.searchParams.get("area");
   const avoidance = (request.nextUrl.searchParams.get("avoid") ?? "strong") as Avoidance;
   const maximumExtraMinutes = parseExtraMinutes(request.nextUrl.searchParams.get("maxExtraMinutes"));
   const requestedMode = request.nextUrl.searchParams.get("mode") ?? "car";
   if (
     !start
     || !end
+    || !area || !coordinateInArea(end, area)
+    || (requestedArea !== null && requestedArea !== area.id)
     || !["balanced", "strong", "maximum"].includes(avoidance)
     || maximumExtraMinutes === undefined
     || !isTransportMode(requestedMode)
@@ -458,15 +441,17 @@ export async function GET(request: NextRequest) {
   }
   const mode = requestedMode;
   const policy = MODE_POLICY[mode];
+  const bounds = area.bounds;
   const padding = 0.02;
-  const south = Math.max(MILAN_BOUNDS.south, Math.min(start[1], end[1]) - padding);
-  const west = Math.max(MILAN_BOUNDS.west, Math.min(start[0], end[0]) - padding);
-  const north = Math.min(MILAN_BOUNDS.north, Math.max(start[1], end[1]) + padding);
-  const east = Math.min(MILAN_BOUNDS.east, Math.max(start[0], end[0]) + padding);
+  const south = Math.max(bounds.south, Math.min(start[1], end[1]) - padding);
+  const west = Math.max(bounds.west, Math.min(start[0], end[0]) - padding);
+  const north = Math.min(bounds.north, Math.max(start[1], end[1]) + padding);
+  const east = Math.min(bounds.east, Math.max(start[0], end[0]) + padding);
   const overpassQuery = `[out:json][timeout:20];way["highway"~"${policy.surfaceHighways}"](${south},${west},${north},${east});out tags geom;`;
   // Candidates may leave the endpoint rectangle; score against the full local snapshot.
 
   try {
+    const spatialRoadStore = await getSpatialRoadStore(area.id);
     const [baseRoutes, overpassResponse] = await Promise.all([
       fetchEngineRoutes([start, end], mode, true, deadline, request.signal),
       navigationRequest
@@ -485,10 +470,13 @@ export async function GET(request: NextRequest) {
     const baseRoutingReadyAt = performance.now();
     if (!baseRoutes.length) throw new Error("Nessun percorso");
 
-    let roads = localRoads;
-    let paveDetails: PaveDetail[] = localPave;
+    const corridorCoords: Coordinate[] = [start, end, ...baseRoutes.flatMap((r) => r.coordinates)];
+    const scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 500);
+    let roads = scoped.roads;
+    let paveDetails: PaveDetail[] = scoped.paveDetails;
     let paveIndex: PaveSpatialIndex | null = null;
     let liveSurfaceIndex: RoadIntelligenceIndex | null = null;
+    let liveSegmentsList: RoadSegmentRecord[] = [];
     let dataSource = "archivio OSM locale";
     if (overpassResponse?.ok) {
       try {
@@ -503,10 +491,11 @@ export async function GET(request: NextRequest) {
             && way.geometry.every((point) => point
               && typeof point.lon === "number" && typeof point.lat === "number"
               && Number.isFinite(point.lon) && Number.isFinite(point.lat)
-              && point.lon >= MILAN_BOUNDS.west && point.lon <= MILAN_BOUNDS.east
-              && point.lat >= MILAN_BOUNDS.south && point.lat <= MILAN_BOUNDS.north));
+              && point.lon >= bounds.west && point.lon <= bounds.east
+              && point.lat >= bounds.south && point.lat <= bounds.north));
         if (liveWays.length) {
-          const snapshotKey = JSON.stringify(liveWays);
+          const tileKeyStr = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 500).sort().join(";");
+          const snapshotKey = `${area.id}:${tileKeyStr}:${JSON.stringify(liveWays)}`;
           if (lastOverpassSnapshot?.key === snapshotKey) {
             roads = lastOverpassSnapshot.roads;
             paveDetails = lastOverpassSnapshot.paveDetails;
@@ -516,8 +505,9 @@ export async function GET(request: NextRequest) {
             const ingestedAt = new Date().toISOString();
             const liveSegments = liveWays.flatMap((way) =>
               normalizeOsmFeature(way, { ingestedAt }).segments) as RoadSegmentRecord[];
+            liveSegmentsList = liveSegments;
             const replacedIds = new Set(liveSegments.map((segment) => segment.osmWayId));
-            roads = [...localRoads.filter((segment) => !replacedIds.has(segment.osmWayId)), ...liveSegments];
+            roads = [...scoped.roads.filter((segment) => !replacedIds.has(segment.osmWayId)), ...liveSegments];
             paveDetails = roughDetails(roads);
             paveIndex = createPaveSpatialIndex(paveDetails);
             liveSurfaceIndex = createRoadIntelligenceIndex(roads);
@@ -535,17 +525,42 @@ export async function GET(request: NextRequest) {
         dataSource = "archivio OSM locale";
       }
     }
-    const activePaveIndex = paveIndex ?? getBasePaveIndex();
-    const surfaceIndex = roads === localRoads
-      ? getBaseSurfaceIndex()
+    let activePaveIndex = paveIndex ?? scoped.paveIndex;
+    let surfaceIndex = roads === scoped.roads
+      ? scoped.surfaceIndex
       : (liveSurfaceIndex ?? createRoadIntelligenceIndex(roads));
+    let loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 500);
+
+    const ensureRouteCovered = (routeCoordinates: Coordinate[]) => {
+      const missing = spatialRoadStore.getMissingTileKeys(loadedTileKeys, routeCoordinates, 80);
+      if (missing.length > 0) {
+        corridorCoords.push(...routeCoordinates);
+        loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 500);
+        const expanded = spatialRoadStore.getScopedIntelligence(corridorCoords, 500);
+        if (liveSegmentsList.length > 0) {
+          const replacedIds = new Set(liveSegmentsList.map((segment) => segment.osmWayId));
+          roads = [...expanded.roads.filter((segment) => !replacedIds.has(segment.osmWayId)), ...liveSegmentsList];
+          paveDetails = roughDetails(roads);
+          activePaveIndex = createPaveSpatialIndex(paveDetails);
+          surfaceIndex = createRoadIntelligenceIndex(roads);
+        } else {
+          roads = expanded.roads;
+          paveDetails = expanded.paveDetails;
+          activePaveIndex = expanded.paveIndex;
+          surfaceIndex = expanded.surfaceIndex;
+        }
+      }
+      return surfaceIndex;
+    };
+
     const scoreCache = new Map<EngineRoute, SurfaceScore>();
     const scoreCandidate = (route: EngineRoute) => {
       const cached = scoreCache.get(route);
       if (cached) return cached;
+      const activeIdx = ensureRouteCovered(route.coordinates);
       const intelligence = scoreRoadIntelligence(
         route.coordinates,
-        surfaceIndex,
+        activeIdx,
         policy.surfaceMatchMeters,
         mode,
       );
@@ -605,7 +620,7 @@ export async function GET(request: NextRequest) {
       const roughSlices = fastestBase.maneuverShapes?.length
         ? fastestBase.maneuverShapes.flatMap((shape) => extractRoughSlices(shape, isSegmentRough, 25))
         : extractRoughSlices(fastestBase.coordinates, isSegmentRough, 25);
-      const { factors, totalPenalizedMeters } = buildLinearCostFactors(roughSlices, 15.0);
+      const { factors, totalPenalizedMeters } = buildLinearCostFactors(roughSlices, 15.0, 4);
       if (factors.length > 0) {
         surfaceAwareDirectMetrics = {
           roughSlicesCount: factors.length,
@@ -639,7 +654,7 @@ export async function GET(request: NextRequest) {
         offsetPoint(anchor.a, anchor.b, -baseOffset),
         offsetPoint(anchor.a, anchor.b, baseOffset * 1.55),
         offsetPoint(anchor.a, anchor.b, -baseOffset * 1.55),
-      ].filter((point): point is Coordinate => Boolean(point));
+      ].filter((point): point is Coordinate => Boolean(point && coordinateInArea(point, area)));
       for (const point of detourPoints.slice(0, navigationRequest ? 1 : 3)) {
         if (deadline - Date.now() < 1_500) break;
         if (request.signal.aborted) break;
@@ -725,6 +740,7 @@ export async function GET(request: NextRequest) {
     const calculationCompletedAt = performance.now();
 
     return NextResponse.json({
+      area: area.id,
       fast: routePayload(fast.route, fast.surfaceScore, fastProblemSegments),
       safe: routePayload(safe.route, safe.surfaceScore, safeProblemSegments),
       problemSegments: relevantPave.map((way) => way.coordinates),

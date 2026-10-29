@@ -1,0 +1,13 @@
+{
+  "request": {
+    "url": "https://valhalla1.openstreetmap.de/route",
+    "method": "POST",
+    "body": "{\"locations\":[{\"lon\":16.3971873,\"lat\":38.3184131,\"type\":\"break\"},{\"lon\":16.405331,\"lat\":38.3210373,\"type\":\"break\"}],\"costing\":\"motorcycle\",\"costing_options\":{\"motorcycle\":{\"use_highways\":0.35,\"use_tolls\":0.2,\"use_trails\":0}},\"units\":\"kilometers\",\"directions_options\":{\"units\":\"kilometers\",\"language\":\"it-IT\"},\"alternates\":2}"
+  },
+  "key": "087570bb7f9ac1d064f0494d82d246c85238f1c97c0c705b0c211f1627f2237a",
+  "retrievedAt": "2026-10-29T14:59:32.033Z",
+  "status": 200,
+  "elapsedMs": 145.86354200000005,
+  "body": "{\"trip\":{\"locations\":[{\"type\":\"break\",\"lat\":38.318413,\"lon\":16.397187,\"original_index\":0},{\"type\":\"break\",\"lat\":38.321037,\"lon\":16.405331,\"original_index\":1}],\"legs\":[{\"maneuvers\":[{\"type\":1,\"instruction\":\"Guida verso est su Lungomare Sisinio Zito.\",\"verbal_succinct_transition_instruction\":\"Guida verso est.\",\"verbal_pre_transition_instruction\":\"Guida verso est su Lungomare Sisinio Zito.\",\"verbal_post_transition_instruction\":\"Continua per 800 metri.\",\"street_names\":[\"Lungomare Sisinio Zito\"],\"bearing_after\":81,\"time\":99.361,\"length\":0.771,\"cost\":101.443,\"begin_shape_index\":0,\"end_shape_index\":17,\"travel_mode\":\"drive\",\"travel_type\":\"motorcycle\"},{\"type\":4,\"instruction\":\"Sei arrivato a destinazione.\",\"verbal_transition_alert_instruction\":\"Arriverai a destinazione.\",\"verbal_pre_transition_instruction\":\"Sei arrivato a destinazione.\",\"bearing_before\":71,\"time\":0.0,\"length\":0.0,\"cost\":0.0,\"begin_shape_index\":17,\"end_shape_index\":17,\"travel_mode\":\"drive\",\"travel_type\":\"motorcycle\"}],\"summary\":{\"has_time_restrictions\":false,\"has_toll\":false,\"has_highway\":false,\"has_ferry\":false,\"min_lat\":38.318413,\"min_lon\":16.397187,\"max_lat\":38.321037,\"max_lon\":16.405331,\"time\":99.361,\"length\":0.771,\"cost\":101.443},\"shape\":\"yswahAewxg^u@iLw@mC}b@qwBqRs~@sNon@wAwGmPaq@}Ua}@iIqWe@wAcEmKcBqG{@{DyGk_@wDeQcDcR_CyM\"}],\"summary\":{\"has_time_restrictions\":false,\"has_toll\":false,\"has_highway\":false,\"has_ferry\":false,\"min_lat\":38.318413,\"min_lon\":16.397187,\"max_lat\":38.321037,\"max_lon\":16.405331,\"time\":99.361,\"length\":0.771,\"cost\":101.443},\"status_message\":\"Found route between points\",\"status\":0,\"units\":\"kilometers\",\"language\":\"it-IT\"}}",
+  "bodySha256": "638151cede5115e506b0c8705d025435f8bc3fbf44ad288bff71f9b971483e8a"
+}

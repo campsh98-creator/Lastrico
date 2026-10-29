@@ -1,0 +1,420 @@
+{
+  "request": {
+    "area": "roccella",
+    "start": "16.3989612,38.3242437",
+    "end": "16.4049363,38.3269985",
+    "mode": "bicycle",
+    "avoid": "strong",
+    "maxExtraMinutes": "5"
+  },
+  "status": 200,
+  "elapsedMs": 1012.9718330000005,
+  "payload": {
+    "area": "roccella",
+    "fast": {
+      "coordinates": [
+        [
+          16.398961,
+          38.324244
+        ],
+        [
+          16.399361,
+          38.324553
+        ],
+        [
+          16.399425,
+          38.324581
+        ],
+        [
+          16.399527,
+          38.324626
+        ],
+        [
+          16.399592,
+          38.32465
+        ],
+        [
+          16.400037,
+          38.324849
+        ],
+        [
+          16.400351,
+          38.324968
+        ],
+        [
+          16.400481,
+          38.325004
+        ],
+        [
+          16.400732,
+          38.325042
+        ],
+        [
+          16.400777,
+          38.325053
+        ],
+        [
+          16.400897,
+          38.32508
+        ],
+        [
+          16.401005,
+          38.325105
+        ],
+        [
+          16.40115,
+          38.325142
+        ],
+        [
+          16.401279,
+          38.325175
+        ],
+        [
+          16.401309,
+          38.325183
+        ],
+        [
+          16.401696,
+          38.325347
+        ],
+        [
+          16.401949,
+          38.325485
+        ],
+        [
+          16.401995,
+          38.325518
+        ],
+        [
+          16.402167,
+          38.325641
+        ],
+        [
+          16.402287,
+          38.325724
+        ],
+        [
+          16.402346,
+          38.325764
+        ],
+        [
+          16.40246,
+          38.325843
+        ],
+        [
+          16.402835,
+          38.326024
+        ],
+        [
+          16.403011,
+          38.326108
+        ],
+        [
+          16.403315,
+          38.326204
+        ],
+        [
+          16.40342,
+          38.326243
+        ],
+        [
+          16.403564,
+          38.326303
+        ],
+        [
+          16.404075,
+          38.326562
+        ],
+        [
+          16.404531,
+          38.326793
+        ],
+        [
+          16.404936,
+          38.326999
+        ]
+      ],
+      "distance": 0.61,
+      "minutes": 2.556633333333333,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 0,
+      "surfaceClassificationConfidence": 0,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 610,
+      "surfaceCoveragePercent": 0,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 0,
+      "surfaceTotalMeters": 610,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-16.398961,38.324244",
+          "text": "Pedala verso nord-est su Via Giuseppe Garibaldi.",
+          "roadName": "Via Giuseppe Garibaldi",
+          "distance": 610,
+          "location": [
+            16.398961,
+            38.324244
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-arrive-16.404936,38.326999",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            16.404936,
+            38.326999
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "safe": {
+      "coordinates": [
+        [
+          16.398961,
+          38.324244
+        ],
+        [
+          16.399361,
+          38.324553
+        ],
+        [
+          16.399425,
+          38.324581
+        ],
+        [
+          16.399527,
+          38.324626
+        ],
+        [
+          16.399592,
+          38.32465
+        ],
+        [
+          16.400037,
+          38.324849
+        ],
+        [
+          16.400351,
+          38.324968
+        ],
+        [
+          16.400481,
+          38.325004
+        ],
+        [
+          16.400732,
+          38.325042
+        ],
+        [
+          16.400777,
+          38.325053
+        ],
+        [
+          16.400897,
+          38.32508
+        ],
+        [
+          16.401005,
+          38.325105
+        ],
+        [
+          16.40115,
+          38.325142
+        ],
+        [
+          16.401279,
+          38.325175
+        ],
+        [
+          16.401309,
+          38.325183
+        ],
+        [
+          16.401696,
+          38.325347
+        ],
+        [
+          16.401949,
+          38.325485
+        ],
+        [
+          16.401995,
+          38.325518
+        ],
+        [
+          16.402167,
+          38.325641
+        ],
+        [
+          16.402287,
+          38.325724
+        ],
+        [
+          16.402346,
+          38.325764
+        ],
+        [
+          16.40246,
+          38.325843
+        ],
+        [
+          16.402835,
+          38.326024
+        ],
+        [
+          16.403011,
+          38.326108
+        ],
+        [
+          16.403315,
+          38.326204
+        ],
+        [
+          16.40342,
+          38.326243
+        ],
+        [
+          16.403564,
+          38.326303
+        ],
+        [
+          16.404075,
+          38.326562
+        ],
+        [
+          16.404531,
+          38.326793
+        ],
+        [
+          16.404936,
+          38.326999
+        ]
+      ],
+      "distance": 0.61,
+      "minutes": 2.556633333333333,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 0,
+      "surfaceClassificationConfidence": 0,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 610,
+      "surfaceCoveragePercent": 0,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 0,
+      "surfaceTotalMeters": 610,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-16.398961,38.324244",
+          "text": "Pedala verso nord-est su Via Giuseppe Garibaldi.",
+          "roadName": "Via Giuseppe Garibaldi",
+          "distance": 610,
+          "location": [
+            16.398961,
+            38.324244
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-arrive-16.404936,38.326999",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            16.404936,
+            38.326999
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "problemSegments": [],
+    "alternativesAnalyzed": 1,
+    "hasDistinctAlternative": false,
+    "surfaceDataAvailable": false,
+    "mode": "bicycle",
+    "transportMode": "bicycle",
+    "routingProfile": {
+      "provider": "valhalla-fossgis",
+      "profile": "bicycle",
+      "beta": true,
+      "approximate": false,
+      "fallbackUsed": false,
+      "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+    },
+    "calculationMode": "planner",
+    "appliedPreferences": {
+      "avoidance": "strong",
+      "maximumExtraMinutes": 5
+    },
+    "performance": {
+      "routingAndSurfaceDataMs": 1011,
+      "candidateGenerationAndScoringMs": 1,
+      "totalMs": 1012
+    },
+    "optimization": {
+      "strategy": "pareto-conservative-unknown",
+      "frontierSize": 1,
+      "unknownMeterPenalty": 1,
+      "directCandidateGenerated": false
+    },
+    "candidateDiagnostics": [
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-1",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 610,
+        "seconds": 153,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "surfaceConfidence": 0,
+        "surfaceClassificationConfidence": 0,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 610,
+        "surfaceCoveragePercent": 0,
+        "smoothSurfaceMeters": 0,
+        "surfaceTotalMeters": 610,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 0,
+        "detourPercent": 0,
+        "distinctFromFast": false
+      }
+    ],
+    "dataNotice": "Dati sul pavé non disponibili: mostro soltanto il percorso rapido La copertura locale dei fondi ciclabili può essere incompleta finché Overpass non risponde. I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
+  },
+  "calls": [
+    {
+      "key": "fa831bd9797712bb8a0b62717de8a77478dac97c7c2041d7d456668ad618a6c0",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 126.59812499999953
+    }
+  ]
+}
