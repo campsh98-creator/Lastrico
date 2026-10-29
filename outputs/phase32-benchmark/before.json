@@ -1,8 +1,8 @@
 {
   "version": "before",
-  "generatedAt": "2026-10-27T22:35:33.845Z",
+  "generatedAt": "2026-10-28T20:22:03.977Z",
   "handlerSha256": "eb8c063b9445d769a23e86bbf9cf65e537bd9881559f266c5d6e58c02beaf650",
-  "surfaceDatasetSha256": "5c28a094c2265473eda999532833740c22259123f6660e7e33bf4808633a96d3",
+  "surfaceDatasetSha256": "6123d499d9afd3517d3ee02ad10f1282055d068414a68fea41dd3a56629ba81d",
   "conditions": {
     "avoid": "strong",
     "maxExtraMinutes": 5,
@@ -36,11 +36,11 @@
       "candidates": 3,
       "distinctCandidates": 2,
       "selectedGeometrySha256": "884eead6340f59bf88782a2b3401947e1ab5cd4a99767bf1b0840e65c02088b4",
-      "elapsedMs": 723.2548750000003,
+      "elapsedMs": 701.8701249999999,
       "performance": {
-        "routingAndSurfaceDataMs": 502,
-        "candidateGenerationAndScoringMs": 215,
-        "totalMs": 716
+        "routingAndSurfaceDataMs": 498,
+        "candidateGenerationAndScoringMs": 198,
+        "totalMs": 696
       },
       "calls": [
         {
@@ -76,11 +76,11 @@
       "candidates": 6,
       "distinctCandidates": 5,
       "selectedGeometrySha256": "bf3bbdfa1bcab4c4fa492c5f142ffce51a130495e104e7708b21ce7eb7a082dc",
-      "elapsedMs": 3964.979125,
+      "elapsedMs": 3945.7691250000007,
       "performance": {
-        "routingAndSurfaceDataMs": 535,
-        "candidateGenerationAndScoringMs": 3426,
-        "totalMs": 3960
+        "routingAndSurfaceDataMs": 559,
+        "candidateGenerationAndScoringMs": 3383,
+        "totalMs": 3942
       },
       "calls": [
         {
@@ -137,11 +137,11 @@
       "candidates": 3,
       "distinctCandidates": 2,
       "selectedGeometrySha256": "bf3bbdfa1bcab4c4fa492c5f142ffce51a130495e104e7708b21ce7eb7a082dc",
-      "elapsedMs": 1038.5833750000002,
+      "elapsedMs": 1078.0143749999997,
       "performance": {
-        "routingAndSurfaceDataMs": 904,
-        "candidateGenerationAndScoringMs": 131,
-        "totalMs": 1035
+        "routingAndSurfaceDataMs": 947,
+        "candidateGenerationAndScoringMs": 128,
+        "totalMs": 1075
       },
       "calls": [
         {
@@ -177,11 +177,11 @@
       "candidates": 6,
       "distinctCandidates": 5,
       "selectedGeometrySha256": "0d41160f148ff5a9f260469e816a66e62981f7899c9528681821f0daa272d98a",
-      "elapsedMs": 4120.086,
+      "elapsedMs": 4112.424875000001,
       "performance": {
         "routingAndSurfaceDataMs": 925,
-        "candidateGenerationAndScoringMs": 3194,
-        "totalMs": 4118
+        "candidateGenerationAndScoringMs": 3186,
+        "totalMs": 4111
       },
       "calls": [
         {
@@ -238,11 +238,11 @@
       "candidates": 5,
       "distinctCandidates": 4,
       "selectedGeometrySha256": "e5beab7a44143a1cd00680a0fa31f5c706754ff7efc95e34b32aab243082ae59",
-      "elapsedMs": 4149.720334,
+      "elapsedMs": 4181.310375000001,
       "performance": {
-        "routingAndSurfaceDataMs": 921,
-        "candidateGenerationAndScoringMs": 3227,
-        "totalMs": 4148
+        "routingAndSurfaceDataMs": 927,
+        "candidateGenerationAndScoringMs": 3252,
+        "totalMs": 4179
       },
       "calls": [
         {
@@ -299,11 +299,11 @@
       "candidates": 3,
       "distinctCandidates": 2,
       "selectedGeometrySha256": "f9557074588423a08aeb1eb8d1bae114f72ee5011d240ed8e884115a84084628",
-      "elapsedMs": 1071.2703749999982,
+      "elapsedMs": 1059.0873749999992,
       "performance": {
-        "routingAndSurfaceDataMs": 975,
-        "candidateGenerationAndScoringMs": 94,
-        "totalMs": 1069
+        "routingAndSurfaceDataMs": 958,
+        "candidateGenerationAndScoringMs": 99,
+        "totalMs": 1057
       },
       "calls": [
         {
@@ -339,11 +339,11 @@
       "candidates": 4,
       "distinctCandidates": 3,
       "selectedGeometrySha256": "baec6d17f2f88ddfb2f5bce547fccfd22f56210adfe4009cea51af8d13fecc6d",
-      "elapsedMs": 4300.270207999998,
+      "elapsedMs": 4251.498208000001,
       "performance": {
-        "routingAndSurfaceDataMs": 878,
-        "candidateGenerationAndScoringMs": 3419,
-        "totalMs": 4298
+        "routingAndSurfaceDataMs": 874,
+        "candidateGenerationAndScoringMs": 3375,
+        "totalMs": 4249
       },
       "calls": [
         {
@@ -400,11 +400,11 @@
       "candidates": 6,
       "distinctCandidates": 5,
       "selectedGeometrySha256": "baec6d17f2f88ddfb2f5bce547fccfd22f56210adfe4009cea51af8d13fecc6d",
-      "elapsedMs": 4103.451375000001,
+      "elapsedMs": 4107.8187499999985,
       "performance": {
-        "routingAndSurfaceDataMs": 901,
-        "candidateGenerationAndScoringMs": 3199,
-        "totalMs": 4100
+        "routingAndSurfaceDataMs": 940,
+        "candidateGenerationAndScoringMs": 3165,
+        "totalMs": 4105
       },
       "calls": [
         {
@@ -461,11 +461,11 @@
       "candidates": 6,
       "distinctCandidates": 5,
       "selectedGeometrySha256": "669c322323f6576e1a2e8f53127d9961f158ec3ce9ea7d9c8917a74b1f28f040",
-      "elapsedMs": 4154.173500000001,
+      "elapsedMs": 4242.377541999998,
       "performance": {
-        "routingAndSurfaceDataMs": 924,
-        "candidateGenerationAndScoringMs": 3228,
-        "totalMs": 4152
+        "routingAndSurfaceDataMs": 949,
+        "candidateGenerationAndScoringMs": 3286,
+        "totalMs": 4235
       },
       "calls": [
         {

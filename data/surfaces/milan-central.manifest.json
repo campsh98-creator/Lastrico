@@ -1,15 +1,15 @@
 {
   "schemaVersion": "2.0.0",
-  "datasetVersion": "osm-api-pilot-2026-10-26",
-  "generatedAt": "2026-10-26T00:44:43.832077+00:00",
+  "datasetVersion": "osm-api-pilot-2026-10-28",
+  "generatedAt": "2026-10-28T23:03:26.733Z",
   "area": {
     "zoneId": "MIL_CENTRE_PILOT",
-    "description": "Milan city-centre pilot only (9.18–9.2 E, 45.455–45.475 N)",
+    "description": "Milan city-centre pilot only (9.169–9.206 E, 45.45–45.48 N)",
     "bounds": {
-      "west": 9.18,
-      "south": 45.455,
-      "east": 9.2,
-      "north": 45.475
+      "west": 9.169,
+      "south": 45.45,
+      "east": 9.206,
+      "north": 45.48
     },
     "denominator": "Sum of linear highway-way centreline edges (area=yes polygons excluded) clipped to the pilot bounds, including unknown surface; each OSM way retained once. Separate mapped carriageways count separately; not lane-km, municipal extent, or citywide road coverage."
   },
@@ -20,16 +20,16 @@
       "license": "ODbL-1.0",
       "licenseUrl": "https://opendatacommons.org/licenses/odbl/1.0/",
       "attribution": "© OpenStreetMap contributors",
-      "snapshotDate": "2026-10-26T00:44:43.832077+00:00",
+      "snapshotDate": "2026-10-28T23:03:26.733Z",
       "snapshotDateMeaning": "Last response retrieval time; this is not an atomic historical OSM snapshot",
-      "sha256": "3ea4c0a8325b66019673777fc2334bd00d11127310de96c8df2ea91111f58b5c",
+      "sha256": "894dfeeb16709df2857db688fd2dedde1f14096363ba76ba22087da2eeeb2bf7",
       "acquisition": {
         "provider": "OpenStreetMap API 0.6",
         "bounds": {
-          "west": 9.18,
-          "south": 45.455,
-          "east": 9.2,
-          "north": 45.475
+          "west": 9.169,
+          "south": 45.45,
+          "east": 9.206,
+          "north": 45.48
         },
         "selection": "All ways with a highway tag, including missing/unknown surface; four map tiles, deduplicated by OSM way ID. This is a small city-centre pilot, not all Milan.",
         "temporalScope": "Four sequential live API responses, not an atomic historical snapshot; original element versions and edit timestamps preserved.",
@@ -85,46 +85,144 @@
             "retrievedAt": "2026-10-26T00:44:43.832077+00:00",
             "serverDate": "Mon, 26 Oct 2026 00:44:42 GMT",
             "sha256": "bc36bc582b9171a775ce5d63be05c793b5ab470cc7bf7262c1451e976725d4cb"
+          },
+          {
+            "file": "milan-pilot-w-sw.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.169,45.455,9.18,45.465",
+            "bbox": [
+              9.169,
+              45.455,
+              9.18,
+              45.465
+            ],
+            "retrievedAt": "2026-10-28T23:03:09.249Z",
+            "serverDate": "Wed, 28 Oct 2026 23:03:08 GMT",
+            "sha256": "b86229d8085919a54d5e414b9000cb4f6114c445beb6e188a9b67c43a301f8e4",
+            "description": "Western Cerchia dei Navigli South (Sant'Ambrogio, San Vittore, Conca del Naviglio)"
+          },
+          {
+            "file": "milan-pilot-w-nw.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.169,45.465,9.18,45.475",
+            "bbox": [
+              9.169,
+              45.465,
+              9.18,
+              45.475
+            ],
+            "retrievedAt": "2026-10-28T23:03:12.813Z",
+            "serverDate": "Wed, 28 Oct 2026 23:03:12 GMT",
+            "sha256": "014895c3f4633fc0e684081d7dc1b2aa7dbf4920530a9e756bfba7a7a1df311f",
+            "description": "Western Cerchia dei Navigli North (Cadorna, Santa Maria delle Grazie, Parco Sempione)"
+          },
+          {
+            "file": "milan-pilot-n-nw.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.18,45.475,9.19,45.48",
+            "bbox": [
+              9.18,
+              45.475,
+              9.19,
+              45.48
+            ],
+            "retrievedAt": "2026-10-28T23:03:15.611Z",
+            "serverDate": "Wed, 28 Oct 2026 23:03:15 GMT",
+            "sha256": "aab161a494d1a8721b70147a0bf46822339dd894c25f3e078617276f15a3e198",
+            "description": "Northern Bastioni West (Moscova north, Porta Garibaldi south)"
+          },
+          {
+            "file": "milan-pilot-n-ne.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.19,45.475,9.2,45.48",
+            "bbox": [
+              9.19,
+              45.475,
+              9.2,
+              45.48
+            ],
+            "retrievedAt": "2026-10-28T23:03:18.355Z",
+            "serverDate": "Wed, 28 Oct 2026 23:03:18 GMT",
+            "sha256": "315fce6ccf40340776abefc2eabec929536f7f30347a44c9649abfe4b33ea19b",
+            "description": "Northern Bastioni East (Repubblica, Giardini Pubblici north)"
+          },
+          {
+            "file": "milan-pilot-e-nw.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.2,45.465,9.206,45.475",
+            "bbox": [
+              9.2,
+              45.465,
+              9.206,
+              45.475
+            ],
+            "retrievedAt": "2026-10-28T23:03:21.196Z",
+            "serverDate": "Wed, 28 Oct 2026 23:03:21 GMT",
+            "sha256": "4d5a4bb70e85fbef999c9d762839aaff7c53aa9b341afe497e59ea6eca85ead6",
+            "description": "Eastern Bastioni (Porta Venezia / Corso Buenos Aires start)"
+          },
+          {
+            "file": "milan-pilot-s-sw.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.175,45.45,9.185,45.455",
+            "bbox": [
+              9.175,
+              45.45,
+              9.185,
+              45.455
+            ],
+            "retrievedAt": "2026-10-28T23:03:24.001Z",
+            "serverDate": "Wed, 28 Oct 2026 23:03:24 GMT",
+            "sha256": "9d821815a8ba17d44516557d896f2b9ebea44f7c9990738c5a9b2de0191a845b",
+            "description": "Southern Axis West (Darsena / Navigli / Porta Ticinese)"
+          },
+          {
+            "file": "milan-pilot-s-se.osm.json.gz",
+            "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.195,45.45,9.205,45.455",
+            "bbox": [
+              9.195,
+              45.45,
+              9.205,
+              45.455
+            ],
+            "retrievedAt": "2026-10-28T23:03:26.733Z",
+            "serverDate": "Wed, 28 Oct 2026 23:03:26 GMT",
+            "sha256": "13ea707cac3cf553919ff3fdadf52581328c37e733319e0b93808b33e322438b",
+            "description": "Southern Axis East (Porta Romana / Piazza Medaglie d'Oro)"
           }
         ],
-        "networkSha256": "3ea4c0a8325b66019673777fc2334bd00d11127310de96c8df2ea91111f58b5c"
+        "networkSha256": "894dfeeb16709df2857db688fd2dedde1f14096363ba76ba22087da2eeeb2bf7"
       }
     }
   ],
   "statistics": {
-    "totalSegments": 18246,
-    "uniqueGeometryHashes": 18246,
-    "totalWays": 5482,
-    "totalLengthMeters": 221272,
+    "totalSegments": 37106,
+    "uniqueGeometryHashes": 37106,
+    "totalWays": 10919,
+    "totalLengthMeters": 487136,
     "surfaceBreakdownMeters": {
-      "confirmed_rough": 26575,
-      "probable_rough": 34188,
-      "confirmed_smooth": 86350,
-      "unpaved_loose": 6260,
-      "unknown": 67901
+      "confirmed_rough": 45017,
+      "probable_rough": 47291,
+      "confirmed_smooth": 244236,
+      "unpaved_loose": 24347,
+      "unknown": 126246
     },
     "smoothnessBreakdownMeters": {
-      "excellent": 2433,
-      "good": 11678,
-      "intermediate": 4443,
-      "bad": 1409,
-      "very_bad": 17,
+      "excellent": 9713,
+      "good": 31731,
+      "intermediate": 10032,
+      "bad": 2577,
+      "very_bad": 65,
       "horrible": 0,
       "very_horrible": 0,
       "impassable": 0,
-      "unknown": 201292
+      "unknown": 433018
     },
-    "cyclingCoverageMeters": 6992,
-    "embeddedRailsMeters": 0
+    "cyclingCoverageMeters": 20194,
+    "embeddedRailsMeters": 3779
   },
   "checksums": {
-    "datasetSha256": "5c28a094c2265473eda999532833740c22259123f6660e7e33bf4808633a96d3"
+    "datasetSha256": "267b01744a33146e5ec237dc1fa4df907d7427f7e121b3ba0cc3c3aaa67f5586"
   },
   "validation": {
-    "excludedAreaWays": 65,
-    "validWays": 5482,
+    "excludedAreaWays": 102,
+    "validWays": 10919,
     "invalidWays": 0,
-    "flaggedJumpsOver250m": 0,
+    "flaggedJumpsOver250m": 3,
     "validationErrors": []
   }
 }

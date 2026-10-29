@@ -3041,8 +3041,8 @@
   },
   "performance": {
     "routingAndSurfaceDataMs": 925,
-    "candidateGenerationAndScoringMs": 3194,
-    "totalMs": 4118
+    "candidateGenerationAndScoringMs": 3186,
+    "totalMs": 4111
   },
   "candidateDiagnostics": [
     {

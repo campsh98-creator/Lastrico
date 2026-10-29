@@ -75,6 +75,23 @@ test("authentic Milan stone and concrete surface tags map to verified categories
   }
 });
 
+test("surface_bike fallback, official bicycle access, and embedded rails are correctly recognized", () => {
+  const coords = [[9.19, 45.46], [9.191, 45.46]];
+  const bikeSett = normalizeOsmFeature({ id: 20, tags: { highway: "residential", surface_bike: "milanese_paving" }, coordinates: coords });
+  assert.equal(bikeSett.surfaceCategory, "confirmed_rough");
+  assert.equal(bikeSett.material, "sett");
+  assert.equal(bikeSett.segments[0].surface.value, "sett");
+
+  const officialBike = normalizeOsmFeature({ id: 21, tags: { highway: "pedestrian", bicycle: "official", motor_vehicle: "destination" }, coordinates: coords });
+  assert.equal(officialBike.segments[0].modeAccess.bicycle, true);
+
+  const tramWay = normalizeOsmFeature({ id: 22, tags: { highway: "residential", tram: "yes" }, coordinates: coords });
+  assert.equal(tramWay.segments[0].embeddedRails, true);
+
+  const platform = normalizeOsmFeature({ id: 23, tags: { highway: "platform", tram: "yes" }, coordinates: coords });
+  assert.equal(platform.segments[0].embeddedRails, false);
+});
+
 test("ingestion records malformed vertices as invalid ways rather than crashing during deduplication", async (t) => {
   const dir = await mkdtemp(join(tmpdir(), "lastrico-invalid-source-"));
   t.after(() => rm(dir, { recursive: true, force: true }));

@@ -4698,9 +4698,9 @@
     "maximumExtraMinutes": 5
   },
   "performance": {
-    "routingAndSurfaceDataMs": 878,
-    "candidateGenerationAndScoringMs": 3419,
-    "totalMs": 4298
+    "routingAndSurfaceDataMs": 874,
+    "candidateGenerationAndScoringMs": 3375,
+    "totalMs": 4249
   },
   "candidateDiagnostics": [
     {
@@ -4753,19 +4753,19 @@
       "profile": "auto",
       "distance": 5273,
       "seconds": 1285,
-      "paveMeters": 1837,
-      "pavePercent": 35,
-      "weightedPaveMeters": 1430,
+      "paveMeters": 1846,
+      "pavePercent": 35.1,
+      "weightedPaveMeters": 1439,
       "surfaceConfidence": 0.78,
       "surfaceClassificationConfidence": 0.78,
       "surfaceDataConfidence": null,
-      "unknownSurfaceMeters": 2172,
-      "surfaceCoveragePercent": 58.7,
+      "unknownSurfaceMeters": 2163,
+      "surfaceCoveragePercent": 58.8,
       "smoothSurfaceMeters": 1245,
       "surfaceTotalMeters": 5254,
       "unpavedSurfaceMeters": 0,
       "cyclewayMeters": 708,
-      "matchedSurfaceFeatures": 58,
+      "matchedSurfaceFeatures": 59,
       "detourPercent": 64.3,
       "distinctFromFast": true
     },

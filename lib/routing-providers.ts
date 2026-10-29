@@ -405,6 +405,17 @@ async function fetchValhallaRoutes(
   }
 }
 
+export async function fetchValhallaCustomizedRoutes(
+  points: Coordinate[],
+  mode: TransportMode,
+  linearCostFactors: { shape: string; factor: number }[],
+  alternatives = false,
+  deadline = Date.now() + ROUTE_BUDGET_MS,
+  signal: AbortSignal = new AbortController().signal,
+): Promise<EngineRoute[]> {
+  return fetchValhallaRoutes(points, mode, alternatives, deadline, signal, linearCostFactors);
+}
+
 export async function fetchValhallaCustomizedRoute(
   points: Coordinate[],
   mode: TransportMode,
@@ -412,7 +423,7 @@ export async function fetchValhallaCustomizedRoute(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
 ): Promise<EngineRoute | null> {
-  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, linearCostFactors);
+  const routes = await fetchValhallaCustomizedRoutes(points, mode, linearCostFactors, false, deadline, signal);
   return routes[0] ?? null;
 }
 

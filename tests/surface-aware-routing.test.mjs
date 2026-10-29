@@ -57,6 +57,21 @@ test("extractRoughSlices extracts contiguous rough sections meeting min length",
   assert.ok(slices[0].length >= 3);
 });
 
+test("extractRoughSlices bridges short non-rough gaps when mergeGapMeters is specified", () => {
+  const routeCoords = [
+    [9.1830, 45.4680],
+    [9.1835, 45.4680], // rough 1 (~39m)
+    [9.1836, 45.4680], // smooth intersection (~8m)
+    [9.1841, 45.4680], // rough 2 (~39m)
+  ];
+  const isRough = (_prev, curr) => (curr[0] >= 9.1831 && curr[0] <= 9.1835) || curr[0] >= 9.1837;
+  const splitSlices = extractRoughSlices(routeCoords, isRough, 15, 0);
+  assert.equal(splitSlices.length, 2);
+
+  const mergedSlices = extractRoughSlices(routeCoords, isRough, 15, 20);
+  assert.equal(mergedSlices.length, 1);
+});
+
 test("buildLinearCostFactors formats valid Valhalla request parameters", () => {
   const slices = [
     [[9.184, 45.468], [9.185, 45.468], [9.186, 45.468]],

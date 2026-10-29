@@ -17,7 +17,7 @@ export async function generateQualityReport({ outputPath = defaultReportOutputPa
     const meters = sum(segments.filter((s) => s.surfaceCategory === category));
     return `| ${category} | ${meters.toFixed(1)} | ${percent(meters)}% |`;
   });
-  const tagged = sum(segments.filter((s) => typeof s.rawTags?.surface === "string" && s.rawTags.surface.trim()));
+  const tagged = sum(segments.filter((s) => (typeof s.rawTags?.surface === "string" && s.rawTags.surface.trim()) || (typeof s.rawTags?.surface_bike === "string" && s.rawTags.surface_bike.trim())));
   const smoothness = sum(segments.filter((s) => s.smoothness.state === "known"));
   const cycling = sum(segments.filter((s) => s.cycling.value?.hasFacility));
   const classRows = [...new Set(segments.map((s) => s.highwayClass))].sort().map((highway) => {

@@ -3556,9 +3556,9 @@
     "maximumExtraMinutes": 5
   },
   "performance": {
-    "routingAndSurfaceDataMs": 924,
-    "candidateGenerationAndScoringMs": 3228,
-    "totalMs": 4152
+    "routingAndSurfaceDataMs": 949,
+    "candidateGenerationAndScoringMs": 3286,
+    "totalMs": 4235
   },
   "candidateDiagnostics": [
     {

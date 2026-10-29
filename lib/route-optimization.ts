@@ -6,7 +6,14 @@ export type OptimizationCandidate = {
   route: EngineRoute;
   paveMeters?: number;
   riskMeters: number;
-  surfaceScore: { paveMeters?: number; unknownMeters: number; totalMeters: number; confirmedRestrictionMeters?: number };
+  surfaceScore: {
+    paveMeters?: number;
+    smoothSurfaceMeters?: number;
+    smoothMeters?: number;
+    unknownMeters: number;
+    totalMeters: number;
+    confirmedRestrictionMeters?: number;
+  };
 };
 export type OptimizationPolicy = {
   minimumPaveReduction: number;
@@ -63,9 +70,29 @@ export function selectOptimizedRoute<T extends OptimizationCandidate>(
   const frontier = paretoFrontier(eligible);
   // Conservative burden, not a prediction: each added unknown metre can hide a
   // rough metre. A route cannot win merely by replacing known stone with missing data.
-  const burden = (candidate: T) =>
-    candidate.riskMeters + Math.max(0, candidate.surfaceScore.unknownMeters - fast.surfaceScore.unknownMeters);
+  // When a detour achieves stone reduction by genuinely increasing confirmed smooth road,
+  // extra length through unmapped streets carries a bounded uncertainty penalty rather
+  // than being equated 100% to confirmed cobblestone.
   const rawPave = (candidate: T) => candidate.paveMeters ?? candidate.surfaceScore.paveMeters ?? candidate.riskMeters;
+  const rawSmooth = (candidate: T) => candidate.surfaceScore.smoothSurfaceMeters ?? candidate.surfaceScore.smoothMeters ?? 0;
+  const fastPave = rawPave(fast);
+  const fastSmooth = rawSmooth(fast);
+
+  const burden = (candidate: T) => {
+    const deltaUnk = Math.max(0, candidate.surfaceScore.unknownMeters - fast.surfaceScore.unknownMeters);
+    if (deltaUnk === 0) return candidate.riskMeters;
+    const paveSaved = Math.max(0, fastPave - rawPave(candidate));
+    const smoothGained = Math.max(0, rawSmooth(candidate) - fastSmooth);
+    const unbackedReduction = Math.max(0, paveSaved - smoothGained);
+    const highRiskUnknown = Math.min(deltaUnk, unbackedReduction);
+    const remainingUnknown = deltaUnk - highRiskUnknown;
+    // Conservative safeguard: cap the discounted unknown meters at 1.25x the cobblestone saved.
+    // Any excess unknown meters beyond 1.25x paveSaved are penalized at the full 1.0x rate.
+    const discountedUnknownCap = paveSaved > 0 ? paveSaved * 1.25 : 0;
+    const discountedUnknown = Math.min(remainingUnknown, discountedUnknownCap);
+    const excessUnknown = remainingUnknown - discountedUnknown;
+    return candidate.riskMeters + highRiskUnknown + discountedUnknown * 0.35 + excessUnknown * 1.0;
+  };
   const secondsWeight = avoidance === "maximum" ? 0 : policy.balancedPaveDivisor / (avoidance === "balanced" ? 60 : 600);
   const utility = (candidate: T) => burden(candidate) + (candidate.route.duration - fast.route.duration) * secondsWeight;
   const reducing = frontier.filter((candidate) => !equivalent(candidate.route, fast.route)

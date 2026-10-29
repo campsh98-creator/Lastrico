@@ -14,6 +14,8 @@ export const SURFACE_MATERIAL_MAP = {
   "cobblestone:flattened": "sett",
   "cobblestone:flattened:large_stone": "sett",
   milanese_paving: "sett",
+  "milanese_paving:rails": "sett",
+  "milanese_paving:lanes": "sett",
   cobblestone: "cobblestone",
   unhewn_cobblestone: "unhewn_cobblestone",
   pebblestone: "cobblestone",

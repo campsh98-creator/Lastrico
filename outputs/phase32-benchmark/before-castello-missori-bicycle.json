@@ -1193,6 +1193,16 @@
       ],
       [
         [
+          9.1875692,
+          45.4640786
+        ],
+        [
+          9.1875315,
+          45.4640557
+        ]
+      ],
+      [
+        [
           9.1885988,
           45.461279
         ],
@@ -1599,16 +1609,6 @@
         [
           9.1865843,
           45.4648965
-        ]
-      ],
-      [
-        [
-          9.1883621,
-          45.46365
-        ],
-        [
-          9.1883817,
-          45.4636525
         ]
       ]
     ]
@@ -3328,6 +3328,16 @@
     ],
     [
       [
+        9.1875692,
+        45.4640786
+      ],
+      [
+        9.1875315,
+        45.4640557
+      ]
+    ],
+    [
+      [
         9.1885988,
         45.461279
       ],
@@ -3835,16 +3845,6 @@
         9.1865843,
         45.4648965
       ]
-    ],
-    [
-      [
-        9.1883621,
-        45.46365
-      ],
-      [
-        9.1883817,
-        45.4636525
-      ]
     ]
   ],
   "alternativesAnalyzed": 3,
@@ -3866,9 +3866,9 @@
     "maximumExtraMinutes": 5
   },
   "performance": {
-    "routingAndSurfaceDataMs": 904,
-    "candidateGenerationAndScoringMs": 131,
-    "totalMs": 1035
+    "routingAndSurfaceDataMs": 947,
+    "candidateGenerationAndScoringMs": 128,
+    "totalMs": 1075
   },
   "candidateDiagnostics": [
     {
@@ -3899,19 +3899,19 @@
       "profile": "bicycle",
       "distance": 3241,
       "seconds": 702,
-      "paveMeters": 1113,
-      "pavePercent": 34.5,
-      "weightedPaveMeters": 906,
-      "surfaceConfidence": 0.81,
-      "surfaceClassificationConfidence": 0.81,
+      "paveMeters": 1123,
+      "pavePercent": 34.8,
+      "weightedPaveMeters": 916,
+      "surfaceConfidence": 0.82,
+      "surfaceClassificationConfidence": 0.82,
       "surfaceDataConfidence": null,
-      "unknownSurfaceMeters": 554,
-      "surfaceCoveragePercent": 82.8,
+      "unknownSurfaceMeters": 544,
+      "surfaceCoveragePercent": 83.2,
       "smoothSurfaceMeters": 1562,
       "surfaceTotalMeters": 3229,
       "unpavedSurfaceMeters": 0,
       "cyclewayMeters": 620,
-      "matchedSurfaceFeatures": 48,
+      "matchedSurfaceFeatures": 49,
       "detourPercent": 25.2,
       "distinctFromFast": true
     },

@@ -1,10 +1,10 @@
 {
   "provider": "OpenStreetMap API 0.6",
   "bounds": {
-    "west": 9.18,
-    "south": 45.455,
-    "east": 9.2,
-    "north": 45.475
+    "west": 9.169,
+    "south": 45.45,
+    "east": 9.206,
+    "north": 45.48
   },
   "selection": "All ways with a highway tag, including missing/unknown surface; four map tiles, deduplicated by OSM way ID. This is a small city-centre pilot, not all Milan.",
   "temporalScope": "Four sequential live API responses, not an atomic historical snapshot; original element versions and edit timestamps preserved.",
@@ -60,7 +60,105 @@
       "retrievedAt": "2026-10-26T00:44:43.832077+00:00",
       "serverDate": "Mon, 26 Oct 2026 00:44:42 GMT",
       "sha256": "bc36bc582b9171a775ce5d63be05c793b5ab470cc7bf7262c1451e976725d4cb"
+    },
+    {
+      "file": "milan-pilot-w-sw.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.169,45.455,9.18,45.465",
+      "bbox": [
+        9.169,
+        45.455,
+        9.18,
+        45.465
+      ],
+      "retrievedAt": "2026-10-28T23:03:09.249Z",
+      "serverDate": "Wed, 28 Oct 2026 23:03:08 GMT",
+      "sha256": "b86229d8085919a54d5e414b9000cb4f6114c445beb6e188a9b67c43a301f8e4",
+      "description": "Western Cerchia dei Navigli South (Sant'Ambrogio, San Vittore, Conca del Naviglio)"
+    },
+    {
+      "file": "milan-pilot-w-nw.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.169,45.465,9.18,45.475",
+      "bbox": [
+        9.169,
+        45.465,
+        9.18,
+        45.475
+      ],
+      "retrievedAt": "2026-10-28T23:03:12.813Z",
+      "serverDate": "Wed, 28 Oct 2026 23:03:12 GMT",
+      "sha256": "014895c3f4633fc0e684081d7dc1b2aa7dbf4920530a9e756bfba7a7a1df311f",
+      "description": "Western Cerchia dei Navigli North (Cadorna, Santa Maria delle Grazie, Parco Sempione)"
+    },
+    {
+      "file": "milan-pilot-n-nw.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.18,45.475,9.19,45.48",
+      "bbox": [
+        9.18,
+        45.475,
+        9.19,
+        45.48
+      ],
+      "retrievedAt": "2026-10-28T23:03:15.611Z",
+      "serverDate": "Wed, 28 Oct 2026 23:03:15 GMT",
+      "sha256": "aab161a494d1a8721b70147a0bf46822339dd894c25f3e078617276f15a3e198",
+      "description": "Northern Bastioni West (Moscova north, Porta Garibaldi south)"
+    },
+    {
+      "file": "milan-pilot-n-ne.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.19,45.475,9.2,45.48",
+      "bbox": [
+        9.19,
+        45.475,
+        9.2,
+        45.48
+      ],
+      "retrievedAt": "2026-10-28T23:03:18.355Z",
+      "serverDate": "Wed, 28 Oct 2026 23:03:18 GMT",
+      "sha256": "315fce6ccf40340776abefc2eabec929536f7f30347a44c9649abfe4b33ea19b",
+      "description": "Northern Bastioni East (Repubblica, Giardini Pubblici north)"
+    },
+    {
+      "file": "milan-pilot-e-nw.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.2,45.465,9.206,45.475",
+      "bbox": [
+        9.2,
+        45.465,
+        9.206,
+        45.475
+      ],
+      "retrievedAt": "2026-10-28T23:03:21.196Z",
+      "serverDate": "Wed, 28 Oct 2026 23:03:21 GMT",
+      "sha256": "4d5a4bb70e85fbef999c9d762839aaff7c53aa9b341afe497e59ea6eca85ead6",
+      "description": "Eastern Bastioni (Porta Venezia / Corso Buenos Aires start)"
+    },
+    {
+      "file": "milan-pilot-s-sw.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.175,45.45,9.185,45.455",
+      "bbox": [
+        9.175,
+        45.45,
+        9.185,
+        45.455
+      ],
+      "retrievedAt": "2026-10-28T23:03:24.001Z",
+      "serverDate": "Wed, 28 Oct 2026 23:03:24 GMT",
+      "sha256": "9d821815a8ba17d44516557d896f2b9ebea44f7c9990738c5a9b2de0191a845b",
+      "description": "Southern Axis West (Darsena / Navigli / Porta Ticinese)"
+    },
+    {
+      "file": "milan-pilot-s-se.osm.json.gz",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json?bbox=9.195,45.45,9.205,45.455",
+      "bbox": [
+        9.195,
+        45.45,
+        9.205,
+        45.455
+      ],
+      "retrievedAt": "2026-10-28T23:03:26.733Z",
+      "serverDate": "Wed, 28 Oct 2026 23:03:26 GMT",
+      "sha256": "13ea707cac3cf553919ff3fdadf52581328c37e733319e0b93808b33e322438b",
+      "description": "Southern Axis East (Porta Romana / Piazza Medaglie d'Oro)"
     }
   ],
-  "networkSha256": "3ea4c0a8325b66019673777fc2334bd00d11127310de96c8df2ea91111f58b5c"
+  "networkSha256": "894dfeeb16709df2857db688fd2dedde1f14096363ba76ba22087da2eeeb2bf7"
 }

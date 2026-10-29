@@ -49,8 +49,9 @@ export function extractRoughSlices(
   coordinates: Coordinate[],
   isSegmentRough: (prev: Coordinate, current: Coordinate) => boolean,
   minMeters = 20,
+  mergeGapMeters = 0,
 ): Coordinate[][] {
-  const slices: Coordinate[][] = [];
+  const rawSlices: Coordinate[][] = [];
   let currentSlice: Coordinate[] = [];
   let currentLength = 0;
 
@@ -72,7 +73,7 @@ export function extractRoughSlices(
       currentLength += pointDistanceMeters(coordinates[i - 1], pt);
     } else {
       if (currentSlice.length >= 2 && currentLength >= minMeters) {
-        slices.push(currentSlice);
+        rawSlices.push(currentSlice);
       }
       currentSlice = [];
       currentLength = 0;
@@ -80,10 +81,23 @@ export function extractRoughSlices(
   }
 
   if (currentSlice.length >= 2 && currentLength >= minMeters) {
-    slices.push(currentSlice);
+    rawSlices.push(currentSlice);
   }
 
-  return slices;
+  if (mergeGapMeters <= 0 || rawSlices.length <= 1) return rawSlices;
+
+  const merged: Coordinate[][] = [rawSlices[0]];
+  for (let s = 1; s < rawSlices.length; s++) {
+    const prev = merged[merged.length - 1];
+    const curr = rawSlices[s];
+    const gap = pointDistanceMeters(prev[prev.length - 1], curr[0]);
+    if (gap <= mergeGapMeters) {
+      merged[merged.length - 1] = [...prev, ...curr];
+    } else {
+      merged.push(curr);
+    }
+  }
+  return merged;
 }
 
 /**
@@ -92,7 +106,7 @@ export function extractRoughSlices(
 export function buildLinearCostFactors(
   roughSlices: Coordinate[][],
   penaltyFactor = 15.0,
-  maxSlices = 4,
+  maxSlices = 8,
 ): { factors: LinearCostFactor[]; totalPenalizedMeters: number } {
   if (roughSlices.length === 0) return { factors: [], totalPenalizedMeters: 0 };
 

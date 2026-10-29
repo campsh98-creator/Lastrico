@@ -180,20 +180,21 @@ const ACCESS_KEYS: Record<TransportMode, string[]> = {
 // access, destination access and dismount cannot be turned into a prohibition.
 function explicitlyRestricted(segment: RoadSegmentRecord, a: GeoCoordinate, b: GeoCoordinate, mode: TransportMode) {
   const tags = segment.rawTags;
-  if (!tags) return false;
-  for (const key of ACCESS_KEYS[mode]) {
-    if (tags[`${key}:conditional`] || tags[`${key}:forward`] || tags[`${key}:backward`]) return false;
-    const value = tags[key]?.trim().toLowerCase();
-    if (value) {
-      if (value === "no" || (value === "private" && tags.service?.trim().toLowerCase() !== "driveway")) return true;
-      break; // A more specific permission overrides a generic prohibition.
+  if (tags) {
+    for (const key of ACCESS_KEYS[mode]) {
+      if (tags[`${key}:conditional`] || tags[`${key}:forward`] || tags[`${key}:backward`]) return false;
+      const value = tags[key]?.trim().toLowerCase();
+      if (value) {
+        if (value === "no" || (value === "private" && tags.service?.trim().toLowerCase() !== "driveway")) return true;
+        break; // A more specific permission overrides a generic prohibition.
+      }
     }
   }
 
   if (!segment.modeAccess?.[mode]) return false;
   // Side-specific cycling direction exceptions need graph semantics that this
   // geometric check does not have. Do not infer a confirmed violation from them.
-  if (mode === "bicycle" && Object.keys(tags).some((key) =>
+  if (mode === "bicycle" && tags && Object.keys(tags).some((key) =>
     key.startsWith("cycleway:") && (key.includes("oneway") || key.includes("conditional")),
   )) return false;
   const direction = segment.modeDirections?.[mode];

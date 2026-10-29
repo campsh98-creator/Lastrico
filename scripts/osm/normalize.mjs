@@ -48,8 +48,21 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   const name = typeof rawWay.name === "string" ? rawWay.name : (tags.name || null);
   const coordinates = rawWay.coordinates || (rawWay.geometry ? rawWay.geometry.map((p) => [p.lon, p.lat]) : []);
 
+  // Highway Classification
+  const rawHighway = (tags.highway || "").trim().toLowerCase();
+  const highwayClass = Object.hasOwn(HIGHWAY_MAP, rawHighway) ? HIGHWAY_MAP[rawHighway] : "unknown";
+
   // 1. Surface Material
-  const rawSurface = (tags.surface || rawWay.surface || "").trim().toLowerCase();
+  let rawSurface = (tags.surface || rawWay.surface || "").trim().toLowerCase();
+  if (!rawSurface && tags.surface_bike) {
+    rawSurface = tags.surface_bike.trim().toLowerCase();
+  }
+  if (!rawSurface && highwayClass === "cycleway") {
+    rawSurface = (tags["cycleway:surface"] || tags["cycleway:both:surface"] || tags["cycleway:right:surface"] || tags["cycleway:left:surface"] || "").trim().toLowerCase();
+  }
+  if (!rawSurface && highwayClass === "footway") {
+    rawSurface = (tags["footway:surface"] || tags["footway:both:surface"] || "").trim().toLowerCase();
+  }
   const material = SURFACE_MATERIAL_MAP[rawSurface] || (rawSurface ? "other" : "unknown");
   const surfaceCategory = SURFACE_CATEGORY_MAP[material] || "unknown";
   const roughnessWeight = SURFACE_ROUGHNESS_WEIGHT[material] ?? 0.0;
@@ -77,18 +90,14 @@ export function normalizeOsmFeature(rawWay, options = {}) {
     confidence: smoothness !== "unknown" ? 0.9 : 0.0,
   };
 
-  // 3. Highway Classification
-  const rawHighway = (tags.highway || "").trim().toLowerCase();
-  const highwayClass = Object.hasOwn(HIGHWAY_MAP, rawHighway) ? HIGHWAY_MAP[rawHighway] : "unknown";
-
-  // 4. Directionality & Modal Access
+  // 3. Directionality & Modal Access
   const onewayTag = (tags.oneway || (tags.junction === "roundabout" ? "yes" : "")).trim().toLowerCase();
   const isOneway = ["yes", "1", "true", "-1"].includes(onewayTag);
   const isReversed = onewayTag === "-1";
 
   // More specific modal tags override generic access. Unrecognised restrictions
   // remain unavailable for matching; this is not a replacement routing graph.
-  const allowedValues = new Set(["yes", "designated", "permissive", "destination", "customers", "delivery"]);
+  const allowedValues = new Set(["yes", "designated", "official", "permissive", "destination", "customers", "delivery"]);
   function access(keys, defaultAllowed) {
     for (const key of keys) {
       if (tags[`${key}:conditional`]) return false;
@@ -155,7 +164,9 @@ export function normalizeOsmFeature(rawWay, options = {}) {
     direction: modeDirections.bicycle === "both" ? "bidirezionale"
       : modeDirections.bicycle === "forward" ? "monodirezionale_concorde"
         : modeDirections.bicycle === "backward" ? "monodirezionale_discorde" : "unknown",
-    surface: tags["cycleway:surface"] ? (SURFACE_MATERIAL_MAP[tags["cycleway:surface"].toLowerCase()] || null) : null,
+    surface: (tags["cycleway:surface"] || tags["cycleway:both:surface"] || tags["cycleway:right:surface"] || tags["cycleway:left:surface"])
+      ? (SURFACE_MATERIAL_MAP[(tags["cycleway:surface"] || tags["cycleway:both:surface"] || tags["cycleway:right:surface"] || tags["cycleway:left:surface"]).toLowerCase()] || null)
+      : null,
     source: hasCycleway ? "osm" : "none",
   };
 
@@ -170,10 +181,22 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   };
 
   // 6. Tram rails hazard detection
-  const embeddedRails = Boolean(
+  const isPlatform = rawHighway === "platform"
+    || tags.railway === "platform"
+    || tags.public_transport === "platform"
+    || tags.platform === "tram";
+  const embeddedRails = !isPlatform && Boolean(
     tags.railway === "tram" ||
     tags.embedded_rails === "yes" ||
-    tags["railway:tram"] === "yes"
+    tags["railway:tram"] === "yes" ||
+    tags.tram === "yes" ||
+    tags["tram:forward"] === "yes" ||
+    tags["tram:backward"] === "yes" ||
+    tags["oneway:tram"] !== undefined ||
+    tags["lanes:tram"] !== undefined ||
+    tags["lanes:tram:forward"] !== undefined ||
+    tags["lanes:tram:backward"] !== undefined ||
+    (typeof tags.surface_bike === "string" && tags.surface_bike.includes(":rails"))
   );
 
   // 7. Deconstruct LineString into directed RoadSegmentRecords
