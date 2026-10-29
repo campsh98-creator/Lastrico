@@ -367,6 +367,15 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   color: var(--ink);
   font-size: 12px;
 }
+.swap-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 44px;
+  min-height: 44px;
+}
 
 .location-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 8px 0 0; }
 .location-tools button {
@@ -1159,7 +1168,20 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .modal h2 { font-size: 38px; }
 .modal p { color: var(--muted); font-size: 11px; line-height: 1.55; }
-.modal-close { position: absolute; top: 11px; right: 14px; border: 0; background: transparent; color: var(--muted); font-size: 25px; }
+.modal-close {
+  position: absolute;
+  top: 11px;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 25px;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 .directions-backdrop { z-index: 45; align-items: end; padding-bottom: 18px; }
 .directions-sheet {
   width: min(690px, 100%);
@@ -1454,6 +1476,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .map-key span:nth-child(4) { display: none; }
   .map-top { top: 8px; left: 8px; right: 8px; }
   .confidence-pill, .cancel-map-action { padding: 6px 8px; font-size: 7px; }
+  .cancel-map-action { min-height: 44px; display: inline-flex; align-items: center; }
   .map-summary { top: 8px; right: 8px; bottom: auto; left: auto; width: auto; min-height: 44px; display: flex; gap: 7px; transform: none; padding: 7px 9px; border-radius: 9px; }
   .maplibregl-ctrl-group button { width: 44px; height: 44px; }
   .map-summary > span:nth-of-type(2), .map-summary > b { display: none; }

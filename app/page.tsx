@@ -24,6 +24,20 @@ import {
 import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
 import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
+import "@/components/phase43/phase43.css";
+import {
+  RouteComparisonPanel,
+  LocalFieldFeedback,
+  NavigationDiagnosticsCard,
+} from "@/components/phase43";
+import {
+  PILOT_AREAS,
+  coordinateInArea,
+  isPilotAreaId,
+  getPilotJourneys,
+  type PilotAreaId,
+  type PilotJourneyPreset,
+} from "@/lib/pilot-areas";
 import {
   directionGlyph,
   type NavigationInstruction,
@@ -117,6 +131,7 @@ type GeocodeResult = LocationChoice & {
 };
 
 type RouteApiResponse = {
+  area?: PilotAreaId;
   fast: Omit<RouteResult, "nodes" | "edges">;
   safe: Omit<RouteResult, "nodes" | "edges">;
   problemSegments: Coordinate[][];
@@ -189,12 +204,7 @@ const navigationPolicy: Record<TransportMode, { offRouteMeters: number; readings
   motorcycle: { offRouteMeters: 50, readings: 2, arrivalMeters: 30, simulationSteps: 90 },
   bicycle: { offRouteMeters: 38, readings: 3, arrivalMeters: 24, simulationSteps: 110 },
 };
-const MILAN_GPS_BOUNDS = {
-  west: 9.04,
-  south: 45.38,
-  east: 9.31,
-  north: 45.55,
-};
+const emptyRoute: RouteResult = { nodes: [], edges: [], coordinates: [], distance: 0, minutes: 0, paveMeters: 0 };
 const formatMinutes = (minutes: number) => minutes.toLocaleString("it-IT", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
@@ -395,6 +405,11 @@ function formatArrivalTime(remainingMinutes: number) {
 }
 
 export default function Home() {
+  const [areaId, setAreaId] = useState<PilotAreaId>("milan");
+  const area = PILOT_AREAS[areaId];
+  const areaIdRef = useRef<PilotAreaId>("milan");
+  const landmarkMarkersRef = useRef<MapLibreMarker[]>([]);
+  const addressRequestRef = useRef<AbortController | null>(null);
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker; vehicle?: MapLibreMarker }>({});
@@ -509,12 +524,13 @@ export default function Home() {
   const [directionsOpen, setDirectionsOpen] = useState(false);
   const [mapReady, setMapReady] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [fieldFeedbackOpen, setFieldFeedbackOpen] = useState(false);
+  const [showDiagnostics, setShowDiagnostics] = useState(false);
   const [navigationDiagnostics, setNavigationDiagnostics] = useState<NavigationDiagnostics>(() => createNavigationDiagnostics());
   const recordDiagnostic = useCallback((event: NavigationDiagnosticEvent) => {
     setNavigationDiagnostics((current) => recordNavigationDiagnosticEvent(current, event));
   }, []);
   const landmarks = nodes.filter((node) => node.landmark);
-  const savedPave = Math.max(0, fastRoute.paveMeters - safeRoute.paveMeters);
   const selectedRoute = activeRoute === "safe" ? safeRoute : fastRoute;
   const selectedRouteModel = useMemo(
     () => buildRouteProgressModel(
@@ -551,7 +567,7 @@ export default function Home() {
     if (gpsState === "weak") {
       return `Segnale debole${journeyAccuracy ? ` · ±${Math.round(journeyAccuracy)} m` : ""} · ultimo punto valido`;
     }
-    if (gpsState === "outside") return "Posizione fuori dall’area coperta dalla beta di Milano";
+    if (gpsState === "outside") return `Posizione fuori dall’area pilota di ${area.name}`;
     if (gpsState === "temporarily-unavailable") return "Posizione temporaneamente non disponibile · ultimo punto valido";
     if (gpsState === "offroute") return "Fuori percorso · attendo un fix affidabile";
     return `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`;
@@ -608,13 +624,27 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("area");
+    if (requested && isPilotAreaId(requested)) window.queueMicrotask(() => changeArea(requested));
+    // Apply the initial URL once; subsequent changes use the explicit selector.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!mapReady || !map) return;
+    map.jumpTo({ center: area.center, zoom: areaId === "milan" ? 13.5 : 13, pitch: 0, bearing: 0 });
+    for (const marker of landmarkMarkersRef.current) marker.getElement().style.display = areaId === "milan" ? "" : "none";
+  }, [area, areaId, mapReady]);
+
+  useEffect(() => {
     let cancelled = false;
     import("maplibre-gl").then(({ Map, NavigationControl, Marker }) => {
       if (cancelled || !mapContainer.current || mapRef.current) return;
       const map = new Map({
         container: mapContainer.current,
         style: mapStyle,
-        center: [9.1905, 45.4685],
+        center: PILOT_AREAS[areaIdRef.current].center,
         zoom: 13.5,
       });
       map.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
@@ -630,7 +660,7 @@ export default function Home() {
         const element = document.createElement("div");
         element.className = "landmark-dot";
         element.setAttribute("aria-label", landmark.name);
-        new Marker({ element }).setLngLat(landmark.coordinate).setPopup(undefined).addTo(map);
+        landmarkMarkersRef.current.push(new Marker({ element }).setLngLat(landmark.coordinate).setPopup(undefined).addTo(map));
       });
       const startElement = document.createElement("div");
       startElement.className = "endpoint-marker start";
@@ -671,6 +701,10 @@ export default function Home() {
           Number(event.lngLat.lng.toFixed(6)),
           Number(event.lngLat.lat.toFixed(6)),
         ];
+        if (!coordinateInArea(coordinate, PILOT_AREAS[areaIdRef.current])) {
+          setStatus(`Scegli un punto nell’area pilota di ${PILOT_AREAS[areaIdRef.current].name}.`);
+          return;
+        }
         const label = `Punto scelto · ${coordinate[1].toFixed(4)}, ${coordinate[0].toFixed(4)}`;
         if (target === "start") {
           invalidateRouteIntent();
@@ -810,12 +844,16 @@ export default function Home() {
 
   useEffect(() => {
     pointMarkersRef.current.start?.setLngLat(startLocation.coordinate);
-  }, [startLocation]);
+    const element = pointMarkersRef.current.start?.getElement();
+    if (element) element.style.display = startLocation.label ? "" : "none";
+  }, [startLocation, mapReady]);
 
   useEffect(() => {
     pointMarkersRef.current.end?.setLngLat(endLocation.coordinate);
+    const element = pointMarkersRef.current.end?.getElement();
+    if (element) element.style.display = endLocation.label ? "" : "none";
     endLocationRef.current = endLocation;
-  }, [endLocation]);
+  }, [endLocation, mapReady]);
 
   useEffect(() => {
     journeyActiveRef.current = isJourneyActive;
@@ -889,13 +927,18 @@ export default function Home() {
   useEffect(() => {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
-    if (!isLiveResult && transportMode !== "car") {
+    if (!isLiveResult && (transportMode !== "car" || areaId !== "milan")) {
       (map.getSource("fast-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
       (map.getSource("safe-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
       (map.getSource("problem-segments") as GeoJSONSource)?.setData(emptyFeatureCollection);
       return;
     }
-    if (!fastRoute.coordinates.length || !safeRoute.coordinates.length) return;
+    if (!fastRoute.coordinates.length || !safeRoute.coordinates.length) {
+      (map.getSource("fast-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      (map.getSource("safe-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      (map.getSource("problem-segments") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      return;
+    }
     (map.getSource("fast-route") as GeoJSONSource)?.setData(routeGeoJSON(fastRoute));
     (map.getSource("safe-route") as GeoJSONSource)?.setData(
       hasDistinctAlternative ? routeGeoJSON(safeRoute) : emptyFeatureCollection,
@@ -930,7 +973,7 @@ export default function Home() {
       maxZoom: 14.7,
       duration: 650,
     });
-  }, [fastRoute, safeRoute, selectedRoute, activeRoute, hasDistinctAlternative, isLiveResult, transportMode, mapReady]);
+  }, [fastRoute, safeRoute, selectedRoute, activeRoute, hasDistinctAlternative, isLiveResult, transportMode, mapReady, areaId]);
 
   useEffect(() => {
     if (!isJourneyActive || !voiceEnabled || !navigationProgress.instruction) return;
@@ -1098,6 +1141,7 @@ export default function Home() {
       if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
       if (simulationTimerRef.current !== null) window.clearInterval(simulationTimerRef.current);
       routeRequestRef.current?.controller.abort();
+      addressRequestRef.current?.abort();
       void wakeLockRef.current?.release();
       window.speechSynthesis?.cancel();
     };
@@ -1120,14 +1164,63 @@ export default function Home() {
   useEffect(() => {
     const map = mapRef.current;
     if (!mapReady || !map?.isStyleLoaded()) return;
-    (map.getSource("community-reports") as GeoJSONSource)?.setData(reportsGeoJSON(reports));
-  }, [reports, mapReady]);
+    (map.getSource("community-reports") as GeoJSONSource)?.setData(areaId === "milan" ? reportsGeoJSON(reports) : emptyFeatureCollection);
+  }, [reports, mapReady, areaId]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!mapReady || !map?.isStyleLoaded()) return;
     (map.getSource("report-draft") as GeoJSONSource)?.setData(draftGeoJSON(reportStart, reportEnd));
   }, [reportStart, reportEnd, mapReady]);
+
+  function changeArea(nextAreaId: PilotAreaId) {
+    if (nextAreaId === areaIdRef.current || journeyActiveRef.current) return;
+    finishNavigation();
+    invalidateRouteIntent();
+    addressRequestRef.current?.abort();
+    addressRequestRef.current = null;
+    areaIdRef.current = nextAreaId;
+    setAreaId(nextAreaId);
+    const nextArea = PILOT_AREAS[nextAreaId];
+    const nextStart: LocationChoice = nextAreaId === "milan"
+      ? { label: "Castello Sforzesco", coordinate: nodeMap.get("castello")!.coordinate }
+      : { label: "", coordinate: nextArea.center };
+    const nextEnd: LocationChoice = nextAreaId === "milan"
+      ? { label: "Porta Venezia", coordinate: nodeMap.get("venezia")!.coordinate }
+      : { label: "", coordinate: nextArea.center };
+    setStartLocation(nextStart);
+    setEndLocation(nextEnd);
+    endLocationRef.current = nextEnd;
+    setStartText("");
+    setEndText("");
+    setFastRoute(nextAreaId === "milan" ? defaultFast : emptyRoute);
+    setSafeRoute(nextAreaId === "milan" ? defaultSafe : emptyRoute);
+    selectedRouteRef.current = null;
+    selectedRouteModelRef.current = null;
+    activeRouteRef.current = "fast";
+    setActiveRoute("fast");
+    setIsLiveResult(false);
+    setHasDistinctAlternative(false);
+    setAlternativesAnalyzed(0);
+    setLastRecalculatedAt(null);
+    setRoutingProfile({ provider: "pending", profile: transportModeRef.current, approximate: false, notice: "Da calcolare" });
+    setAddressResults([]);
+    setAddressSearchTarget(null);
+    setAddressSearchLoading(false);
+    setAddressQuery("");
+    setPickingMode(null);
+    setReportStart(null);
+    setReportEnd(null);
+    setReportModalOpen(false);
+    setMapChooserOpen(false);
+    setActivePanel("plan");
+    const url = new URL(window.location.href);
+    url.searchParams.set("area", nextAreaId);
+    window.history.replaceState(null, "", url);
+    setStatus(nextAreaId === "milan"
+      ? "Milano selezionata. Cerca gli indirizzi o scegli due punti sulla mappa."
+      : "Pilota Roccella Ionica: scegli partenza e arrivo. I percorsi verranno calcolati dal provider, senza dati demo.");
+  }
 
   function invalidateRouteIntent() {
     plannerRevisionRef.current += 1;
@@ -1214,15 +1307,17 @@ export default function Home() {
 
   async function fetchAddresses(text: string, signal?: AbortSignal) {
     if (text.trim().length < 3) throw new Error("Inserisci almeno tre caratteri.");
-    const response = await fetch(`/api/geocode?q=${encodeURIComponent(text.trim())}`, { signal });
+    const requestedArea = areaIdRef.current;
+    const response = await fetch(`/api/geocode?q=${encodeURIComponent(text.trim())}&area=${requestedArea}`, { signal });
     const data = await response.json() as {
       results?: GeocodeResult[];
       error?: string;
     };
+    if (signal?.aborted || requestedArea !== areaIdRef.current) throw new DOMException("Ricerca superata", "AbortError");
     if (!response.ok || !data.results?.length) {
-      throw new Error(data.error ?? `Non trovo “${text}” a Milano.`);
+      throw new Error(data.error ?? `Non trovo “${text}” a ${PILOT_AREAS[requestedArea].name}.`);
     }
-    return data.results;
+    return data.results.filter((result) => coordinateInArea(result.coordinate, PILOT_AREAS[requestedArea]));
   }
 
   async function searchAddresses(target: "start" | "end") {
@@ -1232,20 +1327,26 @@ export default function Home() {
       setStatus(`Inserisci ${target === "start" ? "la partenza" : "la destinazione"}.`);
       return;
     }
+    addressRequestRef.current?.abort();
+    const controller = new AbortController();
+    addressRequestRef.current = controller;
+    const requestedArea = areaIdRef.current;
     setAddressQuery(text.trim());
     setAddressSearchTarget(target);
     setAddressResults([]);
     setAddressSearchLoading(true);
-    setStatus(`Cerco “${text.trim()}” in tutta Milano…`);
+    setStatus(`Cerco “${text.trim()}” a ${PILOT_AREAS[requestedArea].name}…`);
     try {
-      const results = await fetchAddresses(text);
+      const results = await fetchAddresses(text, controller.signal);
+      if (controller.signal.aborted || requestedArea !== areaIdRef.current) return;
       setAddressResults(results);
       setStatus(`${results.length} ${results.length === 1 ? "risultato trovato" : "risultati trovati"}: scegli l’indirizzo corretto.`);
     } catch (error) {
+      if (controller.signal.aborted || requestedArea !== areaIdRef.current) return;
       setAddressSearchTarget(null);
       setStatus(error instanceof Error ? error.message : "Ricerca non riuscita.");
     } finally {
-      setAddressSearchLoading(false);
+      if (addressRequestRef.current === controller) setAddressSearchLoading(false);
     }
   }
 
@@ -1276,6 +1377,7 @@ export default function Home() {
       force?: boolean;
       journeySession?: number;
       preferences?: RoutePreferences;
+      endOverride?: LocationChoice;
     } = {},
   ) {
     if (!navigator.onLine) {
@@ -1304,6 +1406,7 @@ export default function Home() {
       options.journeySession === undefined ? 20_000 : 8_000,
     );
     const requestedMode = options.mode ?? transportModeRef.current;
+    const requestedArea = areaIdRef.current;
     let routeSucceeded = false;
     loadingRef.current = true;
     setIsLoading(true);
@@ -1323,9 +1426,10 @@ export default function Home() {
           }, { once: true });
         });
       }
-      const resolvedEnd = options.journeySession !== undefined
-        ? (endLocationRef.current ?? endLocation)
-        : await geocode(endText, endLocation, "end", controller.signal);
+      const resolvedEnd = options.endOverride
+        ?? (options.journeySession !== undefined
+          ? (endLocationRef.current ?? endLocation)
+          : await geocode(endText, endLocation, "end", controller.signal));
       if (!shouldApplyRouteResponse(
         routeRequestRef.current?.id ?? -1,
         requestId,
@@ -1350,6 +1454,7 @@ export default function Home() {
         end: resolvedEnd.coordinate.join(","),
         avoid: requestedPreferences.avoidance,
         mode: requestedMode,
+        area: requestedArea,
       });
       if (requestedPreferences.maxExtraMinutes !== null) {
         params.set("maxExtraMinutes", String(requestedPreferences.maxExtraMinutes));
@@ -1369,6 +1474,8 @@ export default function Home() {
           journeyActiveRef.current,
         )
         || data.transportMode !== requestedMode
+        || requestedArea !== areaIdRef.current
+        || (data.area !== undefined && data.area !== requestedArea)
         || !shouldApplyPlannerRouteResponse({
           activeRequestId: routeRequestRef.current?.id ?? -1,
           responseRequestId: requestId,
@@ -1468,6 +1575,17 @@ export default function Home() {
     }
   }
 
+  function handleSelectPilotJourney(journey: PilotJourneyPreset) {
+    if (journeyActiveRef.current) return;
+    invalidateRouteIntent();
+    setStartLocation(journey.start);
+    setEndLocation(journey.end);
+    setStartText(journey.start.label);
+    setEndText(journey.end.label);
+    endLocationRef.current = journey.end;
+    void calculateRoutes(journey.start, { endOverride: journey.end });
+  }
+
   function changeTransportMode(nextMode: TransportMode) {
     if (nextMode === transportModeRef.current || isJourneyActive) return;
     const shouldRecalculate = isLiveResult || loadingRef.current;
@@ -1509,12 +1627,15 @@ export default function Home() {
       setStatus("La posizione non è disponibile su questo dispositivo.");
       return;
     }
+    const requestedArea = areaIdRef.current;
+    const requestedRevision = plannerRevisionRef.current;
     setStatus("Sto rilevando la tua posizione…");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         const coordinate: Coordinate = [coords.longitude, coords.latitude];
-        if (coordinate[0] < 9.04 || coordinate[0] > 9.31 || coordinate[1] < 45.38 || coordinate[1] > 45.55) {
-          setStatus("La demo copre per ora soltanto l’area di Milano.");
+        if (requestedArea !== areaIdRef.current || requestedRevision !== plannerRevisionRef.current) return;
+        if (!coordinateInArea(coordinate, PILOT_AREAS[requestedArea])) {
+          setStatus(`La posizione è fuori dall’area pilota di ${PILOT_AREAS[requestedArea].name}. Cambia area se necessario.`);
           return;
         }
         const location = { label: "La mia posizione", coordinate };
@@ -1523,7 +1644,9 @@ export default function Home() {
         setStartText(location.label);
         setStatus("Posizione impostata come partenza.");
       },
-      () => setStatus("Non ho potuto accedere alla posizione."),
+      () => {
+        if (requestedArea === areaIdRef.current && requestedRevision === plannerRevisionRef.current) setStatus("Non ho potuto accedere alla posizione.");
+      },
       { enableHighAccuracy: true, timeout: 8000 },
     );
   }
@@ -1827,18 +1950,14 @@ export default function Home() {
           || session !== navigationSessionRef.current
         ) return;
         const coordinate: Coordinate = [coords.longitude, coords.latitude];
-        const inMilan = (
-          coordinate[0] >= MILAN_GPS_BOUNDS.west
-          && coordinate[0] <= MILAN_GPS_BOUNDS.east
-          && coordinate[1] >= MILAN_GPS_BOUNDS.south
-          && coordinate[1] <= MILAN_GPS_BOUNDS.north
-        );
-        if (!inMilan) {
+        const activeArea = PILOT_AREAS[areaIdRef.current];
+        const inArea = coordinateInArea(coordinate, activeArea);
+        if (!inArea) {
           offRouteReadingsRef.current = 0;
           arrivalReadingsRef.current = 0;
           recordDiagnostic({ type: "fix-rejected", reason: "outside" });
           setGpsState("outside");
-          setStatus("La navigazione della beta copre per ora soltanto Milano.");
+          setStatus(`Posizione fuori dall’area pilota di ${activeArea.name}.`);
           return;
         }
         const now = Date.now();
@@ -1850,7 +1969,7 @@ export default function Home() {
           previousCoordinate: previousJourneyPositionRef.current,
           previousAccuracy: previousJourneyAccuracyRef.current,
           previousTimestamp: previousJourneyTimestampRef.current,
-          bounds: MILAN_GPS_BOUNDS,
+          bounds: activeArea.bounds,
           distanceMeters,
           maximumSpeedMetersPerSecond: transportModeRef.current === "bicycle" ? 22 : 70,
         });
@@ -1913,8 +2032,8 @@ export default function Home() {
 
   async function shareBeta() {
     const shareData = {
-      title: "Lastrico — Milano senza sobbalzi",
-      text: "Prova la beta che confronta il percorso rapido con quello che riduce il pavé noto a Milano.",
+      title: `Lastrico — ${area.name}`,
+      text: `Prova la beta che confronta il percorso rapido con quello che riduce il pavé noto a ${area.name}.`,
       url: window.location.href,
     };
     try {
@@ -1953,6 +2072,10 @@ export default function Home() {
   }
 
   function startReport() {
+    if (areaIdRef.current !== "milan") {
+      setFieldFeedbackOpen(true);
+      return;
+    }
     if (isJourneyActive) {
       setStatus("Per sicurezza, termina la navigazione prima di segnalare una strada.");
       return;
@@ -2040,11 +2163,21 @@ export default function Home() {
             className="report-button"
             onClick={startReport}
             aria-label="Segnala una strada"
-            title={isJourneyActive ? "Termina la navigazione per segnalare" : "Segnala una strada"}
+            title={isJourneyActive ? "Termina la navigazione per segnalare" : areaId !== "milan" ? "Segnala anomalia sul campo (Roccella)" : "Segnala una strada"}
             disabled={isJourneyActive}
           >
             <span aria-hidden="true">⚠</span>
             <b>Segnala</b>
+          </button>
+          <button
+            type="button"
+            className="icon-button"
+            onClick={() => setFieldFeedbackOpen(true)}
+            aria-label="Segnala anomalia sul campo"
+            title="Segnala anomalia sul campo (locale)"
+            data-testid="field-feedback-trigger"
+          >
+            <span aria-hidden="true">📝</span>
           </button>
           <button type="button" className="icon-button" aria-label="Informazioni sulla beta" onClick={() => setDetailsOpen(true)}>i</button>
         </div>
@@ -2074,6 +2207,16 @@ export default function Home() {
           <div className="panel-content">
             {activePanel === "plan" && (
               <section className="planner-panel">
+                <div className="pilot-area-block">
+                  <label htmlFor="pilot-area">Area pilota</label>
+                  <select id="pilot-area" data-testid="pilot-area" value={areaId}
+                    onChange={(event) => { if (isPilotAreaId(event.target.value)) changeArea(event.target.value); }}
+                    disabled={isJourneyActive}
+                    style={{ minHeight: 44, width: "100%", marginTop: 4, color: "inherit", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8 }}>
+                    <option value="milan">Milano</option>
+                    <option value="roccella">Roccella Ionica</option>
+                  </select>
+                </div>
                 <div className="panel-heading">
                   <h1>Dove andiamo?</h1>
                 </div>
@@ -2157,6 +2300,26 @@ export default function Home() {
                 <div className="location-tools">
                   <button type="button" onClick={() => setPickingMode(picking === "start" ? null : "start")}>Partenza su mappa</button>
                   <button type="button" onClick={() => setPickingMode(picking === "end" ? null : "end")}>Arrivo su mappa</button>
+                </div>
+
+                {/* Pilot Journeys Quick-Select */}
+                <div className="pilot-journeys-container" role="region" aria-label="Itinerari di collaudo">
+                  <span className="pilot-journeys-label">Itinerari di collaudo ({areaId === "roccella" ? "Roccella" : "Milano"}):</span>
+                  <div className="pilot-journeys-chips">
+                    {getPilotJourneys(areaId).map((journey) => (
+                      <button
+                        key={journey.id}
+                        type="button"
+                        className="pilot-journey-chip"
+                        onClick={() => handleSelectPilotJourney(journey)}
+                        title={journey.description}
+                        disabled={isJourneyActive || isLoading}
+                        data-testid={`pilot-journey-${journey.id}`}
+                      >
+                        {journey.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="transport-block">
@@ -2257,47 +2420,16 @@ export default function Home() {
                   </button>
                 </div>
 
-                <div className="route-options" role="radiogroup" aria-label={`Percorso ${transportMeta[transportMode].label}`}>
-                  {hasDistinctAlternative ? (
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={activeRoute === "safe"}
-                      data-testid="route-option-safe"
-                      className={`route-option safe ${activeRoute === "safe" ? "selected" : ""}`}
-                      onClick={() => selectActiveRoute("safe")}
-                    >
-                      <span className="route-radio" />
-                      <span className="route-name"><b>Anti-pavé · {transportMeta[transportMode].label}</b><small>{safeRoute.distance.toFixed(1)} km · {safeRoute.paveMeters} m noti</small></span>
-                      <strong>{formatMinutes(safeRoute.minutes)}<small> min</small></strong>
-                      <em>+{formatMinutes(Math.max(0, safeRoute.minutes - fastRoute.minutes))}</em>
-                    </button>
-                  ) : (
-                    <div className="route-option no-alternative">
-                      <span className="route-radio" />
-                      <span className="route-name"><b>Nessuna deviazione migliore</b><small>Nessuna alternativa con meno pavé entro i vincoli scelti</small></span>
-                      <strong>—</strong>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    role="radio"
-                    aria-checked={activeRoute === "fast"}
-                    data-testid="route-option-fast"
-                    className={`route-option fast ${activeRoute === "fast" ? "selected" : ""}`}
-                    onClick={() => selectActiveRoute("fast")}
-                  >
-                    <span className="route-radio" />
-                    <span className="route-name"><b>Più rapido · {transportMeta[transportMode].label}</b><small>{fastRoute.distance.toFixed(1)} km · {fastRoute.paveMeters} m noti</small></span>
-                    <strong>{formatMinutes(fastRoute.minutes)}<small> min</small></strong>
-                    <em>base</em>
-                  </button>
-                </div>
-
-                <div className="impact-strip">
-                  <div><small>Pavé evitato</small><strong>{savedPave.toLocaleString("it-IT")} m</strong></div>
-                  <div><small>Riduzione</small><strong>{fastRoute.paveMeters ? Math.round(savedPave / fastRoute.paveMeters * 100) : 0}%</strong></div>
-                  <div><small>Dati</small><strong>{isLiveResult ? "OSM" : "Demo"}</strong></div>
+                <div aria-label={`Percorso ${transportMeta[transportMode].label}`}>
+                  <RouteComparisonPanel
+                    fastRoute={fastRoute}
+                    safeRoute={safeRoute}
+                    hasDistinctAlternative={hasDistinctAlternative}
+                    activeRoute={activeRoute}
+                    onSelectRoute={selectActiveRoute}
+                    transportMode={transportMode}
+                    extraTimeBudgetMinutes={promptInterpretation?.preferences?.maxExtraMinutes ?? null}
+                  />
                 </div>
 
                 <SurfaceBreakdown
@@ -2309,6 +2441,28 @@ export default function Home() {
 
                 <div className={`profile-note ${routingProfile.approximate ? "warning" : ""}`}>
                   {routingProfile.notice}
+                </div>
+
+                <div className="p43-diagnostics-toggle-container">
+                  <button
+                    type="button"
+                    className="p43-toggle-details-btn"
+                    onClick={() => setShowDiagnostics((prev) => !prev)}
+                    aria-expanded={showDiagnostics}
+                    data-testid="toggle-diagnostics-btn"
+                  >
+                    <span>{showDiagnostics ? "Nascondi diagnostica sessione" : "Mostra diagnostica affidabilità GPS"}</span>
+                    <span aria-hidden="true">{showDiagnostics ? "▲" : "▼"}</span>
+                  </button>
+                  {showDiagnostics && (
+                    <NavigationDiagnosticsCard
+                      diagnostics={navigationDiagnostics}
+                      gpsState={gpsState}
+                      journeyMode={journeyMode}
+                      isOnline={isOnline}
+                      onResetDiagnostics={() => setNavigationDiagnostics(createNavigationDiagnostics())}
+                    />
+                  )}
                 </div>
 
                 <button
@@ -2338,7 +2492,7 @@ export default function Home() {
               </section>
             )}
 
-            {activePanel === "community" && (
+            {activePanel === "community" && areaId === "milan" && (
               <CommunityPanel
                 githubUrl="https://github.com/campsh98-creator/Lastrico"
                 loading={reportsLoading}
@@ -2349,6 +2503,9 @@ export default function Home() {
                 reportsAvailable={reportsAvailable}
                 stats={reportStats}
               />
+            )}
+            {activePanel === "community" && areaId === "roccella" && (
+              <section className="planner-panel"><h2>Comunità · Roccella</h2><p>Le segnalazioni e l’esportazione non sono ancora disponibili in questo pilota.</p></section>
             )}
           </div>
 
@@ -2412,6 +2569,27 @@ export default function Home() {
                     {formatNavigationDiagnosticsSummary(navigationDiagnostics)}
                   </small>
                 )}
+                <div className="p43-hud-diagnostics">
+                  <button
+                    type="button"
+                    className="p43-toggle-details-btn"
+                    onClick={() => setShowDiagnostics((prev) => !prev)}
+                    aria-expanded={showDiagnostics}
+                    data-testid="hud-toggle-diagnostics-btn"
+                  >
+                    <span>{showDiagnostics ? "Nascondi diagnostica GPS" : "Dettagli affidabilità GPS"}</span>
+                    <span aria-hidden="true">{showDiagnostics ? "▲" : "▼"}</span>
+                  </button>
+                  {showDiagnostics && (
+                    <NavigationDiagnosticsCard
+                      diagnostics={navigationDiagnostics}
+                      gpsState={gpsState}
+                      journeyMode={journeyMode}
+                      isOnline={isOnline}
+                      onResetDiagnostics={() => setNavigationDiagnostics(createNavigationDiagnostics())}
+                    />
+                  )}
+                </div>
               </section>
               <div className="driving-safety">{transportMeta[transportMode].safety}</div>
             </div>
@@ -2430,7 +2608,7 @@ export default function Home() {
                     ? hasDistinctAlternative
                       ? `${transportMeta[transportMode].short} · ${alternativesAnalyzed} percorsi · deviazione trovata`
                       : `${transportMeta[transportMode].short} · ${alternativesAnalyzed} percorsi · nessuna deviazione migliore`
-                    : "Esempio iniziale"}
+                    : areaId === "milan" ? "Esempio iniziale · Milano" : "Roccella Ionica · scegli partenza e arrivo"}
             </div>
             {(picking === "reportStart" || picking === "reportEnd") && (
               <button type="button" className="cancel-map-action" onClick={cancelReport}>Annulla</button>
@@ -2503,7 +2681,7 @@ export default function Home() {
                   onClick={() => chooseAddress(addressSearchTarget, result)}
                 >
                   <b>{result.primary}</b>
-                  <small>{result.secondary || "Milano"}</small>
+                  <small>{result.secondary || area.name}</small>
                 </button>
               ))}
             </div>
@@ -2653,6 +2831,22 @@ export default function Home() {
           </section>
         </div>
       )}
+
+      <LocalFieldFeedback
+        isOpen={fieldFeedbackOpen}
+        onClose={() => setFieldFeedbackOpen(false)}
+        coordinate={journeyPosition ?? (startLocation.coordinate[0] ? startLocation.coordinate : null)}
+        transportMode={transportMode}
+        areaId={areaId}
+        activeRoute={activeRoute}
+        predictedSurfaceCategory={selectedRoute.paveMeters > 0 ? "Pavé noto" : "Asfalto / liscio"}
+        routeSummary={{
+          from: startLocation.label || undefined,
+          to: endLocation.label || undefined,
+          distanceKm: selectedRoute.distance || undefined,
+          minutes: selectedRoute.minutes || undefined,
+        }}
+      />
     </main>
   );
 }
