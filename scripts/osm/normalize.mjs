@@ -52,8 +52,16 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   const rawHighway = (tags.highway || "").trim().toLowerCase();
   const highwayClass = Object.hasOwn(HIGHWAY_MAP, rawHighway) ? HIGHWAY_MAP[rawHighway] : "unknown";
 
+  const pilotArea = options.pilotArea || options.area || null;
+  const isRoccella = pilotArea === "ROCCELLA_PILOT" || pilotArea === "roccella" || (Array.isArray(coordinates) && coordinates[0] && coordinates[0][0] > 15);
+
   // 1. Surface Material
   let rawSurface = (tags.surface || rawWay.surface || "").trim().toLowerCase();
+  let sourceId = id ? `osm:way:${id}` : null;
+  let authority = "osm_curated";
+  let state = "known";
+  let confidence = null;
+
   if (!rawSurface && tags.surface_bike) {
     rawSurface = tags.surface_bike.trim().toLowerCase();
   }
@@ -63,18 +71,44 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   if (!rawSurface && highwayClass === "footway") {
     rawSurface = (tags["footway:surface"] || tags["footway:both:surface"] || "").trim().toLowerCase();
   }
+
+  if (!rawSurface && tags.tracktype) {
+    const tt = String(tags.tracktype).trim().toLowerCase();
+    if (tt === "grade1") {
+      rawSurface = "asphalt";
+      authority = "osm_default";
+      state = "inferred";
+      confidence = 0.85;
+    } else if (["grade2", "grade3", "grade4", "grade5"].includes(tt)) {
+      rawSurface = "unpaved";
+      authority = "osm_default";
+      state = "inferred";
+      confidence = 0.85;
+    }
+  }
+
   const material = SURFACE_MATERIAL_MAP[rawSurface] || (rawSurface ? "other" : "unknown");
   const surfaceCategory = SURFACE_CATEGORY_MAP[material] || "unknown";
   const roughnessWeight = SURFACE_ROUGHNESS_WEIGHT[material] ?? 0.0;
 
+  if (confidence === null) {
+    if (surfaceCategory === "confirmed_rough" || surfaceCategory === "confirmed_smooth") {
+      confidence = 1.0;
+    } else if (surfaceCategory === "probable_rough") {
+      confidence = 0.65;
+    } else {
+      confidence = 0.0;
+    }
+  }
+
   const surfaceProvenance = {
-    state: material === "unknown" ? "unknown" : "known",
+    state: material === "unknown" ? "unknown" : state,
     value: material,
-    sourceId: id ? `osm:way:${id}` : null,
-    authority: "osm_curated",
+    sourceId,
+    authority,
     observedAt: null, // STRICTLY null: OSM does not record observation time on way tags. Never fabricated.
     ingestedAt,
-    confidence: surfaceCategory === "confirmed_rough" || surfaceCategory === "confirmed_smooth" ? 1.0 : (surfaceCategory === "probable_rough" ? 0.65 : 0.0),
+    confidence,
   };
 
   // 2. Smoothness (NEVER inferred from surface)
@@ -111,6 +145,15 @@ export function normalizeOsmFeature(rawWay, options = {}) {
     motorcycle: access(["motorcycle", "motor_vehicle", "vehicle", "access"], defaultMotor),
     bicycle: access(["bicycle", "vehicle", "access"], !["unknown", "steps", "motorway", "footway", "pedestrian"].includes(highwayClass)),
   };
+  if (isRoccella && highwayClass === "steps") {
+    // Steps are a structural obstacle: strictly impassable for motor vehicles,
+    // and impassable for bicycles unless explicitly ramped/permitted.
+    modeAccess.car = false;
+    modeAccess.motorcycle = false;
+    if (tags.bicycle !== "yes" && tags["ramp:bicycle"] !== "yes") {
+      modeAccess.bicycle = false;
+    }
+  }
   const isMotorAllowed = modeAccess.car || modeAccess.motorcycle;
   const isBicycleAllowed = modeAccess.bicycle;
 

@@ -8,7 +8,7 @@
     "maxExtraMinutes": "5"
   },
   "status": 200,
-  "elapsedMs": 1044.233875,
+  "elapsedMs": 1047.469959,
   "payload": {
     "area": "roccella",
     "fast": {
@@ -313,9 +313,9 @@
       "maximumExtraMinutes": 5
     },
     "performance": {
-      "routingAndSurfaceDataMs": 1040,
+      "routingAndSurfaceDataMs": 1043,
       "candidateGenerationAndScoringMs": 3,
-      "totalMs": 1043
+      "totalMs": 1047
     },
     "optimization": {
       "strategy": "pareto-conservative-unknown",

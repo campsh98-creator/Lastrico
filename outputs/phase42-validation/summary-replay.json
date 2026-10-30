@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-10-29T15:00:05.696Z",
+  "generatedAt": "2026-10-29T22:34:29.370Z",
   "runMode": "offline-response-replay",
   "surfaceMode": "authentic local compact archive; Overpass deliberately unavailable",
   "handlerSha256": "1b1c3420a6b82cf786a70dc262499b179a18090c27790defa5d66a1dfaebd7da",
   "compactSha256": "a298371f8e441d32cb618e051a8d9670f782ccc0a678d9277b4a82521e1c5246",
   "heapMiB": {
-    "beforeHandlerImport": 19.805419921875,
-    "afterHandlerImport": 39.41425323486328,
-    "end": 45.29998779296875
+    "beforeHandlerImport": 19.87933349609375,
+    "afterHandlerImport": 39.50022888183594,
+    "end": 45.35765838623047
   },
   "offRouteSoftwareTrigger": true,
   "requests": 15,
@@ -19,7 +19,7 @@
       "mode": "car",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 415.5302919999999,
+      "elapsedMs": 411.04262499999993,
       "fast": {
         "seconds": 99.361,
         "distanceMeters": 771,
@@ -84,7 +84,7 @@
       "mode": "motorcycle",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 803.375583,
+      "elapsedMs": 804.2170000000001,
       "fast": {
         "seconds": 99.361,
         "distanceMeters": 771,
@@ -149,7 +149,7 @@
       "mode": "bicycle",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 1068.8113329999999,
+      "elapsedMs": 1069.100292,
       "fast": {
         "seconds": 159.426,
         "distanceMeters": 771,
@@ -214,7 +214,7 @@
       "mode": "car",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 1043.0813749999998,
+      "elapsedMs": 1035.759458,
       "fast": {
         "seconds": 157.139,
         "distanceMeters": 610,
@@ -279,7 +279,7 @@
       "mode": "motorcycle",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 1049.5261660000006,
+      "elapsedMs": 1055.4036669999996,
       "fast": {
         "seconds": 157.139,
         "distanceMeters": 610,
@@ -344,7 +344,7 @@
       "mode": "bicycle",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 1012.9718330000005,
+      "elapsedMs": 1020.2555000000002,
       "fast": {
         "seconds": 153.398,
         "distanceMeters": 610,
@@ -409,7 +409,7 @@
       "mode": "car",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 1051.1362500000005,
+      "elapsedMs": 1040.731417,
       "fast": {
         "seconds": 206.103,
         "distanceMeters": 1602,
@@ -474,7 +474,7 @@
       "mode": "motorcycle",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 1009.2984589999996,
+      "elapsedMs": 1012.4271249999993,
       "fast": {
         "seconds": 206.103,
         "distanceMeters": 1602,
@@ -539,7 +539,7 @@
       "mode": "bicycle",
       "navigation": false,
       "status": 200,
-      "elapsedMs": 1044.233875,
+      "elapsedMs": 1047.469959,
       "fast": {
         "seconds": 319.455,
         "distanceMeters": 1602,
@@ -604,7 +604,7 @@
       "mode": "car",
       "navigation": true,
       "status": 200,
-      "elapsedMs": 1357.2607079999998,
+      "elapsedMs": 1342.491,
       "fast": {
         "seconds": 99.361,
         "distanceMeters": 771,
@@ -669,7 +669,7 @@
       "mode": "car",
       "navigation": true,
       "status": 200,
-      "elapsedMs": 803.654708,
+      "elapsedMs": 816.7271249999994,
       "fast": {
         "seconds": 149.89,
         "distanceMeters": 838,
@@ -734,7 +734,7 @@
       "mode": "motorcycle",
       "navigation": true,
       "status": 200,
-      "elapsedMs": 1052.6999159999996,
+      "elapsedMs": 1058.317959,
       "fast": {
         "seconds": 99.361,
         "distanceMeters": 771,
@@ -799,7 +799,7 @@
       "mode": "motorcycle",
       "navigation": true,
       "status": 200,
-      "elapsedMs": 1040.3518750000003,
+      "elapsedMs": 1039.6777500000007,
       "fast": {
         "seconds": 149.89,
         "distanceMeters": 838,
@@ -864,7 +864,7 @@
       "mode": "bicycle",
       "navigation": true,
       "status": 200,
-      "elapsedMs": 1077.5959579999999,
+      "elapsedMs": 1097.0920420000002,
       "fast": {
         "seconds": 159.426,
         "distanceMeters": 771,
@@ -929,7 +929,7 @@
       "mode": "bicycle",
       "navigation": true,
       "status": 200,
-      "elapsedMs": 1034.4072080000005,
+      "elapsedMs": 1021.6122080000005,
       "fast": {
         "seconds": 153.401,
         "distanceMeters": 844,

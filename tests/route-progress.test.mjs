@@ -114,3 +114,42 @@ test("looping route preserves monotonic instruction progress and does not jump a
   assert.ok(secondPassAfterCrossing.routeProgressMeters > secondPassBeforeCrossing.routeProgressMeters);
   assert.equal(secondPassAfterCrossing.instruction.id, "arrive");
 });
+
+test("Phase 4.9: rejects implausible forward jumps to parallel or future route segments", () => {
+  const coordinates = [
+    [9.1800, 45.4600],
+    [9.1800, 45.4650], // Leg 1: ~555m north
+    [9.1900, 45.4650], // Leg 2: ~780m east
+    [9.1900, 45.4600], // Leg 3: ~555m south
+    [9.1804, 45.4600], // Leg 4: ~750m west
+    [9.1804, 45.4650], // Leg 5: ~555m north (runs parallel to Leg 1, only ~31m away, at cumulative progress ~2640-3195m)
+  ];
+  const model = buildRouteProgressModel(coordinates, [], meters);
+
+  // Vehicle is at meter 111 on Leg 1
+  const anchor = 111;
+
+  // A noisy GPS fix with 25m accuracy: slightly closer to parallel Leg 5 (3.9m away) than Leg 1 (35m away)
+  const noisyGps = [9.18045, 45.4610];
+
+  const result = calculateRouteProgress(model, noisyGps, 10, anchor, {
+    accuracy: 25,
+    elapsedSeconds: 1.0,
+    maxSpeedMps: 20,
+  });
+
+  // Must NOT jump to Leg 5 (~2700m)! Must stay anchored locally near meter 111
+  assert.ok(
+    result.routeProgressMeters < 250,
+    `Progress must stay within local plausible reach, got ${result.routeProgressMeters}`,
+  );
+  assert.ok(
+    result.routeProgressMeters >= anchor,
+    `Progress must maintain monotonicity (>= ${anchor})`,
+  );
+  // Off-route distance should accurately reflect distance from current leg (~35m), not false 3.9m from parallel leg
+  assert.ok(
+    result.offRouteMeters >= 30,
+    `Off-route meters should report real distance from local leg, got ${result.offRouteMeters}`,
+  );
+});

@@ -161,7 +161,35 @@ test("handler honors bicycle counterflow without assigning restricted cycle trac
   assert.ok(car.fast.unknownSurfaceMeters > 300);
 });
 
-test("skips redundant waypoint detour requests when surface-aware Valhalla already returns a distinct corridor", async (t) => {
+test("skips redundant waypoint detour requests when surface-aware Valhalla already returns an admissible distinct corridor", async (t) => {
+  now += 100_000;
+  t.mock.method(Date, "now", () => now);
+  const smoothWay = {
+    ...roughWay,
+    id: 900000002,
+    tags: { highway: "residential", surface: "asphalt" },
+    geometry: detour.slice(1, 3).map(([lon, lat]) => ({ lon, lat })),
+  };
+  const valhallaCalls = [];
+  t.mock.method(globalThis, "fetch", async (url, init) => {
+    now += 2_000;
+    if (String(url).includes("overpass")) return Response.json({ elements: [roughWay, smoothWay] });
+    const body = JSON.parse(init.body);
+    valhallaCalls.push(body);
+    if (Array.isArray(body.linear_cost_factors)) {
+      // 700s is 11.66 min vs 600s (10 min) -> +1.66 min, within maxExtraMinutes 2
+      return Response.json({ trip: trip(detour, 700), alternates: [] });
+    }
+    return Response.json({ trip: trip(points, 600), alternates: [] });
+  });
+  const response = await GET(request({ maxExtraMinutes: "2" }));
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.equal(data.hasDistinctAlternative, true);
+  assert.equal(valhallaCalls.length, 2, "must not fire redundant waypoint detours after an admissible surface-aware corridor");
+});
+
+test("continues waypoint fallback when surface-aware Valhalla returns a distinct but inadmissible candidate", async (t) => {
   now += 100_000;
   t.mock.method(Date, "now", () => now);
   const valhallaCalls = [];
@@ -171,13 +199,45 @@ test("skips redundant waypoint detour requests when surface-aware Valhalla alrea
     const body = JSON.parse(init.body);
     valhallaCalls.push(body);
     if (Array.isArray(body.linear_cost_factors)) {
+      // 750s is 12.5 min vs 600s (10 min) -> +2.5 min, which exceeds maxExtraMinutes: "2" (inadmissible)
       return Response.json({ trip: trip(detour, 750), alternates: [] });
     }
     return Response.json({ trip: trip(points, 600), alternates: [] });
   });
   const response = await GET(request({ maxExtraMinutes: "2" }));
   assert.equal(response.status, 200);
-  const data = await response.json();
-  assert.equal(data.hasDistinctAlternative, false);
-  assert.equal(valhallaCalls.length, 2, "must not fire 3 extra waypoint detours after a distinct surface-aware corridor");
+  assert.ok(valhallaCalls.length > 2, "must continue to waypoint detours when direct surface-aware candidate is inadmissible");
+});
+
+test("preserves live OSM segments across cache hits and corridor expansion in cold and warm requests", async (t) => {
+  const way = bundledSurfaces.find((segment) => segment.surfaceCategory === "probable_rough"
+    && segment.isMotorAllowed && segment.lengthMeters > 20
+    && segment.coordinates.every(([lon]) => lon < points[0][0] - 0.02));
+  assert.ok(way);
+
+  const liveCandidateRoute = [points[0], ...way.coordinates, points[1]];
+  const liveAsphaltWay = {
+    id: 99990001,
+    tags: { highway: "residential", surface: "asphalt", name: "Live Smooth Street" },
+    geometry: way.coordinates.map(([lon, lat]) => ({ lon, lat })),
+  };
+
+  // Mock fetch for both cold and warm runs
+  fixtures(t, [trip(liveCandidateRoute, 1800)], [roughWay, liveAsphaltWay]);
+
+  // Cold request
+  const coldResponse = await GET(request());
+  assert.equal(coldResponse.status, 200);
+  const coldData = await coldResponse.json();
+
+  // Warm request (identical inputs, triggers cache hit on lastOverpassSnapshot)
+  const warmResponse = await GET(request());
+  assert.equal(warmResponse.status, 200);
+  const warmData = await warmResponse.json();
+
+  // Route scores and surface metrics must be identical between cold and warm cache hits
+  assert.equal(coldData.fast.smoothSurfaceMeters, warmData.fast.smoothSurfaceMeters);
+  assert.equal(coldData.fast.paveMeters, warmData.fast.paveMeters);
+  assert.equal(coldData.fast.probablePaveMeters, warmData.fast.probablePaveMeters);
+  assert.equal(coldData.fast.unknownSurfaceMeters, warmData.fast.unknownSurfaceMeters);
 });

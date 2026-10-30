@@ -62,6 +62,7 @@ export async function buildRoccellaPilot({ download = false, outputDirectory = j
   const outputDatasetPath = join(outputDirectory, "surfaces/roccella-pilot.json");
   const outputManifestPath = join(outputDirectory, "surfaces/roccella-pilot.manifest.json");
   await runIngestion({ sourcePath, sourceMetadataPath, outputDatasetPath, outputManifestPath,
+    pilotArea: "ROCCELLA_PILOT",
     datasetVersion: `osm-api-roccella-${provenance.sources.at(-1).retrievedAt.slice(0, 10)}` });
   const segments = JSON.parse(await readFile(outputDatasetPath, "utf8"));
   const manifest = JSON.parse(await readFile(outputManifestPath, "utf8"));

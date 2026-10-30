@@ -19,12 +19,19 @@ export type LocatedProgress = {
   progressMeters: number;
 };
 
+export type RouteProgressOptions = {
+  accuracy?: number | null;
+  elapsedSeconds?: number | null;
+  maxSpeedMps?: number | null;
+};
+
 function projectOnSegment(
   coordinates: ProgressCoordinate[],
   position: ProgressCoordinate,
   cumulativeMeters: number[],
   anchorProgressMeters: number | null = null,
   minProgressMeters: number | null = null,
+  options?: RouteProgressOptions,
 ): LocatedProgress {
   if (coordinates.length <= 1) {
     return { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 };
@@ -37,6 +44,15 @@ function projectOnSegment(
   };
   let bestWindow: LocatedProgress | null = null;
   let bestFromMin: LocatedProgress | null = null;
+
+  const accuracy = Math.max(5, Math.min(80, options?.accuracy ?? 15));
+  const elapsed = Math.max(0.1, Math.min(10, options?.elapsedSeconds ?? 1.5));
+  const maxSpeed = Math.max(10, Math.min(50, options?.maxSpeedMps ?? 35));
+
+  // Dynamic plausible reach along the route based on time, speed limit, and GPS accuracy
+  const forwardWindow = Math.max(200, elapsed * maxSpeed + accuracy * 2.0);
+  const backwardWindow = Math.max(35, accuracy * 1.5);
+
   const latitude = position[1] * Math.PI / 180;
   const scaleX = 111_320 * Math.cos(latitude);
   const scaleY = 110_540;
@@ -69,8 +85,8 @@ function projectOnSegment(
     }
     if (
       anchorProgressMeters !== null
-      && progressMeters >= anchorProgressMeters - 35
-      && progressMeters <= anchorProgressMeters + 160
+      && progressMeters >= anchorProgressMeters - backwardWindow
+      && progressMeters <= anchorProgressMeters + forwardWindow
       && (!bestWindow || distance < bestWindow.offRouteMeters)
     ) {
       bestWindow = candidate;
@@ -92,8 +108,7 @@ function projectOnSegment(
   if (
     anchorProgressMeters !== null
     && bestWindow
-    && bestWindow.offRouteMeters <= 40
-    && bestWindow.offRouteMeters <= best.offRouteMeters + 25
+    && bestWindow.offRouteMeters <= Math.max(45, accuracy * 1.8)
   ) {
     return bestWindow;
   }
@@ -139,9 +154,10 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
   position: ProgressCoordinate | null,
   totalMinutes: number,
   previousProgressMeters: number | null = null,
+  options?: RouteProgressOptions,
 ) {
   const projected = position
-    ? projectOnSegment(model.coordinates, position, model.cumulativeMeters, previousProgressMeters)
+    ? projectOnSegment(model.coordinates, position, model.cumulativeMeters, previousProgressMeters, null, options)
     : { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 };
   const backwardMeters = previousProgressMeters !== null
     ? Math.max(0, previousProgressMeters - projected.progressMeters)

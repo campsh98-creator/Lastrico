@@ -64,6 +64,10 @@ import {
   calculateRouteProgress,
   type RouteProgressModel,
 } from "@/lib/route-progress";
+import {
+  evaluateVoiceGuidance,
+  evaluateArrivalConfirmation,
+} from "@/lib/voice-guidance";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 type Coordinate = [number, number];
@@ -546,8 +550,15 @@ export default function Home() {
       journeyPosition,
       selectedRoute.minutes,
       isJourneyActive ? lastRouteProgressRef.current : null,
+      isJourneyActive && journeyAccuracy !== null
+        ? {
+            accuracy: journeyAccuracy,
+            elapsedSeconds: 1,
+            maxSpeedMps: transportMode === "bicycle" ? 22 : 45,
+          }
+        : undefined,
     ),
-    [isJourneyActive, journeyPosition, selectedRoute.minutes, selectedRouteModel],
+    [isJourneyActive, journeyAccuracy, journeyPosition, selectedRoute.minutes, selectedRouteModel, transportMode],
   );
   const navigationModeLabel = (() => {
     if (journeyMode === "simulation") return "SIMULAZIONE";
@@ -976,11 +987,31 @@ export default function Home() {
   }, [fastRoute, safeRoute, selectedRoute, activeRoute, hasDistinctAlternative, isLiveResult, transportMode, mapReady, areaId]);
 
   useEffect(() => {
-    if (!isJourneyActive || !voiceEnabled || !navigationProgress.instruction) return;
-    if (lastSpokenInstructionRef.current === navigationProgress.instruction.id) return;
-    lastSpokenInstructionRef.current = navigationProgress.instruction.id;
-    speakInstruction(navigationProgress.instruction.text);
-  }, [isJourneyActive, voiceEnabled, navigationProgress.instruction, speakInstruction]);
+    const voiceEval = evaluateVoiceGuidance({
+      isJourneyActive,
+      voiceEnabled,
+      journeyMode,
+      gpsState,
+      accuracy: journeyAccuracy,
+      transportMode,
+      instruction: navigationProgress.instruction,
+      instructionDistance: navigationProgress.instructionDistance,
+      lastSpokenInstructionId: lastSpokenInstructionRef.current,
+    });
+    if (!voiceEval.shouldSpeak || !voiceEval.textToSpeak) return;
+    lastSpokenInstructionRef.current = voiceEval.spokenInstructionId ?? "";
+    speakInstruction(voiceEval.textToSpeak);
+  }, [
+    isJourneyActive,
+    voiceEnabled,
+    journeyMode,
+    gpsState,
+    journeyAccuracy,
+    transportMode,
+    navigationProgress.instruction,
+    navigationProgress.instructionDistance,
+    speakInstruction,
+  ]);
 
   useEffect(() => {
     const simulationRoute = selectedRouteRef.current;
@@ -1794,6 +1825,7 @@ export default function Home() {
     setJourneyHeading(heading);
     if (!recalculatingRef.current) setGpsState("live");
 
+    const now = Date.now();
     const routeResult = selectedRouteRef.current;
     const routeModel = selectedRouteModelRef.current;
     if (!routeResult || !routeModel) return;
@@ -1806,22 +1838,34 @@ export default function Home() {
       filteredCoordinate,
       routeResult.minutes,
       lastRouteProgressRef.current,
+      {
+        accuracy,
+        elapsedSeconds: previousJourneyTimestampRef.current
+          ? Math.max(0.5, (now - previousJourneyTimestampRef.current) / 1000)
+          : 1,
+        maxSpeedMps: mode === "bicycle" ? 22 : 45,
+      },
     );
     lastRouteProgressRef.current = progress.routeProgressMeters;
     const minimumTravelBeforeArrival = Math.min(80, routeResult.distance * 100);
-    const isArrivalReading = Boolean(
-      routeEnd
-      && distanceMeters(filteredCoordinate, routeEnd) <= arrivalTolerance
-      && progress.remainingMeters <= arrivalTolerance * 1.5
-      && journeyTravelledMetersRef.current >= minimumTravelBeforeArrival
-    );
-    arrivalReadingsRef.current = isArrivalReading ? arrivalReadingsRef.current + 1 : 0;
-    if (arrivalReadingsRef.current >= 2) {
+    const arrivalEval = evaluateArrivalConfirmation({
+      routeEnd: routeEnd ?? null,
+      currentPosition: filteredCoordinate,
+      accuracy,
+      distanceToEnd: routeEnd ? distanceMeters(filteredCoordinate, routeEnd) : 9999,
+      remainingRouteMeters: progress.remainingMeters,
+      journeyTravelledMeters: journeyTravelledMetersRef.current,
+      minimumTravelBeforeArrival,
+      arrivalToleranceMeters: arrivalTolerance,
+      currentArrivalReadings: arrivalReadingsRef.current,
+      journeyMode: journeyModeRef.current,
+    });
+    arrivalReadingsRef.current = arrivalEval.consecutiveArrivalReadings;
+    if (arrivalEval.isConfirmedArrival && arrivalReadingsRef.current >= 2) {
       finishNavigation(true);
       return;
     }
 
-    const now = Date.now();
     const previousOffRouteReadings = offRouteReadingsRef.current;
     const offRouteDecision = evaluateOffRouteReading({
       currentReadings: previousOffRouteReadings,

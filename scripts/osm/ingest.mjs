@@ -42,6 +42,7 @@ export async function runIngestion(options = {}) {
   const outDir = options.outputDir || defaultOutputDir;
   const outDataset = options.outputDatasetPath || join(outDir, "milan-central.json");
   const outManifest = options.outputManifestPath || join(outDir, "milan-central.manifest.json");
+  const pilotArea = options.pilotArea || options.area || provenance?.area?.zoneId || (provenance?.bounds?.west > 15 ? "ROCCELLA_PILOT" : "MIL_CENTRE_PILOT");
   const allSegments = [], validationErrors = [], jumpWarnings = [];
   let validWays = 0, excludedAreaWays = 0;
   for (const rawWay of rawFeatures) {
@@ -57,7 +58,7 @@ export async function runIngestion(options = {}) {
     const countBefore = allSegments.length;
     for (let i = 1; i < coords.length; i++) {
       const edge = clipEdge(coords[i - 1], coords[i], provenance.bounds);
-      if (edge) allSegments.push(...normalizeOsmFeature({ ...rawWay, coordinates: edge }, { ingestedAt }).segments);
+      if (edge) allSegments.push(...normalizeOsmFeature({ ...rawWay, coordinates: edge }, { ingestedAt, pilotArea }).segments);
     }
     if (allSegments.length > countBefore) validWays++;
   }

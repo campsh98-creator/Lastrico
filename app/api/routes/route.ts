@@ -411,6 +411,7 @@ let lastOverpassSnapshot: {
   paveDetails: PaveDetail[];
   paveIndex: PaveSpatialIndex;
   surfaceIndex: RoadIntelligenceIndex;
+  liveSegments: RoadSegmentRecord[];
 } | null = null;
 
 export async function GET(request: NextRequest) {
@@ -501,6 +502,7 @@ export async function GET(request: NextRequest) {
             paveDetails = lastOverpassSnapshot.paveDetails;
             paveIndex = lastOverpassSnapshot.paveIndex;
             liveSurfaceIndex = lastOverpassSnapshot.surfaceIndex;
+            liveSegmentsList = lastOverpassSnapshot.liveSegments;
           } else {
             const ingestedAt = new Date().toISOString();
             const liveSegments = liveWays.flatMap((way) =>
@@ -517,6 +519,7 @@ export async function GET(request: NextRequest) {
               paveDetails,
               paveIndex,
               surfaceIndex: liveSurfaceIndex,
+              liveSegments: liveSegmentsList,
             };
           }
           dataSource = "archivio OSM locale + aggiornamento live";
@@ -640,10 +643,10 @@ export async function GET(request: NextRequest) {
       ? [...baseScored, scoredCandidate(surfaceAwareDirectRoute, "surface-aware-valhalla")] : baseScored;
     const directFast = fastestLegalCandidate(directScored, mode)!;
     const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes);
-    const directProducedDistinctRoute = surfaceAwareDirectRoute !== null
-      && !routesAreEquivalent(surfaceAwareDirectRoute, fastestBase, mode);
-    // Retain waypoint fallback if the provider rejects factors or fails to produce a distinct corridor.
-    if (canGenerate && directSafe === directFast && !directProducedDistinctRoute) {
+    const directHasAdmissibleAlternative = directSafe !== directFast
+      && !routesAreEquivalent(directSafe.route, directFast.route, mode);
+    // Retain waypoint fallback if direct search fails to produce an admissible distinct alternative.
+    if (canGenerate && !directHasAdmissibleAlternative) {
       const anchor = findDetourAnchor(fastestBase, activePaveIndex, mode);
       const baseOffset = Math.max(
         policy.detourMinimumMeters,
