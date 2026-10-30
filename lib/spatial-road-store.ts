@@ -4,6 +4,7 @@
  */
 
 import compactData from "../data/surfaces/milan-compact-tiles.json" with { type: "json" };
+import roccellaCompactData from "../data/surfaces/roccella-compact-tiles.json" with { type: "json" };
 import type {
   RoadSegmentRecord,
   HighwayClassification,
@@ -344,13 +345,10 @@ export class SpatialRoadIntelligenceStore {
 }
 
 export const spatialRoadStore = new SpatialRoadIntelligenceStore();
+export const roccellaSpatialRoadStore = new SpatialRoadIntelligenceStore(roccellaCompactData as unknown as CompactTileJson);
 
 // Separate dictionaries and caches: hydrating one area must never resolve names or
 // restrictions through another area's tuple IDs. Milan remains the default export.
-let roccellaStore: Promise<SpatialRoadIntelligenceStore> | undefined;
 export async function getSpatialRoadStore(area: "milan" | "roccella") {
-  if (area === "milan") return spatialRoadStore;
-  roccellaStore ??= import("../data/surfaces/roccella-compact-tiles.json", { with: { type: "json" } })
-    .then(({ default: data }) => new SpatialRoadIntelligenceStore(data as unknown as CompactTileJson));
-  return roccellaStore;
+  return area === "milan" ? spatialRoadStore : roccellaSpatialRoadStore;
 }
