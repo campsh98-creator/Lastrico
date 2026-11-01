@@ -2,6 +2,13 @@
 
 Use a safe passenger test or stop the vehicle before interacting with the screen. Record iPhone model, iOS version, Safari/PWA mode, transport mode, route, time and weather for every failure.
 
+## Evidence to capture on every run
+
+- [ ] Before starting, open **Mostra diagnostica affidabilità GPS** and enable **Registra traccia GPS per il collaudo**. Confirm **REC** appears in the HUD.
+- [ ] After each run, use **Esporta** and confirm the file reaches a place you can open it. The share sheet and download paths in standalone mode have not been verified on a device.
+- [ ] Save real traces only in `outputs/field-traces/`, which git ignores. They reveal where someone was, so never commit or share them without consent.
+- [ ] Replay each trace with `node scripts/replay-gps-trace.mjs <trace.json>` and attach the summary to any failure report.
+
 ## Install and permissions
 
 - [ ] Open the deployed HTTPS URL in Safari.
@@ -30,7 +37,20 @@ Use a safe passenger test or stop the vehicle before interacting with the screen
 - [ ] Stop during a reroute, then calculate a new planner route; confirm calculation is not stuck.
 - [ ] Lock/unlock the iPhone and background/foreground the PWA; confirm the UI explains any suspended GPS and resumes without duplicate navigation.
 
+## Fixes from Phase 4.10 to confirm on a real device
+
+Do these as a passenger or while stopped.
+
+- [ ] Test a route with a parallel return leg or a loop around a block. Confirm the next maneuver and remaining distance do not jump ahead, then check the largest forward advance in the replay summary.
+- [ ] Enable voice **before** starting and confirm the start message and maneuver prompts are spoken.
+- [ ] Separately, while stopped, enable voice **during** navigation and confirm the next prompt is spoken. iOS may block speech that does not follow a user gesture.
+- [ ] Start navigation part way along a calculated route and confirm progress locates you at once, without a reroute.
+- [ ] Choose a destination in a courtyard or private road and confirm the route is offered with the private-access notice.
+- [ ] Note any **Perdite segnale** count that looks too high: geolocation errors also reset arrival readings, and only a device can show how often they occur.
+
 ## Coverage and arrival
+
+- [ ] For anti-pavé assessment in Milan, stay inside surface data coverage (longitude 9.16–9.21, latitude 45.44–45.49). Outside it surfaces are mostly unknown. Roccella has no confirmed rough surface, so it can validate navigation but not anti-pavé value.
 
 - [ ] Test a position near and then outside the Milan beta boundary; confirm the state says **Fuori area beta**, not **GPS debole**.
 - [ ] Approach the destination normally; confirm arrival requires movement and two reliable readings.
