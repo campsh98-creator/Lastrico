@@ -1,0 +1,8 @@
+{
+  "workerName": "lastrico-pilot",
+  "d1": {
+    "binding": "DB",
+    "databaseName": "site-creator-d1",
+    "databaseId": "50683df2-b9fe-41f3-b542-638c7392f4f9"
+  }
+}

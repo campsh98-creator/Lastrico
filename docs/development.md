@@ -80,6 +80,29 @@ documentation must not claim support for a new area before geocoding, routing,
 road-surface data, GPS, report boundaries, mobile behaviour, and production smoke tests
 have passed for that region.
 
+## Pilot deployment
+
+The isolated pilot runs on the `lastrico-pilot` Worker. `npm run build` and `npm test` always
+regenerate `dist/server/wrangler.json` with a placeholder database id, so never deploy that
+file directly. Use the single command, which applies `deploy/pilot.json` and refuses a
+placeholder id or a different Worker name:
+
+```bash
+npm run deploy:pilot -- --dry-run
+```
+
+```bash
+npm run deploy:pilot
+```
+
+It prints the current version before uploading. To roll back, pass that version id:
+
+```bash
+npx wrangler rollback <version-id> --name lastrico-pilot
+```
+
+This path does not touch the ChatGPT Sites deployment or run database migrations.
+
 ## Pull request evidence
 
 Describe:
