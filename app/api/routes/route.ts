@@ -1,21 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSpatialRoadStore } from "@/lib/spatial-road-store";
 import { areaForCoordinate, coordinateInArea } from "@/lib/pilot-areas";
-import type { RoadSegmentRecord } from "@/lib/road-intelligence-types";
-import { normalizeOsmFeature } from "@/scripts/osm/normalize.mjs";
 import {
   isTransportMode,
   type RoutingProfileMetadata,
   type TransportMode,
 } from "@/lib/routing-types";
 import {
-  createRoadIntelligenceIndex,
   scoreRoadIntelligence,
-  type RoadIntelligenceIndex,
   type RoadIntelligenceScore,
 } from "@/lib/road-intelligence-scoring";
 import {
-  combinedTimeoutSignal,
   fetchEngineRoutes,
   ROUTE_BUDGET_MS,
   NAVIGATION_ROUTE_BUDGET_MS,
@@ -35,12 +30,6 @@ import { fastestLegalCandidate, isLegalCandidate, selectOptimizedRoute } from "@
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
 type SurfaceScore = RoadIntelligenceScore & { confidence: number };
-type PaveWay = {
-  id: number;
-  tags?: Record<string, string>;
-  geometry?: Array<{ lat: number; lon: number }>;
-};
-
 type PaveDetail = {
   id: number;
   name: string;
@@ -57,7 +46,6 @@ type ScoredRoute = {
 };
 
 type ModePolicy = {
-  surfaceHighways: string;
   surfaceMatchMeters: number;
   equivalentDistanceMeters: number;
   equivalentDurationSeconds: number;
@@ -72,12 +60,8 @@ type ModePolicy = {
 
 
 
-const MOTOR_HIGHWAYS = "^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track)$";
-const BICYCLE_HIGHWAYS = "^(primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential|living_street|service|road|track|cycleway|path|pedestrian|footway)$";
-
 const MODE_POLICY: Record<TransportMode, ModePolicy> = {
   car: {
-    surfaceHighways: MOTOR_HIGHWAYS,
     surfaceMatchMeters: 12,
     equivalentDistanceMeters: 120,
     equivalentDurationSeconds: 90,
@@ -94,7 +78,6 @@ const MODE_POLICY: Record<TransportMode, ModePolicy> = {
     },
   },
   motorcycle: {
-    surfaceHighways: MOTOR_HIGHWAYS,
     surfaceMatchMeters: 11,
     equivalentDistanceMeters: 110,
     equivalentDurationSeconds: 75,
@@ -111,7 +94,6 @@ const MODE_POLICY: Record<TransportMode, ModePolicy> = {
     },
   },
   bicycle: {
-    surfaceHighways: BICYCLE_HIGHWAYS,
     surfaceMatchMeters: 9,
     equivalentDistanceMeters: 85,
     equivalentDurationSeconds: 75,
@@ -395,26 +377,6 @@ function modeUnavailableMessage(mode: TransportMode) {
   return "Il routing gratuito è temporaneamente indisponibile. Riprova tra poco.";
 }
 
-// bundledRoads: loaded spatially via spatialRoadStore to eliminate memory bottleneck
-function roughDetails(segments: RoadSegmentRecord[]): PaveDetail[] {
-  return segments.filter((segment) => segment.osmWayId !== null &&
-    (segment.surfaceCategory === "confirmed_rough" || segment.surfaceCategory === "probable_rough"))
-    .map((segment) => ({
-      id: segment.osmWayId!,
-      name: segment.name ?? "Strada senza nome",
-      surface: segment.surface.value ?? "unknown",
-      coordinates: segment.coordinates,
-    }));
-}
-let lastOverpassSnapshot: {
-  key: string;
-  roads: RoadSegmentRecord[];
-  paveDetails: PaveDetail[];
-  paveIndex: PaveSpatialIndex;
-  surfaceIndex: RoadIntelligenceIndex;
-  liveSegments: RoadSegmentRecord[];
-} | null = null;
-
 export async function GET(request: NextRequest) {
   const calculationStartedAt = performance.now();
   const navigationRequest = request.nextUrl.searchParams.get("navigation") === "1";
@@ -443,96 +405,16 @@ export async function GET(request: NextRequest) {
   }
   const mode = requestedMode;
   const policy = MODE_POLICY[mode];
-  const bounds = area.bounds;
-  const padding = 0.02;
-  const south = Math.max(bounds.south, Math.min(start[1], end[1]) - padding);
-  const west = Math.max(bounds.west, Math.min(start[0], end[0]) - padding);
-  const north = Math.min(bounds.north, Math.max(start[1], end[1]) + padding);
-  const east = Math.min(bounds.east, Math.max(start[0], end[0]) + padding);
-  const overpassQuery = `[out:json][timeout:20];way["highway"~"${policy.surfaceHighways}"](${south},${west},${north},${east});out tags geom;`;
-  // Candidates may leave the endpoint rectangle; score against the full local snapshot.
 
   try {
     const spatialRoadStore = await getSpatialRoadStore(area.id);
-    const [baseRoutes, overpassResponse] = await Promise.all([
-      fetchEngineRoutes([start, end], mode, true, deadline, request.signal),
-      navigationRequest
-        ? Promise.resolve(null)
-        : fetch("https://overpass-api.de/api/interpreter", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
-            },
-            body: new URLSearchParams({ data: overpassQuery }),
-            cache: "no-store",
-            signal: combinedTimeoutSignal(request.signal, 650),
-          }).catch(() => null),
-    ]);
+    const baseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal);
     const baseRoutingReadyAt = performance.now();
     if (!baseRoutes.length) throw new Error("Nessun percorso");
 
     const corridorCoords: Coordinate[] = [start, end, ...baseRoutes.flatMap((r) => r.coordinates)];
-    const scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 500);
-    let roads = scoped.roads;
-    let paveDetails: PaveDetail[] = scoped.paveDetails;
-    let paveIndex: PaveSpatialIndex | null = null;
-    let liveSurfaceIndex: RoadIntelligenceIndex | null = null;
-    let liveSegmentsList: RoadSegmentRecord[] = [];
-    let dataSource = "archivio OSM locale";
-    if (overpassResponse?.ok) {
-      try {
-        const overpass = await overpassResponse.json() as { elements?: PaveWay[] };
-        // A surface-unfiltered update can invalidate stale rough/smooth evidence.
-        const liveWays = (Array.isArray(overpass.elements) ? overpass.elements : [])
-          .filter((way) =>
-            way && Number.isSafeInteger(way.id) && way.id > 0
-            && way.tags && typeof way.tags.highway === "string"
-            && Object.values(way.tags).every((value) => typeof value === "string")
-            && Array.isArray(way.geometry) && way.geometry.length > 1
-            && way.geometry.every((point) => point
-              && typeof point.lon === "number" && typeof point.lat === "number"
-              && Number.isFinite(point.lon) && Number.isFinite(point.lat)
-              && point.lon >= bounds.west && point.lon <= bounds.east
-              && point.lat >= bounds.south && point.lat <= bounds.north));
-        if (liveWays.length) {
-          const tileKeyStr = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 500).sort().join(";");
-          const snapshotKey = `${area.id}:${tileKeyStr}:${JSON.stringify(liveWays)}`;
-          if (lastOverpassSnapshot?.key === snapshotKey) {
-            roads = lastOverpassSnapshot.roads;
-            paveDetails = lastOverpassSnapshot.paveDetails;
-            paveIndex = lastOverpassSnapshot.paveIndex;
-            liveSurfaceIndex = lastOverpassSnapshot.surfaceIndex;
-            liveSegmentsList = lastOverpassSnapshot.liveSegments;
-          } else {
-            const ingestedAt = new Date().toISOString();
-            const liveSegments = liveWays.flatMap((way) =>
-              normalizeOsmFeature(way, { ingestedAt }).segments) as RoadSegmentRecord[];
-            liveSegmentsList = liveSegments;
-            const replacedIds = new Set(liveSegments.map((segment) => segment.osmWayId));
-            roads = [...scoped.roads.filter((segment) => !replacedIds.has(segment.osmWayId)), ...liveSegments];
-            paveDetails = roughDetails(roads);
-            paveIndex = createPaveSpatialIndex(paveDetails);
-            liveSurfaceIndex = createRoadIntelligenceIndex(roads);
-            lastOverpassSnapshot = {
-              key: snapshotKey,
-              roads,
-              paveDetails,
-              paveIndex,
-              surfaceIndex: liveSurfaceIndex,
-              liveSegments: liveSegmentsList,
-            };
-          }
-          dataSource = "archivio OSM locale + aggiornamento live";
-        }
-      } catch {
-        dataSource = "archivio OSM locale";
-      }
-    }
-    let activePaveIndex = paveIndex ?? scoped.paveIndex;
-    let surfaceIndex = roads === scoped.roads
-      ? scoped.surfaceIndex
-      : (liveSurfaceIndex ?? createRoadIntelligenceIndex(roads));
+    // Candidates may leave the endpoint rectangle; score against the full local snapshot.
+    let scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 500);
     let loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 500);
 
     const ensureRouteCovered = (routeCoordinates: Coordinate[]) => {
@@ -540,21 +422,9 @@ export async function GET(request: NextRequest) {
       if (missing.length > 0) {
         corridorCoords.push(...routeCoordinates);
         loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 500);
-        const expanded = spatialRoadStore.getScopedIntelligence(corridorCoords, 500);
-        if (liveSegmentsList.length > 0) {
-          const replacedIds = new Set(liveSegmentsList.map((segment) => segment.osmWayId));
-          roads = [...expanded.roads.filter((segment) => !replacedIds.has(segment.osmWayId)), ...liveSegmentsList];
-          paveDetails = roughDetails(roads);
-          activePaveIndex = createPaveSpatialIndex(paveDetails);
-          surfaceIndex = createRoadIntelligenceIndex(roads);
-        } else {
-          roads = expanded.roads;
-          paveDetails = expanded.paveDetails;
-          activePaveIndex = expanded.paveIndex;
-          surfaceIndex = expanded.surfaceIndex;
-        }
+        scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 500);
       }
-      return surfaceIndex;
+      return scoped.surfaceIndex;
     };
 
     const scoreCache = new Map<EngineRoute, SurfaceScore>();
@@ -619,7 +489,7 @@ export async function GET(request: NextRequest) {
           end = [prev[0] + (dx / len) * 0.00002, prev[1] + (dy / len) * 0.00002];
         }
         const mid: Coordinate = [(prev[0] + end[0]) / 2, (prev[1] + end[1]) / 2];
-        return scoreRoadIntelligence([prev, mid, end], surfaceIndex, policy.surfaceMatchMeters, mode).paveMeters > 0;
+        return scoreRoadIntelligence([prev, mid, end], scoped.surfaceIndex, policy.surfaceMatchMeters, mode).paveMeters > 0;
       };
       const roughSlices = fastestBase.maneuverShapes?.length
         ? fastestBase.maneuverShapes.flatMap((shape) => extractRoughSlices(shape, isSegmentRough, 25))
@@ -648,7 +518,7 @@ export async function GET(request: NextRequest) {
       && !routesAreEquivalent(directSafe.route, directFast.route, mode);
     // Retain waypoint fallback if direct search fails to produce an admissible distinct alternative.
     if (canGenerate && !directHasAdmissibleAlternative) {
-      const anchor = findDetourAnchor(fastestBase, activePaveIndex, mode);
+      const anchor = findDetourAnchor(fastestBase, scoped.paveIndex, mode);
       const baseOffset = Math.max(
         policy.detourMinimumMeters,
         Math.min(policy.detourMaximumMeters, fastestBase.distance * policy.detourDistanceFactor),
@@ -727,7 +597,7 @@ export async function GET(request: NextRequest) {
     const displayedCoordinates = fast.route === safe.route
       ? fast.route.coordinates
       : [...fast.route.coordinates, ...safe.route.coordinates];
-    const relevantPave = filterNearPaveDetails(displayedCoordinates, paveDetails, activePaveIndex, 18).slice(0, 70);
+    const relevantPave = filterNearPaveDetails(displayedCoordinates, scoped.paveDetails, scoped.paveIndex, 18).slice(0, 70);
     const relevantPaveIndex = createPaveSpatialIndex(relevantPave);
     const routeProblemSegments = (route: EngineRoute) =>
       filterNearPaveDetails(route.coordinates, relevantPave, relevantPaveIndex, 18)
@@ -738,8 +608,8 @@ export async function GET(request: NextRequest) {
       : routeProblemSegments(safe.route);
 
     const routingProfile = profileMetadata(mode, fast.route, safe.route);
-    const bicycleCoverageNotice = mode === "bicycle" && dataSource === "archivio OSM locale"
-      ? " La copertura locale dei fondi ciclabili può essere incompleta finché Overpass non risponde"
+    const bicycleCoverageNotice = mode === "bicycle"
+      ? ". La copertura locale dei fondi ciclabili può essere incompleta"
       : "";
     const calculationCompletedAt = performance.now();
 
@@ -817,8 +687,8 @@ export async function GET(request: NextRequest) {
             ? `${routeCountLabel} ${comparedLabel}; ${Math.max(
                 fast.surfaceScore.matchedFeatures,
                 safe.surfaceScore.matchedFeatures,
-              )} way OSM abbinate al percorso (${dataSource})`
-            : `${routeCountLabel} ${checkedLabel}: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (${dataSource})`
+              )} way OSM abbinate al percorso (archivio OSM locale)`
+            : `${routeCountLabel} ${checkedLabel}: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale)`
       ) + bicycleCoverageNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
     }, {
       headers: {

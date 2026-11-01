@@ -1,6 +1,6 @@
 /** Actual-handler Milan comparison. --live captures missing requests; default is offline replay.
- * --phase=before / --phase=after isolate acquisition. Overpass is deliberately disabled
- * in both runs: the checked-in OSM pilot is the fixed measurement instrument.
+ * --phase=before / --phase=after isolate acquisition. The checked-in OSM pilot is the
+ * fixed measurement instrument in both runs.
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -61,7 +61,6 @@ async function delay(ms, signal) {
 }
 
 async function archivedFetch(url, init = {}) {
-  if (String(url).includes("overpass")) return new Response("Frozen benchmark: bundled OSM only", { status: 503 });
   const keyInput = JSON.stringify({ url: String(url), method: init.method ?? "GET", body: init.body ?? null });
   const key = sha(keyInput);
   const file = new URL(`responses/${key}.json`, output);
@@ -134,7 +133,7 @@ try {
     const source = await readFile(new URL(version === "before" ? "baseline/route.ts.txt" : "../../app/api/routes/route.ts", output), "utf8");
     const result = { version, generatedAt: new Date().toISOString(),
       handlerSha256: sha(source), surfaceDatasetSha256: sha(await readFile(new URL("data/surfaces/milan-central.json", root))),
-      conditions: { avoid: "strong", maxExtraMinutes: 5, navigation: false, overpass: "disabled; fixed archived pilot", liveAcquisition: live,
+      conditions: { avoid: "strong", maxExtraMinutes: 5, navigation: false, surfaceSource: "fixed archived pilot", liveAcquisition: live,
         timing: "Captured HTTP durations replayed in real time; local scoring and provider queue measured afresh. Single observation, not service latency percentile." }, rows };
     await writeFile(new URL(`${version}.json`, output), JSON.stringify(result, null, 2) + "\n");
     if (live) await writeFile(new URL(`${version}-acquisition.json`, output), JSON.stringify(result, null, 2) + "\n");

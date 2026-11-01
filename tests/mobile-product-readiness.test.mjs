@@ -343,13 +343,10 @@ test("Flow 2 & 3: Multimodal Routing, Surface Intelligence & Pareto Alternatives
     }],
   });
 
-  // Mock routing and overpass providers
+  // Mock routing providers
   t.mock.method(Date, "now", () => 2_000_000);
   t.mock.method(globalThis, "fetch", async (url, init) => {
     const urlStr = String(url);
-    if (urlStr.includes("overpass")) {
-      return Response.json({ elements: [] });
-    }
     if (urlStr.includes("valhalla")) {
       const body = init?.body ? String(init.body) : "";
       const isBike = body.includes('"costing":"bicycle"') || body.includes("bicycle");

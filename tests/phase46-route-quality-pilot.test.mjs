@@ -220,7 +220,6 @@ test("Phase 4.6: Multi-modal route calculation and surface intelligence for pilo
   const roccellaTestCoords = [roccellaStart, [16.401, 38.322], roccellaEnd];
 
   t.mock.method(globalThis, "fetch", async (url) => {
-    if (String(url).includes("overpass")) return new Response("Unavailable", { status: 503 });
     return Response.json({
       trip: {
         status: 0,

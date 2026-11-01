@@ -8,6 +8,7 @@ import {
   pointDistanceMeters,
 } from "../lib/surface-aware-routing.ts";
 import { loadApi, encodePolyline } from "./helpers/load-api.mjs";
+import { mockRoadWays } from "./helpers/road-fixtures.mjs";
 
 const { GET } = await loadApi("app/api/routes/route.ts");
 
@@ -104,13 +105,11 @@ test("API route honors poc=surface-aware query parameter safely", async (t) => {
 
   let now = Date.now() + 100_000;
   t.mock.method(Date, "now", () => now);
+  mockRoadWays(t, [roughWay]);
 
   t.mock.method(globalThis, "fetch", async (url) => {
     now += 500;
     const urlStr = String(url);
-    if (urlStr.includes("overpass")) {
-      return Response.json({ elements: [roughWay] });
-    }
     if (urlStr.includes("valhalla") || urlStr.includes("project-osrm")) {
       return Response.json({ trip: trip(points, 120), alternates: [] });
     }

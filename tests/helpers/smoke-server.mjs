@@ -3,7 +3,9 @@
 // Geocoding/routing fixtures never contact public providers or persist reports.
 import http from "node:http";
 import { NextRequest } from "next/server.js";
+import { spatialRoadStore } from "../../lib/spatial-road-store.ts";
 import { loadApi, encodePolyline } from "./load-api.mjs";
+import { scopedWithWays } from "./road-fixtures.mjs";
 
 const nativeFetch = globalThis.fetch;
 const points = [[9.29, 45.53], [9.295, 45.53]];
@@ -20,11 +22,11 @@ globalThis.fetch = async (url, init) => {
   if (String(url).includes("valhalla1.openstreetmap.de/route")) {
     return Response.json({ trip: trip(points, 600), alternates: [{ trip: trip(detour, 750) }] });
   }
-  if (String(url).includes("overpass-api.de")) {
-    return Response.json({ elements: [{ id: 900000001, tags: { surface: "sett" }, geometry: points.map(([lon, lat]) => ({ lon, lat })) }] });
-  }
   return nativeFetch(url, init);
 };
+spatialRoadStore.getScopedIntelligence = scopedWithWays(spatialRoadStore.getScopedIntelligence.bind(spatialRoadStore), [
+  { id: 900000001, tags: { highway: "residential", surface: "sett" }, geometry: points.map(([lon, lat]) => ({ lon, lat })) },
+]);
 const { GET } = await loadApi("app/api/routes/route.ts");
 http.createServer(async (req, res) => {
   try {

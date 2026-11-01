@@ -3,6 +3,7 @@ import test from "node:test";
 import { NextRequest } from "next/server.js";
 import bundledSurfaces from "../data/surfaces/milan-central.json" with { type: "json" };
 import { loadApi, encodePolyline } from "./helpers/load-api.mjs";
+import { mockRoadWays } from "./helpers/road-fixtures.mjs";
 
 const { GET } = await loadApi("app/api/routes/route.ts");
 const points = [[9.29, 45.53], [9.295, 45.53]];
@@ -20,11 +21,11 @@ let now = Date.now();
 function fixtures(t, routes, elements = [roughWay]) {
   now += 100_000;
   t.mock.method(Date, "now", () => now);
+  mockRoadWays(t, elements);
   const calls = [];
   t.mock.method(globalThis, "fetch", async (url, init) => {
     now += 2_000;
     calls.push({ url: String(url), init });
-    if (String(url).includes("overpass")) return Response.json({ elements });
     assert.match(String(url), /valhalla/, "unexpected external service");
     return Response.json({ trip: routes[0], alternates: routes.slice(1).map((item) => ({ trip: item })) });
   });
@@ -73,10 +74,7 @@ test("exact budget boundary admits the lower known exposure route and reports un
 
 test("zero known exposure skips pointless detour requests and remains unknown", async (t) => {
   const emptyPoints = [[9.308, 45.549], [9.309, 45.549]];
-  const calls = fixtures(t, [trip(emptyPoints, 60)], [
-    { ...roughWay, geometry: [{ lon: -180, lat: -90 }, { lon: 180, lat: 90 }] },
-    { ...roughWay, geometry: [{ lon: null, lat: 45.53 }, { lon: 9.3, lat: 45.53 }] },
-  ]);
+  const calls = fixtures(t, [trip(emptyPoints, 60)], []);
   const response = await GET(request({ start: emptyPoints[0].join(","), end: emptyPoints[1].join(",") }));
   const data = await response.json();
   assert.equal(response.status, 200);
@@ -123,8 +121,8 @@ test("known local surfaces remain scored when a candidate leaves the endpoint qu
   assert.equal(typeof data.candidateDiagnostics[0].cyclewayMeters, "number");
 });
 
-test("real handler measures smooth and cycling exposure from live OSM attributes", async (t) => {
-  const calls = fixtures(t, [trip(points, 60)], [{
+test("real handler measures smooth and cycling exposure from OSM attributes", async (t) => {
+  fixtures(t, [trip(points, 60)], [{
     ...roughWay, tags: { highway: "residential", surface: "asphalt", cycleway: "lane" },
   }]);
   const response = await GET(request({ mode: "bicycle", maxExtraMinutes: "0" }));
@@ -137,8 +135,6 @@ test("real handler measures smooth and cycling exposure from live OSM attributes
   assert.equal(data.fast.paveMeters, 0);
   assert.equal(data.surfaceDataAvailable, true);
   assert.equal(data.candidateDiagnostics[0].smoothSurfaceMeters, data.fast.smoothSurfaceMeters);
-  const query = new URLSearchParams(calls.find((call) => call.url.includes("overpass")).init.body).get("data");
-  assert.ok(!query.includes('["surface"'), "updates must include unknown/smooth surfaces, not only rough roads");
 });
 
 test("handler does not classify generic paved as confirmed smooth", async (t) => {
@@ -170,10 +166,10 @@ test("skips redundant waypoint detour requests when surface-aware Valhalla alrea
     tags: { highway: "residential", surface: "asphalt" },
     geometry: detour.slice(1, 3).map(([lon, lat]) => ({ lon, lat })),
   };
+  mockRoadWays(t, [roughWay, smoothWay]);
   const valhallaCalls = [];
   t.mock.method(globalThis, "fetch", async (url, init) => {
     now += 2_000;
-    if (String(url).includes("overpass")) return Response.json({ elements: [roughWay, smoothWay] });
     const body = JSON.parse(init.body);
     valhallaCalls.push(body);
     if (Array.isArray(body.linear_cost_factors)) {
@@ -192,10 +188,10 @@ test("skips redundant waypoint detour requests when surface-aware Valhalla alrea
 test("continues waypoint fallback when surface-aware Valhalla returns a distinct but inadmissible candidate", async (t) => {
   now += 100_000;
   t.mock.method(Date, "now", () => now);
+  mockRoadWays(t, [roughWay]);
   const valhallaCalls = [];
   t.mock.method(globalThis, "fetch", async (url, init) => {
     now += 2_000;
-    if (String(url).includes("overpass")) return Response.json({ elements: [roughWay] });
     const body = JSON.parse(init.body);
     valhallaCalls.push(body);
     if (Array.isArray(body.linear_cost_factors)) {
@@ -209,35 +205,22 @@ test("continues waypoint fallback when surface-aware Valhalla returns a distinct
   assert.ok(valhallaCalls.length > 2, "must continue to waypoint detours when direct surface-aware candidate is inadmissible");
 });
 
-test("preserves live OSM segments across cache hits and corridor expansion in cold and warm requests", async (t) => {
-  const way = bundledSurfaces.find((segment) => segment.surfaceCategory === "probable_rough"
-    && segment.isMotorAllowed && segment.lengthMeters > 20
-    && segment.coordinates.every(([lon]) => lon < points[0][0] - 0.02));
-  assert.ok(way);
-
-  const liveCandidateRoute = [points[0], ...way.coordinates, points[1]];
-  const liveAsphaltWay = {
-    id: 99990001,
-    tags: { highway: "residential", surface: "asphalt", name: "Live Smooth Street" },
-    geometry: way.coordinates.map(([lon, lat]) => ({ lon, lat })),
+test("identical requests are deterministic and contact only the routing provider", async (t) => {
+  const smoothDetour = {
+    ...roughWay, id: 900000002, tags: { highway: "residential", surface: "asphalt" },
+    geometry: detour.slice(1, 3).map(([lon, lat]) => ({ lon, lat })),
   };
-
-  // Mock fetch for both cold and warm runs
-  fixtures(t, [trip(liveCandidateRoute, 1800)], [roughWay, liveAsphaltWay]);
-
-  // Cold request
-  const coldResponse = await GET(request());
-  assert.equal(coldResponse.status, 200);
-  const coldData = await coldResponse.json();
-
-  // Warm request (identical inputs, triggers cache hit on lastOverpassSnapshot)
-  const warmResponse = await GET(request());
-  assert.equal(warmResponse.status, 200);
-  const warmData = await warmResponse.json();
-
-  // Route scores and surface metrics must be identical between cold and warm cache hits
-  assert.equal(coldData.fast.smoothSurfaceMeters, warmData.fast.smoothSurfaceMeters);
-  assert.equal(coldData.fast.paveMeters, warmData.fast.paveMeters);
-  assert.equal(coldData.fast.probablePaveMeters, warmData.fast.probablePaveMeters);
-  assert.equal(coldData.fast.unknownSurfaceMeters, warmData.fast.unknownSurfaceMeters);
+  const calls = fixtures(t, [trip(points, 600), trip(detour, 750)], [roughWay, smoothDetour]);
+  for (const mode of ["car", "motorcycle", "bicycle"]) {
+    for (const navigation of ["0", "1"]) {
+      const scores = async () => {
+        const data = await (await GET(request({ mode, navigation }))).json();
+        return { fast: data.fast, safe: data.safe, candidates: data.candidateDiagnostics };
+      };
+      assert.deepEqual(await scores(), await scores());
+    }
+  }
+  assert.ok(calls.length > 0);
+  // The stub's own assertion would be swallowed by the provider's error handling.
+  assert.deepEqual(calls.filter((call) => !call.url.includes("valhalla")).map((call) => call.url), []);
 });

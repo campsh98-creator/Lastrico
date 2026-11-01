@@ -2,9 +2,9 @@
 
 ## Current dataset
 
-`data/milan-pave-central.json` is a local OpenStreetMap geometry extract used as a resilient
-fallback when Overpass is unavailable. The filename describes the current snapshot, not the
-long-term product identity.
+`data/milan-pave-central.json` is an older local OpenStreetMap geometry extract, kept for
+reference. Route requests score against the compact tiles in `data/surfaces/`. The filename
+describes the snapshot, not the long-term product identity.
 
 Baseline on July 30, 2026:
 
@@ -117,7 +117,8 @@ exposure does not mean a hazard-free route or a fully assessed surface.
 
 ## Updates and contributions
 
-Overpass may enrich ways in memory during planning but does not alter the local file.
+Route requests use only the bundled compact tiles and never contact Overpass; refreshing
+the data is an offline step through `scripts/osm`.
 Community reports remain separate and do not automatically change route classification
 before verification. A future generation pipeline must store its query, timestamp,
 replication sequence, counts, validation report, licence attribution, and dataset hash.

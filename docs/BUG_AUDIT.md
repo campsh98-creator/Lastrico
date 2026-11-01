@@ -68,7 +68,7 @@ without rewriting the whole interface.
 ## Initial verification limits
 
 - Real GPS accuracy requires outdoor, on-device testing.
-- Public Valhalla, OSRM, and Overpass providers have external latency and availability.
+- Public Valhalla and OSRM providers have external latency and availability. Overpass is used only by the offline data pipeline, not by route requests.
 - The beta does not use live traffic.
 - Road-condition coverage depends on available OpenStreetMap evidence.
 

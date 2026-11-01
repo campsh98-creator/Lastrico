@@ -62,7 +62,6 @@ test("real Roccella archive is selected for planner/navigation and never leaks M
   const modes = [];
   t.mock.method(globalThis, "fetch", async (url, init) => {
     now += 2_000;
-    if (String(url).includes("overpass")) return new Response("Unavailable", { status: 503 });
     const body = JSON.parse(init.body);
     modes.push(body.costing);
     return Response.json({ trip: { status: 0, summary: { length: road.lengthMeters / 1000, time: 30 }, legs: [{

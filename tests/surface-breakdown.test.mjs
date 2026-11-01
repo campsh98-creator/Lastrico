@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { NextRequest } from "next/server.js";
 import ts from "typescript";
 import { loadApi, encodePolyline } from "./helpers/load-api.mjs";
+import { mockRoadWays } from "./helpers/road-fixtures.mjs";
 import bundledRoads from "../data/surfaces/milan-central.json" with { type: "json" };
 
 const componentFile = new URL("../components/SurfaceBreakdown.tsx", import.meta.url);
@@ -69,9 +70,9 @@ test("real route handler metrics render consistently through the shared React pa
   }));
   let now = Date.now() + 100_000;
   t.mock.method(Date, "now", () => now);
+  mockRoadWays(t, elements);
   t.mock.method(globalThis, "fetch", async (url) => {
     now += 2000;
-    if (String(url).includes("overpass")) return Response.json({ elements });
     assert.match(String(url), /valhalla/);
     return Response.json({ trip: { status: 0, summary: { length: 2, time: 120 }, legs: [{
       shape: encodePolyline(coordinates),
@@ -110,8 +111,7 @@ test("archived genuine OSM segment reaches planner and navigation UI without a l
   let surfaceCalls = 0;
   t.mock.method(globalThis, "fetch", async (url) => {
     now += 2000;
-    if (String(url).includes("overpass")) { surfaceCalls++; return new Response("Unavailable", { status: 503 }); }
-    assert.match(String(url), /valhalla/);
+    if (!String(url).includes("valhalla")) surfaceCalls++;
     return Response.json({ trip: { status: 0, summary: { length: segment.lengthMeters / 1000, time: 20 }, legs: [{
       shape: encodePolyline(segment.coordinates),
       maneuvers: [{ type: 1, begin_shape_index: 0, instruction: "Parti" }, { type: 4, begin_shape_index: 1, instruction: "Arrivo" }],
@@ -132,5 +132,5 @@ test("archived genuine OSM segment reaches planner and navigation UI without a l
     assert.match(metric(html, "cycleway"), /33 m.*100%/);
     assert.match(metric(html, "unknown"), /0 m.*0%/);
   }
-  assert.equal(surfaceCalls, 1, "navigation uses only the local surface snapshot");
+  assert.equal(surfaceCalls, 0, "surface data comes only from the local snapshot");
 });

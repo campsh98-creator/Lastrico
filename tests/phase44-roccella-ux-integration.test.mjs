@@ -61,7 +61,6 @@ test("Phase 4.4: Roccella multimodal route handling and surface intelligence", a
   const testCoords = [start, [16.401, 38.320], end];
 
   t.mock.method(globalThis, "fetch", async (url) => {
-    if (String(url).includes("overpass")) return new Response("Unavailable", { status: 503 });
     return Response.json({
       trip: {
         status: 0,

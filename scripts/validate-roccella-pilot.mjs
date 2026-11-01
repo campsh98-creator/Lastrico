@@ -1,6 +1,5 @@
 /** Actual Roccella route handler validation. --live captures uncached provider responses.
- * Offline replay is the default. Overpass is deliberately unavailable in both modes:
- * surface measurements must use the reproducible local OSM archive, not changing live tags.
+ * Offline replay is the default. Surface measurements use the reproducible local OSM archive.
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -34,7 +33,6 @@ async function delay(ms, signal) {
 }
 
 globalThis.fetch = async (url, init = {}) => {
-  if (String(url).includes("overpass")) return new Response("Validation: frozen authentic OSM archive only", { status: 503 });
   const request = { url: String(url), method: init.method ?? "GET", body: init.body ?? null };
   const key = sha256(JSON.stringify(request));
   const file = new URL(`responses/${key}.json`, output);
@@ -132,7 +130,7 @@ const offRoute = evaluateOffRouteReading({ currentReadings: 1, offRouteMeters: 1
   requiredReadings: 2, now: 30_000, lastCalculationAt: 0, cooldownMs: 15_000, calculationInProgress: false });
 const summary = {
   generatedAt: new Date().toISOString(), runMode: live ? "capture-missing-real-provider-responses" : "offline-response-replay",
-  surfaceMode: "authentic local compact archive; Overpass deliberately unavailable",
+  surfaceMode: "authentic local compact archive",
   handlerSha256: sha256(await readFile(new URL("app/api/routes/route.ts", root))),
   compactSha256: sha256(await readFile(new URL("data/surfaces/roccella-compact-tiles.json", root))),
   heapMiB: { beforeHandlerImport: beforeImport / 2 ** 20, afterHandlerImport: importedHeap / 2 ** 20, end: process.memoryUsage().heapUsed / 2 ** 20 },
