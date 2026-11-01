@@ -27,6 +27,7 @@ import {
   buildLinearCostFactors,
 } from "@/lib/surface-aware-routing";
 import { fetchValhallaCustomizedRoute } from "@/lib/routing-providers";
+import { logRouteFailure } from "@/lib/server-log";
 
 import { routesShareCorridor, deduplicateRoutes as uniqueRoutes } from "@/lib/route-candidates";
 import { fastestLegalCandidate, isLegalCandidate, selectOptimizedRoute } from "@/lib/route-optimization";
@@ -824,7 +825,12 @@ export async function GET(request: NextRequest) {
         "Cache-Control": "private, no-store",
       },
     });
-  } catch {
+  } catch (error) {
+    logRouteFailure(error, {
+      mode,
+      area: area.id,
+      calculationMode: navigationRequest ? "navigation" : "planner",
+    });
     return NextResponse.json(
       {
         error: modeUnavailableMessage(mode),

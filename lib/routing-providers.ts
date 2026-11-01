@@ -1,4 +1,5 @@
 import type { RoutingProviderName, TransportMode } from "./routing-types";
+import { logProviderFailure } from "./server-log.ts";
 
 type Coordinate = [number, number];
 type SemanticDirection = "left" | "right" | "straight" | "uturn" | "roundabout" | "depart" | "arrive";
@@ -398,9 +399,13 @@ async function fetchValhallaRoutes(
         signal: combinedTimeoutSignal(signal, timeoutMs),
       }),
     );
-    if (!response.ok) return [];
+    if (!response.ok) {
+      logProviderFailure("valhalla", mode, { status: response.status });
+      return [];
+    }
     return normalizeValhallaResponse(await response.json(), mode);
-  } catch {
+  } catch (error) {
+    logProviderFailure("valhalla", mode, { error });
     return [];
   }
 }
@@ -522,9 +527,13 @@ async function fetchOsrmCarRoutes(
       cache: "no-store",
       signal: combinedTimeoutSignal(signal, timeoutMs),
     });
-    if (!response.ok) return [];
+    if (!response.ok) {
+      logProviderFailure("osrm", "car", { status: response.status });
+      return [];
+    }
     return normalizeOsrmResponse(await response.json());
-  } catch {
+  } catch (error) {
+    logProviderFailure("osrm", "car", { error });
     return [];
   }
 }
