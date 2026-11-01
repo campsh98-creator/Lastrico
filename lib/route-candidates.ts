@@ -18,35 +18,52 @@ function distanceToSegment(point: Coordinate, a: Coordinate, b: Coordinate) {
   return Math.hypot(px - ratio * dx, py - ratio * dy);
 }
 
-// Sample by distance, not vertex count: provider simplification must not change equivalence.
-function sampleGeometry(coordinates: Coordinate[]) {
-  const lengths = coordinates.slice(1).map((b, i) => distanceToSegment(b, coordinates[i], coordinates[i]));
-  const total = lengths.reduce((sum, length) => sum + length, 0);
-  if (!total) return [coordinates[0]];
-  const samples: Coordinate[] = [];
-  let segment = 0;
-  let start = 0;
-  for (let index = 0; index <= 24; index += 1) {
-    const target = total * index / 24;
-    while (segment < lengths.length - 1 && start + lengths[segment] < target) {
-      start += lengths[segment++];
-    }
-    const ratio = lengths[segment] ? (target - start) / lengths[segment] : 0;
-    const a = coordinates[segment];
-    const b = coordinates[segment + 1];
-    samples.push([a[0] + (b[0] - a[0]) * ratio, a[1] + (b[1] - a[1]) * ratio]);
-  }
-  return samples;
+function pointDistance(a: Coordinate, b: Coordinate) {
+  return distanceToSegment(a, b, b);
 }
 
-function averageDistance(samples: Coordinate[], geometry: Coordinate[]) {
-  return samples.reduce((sum, point) => {
-    let nearest = Number.POSITIVE_INFINITY;
-    for (let index = 1; index < geometry.length; index += 1) {
-      nearest = Math.min(nearest, distanceToSegment(point, geometry[index - 1], geometry[index]));
+const DIVERGENCE_SAMPLE_METERS = 25;
+const EQUIVALENT_DIVERGENCE_METERS = 60;
+const EQUIVALENT_DIVERGENCE_RATIO = 0.03;
+
+function routeLength(coordinates: Coordinate[]) {
+  return coordinates.slice(1).reduce((sum, point, index) => sum + pointDistance(point, coordinates[index]), 0);
+}
+
+/**
+ * Length of `route` lying farther than `toleranceMeters` from `other`. Samples by distance, not
+ * vertex count, so provider simplification cannot change the result. The scan resumes near the
+ * last match and stops at the first segment in tolerance, which keeps near-identical routes cheap.
+ */
+function divergentMeters(route: Coordinate[], other: Coordinate[], toleranceMeters: number) {
+  let divergent = 0;
+  let lastMatch = 1;
+  const isNear = (point: Coordinate) => {
+    for (let offset = 0; offset < other.length; offset += 1) {
+      for (const index of [lastMatch + offset, lastMatch - offset]) {
+        if (index >= 1 && index < other.length
+          && distanceToSegment(point, other[index - 1], other[index]) <= toleranceMeters) {
+          lastMatch = index;
+          return true;
+        }
+      }
     }
-    return sum + nearest;
-  }, 0) / samples.length;
+    return false;
+  };
+  for (let index = 1; index < route.length; index += 1) {
+    const a = route[index - 1];
+    const b = route[index];
+    const length = pointDistance(a, b);
+    if (!length) continue;
+    const samples = Math.max(1, Math.ceil(length / DIVERGENCE_SAMPLE_METERS));
+    for (let sample = 0; sample < samples; sample += 1) {
+      const ratio = (sample + 0.5) / samples;
+      if (!isNear([a[0] + (b[0] - a[0]) * ratio, a[1] + (b[1] - a[1]) * ratio])) {
+        divergent += length / samples;
+      }
+    }
+  }
+  return divergent;
 }
 
 export function routesAreEquivalent(a: EngineRoute, b: EngineRoute, policy: EquivalencePolicy) {
@@ -64,11 +81,15 @@ export function routesShareCorridor(a: EngineRoute, b: EngineRoute, toleranceMet
   // Matching geometry in reverse is not the same journey.
   if (distanceToSegment(a.coordinates[0], b.coordinates[0], b.coordinates[0]) >= toleranceMeters
     || distanceToSegment(a.coordinates[a.coordinates.length - 1], b.coordinates[b.coordinates.length - 1], b.coordinates[b.coordinates.length - 1]) >= toleranceMeters) return false;
-  // Both directions matter: one route may cover a subset of the other.
-  return Math.max(
-    averageDistance(sampleGeometry(a.coordinates), b.coordinates),
-    averageDistance(sampleGeometry(b.coordinates), a.coordinates),
-  ) < toleranceMeters;
+  // A mean distance would hide a detour onto a parallel street inside a long shared route, and
+  // that detour is often the one that avoids the pave. Both directions matter: one route may
+  // cover a subset of the other.
+  const allowance = Math.max(
+    EQUIVALENT_DIVERGENCE_METERS,
+    EQUIVALENT_DIVERGENCE_RATIO * Math.min(routeLength(a.coordinates), routeLength(b.coordinates)),
+  );
+  return divergentMeters(a.coordinates, b.coordinates, toleranceMeters) <= allowance
+    && divergentMeters(b.coordinates, a.coordinates, toleranceMeters) <= allowance;
 }
 
 export function deduplicateRoutes<T extends { route: EngineRoute }>(routes: T[], policy: EquivalencePolicy): T[] {

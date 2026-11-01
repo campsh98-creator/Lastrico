@@ -205,3 +205,27 @@ test("mathematical continuity and monotonicity of the 1.25x cap across the thres
   // At deltaUnk = 162m: burden = 180.75 > 180 -> burden + 20 = 200.75 > 200 -> rejected, fast wins!
   assert.equal(select([fast, candidateWithUnknown(162)]).safe, fast);
 });
+
+test("a pave-free parallel detour inside a long shared route is selected", () => {
+  const metersPerLon = 111_320 * Math.cos(45.465 * Math.PI / 180);
+  const at = (x, y) => [9.18 + x / metersPerLon, 45.465 + y / 110_540];
+  const straight = [];
+  const detoured = [];
+  for (let x = 0; x <= 3_000; x += 20) {
+    straight.push(at(x, 0));
+    detoured.push(at(x, x >= 900 && x <= 2_100 ? 70 : 0));
+  }
+  const engineRoute = (coordinates, duration) => ({
+    coordinates, duration, distance: 3_000, instructions: [], provider: "valhalla-fossgis", profile: "auto",
+  });
+  const scored = (coordinates, duration, paveMeters) => ({
+    route: engineRoute(coordinates, duration),
+    paveMeters,
+    riskMeters: paveMeters,
+    surfaceScore: { paveMeters, smoothMeters: 3_000 - paveMeters, unknownMeters: 0, totalMeters: 3_000 },
+  });
+  const fast = scored(straight, 360, 1_200);
+  const detour = scored(detoured, 390, 0);
+  const { safe } = selectOptimizedRoute([fast, detour], fast, "car", "strong", 5, policy, equivalent);
+  assert.equal(safe, detour);
+});
