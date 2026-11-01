@@ -81,8 +81,9 @@ const OSRM_TIMEOUT_MS = 7_000;
 export const ROUTE_BUDGET_MS = 18_000;
 export const NAVIGATION_ROUTE_BUDGET_MS = 5_500;
 const VALHALLA_MIN_INTERVAL_MS = 1_050;
-let valhallaQueue: Promise<void> = Promise.resolve();
-let lastValhallaStartedAt = 0;
+// Pacing is per isolate: other isolates keep their own slots, so this is best effort
+// against the provider's one-request-per-second policy, not a global guarantee.
+let nextValhallaSlotAt = 0;
 let lastValhallaFetch: typeof fetch | null = null;
 
 export const ROUTING_PROFILES = { car: "auto", motorcycle: "motorcycle", bicycle: "bicycle" } as const;
@@ -331,30 +332,23 @@ async function runValhallaLimited<T>(
   reserveMs: number,
   task: (timeoutMs: number) => Promise<T>,
 ) {
-  const remainingMs = deadline - Date.now() - reserveMs;
+  const now = Date.now();
+  const remainingMs = deadline - now - reserveMs;
   if (remainingMs < 500 || signal.aborted) throw new Error("Budget routing esaurito");
-  const queueSignal = combinedTimeoutSignal(signal, remainingMs);
-  let releaseQueue: () => void = () => {};
-  const previousRequest = valhallaQueue;
-  const currentTurn = new Promise<void>((resolve) => { releaseQueue = resolve; });
-  // An expired queued turn must not release the request still ahead of it.
-  valhallaQueue = previousRequest.then(() => currentTurn);
-  try {
-    await waitWithSignal(previousRequest, queueSignal);
-    if (lastValhallaFetch !== globalThis.fetch) {
-      lastValhallaFetch = globalThis.fetch;
-      lastValhallaStartedAt = 0;
-    }
-    const waitMs = Math.max(0, VALHALLA_MIN_INTERVAL_MS - (Date.now() - lastValhallaStartedAt));
-    if (waitMs) await abortableDelay(waitMs, queueSignal);
-    queueSignal.throwIfAborted();
-    const timeoutMs = Math.min(VALHALLA_TIMEOUT_MS, deadline - Date.now() - reserveMs);
-    if (timeoutMs < 500) throw new Error("Budget routing esaurito");
-    lastValhallaStartedAt = Date.now();
-    return await task(timeoutMs);
-  } finally {
-    releaseQueue();
+  if (lastValhallaFetch !== globalThis.fetch) {
+    lastValhallaFetch = globalThis.fetch;
+    nextValhallaSlotAt = 0;
   }
+  // Slots limit how often calls start, not how many are in flight. Nothing here waits on
+  // another request's promise, which a cancelled Worker request might never settle.
+  const slotAt = Math.max(now, nextValhallaSlotAt);
+  if (deadline - slotAt - reserveMs < 500) throw new Error("Budget routing esaurito");
+  nextValhallaSlotAt = slotAt + VALHALLA_MIN_INTERVAL_MS;
+  if (slotAt > now) await abortableDelay(slotAt - now, signal);
+  signal.throwIfAborted();
+  const timeoutMs = Math.min(VALHALLA_TIMEOUT_MS, deadline - Date.now() - reserveMs);
+  if (timeoutMs < 500) throw new Error("Budget routing esaurito");
+  return task(timeoutMs);
 }
 
 async function fetchValhallaRoutes(

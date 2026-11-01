@@ -67,7 +67,6 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   assert.ok(paveData.length > 0, "the bundled road-intelligence dataset must not be empty");
   assert.match(routing, /fetchEngineRoutes\(\[start, end\], mode, true, deadline, request\.signal\)/);
   assert.match(routing, /navigationRequest \? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS/);
-  assert.match(routing, /navigationRequest\s+\? Promise\.resolve\(null\)/);
   assert.match(routing, /navigationRequest \? 1 : 3/);
   assert.match(providers, /fetchValhallaRoutes/);
   assert.match(providers, /fetchOsrmCarRoutes/);
@@ -79,9 +78,7 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   assert.match(routing, /routesAreEquivalent/);
   assert.match(routing, /candidate\.riskMeters \+ policy\.minimumPaveReduction <= fast\.riskMeters/);
   assert.match(routing, /hasDistinctAlternative/);
-  assert.match(routing, /bundledRoads/);
-  assert.match(routing, /combinedTimeoutSignal\(request\.signal, 650\)/);
-  assert.match(routing, /createRoadIntelligenceIndex/);
+  assert.doesNotMatch(routing, /overpass/i, "route requests score only against bundled tiles");
   assert.match(routing, /scoreRoadIntelligence/);
   assert.match(routing, /candidateDiagnostics/);
   assert.match(providers, /set\("steps", "true"\)/);

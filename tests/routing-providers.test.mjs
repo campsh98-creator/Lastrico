@@ -166,6 +166,37 @@ test("queued requests honor the deadline even while a previous provider remains 
   }
 });
 
+test("provider calls start at least one interval apart and in request order", async (t) => {
+  const starts = [];
+  t.mock.method(globalThis, "fetch", async (_url, init) => {
+    starts.push({ at: performance.now(), lon: JSON.parse(init.body).locations[0].lon });
+    return json({ trip: trip() });
+  });
+  const origins = [9.1, 9.2, 9.3];
+  const routes = await Promise.all(origins.map((lon) =>
+    fetchEngineRoutes([[lon, 45.46], coordinates[1]], "bicycle")));
+  assert.ok(routes.every((result) => result.length === 1));
+  assert.deepEqual(starts.map((start) => start.lon), origins);
+  for (let index = 1; index < starts.length; index += 1) {
+    // Timers may fire marginally early relative to the wall clock used for slots.
+    assert.ok(starts[index].at - starts[index - 1].at >= 1_040, `gap ${index}: ${starts[index].at - starts[index - 1].at}`);
+  }
+});
+
+// A cancelled Worker request might never run its cleanup, so later requests must not depend on it.
+test("a provider call that never settles does not block later requests", { timeout: 5000 }, async (t) => {
+  let calls = 0;
+  t.mock.method(globalThis, "fetch", async () => {
+    calls += 1;
+    return calls === 1 ? new Promise(() => {}) : json({ trip: trip() });
+  });
+  void fetchEngineRoutes(coordinates, "bicycle");
+  await nextTurn();
+  const routes = await fetchEngineRoutes(coordinates, "bicycle");
+  assert.equal(routes.length, 1);
+  assert.equal(calls, 2);
+});
+
 test("cancelled and expired requests make no network calls", async (t) => {
   const mock = t.mock.method(globalThis, "fetch", async () => { throw new Error("must not fetch"); });
   const controller = new AbortController(); controller.abort();
