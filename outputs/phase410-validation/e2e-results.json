@@ -1,0 +1,125 @@
+{
+  "base": "http://127.0.0.1:8799",
+  "results": [
+    {
+      "name": "dark: no horizontal overflow on planner",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dark: savings text has no stray dollar",
+      "ok": true,
+      "detail": "-604 m (-40%)"
+    },
+    {
+      "name": "dark: selected card text reaches 4.5:1",
+      "ok": true,
+      "detail": "{\"bg\":\"rgb(18, 48, 42)\",\"title\":12.78331445874112,\"detail\":6.993569081732602,\"time\":12.78331445874112,\"extra\":6.993569081732602}"
+    },
+    {
+      "name": "light: no horizontal overflow on planner",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "light: savings text has no stray dollar",
+      "ok": true,
+      "detail": "-604 m (-40%)"
+    },
+    {
+      "name": "light: selected card text reaches 4.5:1",
+      "ok": true,
+      "detail": "{\"bg\":\"rgb(244, 250, 248)\",\"title\":15.711896025012022,\"detail\":6.097599834159504,\"time\":15.711896025012022,\"extra\":6.097599834159504}"
+    },
+    {
+      "name": "simulation distance decreases monotonically",
+      "ok": true,
+      "detail": "2700,2700,2700,2500,2300,2100,2100,2000,1800,1600,1400,1200,1000,660,640,500,420,400,370,350,300,280,240,170,150,80,40"
+    },
+    {
+      "name": "simulation reaches arrival",
+      "ok": true,
+      "detail": "●Sei arrivatoNavigazione Lastrico terminata×"
+    },
+    {
+      "name": "recorder off: nothing stored during GPS navigation",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "recorder off: HUD says position is not saved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "recorder off: no REC indicator",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "recorder control is unchecked by default",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "recorder control turns on",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "recorder on: REC indicator is visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "recorder on: HUD discloses local trace",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "GPS journey confirms arrival",
+      "ok": true,
+      "detail": "●Sei arrivatoNavigazione Lastrico terminata×"
+    },
+    {
+      "name": "trace is listed after the journey",
+      "ok": true,
+      "detail": "01/11/26, 16:12 · 128 rilevazioniEsportaElimina"
+    },
+    {
+      "name": "export produces a versioned trace",
+      "ok": true,
+      "detail": "lastrico-gps-trace-2026-11-01-15-12.json · 128 fixes · 55 KB"
+    },
+    {
+      "name": "the browser's trace replays with zero decision differences",
+      "ok": true,
+      "detail": "{\"fixes\":128,\"accepted\":128,\"reroutes\":0,\"largestAdvance\":27.6,\"differences\":0}"
+    },
+    {
+      "name": "no trace data in any network request",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "delete removes every stored trace key",
+      "ok": true,
+      "detail": "[\"lastrico-gps-trace-index\"]"
+    },
+    {
+      "name": "landscape: no horizontal overflow on planner",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "landscape: no horizontal overflow in HUD",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no console errors or uncaught exceptions",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import {
   distanceMeters,
   NAVIGATION_POLICY,
   processGpsFix,
+  withClearedReadings,
   withReplacementRoute,
   type GpsFix,
   type NavigationFixContext,
@@ -91,6 +92,9 @@ export type TraceSummary = {
 };
 
 export type TraceRecorderStatus = "idle" | "recording" | "suspended" | "full";
+
+/** A geolocation error clears the reading counters between fixes, which replay must reproduce. */
+export const READINGS_CLEARED_EVENT = "readings-cleared";
 
 const rounded = (value: number) => Math.round(value * 10) / 10;
 
@@ -346,8 +350,10 @@ export function replayGpsTrace(trace: GpsTrace): TraceReplayReport {
   let state = createNavigationFixState();
   let active: { route: TraceRoute; model: ReturnType<typeof buildRouteProgressModel<ProgressInstruction & { id?: string }>> } | null = null;
   let nextRoute = 0;
+  const clearedAt = new Set(trace.events.filter((event) => event.type === READINGS_CLEARED_EVENT).map((event) => event.atFix));
 
   trace.fixes.forEach((fix, index) => {
+    if (clearedAt.has(index)) state = withClearedReadings(state);
     while (nextRoute < trace.routes.length && trace.routes[nextRoute].atFix <= index) {
       const route = trace.routes[nextRoute];
       active = { route, model: buildRouteProgressModel(route.coordinates, route.instructions, distanceMeters) };

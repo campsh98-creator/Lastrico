@@ -13,6 +13,7 @@ import {
   listGpsTraces,
   MAX_STORED_TRACES,
   MAX_TRACE_FIXES,
+  READINGS_CLEARED_EVENT,
   readGpsTrace,
   replayGpsTrace,
 } from "../lib/gps-trace.ts";
@@ -20,6 +21,7 @@ import {
   createNavigationFixState,
   distanceMeters,
   processGpsFix,
+  withClearedReadings,
 } from "../lib/navigation-fix-processor.ts";
 import { PILOT_AREAS } from "../lib/pilot-areas.ts";
 import { buildRouteProgressModel } from "../lib/route-progress.ts";
@@ -130,6 +132,40 @@ test("a changed decision is reported as a difference", async () => {
   const trace = JSON.parse(await readFile(fixturePath, "utf8"));
   trace.decisions[5].progressMeters += 500;
   assert.equal(replayGpsTrace(trace).differences.length, 1);
+});
+
+test("a geolocation error between fixes is reproduced by replay", () => {
+  const storage = memoryStorage();
+  const recorder = createGpsTraceRecorder(storage);
+  recorder.start(meta("errors"));
+  recorder.addRoute(route());
+  const model = buildRouteProgressModel(coordinates, instructions, distanceMeters);
+  const end = coordinates[1];
+  let state = createNavigationFixState();
+  // Arrival needs two consecutive readings, so an error in between postpones it by one fix.
+  [[9.185, 45.465], end, end, end].forEach((coordinate, index) => {
+    if (index === 2) {
+      state = withClearedReadings(state);
+      recorder.recordEvent(READINGS_CLEARED_EVENT, "2");
+    }
+    const timestamp = 1_000_000 + index * 20_000;
+    const fix = { coordinate, accuracy: 10, timestamp, heading: null, speed: null };
+    const context = {
+      now: timestamp,
+      mode: "car",
+      bounds: PILOT_AREAS.milan.bounds,
+      route: { model, minutes: 2, distanceKm: 0.78 },
+      lastCalculationAt: 0,
+      calculationInProgress: false,
+    };
+    const decision = processGpsFix(state, fix, context);
+    state = decision.state;
+    recorder.recordFix(fix, context, decision);
+  });
+  recorder.stop();
+  const report = replayGpsTrace(readGpsTrace(storage, "errors"));
+  assert.deepEqual(report.differences, []);
+  assert.equal(report.arrived, true);
 });
 
 test("a replacement route is replayed from the fix where it became active", () => {

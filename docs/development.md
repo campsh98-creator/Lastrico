@@ -80,6 +80,28 @@ documentation must not claim support for a new area before geocoding, routing,
 road-surface data, GPS, report boundaries, mobile behaviour, and production smoke tests
 have passed for that region.
 
+## Mobile end-to-end check
+
+`scripts/e2e-mobile-chrome.mjs` drives real Chrome at phone sizes through DevTools: route
+comparison in both themes, simulation to arrival, and a GPS journey with the trace recorder off
+and on. It calls the real routing provider, so run it sparingly. It does not replace the
+physical iPhone checklist.
+
+```bash
+npm run build && node scripts/e2e-mobile-chrome.mjs
+```
+
+## Replaying a GPS trace
+
+Exported traces can be replayed through the same per-fix logic the app runs:
+
+```bash
+node scripts/replay-gps-trace.mjs outputs/field-traces/<trace>.json
+```
+
+Real traces reveal where someone was. Keep them in `outputs/field-traces/`, which git ignores,
+and never commit them.
+
 ## Pilot deployment
 
 The isolated pilot runs on the `lastrico-pilot` Worker. `npm run build` and `npm test` always

@@ -232,7 +232,7 @@ test("keeps the installed PWA and automatic theme release-ready", async () => {
   assert.match(page, /hour >= 7 && hour < 19/);
   assert.match(page, /lastrico-theme/);
   assert.match(layout, /appleWebApp/);
-  assert.match(serviceWorker, /lastrico-v12/);
+  assert.match(serviceWorker, /lastrico-v13/);
   assert.match(serviceWorker, /self\.skipWaiting\(\)/);
   assert.match(serviceWorker, /self\.clients\.claim\(\)/);
   assert.match(serviceWorker, /url\.pathname\.startsWith\("\/api\/"\)/);

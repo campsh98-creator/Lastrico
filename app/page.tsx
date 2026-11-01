@@ -65,6 +65,7 @@ import {
   createGpsTraceRecorder,
   deleteGpsTrace,
   listGpsTraces,
+  READINGS_CLEARED_EVENT,
   readGpsTrace,
   type TraceRecorderStatus,
   type TraceStorage,
@@ -1918,6 +1919,8 @@ export default function Home() {
     setReportEnd(null);
     setReportSubmitError("");
     setDirectionsOpen(false);
+    // The panel opened to reach the recorder would otherwise cover the map during the drive.
+    setShowDiagnostics(false);
     const session = navigationSessionRef.current + 1;
     navigationSessionRef.current = session;
     journeyModeRef.current = mode;
@@ -1997,6 +2000,7 @@ export default function Home() {
       (error) => {
         if (session !== navigationSessionRef.current) return;
         navigationFixStateRef.current = withClearedReadings(navigationFixStateRef.current);
+        traceRecorderRef.current?.recordEvent(READINGS_CLEARED_EVENT, String(error.code));
         if (error.code === error.PERMISSION_DENIED) {
           finishNavigation();
           recordDiagnostic({ type: "permission-denied" });

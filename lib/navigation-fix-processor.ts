@@ -214,13 +214,18 @@ export function processGpsFix<T extends ProgressInstruction>(
 
   const { model, minutes, distanceKm } = context.route;
   const policy = NAVIGATION_POLICY[context.mode];
-  const progress = calculateRouteProgress(model, position, minutes, state.progressMeters, {
+  let progress = calculateRouteProgress(model, position, minutes, state.progressMeters, {
     accuracy,
     elapsedSeconds,
     maxSpeedMps: context.mode === "bicycle" ? 22 : 45,
     headingDegrees: movingWithReportedHeading ? reportedHeading : null,
     pendingJump: state.pendingJump,
   });
+  // The first fix has no earlier progress to contradict: someone who starts part way along the
+  // route is located there, not held back or sent to a reroute.
+  if (state.timestamp === null && progress.offRouteMeters > Math.max(45, accuracy * 1.8)) {
+    progress = calculateRouteProgress(model, position, minutes, null);
+  }
   next.progressMeters = progress.routeProgressMeters;
   next.pendingJump = progress.pendingJump;
 

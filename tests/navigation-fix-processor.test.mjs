@@ -145,6 +145,16 @@ test("the elapsed time is the real interval between accepted fixes", () => {
   assert.equal(session.fix(434, 0, { elapsed: 30 }).elapsedSeconds, 30);
 });
 
+test("a first fix part way along the route is located there at once", () => {
+  const session = driver(buildRoute([[3000, 0]]));
+  session.fix(800, 2);
+  assert.ok(Math.abs(session.state.progressMeters - 800) < 5, `progress ${session.state.progressMeters}`);
+  assert.equal(session.state.offRouteReadings, 0);
+  session.fix(814, 2);
+  assert.ok(session.state.progressMeters > 800);
+  assert.equal(session.reroutes, 0);
+});
+
 test("leaving the route triggers a reroute within the required readings", () => {
   const session = driver(buildRoute([[2000, 0]]));
   for (let x = 0; x <= 280; x += 14) session.fix(x, 2);

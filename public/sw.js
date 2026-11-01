@@ -1,4 +1,4 @@
-const CACHE = "lastrico-v12";
+const CACHE = "lastrico-v13";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.svg"];
 
 self.addEventListener("install", (event) => {
