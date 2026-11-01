@@ -6,15 +6,15 @@ import { dirname, join } from "node:path";
 import {
   createNavigationDiagnostics,
   evaluateGpsSignalStall,
-  evaluateOffRouteReading,
   evaluateTimedGpsReading,
   recordNavigationDiagnosticEvent,
-  smoothGpsCoordinate,
 } from "../lib/navigation-state.ts";
+import { buildRouteProgressModel } from "../lib/route-progress.ts";
 import {
-  buildRouteProgressModel,
-  calculateRouteProgress,
-} from "../lib/route-progress.ts";
+  createNavigationFixState,
+  NAVIGATION_POLICY,
+  processGpsFix,
+} from "../lib/navigation-fix-processor.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -36,12 +36,6 @@ function distanceMeters([lon1, lat1], [lon2, lat2]) {
       Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
-
-const NAVIGATION_POLICY = {
-  car: { arrivalMeters: 35, offRouteMeters: 55, readings: 2, speedLimitMps: 70 },
-  motorcycle: { arrivalMeters: 30, offRouteMeters: 50, readings: 2, speedLimitMps: 70 },
-  bicycle: { arrivalMeters: 20, offRouteMeters: 38, readings: 3, speedLimitMps: 22 },
-};
 
 /**
  * Generate dense, realistic GPS trace points sampled at speedMps along a polyline
@@ -76,7 +70,7 @@ function generateDenseRouteTrace(coordinates, speedMps = 10, fixIntervalSec = 1)
 }
 
 /**
- * Replay harness that steps through synthetic GPS fixes along a route
+ * Replay harness that steps synthetic GPS fixes through the processor the app runs.
  */
 class NavigationReplayHarness {
   constructor(route, mode = "car") {
@@ -85,24 +79,12 @@ class NavigationReplayHarness {
     this.policy = NAVIGATION_POLICY[mode];
     this.model = buildRouteProgressModel(route.coordinates, route.instructions, distanceMeters);
     this.diagnostics = createNavigationDiagnostics();
+    this.state = createNavigationFixState();
 
     this.sessionActive = true;
     this.sessionStartedAt = 1_000_000;
     this.currentTime = this.sessionStartedAt;
-
-    this.currentPosition = null;
-    this.currentHeading = 0;
-    this.currentAccuracy = 5;
-    this.lastRouteProgressMeters = 0;
-    this.journeyTravelledMeters = 0;
-
-    this.previousPosition = null;
-    this.previousAccuracy = null;
-    this.previousTimestamp = null;
     this.lastValidGpsFixAt = null;
-
-    this.offRouteReadings = 0;
-    this.arrivalReadings = 0;
     this.lastCalculationAt = 0;
     this.calculationInProgress = false;
 
@@ -111,117 +93,66 @@ class NavigationReplayHarness {
     this.history = [];
   }
 
-  processFix({ coordinate, accuracy = 5, timestamp = this.currentTime, heading = 0 }) {
+  get lastRouteProgressMeters() { return this.state.progressMeters; }
+  get offRouteReadings() { return this.state.offRouteReadings; }
+
+  processFix({ coordinate, accuracy = 5, timestamp = this.currentTime, heading = null, speed = null }) {
     this.currentTime = timestamp;
-
-    // 1. Validate fix
-    const timedResult = evaluateTimedGpsReading({
-      coordinate,
-      accuracy,
-      timestamp,
+    const previousProgress = this.state.progressMeters;
+    const decision = processGpsFix(this.state, { coordinate, accuracy, timestamp, heading, speed }, {
       now: this.currentTime,
-      previousCoordinate: this.previousPosition,
-      previousAccuracy: this.previousAccuracy,
-      previousTimestamp: this.previousTimestamp,
+      mode: this.mode,
       bounds: MILAN_BOUNDS,
-      distanceMeters,
-      maximumSpeedMetersPerSecond: this.policy.speedLimitMps,
+      route: {
+        model: this.model,
+        minutes: this.route.minutes || 10,
+        distanceKm: this.route.distance || 1,
+      },
+      lastCalculationAt: this.lastCalculationAt,
+      calculationInProgress: this.calculationInProgress,
     });
+    this.state = decision.state;
 
-    if (!timedResult.accepted) {
-      this.diagnostics = recordNavigationDiagnosticEvent(this.diagnostics, {
-        type: "fix-rejected",
-        reason: timedResult.reason,
-      });
-      return { accepted: false, reason: timedResult.reason };
+    if (decision.outcome !== "accepted") {
+      const reason = decision.outcome === "outside" ? "outside" : decision.reason;
+      this.diagnostics = recordNavigationDiagnosticEvent(this.diagnostics, { type: "fix-rejected", reason });
+      return { accepted: false, reason };
     }
 
     this.diagnostics = recordNavigationDiagnosticEvent(this.diagnostics, { type: "fix-accepted" });
-    this.previousTimestamp = timestamp;
     this.lastValidGpsFixAt = timestamp;
 
-    // 2. Smooth coordinate
-    const filteredCoordinate = smoothGpsCoordinate(this.previousPosition, coordinate, accuracy);
-    if (this.previousPosition) {
-      this.journeyTravelledMeters += distanceMeters(this.previousPosition, filteredCoordinate);
-    }
-    this.previousPosition = filteredCoordinate;
-    this.previousAccuracy = accuracy;
-    this.currentPosition = filteredCoordinate;
-    this.currentAccuracy = accuracy;
-    this.currentHeading = heading;
-
-    // 3. Calculate progress
-    const progress = calculateRouteProgress(
-      this.model,
-      filteredCoordinate,
-      this.route.minutes || 10,
-      this.lastRouteProgressMeters,
-    );
-
-    // Monotonicity assertion: progress must never jump backwards
+    const { progress } = decision;
     assert.ok(
-      progress.routeProgressMeters >= this.lastRouteProgressMeters - 0.001,
-      `Progress jumped backwards: ${progress.routeProgressMeters} < ${this.lastRouteProgressMeters}`
+      progress.routeProgressMeters >= previousProgress - 0.001,
+      `Progress jumped backwards: ${progress.routeProgressMeters} < ${previousProgress}`,
     );
-    this.lastRouteProgressMeters = progress.routeProgressMeters;
-
-    // Instruction distance non-negativity
     assert.ok(
       progress.instructionDistance >= 0,
-      `Instruction distance cannot be negative: ${progress.instructionDistance}`
+      `Instruction distance cannot be negative: ${progress.instructionDistance}`,
     );
 
-    // 4. Evaluate arrival
-    const routeEnd = this.route.coordinates[this.route.coordinates.length - 1];
-    const arrivalTolerance = this.policy.arrivalMeters + Math.min(accuracy, 25);
-    const distToEnd = distanceMeters(filteredCoordinate, routeEnd);
-    const minimumTravelBeforeArrival = Math.min(80, (this.route.distance || 1) * 100);
-
-    const isArrivalReading = Boolean(
-      routeEnd &&
-      distToEnd <= arrivalTolerance &&
-      progress.remainingMeters <= arrivalTolerance * 1.5 &&
-      this.journeyTravelledMeters >= minimumTravelBeforeArrival
-    );
-
-    this.arrivalReadings = isArrivalReading ? this.arrivalReadings + 1 : 0;
-    if (this.arrivalReadings >= 2) {
+    if (decision.arrived) {
       this.arrived = true;
       this.sessionActive = false;
     }
-
-    // 5. Evaluate off-route
-    const offRouteDecision = evaluateOffRouteReading({
-      currentReadings: this.offRouteReadings,
-      offRouteMeters: progress.offRouteMeters,
-      thresholdMeters: this.policy.offRouteMeters + Math.min(accuracy, 60),
-      requiredReadings: this.policy.readings,
-      now: this.currentTime,
-      lastCalculationAt: this.lastCalculationAt,
-      cooldownMs: 15_000,
-      calculationInProgress: this.calculationInProgress,
-    });
-
-    const prevOffRoute = this.offRouteReadings;
-    this.offRouteReadings = offRouteDecision.readings;
-    if (prevOffRoute === 0 && offRouteDecision.readings > 0) {
+    if (decision.offRouteStarted) {
       this.diagnostics = recordNavigationDiagnosticEvent(this.diagnostics, { type: "off-route" });
     }
-
-    if (offRouteDecision.shouldRecalculate) {
+    if (decision.shouldRecalculate) {
       this.reroutesTriggered++;
       this.lastCalculationAt = this.currentTime;
       this.diagnostics = recordNavigationDiagnosticEvent(this.diagnostics, { type: "reroute-start" });
     }
 
+    const routeEnd = this.route.coordinates[this.route.coordinates.length - 1];
     const state = {
       timestamp,
       accepted: true,
       progress,
       arrived: this.arrived,
-      offRouteDecision,
-      distToEnd,
+      offRouteDecision: { readings: this.state.offRouteReadings, shouldRecalculate: decision.shouldRecalculate },
+      distToEnd: distanceMeters(decision.position, routeEnd),
     };
     this.history.push(state);
     return state;

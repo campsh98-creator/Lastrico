@@ -60,7 +60,7 @@ test("Phase 4.4: Roccella multimodal route handling and surface intelligence", a
   const end = [16.39719, 38.31841];
   const testCoords = [start, [16.401, 38.320], end];
 
-  t.mock.method(globalThis, "fetch", async (url) => {
+  t.mock.method(globalThis, "fetch", async () => {
     return Response.json({
       trip: {
         status: 0,

@@ -19,6 +19,7 @@ import {
   buildRouteProgressModel,
   calculateRouteProgress,
 } from "../lib/route-progress.ts";
+import { simulationProgressMeters } from "../lib/navigation-fix-processor.ts";
 import {
   directionGlyph,
 } from "../lib/navigation-instructions.ts";
@@ -427,12 +428,13 @@ test("Flow 4: Navigation Lifecycle — Simulation Mode Step Progression & Arriva
   assert.equal(progress.instruction?.id, "step-1", "First instruction must be active");
   assert.equal(directionGlyph(progress.instruction?.direction), "↑", "Straight glyph must be ↑");
 
-  // Mid-journey
-  progress = calculateRouteProgress(model, coordinates[1], 5.0, progress.routeProgressMeters);
+  // Simulation walks the route's own vertices, so each step carries its exact anchor.
+  progress = calculateRouteProgress(model, coordinates[1], 5.0, simulationProgressMeters(model, 1));
   assert.ok(progress.routeProgressMeters > 100 && progress.routeProgressMeters < 800, "Midpoint progress meters must advance");
 
   // Arrival
-  progress = calculateRouteProgress(model, coordinates[coordinates.length - 1], 5.0, progress.routeProgressMeters);
+  const lastIndex = coordinates.length - 1;
+  progress = calculateRouteProgress(model, coordinates[lastIndex], 5.0, simulationProgressMeters(model, lastIndex));
   assert.equal(progress.routeProgressMeters, model.totalMeters, "Final progress meters must equal total route distance");
   assert.equal(progress.remainingMeters, 0, "Remaining meters at arrival must be 0");
   assert.equal(progress.remainingMinutes, 0, "Remaining minutes at arrival must be 0");
@@ -538,7 +540,8 @@ test("Flow 6: Adversarial Navigation Resilience (U-Turn, Monotonicity & Offline 
   const model = buildRouteProgressModel(coordinates, [], distanceFn);
 
   // Driver moves forward to segment 3 (around 312m progress)
-  const forwardProgress = calculateRouteProgress(model, [9.1840, 45.4700], 5.0, 0);
+  // A null anchor locates the first fix: 312 m from an anchor of 0 is not a plausible single step.
+  const forwardProgress = calculateRouteProgress(model, [9.1840, 45.4700], 5.0, null);
   assert.ok(forwardProgress.routeProgressMeters > 200, "Progress must be advanced");
 
   // Driver performs a 180° U-turn and moves backward to [9.1810, 45.4700] (~234m backward)

@@ -6,6 +6,7 @@ const pageUrl = new URL("../app/page.tsx", import.meta.url);
 const cssUrl = new URL("../app/globals.css", import.meta.url);
 const geocodeUrl = new URL("../app/api/geocode/route.ts", import.meta.url);
 const providersUrl = new URL("../lib/routing-providers.ts", import.meta.url);
+const fixProcessorUrl = new URL("../lib/navigation-fix-processor.ts", import.meta.url);
 const routingUrl = new URL("../app/api/routes/route.ts", import.meta.url);
 const paveDataUrl = new URL("../data/surfaces/milan-central.json", import.meta.url);
 const layoutUrl = new URL("../app/layout.tsx", import.meta.url);
@@ -126,7 +127,7 @@ test("keeps mobile route controls reachable and blocks stale navigation", async 
   assert.match(page, /Ricalcola per navigare/);
   assert.match(page, /const routeForJourney = selectedRouteRef\.current \?\? selectedRoute/);
   assert.match(page, /const simulationRoute = selectedRouteRef\.current/);
-  assert.match(page, /lastRouteProgressRef\.current = 0;\s+selectedRouteRef\.current = nextSelectedRoute/);
+  assert.match(page, /withReplacementRoute\(navigationFixStateRef\.current, 0\);\s+setGpsProgress\(null\);\s+selectedRouteRef\.current = nextSelectedRoute/);
   assert.match(routing, /routeProblemSegments/);
 });
 
@@ -160,7 +161,7 @@ test("provides real, persistent Auto Moto and Bici product modes", async () => {
   assert.match(page, /routeRequestRef\.current\?\.controller\.abort\(\)/);
   assert.match(page, /preserveRoute: activeRouteRef\.current/);
   assert.match(page, /disabled=\{value === "routes" && !isLiveResult\}/);
-  assert.match(page, /navigationPolicy\[mode\]/);
+  assert.match(await readFile(fixProcessorUrl, "utf8"), /NAVIGATION_POLICY\[context\.mode\]/);
   assert.match(page, /data-testid="navigation-hud"/);
   assert.match(page, /Fermati in sicurezza prima di usare lo schermo/);
   assert.match(css, /\.transport-selector/);
@@ -173,15 +174,17 @@ test("separates real GPS navigation from the automatic route simulation", async 
     readFile(cssUrl, "utf8"),
   ]);
 
+  const fixProcessor = await readFile(fixProcessorUrl, "utf8");
   assert.match(page, /navigator\.geolocation\.watchPosition/);
   assert.match(page, /calculateRouteProgress/);
-  assert.match(page, /smoothGpsCoordinate/);
-  assert.match(page, /smoothHeading/);
+  assert.match(fixProcessor, /smoothGpsCoordinate/);
+  assert.match(fixProcessor, /smoothHeading/);
   assert.match(page, /formatArrivalTime/);
   assert.match(page, /arrivo stimato/);
-  assert.match(page, /arrivalReadingsRef\.current >= 2/);
-  assert.match(page, /evaluateOffRouteReading/);
-  assert.match(page, /15_000/);
+  assert.match(fixProcessor, /next\.arrivalReadings >= 2/);
+  assert.match(fixProcessor, /evaluateOffRouteReading/);
+  assert.match(page, /processGpsFix/);
+  assert.match(fixProcessor, /15_000/);
   assert.match(page, /startNavigation\("gps"\)/);
   assert.match(page, /startNavigation\("simulation"\)/);
   assert.match(page, /shouldRunSimulationTimer\(journeyMode\)/);
@@ -191,7 +194,7 @@ test("separates real GPS navigation from the automatic route simulation", async 
   assert.match(page, /Avanzamento automatico · GPS non usato/);
   assert.doesNotMatch(page, /"preview"|ANTEPRIMA/);
   assert.match(page, /navigationSessionRef\.current/);
-  assert.match(page, /evaluateTimedGpsReading/);
+  assert.match(fixProcessor, /evaluateTimedGpsReading/);
   assert.match(page, /shouldApplyRouteResponse/);
   assert.match(page, /routeRequestRef\.current\?\.controller\.abort\(\)/);
   assert.match(page, /speechSynthesis/);

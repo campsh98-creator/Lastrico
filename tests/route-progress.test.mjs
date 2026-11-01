@@ -105,11 +105,13 @@ test("looping route preserves monotonic instruction progress and does not jump a
   // On the second pass approaching from [9.19, 45.464] -> [9.19, 45.462] -> [9.188, 45.462],
   // progress must advance smoothly along the final leg instead of snapping back to the first pass.
   const secondPassBeforeCrossing = calculateRouteProgress(model, [9.19, 45.4625], 10, 750);
+  // These fixes are 133 m apart, so state the elapsed time that makes that distance plausible.
   const secondPassAfterCrossing = calculateRouteProgress(
     model,
     [9.189, 45.462],
     10,
     secondPassBeforeCrossing.routeProgressMeters,
+    { elapsedSeconds: 8 },
   );
   assert.ok(secondPassAfterCrossing.routeProgressMeters > secondPassBeforeCrossing.routeProgressMeters);
   assert.equal(secondPassAfterCrossing.instruction.id, "arrive");

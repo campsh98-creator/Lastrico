@@ -6,17 +6,12 @@ import {
   createNavigationDiagnostics,
   estimateArrivalTimestamp,
   evaluateGpsSignalStall,
-  evaluateOffRouteReading,
-  evaluateTimedGpsReading,
   formatNavigationDiagnosticsSummary,
-  gpsCoordinateMoved,
   recordNavigationDiagnosticEvent,
   shouldApplyRouteResponse,
   shouldBeginNavigation,
   shouldRunSimulationTimer,
   shouldUpdateNavigationCamera,
-  smoothGpsCoordinate,
-  smoothHeading,
   type NavigationDiagnosticEvent,
   type NavigationDiagnostics,
   type NavigationJourneyMode,
@@ -64,10 +59,18 @@ import {
   calculateRouteProgress,
   type RouteProgressModel,
 } from "@/lib/route-progress";
+import { evaluateVoiceGuidance } from "@/lib/voice-guidance";
 import {
-  evaluateVoiceGuidance,
-  evaluateArrivalConfirmation,
-} from "@/lib/voice-guidance";
+  bearingBetween,
+  createNavigationFixState,
+  distanceMeters,
+  NAVIGATION_POLICY,
+  processGpsFix,
+  simulationProgressMeters,
+  withClearedReadings,
+  withReplacementRoute,
+  type GpsFix,
+} from "@/lib/navigation-fix-processor";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 type Coordinate = [number, number];
@@ -202,11 +205,6 @@ const transportMeta: Record<TransportMode, { label: string; short: string; artic
   car: { label: "Auto", short: "AUTO", article: "l’auto", safety: "Non interagire con lo schermo durante la guida" },
   motorcycle: { label: "Moto", short: "MOTO", article: "la moto", safety: "Non interagire con lo schermo durante la guida" },
   bicycle: { label: "Bici", short: "BICI", article: "la bici", safety: "Fermati in sicurezza prima di usare lo schermo" },
-};
-const navigationPolicy: Record<TransportMode, { offRouteMeters: number; readings: number; arrivalMeters: number; simulationSteps: number }> = {
-  car: { offRouteMeters: 55, readings: 2, arrivalMeters: 35, simulationSteps: 80 },
-  motorcycle: { offRouteMeters: 50, readings: 2, arrivalMeters: 30, simulationSteps: 90 },
-  bicycle: { offRouteMeters: 38, readings: 3, arrivalMeters: 24, simulationSteps: 110 },
 };
 const emptyRoute: RouteResult = { nodes: [], edges: [], coordinates: [], distance: 0, minutes: 0, paveMeters: 0 };
 const formatMinutes = (minutes: number) => minutes.toLocaleString("it-IT", {
@@ -373,29 +371,6 @@ function draftGeoJSON(start: Coordinate | null, end: Coordinate | null) {
   };
 }
 
-function distanceMeters(a: Coordinate, b: Coordinate) {
-  const toRadians = (value: number) => value * Math.PI / 180;
-  const earthRadius = 6371000;
-  const dLat = toRadians(b[1] - a[1]);
-  const dLng = toRadians(b[0] - a[0]);
-  const lat1 = toRadians(a[1]);
-  const lat2 = toRadians(b[1]);
-  const value = Math.sin(dLat / 2) ** 2
-    + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
-  return earthRadius * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
-}
-
-function bearingBetween(a: Coordinate, b: Coordinate) {
-  const toRadians = (value: number) => value * Math.PI / 180;
-  const toDegrees = (value: number) => value * 180 / Math.PI;
-  const longitude = toRadians(b[0] - a[0]);
-  const lat1 = toRadians(a[1]);
-  const lat2 = toRadians(b[1]);
-  const y = Math.sin(longitude) * Math.cos(lat2);
-  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(longitude);
-  return (toDegrees(Math.atan2(y, x)) + 360) % 360;
-}
-
 function formatDistance(meters: number) {
   if (meters < 1000) return `${Math.max(0, Math.round(meters / 10) * 10)} m`;
   return `${(meters / 1000).toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km`;
@@ -428,16 +403,9 @@ export default function Home() {
   const wakeLockPendingSessionRef = useRef<number | null>(null);
   const lastJourneyOriginRef = useRef<Coordinate | null>(null);
   const lastJourneyCalculationRef = useRef(0);
-  const previousJourneyPositionRef = useRef<Coordinate | null>(null);
-  const previousJourneyAccuracyRef = useRef<number | null>(null);
-  const previousJourneyTimestampRef = useRef<number | null>(null);
-  const offRouteReadingsRef = useRef(0);
+  const navigationFixStateRef = useRef(createNavigationFixState());
   const lastSpokenInstructionRef = useRef("");
-  const arrivalReadingsRef = useRef(0);
-  const journeyTravelledMetersRef = useRef(0);
-  const lastRouteProgressRef = useRef(0);
   const journeyActiveRef = useRef(false);
-  const journeyHeadingRef = useRef(0);
   const selectedRouteRef = useRef<RouteResult | null>(null);
   const selectedRouteModelRef = useRef<RouteProgressModel<NavigationInstruction> | null>(null);
   const endLocationRef = useRef<LocationChoice | null>(null);
@@ -491,6 +459,7 @@ export default function Home() {
   const [isJourneyActive, setIsJourneyActive] = useState(false);
   const [journeyMode, setJourneyMode] = useState<JourneyMode | null>(null);
   const [journeyPosition, setJourneyPosition] = useState<Coordinate | null>(null);
+  const [gpsProgress, setGpsProgress] = useState<ReturnType<typeof calculateRouteProgress<NavigationInstruction>> | null>(null);
   const [journeyHeading, setJourneyHeading] = useState(0);
   const [journeyAccuracy, setJourneyAccuracy] = useState<number | null>(null);
   const [followVehicle, setFollowVehicle] = useState(true);
@@ -545,20 +514,33 @@ export default function Home() {
     [selectedRoute],
   );
   const navigationProgress = useMemo(
-    () => calculateRouteProgress(
-      selectedRouteModel,
+    () => {
+      // GPS decisions are made once per fix; projecting again here could disagree with them.
+      if (isJourneyActive && journeyMode === "gps" && gpsProgress) return gpsProgress;
+      return calculateRouteProgress(
+        selectedRouteModel,
+        journeyPosition,
+        selectedRoute.minutes,
+        isJourneyActive ? navigationFixStateRef.current.progressMeters : null,
+        isJourneyActive && journeyAccuracy !== null
+          ? {
+              accuracy: journeyAccuracy,
+              elapsedSeconds: 1,
+              maxSpeedMps: transportMode === "bicycle" ? 22 : 45,
+            }
+          : undefined,
+      );
+    },
+    [
+      gpsProgress,
+      isJourneyActive,
+      journeyAccuracy,
+      journeyMode,
       journeyPosition,
       selectedRoute.minutes,
-      isJourneyActive ? lastRouteProgressRef.current : null,
-      isJourneyActive && journeyAccuracy !== null
-        ? {
-            accuracy: journeyAccuracy,
-            elapsedSeconds: 1,
-            maxSpeedMps: transportMode === "bicycle" ? 22 : 45,
-          }
-        : undefined,
-    ),
-    [isJourneyActive, journeyAccuracy, journeyPosition, selectedRoute.minutes, selectedRouteModel, transportMode],
+      selectedRouteModel,
+      transportMode,
+    ],
   );
   const navigationModeLabel = (() => {
     if (journeyMode === "simulation") return "SIMULAZIONE";
@@ -618,7 +600,8 @@ export default function Home() {
       nextSelectedRoute.instructions ?? [],
       distanceMeters,
     );
-    lastRouteProgressRef.current = 0;
+    navigationFixStateRef.current = withReplacementRoute(navigationFixStateRef.current, 0);
+    setGpsProgress(null);
     setActiveRoute(routeKind);
   }
 
@@ -891,10 +874,6 @@ export default function Home() {
   }, [transportMode]);
 
   useEffect(() => {
-    journeyHeadingRef.current = journeyHeading;
-  }, [journeyHeading]);
-
-  useEffect(() => {
     loadingRef.current = isLoading;
   }, [isLoading]);
 
@@ -1019,7 +998,7 @@ export default function Home() {
     const coordinates = simulationRoute.coordinates;
     const session = navigationSessionRef.current;
     let index = 0;
-    const step = Math.max(1, Math.floor(coordinates.length / navigationPolicy[transportModeRef.current].simulationSteps));
+    const step = Math.max(1, Math.floor(coordinates.length / NAVIGATION_POLICY[transportModeRef.current].simulationSteps));
     simulationTimerRef.current = window.setInterval(() => {
       if (
         !journeyActiveRef.current
@@ -1028,6 +1007,12 @@ export default function Home() {
       ) return;
       index = Math.min(coordinates.length - 1, index + step);
       const position = coordinates[index];
+      if (selectedRouteModelRef.current) {
+        navigationFixStateRef.current = {
+          ...navigationFixStateRef.current,
+          progressMeters: simulationProgressMeters(selectedRouteModelRef.current, index),
+        };
+      }
       const previous = coordinates[Math.max(0, index - step)];
       setJourneyPosition(position);
       setJourneyHeading(bearingBetween(previous, position));
@@ -1541,24 +1526,28 @@ export default function Home() {
       setActiveRoute(nextRoute);
       activeRouteRef.current = nextRoute;
       const nextSelectedRoute = nextRoute === "safe" ? nextSafeRoute : nextFastRoute;
-      lastRouteProgressRef.current = 0;
+      navigationFixStateRef.current = withReplacementRoute(navigationFixStateRef.current, 0);
+      setGpsProgress(null);
       selectedRouteRef.current = nextSelectedRoute;
       selectedRouteModelRef.current = buildRouteProgressModel(
         nextSelectedRoute.coordinates,
         nextSelectedRoute.instructions ?? [],
         distanceMeters,
       );
-      if (options.journeySession !== undefined) {
-        offRouteReadingsRef.current = 0;
-        arrivalReadingsRef.current = 0;
-        if (previousJourneyPositionRef.current && selectedRouteModelRef.current) {
-          lastRouteProgressRef.current = calculateRouteProgress(
-            selectedRouteModelRef.current,
-            previousJourneyPositionRef.current,
-            nextSelectedRoute.minutes,
-            0,
-          ).routeProgressMeters;
-        }
+      const lastPosition = navigationFixStateRef.current.position;
+      if (options.journeySession !== undefined && lastPosition && selectedRouteModelRef.current) {
+        // A null anchor: the replacement route has no earlier progress to stay near.
+        const replacementProgress = calculateRouteProgress(
+          selectedRouteModelRef.current,
+          lastPosition,
+          nextSelectedRoute.minutes,
+          null,
+        );
+        navigationFixStateRef.current = withReplacementRoute(
+          navigationFixStateRef.current,
+          replacementProgress.routeProgressMeters,
+        );
+        setGpsProgress(replacementProgress);
       }
       setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
       const timingNotice = requestedMode === "bicycle" ? "Tempi stimati senza traffico live" : "Tempi medi senza traffico live";
@@ -1736,21 +1725,15 @@ export default function Home() {
     setJourneyPosition(null);
     setJourneyAccuracy(null);
     setJourneyHeading(0);
-    journeyHeadingRef.current = 0;
     setFollowVehicle(true);
     setArrived(hasArrived);
     setNavigationDiagnostics(createNavigationDiagnostics());
     lastJourneyOriginRef.current = null;
-    previousJourneyPositionRef.current = null;
-    previousJourneyAccuracyRef.current = null;
-    previousJourneyTimestampRef.current = null;
+    navigationFixStateRef.current = createNavigationFixState();
+    setGpsProgress(null);
     navigationStartedAtRef.current = 0;
     lastValidGpsFixAtRef.current = null;
     gpsStallReportedRef.current = false;
-    offRouteReadingsRef.current = 0;
-    arrivalReadingsRef.current = 0;
-    journeyTravelledMetersRef.current = 0;
-    lastRouteProgressRef.current = 0;
     lastSpokenInstructionRef.current = "";
     cameraLastUpdateRef.current = 0;
     cameraLastCenterRef.current = null;
@@ -1764,125 +1747,62 @@ export default function Home() {
     }
   }
 
-  function updateJourneyPosition(
-    coordinate: Coordinate,
-    accuracy: number,
-    reportedHeading: number | null,
-    reportedSpeed: number | null,
-    session: number,
-  ) {
+  function handleGpsFix(fix: GpsFix, session: number) {
     if (
       !journeyActiveRef.current
       || journeyModeRef.current !== "gps"
       || session !== navigationSessionRef.current
     ) return;
-    const previous = previousJourneyPositionRef.current;
-    const previousAccuracy = previousJourneyAccuracyRef.current ?? accuracy;
-    const headingMovementThreshold = Math.max(
-      6,
-      Math.min(25, Math.max(previousAccuracy, accuracy) * 0.75),
-    );
-    const movedEnoughForHeading = gpsCoordinateMoved(
-      previous,
-      coordinate,
-      distanceMeters,
-      headingMovementThreshold,
-    );
-    const inferredHeading = movedEnoughForHeading && previous
-      ? bearingBetween(previous, coordinate)
-      : journeyHeadingRef.current;
-    const movingWithReportedHeading = (
-      Number.isFinite(reportedHeading)
-      && Number.isFinite(reportedSpeed)
-      && reportedSpeed! > 1
-    );
-    const headingTarget = movingWithReportedHeading ? reportedHeading! : inferredHeading;
-    const heading = smoothHeading(
-      journeyHeadingRef.current,
-      headingTarget,
-      movingWithReportedHeading ? 0.46 : 0.32,
-    );
-    const filteredCoordinate = smoothGpsCoordinate(previous, coordinate, accuracy);
-    const markerMovementThreshold = Math.max(
-      4,
-      Math.min(15, Math.max(previousAccuracy, accuracy) * 0.35),
-    );
-    const markerMoved = previous === null
-      || gpsCoordinateMoved(previous, filteredCoordinate, distanceMeters, markerMovementThreshold);
-    if (markerMoved) {
-      if (previous) {
-        journeyTravelledMetersRef.current += Math.min(
-          250,
-          distanceMeters(previous, filteredCoordinate),
-        );
-      }
-      previousJourneyPositionRef.current = filteredCoordinate;
-      setJourneyPosition(filteredCoordinate);
-    }
-    previousJourneyAccuracyRef.current = accuracy;
-    journeyHeadingRef.current = heading;
-    setJourneyAccuracy(accuracy);
-    setJourneyHeading(heading);
-    if (!recalculatingRef.current) setGpsState("live");
-
     const now = Date.now();
+    const activeArea = PILOT_AREAS[areaIdRef.current];
     const routeResult = selectedRouteRef.current;
     const routeModel = selectedRouteModelRef.current;
-    if (!routeResult || !routeModel) return;
     const mode = transportModeRef.current;
-    const policy = navigationPolicy[mode];
-    const routeEnd = routeResult.coordinates[routeResult.coordinates.length - 1];
-    const arrivalTolerance = policy.arrivalMeters + Math.min(accuracy, 25);
-    const progress = calculateRouteProgress(
-      routeModel,
-      filteredCoordinate,
-      routeResult.minutes,
-      lastRouteProgressRef.current,
-      {
-        accuracy,
-        elapsedSeconds: previousJourneyTimestampRef.current
-          ? Math.max(0.5, (now - previousJourneyTimestampRef.current) / 1000)
-          : 1,
-        maxSpeedMps: mode === "bicycle" ? 22 : 45,
-      },
-    );
-    lastRouteProgressRef.current = progress.routeProgressMeters;
-    const minimumTravelBeforeArrival = Math.min(80, routeResult.distance * 100);
-    const arrivalEval = evaluateArrivalConfirmation({
-      routeEnd: routeEnd ?? null,
-      currentPosition: filteredCoordinate,
-      accuracy,
-      distanceToEnd: routeEnd ? distanceMeters(filteredCoordinate, routeEnd) : 9999,
-      remainingRouteMeters: progress.remainingMeters,
-      journeyTravelledMeters: journeyTravelledMetersRef.current,
-      minimumTravelBeforeArrival,
-      arrivalToleranceMeters: arrivalTolerance,
-      currentArrivalReadings: arrivalReadingsRef.current,
-      journeyMode: journeyModeRef.current,
+    const decision = processGpsFix(navigationFixStateRef.current, fix, {
+      now,
+      mode,
+      bounds: activeArea.bounds,
+      route: routeResult && routeModel
+        ? { model: routeModel, minutes: routeResult.minutes, distanceKm: routeResult.distance }
+        : null,
+      lastCalculationAt: lastJourneyCalculationRef.current,
+      calculationInProgress: loadingRef.current,
     });
-    arrivalReadingsRef.current = arrivalEval.consecutiveArrivalReadings;
-    if (arrivalEval.isConfirmedArrival && arrivalReadingsRef.current >= 2) {
+    navigationFixStateRef.current = decision.state;
+
+    if (decision.outcome === "outside") {
+      recordDiagnostic({ type: "fix-rejected", reason: "outside" });
+      setGpsState("outside");
+      setStatus(`Posizione fuori dall’area pilota di ${activeArea.name}.`);
+      return;
+    }
+    if (decision.outcome === "rejected") {
+      recordDiagnostic({ type: "fix-rejected", reason: decision.reason });
+      setGpsState("weak");
+      setJourneyAccuracy(fix.accuracy);
+      setStatus(decision.reason === "invalid"
+        ? `Segnale GPS debole (±${Math.round(fix.accuracy)} m). Mantengo l’ultimo percorso.`
+        : "Posizione GPS non affidabile o non recente. Mantengo l’ultimo punto valido.");
+      return;
+    }
+
+    lastValidGpsFixAtRef.current = now;
+    gpsStallReportedRef.current = false;
+    recordDiagnostic({ type: "fix-accepted" });
+    if (decision.markerMoved) setJourneyPosition(decision.position);
+    setJourneyAccuracy(fix.accuracy);
+    setJourneyHeading(decision.heading);
+    if (!recalculatingRef.current) setGpsState("live");
+    if (!decision.progress) return;
+    setGpsProgress(decision.progress);
+    if (decision.arrived) {
       finishNavigation(true);
       return;
     }
 
-    const previousOffRouteReadings = offRouteReadingsRef.current;
-    const offRouteDecision = evaluateOffRouteReading({
-      currentReadings: previousOffRouteReadings,
-      offRouteMeters: progress.offRouteMeters,
-      thresholdMeters: policy.offRouteMeters + Math.min(accuracy, 60),
-      requiredReadings: policy.readings,
-      now,
-      lastCalculationAt: lastJourneyCalculationRef.current,
-      cooldownMs: 15_000,
-      calculationInProgress: loadingRef.current,
-    });
-    offRouteReadingsRef.current = offRouteDecision.readings;
-    if (previousOffRouteReadings === 0 && offRouteDecision.readings > 0) {
-      recordDiagnostic({ type: "off-route" });
-    }
-    if (offRouteDecision.readings > 0 && !recalculatingRef.current) setGpsState("offroute");
-    if (offRouteDecision.shouldRecalculate) {
+    if (decision.offRouteStarted) recordDiagnostic({ type: "off-route" });
+    if (decision.state.offRouteReadings > 0 && !recalculatingRef.current) setGpsState("offroute");
+    if (decision.shouldRecalculate) {
       if (!navigator.onLine) {
         recalculatingRef.current = false;
         setIsRecalculating(false);
@@ -1892,14 +1812,14 @@ export default function Home() {
         return;
       }
       lastJourneyCalculationRef.current = now;
-      lastJourneyOriginRef.current = filteredCoordinate;
+      lastJourneyOriginRef.current = decision.position;
       recalculatingRef.current = true;
       setIsRecalculating(true);
       setGpsState("recalculating");
       recordDiagnostic({ type: "reroute-start" });
       setStatus(`Fuori percorso · ricalcolo per ${transportMeta[mode].article}…`);
       void calculateRoutes(
-        { label: "Posizione GPS live", coordinate: filteredCoordinate },
+        { label: "Posizione GPS live", coordinate: decision.position },
         {
           mode,
           preserveRoute: activeRouteRef.current,
@@ -1912,7 +1832,7 @@ export default function Home() {
     }
 
     if (!recalculatingRef.current) {
-      setStatus(`GPS attivo · precisione ±${Math.round(accuracy)} m · ${formatDistance(progress.remainingMeters)} rimanenti.`);
+      setStatus(`GPS attivo · precisione ±${Math.round(fix.accuracy)} m · ${formatDistance(decision.progress.remainingMeters)} rimanenti.`);
     }
   }
 
@@ -1946,18 +1866,12 @@ export default function Home() {
     setJourneyPosition(null);
     setJourneyAccuracy(null);
     setJourneyHeading(0);
-    journeyHeadingRef.current = 0;
-    previousJourneyPositionRef.current = null;
-    previousJourneyAccuracyRef.current = null;
-    previousJourneyTimestampRef.current = null;
+    navigationFixStateRef.current = createNavigationFixState();
+    setGpsProgress(null);
     selectedRouteRef.current = routeForJourney;
     selectedRouteModelRef.current = modelForJourney;
     endLocationRef.current = endLocation;
     lastJourneyCalculationRef.current = 0;
-    offRouteReadingsRef.current = 0;
-    arrivalReadingsRef.current = 0;
-    journeyTravelledMetersRef.current = 0;
-    lastRouteProgressRef.current = 0;
     lastSpokenInstructionRef.current = "";
     cameraLastUpdateRef.current = 0;
     cameraLastCenterRef.current = null;
@@ -1987,63 +1901,16 @@ export default function Home() {
     setGpsState("requesting");
     setStatus("Autorizza la posizione precisa: aggancio il GPS al percorso Lastrico…");
     journeyWatchRef.current = navigator.geolocation.watchPosition(
-      ({ coords, timestamp }) => {
-        if (
-          !journeyActiveRef.current
-          || journeyModeRef.current !== "gps"
-          || session !== navigationSessionRef.current
-        ) return;
-        const coordinate: Coordinate = [coords.longitude, coords.latitude];
-        const activeArea = PILOT_AREAS[areaIdRef.current];
-        const inArea = coordinateInArea(coordinate, activeArea);
-        if (!inArea) {
-          offRouteReadingsRef.current = 0;
-          arrivalReadingsRef.current = 0;
-          recordDiagnostic({ type: "fix-rejected", reason: "outside" });
-          setGpsState("outside");
-          setStatus(`Posizione fuori dall’area pilota di ${activeArea.name}.`);
-          return;
-        }
-        const now = Date.now();
-        const timedReading = evaluateTimedGpsReading({
-          coordinate,
-          accuracy: coords.accuracy,
-          timestamp,
-          now,
-          previousCoordinate: previousJourneyPositionRef.current,
-          previousAccuracy: previousJourneyAccuracyRef.current,
-          previousTimestamp: previousJourneyTimestampRef.current,
-          bounds: activeArea.bounds,
-          distanceMeters,
-          maximumSpeedMetersPerSecond: transportModeRef.current === "bicycle" ? 22 : 70,
-        });
-        if (!timedReading.accepted) {
-          offRouteReadingsRef.current = 0;
-          arrivalReadingsRef.current = 0;
-          recordDiagnostic({ type: "fix-rejected", reason: timedReading.reason });
-          setGpsState("weak");
-          setJourneyAccuracy(coords.accuracy);
-          setStatus(timedReading.reason === "invalid"
-            ? `Segnale GPS debole (±${Math.round(coords.accuracy)} m). Mantengo l’ultimo percorso.`
-            : "Posizione GPS non affidabile o non recente. Mantengo l’ultimo punto valido.");
-          return;
-        }
-        previousJourneyTimestampRef.current = timestamp;
-        lastValidGpsFixAtRef.current = now;
-        gpsStallReportedRef.current = false;
-        recordDiagnostic({ type: "fix-accepted" });
-        updateJourneyPosition(
-          coordinate,
-          coords.accuracy,
-          coords.heading,
-          coords.speed,
-          session,
-        );
-      },
+      ({ coords, timestamp }) => handleGpsFix({
+        coordinate: [coords.longitude, coords.latitude],
+        accuracy: coords.accuracy,
+        timestamp,
+        heading: coords.heading,
+        speed: coords.speed,
+      }, session),
       (error) => {
         if (session !== navigationSessionRef.current) return;
-        offRouteReadingsRef.current = 0;
-        arrivalReadingsRef.current = 0;
+        navigationFixStateRef.current = withClearedReadings(navigationFixStateRef.current);
         if (error.code === error.PERMISSION_DENIED) {
           finishNavigation();
           recordDiagnostic({ type: "permission-denied" });

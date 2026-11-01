@@ -219,7 +219,7 @@ test("Phase 4.6: Multi-modal route calculation and surface intelligence for pilo
   const roccellaEnd = [16.3959, 38.3182];
   const roccellaTestCoords = [roccellaStart, [16.401, 38.322], roccellaEnd];
 
-  t.mock.method(globalThis, "fetch", async (url) => {
+  t.mock.method(globalThis, "fetch", async () => {
     return Response.json({
       trip: {
         status: 0,

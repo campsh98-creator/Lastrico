@@ -17,21 +17,44 @@ export type LocatedProgress = {
   ratio: number;
   offRouteMeters: number;
   progressMeters: number;
+  pendingJump?: PendingForwardJump;
+};
+
+/** Tracks a held anchor. Zero confirmations means progress was held with no jump candidate yet. */
+export type PendingForwardJump = {
+  progressMeters: number;
+  confirmations: number;
+  /** Time since the anchor last moved, so reachability keeps growing while it is held. */
+  elapsedSeconds: number;
 };
 
 export type RouteProgressOptions = {
   accuracy?: number | null;
   elapsedSeconds?: number | null;
   maxSpeedMps?: number | null;
+  /** Reported course of travel. Omit when stationary or unknown. */
+  headingDegrees?: number | null;
+  pendingJump?: PendingForwardJump | null;
 };
+
+const MIN_FORWARD_WINDOW_METERS = 60;
+const MAX_WINDOW_ELAPSED_SECONDS = 10;
+const MAX_REACH_ELAPSED_SECONDS = 300;
+const FORWARD_JUMP_CONFIRMATIONS = 3;
+const MAX_JUMP_HEADING_DIFFERENCE_DEGREES = 60;
+const OPPOSED_HEADING_DEGREES = 120;
+const OPPOSED_HEADING_PENALTY_METERS = 50;
+
+function angularDifference(a: number, b: number) {
+  const difference = Math.abs(((a - b) % 360 + 360) % 360);
+  return difference > 180 ? 360 - difference : difference;
+}
 
 function projectOnSegment(
   coordinates: ProgressCoordinate[],
   position: ProgressCoordinate,
   cumulativeMeters: number[],
-  anchorProgressMeters: number | null = null,
   minProgressMeters: number | null = null,
-  options?: RouteProgressOptions,
 ): LocatedProgress {
   if (coordinates.length <= 1) {
     return { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 };
@@ -42,16 +65,7 @@ function projectOnSegment(
     offRouteMeters: Number.POSITIVE_INFINITY,
     progressMeters: 0,
   };
-  let bestWindow: LocatedProgress | null = null;
   let bestFromMin: LocatedProgress | null = null;
-
-  const accuracy = Math.max(5, Math.min(80, options?.accuracy ?? 15));
-  const elapsed = Math.max(0.1, Math.min(10, options?.elapsedSeconds ?? 1.5));
-  const maxSpeed = Math.max(10, Math.min(50, options?.maxSpeedMps ?? 35));
-
-  // Dynamic plausible reach along the route based on time, speed limit, and GPS accuracy
-  const forwardWindow = Math.max(200, elapsed * maxSpeed + accuracy * 2.0);
-  const backwardWindow = Math.max(35, accuracy * 1.5);
 
   const latitude = position[1] * Math.PI / 180;
   const scaleX = 111_320 * Math.cos(latitude);
@@ -84,14 +98,6 @@ function projectOnSegment(
       best = candidate;
     }
     if (
-      anchorProgressMeters !== null
-      && progressMeters >= anchorProgressMeters - backwardWindow
-      && progressMeters <= anchorProgressMeters + forwardWindow
-      && (!bestWindow || distance < bestWindow.offRouteMeters)
-    ) {
-      bestWindow = candidate;
-    }
-    if (
       minProgressMeters !== null
       && progressMeters + 5 >= minProgressMeters
       && (!bestFromMin || distance < bestFromMin.offRouteMeters)
@@ -105,14 +111,138 @@ function projectOnSegment(
       progressMeters: Math.max(minProgressMeters, bestFromMin.progressMeters),
     };
   }
-  if (
-    anchorProgressMeters !== null
-    && bestWindow
-    && bestWindow.offRouteMeters <= Math.max(45, accuracy * 1.8)
-  ) {
-    return bestWindow;
-  }
   return best;
+}
+
+/**
+ * Locates a fix relative to the previous progress. The nearest point on the whole route is not
+ * trusted: multipath near a parallel leg can make a segment far ahead look closest. A forward
+ * jump needs consecutive fixes that are clearly closer, reachable and heading the same way.
+ */
+function projectFromAnchor(
+  coordinates: ProgressCoordinate[],
+  position: ProgressCoordinate,
+  cumulativeMeters: number[],
+  anchorProgressMeters: number,
+  options?: RouteProgressOptions,
+): LocatedProgress {
+  if (coordinates.length <= 1) {
+    return { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 };
+  }
+  const accuracy = Math.max(5, Math.min(80, options?.accuracy ?? 15));
+  const elapsed = Math.max(0.1, options?.elapsedSeconds ?? 1.5);
+  const maxSpeed = Math.max(10, Math.min(50, options?.maxSpeedMps ?? 35));
+  const heading = Number.isFinite(options?.headingDegrees) ? options!.headingDegrees! : null;
+  const pendingJump = options?.pendingJump ?? null;
+
+  const windowStart = anchorProgressMeters - Math.max(35, accuracy * 1.5);
+  const windowEnd = anchorProgressMeters + Math.max(
+    MIN_FORWARD_WINDOW_METERS,
+    Math.min(elapsed, MAX_WINDOW_ELAPSED_SECONDS) * maxSpeed + accuracy * 2,
+  );
+
+  let best: LocatedProgress | null = null;
+  let bestWindow: LocatedProgress | null = null;
+  let bestWindowScore = Number.POSITIVE_INFINITY;
+  let bestAhead: LocatedProgress | null = null;
+
+  const latitude = position[1] * Math.PI / 180;
+  const scaleX = 111_320 * Math.cos(latitude);
+  const scaleY = 110_540;
+  const px = position[0] * scaleX;
+  const py = position[1] * scaleY;
+  for (let index = 1; index < coordinates.length; index += 1) {
+    const a = coordinates[index - 1];
+    const b = coordinates[index];
+    const ax = a[0] * scaleX;
+    const ay = a[1] * scaleY;
+    const dx = b[0] * scaleX - ax;
+    const dy = b[1] * scaleY - ay;
+    const denominator = dx * dx + dy * dy;
+    const startMeters = cumulativeMeters[index - 1];
+    const segmentMeters = cumulativeMeters[index] - startMeters;
+    const ratio = denominator
+      ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / denominator))
+      : 0;
+    const distanceAt = (value: number) => Math.hypot(px - (ax + value * dx), py - (ay + value * dy));
+    const candidate: LocatedProgress = {
+      segmentIndex: index - 1,
+      ratio,
+      offRouteMeters: distanceAt(ratio),
+      progressMeters: startMeters + segmentMeters * ratio,
+    };
+    if (!best || candidate.offRouteMeters < best.offRouteMeters) best = candidate;
+
+    const headingDifference = heading !== null && denominator
+      ? angularDifference(heading, (Math.atan2(dx, dy) * 180 / Math.PI + 360) % 360)
+      : null;
+
+    if (cumulativeMeters[index] >= windowStart && startMeters <= windowEnd) {
+      // A long segment can extend past the window, so measure against the part inside it.
+      const windowRatio = segmentMeters > 0
+        ? Math.max((windowStart - startMeters) / segmentMeters,
+          Math.min((windowEnd - startMeters) / segmentMeters, ratio))
+        : ratio;
+      const windowDistance = distanceAt(windowRatio);
+      const score = windowDistance
+        + (headingDifference !== null && headingDifference >= OPPOSED_HEADING_DEGREES
+          ? OPPOSED_HEADING_PENALTY_METERS : 0);
+      if (score < bestWindowScore) {
+        bestWindowScore = score;
+        bestWindow = {
+          segmentIndex: index - 1,
+          ratio: windowRatio,
+          offRouteMeters: windowDistance,
+          progressMeters: startMeters + segmentMeters * windowRatio,
+        };
+      }
+    }
+
+    if (
+      candidate.progressMeters > windowEnd
+      && (headingDifference === null || headingDifference <= MAX_JUMP_HEADING_DIFFERENCE_DEGREES)
+      && (!bestAhead || candidate.offRouteMeters < bestAhead.offRouteMeters)
+    ) {
+      bestAhead = candidate;
+    }
+  }
+
+  const windowDistance = bestWindow?.offRouteMeters ?? Number.POSITIVE_INFINITY;
+  if (bestWindow && windowDistance <= Math.max(45, accuracy * 1.8)) return bestWindow;
+
+  const clearlyCloserBy = Math.max(15, accuracy * 0.5);
+  const elapsedSinceAnchor = (pendingJump?.elapsedSeconds ?? 0) + elapsed;
+  if (bestAhead && windowDistance - bestAhead.offRouteMeters >= clearlyCloserBy) {
+    const reachMeters = Math.min(elapsedSinceAnchor, MAX_REACH_ELAPSED_SECONDS) * maxSpeed + accuracy * 2;
+    if (bestAhead.progressMeters - anchorProgressMeters <= reachMeters) {
+      const continues = pendingJump !== null && pendingJump.confirmations > 0
+        && bestAhead.progressMeters >= pendingJump.progressMeters - 5;
+      const confirmations = continues ? pendingJump.confirmations + 1 : 1;
+      if (confirmations >= FORWARD_JUMP_CONFIRMATIONS) return bestAhead;
+      // Reporting the candidate's distance stops a recovering GPS gap from looking off route.
+      return {
+        ...bestAhead,
+        progressMeters: anchorProgressMeters,
+        pendingJump: {
+          progressMeters: bestAhead.progressMeters,
+          confirmations,
+          elapsedSeconds: elapsedSinceAnchor,
+        },
+      };
+    }
+  }
+
+  if (best && best.progressMeters < windowStart && windowDistance - best.offRouteMeters >= clearlyCloserBy) {
+    return best;
+  }
+  const located = bestWindow ?? best!;
+  return {
+    segmentIndex: located.segmentIndex,
+    ratio: located.ratio,
+    offRouteMeters: located.offRouteMeters,
+    progressMeters: anchorProgressMeters,
+    pendingJump: { progressMeters: anchorProgressMeters, confirmations: 0, elapsedSeconds: elapsedSinceAnchor },
+  };
 }
 
 export function buildRouteProgressModel<T extends ProgressInstruction>(
@@ -136,7 +266,6 @@ export function buildRouteProgressModel<T extends ProgressInstruction>(
         coordinates,
         instruction.location,
         cumulativeMeters,
-        null,
         minInstructionProgress,
       );
       const progressMeters = Math.max(minInstructionProgress, projected.progressMeters);
@@ -156,9 +285,11 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
   previousProgressMeters: number | null = null,
   options?: RouteProgressOptions,
 ) {
-  const projected = position
-    ? projectOnSegment(model.coordinates, position, model.cumulativeMeters, previousProgressMeters, null, options)
-    : { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 };
+  const projected: LocatedProgress = !position
+    ? { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 }
+    : previousProgressMeters === null
+      ? projectOnSegment(model.coordinates, position, model.cumulativeMeters)
+      : projectFromAnchor(model.coordinates, position, model.cumulativeMeters, previousProgressMeters, options);
   const backwardMeters = previousProgressMeters !== null
     ? Math.max(0, previousProgressMeters - projected.progressMeters)
     : 0;
@@ -186,5 +317,6 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
       ? Math.max(0, next.progressMeters - located.progressMeters)
       : remainingMeters,
     instruction: next?.instruction ?? null,
+    pendingJump: projected.pendingJump ?? null,
   };
 }
