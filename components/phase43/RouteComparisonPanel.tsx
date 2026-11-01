@@ -86,7 +86,7 @@ export function RouteComparisonPanel({
             <span className="p43-metric-label">Pavé evitato</span>
             <strong className="p43-metric-value p43-value-positive">
               -{formatMeters(savedPaveMeters)}
-              <small> (-${paveReductionPercent}%)</small>
+              <small> (-{paveReductionPercent}%)</small>
             </strong>
           </div>
           <div className="p43-tradeoff-divider" aria-hidden="true" />

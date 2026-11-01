@@ -383,8 +383,9 @@ test("Phase 4.3: NavigationDiagnosticsCard visualizes session metrics and privac
 
   // Privacy notice
   assert.match(html, /p43-privacy-badge/);
-  assert.match(html, /Zero tracciamento:/);
-  assert.match(html, /Nessuna coordinata GPS viene inviata a server/);
+  // Reroutes send the live position to routing providers, so the card must not deny it.
+  assert.match(html, /la posizione usata come partenza viene inviata ai servizi di routing/);
+  assert.doesNotMatch(html, /Zero tracciamento|Nessuna coordinata GPS/);
 
   // Reset button
   assert.match(html, /Azzera contatori sessione/);

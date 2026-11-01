@@ -134,14 +134,14 @@
 
 .p43-route-card.p43-selected {
   border-color: var(--green, #16886e);
-  background: #f4faf8;
+  background: var(--p43-selected-surface);
   box-shadow: 0 2px 10px rgba(22, 136, 110, 0.12);
 }
 
 .p43-route-card.p43-card-disabled {
-  opacity: 0.6;
+  color: var(--p43-card-detail);
   cursor: not-allowed;
-  background: #f9f8f6;
+  background: var(--p43-disabled-surface);
 }
 
 .p43-card-head {
@@ -181,7 +181,7 @@
 .p43-card-names small {
   display: block;
   font-size: 11px;
-  color: var(--muted, #697876);
+  color: var(--p43-card-detail);
 }
 
 .p43-card-time {
@@ -198,7 +198,7 @@
   display: block;
   font-size: 11px;
   font-style: normal;
-  color: var(--muted, #697876);
+  color: var(--p43-card-detail);
 }
 
 .p43-unknown-row {
@@ -211,7 +211,7 @@
 }
 
 .p43-unknown-label {
-  color: var(--muted, #697876);
+  color: var(--p43-card-detail);
 }
 
 .p43-unknown-value {
@@ -220,7 +220,7 @@
 }
 
 .p43-unknown-value.p43-unknown-warn {
-  color: var(--coral, #d84a35);
+  color: var(--p43-rough-ink);
 }
 
 .p43-uncertainty-alert {
@@ -231,7 +231,7 @@
   border-radius: 6px;
   font-size: 11px;
   line-height: 1.35;
-  color: #7a4f00;
+  color: var(--p43-warn-ink);
 }
 
 /* Local Field Feedback Modal */
@@ -305,9 +305,9 @@
   line-height: 1.4;
   margin: 0 0 14px;
   padding: 8px 10px;
-  background: #f1f8f6;
+  background: var(--p43-notice-surface);
   border-radius: 8px;
-  color: #1a5647;
+  color: var(--p43-notice-ink);
 }
 
 .p43-category-tabs {
@@ -315,7 +315,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 6px;
   margin-bottom: 14px;
-  background: #efeee8;
+  background: var(--p43-track-surface);
   padding: 3px;
   border-radius: 10px;
 }
@@ -374,7 +374,7 @@
 
 .p43-option-item.p43-option-selected {
   border-color: var(--green, #16886e);
-  background: #f4faf8;
+  background: var(--p43-selected-surface);
 }
 
 .p43-option-item input[type="radio"] {
@@ -400,10 +400,10 @@
   gap: 6px;
   font-size: 11px;
   padding: 4px 8px;
-  background: #eef2f2;
+  background: var(--p43-pill-surface);
   border-radius: 6px;
   margin-bottom: 12px;
-  color: #385056;
+  color: var(--p43-pill-ink);
 }
 
 .p43-field-block {
@@ -489,7 +489,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #daf1ea;
+  background: var(--p43-success-surface);
   color: var(--green, #16886e);
   display: flex;
   align-items: center;
@@ -555,10 +555,10 @@
   gap: 6px;
   font-size: 11px;
   line-height: 1.35;
-  background: #eef5f4;
+  background: var(--p43-notice-surface);
   padding: 6px 8px;
   border-radius: 6px;
-  color: #1e5246;
+  color: var(--p43-notice-ink);
 }
 
 .p43-metric-grid {
@@ -684,7 +684,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 6px;
   margin-bottom: 14px;
-  background: #e6e4dc;
+  background: var(--p43-track-surface);
   padding: 4px;
   border-radius: 10px;
 }
@@ -693,7 +693,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  background: #f4f6f6;
+  background: var(--p43-toggle-surface);
   border: 1px solid var(--border, #e2ded9);
   border-radius: 10px;
   padding: 10px 12px;
@@ -725,7 +725,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  background: #fdfcf9;
+  background: var(--p43-context-surface);
   border: 1px dashed var(--border, #e2ded9);
   border-radius: 8px;
   padding: 8px 10px;
@@ -735,7 +735,7 @@
 
 .p43-context-badge {
   background: rgba(22, 136, 110, 0.1);
-  color: #156250;
+  color: var(--p43-context-ink);
   padding: 2px 6px;
   border-radius: 4px;
   font-weight: 600;
@@ -893,22 +893,22 @@
 
 .p43-item-rough {
   background: rgba(216, 74, 53, 0.1);
-  color: var(--coral, #d84a35);
+  color: var(--p43-rough-ink);
 }
 
 .p43-item-smooth {
   background: rgba(22, 136, 110, 0.1);
-  color: var(--green, #16886e);
+  color: var(--p43-smooth-ink);
 }
 
 .p43-item-unknown {
   background: rgba(105, 120, 118, 0.1);
-  color: var(--muted, #697876);
+  color: var(--p43-card-detail);
 }
 
 .p43-item-unknown-warn {
   background: rgba(229, 154, 47, 0.15);
-  color: #8c5b05;
+  color: var(--p43-warn-ink);
 }
 
 .p43-surface-badge {
@@ -925,13 +925,13 @@
 
 .p43-badge-moderate {
   background: rgba(229, 154, 47, 0.15);
-  color: #8c5b05;
+  color: var(--p43-warn-ink);
   border: 1px solid rgba(229, 154, 47, 0.3);
 }
 
 .p43-badge-critical {
   background: rgba(216, 74, 53, 0.12);
-  color: var(--coral, #d84a35);
+  color: var(--p43-rough-ink);
   border: 1px solid rgba(216, 74, 53, 0.25);
 }
 
@@ -974,7 +974,7 @@
 }
 
 .pilot-journey-chip:hover {
-  background: #f0f7f5;
+  background: var(--p43-chip-hover-surface);
   border-color: var(--green, #16886e);
   color: var(--green, #16886e);
 }

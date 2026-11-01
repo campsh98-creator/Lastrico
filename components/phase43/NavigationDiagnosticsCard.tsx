@@ -53,8 +53,8 @@ export function NavigationDiagnosticsCard({
       <div className="p43-privacy-badge" role="note">
         <span aria-hidden="true">🔒</span>
         <span>
-          <b>Zero tracciamento:</b> i contatori sono temporanei e memorizzati esclusivamente
-          nella memoria volatile della sessione in corso. Nessuna coordinata GPS viene inviata a server.
+          I contatori restano in questa sessione e non vengono inviati. Per calcolare e ricalcolare
+          il percorso, la posizione usata come partenza viene inviata ai servizi di routing.
         </span>
       </div>
 

@@ -112,6 +112,9 @@ test("Phase 4.6: RouteComparisonPanel renders selection rationale and surface br
   });
 
   const htmlSafe = renderToStaticMarkup(elSafe);
+  // JSX treats "$" as literal text, so a template-style percent would render "-$83%".
+  assert.match(htmlSafe, /<small> \(-(?:<!-- -->)?83(?:<!-- -->)?%\)<\/small>/);
+  assert.doesNotMatch(htmlSafe, /\$/);
 
   // Verification: Rationale explains pavé reduction and extra time within budget
   assert.match(htmlSafe, /data-testid="p43-selection-rationale"/);
