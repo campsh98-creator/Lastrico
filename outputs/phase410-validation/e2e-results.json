@@ -32,9 +32,14 @@
       "detail": "{\"bg\":\"rgb(244, 250, 248)\",\"title\":15.711896025012022,\"detail\":6.097599834159504,\"time\":15.711896025012022,\"extra\":6.097599834159504}"
     },
     {
+      "name": "portrait: every HUD control receives taps",
+      "ok": true,
+      "detail": "[{\"label\":\"🔇 Voce spenta\",\"ok\":true},{\"label\":\"Centrata\",\"ok\":true},{\"label\":\"Termina\",\"ok\":true},{\"label\":\"Dettagli affidabilit\",\"ok\":true}]"
+    },
+    {
       "name": "simulation distance decreases monotonically",
       "ok": true,
-      "detail": "2700,2700,2600,2500,2200,2100,2000,1900,1700,1500,1300,1100,820,650,550,470,410,370,360,310,280,250,180,150,100,40"
+      "detail": "2700,2700,2700,2500,2300,2100,2100,2000,1800,1600,1400,1200,1000,660,640,500,420,400,370,350,300,280,240,170,150,80,40"
     },
     {
       "name": "simulation reaches arrival",
@@ -84,12 +89,12 @@
     {
       "name": "trace is listed after the journey",
       "ok": true,
-      "detail": "01/11/26, 16:21 · 128 rilevazioniEsportaElimina"
+      "detail": "01/11/26, 16:35 · 128 rilevazioniEsportaElimina"
     },
     {
       "name": "export produces a versioned trace",
       "ok": true,
-      "detail": "lastrico-gps-trace-2026-11-01-15-21.json · 128 fixes · 55 KB"
+      "detail": "lastrico-gps-trace-2026-11-01-15-35.json · 128 fixes · 55 KB"
     },
     {
       "name": "the browser's trace replays with zero decision differences",
@@ -115,6 +120,11 @@
       "name": "landscape: no horizontal overflow in HUD",
       "ok": true,
       "detail": ""
+    },
+    {
+      "name": "landscape: every HUD control receives taps",
+      "ok": true,
+      "detail": "[{\"label\":\"🔇 Voce spenta\",\"ok\":true},{\"label\":\"Centrata\",\"ok\":true},{\"label\":\"Termina\",\"ok\":true},{\"label\":\"Dettagli affidabilit\",\"ok\":true}]"
     },
     {
       "name": "no console errors or uncaught exceptions",

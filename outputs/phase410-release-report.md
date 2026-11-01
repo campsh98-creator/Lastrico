@@ -2,9 +2,9 @@
 
 **Outcome: ready for the first physical iPhone test. Navigation is not yet validated on a real device.**
 
-Deployed to `https://lastrico-pilot.campsh.workers.dev` on 2026-11-01 as version `ad7a353a-cbfa-485d-9d51-bcbb1ac2fb3e`.
+Deployed to `https://lastrico-pilot.campsh.workers.dev` on 2026-11-01 as version `f5e3dd66-8bcb-4922-9c7e-9b37e6572a81`.
 
-Rollback:
+To return to the version before this phase:
 
 ```bash
 npx wrangler rollback de0d61c9-4061-4177-add1-3d174f6d8e42 --name lastrico-pilot
@@ -34,7 +34,11 @@ Nothing was pushed to GitHub or merged, so the pilot now runs commits that exist
 
 Private access within 150 m of either route end is now allowed and disclosed. `access=no`, wrong-way travel and private land crossed mid-route still disqualify a route, and now answer 422 with the real reason. This route returns 200 in production with the notice.
 
+## Other defects the review missed or understated
+
 The review report also missed that the diagnostics card claimed "Nessuna coordinata GPS viene inviata a server", which is false because reroutes send the position to routing providers. A test pinned that text. Both are corrected.
+
+The review described the "Non interagire con lo schermo" message as a minor overlap. It was permanent, sat over Voce, Centrata and Termina, and could take their taps. It now sits in the panel's flow and is hidden on a landscape phone. The end-to-end check asserts that a tap at each HUD control's centre reaches that control.
 
 ## Deviations from the prompt
 
@@ -43,7 +47,7 @@ The review report also missed that the diagnostics card claimed "Nessuna coordin
 - **B, untested path.** Export used the download path with the anchor click captured. The iOS share sheet has not been exercised.
 - **Benchmarks.** `scripts/benchmark-route-optimization.mjs` was not run, because it overwrites tracked files and replays archived provider responses that no longer match these requests. The table below compares the review's production measurements with the new production version instead.
 - **End-to-end tool.** The built-in browser blocks localhost subresources, so `scripts/e2e-mobile-chrome.mjs` drives real Chrome through DevTools. It is committed and can be rerun.
-- **Scope additions.** `.p43-hud-diagnostics` now spans the HUD row and the panel closes when navigation starts, because the recorder flow otherwise left a clipped panel covering the map.
+- **Scope additions.** `.p43-hud-diagnostics` now spans the HUD row and the panel closes when navigation starts, because the recorder flow otherwise left a clipped panel covering the map. The safety message moved out of its overlay, as described above.
 
 ## Evidence
 
@@ -59,7 +63,7 @@ In one earlier full run during development, two headless Chrome layout tests (Ph
 |---|---|---|
 | `dist/server/index.js` | 7,782,527 B | 7,769,262 B |
 | `index.js` gzip | 2,706,049 B | 2,703,025 B |
-| Total Worker upload gzip | not measured | 3,037 KiB |
+| Total Worker upload gzip | about 3.03 MB (phase 4.9 note) | 3,037 KiB |
 
 ### Route quality in production
 
@@ -75,9 +79,12 @@ The bicycle case is unchanged: it needs corridor-wide penalties, which are out o
 
 ### Mobile end-to-end
 
-`scripts/e2e-mobile-chrome.mjs` passed 24 of 24 checks on the local build under `wrangler dev` and again on production. Screenshots and `e2e-results.json` from the production run are in `outputs/phase410-validation/`.
+`scripts/e2e-mobile-chrome.mjs` passed 26 of 26 checks on the local build under `wrangler dev` and again on production. Screenshots and `e2e-results.json` from the production run are in `outputs/phase410-validation/`.
+
+The first production run, started seconds after the deploy finished, timed out waiting for the first page to load. The rerun passed in full. Deploy propagation is the likely cause, but it was not established.
 
 - Selected card contrast is at least 6:1 in both themes.
+- Every HUD control receives taps in portrait and landscape.
 - Simulation reaches arrival with monotonic distance.
 - With the recorder off, nothing is stored and the HUD says the position is not saved.
 - With the recorder on, a 128-fix GPS journey shows REC and discloses local storage, with no reroute and a largest advance of 27.6 m. It replays with 0 decision differences.
@@ -89,7 +96,7 @@ Read-only, at no more than one request per second, with no report POST:
 
 - All 6 preset itineraries by car, plus motorcycle and bicycle samples, returned 200 from `valhalla-fossgis`.
 - No notice mentions Overpass.
-- Production's page asset matches the build (`page-DnV64chf.js`), and the service worker is `lastrico-v13`.
+- Production's page asset matches the build (`page-CZI9cJ1d.js`), and the service worker is `lastrico-v13`.
 - Invalid coordinates return 400, and `/api/reports` returns 200.
 
 ### `wrangler dev` queue reproduction
@@ -98,8 +105,7 @@ A client abort while queued and while in flight did not stall later requests loc
 
 ## Known issues left open
 
-- **Landscape HUD:** on a phone in landscape the instruction and trip panels overlap by about 9 px and cover nearly all of the map (`simulation-hud-dark-852x393.png`). The checklist still tests landscape.
-- **Toast:** "Non interagire con lo schermo" overlaps HUD controls for a few seconds.
+- **Landscape HUD:** on a phone in landscape the instruction and trip panels overlap by about 9 px and cover nearly all of the map (`simulation-hud-dark-852x393.png`). All controls still receive taps. The checklist still tests landscape.
 - **Coverage:** surface data covers about 5% of the accepted Milan area, and nothing warns when a route leaves it.
 - **`/api/routes` has no per-client rate limit.** This is needed before wider testing, not for one iPhone.
 - **Coordinates are still sent in GET URLs,** with Workers observability enabled.
