@@ -13,6 +13,7 @@ export type OptimizationCandidate = {
     unknownMeters: number;
     totalMeters: number;
     confirmedRestrictionMeters?: number;
+    blockingRestrictionMeters?: number;
   };
 };
 export type OptimizationPolicy = {
@@ -29,7 +30,8 @@ export function isLegalCandidate(candidate: OptimizationCandidate, mode: Transpo
     : route.provider === "valhalla-fossgis" && route.profile === mode;
   // Provider profiles retain turn/access restrictions. Reject additional, unambiguous
   // local contradictions; missing OSM evidence is not proof of illegal travel.
-  return correctProfile && (surfaceScore.confirmedRestrictionMeters ?? 0) === 0
+  const restrictedMeters = surfaceScore.blockingRestrictionMeters ?? surfaceScore.confirmedRestrictionMeters ?? 0;
+  return correctProfile && restrictedMeters === 0
     && Number.isFinite(route.duration) && route.duration >= 0
     && Number.isFinite(candidate.riskMeters) && candidate.riskMeters >= 0
     && Number.isFinite(surfaceScore.unknownMeters) && surfaceScore.unknownMeters >= 0;

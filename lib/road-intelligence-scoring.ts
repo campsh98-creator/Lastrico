@@ -45,6 +45,10 @@ export type RoadIntelligenceScore = {
   /** Close, unambiguous geometry with explicit forbidden access or known wrong-way travel.
    * Zero is not a legal-route certification; turn and conditional restrictions stay with the provider. */
   confirmedRestrictionMeters: number;
+  /** Restricted distance that disqualifies a route: everything except private access at its ends. */
+  blockingRestrictionMeters: number;
+  /** Private access next to the start or destination, which the driver must be able to use. */
+  terminalPrivateAccessMeters: number;
 };
 
 export type RoadIntelligenceIndex = {
@@ -176,32 +180,44 @@ const ACCESS_KEYS: Record<TransportMode, string[]> = {
   bicycle: ["bicycle", "vehicle", "access"],
 };
 
+type RestrictionKind = "private" | "prohibited";
+
+// A courtyard or private road can be the only way to reach an address, so the provider
+// allows it at the ends of a route. Crossing private land mid-route stays disqualifying.
+const TERMINAL_ACCESS_METERS = 150;
+
 // Restriction evidence is intentionally narrower than surface matching. Unknown
 // access, destination access and dismount cannot be turned into a prohibition.
-function explicitlyRestricted(segment: RoadSegmentRecord, a: GeoCoordinate, b: GeoCoordinate, mode: TransportMode) {
+function explicitRestriction(
+  segment: RoadSegmentRecord,
+  a: GeoCoordinate,
+  b: GeoCoordinate,
+  mode: TransportMode,
+): RestrictionKind | null {
   const tags = segment.rawTags;
   if (tags) {
     for (const key of ACCESS_KEYS[mode]) {
-      if (tags[`${key}:conditional`] || tags[`${key}:forward`] || tags[`${key}:backward`]) return false;
+      if (tags[`${key}:conditional`] || tags[`${key}:forward`] || tags[`${key}:backward`]) return null;
       const value = tags[key]?.trim().toLowerCase();
       if (value) {
-        if (value === "no" || (value === "private" && tags.service?.trim().toLowerCase() !== "driveway")) return true;
+        if (value === "no") return "prohibited";
+        if (value === "private" && tags.service?.trim().toLowerCase() !== "driveway") return "private";
         break; // A more specific permission overrides a generic prohibition.
       }
     }
   }
 
-  if (!segment.modeAccess?.[mode]) return false;
+  if (!segment.modeAccess?.[mode]) return null;
   // Side-specific cycling direction exceptions need graph semantics that this
   // geometric check does not have. Do not infer a confirmed violation from them.
   if (mode === "bicycle" && tags && Object.keys(tags).some((key) =>
     key.startsWith("cycleway:") && (key.includes("oneway") || key.includes("conditional")),
-  )) return false;
+  )) return null;
   const direction = segment.modeDirections?.[mode];
-  if (direction !== "forward" && direction !== "backward") return false;
+  if (direction !== "forward" && direction !== "backward") return null;
   const [start, end] = direction === "backward"
     ? [segment.coordinates[1], segment.coordinates[0]] : segment.coordinates;
-  return !headingsAlign(a, b, start, end, true);
+  return headingsAlign(a, b, start, end, true) ? null : "prohibited";
 }
 
 function restrictionSample(
@@ -209,22 +225,27 @@ function restrictionSample(
   a: GeoCoordinate,
   b: GeoCoordinate,
   mode: TransportMode,
-) {
+): RestrictionKind | null {
   const sorted = [...candidates].sort((x, y) => x.distance - y.distance);
   const nearest = sorted[0];
-  if (!nearest || nearest.distance > 3 || nearest.segment.osmWayId === null) return false;
+  if (!nearest || nearest.distance > 3 || nearest.segment.osmWayId === null) return null;
   const segment = nearest.segment;
   const grade = (road: RoadSegmentRecord) => `${road.rawTags?.layer ?? "0"}:${road.rawTags?.bridge ?? "no"}:${road.rawTags?.tunnel ?? "no"}`;
   if (sorted.some((other) => other.distance <= nearest.distance + 2
-    && (other.segment.osmWayId !== segment.osmWayId || grade(other.segment) !== grade(segment)))) return false;
+    && (other.segment.osmWayId !== segment.osmWayId || grade(other.segment) !== grade(segment)))) return null;
   const [c, d] = segment.coordinates;
-  if (pointToSegmentDistance(a, c, d) > 3 || pointToSegmentDistance(b, c, d) > 3) return false;
+  if (pointToSegmentDistance(a, c, d) > 3 || pointToSegmentDistance(b, c, d) > 3) return null;
   const scaleX = metersPerLongitude((a[1] + b[1]) / 2);
   const rx = (b[0] - a[0]) * scaleX, ry = (b[1] - a[1]) * 110_540;
   const sx = (d[0] - c[0]) * scaleX, sy = (d[1] - c[1]) * 110_540;
   const denominator = Math.hypot(rx, ry) * Math.hypot(sx, sy);
-  if (!denominator || Math.abs((rx * sx + ry * sy) / denominator) < 0.98) return false;
-  return explicitlyRestricted(segment, a, b, mode);
+  if (!denominator || Math.abs((rx * sx + ry * sy) / denominator) < 0.98) return null;
+  return explicitRestriction(segment, a, b, mode);
+}
+
+// Any confirmed restriction must stay visible even when it is shorter than one rounded metre.
+function restrictedMeters(meters: number) {
+  return meters > 1e-6 ? Math.max(1, Math.round(meters)) : 0;
 }
 
 export function scoreRoadIntelligence(
@@ -244,6 +265,10 @@ export function scoreRoadIntelligence(
   let totalMeters = 0;
   let ambiguousMatchesCount = 0;
   let confirmedRestrictionMeters = 0;
+  let terminalPrivateAccessMeters = 0;
+  let traversedMeters = 0;
+  const routeMeters = coordinates.reduce((sum, point, index) =>
+    index === 0 ? 0 : sum + geographicDistance(coordinates[index - 1], point), 0);
   const matched = new Set<string>();
   const matchedFeatures = new Set<string>();
 
@@ -317,8 +342,14 @@ export function scoreRoadIntelligence(
         }
       }
 
-      if (restrictionSample(geometricCandidates, sampleA, sampleB, mode)) {
+      const restriction = restrictionSample(geometricCandidates, sampleA, sampleB, mode);
+      if (restriction) {
         confirmedRestrictionMeters += sampleLength;
+        const sampleStart = traversedMeters + sample * sampleLength;
+        if (restriction === "private" && (sampleStart <= TERMINAL_ACCESS_METERS
+          || routeMeters - sampleStart - sampleLength <= TERMINAL_ACCESS_METERS)) {
+          terminalPrivateAccessMeters += sampleLength;
+        }
       }
 
       // Reject a closer prohibited road rather than transferring its route samples
@@ -365,6 +396,7 @@ export function scoreRoadIntelligence(
         embeddedRailsMeters += sampleLength;
       }
     }
+    traversedMeters += length;
   }
 
   const roundedTotal = Math.round(totalMeters);
@@ -401,6 +433,8 @@ export function scoreRoadIntelligence(
     matchedSegments: matched.size,
     matchedFeatures: matchedFeatures.size,
     ambiguousMatchesCount,
-    confirmedRestrictionMeters: confirmedRestrictionMeters > 0 ? Math.max(1, Math.round(confirmedRestrictionMeters)) : 0,
+    confirmedRestrictionMeters: restrictedMeters(confirmedRestrictionMeters),
+    blockingRestrictionMeters: restrictedMeters(confirmedRestrictionMeters - terminalPrivateAccessMeters),
+    terminalPrivateAccessMeters: restrictedMeters(terminalPrivateAccessMeters),
   };
 }

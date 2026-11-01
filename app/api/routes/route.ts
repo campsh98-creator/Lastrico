@@ -45,6 +45,11 @@ type ScoredRoute = {
   source: string;
 };
 
+/** Retrying cannot help: every provider route contradicts explicit local access evidence. */
+class NoLegalRouteError extends Error {
+  override name = "NoLegalRouteError";
+}
+
 type ModePolicy = {
   surfaceMatchMeters: number;
   equivalentDistanceMeters: number;
@@ -323,6 +328,7 @@ function routePayload(
     unpavedSurfaceMeters: surfaceScore.unpavedMeters,
     surfaceSource: "osm" as const,
     cyclewayMeters: surfaceScore.cyclewayMeters ?? 0,
+    terminalPrivateAccessMeters: surfaceScore.terminalPrivateAccessMeters,
     instructions: route.instructions,
     problemSegments,
   };
@@ -456,7 +462,7 @@ export async function GET(request: NextRequest) {
     const baseScored: ScoredRoute[] = baseRoutes.map((route, index) =>
       scoredCandidate(route, `base-${index + 1}`));
     const preliminaryFast = fastestLegalCandidate(baseScored, mode);
-    if (!preliminaryFast) throw new Error("Nessun percorso compatibile con le restrizioni note");
+    if (!preliminaryFast) throw new NoLegalRouteError("Nessun percorso compatibile con le restrizioni note");
     const fastestBase = preliminaryFast.route;
     const preliminarySafe = selectSafeRoute(
       baseScored,
@@ -573,7 +579,7 @@ export async function GET(request: NextRequest) {
     const scored: ScoredRoute[] = candidates.map((candidate) =>
       scoredCandidate(candidate.route, candidate.source));
     const fast = fastestLegalCandidate(scored, mode);
-    if (!fast) throw new Error("Nessun percorso compatibile con le restrizioni note");
+    if (!fast) throw new NoLegalRouteError("Nessun percorso compatibile con le restrizioni note");
     const selection = selectOptimizedRoute(scored, fast, mode, avoidance, maximumExtraMinutes, policy,
       (a, b) => routesAreEquivalent(a, b, mode));
     const safe = selection.safe;
@@ -611,6 +617,9 @@ export async function GET(request: NextRequest) {
     const bicycleCoverageNotice = mode === "bicycle"
       ? ". La copertura locale dei fondi ciclabili può essere incompleta"
       : "";
+    const terminalAccessNotice = fast.surfaceScore.terminalPrivateAccessMeters + safe.surfaceScore.terminalPrivateAccessMeters > 0
+      ? ". Partenza o arrivo su un tratto privato secondo OpenStreetMap: verifica di potervi accedere"
+      : "";
     const calculationCompletedAt = performance.now();
 
     return NextResponse.json({
@@ -645,6 +654,8 @@ export async function GET(request: NextRequest) {
       candidateDiagnostics: scored.map((candidate) => ({
         eligibleModeAndAccess: isLegalCandidate(candidate, mode),
         confirmedRestrictionMeters: candidate.surfaceScore.confirmedRestrictionMeters,
+        blockingRestrictionMeters: candidate.surfaceScore.blockingRestrictionMeters,
+        terminalPrivateAccessMeters: candidate.surfaceScore.terminalPrivateAccessMeters,
         paretoOptimal: selection.frontier.includes(candidate),
         source: candidate.source,
         provider: candidate.route.provider,
@@ -689,7 +700,7 @@ export async function GET(request: NextRequest) {
                 safe.surfaceScore.matchedFeatures,
               )} way OSM abbinate al percorso (archivio OSM locale)`
             : `${routeCountLabel} ${checkedLabel}: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale)`
-      ) + bicycleCoverageNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
+      ) + bicycleCoverageNotice + terminalAccessNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
     }, {
       headers: {
         "Cache-Control": "private, no-store",
@@ -701,6 +712,16 @@ export async function GET(request: NextRequest) {
       area: area.id,
       calculationMode: navigationRequest ? "navigation" : "planner",
     });
+    if (error instanceof NoLegalRouteError) {
+      return NextResponse.json(
+        {
+          error: "Tutti i percorsi trovati attraversano tratti vietati secondo OpenStreetMap. Prova una partenza o una destinazione vicina.",
+          mode,
+          transportMode: mode,
+        },
+        { status: 422 },
+      );
+    }
     return NextResponse.json(
       {
         error: modeUnavailableMessage(mode),

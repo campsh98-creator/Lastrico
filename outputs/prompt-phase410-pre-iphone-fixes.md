@@ -21,6 +21,7 @@ Line numbers refer to commit `1807744`. Re-locate each reference before editing.
 | 1 | E | Versioned pilot deployment | Every iPhone test |
 | 1 | F | Honest UI: percent text, dark contrast, privacy copy | Every iPhone test |
 | 1 | G | Server error logging without location data | Every iPhone test |
+| 1 | K | Private access at route ends (found during execution) | Every iPhone test |
 | 2 | H | Route equivalence based on divergent length | Tests that include Milan |
 | 2 | I | Do not stop candidate search on a marginal gain | Tests that include Milan |
 | 2 | J | Count unpaved surfaces in route risk | Tests that include Milan |
@@ -293,6 +294,17 @@ Do not assert a specific better route here. The current generators may not find 
 - A candidate with 300 m of compacted surface can beat 300 m of sett.
 - Asphalt still contributes zero.
 - No additional Valhalla calls occur on an unpaved-only route.
+
+### K. Private access at route ends (found during execution)
+
+**Problem:** an address reachable only through a short `vehicle=private` stretch made the local restriction check reject every provider route, so `/api/routes` returned 503 "riprova tra poco" for a valid destination (start 9.1765,45.4682, end 9.1771,45.4623). Retrying cannot help, and the generic error hid the cause.
+
+**Required change:** private access within 150 m of the start or destination no longer disqualifies a route, and the notice tells the driver to check they can use it. `access=no`, wrong-way travel and private land crossed mid-route stay disqualifying. When every route is disqualified, respond 422 with an explicit message instead of the provider-outage 503.
+
+**Acceptance criteria**
+
+- The route above returns 200 with the private-access notice.
+- Private mid-route, prohibited at the destination and wrong-way at the destination each return 422.
 
 ## 5. Tests
 

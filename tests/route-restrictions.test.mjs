@@ -74,3 +74,16 @@ test("restriction evidence is independent of source ordering without changing su
   assert.equal(score([...blocked, ...farther]).smoothMeters, 0);
   assert.ok(score([...blocked, ...farther]).confirmedRestrictionMeters > 100);
 });
+
+test("only private access at the route ends stops counting as blocking", () => {
+  const privateRoads = roads({ access: "private" });
+  const privateScore = score(privateRoads);
+  assert.equal(privateScore.confirmedRestrictionMeters, privateScore.totalMeters);
+  assert.equal(
+    privateScore.blockingRestrictionMeters + privateScore.terminalPrivateAccessMeters,
+    privateScore.confirmedRestrictionMeters,
+  );
+  const prohibited = score(roads({ access: "no" }));
+  assert.equal(prohibited.terminalPrivateAccessMeters, 0);
+  assert.equal(prohibited.blockingRestrictionMeters, prohibited.confirmedRestrictionMeters);
+});

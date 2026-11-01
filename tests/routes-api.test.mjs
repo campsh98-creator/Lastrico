@@ -224,3 +224,37 @@ test("identical requests are deterministic and contact only the routing provider
   // The stub's own assertion would be swallowed by the provider's error handling.
   assert.deepEqual(calls.filter((call) => !call.url.includes("valhalla")).map((call) => call.url), []);
 });
+
+test("private access beside the destination stays routable with an explicit warning", async (t) => {
+  const longRoute = [[9.28, 45.53], [9.2942, 45.53], [9.295, 45.53]];
+  const privateEnd = {
+    id: 900000003, tags: { highway: "service", vehicle: "private" },
+    geometry: longRoute.slice(1).map(([lon, lat]) => ({ lon, lat })),
+  };
+  fixtures(t, [trip(longRoute, 120)], [privateEnd]);
+  const response = await GET(request({ start: longRoute[0].join(","), end: longRoute[2].join(",") }));
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.ok(data.fast.terminalPrivateAccessMeters > 0);
+  assert.equal(data.candidateDiagnostics[0].blockingRestrictionMeters, 0);
+  assert.match(data.dataNotice, /tratto privato/);
+});
+
+test("access restrictions that retrying cannot solve report 422, not a provider outage", async (t) => {
+  const longRoute = [[9.28, 45.53], [9.285, 45.53], [9.286, 45.53], [9.2942, 45.53], [9.295, 45.53]];
+  const stretch = ([from, to], tags) => ({
+    id: 900000004, tags: { highway: "service", ...tags },
+    geometry: [from, to].map(([lon, lat]) => ({ lon, lat })),
+  });
+  const cases = [
+    ["private mid-route", stretch([longRoute[1], longRoute[2]], { vehicle: "private" })],
+    ["prohibited at the destination", stretch([longRoute[3], longRoute[4]], { vehicle: "no" })],
+    ["wrong way at the destination", stretch([longRoute[4], longRoute[3]], { oneway: "yes" })],
+  ];
+  for (const [label, way] of cases) {
+    fixtures(t, [trip(longRoute, 120)], [way]);
+    const response = await GET(request({ start: longRoute[0].join(","), end: longRoute[4].join(",") }));
+    assert.equal(response.status, 422, label);
+    assert.match((await response.json()).error, /tratti vietati/);
+  }
+});
