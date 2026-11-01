@@ -986,3 +986,66 @@
 
 
 
+
+/* Phase 4.10 GPS trace recorder */
+.p43-trace-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.p43-trace-controls small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--p43-card-detail);
+}
+
+.p43-trace-status {
+  margin: 0;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  background: var(--p43-notice-surface);
+  color: var(--p43-notice-ink);
+}
+
+.p43-trace-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+
+.p43-trace-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.p43-trace-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.p43-trace-actions button {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border, #e2ded9);
+  border-radius: 8px;
+  background: var(--white, #ffffff);
+  color: var(--ink, #122023);
+  font: inherit;
+}
+
+.p43-trace-actions button:disabled {
+  color: var(--p43-card-detail);
+  cursor: not-allowed;
+}

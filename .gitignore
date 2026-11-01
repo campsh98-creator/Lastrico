@@ -60,3 +60,6 @@ next-env.d.ts
 /dist/
 /.wrangler/
 /work/
+
+# Real GPS traces reveal where a person was and must never be committed.
+/outputs/field-traces/

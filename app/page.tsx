@@ -24,6 +24,7 @@ import {
   RouteComparisonPanel,
   LocalFieldFeedback,
   NavigationDiagnosticsCard,
+  GpsTraceControls,
 } from "@/components/phase43";
 import {
   PILOT_AREAS,
@@ -60,6 +61,15 @@ import {
   type RouteProgressModel,
 } from "@/lib/route-progress";
 import { evaluateVoiceGuidance } from "@/lib/voice-guidance";
+import {
+  createGpsTraceRecorder,
+  deleteGpsTrace,
+  listGpsTraces,
+  readGpsTrace,
+  type TraceRecorderStatus,
+  type TraceStorage,
+  type TraceSummary,
+} from "@/lib/gps-trace";
 import {
   bearingBetween,
   createNavigationFixState,
@@ -371,6 +381,14 @@ function draftGeoJSON(start: Coordinate | null, end: Coordinate | null) {
   };
 }
 
+function traceStorage(): TraceStorage | null {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
 function formatDistance(meters: number) {
   if (meters < 1000) return `${Math.max(0, Math.round(meters / 10) * 10)} m`;
   return `${(meters / 1000).toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km`;
@@ -404,6 +422,7 @@ export default function Home() {
   const lastJourneyOriginRef = useRef<Coordinate | null>(null);
   const lastJourneyCalculationRef = useRef(0);
   const navigationFixStateRef = useRef(createNavigationFixState());
+  const traceRecorderRef = useRef<ReturnType<typeof createGpsTraceRecorder> | null>(null);
   const lastSpokenInstructionRef = useRef("");
   const journeyActiveRef = useRef(false);
   const selectedRouteRef = useRef<RouteResult | null>(null);
@@ -499,9 +518,15 @@ export default function Home() {
   const [isOnline, setIsOnline] = useState(true);
   const [fieldFeedbackOpen, setFieldFeedbackOpen] = useState(false);
   const [showDiagnostics, setShowDiagnostics] = useState(false);
+  const [traceEnabled, setTraceEnabled] = useState(false);
+  const [traceStatus, setTraceStatus] = useState<TraceRecorderStatus>("idle");
+  const [traces, setTraces] = useState<TraceSummary[]>([]);
   const [navigationDiagnostics, setNavigationDiagnostics] = useState<NavigationDiagnostics>(() => createNavigationDiagnostics());
   const recordDiagnostic = useCallback((event: NavigationDiagnosticEvent) => {
     setNavigationDiagnostics((current) => recordNavigationDiagnosticEvent(current, event));
+    if (event.type !== "fix-accepted" && event.type !== "fix-rejected") {
+      traceRecorderRef.current?.recordEvent(event.type, event.type === "wake-lock" ? String(event.active) : undefined);
+    }
   }, []);
   const landmarks = nodes.filter((node) => node.landmark);
   const selectedRoute = activeRoute === "safe" ? safeRoute : fastRoute;
@@ -563,7 +588,8 @@ export default function Home() {
     if (gpsState === "outside") return `Posizione fuori dall’area pilota di ${area.name}`;
     if (gpsState === "temporarily-unavailable") return "Posizione temporaneamente non disponibile · ultimo punto valido";
     if (gpsState === "offroute") return "Fuori percorso · attendo un fix affidabile";
-    return `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · posizione non salvata`;
+    const positionStorage = traceStatus === "recording" ? "traccia salvata su questo dispositivo" : "posizione non salvata";
+    return `Precisione ${journeyAccuracy ? `±${Math.round(journeyAccuracy)} m` : "in acquisizione"} · ${positionStorage}`;
   })();
   const speakInstruction = useCallback((text: string) => {
     if (!voiceEnabledRef.current || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
@@ -602,6 +628,13 @@ export default function Home() {
     );
     navigationFixStateRef.current = withReplacementRoute(navigationFixStateRef.current, 0);
     setGpsProgress(null);
+    traceRecorderRef.current?.addRoute({
+      progressMeters: 0,
+      minutes: nextSelectedRoute.minutes,
+      distanceKm: nextSelectedRoute.distance,
+      coordinates: nextSelectedRoute.coordinates,
+      instructions: nextSelectedRoute.instructions ?? [],
+    });
     setActiveRoute(routeKind);
   }
 
@@ -980,6 +1013,7 @@ export default function Home() {
     if (!voiceEval.shouldSpeak || !voiceEval.textToSpeak) return;
     lastSpokenInstructionRef.current = voiceEval.spokenInstructionId ?? "";
     speakInstruction(voiceEval.textToSpeak);
+    traceRecorderRef.current?.recordEvent("voice-spoken", voiceEval.spokenInstructionId ?? undefined);
   }, [
     isJourneyActive,
     voiceEnabled,
@@ -1031,6 +1065,21 @@ export default function Home() {
     window.queueMicrotask(() => {
       setVoiceAvailable("speechSynthesis" in window && "SpeechSynthesisUtterance" in window);
     });
+  }, []);
+
+  useEffect(() => {
+    window.queueMicrotask(() => setTraces(listGpsTraces(traceStorage())));
+    // iOS does not reliably fire pagehide, so a hidden page also saves what is buffered.
+    const saveTrace = () => {
+      if (document.visibilityState !== "visible") traceRecorderRef.current?.flush();
+    };
+    window.addEventListener("pagehide", saveTrace);
+    document.addEventListener("visibilitychange", saveTrace);
+    return () => {
+      window.removeEventListener("pagehide", saveTrace);
+      document.removeEventListener("visibilitychange", saveTrace);
+      traceRecorderRef.current?.flush();
+    };
   }, []);
 
   useEffect(() => {
@@ -1549,6 +1598,15 @@ export default function Home() {
         );
         setGpsProgress(replacementProgress);
       }
+      if (options.journeySession !== undefined) {
+        traceRecorderRef.current?.addRoute({
+          progressMeters: navigationFixStateRef.current.progressMeters,
+          minutes: nextSelectedRoute.minutes,
+          distanceKm: nextSelectedRoute.distance,
+          coordinates: nextSelectedRoute.coordinates,
+          instructions: nextSelectedRoute.instructions ?? [],
+        });
+      }
       setLastRecalculatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
       const timingNotice = requestedMode === "bicycle" ? "Tempi stimati senza traffico live" : "Tempi medi senza traffico live";
       setStatus(`${data.dataNotice}. ${timingNotice}.`);
@@ -1731,6 +1789,10 @@ export default function Home() {
     lastJourneyOriginRef.current = null;
     navigationFixStateRef.current = createNavigationFixState();
     setGpsProgress(null);
+    traceRecorderRef.current?.stop();
+    traceRecorderRef.current = null;
+    setTraceStatus("idle");
+    setTraces(listGpsTraces(traceStorage()));
     navigationStartedAtRef.current = 0;
     lastValidGpsFixAtRef.current = null;
     gpsStallReportedRef.current = false;
@@ -1758,7 +1820,7 @@ export default function Home() {
     const routeResult = selectedRouteRef.current;
     const routeModel = selectedRouteModelRef.current;
     const mode = transportModeRef.current;
-    const decision = processGpsFix(navigationFixStateRef.current, fix, {
+    const context = {
       now,
       mode,
       bounds: activeArea.bounds,
@@ -1767,8 +1829,14 @@ export default function Home() {
         : null,
       lastCalculationAt: lastJourneyCalculationRef.current,
       calculationInProgress: loadingRef.current,
-    });
+    };
+    const decision = processGpsFix(navigationFixStateRef.current, fix, context);
     navigationFixStateRef.current = decision.state;
+    const recorder = traceRecorderRef.current;
+    if (recorder) {
+      recorder.recordFix(fix, context, decision);
+      setTraceStatus(recorder.status);
+    }
 
     if (decision.outcome === "outside") {
       recordDiagnostic({ type: "fix-rejected", reason: "outside" });
@@ -1898,6 +1966,24 @@ export default function Home() {
       setStatus("Il GPS non è disponibile su questo dispositivo. Puoi usare Simula percorso.");
       return;
     }
+    if (traceEnabled) {
+      const recorder = createGpsTraceRecorder(traceStorage());
+      recorder.start({
+        id: crypto.randomUUID(),
+        startedAt: new Date().toISOString(),
+        area: areaIdRef.current,
+        mode: transportModeRef.current,
+      });
+      recorder.addRoute({
+        progressMeters: 0,
+        minutes: routeForJourney.minutes,
+        distanceKm: routeForJourney.distance,
+        coordinates: routeForJourney.coordinates,
+        instructions: routeForJourney.instructions ?? [],
+      });
+      traceRecorderRef.current = recorder;
+      setTraceStatus(recorder.status);
+    }
     setGpsState("requesting");
     setStatus("Autorizza la posizione precisa: aggancio il GPS al percorso Lastrico…");
     journeyWatchRef.current = navigator.geolocation.watchPosition(
@@ -1926,6 +2012,42 @@ export default function Home() {
       },
       { enableHighAccuracy: true, maximumAge: 1500, timeout: 12000 },
     );
+  }
+
+  async function exportGpsTrace(id: string) {
+    traceRecorderRef.current?.flush();
+    const storage = traceStorage();
+    const trace = storage && readGpsTrace(storage, id);
+    if (!trace) {
+      setStatus("Non riesco a leggere questa traccia dal dispositivo.");
+      return;
+    }
+    const name = `lastrico-gps-trace-${trace.startedAt.slice(0, 16).replace(/[:T]/g, "-")}.json`;
+    const file = new File([JSON.stringify(trace)], name, { type: "application/json" });
+    if (navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: "Traccia GPS Lastrico" });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function removeGpsTrace(id: string) {
+    const storage = traceStorage();
+    if (!storage) return;
+    deleteGpsTrace(storage, id);
+    setTraces(listGpsTraces(storage));
+    setStatus("Traccia GPS eliminata dal dispositivo.");
   }
 
   function recenterNavigation() {
@@ -2374,6 +2496,17 @@ export default function Home() {
                       onResetDiagnostics={() => setNavigationDiagnostics(createNavigationDiagnostics())}
                     />
                   )}
+                  {showDiagnostics && (
+                    <GpsTraceControls
+                      enabled={traceEnabled}
+                      status={traceStatus}
+                      traces={traces}
+                      journeyActive={isJourneyActive}
+                      onToggle={setTraceEnabled}
+                      onExport={(id) => void exportGpsTrace(id)}
+                      onDelete={removeGpsTrace}
+                    />
+                  )}
                 </div>
 
                 <button
@@ -2443,6 +2576,8 @@ export default function Home() {
                   <span>{navigationModeLabel}</span>
                   <small>{transportMeta[transportMode].short}</small>
                   <small>{activeRoute === "safe" ? "ANTI-PAVÉ" : "RAPIDO"}</small>
+                  {traceStatus === "recording" && <small data-testid="gps-trace-indicator">REC</small>}
+                  {traceStatus === "suspended" && <small data-testid="gps-trace-indicator">REC SOSPESA</small>}
                 </div>
                 <div className="maneuver-glyph" aria-hidden="true">
                   {directionGlyph(navigationProgress.instruction?.direction)}
