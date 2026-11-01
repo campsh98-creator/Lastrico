@@ -1078,18 +1078,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
+/* In the panel's flow: as an overlay it covered the stop button and took its taps. */
 .driving-safety {
-  position: absolute;
-  bottom: calc(116px + env(safe-area-inset-bottom, 0px));
-  left: 50%;
-  padding: 6px 9px;
-  border-radius: 7px;
-  background: rgba(12, 27, 30, .82);
-  color: #dce8e5;
+  grid-column: 1 / -1;
+  color: var(--metric-label);
   font-size: 11px;
   font-weight: 800;
-  transform: translateX(-50%);
-  white-space: nowrap;
+  text-align: center;
 }
 .arrival-banner {
   position: fixed;
@@ -1595,17 +1590,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .trip-metric.eta strong { font-size: 17px; }
   .navigation-controls { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); }
   .navigation-controls button { min-width: 0; min-height: 44px; }
-  .driving-safety {
-    bottom: calc(134px + env(safe-area-inset-bottom, 0px));
-    font-size: 11px;
-    padding: 5px 12px;
-    border-radius: 8px;
-    max-width: calc(100% - 24px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-  }
 }
 
 @media (max-height: 560px) {
+  /* A landscape phone has no room to spare for a second line of text. */
+  .driving-safety { display: none; }
   .panel-content {
     overflow-y: auto;
     overscroll-behavior: contain;

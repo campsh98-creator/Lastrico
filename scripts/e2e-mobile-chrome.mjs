@@ -77,6 +77,14 @@ const contrast = `(() => {
   return { bg, title: pick(".p43-card-names strong"), detail: pick(".p43-card-names small"), time: pick(".p43-card-time span"), extra: pick(".p43-card-time em") };
 })()`;
 const overflow = `document.documentElement.scrollWidth <= innerWidth`;
+// A control is usable only if a tap at its centre actually lands on it.
+const hudControlsTappable = `[...document.querySelectorAll(".navigation-tripbar button")]
+  .filter((button) => button.getBoundingClientRect().width > 0)
+  .map((button) => {
+    const r = button.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return { label: button.textContent.trim().slice(0, 20), ok: button === hit || button.contains(hit) };
+  })`;
 const traceKeys = `Object.keys(localStorage).filter((k) => k.startsWith("lastrico-gps-trace"))`;
 
 try {
@@ -110,7 +118,12 @@ try {
     const hud = await evaluate(`Boolean(document.querySelector('[data-testid="navigation-hud"]'))`);
     if (!hud) break;
     seen.push(parseKm(await remaining()));
-    if (!shotTaken && seen.length >= 4) { await shot("simulation-hud-dark-393x852"); shotTaken = true; }
+    if (!shotTaken && seen.length >= 4) {
+      await shot("simulation-hud-dark-393x852");
+      const controls = await evaluate(hudControlsTappable);
+      check("portrait: every HUD control receives taps", controls.length >= 3 && controls.every((c) => c.ok), JSON.stringify(controls));
+      shotTaken = true;
+    }
   }
   const monotonic = seen.every((v, i) => i === 0 || v <= seen[i - 1]);
   check("simulation distance decreases monotonically", monotonic && seen.length >= 5 && seen[0] > seen.at(-1), seen.join(","));
@@ -216,6 +229,8 @@ try {
   await waitFor(`Boolean(document.querySelector('[data-testid="navigation-hud"]'))`, 5000, "HUD");
   await sleep(3000);
   check("landscape: no horizontal overflow in HUD", await evaluate(overflow));
+  const landscapeControls = await evaluate(hudControlsTappable);
+  check("landscape: every HUD control receives taps", landscapeControls.length >= 3 && landscapeControls.every((c) => c.ok), JSON.stringify(landscapeControls));
   const hudFit = await evaluate(`(() => { const rects = [".navigation-instruction", ".navigation-tripbar"].map((s) => document.querySelector(s)?.getBoundingClientRect()); return rects.map((r) => r ? [Math.round(r.top), Math.round(r.bottom), Math.round(r.left), Math.round(r.right)] : null); })()`);
   // Recorded, not asserted: the two HUD panels overlap on a landscape phone (known, deferred).
   console.log("landscape HUD rects", JSON.stringify(hudFit));

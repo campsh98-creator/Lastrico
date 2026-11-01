@@ -2640,8 +2640,8 @@ export default function Home() {
                     />
                   )}
                 </div>
+                <div className="driving-safety">{transportMeta[transportMode].safety}</div>
               </section>
-              <div className="driving-safety">{transportMeta[transportMode].safety}</div>
             </div>
           )}
           <div className="map-top">
