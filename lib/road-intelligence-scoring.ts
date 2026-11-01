@@ -22,6 +22,8 @@ export type RoadIntelligenceScore = {
   smoothMeters: number;
   /** Distance on known loose/unpaved surfaces, distinct from smooth or rough stone */
   unpavedMeters: number;
+  /** Unpaved distance weighted by roughness, so a route cannot look smooth by using gravel */
+  weightedUnpavedMeters: number;
   /** Percentage of route on rough surface [0 - 100] */
   pavePercent: number;
   /** Percentage of route on smooth surface [0 - 100] */
@@ -260,6 +262,7 @@ export function scoreRoadIntelligence(
   let probableMeters = 0;
   let smoothMeters = 0;
   let unpavedMeters = 0;
+  let weightedUnpavedMeters = 0;
   let cyclewayMeters = 0;
   let embeddedRailsMeters = 0;
   let totalMeters = 0;
@@ -387,6 +390,7 @@ export function scoreRoadIntelligence(
         smoothMeters += sampleLength;
       } else if (best.surfaceCategory === "unpaved_loose") {
         unpavedMeters += sampleLength;
+        weightedUnpavedMeters += sampleLength * bestWeight;
       }
 
       if (best.cycling?.value?.hasFacility) {
@@ -422,6 +426,7 @@ export function scoreRoadIntelligence(
     probableMeters: Math.round(probableMeters),
     smoothMeters: roundedSmooth,
     unpavedMeters: roundedUnpaved,
+    weightedUnpavedMeters: Math.round(weightedUnpavedMeters),
     pavePercent,
     smoothPercent,
     unknownMeters,

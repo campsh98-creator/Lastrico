@@ -31,5 +31,6 @@ test("known compacted surface contributes to coverage without becoming smooth or
   assert.equal(score.matchedCoveragePercent, 100);
   assert.equal(score.paveMeters, 0);
   assert.equal(score.weightedPaveMeters, 0);
+  assert.equal(score.weightedUnpavedMeters, Math.round(score.totalMeters * 0.35));
   assert.equal(score.smoothMeters, 0);
 });

@@ -258,3 +258,60 @@ test("access restrictions that retrying cannot solve report 422, not a provider 
     assert.match((await response.json()).error, /tratti vietati/);
   }
 });
+
+const over = (coordinates, surface, id) => ({
+  id, tags: { highway: "residential", surface },
+  geometry: coordinates.map(([lon, lat]) => ({ lon, lat })),
+});
+// The detour's connecting streets are known smooth, so only the surfaces under test differ.
+const detourConnectors = [
+  over([points[0], detour[1]], "asphalt", 900000010),
+  over([detour[2], points[1]], "asphalt", 900000011),
+];
+
+test("a marginal base alternative does not stop the planner searching, but a strong one does", async (t) => {
+  const ways = (surface) => [roughWay, ...detourConnectors, over(detour.slice(1, 3), surface, 900000005)];
+  // Same raw pave as the fastest route, with lower weighted risk: the shape of a -33 m "alternative".
+  const marginal = fixtures(t, [trip(points, 600), trip(detour, 650)], ways("paving_stones"));
+  assert.equal((await GET(request({ maxExtraMinutes: "5" }))).status, 200);
+  assert.ok(marginal.length > 1, "the planner must keep looking after a marginal gain");
+
+  const strong = fixtures(t, [trip(points, 600), trip(detour, 650)], ways("asphalt"));
+  assert.equal((await GET(request({ maxExtraMinutes: "5" }))).status, 200);
+  assert.equal(strong.length, 1, "a strong alternative needs no further provider calls");
+
+  const navigation = fixtures(t, [trip(points, 600), trip(detour, 650)], ways("paving_stones"));
+  assert.equal((await GET(request({ maxExtraMinutes: "5", navigation: "1" }))).status, 200);
+  assert.equal(navigation.length, 1, "a reroute must stay fast");
+});
+
+test("unpaved surfaces count as route risk without triggering extra provider calls", async (t) => {
+  const select = async (ways) => {
+    fixtures(t, [trip(points, 600), trip(detour, 650)], [...detourConnectors, ...ways]);
+    return (await GET(request({ maxExtraMinutes: "5", navigation: "1" }))).json();
+  };
+
+  // About 200 m of sett against about 300 m of gravel (weight 0.7), the rest known smooth.
+  const gravelAgainstSett = await select([
+    over([points[0], [9.2926, 45.53]], "sett", 900000006),
+    over([[9.2926, 45.53], points[1]], "asphalt", 900000007),
+    over([detour[1], [9.2938, 45.531]], "gravel", 900000008),
+    over([[9.2938, 45.531], detour[2]], "asphalt", 900000009),
+  ]);
+  assert.equal(gravelAgainstSett.hasDistinctAlternative, false, "gravel must not beat less stone");
+
+  const compactedAgainstSett = await select([
+    over(points, "sett", 900000006),
+    over(detour.slice(1, 3), "compacted", 900000008),
+  ]);
+  assert.equal(compactedAgainstSett.hasDistinctAlternative, true);
+  const detourDiagnostics = compactedAgainstSett.candidateDiagnostics.find((candidate) => candidate.distinctFromFast);
+  assert.equal(detourDiagnostics.weightedPaveMeters, 0, "the stone metric stays stone only");
+  assert.ok(detourDiagnostics.riskMeters > 0);
+
+  const unpavedOnly = fixtures(t, [trip(points, 600)], [over(points, "gravel", 900000012)]);
+  const data = await (await GET(request({ maxExtraMinutes: "5" }))).json();
+  assert.ok(data.fast.unpavedSurfaceMeters > 300);
+  assert.equal(data.fast.paveMeters, 0);
+  assert.equal(unpavedOnly.length, 1, "unpaved roads alone must not generate more provider calls");
+});

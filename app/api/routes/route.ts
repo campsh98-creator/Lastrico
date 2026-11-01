@@ -45,6 +45,10 @@ type ScoredRoute = {
   source: string;
 };
 
+// Provisional until field data exists: below this gain a planner request keeps looking.
+const SUFFICIENT_PAVE_REDUCTION_METERS = 100;
+const SUFFICIENT_PAVE_REDUCTION_RATIO = 0.25;
+
 /** Retrying cannot help: every provider route contradicts explicit local access evidence. */
 class NoLegalRouteError extends Error {
   override name = "NoLegalRouteError";
@@ -454,7 +458,7 @@ export async function GET(request: NextRequest) {
         route,
         source,
         paveMeters: surfaceScore.paveMeters,
-        riskMeters: surfaceScore.weightedPaveMeters,
+        riskMeters: surfaceScore.weightedPaveMeters + surfaceScore.weightedUnpavedMeters,
         surfaceScore,
       };
     };
@@ -471,17 +475,22 @@ export async function GET(request: NextRequest) {
       mode,
       maximumExtraMinutes,
     );
-    const baseAlreadyImproves = !routesAreEquivalent(
-      preliminaryFast.route,
-      preliminarySafe.route,
-      mode,
-    ) && preliminarySafe.riskMeters + policy.minimumPaveReduction <= preliminaryFast.riskMeters;
+    // A small gain must not end the search for a much better route, except in navigation,
+    // where a reroute has to stay fast.
+    const improvesEnough = (candidate: ScoredRoute, fastest: ScoredRoute) =>
+      !routesAreEquivalent(fastest.route, candidate.route, mode)
+      && candidate.riskMeters + policy.minimumPaveReduction <= fastest.riskMeters
+      && (navigationRequest || fastest.paveMeters - candidate.paveMeters >= Math.max(
+        SUFFICIENT_PAVE_REDUCTION_METERS,
+        fastest.paveMeters * SUFFICIENT_PAVE_REDUCTION_RATIO,
+      ));
+    const baseAlreadyImproves = improvesEnough(preliminarySafe, preliminaryFast);
     const detourResponses: EngineRoute[][] = [];
     let surfaceAwareDirectRoute: EngineRoute | null = null;
     let surfaceAwareDirectMetrics: { roughSlicesCount: number; penalizedMeters: number } | null = null;
 
     const canGenerate = !baseAlreadyImproves && maximumExtraMinutes !== 0
-      && preliminaryFast.riskMeters >= policy.minimumPaveReduction;
+      && preliminaryFast.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction;
     // One bounded provider-cost attempt in planner; navigation keeps its existing latency budget.
     if (canGenerate && (!navigationRequest || surfaceAwarePoc)
       && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
@@ -520,10 +529,8 @@ export async function GET(request: NextRequest) {
       ? [...baseScored, scoredCandidate(surfaceAwareDirectRoute, "surface-aware-valhalla")] : baseScored;
     const directFast = fastestLegalCandidate(directScored, mode)!;
     const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes);
-    const directHasAdmissibleAlternative = directSafe !== directFast
-      && !routesAreEquivalent(directSafe.route, directFast.route, mode);
-    // Retain waypoint fallback if direct search fails to produce an admissible distinct alternative.
-    if (canGenerate && !directHasAdmissibleAlternative) {
+    // Retain waypoint fallback if direct search fails to produce a sufficient distinct alternative.
+    if (canGenerate && !(directSafe !== directFast && improvesEnough(directSafe, directFast))) {
       const anchor = findDetourAnchor(fastestBase, scoped.paveIndex, mode);
       const baseOffset = Math.max(
         policy.detourMinimumMeters,
@@ -561,12 +568,7 @@ export async function GET(request: NextRequest) {
           mode,
           maximumExtraMinutes,
         );
-        if (
-          !routesAreEquivalent(provisionalFast.route, provisionalSafe.route, mode)
-          && provisionalSafe.riskMeters + policy.minimumPaveReduction <= provisionalFast.riskMeters
-        ) {
-          break;
-        }
+        if (improvesEnough(provisionalSafe, provisionalFast)) break;
       }
     }
     const candidates = deduplicateRoutes([
@@ -664,7 +666,8 @@ export async function GET(request: NextRequest) {
         seconds: Math.round(candidate.route.duration),
         paveMeters: candidate.paveMeters,
         pavePercent: candidate.surfaceScore.pavePercent,
-        weightedPaveMeters: candidate.riskMeters,
+        weightedPaveMeters: candidate.surfaceScore.weightedPaveMeters,
+        riskMeters: candidate.riskMeters,
         surfaceConfidence: candidate.surfaceScore.confidence,
         surfaceClassificationConfidence: candidate.surfaceScore.classificationConfidence,
         surfaceDataConfidence: candidate.surfaceScore.dataConfidence,
