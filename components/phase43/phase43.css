@@ -1050,3 +1050,6 @@
   color: var(--p43-card-detail);
   cursor: not-allowed;
 }
+
+.p43-trace-controls label { min-height: var(--tap, 44px); display: flex; align-items: center; gap: var(--space-2, 8px); }
+.p43-trace-controls input[type="checkbox"] { width: 20px; height: 20px; flex: none; accent-color: var(--accent-fill, #16886e); }

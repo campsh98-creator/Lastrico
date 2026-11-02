@@ -8,6 +8,7 @@ import {
   distanceMeters,
   NAVIGATION_POLICY,
   processGpsFix,
+  REROUTE_COOLDOWN_MS,
   withClearedReadings,
   withReplacementRoute,
   type GpsFix,
@@ -43,9 +44,9 @@ export type TraceRoute<T extends ProgressInstruction = ProgressInstruction> = {
   instructions: T[];
 };
 
-/** [timestamp, lon, lat, accuracy, heading, speed, receivedAt, lastCalculationAt, calculating] */
+/** [timestamp, lon, lat, accuracy, heading, speed, receivedAt, lastCalculationAt, calculating, cooldownMs] */
 export type TraceFix = [
-  number, number, number, number, number | null, number | null, number, number, 0 | 1,
+  number, number, number, number, number | null, number | null, number, number, 0 | 1, number,
 ];
 
 export type TraceDecision =
@@ -93,7 +94,6 @@ export type TraceSummary = {
 
 export type TraceRecorderStatus = "idle" | "recording" | "suspended" | "full";
 
-/** A geolocation error clears the reading counters between fixes, which replay must reproduce. */
 export const READINGS_CLEARED_EVENT = "readings-cleared";
 
 const rounded = (value: number) => Math.round(value * 10) / 10;
@@ -260,13 +260,14 @@ export function createGpsTraceRecorder(storage: TraceStorage | null) {
 
     recordFix<T extends ProgressInstruction & { id?: string }>(
       fix: GpsFix,
-      context: Pick<NavigationFixContext<T>, "now" | "lastCalculationAt" | "calculationInProgress">,
+      context: Pick<NavigationFixContext<T>, "now" | "lastCalculationAt" | "calculationInProgress" | "rerouteCooldownMs">,
       decision: NavigationFixDecision<T>,
     ) {
       if (status !== "recording" || !summary) return;
       pendingFixes.push([
         fix.timestamp, fix.coordinate[0], fix.coordinate[1], fix.accuracy, fix.heading, fix.speed,
         context.now, context.lastCalculationAt, context.calculationInProgress ? 1 : 0,
+        context.rerouteCooldownMs ?? REROUTE_COOLDOWN_MS,
       ]);
       pendingDecisions.push(compactDecision(decision));
       summary.fixes += 1;
@@ -360,7 +361,7 @@ export function replayGpsTrace(trace: GpsTrace): TraceReplayReport {
       state = withReplacementRoute(state, route.progressMeters);
       nextRoute += 1;
     }
-    const [timestamp, lon, lat, accuracy, heading, speed, now, lastCalculationAt, calculating] = fix;
+    const [timestamp, lon, lat, accuracy, heading, speed, now, lastCalculationAt, calculating, cooldownMs] = fix;
     const previousProgress = state.progressMeters;
     const current = active as { route: TraceRoute; model: ReturnType<typeof buildRouteProgressModel<ProgressInstruction & { id?: string }>> } | null;
     const decision = processGpsFix(state, { coordinate: [lon, lat], accuracy, timestamp, heading, speed }, {
@@ -372,6 +373,7 @@ export function replayGpsTrace(trace: GpsTrace): TraceReplayReport {
         : null,
       lastCalculationAt,
       calculationInProgress: calculating === 1,
+      rerouteCooldownMs: cooldownMs,
     });
     state = decision.state;
 

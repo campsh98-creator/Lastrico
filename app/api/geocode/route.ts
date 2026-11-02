@@ -21,7 +21,9 @@ export async function GET(request: NextRequest) {
   }
 
   const url = new URL("https://nominatim.openstreetmap.org/search");
-  const queryWithoutCity = query.replace(pilot.id === "milan" ? /,?\s*milano\s*$/i : /,?\s*roccella [ij]onica\s*$/i, "").trim();
+  // Postcode and district after the first comma, as in the app's own labels, are not a street:
+  // "Via Torino 20, Municipio 1 · 20123 · Milano" searches for "Via Torino 20".
+  const queryWithoutCity = query.split(",")[0].trim();
   if (/\d/.test(queryWithoutCity)) {
     url.searchParams.set("street", queryWithoutCity);
     if (pilot.id === "milan") {
@@ -30,7 +32,7 @@ export async function GET(request: NextRequest) {
       url.searchParams.set("city", pilot.name);
     }
   } else {
-    url.searchParams.set("q", query.toLowerCase().includes(pilot.name.toLowerCase()) ? query : `${query}, ${pilot.name}`);
+    url.searchParams.set("q", queryWithoutCity.toLowerCase().includes(pilot.name.toLowerCase()) ? queryWithoutCity : `${queryWithoutCity}, ${pilot.name}`);
   }
   url.searchParams.set("format", "jsonv2");
   url.searchParams.set("limit", "10");

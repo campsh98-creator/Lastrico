@@ -21,14 +21,20 @@ export function routePreferencesMatch(
   );
 }
 
-export function isNavigableRouteGeometry(coordinates: RouteCoordinate[]) {
-  return coordinates.length >= 2 && coordinates.every(([longitude, latitude]) => (
-    Number.isFinite(longitude)
-    && Number.isFinite(latitude)
-    && longitude >= -180
-    && longitude <= 180
-    && latitude >= -90
-    && latitude <= 90
+export function isNavigableRouteGeometry(coordinates: unknown): coordinates is RouteCoordinate[] {
+  if (!Array.isArray(coordinates) || coordinates.length < 2) return false;
+  const valid = coordinates.every((point) => (
+    Array.isArray(point)
+    && Number.isFinite(point[0])
+    && Number.isFinite(point[1])
+    && point[0] >= -180
+    && point[0] <= 180
+    && point[1] >= -90
+    && point[1] <= 90
+  ));
+  // A line that never leaves its first point has nothing to navigate.
+  return valid && coordinates.some(([longitude, latitude]) => (
+    longitude !== coordinates[0][0] || latitude !== coordinates[0][1]
   ));
 }
 

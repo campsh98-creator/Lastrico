@@ -1,6 +1,7 @@
 export type SurfaceMetrics = {
   distance: number;
   paveMeters: number;
+  probablePaveMeters?: number;
   smoothSurfaceMeters?: number;
   unknownSurfaceMeters?: number;
   unpavedSurfaceMeters?: number;
@@ -23,6 +24,8 @@ export function surfaceBreakdownModel(route: SurfaceMetrics) {
     : validMeters(route.unknownSurfaceMeters) ? rough + smooth + unpaved + route.unknownSurfaceMeters
       : validMeters(route.distance) ? route.distance * 1000 : 0;
   const roughMeters = Math.min(total, rough);
+  // Pavé inferred from nearby tags counts towards the total but is not a surveyed surface.
+  const inferredRoughMeters = validMeters(route.probablePaveMeters) ? Math.min(roughMeters, route.probablePaveMeters) : 0;
   const smoothMeters = Math.min(total - roughMeters, smooth);
   const unpavedMeters = Math.min(total - roughMeters - smoothMeters, unpaved);
   const unknownMeters = Math.max(0, total - roughMeters - smoothMeters - unpavedMeters);
@@ -30,7 +33,7 @@ export function surfaceBreakdownModel(route: SurfaceMetrics) {
   const percent = (meters: number) => total > 0 ? Math.round(meters / total * 1000) / 10 : 0;
   return {
     total,
-    roughMeters, smoothMeters, unpavedMeters, unknownMeters, cyclingMeters,
+    roughMeters, inferredRoughMeters, smoothMeters, unpavedMeters, unknownMeters, cyclingMeters,
     roughPercent: percent(roughMeters), smoothPercent: percent(smoothMeters),
     unpavedPercent: percent(unpavedMeters), unknownPercent: percent(unknownMeters),
     cyclingPercent: cyclingMeters === null ? null : percent(cyclingMeters),
@@ -70,6 +73,9 @@ export function SurfaceBreakdown({ route, isLiveResult, activeRoute, transportMo
           <span className="metric-tag"><i className="surface-indicator rough" aria-hidden="true" />{demo ? "Pavé simulato" : "Pavé noto"}</span>
           <strong>{distance(metrics.roughMeters)}</strong>
           <span className="surface-pct">{percentage(metrics.roughPercent)}</span>
+          {metrics.inferredRoughMeters > 0 && (
+            <span className="surface-pct" data-testid="metric-rough-inferred">di cui {distance(metrics.inferredRoughMeters)} probabili</span>
+          )}
         </div>
         <div className="surface-metric-cell" data-testid="metric-unknown">
           <span className="metric-tag"><i className="surface-indicator unknown" aria-hidden="true" />Non verificato</span>

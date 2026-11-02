@@ -111,6 +111,7 @@ export type ArrivalEvaluationInput = {
   arrivalToleranceMeters: number;
   currentArrivalReadings: number;
   journeyMode: "gps" | "simulation" | null;
+  maxArrivalAccuracyMeters?: number;
 };
 
 export type ArrivalEvaluationResult = {
@@ -119,10 +120,13 @@ export type ArrivalEvaluationResult = {
   arrivalNotice: string | null;
 };
 
+const PRECISE_ARRIVAL_ACCURACY_METERS = 25;
+const COARSE_ARRIVAL_READINGS = 4;
+
 /**
  * Reliably verifies whether the user has reached destination.
- * Requires GPS fix quality within 25m, position within arrival tolerance,
- * and multiple consecutive confirmed readings in GPS mode.
+ * Requires the position within arrival tolerance and consecutive readings in GPS mode:
+ * two within ±25 m, or four within ±65 m.
  */
 export function evaluateArrivalConfirmation(input: ArrivalEvaluationInput): ArrivalEvaluationResult {
   if (!input.routeEnd || !input.currentPosition) {
@@ -130,8 +134,10 @@ export function evaluateArrivalConfirmation(input: ArrivalEvaluationInput): Arri
   }
 
   if (input.journeyMode === "gps") {
-    // In GPS mode, reject inaccurate fixes (> 25m) as unreliable for confirming arrival
-    if (input.accuracy === null || input.accuracy > 25) {
+    // Urban canyons rarely report better than ±25 m, so a coarser fix can confirm arrival too,
+    // but it has to repeat for longer. Beyond maxAccuracy a reading says nothing about the destination.
+    const maxAccuracy = input.maxArrivalAccuracyMeters ?? PRECISE_ARRIVAL_ACCURACY_METERS;
+    if (input.accuracy === null || input.accuracy > maxAccuracy) {
       return { isConfirmedArrival: false, consecutiveArrivalReadings: 0, arrivalNotice: null };
     }
   }
@@ -147,7 +153,8 @@ export function evaluateArrivalConfirmation(input: ArrivalEvaluationInput): Arri
   }
 
   const nextReadings = input.currentArrivalReadings + 1;
-  const isConfirmed = input.journeyMode === "simulation" ? true : nextReadings >= 2;
+  const requiredReadings = (input.accuracy ?? 0) <= PRECISE_ARRIVAL_ACCURACY_METERS ? 2 : COARSE_ARRIVAL_READINGS;
+  const isConfirmed = input.journeyMode === "simulation" ? true : nextReadings >= requiredReadings;
 
   return {
     isConfirmedArrival: isConfirmed,

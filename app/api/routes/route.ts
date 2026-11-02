@@ -30,13 +30,6 @@ import { fastestLegalCandidate, isLegalCandidate, selectOptimizedRoute } from "@
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
 type SurfaceScore = RoadIntelligenceScore & { confidence: number };
-type PaveDetail = {
-  id: number;
-  name: string;
-  surface: string;
-  coordinates: Coordinate[];
-};
-
 type ScoredRoute = {
   route: EngineRoute;
   paveMeters: number;
@@ -48,6 +41,9 @@ type ScoredRoute = {
 // Provisional until field data exists: below this gain a planner request keeps looking.
 const SUFFICIENT_PAVE_REDUCTION_METERS = 100;
 const SUFFICIENT_PAVE_REDUCTION_RATIO = 0.25;
+
+// Below this the two points are the same place, and there is nothing to navigate.
+const MINIMUM_ROUTE_METERS = 15;
 
 /** Retrying cannot help: every provider route contradicts explicit local access evidence. */
 class NoLegalRouteError extends Error {
@@ -184,57 +180,6 @@ type PaveSpatialIndex = {
 
 function paveCellKey(cellX: number, cellY: number) {
   return `${cellX}:${cellY}`;
-}
-
-function createPaveSpatialIndex(details: PaveDetail[], cellSize = 0.001): PaveSpatialIndex {
-  const cells = new Map<string, PaveSegmentEntry[]>();
-  const padLon = 0.0003;
-  const padLat = 0.0002;
-  details.forEach((way, wayIndex) => {
-    for (let index = 1; index < way.coordinates.length; index += 1) {
-      const a = way.coordinates[index - 1];
-      const b = way.coordinates[index];
-      const entry: PaveSegmentEntry = { wayIndex, a, b };
-      const minCellX = Math.floor((Math.min(a[0], b[0]) - padLon) / cellSize);
-      const maxCellX = Math.floor((Math.max(a[0], b[0]) + padLon) / cellSize);
-      const minCellY = Math.floor((Math.min(a[1], b[1]) - padLat) / cellSize);
-      const maxCellY = Math.floor((Math.max(a[1], b[1]) + padLat) / cellSize);
-      for (let cx = minCellX; cx <= maxCellX; cx += 1) {
-        for (let cy = minCellY; cy <= maxCellY; cy += 1) {
-          const key = paveCellKey(cx, cy);
-          const bucket = cells.get(key);
-          if (bucket) {
-            bucket.push(entry);
-          } else {
-            cells.set(key, [entry]);
-          }
-        }
-      }
-    }
-  });
-  return { cellSize, cells };
-}
-
-function filterNearPaveDetails(
-  coordinates: Coordinate[],
-  details: PaveDetail[],
-  paveIndex: PaveSpatialIndex,
-  maxDistanceMeters = 18,
-): PaveDetail[] {
-  const matchedWayIndices = new Set<number>();
-  for (const point of coordinates) {
-    const bucket = paveIndex.cells.get(
-      paveCellKey(Math.floor(point[0] / paveIndex.cellSize), Math.floor(point[1] / paveIndex.cellSize)),
-    );
-    if (!bucket) continue;
-    for (const seg of bucket) {
-      if (matchedWayIndices.has(seg.wayIndex)) continue;
-      if (pointToSegmentDistance(point, seg.a, seg.b) <= maxDistanceMeters) {
-        matchedWayIndices.add(seg.wayIndex);
-      }
-    }
-  }
-  return details.filter((_, index) => matchedWayIndices.has(index));
 }
 
 function segmentTouchesPave(a: Coordinate, b: Coordinate, paveIndex: PaveSpatialIndex, mode: TransportMode) {
@@ -415,6 +360,12 @@ export async function GET(request: NextRequest) {
   }
   const mode = requestedMode;
   const policy = MODE_POLICY[mode];
+  if (segmentLength(start, end) < MINIMUM_ROUTE_METERS) {
+    return NextResponse.json(
+      { error: "Partenza e destinazione coincidono. Scegli due punti diversi.", mode, transportMode: mode },
+      { status: 422 },
+    );
+  }
 
   try {
     const spatialRoadStore = await getSpatialRoadStore(area.id);
@@ -602,14 +553,14 @@ export async function GET(request: NextRequest) {
     const comparedLabel = scored.length === 1 ? "confrontato" : "confrontati";
     const checkedLabel = scored.length === 1 ? "controllato" : "controllati";
 
-    const displayedCoordinates = fast.route === safe.route
-      ? fast.route.coordinates
-      : [...fast.route.coordinates, ...safe.route.coordinates];
-    const relevantPave = filterNearPaveDetails(displayedCoordinates, scoped.paveDetails, scoped.paveIndex, 18).slice(0, 70);
-    const relevantPaveIndex = createPaveSpatialIndex(relevantPave);
+    // Drawn from the route itself with the classifier behind the metres shown on its card, so
+    // the map and the numbers agree, and parallel or crossing streets are not painted as pave.
+    const isSampleRough = (prev: Coordinate, curr: Coordinate) => {
+      const mid: Coordinate = [(prev[0] + curr[0]) / 2, (prev[1] + curr[1]) / 2];
+      return scoreRoadIntelligence([prev, mid, curr], scoped.surfaceIndex, policy.surfaceMatchMeters, mode).paveMeters > 0;
+    };
     const routeProblemSegments = (route: EngineRoute) =>
-      filterNearPaveDetails(route.coordinates, relevantPave, relevantPaveIndex, 18)
-        .map((way) => way.coordinates);
+      extractRoughSlices(route.coordinates, isSampleRough, 5);
     const fastProblemSegments = routeProblemSegments(fast.route);
     const safeProblemSegments = safe.route === fast.route
       ? fastProblemSegments
@@ -628,7 +579,9 @@ export async function GET(request: NextRequest) {
       area: area.id,
       fast: routePayload(fast.route, fast.surfaceScore, fastProblemSegments),
       safe: routePayload(safe.route, safe.surfaceScore, safeProblemSegments),
-      problemSegments: relevantPave.map((way) => way.coordinates),
+      problemSegments: safe.route === fast.route
+        ? fastProblemSegments
+        : [...fastProblemSegments, ...safeProblemSegments],
       alternativesAnalyzed: scored.length,
       hasDistinctAlternative,
       surfaceDataAvailable: (

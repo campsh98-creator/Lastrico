@@ -34,7 +34,14 @@ export const NAVIGATION_POLICY: Record<NavigationTransportMode, NavigationPolicy
   bicycle: { offRouteMeters: 38, readings: 3, arrivalMeters: 24, simulationSteps: 110 },
 };
 
-const REROUTE_COOLDOWN_MS = 15_000;
+export const REROUTE_COOLDOWN_MS = 15_000;
+const MAX_REROUTE_COOLDOWN_MS = 120_000;
+// Readings count consecutive evidence, so a long silence means they no longer describe now.
+const READINGS_EXPIRE_SECONDS = 20;
+const RELOCATION_CONFIRMATIONS = 3;
+const DWELL_ARRIVAL_SECONDS = 30;
+const DWELL_ARRIVAL_ROUTE_METERS = 120;
+const DWELL_MAX_ACCURACY_METERS = 65;
 // Averaging across a gap would place the vehicle far behind its fix and then race to catch up.
 const MAX_SMOOTHED_GAP_SECONDS = 5;
 
@@ -61,6 +68,11 @@ export function bearingBetween(a: Coordinate, b: Coordinate) {
   return (toDegrees(Math.atan2(y, x)) + 360) % 360;
 }
 
+/** Failed reroutes back off so a provider outage does not become a steady stream of requests. */
+export function rerouteCooldownMs(consecutiveFailures: number) {
+  return Math.min(MAX_REROUTE_COOLDOWN_MS, REROUTE_COOLDOWN_MS * 2 ** Math.max(0, consecutiveFailures));
+}
+
 export type GpsFix = {
   coordinate: Coordinate;
   accuracy: number;
@@ -79,10 +91,19 @@ export type NavigationFixState = {
   travelledMeters: number;
   offRouteReadings: number;
   arrivalReadings: number;
+  /** Smallest gap seen between the device clock and fix timestamps, so skew is not mistaken for staleness. */
+  clockOffsetMs: number | null;
+  /** Consecutive implausible fixes that agree with each other, which means a real relocation. */
+  relocation: { coordinate: Coordinate; accuracy: number; timestamp: number; count: number } | null;
+  /** Where and when the vehicle stopped near the destination. */
+  dwell: { coordinate: Coordinate; startedAt: number } | null;
 };
 
 export function createNavigationFixState(): NavigationFixState {
   return {
+    clockOffsetMs: null,
+    relocation: null,
+    dwell: null,
     position: null,
     accuracy: null,
     timestamp: null,
@@ -97,11 +118,11 @@ export function createNavigationFixState(): NavigationFixState {
 
 /** A replacement route has its own distances, so nothing measured on the old one carries over. */
 export function withReplacementRoute(state: NavigationFixState, progressMeters: number): NavigationFixState {
-  return { ...state, progressMeters, pendingJump: null, offRouteReadings: 0, arrivalReadings: 0 };
+  return { ...state, progressMeters, pendingJump: null, offRouteReadings: 0, arrivalReadings: 0, dwell: null };
 }
 
 export function withClearedReadings(state: NavigationFixState): NavigationFixState {
-  return { ...state, offRouteReadings: 0, arrivalReadings: 0 };
+  return { ...state, offRouteReadings: 0, arrivalReadings: 0, dwell: null };
 }
 
 export type NavigationFixContext<T extends ProgressInstruction> = {
@@ -115,6 +136,7 @@ export type NavigationFixContext<T extends ProgressInstruction> = {
   } | null;
   lastCalculationAt: number;
   calculationInProgress: boolean;
+  rerouteCooldownMs?: number;
 };
 
 export type NavigationFixDecision<T extends ProgressInstruction> =
@@ -152,34 +174,68 @@ export function processGpsFix<T extends ProgressInstruction>(
   if (!coordinateInBounds(coordinate, context.bounds)) {
     return { outcome: "outside", state: withClearedReadings(state) };
   }
+  // A device clock that disagrees with the GPS by a constant offset must not reject every fix.
+  const clockGapMs = context.now - timestamp;
+  const clockOffsetMs = Number.isFinite(timestamp)
+    ? Math.min(state.clockOffsetMs ?? clockGapMs, clockGapMs)
+    : state.clockOffsetMs;
+  const maximumSpeed = context.mode === "bicycle" ? 22 : 70;
   const reading = evaluateTimedGpsReading({
     coordinate,
     accuracy,
     timestamp,
-    now: context.now,
+    now: context.now - (clockOffsetMs ?? 0),
     previousCoordinate: state.position,
     previousAccuracy: state.accuracy,
     previousTimestamp: state.timestamp,
     bounds: context.bounds,
     distanceMeters,
-    maximumSpeedMetersPerSecond: context.mode === "bicycle" ? 22 : 70,
+    maximumSpeedMetersPerSecond: maximumSpeed,
   });
+  let current: NavigationFixState = { ...state, clockOffsetMs };
   if (!reading.accepted) {
-    return { outcome: "rejected", reason: reading.reason, state: withClearedReadings(state) };
+    // A rejected reading says nothing about the route, so it must not erase evidence
+    // already gathered towards a reroute or arrival.
+    if (reading.reason !== "implausible") return { outcome: "rejected", reason: reading.reason, state: current };
+    const candidate = current.relocation;
+    const agrees = candidate !== null && timestamp > candidate.timestamp
+      && distanceMeters(candidate.coordinate, coordinate) <= Math.max(8, accuracy * 1.5 + candidate.accuracy * 1.25)
+        + ((timestamp - candidate.timestamp) / 1_000) * maximumSpeed;
+    const count = agrees ? candidate.count + 1 : 1;
+    if (count < RELOCATION_CONFIRMATIONS) {
+      return {
+        outcome: "rejected",
+        reason: reading.reason,
+        state: { ...current, relocation: { coordinate, accuracy, timestamp, count } },
+      };
+    }
+    // Several fixes agree on a new place: treat it like a first fix there.
+    current = {
+      ...current,
+      position: null,
+      accuracy: null,
+      timestamp: null,
+      pendingJump: null,
+      offRouteReadings: 0,
+      arrivalReadings: 0,
+      dwell: null,
+    };
   }
+  current.relocation = null;
 
-  const elapsedSeconds = state.timestamp !== null ? (timestamp - state.timestamp) / 1_000 : 1;
-  const previous = state.position;
-  const previousAccuracy = state.accuracy ?? accuracy;
+  const elapsedSeconds = current.timestamp !== null ? (timestamp - current.timestamp) / 1_000 : 1;
+  if (elapsedSeconds > READINGS_EXPIRE_SECONDS) current = withClearedReadings(current);
+  const previous = current.position;
+  const previousAccuracy = current.accuracy ?? accuracy;
   const headingMovementThreshold = Math.max(6, Math.min(25, Math.max(previousAccuracy, accuracy) * 0.75));
   const inferredHeading = previous && gpsCoordinateMoved(previous, coordinate, distanceMeters, headingMovementThreshold)
     ? bearingBetween(previous, coordinate)
-    : state.heading;
+    : current.heading;
   const movingWithReportedHeading = Number.isFinite(reportedHeading)
     && Number.isFinite(reportedSpeed)
     && reportedSpeed! > 1;
   const heading = smoothHeading(
-    state.heading,
+    current.heading,
     movingWithReportedHeading ? reportedHeading! : inferredHeading,
     movingWithReportedHeading ? 0.46 : 0.32,
   );
@@ -190,14 +246,14 @@ export function processGpsFix<T extends ProgressInstruction>(
   const markerMoved = previous === null
     || gpsCoordinateMoved(previous, position, distanceMeters, markerMovementThreshold);
   const next: NavigationFixState = {
-    ...state,
+    ...current,
     position: markerMoved ? position : previous,
     accuracy,
     timestamp,
     heading,
     travelledMeters: markerMoved && previous
-      ? state.travelledMeters + Math.min(250, distanceMeters(previous, position))
-      : state.travelledMeters,
+      ? current.travelledMeters + Math.min(250, distanceMeters(previous, position))
+      : current.travelledMeters,
   };
   const accepted = { outcome: "accepted" as const, position, markerMoved, heading, elapsedSeconds };
 
@@ -214,16 +270,16 @@ export function processGpsFix<T extends ProgressInstruction>(
 
   const { model, minutes, distanceKm } = context.route;
   const policy = NAVIGATION_POLICY[context.mode];
-  let progress = calculateRouteProgress(model, position, minutes, state.progressMeters, {
+  let progress = calculateRouteProgress(model, position, minutes, current.progressMeters, {
     accuracy,
     elapsedSeconds,
     maxSpeedMps: context.mode === "bicycle" ? 22 : 45,
     headingDegrees: movingWithReportedHeading ? reportedHeading : null,
-    pendingJump: state.pendingJump,
+    pendingJump: current.pendingJump,
   });
   // The first fix has no earlier progress to contradict: someone who starts part way along the
   // route is located there, not held back or sent to a reroute.
-  if (state.timestamp === null && progress.offRouteMeters > Math.max(45, accuracy * 1.8)) {
+  if (current.timestamp === null && progress.offRouteMeters > Math.max(45, accuracy * 1.8)) {
     progress = calculateRouteProgress(model, position, minutes, null);
   }
   next.progressMeters = progress.routeProgressMeters;
@@ -239,11 +295,23 @@ export function processGpsFix<T extends ProgressInstruction>(
     journeyTravelledMeters: next.travelledMeters,
     minimumTravelBeforeArrival: Math.min(80, distanceKm * 100),
     arrivalToleranceMeters: policy.arrivalMeters + Math.min(accuracy, 25),
-    currentArrivalReadings: state.arrivalReadings,
+    currentArrivalReadings: current.arrivalReadings,
     journeyMode: "gps",
+    maxArrivalAccuracyMeters: 65,
   });
   next.arrivalReadings = arrival.consecutiveArrivalReadings;
-  if (arrival.isConfirmedArrival && next.arrivalReadings >= 2) {
+
+  // Parking short of the destination never satisfies the arrival radius, so waiting close by
+  // for long enough also counts as having arrived.
+  const nearEnd = progress.remainingMeters <= DWELL_ARRIVAL_ROUTE_METERS
+    && accuracy <= DWELL_MAX_ACCURACY_METERS
+    && next.travelledMeters >= Math.min(80, distanceKm * 100);
+  const stayedPut = nearEnd && current.dwell !== null
+    && distanceMeters(current.dwell.coordinate, position) <= Math.max(15, accuracy);
+  next.dwell = !nearEnd ? null : stayedPut ? current.dwell : { coordinate: position, startedAt: timestamp };
+  const dwelled = next.dwell !== null && (timestamp - next.dwell.startedAt) / 1_000 >= DWELL_ARRIVAL_SECONDS;
+
+  if (arrival.isConfirmedArrival || next.arrivalReadings >= 2 || dwelled) {
     return {
       ...accepted,
       state: next,
@@ -255,13 +323,13 @@ export function processGpsFix<T extends ProgressInstruction>(
   }
 
   const offRoute = evaluateOffRouteReading({
-    currentReadings: state.offRouteReadings,
+    currentReadings: current.offRouteReadings,
     offRouteMeters: progress.offRouteMeters,
     thresholdMeters: policy.offRouteMeters + Math.min(accuracy, 60),
     requiredReadings: policy.readings,
     now: context.now,
     lastCalculationAt: context.lastCalculationAt,
-    cooldownMs: REROUTE_COOLDOWN_MS,
+    cooldownMs: context.rerouteCooldownMs ?? REROUTE_COOLDOWN_MS,
     calculationInProgress: context.calculationInProgress,
   });
   next.offRouteReadings = offRoute.readings;
@@ -270,7 +338,7 @@ export function processGpsFix<T extends ProgressInstruction>(
     state: next,
     progress,
     arrived: false,
-    offRouteStarted: state.offRouteReadings === 0 && offRoute.readings > 0,
+    offRouteStarted: current.offRouteReadings === 0 && offRoute.readings > 0,
     shouldRecalculate: offRoute.shouldRecalculate,
   };
 }
