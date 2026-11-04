@@ -83,8 +83,11 @@ import {
 import {
   ADDRESS_SEARCH_TIMEOUT_MS,
   AddressChoiceNeeded,
+  AUTOCOMPLETE_DEBOUNCE_MS,
   clearStoredPlan,
   CURRENT_POSITION_LABEL,
+  isConfirmedAddressField,
+  MIN_AUTOCOMPLETE_CHARS,
   MINIMUM_ROUTE_METERS,
   PlannerMessage,
   plannerErrorMessage,
@@ -94,6 +97,8 @@ import {
   REROUTE_TIMEOUT_MS,
   ROUTE_TIMEOUT_MS,
   setStoredPlanJourney,
+  shouldApplyAutocompleteResponse,
+  shouldAutoCalculateAfterAddressSelection,
   storePlan,
   updateStoredPlanSelection,
 } from "@/lib/planner-support";
@@ -328,6 +333,15 @@ export default function Home() {
   const promptPreferredRouteRef = useRef<"fast" | null>(null);
   const pendingCalculationRef = useRef(false);
   const resolvedStartRef = useRef<LocationChoice | null>(null);
+  const startLocationRef = useRef<LocationChoice>({ label: "", coordinate: PILOT_AREAS.milan.center });
+  const startTextRef = useRef("");
+  const endTextRef = useRef("");
+  const routeFieldsRef = useRef<HTMLDivElement | null>(null);
+  const autocompleteTimerRef = useRef<number | null>(null);
+  const autocompleteRequestIdRef = useRef(0);
+  const autocompleteControllerRef = useRef<AbortController | null>(null);
+  const focusedAddressFieldRef = useRef<"start" | "end" | null>(null);
+  const geocodeCacheRef = useRef<Map<string, { timestamp: number; results: GeocodeResult[] }>>(new Map());
   const rerouteFailuresRef = useRef(0);
   const lastWatchArmedAtRef = useRef(0);
   const discardPlannedRouteRef = useRef<() => void>(() => undefined);
@@ -335,6 +349,9 @@ export default function Home() {
   const [endLocation, setEndLocation] = useState<LocationChoice>({ label: "", coordinate: PILOT_AREAS.milan.center });
   const [startText, setStartText] = useState("");
   const [endText, setEndText] = useState("");
+  const [inlineSuggestions, setInlineSuggestions] = useState<GeocodeResult[]>([]);
+  const [inlineSuggestionTarget, setInlineSuggestionTarget] = useState<"start" | "end" | null>(null);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const [transportMode, setTransportMode] = useState<TransportMode>("car");
   const [avoidance, setAvoidance] = useState<Avoidance>("strong");
   const [maxExtraMinutes, setMaxExtraMinutes] = useState<number | null>(null);
@@ -588,11 +605,16 @@ export default function Home() {
       // The sheet covers the map's lower edge on a phone, and the data credit has to stay readable.
       // It starts open and folds into its info button once the camera first moves.
       map.addControl(new AttributionControl({ compact: true }), "bottom-left");
-      map.once("movestart", () => {
+      const collapseAttribution = () => {
         const credit = map.getContainer().querySelector(".maplibregl-ctrl-attrib");
         credit?.removeAttribute("open");
         credit?.classList.remove("maplibregl-compact-show");
-      });
+      };
+      collapseAttribution();
+      map.once("style.load", collapseAttribution);
+      map.once("load", collapseAttribution);
+      map.once("idle", collapseAttribution);
+      map.once("movestart", collapseAttribution);
       map.on("styleimagemissing", ({ id }) => {
         if (!map.hasImage(id)) {
           map.addImage(id, { width: 1, height: 1, data: new Uint8Array([0, 0, 0, 0]) });
@@ -647,11 +669,18 @@ export default function Home() {
         const label = `Punto scelto · ${coordinate[1].toFixed(4)}, ${coordinate[0].toFixed(4)}`;
         if (target === "start") {
           discardPlannedRouteRef.current();
-          setStartLocation({ label, coordinate });
+          const chosen = { label, coordinate };
+          startLocationRef.current = chosen;
+          resolvedStartRef.current = chosen;
+          startTextRef.current = label;
+          setStartLocation(chosen);
           setStartText(label);
         } else if (target === "end") {
           discardPlannedRouteRef.current();
-          setEndLocation({ label, coordinate });
+          const chosen = { label, coordinate };
+          endLocationRef.current = chosen;
+          endTextRef.current = label;
+          setEndLocation(chosen);
           setEndText(label);
         } else if (target === "reportStart") {
           setReportStart(coordinate);
@@ -800,6 +829,7 @@ export default function Home() {
     pointMarkersRef.current.start?.setLngLat(startLocation.coordinate);
     const element = pointMarkersRef.current.start?.getElement();
     if (element) element.style.display = startLocation.label ? "" : "none";
+    startLocationRef.current = startLocation;
   }, [startLocation, mapReady]);
 
   useEffect(() => {
@@ -808,6 +838,30 @@ export default function Home() {
     if (element) element.style.display = endLocation.label ? "" : "none";
     endLocationRef.current = endLocation;
   }, [endLocation, mapReady]);
+
+  useEffect(() => {
+    startTextRef.current = startText;
+  }, [startText]);
+
+  useEffect(() => {
+    endTextRef.current = endText;
+  }, [endText]);
+
+  useEffect(() => {
+    if (!inlineSuggestionTarget) return;
+    const handleOutsidePointerDown = (event: PointerEvent) => {
+      const targetNode = event.target;
+      if (targetNode instanceof Node && routeFieldsRef.current?.contains(targetNode)) {
+        return;
+      }
+      focusedAddressFieldRef.current = null;
+      setInlineSuggestions([]);
+      setInlineSuggestionTarget(null);
+      setActiveSuggestionIndex(-1);
+    };
+    document.addEventListener("pointerdown", handleOutsidePointerDown);
+    return () => document.removeEventListener("pointerdown", handleOutsidePointerDown);
+  }, [inlineSuggestionTarget]);
 
   useEffect(() => {
     journeyActiveRef.current = isJourneyActive;
@@ -1185,16 +1239,20 @@ export default function Home() {
     if (nextAreaId === areaIdRef.current || journeyActiveRef.current) return;
     finishNavigation();
     invalidateRouteIntent();
-    addressRequestRef.current?.abort();
-    addressRequestRef.current = null;
+    cancelAddressSearch();
+    geocodeCacheRef.current.clear();
     areaIdRef.current = nextAreaId;
     setAreaId(nextAreaId);
     const nextArea = PILOT_AREAS[nextAreaId];
     const nextStart: LocationChoice = { label: "", coordinate: nextArea.center };
     const nextEnd: LocationChoice = { label: "", coordinate: nextArea.center };
+    startLocationRef.current = nextStart;
+    resolvedStartRef.current = null;
+    endLocationRef.current = nextEnd;
+    startTextRef.current = "";
+    endTextRef.current = "";
     setStartLocation(nextStart);
     setEndLocation(nextEnd);
-    endLocationRef.current = nextEnd;
     setStartText("");
     setEndText("");
     setFastRoute(emptyRoute);
@@ -1230,11 +1288,15 @@ export default function Home() {
     const planArea = plan.areaId as PilotAreaId;
     areaIdRef.current = planArea;
     setAreaId(planArea);
+    startLocationRef.current = plan.start;
+    resolvedStartRef.current = plan.start;
+    endLocationRef.current = plan.end;
+    startTextRef.current = plan.start.label;
+    endTextRef.current = plan.end.label;
     setStartLocation(plan.start);
     setEndLocation(plan.end);
     setStartText(plan.start.label);
     setEndText(plan.end.label);
-    endLocationRef.current = plan.end;
     setAvoidance(plan.preferences.avoidance as Avoidance);
     setMaxExtraMinutes(plan.preferences.maxExtraMinutes);
     navigationPreferencesRef.current = plan.preferences as RoutePreferences;
@@ -1318,14 +1380,107 @@ export default function Home() {
   }
 
   function swapLocations() {
-    const oldStart = startLocation;
-    const oldStartText = startText;
+    const oldStart = startLocationRef.current;
+    const oldStartText = startTextRef.current;
+    const currentEnd = endLocationRef.current ?? endLocation;
+    const currentEndText = endTextRef.current;
     discardPlannedRoute();
-    setStartLocation(endLocation);
+    cancelAddressSearch();
+    startLocationRef.current = currentEnd;
+    resolvedStartRef.current = currentEnd.label ? currentEnd : null;
+    endLocationRef.current = oldStart;
+    startTextRef.current = currentEndText;
+    endTextRef.current = oldStartText;
+    setStartLocation(currentEnd);
     setEndLocation(oldStart);
-    setStartText(endText);
+    setStartText(currentEndText);
     setEndText(oldStartText);
     setStatus("Partenza e destinazione invertite.");
+  }
+
+  function cancelAutocomplete() {
+    if (autocompleteTimerRef.current !== null) {
+      window.clearTimeout(autocompleteTimerRef.current);
+      autocompleteTimerRef.current = null;
+    }
+    autocompleteRequestIdRef.current += 1;
+    autocompleteControllerRef.current?.abort();
+    autocompleteControllerRef.current = null;
+    setInlineSuggestions([]);
+    setInlineSuggestionTarget(null);
+    setActiveSuggestionIndex(-1);
+  }
+
+  async function runAutocomplete(target: "start" | "end", query: string) {
+    const trimmed = query.trim();
+    if (trimmed.length < MIN_AUTOCOMPLETE_CHARS) return;
+    const requestId = autocompleteRequestIdRef.current + 1;
+    autocompleteRequestIdRef.current = requestId;
+    autocompleteControllerRef.current?.abort();
+    const controller = new AbortController();
+    autocompleteControllerRef.current = controller;
+    const requestedArea = areaIdRef.current;
+    try {
+      const results = await fetchAddresses(trimmed, controller.signal);
+      const currentText = target === "start" ? startTextRef.current : endTextRef.current;
+      const currentLocation = target === "start" ? startLocationRef.current : (endLocationRef.current ?? endLocation);
+      if (!shouldApplyAutocompleteResponse({
+        activeRequestId: autocompleteRequestIdRef.current,
+        responseRequestId: requestId,
+        activeAreaId: areaIdRef.current,
+        responseAreaId: requestedArea,
+        activeTarget: focusedAddressFieldRef.current,
+        responseTarget: target,
+        currentFieldText: currentText,
+        requestedQuery: trimmed,
+        fieldConfirmed: isConfirmedAddressField(currentText, currentLocation),
+        isCalculating: loadingRef.current,
+      })) {
+        return;
+      }
+      setInlineSuggestionTarget(target);
+      setInlineSuggestions(results);
+      setActiveSuggestionIndex(-1);
+    } catch {
+      // Do not surface premature errors while the user is still typing.
+      if (autocompleteRequestIdRef.current === requestId) {
+        setInlineSuggestions([]);
+        setInlineSuggestionTarget(null);
+        setActiveSuggestionIndex(-1);
+      }
+    } finally {
+      if (autocompleteControllerRef.current === controller) {
+        autocompleteControllerRef.current = null;
+      }
+    }
+  }
+
+  function handleAddressInputChange(target: "start" | "end", nextValue: string) {
+    discardPlannedRoute();
+    cancelAddressSearch();
+    focusedAddressFieldRef.current = target;
+    if (target === "start") {
+      const resetStart: LocationChoice = { label: "", coordinate: startLocationRef.current.coordinate };
+      startTextRef.current = nextValue;
+      startLocationRef.current = resetStart;
+      resolvedStartRef.current = null;
+      setStartText(nextValue);
+      setStartLocation((current) => ({ ...current, label: "" }));
+    } else {
+      const currentEnd = endLocationRef.current ?? endLocation;
+      const resetEnd: LocationChoice = { label: "", coordinate: currentEnd.coordinate };
+      endTextRef.current = nextValue;
+      endLocationRef.current = resetEnd;
+      setEndText(nextValue);
+      setEndLocation((current) => ({ ...current, label: "" }));
+    }
+    const trimmed = nextValue.trim();
+    if (trimmed.length >= MIN_AUTOCOMPLETE_CHARS) {
+      autocompleteTimerRef.current = window.setTimeout(() => {
+        autocompleteTimerRef.current = null;
+        void runAutocomplete(target, trimmed);
+      }, AUTOCOMPLETE_DEBOUNCE_MS);
+    }
   }
 
   function chooseAddress(target: "start" | "end", result: GeocodeResult) {
@@ -1333,30 +1488,62 @@ export default function Home() {
     const location = { label, coordinate: result.coordinate };
     const shouldContinue = pendingCalculationRef.current;
     const resolvedStart = resolvedStartRef.current;
+    pendingCalculationRef.current = false;
+    cancelAddressSearch();
     discardPlannedRoute();
+    setPlanError(null);
+
+    const nextStartLocation = target === "start" ? location : startLocationRef.current;
+    const nextStartText = target === "start" ? location.label : startTextRef.current;
+    const nextEndLocation = target === "end" ? location : (endLocationRef.current ?? endLocation);
+    const nextEndText = target === "end" ? location.label : endTextRef.current;
+
     if (target === "start") {
+      startLocationRef.current = location;
+      resolvedStartRef.current = location;
+      startTextRef.current = location.label;
       setStartLocation(location);
       setStartText(location.label);
     } else {
+      endLocationRef.current = location;
+      endTextRef.current = location.label;
       setEndLocation(location);
       setEndText(location.label);
-      endLocationRef.current = location;
     }
+    focusedAddressFieldRef.current = null;
     setAddressResults([]);
     setAddressSearchTarget(null);
     setAddressQuery("");
     setStatus(`${target === "start" ? "Partenza" : "Destinazione"} confermata.`);
-    // The person already asked to compare routes and was only asked to disambiguate.
-    if (shouldContinue) {
+
+    // Dismiss the mobile keyboard and clear active input focus upon one-tap confirmation.
+    const startInput = document.getElementById("start-search");
+    const endInput = document.getElementById("end-search");
+    if (startInput instanceof HTMLElement) startInput.blur();
+    if (endInput instanceof HTMLElement) endInput.blur();
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+
+    const autoDecision = shouldAutoCalculateAfterAddressSelection({
+      target,
+      selected: location,
+      startText: nextStartText,
+      startLocation: nextStartLocation,
+      endText: nextEndText,
+      endLocation: nextEndLocation,
+      pendingCalculation: shouldContinue,
+      isLoading: loadingRef.current,
+    });
+    if (autoDecision.shouldCalculate) {
       void calculateRoutes(
-        target === "start" ? location : resolvedStart ?? undefined,
-        target === "end" ? { endOverride: location } : {},
+        autoDecision.startOverride ?? (target === "start" ? location : resolvedStart ?? undefined),
+        autoDecision.endOverride ? { endOverride: autoDecision.endOverride } : (target === "end" ? { endOverride: location } : {}),
       );
     }
   }
 
   function closeAddressPicker() {
     pendingCalculationRef.current = false;
+    cancelAutocomplete();
     setAddressResults([]);
     setAddressSearchTarget(null);
     setAddressQuery("");
@@ -1364,24 +1551,32 @@ export default function Home() {
   }
 
   async function fetchAddresses(text: string, signal?: AbortSignal) {
-    if (text.trim().length < 3) throw new Error("Inserisci almeno tre caratteri.");
+    const trimmed = text.trim();
+    if (trimmed.length < 3) throw new PlannerMessage("Inserisci almeno tre caratteri.");
     const requestedArea = areaIdRef.current;
-    const response = await fetch(`/api/geocode?q=${encodeURIComponent(text.trim())}&area=${requestedArea}`, { signal });
+    const cacheKey = `${requestedArea}:${trimmed.toLocaleLowerCase("it")}`;
+    const cached = geocodeCacheRef.current.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < 300_000 && cached.results.length > 0) {
+      return cached.results;
+    }
+    const response = await fetch(`/api/geocode?q=${encodeURIComponent(trimmed)}&area=${requestedArea}`, { signal });
     const data = await readApiJson<{ results?: GeocodeResult[]; error?: string }>(response);
     if (signal?.aborted || requestedArea !== areaIdRef.current) throw new DOMException("Ricerca superata", "AbortError");
     if (!response.ok) throw new PlannerMessage(data.error ?? "La ricerca indirizzi non è disponibile. Riprova.");
     const results = (data.results ?? []).filter((result) => coordinateInArea(result.coordinate, PILOT_AREAS[requestedArea]));
-    if (!results.length) throw new PlannerMessage(`Non trovo “${text.trim()}” a ${PILOT_AREAS[requestedArea].name}.`);
+    if (!results.length) throw new PlannerMessage(`Non trovo “${trimmed}” a ${PILOT_AREAS[requestedArea].name}.`);
+    geocodeCacheRef.current.set(cacheKey, { timestamp: Date.now(), results });
     return results;
   }
 
   async function searchAddresses(target: "start" | "end") {
     if (addressSearchLoading) return;
-    const text = target === "start" ? startText : endText;
+    const text = target === "start" ? startTextRef.current || startText : endTextRef.current || endText;
     if (!text.trim()) {
       setStatus(`Inserisci ${target === "start" ? "la partenza" : "la destinazione"}.`);
       return;
     }
+    cancelAutocomplete();
     addressRequestRef.current?.abort();
     const controller = new AbortController();
     addressRequestRef.current = controller;
@@ -1416,6 +1611,7 @@ export default function Home() {
 
   /** Editing a field cancels its search, so a late answer cannot open a list for old text. */
   function cancelAddressSearch() {
+    cancelAutocomplete();
     addressRequestRef.current?.abort();
     addressRequestRef.current = null;
     setAddressSearchLoading(false);
@@ -1454,6 +1650,10 @@ export default function Home() {
     } = {},
   ) {
     const isReroute = options.journeySession !== undefined;
+    const currentStartText = startTextRef.current || startText;
+    const currentEndText = endTextRef.current || endText;
+    const currentStartLocation = startLocationRef.current ?? startLocation;
+    const currentEndLocation = endLocationRef.current ?? endLocation;
     if (!navigator.onLine) {
       if (isReroute && options.journeySession === navigationSessionRef.current) {
         recalculatingRef.current = false;
@@ -1470,17 +1670,18 @@ export default function Home() {
       }
       return;
     }
-    if (!isReroute && !startOverride && !startText.trim()) {
+    if (!isReroute && !startOverride && !currentStartText.trim()) {
       setPlanError("Inserisci la partenza, oppure usa la tua posizione.");
       document.getElementById("start-search")?.focus();
       return;
     }
-    if (!isReroute && !options.endOverride && !endText.trim()) {
+    if (!isReroute && !options.endOverride && !currentEndText.trim()) {
       setPlanError("Inserisci la destinazione.");
       document.getElementById("end-search")?.focus();
       return;
     }
     if (loadingRef.current && !options.force) return;
+    if (!isReroute) cancelAddressSearch();
     routeRequestRef.current?.controller.abort();
     const controller = new AbortController();
     const requestId = routeRequestCounterRef.current + 1;
@@ -1515,9 +1716,15 @@ export default function Home() {
     }) && requestedArea === areaIdRef.current && (isReroute || !journeyActiveRef.current);
     try {
       const resolvedStart = startOverride
-        ?? await geocode(startText, startLocation, "start", controller.signal);
+        ?? await geocode(currentStartText, currentStartLocation, "start", controller.signal);
       resolvedStartRef.current = resolvedStart;
-      if (!startOverride && startText.trim() !== startLocation.label && endText.trim() !== endLocation.label) {
+      if (!isReroute && isCurrentRequest()) {
+        startLocationRef.current = resolvedStart;
+        startTextRef.current = resolvedStart.label;
+        setStartLocation(resolvedStart);
+        setStartText(resolvedStart.label);
+      }
+      if (!startOverride && currentStartText.trim() !== currentStartLocation.label && currentEndText.trim() !== currentEndLocation.label) {
         await new Promise<void>((resolve, reject) => {
           const timer = window.setTimeout(resolve, 250);
           controller.signal.addEventListener("abort", () => {
@@ -1528,10 +1735,14 @@ export default function Home() {
       }
       const resolvedEnd = options.endOverride
         ?? (options.journeySession !== undefined
-          ? (endLocationRef.current ?? endLocation)
-          : await geocode(endText, endLocation, "end", controller.signal));
+          ? currentEndLocation
+          : await geocode(currentEndText, currentEndLocation, "end", controller.signal));
       if (!isCurrentRequest()) return;
       if (!isReroute) {
+        startLocationRef.current = resolvedStart;
+        endLocationRef.current = resolvedEnd;
+        startTextRef.current = resolvedStart.label;
+        endTextRef.current = resolvedEnd.label;
         setStartLocation(resolvedStart);
         setEndLocation(resolvedEnd);
         setStartText(resolvedStart.label);
@@ -1698,12 +1909,56 @@ export default function Home() {
       return;
     }
     discardPlannedRoute();
+    cancelAddressSearch();
+    startLocationRef.current = journey.start;
+    resolvedStartRef.current = journey.start;
+    endLocationRef.current = journey.end;
+    startTextRef.current = journey.start.label;
+    endTextRef.current = journey.end.label;
     setStartLocation(journey.start);
     setEndLocation(journey.end);
     setStartText(journey.start.label);
     setEndText(journey.end.label);
-    endLocationRef.current = journey.end;
     void calculateRoutes(journey.start, { endOverride: journey.end });
+  }
+
+  function handleAddressInputFocus(target: "start" | "end") {
+    focusedAddressFieldRef.current = target;
+    if (inlineSuggestionTarget && inlineSuggestionTarget !== target) {
+      setInlineSuggestions([]);
+      setInlineSuggestionTarget(null);
+      setActiveSuggestionIndex(-1);
+    }
+  }
+
+  function handleAddressInputKeyDown(target: "start" | "end", event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.nativeEvent.isComposing) return;
+    const hasInline = inlineSuggestionTarget === target && inlineSuggestions.length > 0;
+    if (hasInline && event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveSuggestionIndex((prev) => (prev + 1) % inlineSuggestions.length);
+      return;
+    }
+    if (hasInline && event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveSuggestionIndex((prev) => (prev <= 0 ? inlineSuggestions.length - 1 : prev - 1));
+      return;
+    }
+    if (hasInline && event.key === "Escape") {
+      event.preventDefault();
+      setInlineSuggestions([]);
+      setInlineSuggestionTarget(null);
+      setActiveSuggestionIndex(-1);
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (hasInline && activeSuggestionIndex >= 0 && inlineSuggestions[activeSuggestionIndex]) {
+        chooseAddress(target, inlineSuggestions[activeSuggestionIndex]);
+        return;
+      }
+      void searchAddresses(target);
+    }
   }
 
   function changeTransportMode(nextMode: TransportMode) {
@@ -1753,6 +2008,10 @@ export default function Home() {
         }
         const location = { label: CURRENT_POSITION_LABEL, coordinate };
         discardPlannedRoute();
+        cancelAddressSearch();
+        startLocationRef.current = location;
+        resolvedStartRef.current = location;
+        startTextRef.current = location.label;
         setStartLocation(location);
         setStartText(location.label);
         setStatus("Posizione impostata come partenza.");
@@ -2362,78 +2621,97 @@ export default function Home() {
             <section className="planner-panel" data-testid="planner-panel">
               <div className="sheet-body">
                 <h1 className="visually-hidden">Dove andiamo?</h1>
-                <div className="route-fields">
-                  <div className={`route-field ${addressSearchTarget === "start" ? "searching" : ""}`}>
-                    <i className="origin-dot" aria-hidden="true" />
-                    <label htmlFor="start-search">Partenza</label>
-                    <input
-                      id="start-search"
-                      value={startText}
-                      onChange={(event) => {
-                        discardPlannedRoute();
-                        cancelAddressSearch();
-                        setStartText(event.target.value);
-                        setStartLocation((current) => ({ ...current, label: "" }));
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
-                          void searchAddresses("start");
-                        }
-                      }}
-                      placeholder="Via, numero civico o luogo"
-                      autoComplete="off"
-                      enterKeyHint="search"
-                      spellCheck={false}
-                      role="combobox"
-                      aria-expanded={addressSearchTarget === "start" && addressResults.length > 0}
-                      aria-controls="start-address-results"
-                    />
-                    <button
-                      type="button"
-                      onClick={startText.trim() ? () => void searchAddresses("start") : useCurrentLocation}
-                      aria-label={startText.trim() ? "Cerca indirizzo di partenza" : "Usa posizione GPS"}
+                <div className="address-search-group" ref={routeFieldsRef}>
+                  <div className="route-fields">
+                    <div className={`route-field ${addressSearchTarget === "start" || inlineSuggestionTarget === "start" ? "searching" : ""}`}>
+                      <i className="origin-dot" aria-hidden="true" />
+                      <label htmlFor="start-search">Partenza</label>
+                      <input
+                        id="start-search"
+                        value={startText}
+                        onFocus={() => handleAddressInputFocus("start")}
+                        onChange={(event) => handleAddressInputChange("start", event.target.value)}
+                        onKeyDown={(event) => handleAddressInputKeyDown("start", event)}
+                        placeholder="Via, numero civico o luogo"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        enterKeyHint="search"
+                        spellCheck={false}
+                        role="combobox"
+                        aria-autocomplete="list"
+                        aria-expanded={(addressSearchTarget === "start" && addressResults.length > 0) || (inlineSuggestionTarget === "start" && inlineSuggestions.length > 0)}
+                        aria-controls="start-address-results"
+                        aria-activedescendant={inlineSuggestionTarget === "start" && activeSuggestionIndex >= 0 ? `start-suggestion-${activeSuggestionIndex}` : undefined}
+                      />
+                      <button
+                        type="button"
+                        onClick={startText.trim() ? () => void searchAddresses("start") : useCurrentLocation}
+                        aria-label={startText.trim() ? "Cerca indirizzo di partenza" : "Usa posizione GPS"}
+                      >
+                        {addressSearchLoading && addressSearchTarget === "start"
+                          ? <span className="spinner" aria-hidden="true" />
+                          : <Icon name={startText.trim() ? "search" : "locate"} />}
+                      </button>
+                    </div>
+                    <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">
+                      <Icon name="swap" size={18} />
+                    </button>
+                    <div className={`route-field ${addressSearchTarget === "end" || inlineSuggestionTarget === "end" ? "searching" : ""}`}>
+                      <i className="destination-dot" aria-hidden="true" />
+                      <label htmlFor="end-search">Destinazione</label>
+                      <input
+                        id="end-search"
+                        value={endText}
+                        onFocus={() => handleAddressInputFocus("end")}
+                        onChange={(event) => handleAddressInputChange("end", event.target.value)}
+                        onKeyDown={(event) => handleAddressInputKeyDown("end", event)}
+                        placeholder="Via, numero civico o luogo"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        enterKeyHint="search"
+                        spellCheck={false}
+                        role="combobox"
+                        aria-autocomplete="list"
+                        aria-expanded={(addressSearchTarget === "end" && addressResults.length > 0) || (inlineSuggestionTarget === "end" && inlineSuggestions.length > 0)}
+                        aria-controls="end-address-results"
+                        aria-activedescendant={inlineSuggestionTarget === "end" && activeSuggestionIndex >= 0 ? `end-suggestion-${activeSuggestionIndex}` : undefined}
+                      />
+                      <button type="button" onClick={() => void searchAddresses("end")} aria-label="Cerca indirizzo di destinazione">
+                        {addressSearchLoading && addressSearchTarget === "end"
+                          ? <span className="spinner" aria-hidden="true" />
+                          : <Icon name="search" />}
+                      </button>
+                    </div>
+                  </div>
+                  {inlineSuggestionTarget && inlineSuggestions.length > 0 && !addressSearchTarget && (
+                    <div
+                      id={inlineSuggestionTarget === "start" ? "start-address-results" : "end-address-results"}
+                      className="address-suggestions"
+                      role="listbox"
+                      data-testid="address-suggestions"
+                      data-target={inlineSuggestionTarget}
+                      aria-label={inlineSuggestionTarget === "start" ? "Indirizzi di partenza" : "Indirizzi di destinazione"}
                     >
-                      {addressSearchLoading && addressSearchTarget === "start"
-                        ? <span className="spinner" aria-hidden="true" />
-                        : <Icon name={startText.trim() ? "search" : "locate"} />}
-                    </button>
-                  </div>
-                  <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">
-                    <Icon name="swap" size={18} />
-                  </button>
-                  <div className={`route-field ${addressSearchTarget === "end" ? "searching" : ""}`}>
-                    <i className="destination-dot" aria-hidden="true" />
-                    <label htmlFor="end-search">Destinazione</label>
-                    <input
-                      id="end-search"
-                      value={endText}
-                      onChange={(event) => {
-                        discardPlannedRoute();
-                        cancelAddressSearch();
-                        setEndText(event.target.value);
-                        setEndLocation((current) => ({ ...current, label: "" }));
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          event.preventDefault();
-                          void searchAddresses("end");
-                        }
-                      }}
-                      placeholder="Via, numero civico o luogo"
-                      autoComplete="off"
-                      enterKeyHint="search"
-                      spellCheck={false}
-                      role="combobox"
-                      aria-expanded={addressSearchTarget === "end" && addressResults.length > 0}
-                      aria-controls="end-address-results"
-                    />
-                    <button type="button" onClick={() => void searchAddresses("end")} aria-label="Cerca indirizzo di destinazione">
-                      {addressSearchLoading && addressSearchTarget === "end"
-                        ? <span className="spinner" aria-hidden="true" />
-                        : <Icon name="search" />}
-                    </button>
-                  </div>
+                      {inlineSuggestions.map((result, index) => (
+                        <button
+                          type="button"
+                          role="option"
+                          id={`${inlineSuggestionTarget}-suggestion-${index}`}
+                          aria-selected={activeSuggestionIndex === index}
+                          key={result.id}
+                          className={`address-suggestion-option ${activeSuggestionIndex === index ? "active" : ""}`}
+                          data-testid={`address-suggestion-${index}`}
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => chooseAddress(inlineSuggestionTarget, result)}
+                        >
+                          <b>{result.primary}</b>
+                          <small>{result.secondary || area.name}</small>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div
@@ -2722,32 +3000,11 @@ export default function Home() {
                   {planCalculating
                     ? <span className="spinner" aria-hidden="true" />
                     : <Icon name={routeReady ? "recenter" : "refresh"} />}
-                  <span><b>{routeReady ? "Avvia con GPS" : "Ricalcola per navigare"}</b></span>
-                  <small className="visually-hidden">{routeReady ? "La freccia segue la tua posizione reale" : "Il percorso mostrato non è più aggiornato"}</small>
+                  <span><b>{routeReady ? "Avvia navigazione" : "Ricalcola per navigare"}</b></span>
+                  <small className="visually-hidden">{routeReady ? "Avvia con GPS · La freccia segue la tua posizione reale" : "Il percorso mostrato non è più aggiornato"}</small>
                 </button>
               </div>
-              <div className="route-actions" style={{ display: "flex", gap: "8px", padding: "0 var(--space-4) var(--space-3)", justifyContent: "space-between" }}>
-                <button
-                  type="button"
-                  className="secondary-action"
-                  onClick={() => startNavigation("simulation")}
-                  disabled={!routeReady || isLoading}
-                  data-testid="start-simulation"
-                  style={{ flex: 1, minHeight: 44, fontSize: 13 }}
-                >
-                  ▷ Simula percorso
-                  <small className="visually-hidden">Avanzamento automatico · GPS non usato</small>
-                </button>
-                <button
-                  type="button"
-                  className="secondary-action"
-                  onClick={() => setMapChooserOpen(true)}
-                  data-testid="fallback-maps"
-                  style={{ flex: 1, minHeight: 44, fontSize: 13 }}
-                >
-                  Fallback mappe ↗
-                </button>
-              </div>
+              {/* Azioni secondarie nel pannello Fondo stradale e altre opzioni: Simula percorso · Fallback mappe */}
             </section>
           )}
 
@@ -2956,7 +3213,7 @@ export default function Home() {
       )}
 
       {addressSearchTarget && addressResults.length > 0 && (
-        <Dialog labelledBy="address-picker-title" onClose={closeAddressPicker} className="modal address-picker" testId="address-picker">
+        <Dialog labelledBy="address-picker-title" onClose={closeAddressPicker} className="modal address-picker" testId="address-picker" restoreFocus={false}>
           <button type="button" className="modal-close" onClick={closeAddressPicker} aria-label="Chiudi"><Icon name="close" /></button>
           <span className="eyebrow">{addressSearchTarget === "start" ? "Partenza" : "Destinazione"}</span>
           <h2 id="address-picker-title">Scegli l’indirizzo</h2>
@@ -2973,6 +3230,7 @@ export default function Home() {
                 role="option"
                 aria-selected="false"
                 key={result.id}
+                onMouseDown={(event) => event.preventDefault()}
                 onClick={() => chooseAddress(addressSearchTarget, result)}
               >
                 <b>{result.primary}</b>

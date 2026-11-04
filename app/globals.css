@@ -338,7 +338,36 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .route-footer .icon-button { width: var(--action); height: var(--action); background: var(--white); border-color: var(--border); }
 
 /* Address fields */
+.address-search-group { position: relative; display: flex; flex-direction: column; gap: var(--space-1); }
 .route-fields { position: relative; display: grid; gap: var(--space-1); }
+.address-suggestions {
+  display: flex;
+  flex-direction: column;
+  max-height: 204px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--white);
+  box-shadow: var(--shadow-float);
+}
+.address-suggestion-option {
+  min-height: 48px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6px var(--space-3);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+.address-suggestion-option:last-child { border-bottom: 0; }
+.address-suggestion-option.active, .address-suggestion-option:hover { background: var(--p43-selected-surface); }
+.address-suggestion-option b { display: block; font-size: var(--t-sm); font-weight: 600; line-height: 1.25; }
+.address-suggestion-option small { display: block; color: var(--muted); font-size: var(--t-xs); line-height: 1.2; }
 .route-field {
   position: relative;
   min-height: 52px;
@@ -511,6 +540,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .panel-note { color: var(--muted); font-size: var(--t-sm); }
 
 /* Routes */
+.routes-panel .sheet-body { gap: 2px; padding-top: 6px; padding-bottom: 2px; }
+.routes-panel .sheet-footer { padding-top: 4px; padding-bottom: calc(4px + var(--safe-bottom)); }
 .routes-heading { display: flex; align-items: center; gap: var(--space-2); }
 .routes-heading > div { flex: 1; min-width: 0; }
 .routes-heading h2 { font-size: var(--t-md); font-weight: 700; line-height: 1.2; }
@@ -629,6 +660,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
   color: var(--ink-2);
   font-size: var(--t-xs);
   font-weight: 500;
+  pointer-events: none;
 }
 .map-key span { display: inline-flex; align-items: center; gap: var(--space-1); }
 .line { width: 16px; height: 4px; display: inline-block; border-radius: 2px; }
@@ -1137,4 +1169,5 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
   cursor: not-allowed;
 }
 
+.mobile-nav { display: none; }
 .journey-active .mobile-nav { display: none; }
