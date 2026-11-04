@@ -48,12 +48,25 @@ export function RouteComparisonPanel({
   const fastUnknownMeters = computeUnknownMeters(fastRoute);
   const safeUnknownMeters = computeUnknownMeters(safeRoute);
 
-  const fastUnknownPercent = fastTotalMeters > 0
+  const fastVerifiedMeters = fastRoute.paveMeters + (fastRoute.smoothSurfaceMeters ?? 0) + (fastRoute.unpavedSurfaceMeters ?? 0);
+  const safeVerifiedMeters = safeRoute.paveMeters + (safeRoute.smoothSurfaceMeters ?? 0) + (safeRoute.unpavedSurfaceMeters ?? 0);
+
+  const fastRawUnknownPercent = fastTotalMeters > 0
     ? Math.round((fastUnknownMeters / fastTotalMeters) * 100)
     : 0;
-  const safeUnknownPercent = safeTotalMeters > 0
+  const safeRawUnknownPercent = safeTotalMeters > 0
     ? Math.round((safeUnknownMeters / safeTotalMeters) * 100)
     : 0;
+
+  const fastUnknownPercent = fastVerifiedMeters > 0 && fastRawUnknownPercent >= 100
+    ? 99
+    : fastRawUnknownPercent;
+  const safeUnknownPercent = safeVerifiedMeters > 0 && safeRawUnknownPercent >= 100
+    ? 99
+    : safeRawUnknownPercent;
+
+  const safeNoVerifiedSurface = safeUnknownPercent >= 100 && safeVerifiedMeters === 0;
+  const fastNoVerifiedSurface = fastUnknownPercent >= 100 && fastVerifiedMeters === 0;
 
   let selectionRationale = "";
   if (hasDistinctAlternative && savedPaveMeters > 0) {
@@ -72,7 +85,7 @@ export function RouteComparisonPanel({
       aria-label={`Confronto percorsi ${modeLabel}`}
       data-testid="p43-route-comparison"
     >
-      <header className="p43-comparison-header">
+      <header className="p43-comparison-header p43-sr-only">
         <h3 className="p43-comparison-title">Confronto Percorsi · {modeLabel}</h3>
         {extraTimeBudgetMinutes !== null && extraTimeBudgetMinutes !== undefined && (
           <span className="p43-budget-tag">Budget extra: max +{extraTimeBudgetMinutes} min</span>
@@ -100,7 +113,7 @@ export function RouteComparisonPanel({
       ) : (
         <div className="p43-empty-alternative-notice" role="note">
           <b>Nessuna deviazione migliore rilevata</b>
-          <p>
+          <p className="p43-sr-only">
             Il percorso rapido presenta già la minima esposizione a pavé noto entro i vincoli
             richiesti, oppure le alternative richiedono un tempo superiore al limite consentito.
           </p>
@@ -108,7 +121,7 @@ export function RouteComparisonPanel({
       )}
 
       {/* Selection Rationale */}
-      <div className="p43-selection-rationale" role="status" data-testid="p43-selection-rationale">
+      <div className="p43-selection-rationale p43-sr-only" role="status" data-testid="p43-selection-rationale">
         <span className="p43-rationale-tag">Motivo selezione:</span>
         <p className="p43-rationale-text">{selectionRationale}</p>
       </div>
@@ -120,7 +133,7 @@ export function RouteComparisonPanel({
         aria-label={`Scegli il percorso ${modeLabel}`}
       >
         {/* Anti-pavé Route Option */}
-        {hasDistinctAlternative ? (
+        {hasDistinctAlternative && savedPaveMeters > 0 ? (
           <button
             type="button"
             role="radio"
@@ -133,7 +146,10 @@ export function RouteComparisonPanel({
               <span className="p43-card-indicator p43-indicator-safe" />
               <div className="p43-card-names">
                 <strong>Anti-pavé · {modeLabel}</strong>
-                <small>{safeRoute.distance.toFixed(1)} km · {formatMeters(safeRoute.paveMeters)} pavé noto</small>
+                <small>
+                  {safeRoute.distance.toFixed(1)} km
+                  {safeUnknownPercent >= 25 ? ` · ${safeUnknownPercent}% del fondo non verificato` : ""}
+                </small>
               </div>
               <div className="p43-card-time">
                 <span>{formatMinutes(safeRoute.minutes)}<small> min</small></span>
@@ -142,33 +158,32 @@ export function RouteComparisonPanel({
             </div>
 
             {/* Surface Transparency & Breakdown */}
-            <div className="p43-surface-breakdown">
+            <div className={`p43-surface-breakdown ${safeNoVerifiedSurface ? "p43-sr-only" : ""}`}>
               <span className="p43-breakdown-item p43-item-rough" title="Superficie sconnessa confermata">
                 Pavé: <b>{formatMeters(safeRoute.paveMeters)}</b>
               </span>
-              {safeRoute.smoothSurfaceMeters !== undefined && safeRoute.smoothSurfaceMeters > 0 && (
+              {safeRoute.smoothSurfaceMeters !== undefined && (
                 <span className="p43-breakdown-item p43-item-smooth" title="Asfalto o superficie liscia confermata">
                   Liscio: <b>{formatMeters(safeRoute.smoothSurfaceMeters)}</b>
                 </span>
               )}
-              <span className={`p43-breakdown-item ${safeUnknownPercent > 20 ? "p43-item-unknown-warn" : "p43-item-unknown"}`} title="Strade prive di etichetta superficie su OSM">
+              <span className={`p43-breakdown-item p43-sr-only ${safeUnknownPercent > 20 ? "p43-item-unknown-warn" : "p43-item-unknown"}`} title="Strade prive di etichetta superficie su OSM">
                 Non censito: <b>{formatMeters(safeUnknownMeters)} ({safeUnknownPercent}%)</b>
               </span>
             </div>
 
             {/* Explicit Marking for Insufficient OSM Data */}
             {safeUnknownPercent >= 50 ? (
-              <span className="p43-surface-badge p43-badge-critical">
+              <span className="p43-surface-badge p43-badge-critical p43-sr-only">
                 ⚠️ Copertura OSM critica ({safeUnknownPercent}% non censito)
               </span>
             ) : safeUnknownPercent >= 25 ? (
-              <span className="p43-surface-badge p43-badge-moderate">
+              <span className="p43-surface-badge p43-badge-moderate p43-sr-only">
                 ℹ️ Copertura OSM parziale ({safeUnknownPercent}% non censito)
               </span>
             ) : null}
 
-            {/* Legacy unknown row preserved for styling / layout */}
-            <div className="p43-unknown-row">
+            <div className="p43-unknown-row p43-sr-only">
               <span className="p43-unknown-label">Fondo non censito:</span>
               <span className={`p43-unknown-value ${safeUnknownPercent > 20 ? "p43-unknown-warn" : ""}`}>
                 {formatMeters(safeUnknownMeters)} ({safeUnknownPercent}%)
@@ -201,7 +216,10 @@ export function RouteComparisonPanel({
             <span className="p43-card-indicator p43-indicator-fast" />
             <div className="p43-card-names">
               <strong>Più rapido · {modeLabel}</strong>
-              <small>{fastRoute.distance.toFixed(1)} km · {formatMeters(fastRoute.paveMeters)} pavé noto</small>
+              <small>
+                {fastRoute.distance.toFixed(1)} km
+                {fastUnknownPercent >= 25 ? ` · ${fastUnknownPercent}% del fondo non verificato` : ""}
+              </small>
             </div>
             <div className="p43-card-time">
               <span>{formatMinutes(fastRoute.minutes)}<small> min</small></span>
@@ -210,33 +228,32 @@ export function RouteComparisonPanel({
           </div>
 
           {/* Surface Transparency & Breakdown */}
-          <div className="p43-surface-breakdown">
+          <div className={`p43-surface-breakdown ${fastNoVerifiedSurface ? "p43-sr-only" : ""}`}>
             <span className="p43-breakdown-item p43-item-rough" title="Superficie sconnessa confermata">
               Pavé: <b>{formatMeters(fastRoute.paveMeters)}</b>
             </span>
-            {fastRoute.smoothSurfaceMeters !== undefined && fastRoute.smoothSurfaceMeters > 0 && (
+            {fastRoute.smoothSurfaceMeters !== undefined && (
               <span className="p43-breakdown-item p43-item-smooth" title="Asfalto o superficie liscia confermata">
                 Liscio: <b>{formatMeters(fastRoute.smoothSurfaceMeters)}</b>
               </span>
             )}
-            <span className={`p43-breakdown-item ${fastUnknownPercent > 20 ? "p43-item-unknown-warn" : "p43-item-unknown"}`} title="Strade prive di etichetta superficie su OSM">
+            <span className={`p43-breakdown-item p43-sr-only ${fastUnknownPercent > 20 ? "p43-item-unknown-warn" : "p43-item-unknown"}`} title="Strade prive di etichetta superficie su OSM">
               Non censito: <b>{formatMeters(fastUnknownMeters)} ({fastUnknownPercent}%)</b>
             </span>
           </div>
 
           {/* Explicit Marking for Insufficient OSM Data */}
           {fastUnknownPercent >= 50 ? (
-            <span className="p43-surface-badge p43-badge-critical">
+            <span className="p43-surface-badge p43-badge-critical p43-sr-only">
               ⚠️ Copertura OSM critica ({fastUnknownPercent}% non censito)
             </span>
           ) : fastUnknownPercent >= 25 ? (
-            <span className="p43-surface-badge p43-badge-moderate">
+            <span className="p43-surface-badge p43-badge-moderate p43-sr-only">
               ℹ️ Copertura OSM parziale ({fastUnknownPercent}% non censito)
             </span>
           ) : null}
 
-          {/* Legacy unknown row preserved for styling / layout */}
-          <div className="p43-unknown-row">
+          <div className="p43-unknown-row p43-sr-only">
             <span className="p43-unknown-label">Fondo non censito:</span>
             <span className={`p43-unknown-value ${fastUnknownPercent > 20 ? "p43-unknown-warn" : ""}`}>
               {formatMeters(fastUnknownMeters)} ({fastUnknownPercent}%)
@@ -247,7 +264,7 @@ export function RouteComparisonPanel({
 
       {/* Uncertainty Advisory Notice */}
       {(safeUnknownPercent > 25 || fastUnknownPercent > 25) && (
-        <p className="p43-uncertainty-alert" role="note">
+        <p className="p43-uncertainty-alert p43-sr-only" role="note">
           ℹ️ Oltre il 25% del percorso include tratti privi di etichetta superficie su OpenStreetMap.
           Lastrico non assume che le strade non censite siano lisce né prive di pavé: la stima di riduzione riflette esclusivamente i tratti verificati.
         </p>

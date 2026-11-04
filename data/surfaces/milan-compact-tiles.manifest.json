@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "2.0.0",
+  "datasetVersion": "osm-milan-citywide-2026-11-04",
+  "generatedAt": "2026-10-28T23:03:26.733Z",
+  "area": {
+    "zoneId": "MILAN_URBAN_EXPANDED",
+    "description": "Milan urban road-surface network (central pilot + Southern, Western, Northern, Eastern Milan expansion)",
+    "bounds": {
+      "west": 9.1203,
+      "south": 45.4135,
+      "east": 9.2553,
+      "north": 45.511
+    }
+  },
+  "statistics": {
+    "tileCount": 117,
+    "pilotSegments": 37106,
+    "addedOutsideSegments": 65188,
+    "totalSegments": 102294,
+    "totalLengthMeters": 1644699,
+    "surfaceBreakdownMeters": {
+      "confirmed_rough": 70682,
+      "probable_rough": 68141,
+      "confirmed_smooth": 1169262,
+      "unpaved_loose": 60856,
+      "unknown": 275759
+    },
+    "surfaceBreakdownPercent": {
+      "confirmed_rough": 4.3,
+      "probable_rough": 4.1,
+      "confirmed_smooth": 71.1,
+      "unpaved_loose": 3.7,
+      "unknown": 16.8
+    }
+  },
+  "checksums": {
+    "pilotDatasetSha256": "267b01744a33146e5ec237dc1fa4df907d7427f7e121b3ba0cc3c3aaa67f5586",
+    "compactTilesSha256": "6ec977a5604708e041c6acbcd4e37abfd9261e72a0fe59f9e6450931011c2914",
+    "citywideExpansionManifestSha256": "6a07224314116cefff25a1a85a84532ce95a5698fa06682fd3eff8472411b781"
+  }
+}

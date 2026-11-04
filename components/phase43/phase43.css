@@ -3,11 +3,11 @@
 .p43-comparison-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: var(--surface, #faf8f5);
-  border: 1px solid var(--border, #e2ded9);
-  border-radius: 14px;
-  padding: 12px;
+  gap: 3px;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  padding: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--ink, #122023);
 }
@@ -42,27 +42,30 @@
   justify-content: space-around;
   background: rgba(22, 136, 110, 0.08);
   border: 1px solid rgba(22, 136, 110, 0.2);
-  border-radius: 10px;
-  padding: 8px 12px;
+  border-radius: 9px;
+  padding: 3px 10px;
 }
 
 .p43-tradeoff-metric {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
   text-align: center;
 }
 
 .p43-metric-label {
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--muted, #697876);
   font-weight: 600;
   text-transform: uppercase;
+  line-height: 1.1;
 }
 
 .p43-metric-value {
-  font-size: 16px;
+  font-size: 13.5px;
   font-weight: 800;
+  line-height: 1.1;
 }
 
 .p43-value-positive {
@@ -79,23 +82,23 @@
 
 .p43-tradeoff-divider {
   width: 1px;
-  height: 28px;
+  height: 16px;
   background: rgba(22, 136, 110, 0.2);
 }
 
 .p43-empty-alternative-notice {
   background: rgba(105, 120, 118, 0.08);
   border: 1px dashed var(--border, #e2ded9);
-  border-radius: 10px;
-  padding: 10px 12px;
+  border-radius: 9px;
+  padding: 5px 10px;
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.25;
 }
 
 .p43-empty-alternative-notice b {
   display: block;
-  font-size: 13px;
-  margin-bottom: 3px;
+  font-size: 12px;
+  margin-bottom: 0;
 }
 
 .p43-empty-alternative-notice p {
@@ -107,16 +110,16 @@
 .p43-route-cards {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 3px;
 }
 
 .p43-route-card {
   width: 100%;
-  min-height: 52px;
+  min-height: 44px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 10px 12px;
+  gap: 2px;
+  padding: 4px 10px;
   background: var(--white, #ffffff);
   border: 1.5px solid var(--border, #e2ded9);
   border-radius: 10px;
@@ -175,12 +178,14 @@
 
 .p43-card-names strong {
   display: block;
-  font-size: 14px;
+  font-size: 13.5px;
+  line-height: 1.15;
 }
 
 .p43-card-names small {
   display: block;
   font-size: 11px;
+  line-height: 1.15;
   color: var(--p43-card-detail);
 }
 
@@ -190,14 +195,16 @@
 
 .p43-card-time span {
   display: block;
-  font-size: 17px;
+  font-size: 15.5px;
   font-weight: 800;
+  line-height: 1.1;
 }
 
 .p43-card-time em {
   display: block;
-  font-size: 11px;
+  font-size: 10.5px;
   font-style: normal;
+  line-height: 1.1;
   color: var(--p43-card-detail);
 }
 
@@ -876,16 +883,21 @@
 .p43-surface-breakdown {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  padding: 6px 0 2px;
+  gap: 5px;
+  padding: 0;
+}
+
+.p43-comparison-panel .p43-sr-only {
+  display: none;
 }
 
 .p43-breakdown-item {
   font-size: 10.5px;
-  padding: 3px 6px;
-  border-radius: 6px;
+  padding: 1px 6px;
+  border-radius: 5px;
   background: rgba(0, 0, 0, 0.04);
   color: var(--ink, #122023);
+  line-height: 1.2;
 }
 
 .p43-breakdown-item b {
