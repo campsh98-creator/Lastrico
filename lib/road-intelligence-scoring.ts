@@ -354,11 +354,25 @@ export function scoreRoadIntelligence(
       const alignedCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
       const geometricCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
 
+      const padLat = matchMeters / 110_540;
+      const padLon = matchMeters / Math.max(1, metersPerLongitude(midpoint[1]));
+
       for (const candidate of nearbySegments(index, midpoint, matchMeters, boxCache)) {
+        const c0 = candidate.coordinates[0];
+        const c1 = candidate.coordinates[1];
+        if (
+          midpoint[1] < Math.min(c0[1], c1[1]) - padLat ||
+          midpoint[1] > Math.max(c0[1], c1[1]) + padLat ||
+          midpoint[0] < Math.min(c0[0], c1[0]) - padLon ||
+          midpoint[0] > Math.max(c0[0], c1[0]) + padLon
+        ) {
+          continue;
+        }
+
         const distance = pointToSegmentDistance(
           midpoint,
-          candidate.coordinates[0],
-          candidate.coordinates[1],
+          c0,
+          c1,
         );
 
         if (distance > matchMeters) continue;
