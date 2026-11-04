@@ -16,7 +16,6 @@ import type {
   SurfaceMaterial,
 } from "./road-intelligence-types.ts";
 import {
-  createRoadIntelligenceIndex,
   type RoadIntelligenceIndex,
 } from "./road-intelligence-scoring.ts";
 

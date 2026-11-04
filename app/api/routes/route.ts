@@ -208,13 +208,22 @@ function deduplicateRoutes(routes: Array<{ route: EngineRoute; source: string }>
   return uniqueRoutes(routes, MODE_POLICY[mode]);
 }
 
-function findDetourAnchor(route: EngineRoute, paveIndex: PaveSpatialIndex, mode: TransportMode) {
+function findDetourAnchor(
+  route: EngineRoute,
+  roughIndices?: Set<number>,
+  paveIndex?: PaveSpatialIndex,
+  mode: TransportMode = "car",
+) {
   const coordinates = route.coordinates;
   let best: { a: Coordinate; b: Coordinate; weight: number } | null = null;
   for (let index = 1; index < coordinates.length; index += 1) {
     const a = coordinates[index - 1];
     const b = coordinates[index];
-    if (!segmentTouchesPave(a, b, paveIndex, mode)) continue;
+    if (roughIndices && roughIndices.size > 0) {
+      if (!roughIndices.has(index)) continue;
+    } else if (paveIndex) {
+      if (!segmentTouchesPave(a, b, paveIndex, mode)) continue;
+    }
     const centrality = 1 - Math.abs(index / coordinates.length - 0.5);
     const weight = segmentLength(a, b) * (0.7 + centrality);
     if (!best || weight > best.weight) best = { a, b, weight };
@@ -453,7 +462,11 @@ export async function GET(request: NextRequest) {
     if (canGenerate && (!navigationRequest || surfaceAwarePoc)
       && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
       && deadline - Date.now() >= 4_000 && preliminaryFast.surfaceScore.paveMeters > 0) {
-      const isSegmentRough = (prev: Coordinate, curr: Coordinate) => {
+      const fastRough = preliminaryFast.surfaceScore.roughSegmentIndices;
+      const isSegmentRough = (prev: Coordinate, curr: Coordinate, idx: number) => {
+        if (fastRough && fastRough.size > 0) {
+          return fastRough.has(idx);
+        }
         let end = curr;
         if (segmentLength(prev, curr) < 1) {
           const dx = curr[0] - prev[0];
@@ -463,9 +476,7 @@ export async function GET(request: NextRequest) {
         }
         return scoreRoadIntelligence([prev, end], scoped.surfaceIndex, policy.surfaceMatchMeters, mode, true).paveMeters > 0;
       };
-      const roughSlices = fastestBase.maneuverShapes?.length
-        ? fastestBase.maneuverShapes.flatMap((shape) => extractRoughSlices(shape, isSegmentRough, 25))
-        : extractRoughSlices(fastestBase.coordinates, isSegmentRough, 25);
+      const roughSlices = extractRoughSlices(fastestBase.coordinates, isSegmentRough, 25);
       const { factors, totalPenalizedMeters } = buildLinearCostFactors(roughSlices, 15.0, 4);
       if (factors.length > 0) {
         surfaceAwareDirectMetrics = {
@@ -491,7 +502,7 @@ export async function GET(request: NextRequest) {
     const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes);
     // Retain waypoint fallback if direct search fails to produce a sufficient distinct alternative.
     if (canGenerate && !(directSafe !== directFast && improvesEnough(directSafe, directFast))) {
-      const anchor = findDetourAnchor(fastestBase, scoped.paveIndex, mode);
+      const anchor = findDetourAnchor(fastestBase, preliminaryFast.surfaceScore.roughSegmentIndices, scoped.paveIndex, mode);
       const baseOffset = Math.max(
         policy.detourMinimumMeters,
         Math.min(policy.detourMaximumMeters, fastestBase.distance * policy.detourDistanceFactor),
@@ -569,14 +580,17 @@ export async function GET(request: NextRequest) {
     const isSampleRough = (prev: Coordinate, curr: Coordinate) => {
       return scoreRoadIntelligence([prev, curr], scoped.surfaceIndex, policy.surfaceMatchMeters, mode, true).paveMeters > 0;
     };
-    const routeProblemSegments = (route: EngineRoute, paveMeters: number) => {
+    const routeProblemSegments = (route: EngineRoute, paveMeters: number, roughIndices?: Set<number>) => {
       if (paveMeters <= 0) return [];
+      if (roughIndices && roughIndices.size > 0) {
+        return extractRoughSlices(route.coordinates, (_prev, _curr, idx) => roughIndices.has(idx), 15);
+      }
       return extractRoughSlices(route.coordinates, isSampleRough, 15);
     };
-    const fastProblemSegments = routeProblemSegments(fast.route, fast.surfaceScore.paveMeters);
+    const fastProblemSegments = routeProblemSegments(fast.route, fast.surfaceScore.paveMeters, fast.surfaceScore.roughSegmentIndices);
     const safeProblemSegments = safe.route === fast.route
       ? fastProblemSegments
-      : routeProblemSegments(safe.route, safe.surfaceScore.paveMeters);
+      : routeProblemSegments(safe.route, safe.surfaceScore.paveMeters, safe.surfaceScore.roughSegmentIndices);
 
     const routingProfile = profileMetadata(mode, fast.route, safe.route);
     const bicycleCoverageNotice = mode === "bicycle"

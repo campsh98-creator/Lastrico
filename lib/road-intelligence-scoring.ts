@@ -51,6 +51,8 @@ export type RoadIntelligenceScore = {
   blockingRestrictionMeters: number;
   /** Private access next to the start or destination, which the driver must be able to use. */
   terminalPrivateAccessMeters: number;
+  /** Set of coordinate indices [1..n] along the route that traverse rough surfaces */
+  roughSegmentIndices?: Set<number>;
 };
 
 export type RoadIntelligenceIndex = {
@@ -317,6 +319,7 @@ export function scoreRoadIntelligence(
     index === 0 ? 0 : sum + geographicDistance(coordinates[index - 1], point), 0);
   const matched = new Set<string>();
   const matchedFeatures = new Set<string>();
+  const roughSegmentIndices = new Set<number>();
   const boxCache = { key: "", segments: [] as RoadSegmentRecord[] };
 
   for (let rIndex = 1; rIndex < coordinates.length; rIndex += 1) {
@@ -424,10 +427,12 @@ export function scoreRoadIntelligence(
       if (best.surfaceCategory !== "unknown") matchedFeatures.add(sourceKey);
 
       if (best.surfaceCategory === "confirmed_rough") {
+        roughSegmentIndices.add(rIndex);
         paveMeters += sampleLength;
         weightedPaveMeters += sampleLength * bestWeight;
         confirmedMeters += sampleLength;
       } else if (best.surfaceCategory === "probable_rough") {
+        roughSegmentIndices.add(rIndex);
         paveMeters += sampleLength;
         weightedPaveMeters += sampleLength * bestWeight;
         probableMeters += sampleLength;
@@ -490,5 +495,6 @@ export function scoreRoadIntelligence(
     confirmedRestrictionMeters: restrictedMeters(confirmedRestrictionMeters),
     blockingRestrictionMeters: restrictedMeters(confirmedRestrictionMeters - terminalPrivateAccessMeters),
     terminalPrivateAccessMeters: restrictedMeters(terminalPrivateAccessMeters),
+    roughSegmentIndices,
   };
 }
