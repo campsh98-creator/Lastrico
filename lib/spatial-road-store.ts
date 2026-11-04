@@ -417,9 +417,9 @@ export class SpatialRoadIntelligenceStore {
       try {
         const nodeRequire = createRequire(import.meta.url);
         const fs = nodeRequire("node:fs");
-        const path = nodeRequire("node:path");
+        const fileURLToPath = nodeRequire("node:url").fileURLToPath;
         const area = this.isRoccella ? "roccella" : "milan";
-        const filePath = path.resolve(process.cwd(), `data/surfaces/${area}-tiles/${tileKey}.json`);
+        const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
         if (fs.existsSync(filePath)) {
           const tuples = JSON.parse(fs.readFileSync(filePath, "utf8")) as CompactTuple[];
           this.tileCache.set(tileKey, tuples);
@@ -502,14 +502,9 @@ export class SpatialRoadIntelligenceStore {
       for (const [cellKey, segs] of tCells) {
         const existing = mergedCells.get(cellKey);
         if (existing) {
-          for (let s = 0; s < segs.length; s += 1) {
-            const seg = segs[s];
-            if (!existing.some((other) => other.segmentHash === seg.segmentHash && other.osmWayId === seg.osmWayId)) {
-              existing.push(seg);
-            }
-          }
+          mergedCells.set(cellKey, existing.concat(segs));
         } else {
-          mergedCells.set(cellKey, [...segs]);
+          mergedCells.set(cellKey, segs);
         }
       }
     }

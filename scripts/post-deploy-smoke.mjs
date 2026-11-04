@@ -22,6 +22,8 @@ async function runSmokeTests() {
       console.error(`  Error: ${err.message}`);
       failed++;
     }
+    // Respect public Valhalla FOSGIS rate limit (1 req/sec) between smoke checks
+    await new Promise((r) => setTimeout(r, 1100));
   }
 
   // 1. Homepage & Static Assets
