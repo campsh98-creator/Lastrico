@@ -150,6 +150,24 @@ const HC_ENUM: HighwayClassification[] = [
 ];
 const DIRS = ["both", "forward", "backward", "unknown"] as const;
 
+const MA_CACHE = new Array(8);
+for (let b = 0; b < 8; b++) {
+  MA_CACHE[b] = Object.freeze({
+    car: (b & 1) !== 0,
+    motorcycle: (b & 2) !== 0,
+    bicycle: (b & 4) !== 0,
+  });
+}
+
+const MD_CACHE = new Array(64);
+for (let b = 0; b < 64; b++) {
+  MD_CACHE[b] = Object.freeze({
+    car: DIRS[(b >> 4) & 3] ?? "both",
+    motorcycle: DIRS[(b >> 2) & 3] ?? "both",
+    bicycle: DIRS[b & 3] ?? "both",
+  });
+}
+
 function geographicDistance(a: Coordinate, b: Coordinate): number {
   const lat = (a[1] + b[1]) / 2;
   const metersPerLon = 111320 * Math.cos((lat * Math.PI) / 180);
@@ -202,17 +220,8 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
     [h, w, nameId, c, kId, rw, svId, flags, mdBits, maBits, hc, l, b, tagSetId] = tuple;
   }
 
-  const ma = maBits >= 0 ? {
-    car: (maBits & 1) !== 0,
-    motorcycle: (maBits & 2) !== 0,
-    bicycle: (maBits & 4) !== 0,
-  } : undefined;
-
-  const md = mdBits >= 0 ? {
-    car: DIRS[(mdBits >> 4) & 3] ?? "both",
-    motorcycle: DIRS[(mdBits >> 2) & 3] ?? "both",
-    bicycle: DIRS[mdBits & 3] ?? "both",
-  } : undefined;
+  const ma = maBits >= 0 ? MA_CACHE[maBits & 7] : undefined;
+  const md = mdBits >= 0 ? MD_CACHE[mdBits & 63] : undefined;
 
   const k = K_ENUM[kId] ?? "unknown";
   const cyHasFacility = (flags & 16) !== 0;
@@ -426,7 +435,20 @@ export class SpatialRoadIntelligenceStore {
           return tuples;
         }
       } catch {
-        // Silently ignore if fs unavailable in worker sandbox
+        try {
+          const nodeRequire = createRequire(import.meta.url);
+          const fs = nodeRequire("node:fs");
+          const fileURLToPath = nodeRequire("node:url").fileURLToPath;
+          const area = this.isRoccella ? "roccella" : "milan";
+          const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
+          if (fs.existsSync(filePath)) {
+            const tuples = JSON.parse(fs.readFileSync(filePath, "utf8")) as CompactTuple[];
+            this.tileCache.set(tileKey, tuples);
+            return tuples;
+          }
+        } catch {
+          // Silently ignore if fs unavailable in worker sandbox
+        }
       }
     }
     return null;

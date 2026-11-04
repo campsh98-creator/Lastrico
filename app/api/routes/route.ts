@@ -384,17 +384,17 @@ export async function GET(request: NextRequest) {
 
     const corridorCoords: Coordinate[] = [start, end, ...baseRoutes.flatMap((r) => r.coordinates)];
     // Preload only the tiles intersecting the initial corridor
-    let loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 120);
+    let loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
     await spatialRoadStore.preloadTiles(loadedTileKeys);
-    let scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 120);
+    let scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 50);
 
     const ensureRouteCovered = async (routeCoordinates: Coordinate[]) => {
-      const missing = spatialRoadStore.getMissingTileKeys(loadedTileKeys, routeCoordinates, 80);
+      const missing = spatialRoadStore.getMissingTileKeys(loadedTileKeys, routeCoordinates, 50);
       if (missing.length > 0) {
         corridorCoords.push(...routeCoordinates);
         await spatialRoadStore.preloadTiles(missing);
-        loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 120);
-        scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 120);
+        loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
+        scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 50);
       }
       return scoped.surfaceIndex;
     };
