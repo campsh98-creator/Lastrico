@@ -30,18 +30,36 @@ export async function generateChunks(areaName, compactJsonPath, outputDir, index
 
   const tileKeys = metadata.tileKeys;
   for (const key of tileKeys) {
+    const tuples = data.tiles[key];
+    const cells = {};
+    for (let i = 0; i < tuples.length; i++) {
+      const t = tuples[i];
+      const coords = t.length === 11 ? t[2] : t[3];
+      const minX = Math.floor(Math.min(coords[0], coords[2]) * 1000);
+      const maxX = Math.floor(Math.max(coords[0], coords[2]) * 1000);
+      const minY = Math.floor(Math.min(coords[1], coords[3]) * 1000);
+      const maxY = Math.floor(Math.max(coords[1], coords[3]) * 1000);
+      for (let x = minX; x <= maxX; x++) {
+        for (let y = minY; y <= maxY; y++) {
+          const ckey = `${x}:${y}`;
+          if (!cells[ckey]) cells[ckey] = [i];
+          else cells[ckey].push(i);
+        }
+      }
+    }
+    const tilePayload = { cells, tuples };
     const tilePath = join(outputDir, `${key}.json`);
-    await writeFile(tilePath, JSON.stringify(data.tiles[key]), "utf8");
+    await writeFile(tilePath, JSON.stringify(tilePayload), "utf8");
   }
 
   // Generate TypeScript index with explicit typed lazy loaders
   const relOutputDir = outputDir.replace(join(root, "lib/"), "").replace(join(root, "data/"), "../data/");
   const tsContent = [
     `// Auto-generated tile loaders for ${areaName}`,
-    `import type { CompactTuple } from "./spatial-road-store";`,
+    `import type { TilePayload } from "./spatial-road-store";`,
     ``,
-    `export const ${areaName}TileLoaders: Record<string, () => Promise<{ default: CompactTuple[] }>> = {`,
-    ...tileKeys.map((k) => `  ${JSON.stringify(k)}: () => import(${JSON.stringify(`${relOutputDir}/${k}.json`)}).then((m) => ({ default: m.default as CompactTuple[] })),`),
+    `export const ${areaName}TileLoaders: Record<string, () => Promise<{ default: TilePayload }>> = {`,
+    ...tileKeys.map((k) => `  ${JSON.stringify(k)}: () => import(${JSON.stringify(`${relOutputDir}/${k}.json`)}).then((m) => ({ default: m.default as unknown as TilePayload })),`),
     `};`,
     ``,
   ].join("\n");

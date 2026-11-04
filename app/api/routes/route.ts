@@ -382,27 +382,20 @@ export async function GET(request: NextRequest) {
     const baseRoutingReadyAt = performance.now();
     if (!baseRoutes.length) throw new Error("Nessun percorso");
 
-    const corridorCoords: Coordinate[] = [start, end, ...baseRoutes.flatMap((r) => r.coordinates)];
-    // Preload only the tiles intersecting the initial corridor
+    const corridorCoords: Coordinate[] = baseRoutes.flatMap((r) => r.coordinates);
     const loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
+    // Preload only the tiles intersecting the initial base route corridors
     await spatialRoadStore.preloadTiles(loadedTileKeys);
     const scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 50);
 
     const ensureRouteCovered = async (routeCoordinates: Coordinate[]) => {
       const missing = spatialRoadStore.getMissingTileKeys(loadedTileKeys, routeCoordinates, 50);
       if (missing.length > 0) {
-        corridorCoords.push(...routeCoordinates);
         await spatialRoadStore.preloadTiles(missing);
-        loadedTileKeys.push(...missing);
         for (const key of missing) {
-          const tCells = spatialRoadStore.getTileIndex(key);
-          for (const [cellKey, segs] of tCells) {
-            const existing = scoped.surfaceIndex.cells.get(cellKey);
-            if (existing) {
-              scoped.surfaceIndex.cells.set(cellKey, existing.concat(segs));
-            } else {
-              scoped.surfaceIndex.cells.set(cellKey, segs);
-            }
+          loadedTileKeys.push(key);
+          if (typeof scoped.addTileKey === "function") {
+            scoped.addTileKey(key);
           }
         }
       }

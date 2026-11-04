@@ -21,6 +21,11 @@ import {
 
 export type Coordinate = [number, number];
 
+export type TilePayload = {
+  cells?: Record<string, number[]>;
+  tuples: CompactTuple[];
+} | CompactTuple[];
+
 export type PaveDetail = {
   id: number;
   name: string;
@@ -251,11 +256,13 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
     maBits = maBitsSlim;
     hc = HC_ENUM[hcIdSlim] ?? "unknown";
     tagSetId = tagSetIdSlim;
-    const ptA: Coordinate = [c[0], c[1]];
-    const ptB: Coordinate = [c[2], c[3]];
-    l = geographicDistance(ptA, ptB);
+    const lat = (c[1] + c[3]) * 0.5;
+    const mLon = 111_320 * Math.cos((lat * Math.PI) / 180);
+    const dx = (c[2] - c[0]) * mLon;
+    const dy = (c[3] - c[1]) * 110_540;
+    l = Math.sqrt(dx * dx + dy * dy);
     b = 0;
-    h = `${c[0]},${c[1]}->${c[2]},${c[3]}`;
+    h = w ? `w:${w}:${c[0]}` : `${c[0]},${c[1]}`;
   } else {
     [h, w, nameId, c, kId, rw, svId, flags, mdBits, maBits, hc, l, b, tagSetId] = tuple;
   }
@@ -314,25 +321,74 @@ export type ScopedIntelligenceResult = {
   paveDetails: PaveDetail[];
   surfaceIndex: RoadIntelligenceIndex;
   paveIndex: PaveSpatialIndex;
+  addTileKey(tileKey: string): void;
 };
+
+export class LazySurfaceCellMap extends Map<string, RoadSegmentRecord[]> {
+  private readonly store: SpatialRoadIntelligenceStore;
+  private readonly tileKeys: Set<string>;
+
+  constructor(store: SpatialRoadIntelligenceStore, tileKeys: Set<string>) {
+    super();
+    this.store = store;
+    this.tileKeys = tileKeys;
+  }
+
+  public addTileKey(tileKey: string): void {
+    this.tileKeys.add(tileKey);
+  }
+
+  public hasTileKey(tileKey: string): boolean {
+    return this.tileKeys.has(tileKey);
+  }
+
+  override get(cellKey: string): RoadSegmentRecord[] | undefined {
+    const existing = super.get(cellKey);
+    if (existing !== undefined) {
+      return existing;
+    }
+    const colonIdx = cellKey.indexOf(":");
+    if (colonIdx === -1) return undefined;
+    const x = Number(cellKey.slice(0, colonIdx));
+    const y = Number(cellKey.slice(colonIdx + 1));
+    const tileKey = `${Math.floor(x / 10)}_${Math.floor(y / 10)}`;
+    if (!this.tileKeys.has(tileKey)) {
+      return undefined;
+    }
+    const segs = this.store.getCellSegments(tileKey, cellKey);
+    super.set(cellKey, segs);
+    return segs;
+  }
+
+  override has(cellKey: string): boolean {
+    if (super.has(cellKey)) return true;
+    const colonIdx = cellKey.indexOf(":");
+    if (colonIdx === -1) return false;
+    const x = Number(cellKey.slice(0, colonIdx));
+    const y = Number(cellKey.slice(colonIdx + 1));
+    const tileKey = `${Math.floor(x / 10)}_${Math.floor(y / 10)}`;
+    return this.tileKeys.has(tileKey);
+  }
+}
 
 export class SpatialRoadIntelligenceStore {
   private readonly meta: CompactTileMetadata;
-  private readonly loaders: Record<string, () => Promise<{ default: CompactTuple[] }>>;
+  private readonly loaders: Record<string, () => Promise<{ default: TilePayload }>>;
   private readonly tileKeySet: Set<string>;
   private readonly isRoccella: boolean;
 
-  private tileCache = new Map<string, CompactTuple[]>();
+  private tileCache = new Map<string, TilePayload>();
   private tileSegmentCache = new Map<string, RoadSegmentRecord[]>();
   private tileIndexCache = new Map<string, Map<string, RoadSegmentRecord[]>>();
   private tilePaveCache = new Map<string, PaveDetail[]>();
+  private tileHydratedCache = new Map<string, (RoadSegmentRecord | undefined)[]>();
   private indexCache = new Map<string, ScopedIntelligenceResult>();
   private allRoadsCache: RoadSegmentRecord[] | null = null;
   private allPaveCache: PaveDetail[] | null = null;
 
   constructor(
     meta: CompactTileMetadata = milanMeta as unknown as CompactTileMetadata,
-    loaders: Record<string, () => Promise<{ default: CompactTuple[] }>> = milanTileLoaders,
+    loaders: Record<string, () => Promise<{ default: TilePayload }>> = milanTileLoaders,
     isRoccella = false,
   ) {
     this.meta = meta;
@@ -424,9 +480,9 @@ export class SpatialRoadIntelligenceStore {
       needed.map(async (key) => {
         try {
           const mod = await this.loaders[key]();
-          const tuples = (mod as { default?: CompactTuple[] })?.default ?? (mod as unknown as CompactTuple[]);
-          if (Array.isArray(tuples)) {
-            this.tileCache.set(key, tuples);
+          const payload = (mod as { default?: TilePayload })?.default ?? (mod as unknown as TilePayload);
+          if (payload) {
+            this.tileCache.set(key, payload);
           } else {
             this.loadTileSync(key);
           }
@@ -437,7 +493,53 @@ export class SpatialRoadIntelligenceStore {
     );
   }
 
-  private loadTileSync(tileKey: string): CompactTuple[] | null {
+  public getTilePayload(tileKey: string): TilePayload | null {
+    if (this.tileCache.has(tileKey)) return this.tileCache.get(tileKey)!;
+    return this.loadTileSync(tileKey);
+  }
+
+  public getTileTuples(tileKey: string): CompactTuple[] | null {
+    const payload = this.getTilePayload(tileKey);
+    if (!payload) return null;
+    return Array.isArray(payload) ? payload : payload.tuples;
+  }
+
+  public getHydratedSegment(tileKey: string, idx: number): RoadSegmentRecord {
+    let list = this.tileHydratedCache.get(tileKey);
+    if (!list) {
+      list = [];
+      this.tileHydratedCache.set(tileKey, list);
+    }
+    let seg = list[idx];
+    if (!seg) {
+      const tuples = this.getTileTuples(tileKey);
+      if (!tuples || !tuples[idx]) {
+        throw new Error(`Invalid tuple index ${idx} in tile ${tileKey}`);
+      }
+      seg = hydrateTuple(tuples[idx], this.meta);
+      list[idx] = seg;
+    }
+    return seg;
+  }
+
+  public getCellSegments(tileKey: string, cellKey: string): RoadSegmentRecord[] {
+    const payload = this.getTilePayload(tileKey);
+    if (!payload) return [];
+    if (!Array.isArray(payload) && payload.cells) {
+      const indices = payload.cells[cellKey];
+      if (!indices || indices.length === 0) return [];
+      const segs = new Array<RoadSegmentRecord>(indices.length);
+      for (let i = 0; i < indices.length; i++) {
+        segs[i] = this.getHydratedSegment(tileKey, indices[i]);
+      }
+      return segs;
+    }
+    // Fallback if tile has no precomputed cells
+    const tIndex = this.getTileIndex(tileKey);
+    return tIndex.get(cellKey) ?? [];
+  }
+
+  private loadTileSync(tileKey: string): TilePayload | null {
     if (this.tileCache.has(tileKey)) return this.tileCache.get(tileKey)!;
     // In Node.js testing/benchmarking environment, fall back to synchronous read
     if (typeof process !== "undefined" && process.versions?.node) {
@@ -448,9 +550,9 @@ export class SpatialRoadIntelligenceStore {
         const area = this.isRoccella ? "roccella" : "milan";
         const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
         if (fs.existsSync(filePath)) {
-          const tuples = JSON.parse(fs.readFileSync(filePath, "utf8")) as CompactTuple[];
-          this.tileCache.set(tileKey, tuples);
-          return tuples;
+          const payload = JSON.parse(fs.readFileSync(filePath, "utf8")) as TilePayload;
+          this.tileCache.set(tileKey, payload);
+          return payload;
         }
       } catch {
         try {
@@ -460,9 +562,9 @@ export class SpatialRoadIntelligenceStore {
           const area = this.isRoccella ? "roccella" : "milan";
           const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
           if (fs.existsSync(filePath)) {
-            const tuples = JSON.parse(fs.readFileSync(filePath, "utf8")) as CompactTuple[];
-            this.tileCache.set(tileKey, tuples);
-            return tuples;
+            const payload = JSON.parse(fs.readFileSync(filePath, "utf8")) as TilePayload;
+            this.tileCache.set(tileKey, payload);
+            return payload;
           }
         } catch {
           // Silently ignore if fs unavailable in worker sandbox
@@ -475,12 +577,12 @@ export class SpatialRoadIntelligenceStore {
   public getTileSegments(tileKey: string): RoadSegmentRecord[] {
     const cached = this.tileSegmentCache.get(tileKey);
     if (cached) return cached;
-    let tuples = this.tileCache.get(tileKey);
-    if (!tuples) {
-      tuples = this.loadTileSync(tileKey) ?? undefined;
-    }
+    const tuples = this.getTileTuples(tileKey);
     if (!tuples) return [];
-    const segments = tuples.map((tuple) => hydrateTuple(tuple, this.meta));
+    const segments = new Array<RoadSegmentRecord>(tuples.length);
+    for (let i = 0; i < tuples.length; i++) {
+      segments[i] = this.getHydratedSegment(tileKey, i);
+    }
     this.tileSegmentCache.set(tileKey, segments);
     return segments;
   }
@@ -488,22 +590,34 @@ export class SpatialRoadIntelligenceStore {
   public getTileIndex(tileKey: string): Map<string, RoadSegmentRecord[]> {
     const cached = this.tileIndexCache.get(tileKey);
     if (cached) return cached;
-    const segs = this.getTileSegments(tileKey);
+    const payload = this.getTilePayload(tileKey);
+    if (!payload) return new Map();
     const cells = new Map<string, RoadSegmentRecord[]>();
-    const cellSize = 0.001;
-    for (let i = 0; i < segs.length; i += 1) {
-      const seg = segs[i];
-      const [a, b] = seg.coordinates;
-      const minX = Math.floor(Math.min(a[0], b[0]) / cellSize);
-      const maxX = Math.floor(Math.max(a[0], b[0]) / cellSize);
-      const minY = Math.floor(Math.min(a[1], b[1]) / cellSize);
-      const maxY = Math.floor(Math.max(a[1], b[1]) / cellSize);
-      for (let x = minX; x <= maxX; x += 1) {
-        for (let y = minY; y <= maxY; y += 1) {
-          const key = `${x}:${y}`;
-          const existing = cells.get(key);
-          if (existing) existing.push(seg);
-          else cells.set(key, [seg]);
+    if (!Array.isArray(payload) && payload.cells) {
+      for (const [cellKey, indices] of Object.entries(payload.cells)) {
+        const segs = new Array<RoadSegmentRecord>(indices.length);
+        for (let i = 0; i < indices.length; i++) {
+          segs[i] = this.getHydratedSegment(tileKey, indices[i]);
+        }
+        cells.set(cellKey, segs);
+      }
+    } else {
+      const segs = this.getTileSegments(tileKey);
+      const cellSize = 0.001;
+      for (let i = 0; i < segs.length; i += 1) {
+        const seg = segs[i];
+        const [a, b] = seg.coordinates;
+        const minX = Math.floor(Math.min(a[0], b[0]) / cellSize);
+        const maxX = Math.floor(Math.max(a[0], b[0]) / cellSize);
+        const minY = Math.floor(Math.min(a[1], b[1]) / cellSize);
+        const maxY = Math.floor(Math.max(a[1], b[1]) / cellSize);
+        for (let x = minX; x <= maxX; x += 1) {
+          for (let y = minY; y <= maxY; y += 1) {
+            const key = `${x}:${y}`;
+            const existing = cells.get(key);
+            if (existing) existing.push(seg);
+            else cells.set(key, [seg]);
+          }
         }
       }
     }
@@ -520,38 +634,23 @@ export class SpatialRoadIntelligenceStore {
     return pave;
   }
 
-  public getScopedIntelligence(
-    coordinates: Coordinate[],
-    paddingMeters = 500,
-  ): ScopedIntelligenceResult {
-    const tileKeys = this.getTileKeysForCoordinates(coordinates, paddingMeters);
+  public getScopedIntelligenceForTiles(tileKeys: string[]): ScopedIntelligenceResult {
     tileKeys.sort();
     const cacheKey = tileKeys.join(";");
 
     const existing = this.indexCache.get(cacheKey);
     if (existing) {
-      // Refresh key for true LRU eviction order
       this.indexCache.delete(cacheKey);
       this.indexCache.set(cacheKey, existing);
       return existing;
     }
 
-    const mergedCells = new Map<string, RoadSegmentRecord[]>();
-    for (const key of tileKeys) {
-      const tCells = this.getTileIndex(key);
-      for (const [cellKey, segs] of tCells) {
-        const existing = mergedCells.get(cellKey);
-        if (existing) {
-          mergedCells.set(cellKey, existing.concat(segs));
-        } else {
-          mergedCells.set(cellKey, segs);
-        }
-      }
-    }
+    const tileKeySet = new Set(tileKeys);
+    const lazyCells = new LazySurfaceCellMap(this, tileKeySet);
 
     const surfaceIndex: RoadIntelligenceIndex = {
       cellSize: 0.001,
-      cells: mergedCells,
+      cells: lazyCells,
       allSegments: [],
     };
 
@@ -562,7 +661,7 @@ export class SpatialRoadIntelligenceStore {
     const getRoads = () => {
       if (!_roads) {
         const roadMap = new Map<string, RoadSegmentRecord>();
-        for (const key of tileKeys) {
+        for (const key of tileKeySet) {
           const segs = this.getTileSegments(key);
           for (let i = 0; i < segs.length; i += 1) {
             const s = segs[i];
@@ -575,21 +674,36 @@ export class SpatialRoadIntelligenceStore {
       return _roads;
     };
 
+    const getPaveDetails = () => {
+      if (!_paveDetails) {
+        _paveDetails = roughDetailsFromSegments(getRoads());
+      }
+      return _paveDetails;
+    };
+
     const result: ScopedIntelligenceResult = {
       get roads() {
         return getRoads();
       },
       get paveDetails() {
-        if (!_paveDetails) _paveDetails = roughDetailsFromSegments(getRoads());
-        return _paveDetails;
+        return getPaveDetails();
       },
       surfaceIndex,
       get paveIndex() {
-        if (!_paveIndex) _paveIndex = createPaveSpatialIndex(this.paveDetails);
+        if (!_paveIndex) {
+          _paveIndex = createPaveSpatialIndex(this.paveDetails);
+        }
         return _paveIndex;
       },
+      addTileKey(tileKey: string) {
+        tileKeySet.add(tileKey);
+        lazyCells.addTileKey(tileKey);
+        _roads = null;
+        _paveDetails = null;
+        _paveIndex = null;
+      },
     };
-    // Keep LRU strictly bounded to 8 active corridor indexes
+
     const MAX_INDEX_CACHE = 8;
     while (this.indexCache.size >= MAX_INDEX_CACHE) {
       const oldestKey = this.indexCache.keys().next().value;
@@ -598,6 +712,14 @@ export class SpatialRoadIntelligenceStore {
     }
     this.indexCache.set(cacheKey, result);
     return result;
+  }
+
+  public getScopedIntelligence(
+    coordinates: Coordinate[],
+    paddingMeters = 500,
+  ): ScopedIntelligenceResult {
+    const tileKeys = this.getTileKeysForCoordinates(coordinates, paddingMeters);
+    return this.getScopedIntelligenceForTiles(tileKeys);
   }
 
   public getAllRoads(): RoadSegmentRecord[] {
