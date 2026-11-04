@@ -157,6 +157,14 @@ function geographicDistance(a: Coordinate, b: Coordinate): number {
   return Math.hypot((b[0] - a[0]) * metersPerLon, (b[1] - a[1]) * 110540);
 }
 
+const NO_CYCLING_VALUE = Object.freeze({
+  hasFacility: false,
+  typology: "none" as const,
+  direction: "bidirezionale" as const,
+  surface: null,
+  source: "none" as const,
+});
+
 function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegmentRecord {
   let h: string;
   let w: number | null;
@@ -209,6 +217,7 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
 
   const k = K_ENUM[kId] ?? "unknown";
   const cyHasFacility = (flags & 16) !== 0;
+  const osmSourceId = w ? `osm:way:${w}` : null;
 
   return {
     segmentHash: h,
@@ -227,7 +236,7 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
     surface: {
       state: k === "unknown" ? "unknown" : "known",
       value: (svId >= 0 ? (meta.surfaceVals[svId] ?? "unknown") : "unknown") as SurfaceMaterial,
-      sourceId: w ? `osm:way:${w}` : null,
+      sourceId: osmSourceId,
       authority: "osm_curated",
       observedAt: null,
       ingestedAt: meta.sourceGeneratedAt,
@@ -236,7 +245,7 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
     smoothness: {
       state: "unknown",
       value: "unknown",
-      sourceId: w ? `osm:way:${w}` : null,
+      sourceId: osmSourceId,
       authority: "osm_curated",
       observedAt: null,
       ingestedAt: meta.sourceGeneratedAt,
@@ -244,14 +253,14 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
     },
     cycling: {
       state: cyHasFacility ? "known" : "unknown",
-      value: {
-        hasFacility: cyHasFacility,
+      value: cyHasFacility ? {
+        hasFacility: true,
         typology: "none",
         direction: "bidirezionale",
         surface: null,
         source: "none",
-      },
-      sourceId: w ? `osm:way:${w}` : null,
+      } : NO_CYCLING_VALUE,
+      sourceId: osmSourceId,
       authority: "osm_curated",
       observedAt: null,
       ingestedAt: meta.sourceGeneratedAt,
@@ -388,7 +397,12 @@ export class SpatialRoadIntelligenceStore {
       needed.map(async (key) => {
         try {
           const mod = await this.loaders[key]();
-          this.tileCache.set(key, mod.default);
+          const tuples = (mod as { default?: CompactTuple[] })?.default ?? (mod as unknown as CompactTuple[]);
+          if (Array.isArray(tuples)) {
+            this.tileCache.set(key, tuples);
+          } else {
+            this.loadTileSync(key);
+          }
         } catch {
           this.loadTileSync(key);
         }
@@ -457,28 +471,33 @@ export class SpatialRoadIntelligenceStore {
     }
 
     const roadMap = new Map<string, RoadSegmentRecord>();
-    const paveMap = new Map<string, PaveDetail>();
 
     for (const key of tileKeys) {
       const segs = this.getTileSegments(key);
-      for (const s of segs) {
+      for (let i = 0; i < segs.length; i += 1) {
+        const s = segs[i];
         const identity = `${s.osmWayId ?? ""}:${s.segmentHash}`;
         if (!roadMap.has(identity)) roadMap.set(identity, s);
-      }
-      const pave = this.getTilePaveDetails(key);
-      for (const p of pave) {
-        const last = p.coordinates[p.coordinates.length - 1];
-        const pKey = `${p.id}:${p.coordinates[0][0]},${p.coordinates[0][1]}->${last[0]},${last[1]}`;
-        if (!paveMap.has(pKey)) paveMap.set(pKey, p);
       }
     }
 
     const roads = Array.from(roadMap.values());
-    const paveDetails = Array.from(paveMap.values());
     const surfaceIndex = createRoadIntelligenceIndex(roads);
-    const paveIndex = createPaveSpatialIndex(paveDetails);
 
-    const result = { roads, paveDetails, surfaceIndex, paveIndex };
+    let _paveDetails: PaveDetail[] | null = null;
+    let _paveIndex: PaveSpatialIndex | null = null;
+    const result: ScopedIntelligenceResult = {
+      roads,
+      get paveDetails() {
+        if (!_paveDetails) _paveDetails = roughDetailsFromSegments(roads);
+        return _paveDetails;
+      },
+      surfaceIndex,
+      get paveIndex() {
+        if (!_paveIndex) _paveIndex = createPaveSpatialIndex(this.paveDetails);
+        return _paveIndex;
+      },
+    };
     // Keep LRU strictly bounded to 8 active corridor indexes
     const MAX_INDEX_CACHE = 8;
     while (this.indexCache.size >= MAX_INDEX_CACHE) {

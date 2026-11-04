@@ -41,7 +41,7 @@ export async function generateChunks(areaName, compactJsonPath, outputDir, index
     `import type { CompactTuple } from "./spatial-road-store";`,
     ``,
     `export const ${areaName}TileLoaders: Record<string, () => Promise<{ default: CompactTuple[] }>> = {`,
-    ...tileKeys.map((k) => `  ${JSON.stringify(k)}: () => import(${JSON.stringify(`${relOutputDir}/${k}.json`)}, { with: { type: "json" } }).then((m) => m as unknown as { default: CompactTuple[] }),`),
+    ...tileKeys.map((k) => `  ${JSON.stringify(k)}: () => import(${JSON.stringify(`${relOutputDir}/${k}.json`)}).then((m) => ({ default: m.default as CompactTuple[] })),`),
     `};`,
     ``,
   ].join("\n");

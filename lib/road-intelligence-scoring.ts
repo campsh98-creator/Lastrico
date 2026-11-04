@@ -158,7 +158,8 @@ function nearbySegments(
   index: RoadIntelligenceIndex,
   point: GeoCoordinate,
   matchMeters: number,
-): Set<RoadSegmentRecord> {
+  boxCache?: { key: string; segments: RoadSegmentRecord[] },
+): RoadSegmentRecord[] {
   const lonPadding = matchMeters / Math.max(1, metersPerLongitude(point[1]));
   const latPadding = matchMeters / 110_540;
   const minX = Math.floor((point[0] - lonPadding) / index.cellSize);
@@ -166,13 +167,35 @@ function nearbySegments(
   const minY = Math.floor((point[1] - latPadding) / index.cellSize);
   const maxY = Math.floor((point[1] + latPadding) / index.cellSize);
 
+  const boxKey = `${minX}:${maxX}:${minY}:${maxY}`;
+  if (boxCache && boxCache.key === boxKey) {
+    return boxCache.segments;
+  }
+
+  if (minX === maxX && minY === maxY) {
+    const list = index.cells.get(cellKey(minX, minY)) ?? [];
+    if (boxCache) {
+      boxCache.key = boxKey;
+      boxCache.segments = list;
+    }
+    return list;
+  }
+
   const found = new Set<RoadSegmentRecord>();
   for (let x = minX; x <= maxX; x += 1) {
     for (let y = minY; y <= maxY; y += 1) {
-      index.cells.get(cellKey(x, y))?.forEach((seg) => found.add(seg));
+      const segs = index.cells.get(cellKey(x, y));
+      if (segs) {
+        for (let i = 0; i < segs.length; i += 1) found.add(segs[i]);
+      }
     }
   }
-  return found;
+  const result = Array.from(found);
+  if (boxCache) {
+    boxCache.key = boxKey;
+    boxCache.segments = result;
+  }
+  return result;
 }
 
 type TransportMode = "car" | "motorcycle" | "bicycle";
@@ -212,13 +235,20 @@ function explicitRestriction(
   if (!segment.modeAccess?.[mode]) return null;
   // Side-specific cycling direction exceptions need graph semantics that this
   // geometric check does not have. Do not infer a confirmed violation from them.
-  if (mode === "bicycle" && tags && Object.keys(tags).some((key) =>
-    key.startsWith("cycleway:") && (key.includes("oneway") || key.includes("conditional")),
-  )) return null;
+  if (mode === "bicycle" && tags) {
+    let hasCyclewaySpecial = false;
+    for (const key in tags) {
+      if (key.startsWith("cycleway:") && (key.includes("oneway") || key.includes("conditional"))) {
+        hasCyclewaySpecial = true;
+        break;
+      }
+    }
+    if (hasCyclewaySpecial) return null;
+  }
   const direction = segment.modeDirections?.[mode];
   if (direction !== "forward" && direction !== "backward") return null;
-  const [start, end] = direction === "backward"
-    ? [segment.coordinates[1], segment.coordinates[0]] : segment.coordinates;
+  const start = direction === "backward" ? segment.coordinates[1] : segment.coordinates[0];
+  const end = direction === "backward" ? segment.coordinates[0] : segment.coordinates[1];
   return headingsAlign(a, b, start, end, true) ? null : "prohibited";
 }
 
@@ -228,13 +258,25 @@ function restrictionSample(
   b: GeoCoordinate,
   mode: TransportMode,
 ): RestrictionKind | null {
-  const sorted = [...candidates].sort((x, y) => x.distance - y.distance);
-  const nearest = sorted[0];
-  if (!nearest || nearest.distance > 3 || nearest.segment.osmWayId === null) return null;
+  if (candidates.length === 0) return null;
+  let nearest: { segment: RoadSegmentRecord; distance: number } | null = null;
+  for (let i = 0; i < candidates.length; i += 1) {
+    const cand = candidates[i];
+    if (cand.distance <= 3 && (!nearest || cand.distance < nearest.distance)) {
+      nearest = cand;
+    }
+  }
+  if (!nearest || nearest.segment.osmWayId === null) return null;
   const segment = nearest.segment;
   const grade = (road: RoadSegmentRecord) => `${road.rawTags?.layer ?? "0"}:${road.rawTags?.bridge ?? "no"}:${road.rawTags?.tunnel ?? "no"}`;
-  if (sorted.some((other) => other.distance <= nearest.distance + 2
-    && (other.segment.osmWayId !== segment.osmWayId || grade(other.segment) !== grade(segment)))) return null;
+  const nearestGrade = grade(segment);
+  for (let i = 0; i < candidates.length; i += 1) {
+    const other = candidates[i];
+    if (other.distance <= nearest.distance + 2
+      && (other.segment.osmWayId !== segment.osmWayId || grade(other.segment) !== nearestGrade)) {
+      return null;
+    }
+  }
   const [c, d] = segment.coordinates;
   if (pointToSegmentDistance(a, c, d) > 3 || pointToSegmentDistance(b, c, d) > 3) return null;
   const scaleX = metersPerLongitude((a[1] + b[1]) / 2);
@@ -255,6 +297,7 @@ export function scoreRoadIntelligence(
   index: RoadIntelligenceIndex,
   matchMeters: number,
   mode: "car" | "motorcycle" | "bicycle" = "car",
+  skipRestrictions = false,
 ): RoadIntelligenceScore {
   let paveMeters = 0;
   let weightedPaveMeters = 0;
@@ -274,6 +317,7 @@ export function scoreRoadIntelligence(
     index === 0 ? 0 : sum + geographicDistance(coordinates[index - 1], point), 0);
   const matched = new Set<string>();
   const matchedFeatures = new Set<string>();
+  const boxCache = { key: "", segments: [] as RoadSegmentRecord[] };
 
   for (let rIndex = 1; rIndex < coordinates.length; rIndex += 1) {
     const a = coordinates[rIndex - 1];
@@ -307,7 +351,7 @@ export function scoreRoadIntelligence(
       const alignedCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
       const geometricCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
 
-      for (const candidate of nearbySegments(index, midpoint, matchMeters)) {
+      for (const candidate of nearbySegments(index, midpoint, matchMeters, boxCache)) {
         const distance = pointToSegmentDistance(
           midpoint,
           candidate.coordinates[0],
@@ -326,7 +370,8 @@ export function scoreRoadIntelligence(
         geometricCandidates.push({ segment: candidate, distance });
         const allowed = candidate.modeAccess?.[mode] ?? (mode === "bicycle" ? candidate.isBicycleAllowed : candidate.isMotorAllowed);
         const direction = candidate.modeDirections?.[mode] ?? (candidate.isOneway ? "forward" : "both");
-        const [start, end] = direction === "backward" ? [...candidate.coordinates].reverse() : candidate.coordinates;
+        const start = direction === "backward" ? candidate.coordinates[1] : candidate.coordinates[0];
+        const end = direction === "backward" ? candidate.coordinates[0] : candidate.coordinates[1];
         if (!allowed || direction === "unknown" || !headingsAlign(sampleA, sampleB, start, end, direction !== "both")) {
           nearestRejected = Math.min(nearestRejected, distance);
           continue;
@@ -345,7 +390,7 @@ export function scoreRoadIntelligence(
         }
       }
 
-      const restriction = restrictionSample(geometricCandidates, sampleA, sampleB, mode);
+      const restriction = skipRestrictions ? null : restrictionSample(geometricCandidates, sampleA, sampleB, mode);
       if (restriction) {
         confirmedRestrictionMeters += sampleLength;
         const sampleStart = traversedMeters + sample * sampleLength;

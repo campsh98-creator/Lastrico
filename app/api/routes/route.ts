@@ -461,8 +461,7 @@ export async function GET(request: NextRequest) {
           const len = Math.hypot(dx, dy) || 1;
           end = [prev[0] + (dx / len) * 0.00002, prev[1] + (dy / len) * 0.00002];
         }
-        const mid: Coordinate = [(prev[0] + end[0]) / 2, (prev[1] + end[1]) / 2];
-        return scoreRoadIntelligence([prev, mid, end], scoped.surfaceIndex, policy.surfaceMatchMeters, mode).paveMeters > 0;
+        return scoreRoadIntelligence([prev, end], scoped.surfaceIndex, policy.surfaceMatchMeters, mode, true).paveMeters > 0;
       };
       const roughSlices = fastestBase.maneuverShapes?.length
         ? fastestBase.maneuverShapes.flatMap((shape) => extractRoughSlices(shape, isSegmentRough, 25))
@@ -568,8 +567,7 @@ export async function GET(request: NextRequest) {
     // Drawn from the route itself with the classifier behind the metres shown on its card, so
     // the map and the numbers agree, and parallel or crossing streets are not painted as pave.
     const isSampleRough = (prev: Coordinate, curr: Coordinate) => {
-      const mid: Coordinate = [(prev[0] + curr[0]) / 2, (prev[1] + curr[1]) / 2];
-      return scoreRoadIntelligence([prev, mid, curr], scoped.surfaceIndex, policy.surfaceMatchMeters, mode).paveMeters > 0;
+      return scoreRoadIntelligence([prev, curr], scoped.surfaceIndex, policy.surfaceMatchMeters, mode, true).paveMeters > 0;
     };
     const routeProblemSegments = (route: EngineRoute, paveMeters: number) => {
       if (paveMeters <= 0) return [];
