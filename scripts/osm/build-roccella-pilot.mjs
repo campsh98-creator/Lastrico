@@ -7,6 +7,7 @@ import { gzipSync, gunzipSync } from "node:zlib";
 import { extractHighways } from "./build-representative-network.mjs";
 import { runIngestion } from "./ingest.mjs";
 import { compileCompactSegments } from "./compile-compact-tiles.mjs";
+import { generateChunks } from "./generate-tile-chunks.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../..");
 const sourceDir = join(root, "data/sources");
@@ -72,6 +73,12 @@ export async function buildRoccellaPilot({ download = false, outputDirectory = j
   const compactPath = join(outputDirectory, "surfaces/roccella-compact-tiles.json");
   const compactJson = JSON.stringify(compact);
   await writeFile(compactPath, compactJson);
+  await generateChunks(
+    "roccella",
+    compactPath,
+    join(outputDirectory, "surfaces/roccella-tiles"),
+    join(root, "lib/roccella-tile-index.ts"),
+  );
   manifest.checksums.compactSha256 = sha256(compactJson);
   manifest.statistics.compactBytes = Buffer.byteLength(compactJson);
   manifest.statistics.tileCount = Object.keys(compact.tiles).length;

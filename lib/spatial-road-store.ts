@@ -1,10 +1,14 @@
 /**
  * Lastrico Road Intelligence — Compact Spatial Tile Store
  * Phase 3.8: Memory-Efficient Spatially Scoped Road Intelligence
+ * Phase 4.16: Per-Tile Lazy Hydration for Sub-Millisecond Cloudflare Edge Execution
  */
 
-import compactData from "../data/surfaces/milan-compact-tiles.json" with { type: "json" };
-import roccellaCompactData from "../data/surfaces/roccella-compact-tiles.json" with { type: "json" };
+import { createRequire } from "node:module";
+import milanMeta from "../data/surfaces/milan-tiles/metadata.json" with { type: "json" };
+import roccellaMeta from "../data/surfaces/roccella-tiles/metadata.json" with { type: "json" };
+import { milanTileLoaders } from "./milan-tile-index.ts";
+import { roccellaTileLoaders } from "./roccella-tile-index.ts";
 import type {
   RoadSegmentRecord,
   HighwayClassification,
@@ -69,7 +73,7 @@ export function createPaveSpatialIndex(details: PaveDetail[], cellSize = 0.001):
   return { cellSize, cells };
 }
 
-type LegacyCompactTuple = [
+export type LegacyCompactTuple = [
   h: string,
   w: number | null,
   nameId: number,
@@ -86,7 +90,7 @@ type LegacyCompactTuple = [
   tagSetId: number,
 ];
 
-type SlimCompactTuple = [
+export type SlimCompactTuple = [
   w: number | null,
   nameId: number,
   c: [number, number, number, number],
@@ -100,9 +104,9 @@ type SlimCompactTuple = [
   tagSetId: number,
 ];
 
-type CompactTuple = LegacyCompactTuple | SlimCompactTuple;
+export type CompactTuple = LegacyCompactTuple | SlimCompactTuple;
 
-export interface CompactTileJson {
+export interface CompactTileMetadata {
   version: string;
   sourceDatasetSha256: string;
   sourceGeneratedAt: string;
@@ -114,10 +118,12 @@ export interface CompactTileJson {
   names: (string | null)[];
   surfaceVals: string[];
   tagSets: (Record<string, string> | undefined)[];
-  tiles: Record<string, CompactTuple[]>;
+  tileKeys?: string[];
+  tiles?: Record<string, CompactTuple[]>;
 }
 
-const typedData = compactData as unknown as CompactTileJson;
+export type CompactTileJson = CompactTileMetadata;
+
 const K_ENUM: SurfaceCategory[] = [
   "confirmed_rough",
   "probable_rough",
@@ -151,37 +157,7 @@ function geographicDistance(a: Coordinate, b: Coordinate): number {
   return Math.hypot((b[0] - a[0]) * metersPerLon, (b[1] - a[1]) * 110540);
 }
 
-function calculateBearing(a: Coordinate, b: Coordinate): number {
-  const lat1 = (a[1] * Math.PI) / 180;
-  const lat2 = (b[1] * Math.PI) / 180;
-  const deltaLon = ((b[0] - a[0]) * Math.PI) / 180;
-  const y = Math.sin(deltaLon) * Math.cos(lat2);
-  const x =
-    Math.cos(lat1) * Math.sin(lat2) -
-    Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLon);
-  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
-}
-
-function computeSegmentHash(a: Coordinate, b: Coordinate, bearing: number, lengthCm: number): string {
-  const qLonA = Math.round(a[0] * 1000000) / 1000000;
-  const qLatA = Math.round(a[1] * 1000000) / 1000000;
-  const qLonB = Math.round(b[0] * 1000000) / 1000000;
-  const qLatB = Math.round(b[1] * 1000000) / 1000000;
-  const qBearing = Math.round(bearing * 10) / 10;
-  const qLength = Math.round(lengthCm);
-
-  const sig = `${qLonA},${qLatA}->${qLonB},${qLatB};b=${qBearing};l=${qLength}`;
-  let h1 = 0x811c9dc5;
-  let h2 = 0x41c64e6d;
-  for (let i = 0; i < sig.length; i++) {
-    const ch = sig.charCodeAt(i);
-    h1 = Math.imul(h1 ^ ch, 0x01000193);
-    h2 = Math.imul(h2 ^ (ch + i), 0x5bd1e995);
-  }
-  return `${(h1 >>> 0).toString(16).padStart(8, "0")}${(h2 >>> 0).toString(16).padStart(8, "0")}`;
-}
-
-function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegmentRecord {
+function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegmentRecord {
   let h: string;
   let w: number | null;
   let nameId: number;
@@ -237,7 +213,7 @@ function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegm
   return {
     segmentHash: h,
     osmWayId: w,
-    name: nameId >= 0 ? (typedData.names[nameId] ?? null) : null,
+    name: nameId >= 0 ? (meta.names[nameId] ?? null) : null,
     coordinates: [[c[0], c[1]], [c[2], c[3]]],
     lengthMeters: l,
     bearing: b,
@@ -250,11 +226,11 @@ function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegm
     embeddedRails: (flags & 8) !== 0,
     surface: {
       state: k === "unknown" ? "unknown" : "known",
-      value: (svId >= 0 ? (typedData.surfaceVals[svId] ?? "unknown") : "unknown") as SurfaceMaterial,
+      value: (svId >= 0 ? (meta.surfaceVals[svId] ?? "unknown") : "unknown") as SurfaceMaterial,
       sourceId: w ? `osm:way:${w}` : null,
       authority: "osm_curated",
       observedAt: null,
-      ingestedAt: typedData.sourceGeneratedAt,
+      ingestedAt: meta.sourceGeneratedAt,
       confidence: k === "unknown" ? 0 : (k === "confirmed_rough" || k === "confirmed_smooth" ? 1 : 0.65),
     },
     smoothness: {
@@ -263,7 +239,7 @@ function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegm
       sourceId: w ? `osm:way:${w}` : null,
       authority: "osm_curated",
       observedAt: null,
-      ingestedAt: typedData.sourceGeneratedAt,
+      ingestedAt: meta.sourceGeneratedAt,
       confidence: 0,
     },
     cycling: {
@@ -278,12 +254,12 @@ function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegm
       sourceId: w ? `osm:way:${w}` : null,
       authority: "osm_curated",
       observedAt: null,
-      ingestedAt: typedData.sourceGeneratedAt,
+      ingestedAt: meta.sourceGeneratedAt,
       confidence: cyHasFacility ? 1 : 0,
     },
     surfaceCategory: k,
     roughnessWeight: rw,
-    rawTags: tagSetId >= 0 ? typedData.tagSets[tagSetId] : undefined,
+    rawTags: tagSetId >= 0 ? meta.tagSets[tagSetId] : undefined,
   };
 }
 
@@ -298,19 +274,49 @@ function roughDetailsFromSegments(segments: RoadSegmentRecord[]): PaveDetail[] {
     }));
 }
 
+export type ScopedIntelligenceResult = {
+  roads: RoadSegmentRecord[];
+  paveDetails: PaveDetail[];
+  surfaceIndex: RoadIntelligenceIndex;
+  paveIndex: PaveSpatialIndex;
+};
+
 export class SpatialRoadIntelligenceStore {
-  private readonly data: CompactTileJson;
-  constructor(data: CompactTileJson = typedData) { this.data = data; }
+  private readonly meta: CompactTileMetadata;
+  private readonly loaders: Record<string, () => Promise<{ default: CompactTuple[] }>>;
+  private readonly tileKeySet: Set<string>;
+  private readonly isRoccella: boolean;
+
+  private tileCache = new Map<string, CompactTuple[]>();
   private tileSegmentCache = new Map<string, RoadSegmentRecord[]>();
   private tilePaveCache = new Map<string, PaveDetail[]>();
-  private indexCache = new Map<string, { surfaceIndex: RoadIntelligenceIndex; paveIndex: PaveSpatialIndex; roads: RoadSegmentRecord[]; paveDetails: PaveDetail[] }>();
+  private indexCache = new Map<string, ScopedIntelligenceResult>();
   private allRoadsCache: RoadSegmentRecord[] | null = null;
   private allPaveCache: PaveDetail[] | null = null;
 
-  public get sourceSha256() { return this.data.sourceDatasetSha256; }
-  public get totalSegments() { return this.data.totalSegments; }
-  public get pilotSegments() { return this.data.pilotSegments ?? this.data.totalSegments; }
-  public get tileCount() { return Object.keys(this.data.tiles).length; }
+  constructor(
+    meta: CompactTileMetadata = milanMeta as unknown as CompactTileMetadata,
+    loaders: Record<string, () => Promise<{ default: CompactTuple[] }>> = milanTileLoaders,
+    isRoccella = false,
+  ) {
+    this.meta = meta;
+    this.loaders = loaders;
+    this.isRoccella = isRoccella;
+
+    const keys = meta.tileKeys ?? (meta.tiles ? Object.keys(meta.tiles) : []);
+    this.tileKeySet = new Set(keys);
+
+    if (meta.tiles) {
+      for (const [k, v] of Object.entries(meta.tiles)) {
+        this.tileCache.set(k, v);
+      }
+    }
+  }
+
+  public get sourceSha256() { return this.meta.sourceDatasetSha256; }
+  public get totalSegments() { return this.meta.totalSegments; }
+  public get pilotSegments() { return this.meta.pilotSegments ?? this.meta.totalSegments; }
+  public get tileCount() { return this.tileKeySet.size; }
 
   public get indexCacheSize(): number {
     return this.indexCache.size;
@@ -334,7 +340,7 @@ export class SpatialRoadIntelligenceStore {
       for (let x = minX; x <= maxX; x++) {
         for (let y = minY; y <= maxY; y++) {
           const key = `${x}_${y}`;
-          if (this.data.tiles[key]) {
+          if (this.tileKeySet.has(key)) {
             keys.add(key);
           }
         }
@@ -372,12 +378,55 @@ export class SpatialRoadIntelligenceStore {
     return needed.filter((k) => !loadedSet.has(k));
   }
 
+  /**
+   * Preload specific tiles asynchronously before calling getScopedIntelligence
+   */
+  public async preloadTiles(tileKeys: string[]): Promise<void> {
+    const needed = tileKeys.filter((k) => !this.tileCache.has(k) && this.loaders[k]);
+    if (!needed.length) return;
+    await Promise.all(
+      needed.map(async (key) => {
+        try {
+          const mod = await this.loaders[key]();
+          this.tileCache.set(key, mod.default);
+        } catch {
+          this.loadTileSync(key);
+        }
+      }),
+    );
+  }
+
+  private loadTileSync(tileKey: string): CompactTuple[] | null {
+    if (this.tileCache.has(tileKey)) return this.tileCache.get(tileKey)!;
+    // In Node.js testing/benchmarking environment, fall back to synchronous read
+    if (typeof process !== "undefined" && process.versions?.node) {
+      try {
+        const nodeRequire = createRequire(import.meta.url);
+        const fs = nodeRequire("node:fs");
+        const path = nodeRequire("node:path");
+        const area = this.isRoccella ? "roccella" : "milan";
+        const filePath = path.resolve(process.cwd(), `data/surfaces/${area}-tiles/${tileKey}.json`);
+        if (fs.existsSync(filePath)) {
+          const tuples = JSON.parse(fs.readFileSync(filePath, "utf8")) as CompactTuple[];
+          this.tileCache.set(tileKey, tuples);
+          return tuples;
+        }
+      } catch {
+        // Silently ignore if fs unavailable in worker sandbox
+      }
+    }
+    return null;
+  }
+
   public getTileSegments(tileKey: string): RoadSegmentRecord[] {
     const cached = this.tileSegmentCache.get(tileKey);
     if (cached) return cached;
-    const tuples = this.data.tiles[tileKey];
+    let tuples = this.tileCache.get(tileKey);
+    if (!tuples) {
+      tuples = this.loadTileSync(tileKey) ?? undefined;
+    }
     if (!tuples) return [];
-    const segments = tuples.map((tuple) => hydrateTuple(tuple, this.data));
+    const segments = tuples.map((tuple) => hydrateTuple(tuple, this.meta));
     this.tileSegmentCache.set(tileKey, segments);
     return segments;
   }
@@ -394,12 +443,7 @@ export class SpatialRoadIntelligenceStore {
   public getScopedIntelligence(
     coordinates: Coordinate[],
     paddingMeters = 500,
-  ): {
-    roads: RoadSegmentRecord[];
-    paveDetails: PaveDetail[];
-    surfaceIndex: RoadIntelligenceIndex;
-    paveIndex: PaveSpatialIndex;
-  } {
+  ): ScopedIntelligenceResult {
     const tileKeys = this.getTileKeysForCoordinates(coordinates, paddingMeters);
     tileKeys.sort();
     const cacheKey = tileKeys.join(";");
@@ -449,7 +493,7 @@ export class SpatialRoadIntelligenceStore {
   public getAllRoads(): RoadSegmentRecord[] {
     if (this.allRoadsCache) return this.allRoadsCache;
     const roadMap = new Map<string, RoadSegmentRecord>();
-    for (const key of Object.keys(this.data.tiles)) {
+    for (const key of this.tileKeySet) {
       const segs = this.getTileSegments(key);
       for (const s of segs) {
         const identity = `${s.osmWayId ?? ""}:${s.segmentHash}`;
@@ -467,8 +511,8 @@ export class SpatialRoadIntelligenceStore {
   }
 }
 
-export const spatialRoadStore = new SpatialRoadIntelligenceStore();
-export const roccellaSpatialRoadStore = new SpatialRoadIntelligenceStore(roccellaCompactData as unknown as CompactTileJson);
+export const spatialRoadStore = new SpatialRoadIntelligenceStore(milanMeta as unknown as CompactTileMetadata, milanTileLoaders, false);
+export const roccellaSpatialRoadStore = new SpatialRoadIntelligenceStore(roccellaMeta as unknown as CompactTileMetadata, roccellaTileLoaders, true);
 
 // Separate dictionaries and caches: hydrating one area must never resolve names or
 // restrictions through another area's tuple IDs. Milan remains the default export.

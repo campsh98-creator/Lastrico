@@ -5,6 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeOsmFeature } from "./normalize.mjs";
 import { extractHighways } from "./build-representative-network.mjs";
+import { generateChunks } from "./generate-tile-chunks.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "../..");
@@ -377,6 +378,13 @@ export async function compileMilanCompactTiles() {
     },
   };
   await writeFile(compactManifestPath, JSON.stringify(compactManifest, null, 2) + "\n", "utf8");
+
+  await generateChunks(
+    "milan",
+    outputPath,
+    join(root, "data/surfaces/milan-tiles"),
+    join(root, "lib/milan-tile-index.ts"),
+  );
 
   return {
     outputPath,

@@ -374,14 +374,16 @@ export async function GET(request: NextRequest) {
     if (!baseRoutes.length) throw new Error("Nessun percorso");
 
     const corridorCoords: Coordinate[] = [start, end, ...baseRoutes.flatMap((r) => r.coordinates)];
-    // Candidates may leave the endpoint rectangle; score against the full local snapshot.
-    let scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 120);
+    // Preload only the tiles intersecting the initial corridor
     let loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 120);
+    await spatialRoadStore.preloadTiles(loadedTileKeys);
+    let scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 120);
 
-    const ensureRouteCovered = (routeCoordinates: Coordinate[]) => {
+    const ensureRouteCovered = async (routeCoordinates: Coordinate[]) => {
       const missing = spatialRoadStore.getMissingTileKeys(loadedTileKeys, routeCoordinates, 80);
       if (missing.length > 0) {
         corridorCoords.push(...routeCoordinates);
+        await spatialRoadStore.preloadTiles(missing);
         loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 120);
         scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 120);
       }
@@ -392,10 +394,9 @@ export async function GET(request: NextRequest) {
     const scoreCandidate = (route: EngineRoute) => {
       const cached = scoreCache.get(route);
       if (cached) return cached;
-      const activeIdx = ensureRouteCovered(route.coordinates);
       const intelligence = scoreRoadIntelligence(
         route.coordinates,
-        activeIdx,
+        scoped.surfaceIndex,
         policy.surfaceMatchMeters,
         mode,
       );
@@ -451,7 +452,7 @@ export async function GET(request: NextRequest) {
     // One bounded provider-cost attempt in planner; navigation keeps its existing latency budget.
     if (canGenerate && (!navigationRequest || surfaceAwarePoc)
       && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
-      && deadline - Date.now() >= 4_000) {
+      && deadline - Date.now() >= 4_000 && preliminaryFast.surfaceScore.paveMeters > 0) {
       const isSegmentRough = (prev: Coordinate, curr: Coordinate) => {
         let end = curr;
         if (segmentLength(prev, curr) < 1) {
@@ -479,6 +480,9 @@ export async function GET(request: NextRequest) {
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
         );
+        if (surfaceAwareDirectRoute) {
+          await ensureRouteCovered(surfaceAwareDirectRoute.coordinates);
+        }
       }
     }
 
@@ -510,6 +514,7 @@ export async function GET(request: NextRequest) {
           request.signal,
         );
         detourResponses.push(routes);
+        await ensureRouteCovered(routes.flatMap((r) => r.coordinates));
         const provisionalRoutes = [
           ...baseRoutes,
           ...(surfaceAwareDirectRoute ? [surfaceAwareDirectRoute] : []),
@@ -566,12 +571,14 @@ export async function GET(request: NextRequest) {
       const mid: Coordinate = [(prev[0] + curr[0]) / 2, (prev[1] + curr[1]) / 2];
       return scoreRoadIntelligence([prev, mid, curr], scoped.surfaceIndex, policy.surfaceMatchMeters, mode).paveMeters > 0;
     };
-    const routeProblemSegments = (route: EngineRoute) =>
-      extractRoughSlices(route.coordinates, isSampleRough, 5);
-    const fastProblemSegments = routeProblemSegments(fast.route);
+    const routeProblemSegments = (route: EngineRoute, paveMeters: number) => {
+      if (paveMeters <= 0) return [];
+      return extractRoughSlices(route.coordinates, isSampleRough, 15);
+    };
+    const fastProblemSegments = routeProblemSegments(fast.route, fast.surfaceScore.paveMeters);
     const safeProblemSegments = safe.route === fast.route
       ? fastProblemSegments
-      : routeProblemSegments(safe.route);
+      : routeProblemSegments(safe.route, safe.surfaceScore.paveMeters);
 
     const routingProfile = profileMetadata(mode, fast.route, safe.route);
     const bicycleCoverageNotice = mode === "bicycle"
