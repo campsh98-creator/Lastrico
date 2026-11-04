@@ -375,15 +375,15 @@ export async function GET(request: NextRequest) {
 
     const corridorCoords: Coordinate[] = [start, end, ...baseRoutes.flatMap((r) => r.coordinates)];
     // Candidates may leave the endpoint rectangle; score against the full local snapshot.
-    let scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 500);
-    let loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 500);
+    let scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 120);
+    let loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 120);
 
     const ensureRouteCovered = (routeCoordinates: Coordinate[]) => {
       const missing = spatialRoadStore.getMissingTileKeys(loadedTileKeys, routeCoordinates, 80);
       if (missing.length > 0) {
         corridorCoords.push(...routeCoordinates);
-        loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 500);
-        scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 500);
+        loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 120);
+        scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 120);
       }
       return scoped.surfaceIndex;
     };

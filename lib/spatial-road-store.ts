@@ -213,8 +213,8 @@ function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegm
     const ptA: Coordinate = [c[0], c[1]];
     const ptB: Coordinate = [c[2], c[3]];
     l = geographicDistance(ptA, ptB);
-    b = calculateBearing(ptA, ptB);
-    h = computeSegmentHash(ptA, ptB, b, l * 100);
+    b = 0;
+    h = `${c[0]},${c[1]}->${c[2]},${c[3]}`;
   } else {
     [h, w, nameId, c, kId, rw, svId, flags, mdBits, maBits, hc, l, b, tagSetId] = tuple;
   }
