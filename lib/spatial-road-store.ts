@@ -262,7 +262,7 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
     const dy = (c[3] - c[1]) * 110_540;
     l = Math.sqrt(dx * dx + dy * dy);
     b = 0;
-    h = w ? `w:${w}:${c[0]}` : `${c[0]},${c[1]}`;
+    h = `${c[0]},${c[1]}->${c[2]},${c[3]}`;
   } else {
     [h, w, nameId, c, kId, rw, svId, flags, mdBits, maBits, hc, l, b, tagSetId] = tuple;
   }
@@ -543,18 +543,7 @@ export class SpatialRoadIntelligenceStore {
     if (this.tileCache.has(tileKey)) return this.tileCache.get(tileKey)!;
     // In Node.js testing/benchmarking environment, fall back to synchronous read
     if (typeof process !== "undefined" && process.versions?.node) {
-      try {
-        const nodeRequire = createRequire(import.meta.url);
-        const fs = nodeRequire("node:fs");
-        const fileURLToPath = nodeRequire("node:url").fileURLToPath;
-        const area = this.isRoccella ? "roccella" : "milan";
-        const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
-        if (fs.existsSync(filePath)) {
-          const payload = JSON.parse(fs.readFileSync(filePath, "utf8")) as TilePayload;
-          this.tileCache.set(tileKey, payload);
-          return payload;
-        }
-      } catch {
+      for (let attempt = 0; attempt < 3; attempt++) {
         try {
           const nodeRequire = createRequire(import.meta.url);
           const fs = nodeRequire("node:fs");
@@ -562,12 +551,13 @@ export class SpatialRoadIntelligenceStore {
           const area = this.isRoccella ? "roccella" : "milan";
           const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
           if (fs.existsSync(filePath)) {
-            const payload = JSON.parse(fs.readFileSync(filePath, "utf8")) as TilePayload;
+            const raw = fs.readFileSync(filePath, "utf8");
+            const payload = JSON.parse(raw) as TilePayload;
             this.tileCache.set(tileKey, payload);
             return payload;
           }
         } catch {
-          // Silently ignore if fs unavailable in worker sandbox
+          // Transient parallel lock retry
         }
       }
     }

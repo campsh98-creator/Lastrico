@@ -508,9 +508,7 @@ export async function GET(request: NextRequest) {
       const anchor = findDetourAnchor(
         fastestBase,
         preliminaryFast.surfaceScore.roughSegmentIndices,
-        (!preliminaryFast.surfaceScore.roughSegmentIndices || preliminaryFast.surfaceScore.roughSegmentIndices.size === 0)
-          ? scoped.paveIndex
-          : undefined,
+        undefined,
         mode,
       );
       const baseOffset = Math.max(
