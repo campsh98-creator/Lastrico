@@ -298,6 +298,7 @@ export class SpatialRoadIntelligenceStore {
 
   private tileCache = new Map<string, CompactTuple[]>();
   private tileSegmentCache = new Map<string, RoadSegmentRecord[]>();
+  private tileIndexCache = new Map<string, Map<string, RoadSegmentRecord[]>>();
   private tilePaveCache = new Map<string, PaveDetail[]>();
   private indexCache = new Map<string, ScopedIntelligenceResult>();
   private allRoadsCache: RoadSegmentRecord[] | null = null;
@@ -445,6 +446,32 @@ export class SpatialRoadIntelligenceStore {
     return segments;
   }
 
+  public getTileIndex(tileKey: string): Map<string, RoadSegmentRecord[]> {
+    const cached = this.tileIndexCache.get(tileKey);
+    if (cached) return cached;
+    const segs = this.getTileSegments(tileKey);
+    const cells = new Map<string, RoadSegmentRecord[]>();
+    const cellSize = 0.001;
+    for (let i = 0; i < segs.length; i += 1) {
+      const seg = segs[i];
+      const [a, b] = seg.coordinates;
+      const minX = Math.floor(Math.min(a[0], b[0]) / cellSize);
+      const maxX = Math.floor(Math.max(a[0], b[0]) / cellSize);
+      const minY = Math.floor(Math.min(a[1], b[1]) / cellSize);
+      const maxY = Math.floor(Math.max(a[1], b[1]) / cellSize);
+      for (let x = minX; x <= maxX; x += 1) {
+        for (let y = minY; y <= maxY; y += 1) {
+          const key = `${x}:${y}`;
+          const existing = cells.get(key);
+          if (existing) existing.push(seg);
+          else cells.set(key, [seg]);
+        }
+      }
+    }
+    this.tileIndexCache.set(tileKey, cells);
+    return cells;
+  }
+
   public getTilePaveDetails(tileKey: string): PaveDetail[] {
     const cached = this.tilePaveCache.get(tileKey);
     if (cached) return cached;
@@ -470,26 +497,56 @@ export class SpatialRoadIntelligenceStore {
       return existing;
     }
 
-    const roadMap = new Map<string, RoadSegmentRecord>();
-
+    const mergedCells = new Map<string, RoadSegmentRecord[]>();
     for (const key of tileKeys) {
-      const segs = this.getTileSegments(key);
-      for (let i = 0; i < segs.length; i += 1) {
-        const s = segs[i];
-        const identity = `${s.osmWayId ?? ""}:${s.segmentHash}`;
-        if (!roadMap.has(identity)) roadMap.set(identity, s);
+      const tCells = this.getTileIndex(key);
+      for (const [cellKey, segs] of tCells) {
+        const existing = mergedCells.get(cellKey);
+        if (existing) {
+          for (let s = 0; s < segs.length; s += 1) {
+            const seg = segs[s];
+            if (!existing.some((other) => other.segmentHash === seg.segmentHash && other.osmWayId === seg.osmWayId)) {
+              existing.push(seg);
+            }
+          }
+        } else {
+          mergedCells.set(cellKey, [...segs]);
+        }
       }
     }
 
-    const roads = Array.from(roadMap.values());
-    const surfaceIndex = createRoadIntelligenceIndex(roads);
+    const surfaceIndex: RoadIntelligenceIndex = {
+      cellSize: 0.001,
+      cells: mergedCells,
+      allSegments: [],
+    };
 
+    let _roads: RoadSegmentRecord[] | null = null;
     let _paveDetails: PaveDetail[] | null = null;
     let _paveIndex: PaveSpatialIndex | null = null;
+
+    const getRoads = () => {
+      if (!_roads) {
+        const roadMap = new Map<string, RoadSegmentRecord>();
+        for (const key of tileKeys) {
+          const segs = this.getTileSegments(key);
+          for (let i = 0; i < segs.length; i += 1) {
+            const s = segs[i];
+            const identity = `${s.osmWayId ?? ""}:${s.segmentHash}`;
+            if (!roadMap.has(identity)) roadMap.set(identity, s);
+          }
+        }
+        _roads = Array.from(roadMap.values());
+      }
+      return _roads;
+    };
+
     const result: ScopedIntelligenceResult = {
-      roads,
+      get roads() {
+        return getRoads();
+      },
       get paveDetails() {
-        if (!_paveDetails) _paveDetails = roughDetailsFromSegments(roads);
+        if (!_paveDetails) _paveDetails = roughDetailsFromSegments(getRoads());
         return _paveDetails;
       },
       surfaceIndex,
