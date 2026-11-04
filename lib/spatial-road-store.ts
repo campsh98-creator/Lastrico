@@ -169,9 +169,11 @@ for (let b = 0; b < 64; b++) {
 }
 
 function geographicDistance(a: Coordinate, b: Coordinate): number {
-  const lat = (a[1] + b[1]) / 2;
+  const lat = (a[1] + b[1]) * 0.5;
   const metersPerLon = 111320 * Math.cos((lat * Math.PI) / 180);
-  return Math.hypot((b[0] - a[0]) * metersPerLon, (b[1] - a[1]) * 110540);
+  const dx = (b[0] - a[0]) * metersPerLon;
+  const dy = (b[1] - a[1]) * 110540;
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
 const NO_CYCLING_VALUE = Object.freeze({
@@ -180,6 +182,44 @@ const NO_CYCLING_VALUE = Object.freeze({
   direction: "bidirezionale" as const,
   surface: null,
   source: "none" as const,
+});
+
+const FACILITY_CYCLING_VALUE = Object.freeze({
+  hasFacility: true,
+  typology: "none" as const,
+  direction: "bidirezionale" as const,
+  surface: null,
+  source: "none" as const,
+});
+
+const SHARED_SMOOTHNESS: RoadSegmentRecord["smoothness"] = Object.freeze({
+  state: "unknown" as const,
+  value: "unknown" as const,
+  sourceId: null,
+  authority: "osm_curated" as const,
+  observedAt: null,
+  ingestedAt: milanMeta.sourceGeneratedAt,
+  confidence: 0,
+});
+
+const SHARED_CYCLING_NONE: RoadSegmentRecord["cycling"] = Object.freeze({
+  state: "unknown" as const,
+  value: NO_CYCLING_VALUE,
+  sourceId: null,
+  authority: "osm_curated" as const,
+  observedAt: null,
+  ingestedAt: milanMeta.sourceGeneratedAt,
+  confidence: 0,
+});
+
+const SHARED_CYCLING_FACILITY: RoadSegmentRecord["cycling"] = Object.freeze({
+  state: "known" as const,
+  value: FACILITY_CYCLING_VALUE,
+  sourceId: null,
+  authority: "osm_curated" as const,
+  observedAt: null,
+  ingestedAt: milanMeta.sourceGeneratedAt,
+  confidence: 1,
 });
 
 function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegmentRecord {
@@ -250,30 +290,8 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
       ingestedAt: meta.sourceGeneratedAt,
       confidence: k === "unknown" ? 0 : (k === "confirmed_rough" || k === "confirmed_smooth" ? 1 : 0.65),
     },
-    smoothness: {
-      state: "unknown",
-      value: "unknown",
-      sourceId: osmSourceId,
-      authority: "osm_curated",
-      observedAt: null,
-      ingestedAt: meta.sourceGeneratedAt,
-      confidence: 0,
-    },
-    cycling: {
-      state: cyHasFacility ? "known" : "unknown",
-      value: cyHasFacility ? {
-        hasFacility: true,
-        typology: "none",
-        direction: "bidirezionale",
-        surface: null,
-        source: "none",
-      } : NO_CYCLING_VALUE,
-      sourceId: osmSourceId,
-      authority: "osm_curated",
-      observedAt: null,
-      ingestedAt: meta.sourceGeneratedAt,
-      confidence: cyHasFacility ? 1 : 0,
-    },
+    smoothness: SHARED_SMOOTHNESS,
+    cycling: cyHasFacility ? SHARED_CYCLING_FACILITY : SHARED_CYCLING_NONE,
     surfaceCategory: k,
     roughnessWeight: rw,
     rawTags: tagSetId >= 0 ? meta.tagSets[tagSetId] : undefined,

@@ -17,13 +17,27 @@ async function runSmokeTests() {
       console.log(`PASS (${elapsed} ms)`);
       passed++;
     } catch (err) {
+      if (err.message && err.message.includes("HTTP 503")) {
+        // Public Valhalla FOSGIS rate limiter burst backoff and retry once
+        await new Promise((r) => setTimeout(r, 3000));
+        try {
+          await fn();
+          const elapsed = Math.round(performance.now() - start);
+          console.log(`PASS (retry: ${elapsed} ms)`);
+          passed++;
+          await new Promise((r) => setTimeout(r, 2000));
+          return;
+        } catch (retryErr) {
+          err = retryErr;
+        }
+      }
       const elapsed = Math.round(performance.now() - start);
       console.log(`FAIL (${elapsed} ms)`);
       console.error(`  Error: ${err.message}`);
       failed++;
     }
-    // Respect public Valhalla FOSGIS rate limit (1 req/sec) between smoke checks
-    await new Promise((r) => setTimeout(r, 1100));
+    // Respect public Valhalla FOSGIS rate limit between smoke checks
+    await new Promise((r) => setTimeout(r, 2000));
   }
 
   // 1. Homepage & Static Assets

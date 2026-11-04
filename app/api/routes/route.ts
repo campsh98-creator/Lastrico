@@ -384,17 +384,27 @@ export async function GET(request: NextRequest) {
 
     const corridorCoords: Coordinate[] = [start, end, ...baseRoutes.flatMap((r) => r.coordinates)];
     // Preload only the tiles intersecting the initial corridor
-    let loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
+    const loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
     await spatialRoadStore.preloadTiles(loadedTileKeys);
-    let scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 50);
+    const scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 50);
 
     const ensureRouteCovered = async (routeCoordinates: Coordinate[]) => {
       const missing = spatialRoadStore.getMissingTileKeys(loadedTileKeys, routeCoordinates, 50);
       if (missing.length > 0) {
         corridorCoords.push(...routeCoordinates);
         await spatialRoadStore.preloadTiles(missing);
-        loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
-        scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 50);
+        loadedTileKeys.push(...missing);
+        for (const key of missing) {
+          const tCells = spatialRoadStore.getTileIndex(key);
+          for (const [cellKey, segs] of tCells) {
+            const existing = scoped.surfaceIndex.cells.get(cellKey);
+            if (existing) {
+              scoped.surfaceIndex.cells.set(cellKey, existing.concat(segs));
+            } else {
+              scoped.surfaceIndex.cells.set(cellKey, segs);
+            }
+          }
+        }
       }
       return scoped.surfaceIndex;
     };
@@ -502,7 +512,14 @@ export async function GET(request: NextRequest) {
     const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes);
     // Retain waypoint fallback if direct search fails to produce a sufficient distinct alternative.
     if (canGenerate && !(directSafe !== directFast && improvesEnough(directSafe, directFast))) {
-      const anchor = findDetourAnchor(fastestBase, preliminaryFast.surfaceScore.roughSegmentIndices, scoped.paveIndex, mode);
+      const anchor = findDetourAnchor(
+        fastestBase,
+        preliminaryFast.surfaceScore.roughSegmentIndices,
+        (!preliminaryFast.surfaceScore.roughSegmentIndices || preliminaryFast.surfaceScore.roughSegmentIndices.size === 0)
+          ? scoped.paveIndex
+          : undefined,
+        mode,
+      );
       const baseOffset = Math.max(
         policy.detourMinimumMeters,
         Math.min(policy.detourMaximumMeters, fastestBase.distance * policy.detourDistanceFactor),
