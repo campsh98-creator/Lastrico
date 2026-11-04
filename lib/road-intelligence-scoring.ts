@@ -405,6 +405,10 @@ export function scoreRoadIntelligence(
 
   const roundedTotal = Math.round(totalMeters);
   const roundedPave = Math.min(roundedTotal, Math.round(paveMeters));
+  const roundedConfirmed = probableMeters > 0
+    ? Math.min(roundedPave, Math.round(confirmedMeters))
+    : roundedPave;
+  const roundedProbable = Math.max(0, roundedPave - roundedConfirmed);
   const roundedSmooth = Math.min(roundedTotal - roundedPave, Math.round(smoothMeters));
   const roundedUnpaved = Math.min(roundedTotal - roundedPave - roundedSmooth, Math.round(unpavedMeters));
   const assessedMeters = roundedPave + roundedSmooth + roundedUnpaved;
@@ -422,8 +426,8 @@ export function scoreRoadIntelligence(
     totalMeters: roundedTotal,
     paveMeters: roundedPave,
     weightedPaveMeters: Math.round(weightedPaveMeters),
-    confirmedMeters: Math.round(confirmedMeters),
-    probableMeters: Math.round(probableMeters),
+    confirmedMeters: roundedConfirmed,
+    probableMeters: roundedProbable,
     smoothMeters: roundedSmooth,
     unpavedMeters: roundedUnpaved,
     weightedUnpavedMeters: Math.round(weightedUnpavedMeters),

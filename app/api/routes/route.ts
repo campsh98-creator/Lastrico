@@ -419,6 +419,12 @@ export async function GET(request: NextRequest) {
     const preliminaryFast = fastestLegalCandidate(baseScored, mode);
     if (!preliminaryFast) throw new NoLegalRouteError("Nessun percorso compatibile con le restrizioni note");
     const fastestBase = preliminaryFast.route;
+    if (fastestBase.distance < MINIMUM_ROUTE_METERS) {
+      return NextResponse.json(
+        { error: "Partenza e destinazione coincidono. Scegli due punti diversi.", mode, transportMode: mode },
+        { status: 422 },
+      );
+    }
     const preliminarySafe = selectSafeRoute(
       baseScored,
       preliminaryFast,
@@ -535,9 +541,10 @@ export async function GET(request: NextRequest) {
     if (!fast) throw new NoLegalRouteError("Nessun percorso compatibile con le restrizioni note");
     const selection = selectOptimizedRoute(scored, fast, mode, avoidance, maximumExtraMinutes, policy,
       (a, b) => routesAreEquivalent(a, b, mode));
-    const safe = selection.safe;
-    const hasDistinctAlternative = !routesAreEquivalent(fast.route, safe.route, mode)
-      && safe.riskMeters + policy.minimumPaveReduction <= fast.riskMeters;
+    const hasDistinctAlternative = !routesAreEquivalent(fast.route, selection.safe.route, mode)
+      && selection.safe.paveMeters < fast.paveMeters
+      && selection.safe.riskMeters + policy.minimumPaveReduction <= fast.riskMeters;
+    const safe = hasDistinctAlternative ? selection.safe : fast;
     const budgetExcludedLowerExposureRoute = maximumExtraMinutes !== null
       && !hasDistinctAlternative
       && scored.some((candidate) =>

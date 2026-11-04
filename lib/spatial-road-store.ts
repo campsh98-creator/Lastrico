@@ -69,7 +69,7 @@ export function createPaveSpatialIndex(details: PaveDetail[], cellSize = 0.001):
   return { cellSize, cells };
 }
 
-type CompactTuple = [
+type LegacyCompactTuple = [
   h: string,
   w: number | null,
   nameId: number,
@@ -85,6 +85,22 @@ type CompactTuple = [
   b: number,
   tagSetId: number,
 ];
+
+type SlimCompactTuple = [
+  w: number | null,
+  nameId: number,
+  c: [number, number, number, number],
+  kId: number,
+  rw: number,
+  svId: number,
+  flags: number,
+  mdBits: number,
+  maBits: number,
+  hcId: number,
+  tagSetId: number,
+];
+
+type CompactTuple = LegacyCompactTuple | SlimCompactTuple;
 
 export interface CompactTileJson {
   version: string;
@@ -109,12 +125,99 @@ const K_ENUM: SurfaceCategory[] = [
   "unpaved_loose",
   "unknown",
 ];
+const HC_ENUM: HighwayClassification[] = [
+  "unknown",
+  "steps",
+  "motorway",
+  "trunk",
+  "primary",
+  "secondary",
+  "tertiary",
+  "unclassified",
+  "residential",
+  "living_street",
+  "service",
+  "pedestrian",
+  "cycleway",
+  "footway",
+  "path",
+  "track",
+];
 const DIRS = ["both", "forward", "backward", "unknown"] as const;
 
+function geographicDistance(a: Coordinate, b: Coordinate): number {
+  const lat = (a[1] + b[1]) / 2;
+  const metersPerLon = 111320 * Math.cos((lat * Math.PI) / 180);
+  return Math.hypot((b[0] - a[0]) * metersPerLon, (b[1] - a[1]) * 110540);
+}
+
+function calculateBearing(a: Coordinate, b: Coordinate): number {
+  const lat1 = (a[1] * Math.PI) / 180;
+  const lat2 = (b[1] * Math.PI) / 180;
+  const deltaLon = ((b[0] - a[0]) * Math.PI) / 180;
+  const y = Math.sin(deltaLon) * Math.cos(lat2);
+  const x =
+    Math.cos(lat1) * Math.sin(lat2) -
+    Math.sin(lat1) * Math.cos(lat2) * Math.cos(deltaLon);
+  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
+}
+
+function computeSegmentHash(a: Coordinate, b: Coordinate, bearing: number, lengthCm: number): string {
+  const qLonA = Math.round(a[0] * 1000000) / 1000000;
+  const qLatA = Math.round(a[1] * 1000000) / 1000000;
+  const qLonB = Math.round(b[0] * 1000000) / 1000000;
+  const qLatB = Math.round(b[1] * 1000000) / 1000000;
+  const qBearing = Math.round(bearing * 10) / 10;
+  const qLength = Math.round(lengthCm);
+
+  const sig = `${qLonA},${qLatA}->${qLonB},${qLatB};b=${qBearing};l=${qLength}`;
+  let h1 = 0x811c9dc5;
+  let h2 = 0x41c64e6d;
+  for (let i = 0; i < sig.length; i++) {
+    const ch = sig.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 0x01000193);
+    h2 = Math.imul(h2 ^ (ch + i), 0x5bd1e995);
+  }
+  return `${(h1 >>> 0).toString(16).padStart(8, "0")}${(h2 >>> 0).toString(16).padStart(8, "0")}`;
+}
+
 function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegmentRecord {
-  const [
-    h, w, nameId, c, kId, rw, svId, flags, mdBits, maBits, hc, l, b, tagSetId,
-  ] = tuple;
+  let h: string;
+  let w: number | null;
+  let nameId: number;
+  let c: [number, number, number, number];
+  let kId: number;
+  let rw: number;
+  let svId: number;
+  let flags: number;
+  let mdBits: number;
+  let maBits: number;
+  let hc: HighwayClassification;
+  let l: number;
+  let b: number;
+  let tagSetId: number;
+
+  if (tuple.length === 11) {
+    const [wSlim, nameIdSlim, cSlim, kIdSlim, rwSlim, svIdSlim, flagsSlim, mdBitsSlim, maBitsSlim, hcIdSlim, tagSetIdSlim] = tuple;
+    w = wSlim;
+    nameId = nameIdSlim;
+    c = cSlim;
+    kId = kIdSlim;
+    rw = rwSlim;
+    svId = svIdSlim;
+    flags = flagsSlim;
+    mdBits = mdBitsSlim;
+    maBits = maBitsSlim;
+    hc = HC_ENUM[hcIdSlim] ?? "unknown";
+    tagSetId = tagSetIdSlim;
+    const ptA: Coordinate = [c[0], c[1]];
+    const ptB: Coordinate = [c[2], c[3]];
+    l = geographicDistance(ptA, ptB);
+    b = calculateBearing(ptA, ptB);
+    h = computeSegmentHash(ptA, ptB, b, l * 100);
+  } else {
+    [h, w, nameId, c, kId, rw, svId, flags, mdBits, maBits, hc, l, b, tagSetId] = tuple;
+  }
 
   const ma = maBits >= 0 ? {
     car: (maBits & 1) !== 0,
@@ -222,7 +325,7 @@ export class SpatialRoadIntelligenceStore {
     const padLat = paddingMeters / 110_540;
     const keys = new Set<string>();
 
-    for (const [lon, lat] of coordinates) {
+    const addPointTiles = (lon: number, lat: number) => {
       const padLon = paddingMeters / (111_320 * Math.cos(lat * Math.PI / 180));
       const minX = Math.floor((lon - padLon) * 100);
       const maxX = Math.floor((lon + padLon) * 100);
@@ -233,6 +336,25 @@ export class SpatialRoadIntelligenceStore {
           const key = `${x}_${y}`;
           if (this.data.tiles[key]) {
             keys.add(key);
+          }
+        }
+      }
+    };
+
+    for (let i = 0; i < coordinates.length; i++) {
+      const [lon, lat] = coordinates[i];
+      addPointTiles(lon, lat);
+      if (i > 0) {
+        const prev = coordinates[i - 1];
+        const segLen = geographicDistance(prev, [lon, lat]);
+        if (segLen > 100) {
+          const steps = Math.ceil(segLen / 100);
+          for (let step = 1; step < steps; step++) {
+            const t = step / steps;
+            addPointTiles(
+              prev[0] + (lon - prev[0]) * t,
+              prev[1] + (lat - prev[1]) * t,
+            );
           }
         }
       }
@@ -301,7 +423,8 @@ export class SpatialRoadIntelligenceStore {
       }
       const pave = this.getTilePaveDetails(key);
       for (const p of pave) {
-        const pKey = `${p.id}:${p.coordinates[0][0]},${p.coordinates[0][1]}`;
+        const last = p.coordinates[p.coordinates.length - 1];
+        const pKey = `${p.id}:${p.coordinates[0][0]},${p.coordinates[0][1]}->${last[0]},${last[1]}`;
         if (!paveMap.has(pKey)) paveMap.set(pKey, p);
       }
     }

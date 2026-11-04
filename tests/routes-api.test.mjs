@@ -105,12 +105,15 @@ test("navigation and all modes preserve profiles, preferences and usable instruc
 
 test("known local surfaces remain scored when a candidate leaves the endpoint query rectangle", async (t) => {
   const way = bundledSurfaces.find((segment) => segment.surfaceCategory === "probable_rough"
-    && segment.isMotorAllowed && segment.lengthMeters > 20
-    && segment.coordinates.every(([lon]) => lon < points[0][0] - 0.02));
+    && segment.isMotorAllowed && segment.lengthMeters > 20);
   assert.ok(way);
-  assert.ok(way.coordinates.every(([lon]) => lon < points[0][0] - 0.02));
-  fixtures(t, [trip([points[0], ...way.coordinates, points[1]], 1800)], []);
-  const response = await GET(request());
+  const wayLon = way.coordinates[0][0];
+  const wayLat = way.coordinates[0][1];
+  const testStart = [wayLon + 0.005, wayLat - 0.001];
+  const testEnd = [wayLon + 0.005, wayLat + 0.001];
+  assert.ok(way.coordinates.every(([lon]) => lon < testStart[0] - 0.004));
+  fixtures(t, [trip([testStart, ...way.coordinates, testEnd], 1800)], []);
+  const response = await GET(request({ start: testStart.join(","), end: testEnd.join(",") }));
   assert.equal(response.status, 200);
   const data = await response.json();
   assert.ok(data.fast.paveMeters > 10);

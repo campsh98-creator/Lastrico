@@ -1,0 +1,331 @@
+{
+  "trip": {
+    "locations": [
+      {
+        "type": "break",
+        "lat": 45.452239,
+        "lon": 9.202056,
+        "side_of_street": "left",
+        "original_index": 0
+      },
+      {
+        "type": "break",
+        "lat": 45.434974,
+        "lon": 9.173472,
+        "original_index": 1
+      }
+    ],
+    "legs": [
+      {
+        "maneuvers": [
+          {
+            "type": 3,
+            "instruction": "Guida verso nord su Piazzale Medaglie d'Oro.",
+            "verbal_succinct_transition_instruction": "Guida verso nord. poi Svolta a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_pre_transition_instruction": "Guida verso nord su Piazzale Medaglie d'Oro. poi Svolta a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_post_transition_instruction": "Continua per 10 metri.",
+            "street_names": [
+              "Piazzale Medaglie d'Oro"
+            ],
+            "bearing_after": 349,
+            "time": 2.104,
+            "length": 0.013,
+            "cost": 2.473,
+            "begin_shape_index": 0,
+            "end_shape_index": 6,
+            "verbal_multi_cue": true,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 15,
+            "instruction": "Svolta a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_transition_alert_instruction": "Svolta a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_succinct_transition_instruction": "Svolta a sinistra. poi Fai un curva a gomito a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_pre_transition_instruction": "Svolta a sinistra per rimanere su Piazzale Medaglie d'Oro. poi Fai un curva a gomito a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_post_transition_instruction": "Continua per 30 metri.",
+            "street_names": [
+              "Piazzale Medaglie d'Oro"
+            ],
+            "bearing_before": 349,
+            "bearing_after": 294,
+            "time": 9.571,
+            "length": 0.032,
+            "cost": 37.144,
+            "begin_shape_index": 6,
+            "end_shape_index": 16,
+            "verbal_multi_cue": true,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 14,
+            "instruction": "Fai un curva a gomito a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_transition_alert_instruction": "Fai un curva a gomito a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_succinct_transition_instruction": "Fai un curva a gomito a sinistra.",
+            "verbal_pre_transition_instruction": "Fai un curva a gomito a sinistra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_post_transition_instruction": "Continua per 80 metri.",
+            "street_names": [
+              "Piazzale Medaglie d'Oro"
+            ],
+            "bearing_before": 284,
+            "bearing_after": 143,
+            "time": 22.856,
+            "length": 0.083,
+            "cost": 61.458,
+            "begin_shape_index": 16,
+            "end_shape_index": 41,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 10,
+            "instruction": "Svolta a destra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_transition_alert_instruction": "Svolta a destra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_succinct_transition_instruction": "Svolta a destra.",
+            "verbal_pre_transition_instruction": "Svolta a destra per rimanere su Piazzale Medaglie d'Oro.",
+            "verbal_post_transition_instruction": "Continua per 90 metri.",
+            "street_names": [
+              "Piazzale Medaglie d'Oro"
+            ],
+            "bearing_before": 115,
+            "bearing_after": 190,
+            "time": 17.771,
+            "length": 0.093,
+            "cost": 30.269,
+            "begin_shape_index": 41,
+            "end_shape_index": 50,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 10,
+            "instruction": "Svolta a destra su Viale Sabotino.",
+            "verbal_transition_alert_instruction": "Svolta a destra su Viale Sabotino.",
+            "verbal_succinct_transition_instruction": "Svolta a destra.",
+            "verbal_pre_transition_instruction": "Svolta a destra su Viale Sabotino.",
+            "verbal_post_transition_instruction": "Continua per 400 metri.",
+            "street_names": [
+              "Viale Sabotino"
+            ],
+            "bearing_before": 161,
+            "bearing_after": 232,
+            "time": 80.614,
+            "length": 0.442,
+            "cost": 117.226,
+            "begin_shape_index": 50,
+            "end_shape_index": 77,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 15,
+            "instruction": "Svolta a sinistra su Via Giuseppe Ripamonti.",
+            "verbal_transition_alert_instruction": "Svolta a sinistra su Via Giuseppe Ripamonti.",
+            "verbal_succinct_transition_instruction": "Svolta a sinistra.",
+            "verbal_pre_transition_instruction": "Svolta a sinistra su Via Giuseppe Ripamonti.",
+            "verbal_post_transition_instruction": "Continua per 500 metri.",
+            "street_names": [
+              "Via Giuseppe Ripamonti"
+            ],
+            "bearing_before": 240,
+            "bearing_after": 170,
+            "time": 94.209,
+            "length": 0.493,
+            "cost": 154.133,
+            "begin_shape_index": 77,
+            "end_shape_index": 98,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 10,
+            "instruction": "Svolta a destra su Viale Toscana.",
+            "verbal_transition_alert_instruction": "Svolta a destra su Viale Toscana.",
+            "verbal_succinct_transition_instruction": "Svolta a destra.",
+            "verbal_pre_transition_instruction": "Svolta a destra su Viale Toscana.",
+            "verbal_post_transition_instruction": "Continua per 2 chilometri.",
+            "street_names": [
+              "Viale Toscana"
+            ],
+            "bearing_before": 169,
+            "bearing_after": 266,
+            "time": 309.187,
+            "length": 1.771,
+            "cost": 400.77,
+            "begin_shape_index": 98,
+            "end_shape_index": 170,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 15,
+            "instruction": "Svolta a sinistra su Alzaia Naviglio Pavese.",
+            "verbal_transition_alert_instruction": "Svolta a sinistra su Alzaia Naviglio Pavese.",
+            "verbal_succinct_transition_instruction": "Svolta a sinistra.",
+            "verbal_pre_transition_instruction": "Svolta a sinistra su Alzaia Naviglio Pavese.",
+            "verbal_post_transition_instruction": "Continua per 700 metri.",
+            "street_names": [
+              "Alzaia Naviglio Pavese"
+            ],
+            "bearing_before": 278,
+            "bearing_after": 187,
+            "time": 167.358,
+            "length": 0.672,
+            "cost": 234.459,
+            "begin_shape_index": 170,
+            "end_shape_index": 216,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 15,
+            "instruction": "Svolta a sinistra per rimanere su Alzaia Naviglio Pavese.",
+            "verbal_transition_alert_instruction": "Svolta a sinistra per rimanere su Alzaia Naviglio Pavese.",
+            "verbal_succinct_transition_instruction": "Svolta a sinistra.",
+            "verbal_pre_transition_instruction": "Svolta a sinistra per rimanere su Alzaia Naviglio Pavese.",
+            "verbal_post_transition_instruction": "Continua per 200 metri.",
+            "street_names": [
+              "Alzaia Naviglio Pavese"
+            ],
+            "bearing_before": 215,
+            "bearing_after": 158,
+            "time": 38.738,
+            "length": 0.156,
+            "cost": 63.02,
+            "begin_shape_index": 216,
+            "end_shape_index": 226,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 10,
+            "instruction": "Svolta a destra su Via Fra Cristoforo.",
+            "verbal_transition_alert_instruction": "Svolta a destra su Via Fra Cristoforo.",
+            "verbal_succinct_transition_instruction": "Svolta a destra.",
+            "verbal_pre_transition_instruction": "Svolta a destra su Via Fra Cristoforo.",
+            "verbal_post_transition_instruction": "Continua per 400 metri.",
+            "street_names": [
+              "Via Fra Cristoforo"
+            ],
+            "bearing_before": 189,
+            "bearing_after": 279,
+            "time": 80.969,
+            "length": 0.382,
+            "cost": 144.881,
+            "begin_shape_index": 226,
+            "end_shape_index": 251,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 15,
+            "instruction": "Svolta a sinistra su Via Don Rodrigo.",
+            "verbal_transition_alert_instruction": "Svolta a sinistra su Via Don Rodrigo.",
+            "verbal_succinct_transition_instruction": "Svolta a sinistra.",
+            "verbal_pre_transition_instruction": "Svolta a sinistra su Via Don Rodrigo.",
+            "verbal_post_transition_instruction": "Continua per 100 metri.",
+            "street_names": [
+              "Via Don Rodrigo"
+            ],
+            "bearing_before": 199,
+            "bearing_after": 109,
+            "time": 40.257,
+            "length": 0.145,
+            "cost": 63.229,
+            "begin_shape_index": 251,
+            "end_shape_index": 258,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 15,
+            "instruction": "Svolta a sinistra su Alzaia Naviglio Pavese.",
+            "verbal_transition_alert_instruction": "Svolta a sinistra su Alzaia Naviglio Pavese.",
+            "verbal_succinct_transition_instruction": "Svolta a sinistra.",
+            "verbal_pre_transition_instruction": "Svolta a sinistra su Alzaia Naviglio Pavese.",
+            "verbal_post_transition_instruction": "Continua per 200 metri.",
+            "street_names": [
+              "Alzaia Naviglio Pavese"
+            ],
+            "bearing_before": 100,
+            "bearing_after": 45,
+            "time": 40.472,
+            "length": 0.164,
+            "cost": 62.546,
+            "begin_shape_index": 258,
+            "end_shape_index": 269,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 15,
+            "instruction": "Svolta a sinistra su Largo Promessi Sposi.",
+            "verbal_transition_alert_instruction": "Svolta a sinistra su Largo Promessi Sposi.",
+            "verbal_succinct_transition_instruction": "Svolta a sinistra. poi, tra 30 metri , Arriverai a destinazione.",
+            "verbal_pre_transition_instruction": "Svolta a sinistra su Largo Promessi Sposi. poi, tra 30 metri , Arriverai a destinazione.",
+            "verbal_post_transition_instruction": "Continua per 30 metri.",
+            "street_names": [
+              "Largo Promessi Sposi"
+            ],
+            "bearing_before": 9,
+            "bearing_after": 281,
+            "time": 15.972,
+            "length": 0.03,
+            "cost": 647.413,
+            "begin_shape_index": 269,
+            "end_shape_index": 272,
+            "verbal_multi_cue": true,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          },
+          {
+            "type": 4,
+            "instruction": "Sei arrivato a destinazione.",
+            "verbal_transition_alert_instruction": "Arriverai a destinazione.",
+            "verbal_pre_transition_instruction": "Sei arrivato a destinazione.",
+            "bearing_before": 280,
+            "time": 0,
+            "length": 0,
+            "cost": 0,
+            "begin_shape_index": 272,
+            "end_shape_index": 272,
+            "travel_mode": "drive",
+            "travel_type": "car"
+          }
+        ],
+        "summary": {
+          "has_time_restrictions": false,
+          "has_toll": false,
+          "has_highway": false,
+          "has_ferry": false,
+          "min_lat": 45.433501,
+          "min_lon": 9.171695,
+          "max_lat": 45.452442,
+          "max_lon": 9.20248,
+          "time": 920.084,
+          "length": 4.48,
+          "cost": 2019.025
+        },
+        "shape": "a{duuAmatpPQC_@Ag@DWDm@PiAh@]|@Mb@Sp@Qv@Mn@Mr@Kp@I~@a@xDa@bEbBAbD?`@I`@Oj@Uv@k@t@q@j@o@h@q@\\q@Zu@Ts@N{@NcAJgARuCJ}@NuARyAT{A\\yANm@T_APu@P_A`G|@zVzCrGv@bADfA?p@ShAYt@_@VUvA|Bz@jB|@zCfAtCl@xCn@|Df@|Db@pFT`HT~b@GtQ?~CAzlA?|C@`IChG?nBDffA?rAChL[hAs@bC?l^?r@p@zBNd@J\\VE~Ci@~Ba@@?zDq@tmAaTnCe@rAW|YiFbCc@dJ_BhJcBvLuB~VoE`@V`EdC`BdAp`@aHnZ}F`B]zCi@FhD~B|gB|BjwAJfEPtKLvEzAtiAlAvy@zAvx@R~ILfG`BrgAb@lPl@xOz@dNv@zM~C`VxBdOrCdPz@fFvDzRp@fDzPxw@|Ppy@`BjIt@|CpBvJnBhJt@lDdBnItA~GJd@TdANx@RfAj@jCr@`DFVfDfPp@~Ct@pDzPjy@fApF~@xEzBjKnGlZvCfNbJtb@fBfIbCjMlBjOrAbPp@jK\\rKAxLe@rVEhEAd@Af@IhEk@dZgA|l@FvLD`HsAfy@IhBGvAQbEKxBUjFQzDMtCjALnBPrEn@vAP`@FvFv@zHfAjHlAF@rGSpEp@zq@pKvBf@tBr@fEnAbAJ`ABfDCh@Av@JdOtBn_@dFr@Tt@^fAl@ZLl@Pb@Dj@@J@bBDt`@hGjo@hJvs@nKfAJ|@BnBC`@?j@FjBR`IhAfFvA`Af@r@p@|@z@n@n@f@]f@OfAMnAClABvQjChEv@pBXrh@rHtEp@YtFGv@A|ALfBJjALpATlAVx@j@lB|D~MtInYxC|JjD`Mb@|Av@xAj@d@hAh@j[lKdLvDlMhEp@P~Br@hi@|PdOpExChAx@qFrLev@r@mEbBgMx@iN`@qGJcBGc@[u@a@e@e@Wc@Y]C{@Je@AyAU{gAaP_De@MfBe@|Hi@nI"
+      }
+    ],
+    "summary": {
+      "has_time_restrictions": false,
+      "has_toll": false,
+      "has_highway": false,
+      "has_ferry": false,
+      "min_lat": 45.433501,
+      "min_lon": 9.171695,
+      "max_lat": 45.452442,
+      "max_lon": 9.20248,
+      "time": 920.084,
+      "length": 4.48,
+      "cost": 2019.025
+    },
+    "status_message": "Found route between points",
+    "status": 0,
+    "units": "kilometers",
+    "language": "it-IT"
+  }
+}
