@@ -77,14 +77,14 @@ function pointToSegmentDistance(
   point: GeoCoordinate,
   a: GeoCoordinate,
   b: GeoCoordinate,
+  scaleX?: number,
 ): number {
-  const latitude = point[1];
-  const scaleX = metersPerLongitude(latitude);
-  const px = point[0] * scaleX;
+  const sx = scaleX ?? metersPerLongitude(point[1]);
+  const px = point[0] * sx;
   const py = point[1] * 110_540;
-  const ax = a[0] * scaleX;
+  const ax = a[0] * sx;
   const ay = a[1] * 110_540;
-  const bx = b[0] * scaleX;
+  const bx = b[0] * sx;
   const by = b[1] * 110_540;
   const dx = bx - ax;
   const dy = by - ay;
@@ -106,12 +106,12 @@ export function headingsAlign(
   c: GeoCoordinate,
   d: GeoCoordinate,
   requireForward = false,
+  scaleX?: number,
 ): boolean {
-  const latitude = (a[1] + b[1] + c[1] + d[1]) / 4;
-  const scaleX = metersPerLongitude(latitude);
-  const routeX = (b[0] - a[0]) * scaleX;
+  const sx = scaleX ?? metersPerLongitude((a[1] + b[1] + c[1] + d[1]) / 4);
+  const routeX = (b[0] - a[0]) * sx;
   const routeY = (b[1] - a[1]) * 110_540;
-  const wayX = (d[0] - c[0]) * scaleX;
+  const wayX = (d[0] - c[0]) * sx;
   const wayY = (d[1] - c[1]) * 110_540;
   const denominator = Math.hypot(routeX, routeY) * Math.hypot(wayX, wayY);
   if (denominator <= 0) return false;
@@ -160,26 +160,26 @@ function nearbySegments(
   index: RoadIntelligenceIndex,
   point: GeoCoordinate,
   matchMeters: number,
-  boxCache?: { key: string; segments: RoadSegmentRecord[] },
+  boxCache?: Map<string, RoadSegmentRecord[]>,
+  lonPadding?: number,
+  latPadding?: number,
 ): RoadSegmentRecord[] {
-  const lonPadding = matchMeters / Math.max(1, metersPerLongitude(point[1]));
-  const latPadding = matchMeters / 110_540;
-  const minX = Math.floor((point[0] - lonPadding) / index.cellSize);
-  const maxX = Math.floor((point[0] + lonPadding) / index.cellSize);
-  const minY = Math.floor((point[1] - latPadding) / index.cellSize);
-  const maxY = Math.floor((point[1] + latPadding) / index.cellSize);
+  const padLon = lonPadding ?? (matchMeters / Math.max(1, metersPerLongitude(point[1])));
+  const padLat = latPadding ?? (matchMeters / 110_540);
+  const minX = Math.floor((point[0] - padLon) / index.cellSize);
+  const maxX = Math.floor((point[0] + padLon) / index.cellSize);
+  const minY = Math.floor((point[1] - padLat) / index.cellSize);
+  const maxY = Math.floor((point[1] + padLat) / index.cellSize);
 
   const boxKey = `${minX}:${maxX}:${minY}:${maxY}`;
-  if (boxCache && boxCache.key === boxKey) {
-    return boxCache.segments;
+  if (boxCache) {
+    const cached = boxCache.get(boxKey);
+    if (cached) return cached;
   }
 
   if (minX === maxX && minY === maxY) {
     const list = index.cells.get(cellKey(minX, minY)) ?? [];
-    if (boxCache) {
-      boxCache.key = boxKey;
-      boxCache.segments = list;
-    }
+    if (boxCache) boxCache.set(boxKey, list);
     return list;
   }
 
@@ -193,10 +193,7 @@ function nearbySegments(
     }
   }
   const result = Array.from(found);
-  if (boxCache) {
-    boxCache.key = boxKey;
-    boxCache.segments = result;
-  }
+  if (boxCache) boxCache.set(boxKey, result);
   return result;
 }
 
@@ -320,7 +317,7 @@ export function scoreRoadIntelligence(
   const matched = new Set<string>();
   const matchedFeatures = new Set<string>();
   const roughSegmentIndices = new Set<number>();
-  const boxCache = { key: "", segments: [] as RoadSegmentRecord[] };
+  const boxCache = new Map<string, RoadSegmentRecord[]>();
 
   for (let rIndex = 1; rIndex < coordinates.length; rIndex += 1) {
     const a = coordinates[rIndex - 1];
@@ -354,10 +351,11 @@ export function scoreRoadIntelligence(
       const alignedCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
       const geometricCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
 
+      const scaleLon = metersPerLongitude(midpoint[1]);
       const padLat = matchMeters / 110_540;
-      const padLon = matchMeters / Math.max(1, metersPerLongitude(midpoint[1]));
+      const padLon = matchMeters / Math.max(1, scaleLon);
 
-      for (const candidate of nearbySegments(index, midpoint, matchMeters, boxCache)) {
+      for (const candidate of nearbySegments(index, midpoint, matchMeters, boxCache, padLon, padLat)) {
         const c0 = candidate.coordinates[0];
         const c1 = candidate.coordinates[1];
         if (
@@ -373,6 +371,7 @@ export function scoreRoadIntelligence(
           midpoint,
           c0,
           c1,
+          scaleLon,
         );
 
         if (distance > matchMeters) continue;
@@ -382,6 +381,8 @@ export function scoreRoadIntelligence(
           sampleB,
           candidate.coordinates[0],
           candidate.coordinates[1],
+          false,
+          scaleLon,
         );
         if (!geometricallyAligned) continue;
         geometricCandidates.push({ segment: candidate, distance });
@@ -389,7 +390,7 @@ export function scoreRoadIntelligence(
         const direction = candidate.modeDirections?.[mode] ?? (candidate.isOneway ? "forward" : "both");
         const start = direction === "backward" ? candidate.coordinates[1] : candidate.coordinates[0];
         const end = direction === "backward" ? candidate.coordinates[0] : candidate.coordinates[1];
-        if (!allowed || direction === "unknown" || !headingsAlign(sampleA, sampleB, start, end, direction !== "both")) {
+        if (!allowed || direction === "unknown" || !headingsAlign(sampleA, sampleB, start, end, direction !== "both", scaleLon)) {
           nearestRejected = Math.min(nearestRejected, distance);
           continue;
         }
