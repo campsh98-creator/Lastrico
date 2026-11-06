@@ -1,0 +1,713 @@
+{
+  "schema": "lastrico-phase420-road-dashboard/results@1",
+  "experiment": "Phase 4.20 Agent D — Road Intelligence Dashboard",
+  "dataEvidence": "OSM explicit surface tags in the production runtime dataset (© OpenStreetMap contributors, ODbL-1.0). Not an independent physical survey.",
+  "baseline": "Raw source totals in data/surfaces/*manifest.json and an independent recomputation from the compact runtime tiles (test/build.test.mjs).",
+  "inputsSha256": {
+    "data/surfaces/milan-compact-tiles.json": "6ec977a5604708e041c6acbcd4e37abfd9261e72a0fe59f9e6450931011c2914",
+    "data/surfaces/milan-compact-tiles.manifest.json": "478c4a513c065a80d44670304e89c52181a226415c86b96d7371048aa7832f18",
+    "data/surfaces/milan-central.json": "267b01744a33146e5ec237dc1fa4df907d7427f7e121b3ba0cc3c3aaa67f5586",
+    "data/surfaces/milan-central.manifest.json": "38e908d1a99981325053d6942c5ec677058f1f538cc7aa9db8c10a3978133882",
+    "data/milan-road-network-representative.json": "894dfeeb16709df2857db688fd2dedde1f14096363ba76ba22087da2eeeb2bf7",
+    "data/sources/milan-citywide-expansion.source.json": "6a07224314116cefff25a1a85a84532ce95a5698fa06682fd3eff8472411b781",
+    "data/sources/milan-pilot-osm.source.json": "260c1f91d2defb6876810a15e2bb1fbddc0a390e6fb98996e10f0bef105aeaf2",
+    "data/surfaces/roccella-compact-tiles.json": "a298371f8e441d32cb618e051a8d9670f782ccc0a678d9277b4a82521e1c5246",
+    "data/surfaces/roccella-pilot.json": "57da5fa77701e0caa9bcaa4115a87c622ed7239a3dca0663c435dad59d2e62d5",
+    "data/surfaces/roccella-pilot.manifest.json": "b746adedd269fd20a107dd161313b58bde1d48afe055e6dcfaf2246b18eb474b",
+    "data/sources/roccella-pilot-osm.source.json": "20412691895070b8ef126ebc682d4e78220c9ee639c1d237a1a0f5b75e08cf50",
+    "data/roccella-road-network.json": "b481cf049ec820ed094d3e5d183d675021d0b0adba5b91581afe92aa2b06448f"
+  },
+  "checksumVerification": {
+    "counts": {
+      "ok": 57
+    },
+    "totalChecks": 57,
+    "archives": [
+      {
+        "file": "milan-pilot-sw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-se.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-nw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-ne.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-w-sw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-w-nw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-n-nw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-n-ne.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-e-nw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-s-sw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-pilot-s-se.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-citywide-s-central.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-citywide-s-west.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-citywide-s-east.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-citywide-west.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-citywide-east.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-citywide-n-west.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-citywide-n-central.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "milan-citywide-n-east.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "roccella-pilot-sw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "roccella-pilot-se.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "roccella-pilot-nw.osm.json.gz",
+        "status": "ok"
+      },
+      {
+        "file": "roccella-pilot-ne.osm.json.gz",
+        "status": "ok"
+      }
+    ],
+    "runtimeChunks": [
+      {
+        "area": "milan",
+        "status": "ok",
+        "identicalTiles": 117,
+        "tiles": 117
+      },
+      {
+        "area": "roccella",
+        "status": "ok",
+        "identicalTiles": 40,
+        "tiles": 40
+      }
+    ],
+    "reconciliation": {
+      "milanVsCompactManifest": true,
+      "milanPilotVsMilanCentralManifest": true,
+      "roccellaVsManifest": true
+    },
+    "conflictingSurfaceStates": {
+      "milanPilot": {
+        "known": 26645,
+        "unknown": 10461
+      },
+      "roccella": {
+        "unknown": 7049,
+        "known": 1056
+      }
+    }
+  },
+  "semantics": {
+    "categories": {
+      "confirmed_rough": "Pavé verificato",
+      "probable_rough": "Pavé probabile",
+      "confirmed_smooth": "Liscio verificato",
+      "unpaved_loose": "Altro verificato (sterrato)",
+      "unknown": "Sconosciuto"
+    },
+    "known": "Nota = pavé verificato + pavé probabile + liscio verificato + altro verificato (come matchedCoveragePercent in produzione). Sconosciuto = resto."
+  },
+  "areas": {
+    "milan": {
+      "label": "Milano",
+      "segments": 102294,
+      "km": {
+        "total": 1644.699,
+        "verifiedPave": 70.682,
+        "probablePave": 68.141,
+        "verifiedSmooth": 1169.262,
+        "verifiedOther": 60.856,
+        "unknown": 275.759
+      },
+      "percentKnown": 83.2,
+      "percentKnownMainNetwork": 90.3,
+      "percentKnownAnyModeRoutable": 88,
+      "unknownKmRoutable": 159.569,
+      "unknownGenericValueKm": 11.801,
+      "bySource": [
+        {
+          "source": "pilot",
+          "segments": 37106,
+          "km": 487.136,
+          "percentKnown": 74.1
+        },
+        {
+          "source": "representative",
+          "segments": 738,
+          "km": 21.199,
+          "percentKnown": 85.7
+        },
+        {
+          "source": "citywide",
+          "segments": 64450,
+          "km": 1136.364,
+          "percentKnown": 87.1
+        }
+      ],
+      "unknownKmByClass": {
+        "unknown": 2.252,
+        "steps": 3.276,
+        "trunk": 0.195,
+        "primary": 0.035,
+        "secondary": 0.114,
+        "tertiary": 0.099,
+        "unclassified": 15.158,
+        "residential": 86.781,
+        "service": 40.884,
+        "pedestrian": 3.134,
+        "cycleway": 20.731,
+        "footway": 102.864,
+        "path": 0.236
+      },
+      "cells": 1233,
+      "hotspots": {
+        "cellsWithScore": 778,
+        "totalScore": 96273.3,
+        "top10ShareOfScore": 7.2,
+        "top5": [
+          {
+            "rank": 1,
+            "lat": 45.426962,
+            "lon": 9.176032,
+            "score": 875,
+            "unknownRoutableM": 1061.9,
+            "unknownMajorM": 0,
+            "pave3x3M": 165.1,
+            "streets": [
+              "Via Pietro Boifava",
+              "Via Santa Teresa",
+              "Via Beato Padre Pio da Pietrelcina"
+            ],
+            "reasons": [
+              "1.062 m senza superficie nota su altre strade percorribili",
+              "165 m di pavé verificato nella cella o nelle 8 adiacenti (moltiplicatore ×1,55)",
+              "0,91% dell'incertezza ponderata dell'area"
+            ]
+          },
+          {
+            "rank": 2,
+            "lat": 45.483503,
+            "lon": 9.195243,
+            "score": 863.4,
+            "unknownRoutableM": 956.7,
+            "unknownMajorM": 0,
+            "pave3x3M": 477.8,
+            "streets": [
+              "Via Giovanni Battista Pirelli",
+              "Piazza Luigi Einaudi",
+              "Via Antonio Bordoni"
+            ],
+            "reasons": [
+              "957 m senza superficie nota su altre strade percorribili",
+              "478 m di pavé verificato nella cella o nelle 8 adiacenti (moltiplicatore ×2,00)",
+              "62 m di pavé solo probabile (paving_stones, evidenza debole)",
+              "0,90% dell'incertezza ponderata dell'area"
+            ]
+          },
+          {
+            "rank": 3,
+            "lat": 45.47898,
+            "lon": 9.195243,
+            "score": 754.3,
+            "unknownRoutableM": 660.8,
+            "unknownMajorM": 0,
+            "pave3x3M": 3374.7,
+            "streets": [
+              "Piazzale Principessa Clotilde",
+              "Via Andrea Appiani",
+              "Via Galileo Galilei"
+            ],
+            "reasons": [
+              "661 m senza superficie nota su altre strade percorribili",
+              "3.375 m di pavé verificato nella cella o nelle 8 adiacenti (moltiplicatore ×2,00)",
+              "49 m di pavé solo probabile (paving_stones, evidenza debole)",
+              "0,78% dell'incertezza ponderata dell'area"
+            ]
+          },
+          {
+            "rank": 4,
+            "lat": 45.429224,
+            "lon": 9.160023,
+            "score": 744.1,
+            "unknownRoutableM": 1594.2,
+            "unknownMajorM": 0,
+            "pave3x3M": 0,
+            "streets": [
+              "Via San Vigilio",
+              "Via San Paolino",
+              "Via Agostino Depretis"
+            ],
+            "reasons": [
+              "1.594 m senza superficie nota su altre strade percorribili",
+              "0,77% dell'incertezza ponderata dell'area"
+            ]
+          },
+          {
+            "rank": 5,
+            "lat": 45.492549,
+            "lon": 9.150417,
+            "score": 668.7,
+            "unknownRoutableM": 909.4,
+            "unknownMajorM": 0,
+            "pave3x3M": 167.7,
+            "streets": [
+              "Via Pietro Gassendi",
+              "Via Giambattista Bodoni",
+              "Via Antonio Pacinotti"
+            ],
+            "reasons": [
+              "909 m senza superficie nota su altre strade percorribili",
+              "168 m di pavé verificato nella cella o nelle 8 adiacenti (moltiplicatore ×1,56)",
+              "0,69% dell'incertezza ponderata dell'area"
+            ]
+          }
+        ]
+      }
+    },
+    "roccella": {
+      "label": "Roccella Ionica",
+      "segments": 8105,
+      "km": {
+        "total": 176.542,
+        "verifiedPave": 0,
+        "probablePave": 0.39,
+        "verifiedSmooth": 30.921,
+        "verifiedOther": 8.16,
+        "unknown": 137.071
+      },
+      "percentKnown": 22.4,
+      "percentKnownMainNetwork": 28.7,
+      "percentKnownAnyModeRoutable": 23.2,
+      "unknownKmRoutable": 123.818,
+      "unknownGenericValueKm": 0.217,
+      "bySource": [
+        {
+          "source": "roccella_pilot",
+          "segments": 8105,
+          "km": 176.542,
+          "percentKnown": 22.4
+        }
+      ],
+      "unknownKmByClass": {
+        "steps": 0.257,
+        "unclassified": 60.076,
+        "residential": 11.412,
+        "service": 11.516,
+        "pedestrian": 2.23,
+        "cycleway": 2.889,
+        "footway": 7.655,
+        "path": 0.8,
+        "track": 40.236
+      },
+      "cells": 324,
+      "hotspots": {
+        "cellsWithScore": 288,
+        "totalScore": 53174.3,
+        "top10ShareOfScore": 15.6,
+        "top5": [
+          {
+            "rank": 1,
+            "lat": 38.325055,
+            "lon": 16.404368,
+            "score": 1064.5,
+            "unknownRoutableM": 1879.5,
+            "unknownMajorM": 0,
+            "pave3x3M": 0,
+            "streets": [
+              "Via Vittorio Emanuele",
+              "Vico Picatari",
+              "Via Armando Diaz"
+            ],
+            "reasons": [
+              "1.880 m senza superficie nota su altre strade percorribili",
+              "2,00% dell'incertezza ponderata dell'area"
+            ]
+          },
+          {
+            "rank": 2,
+            "lat": 38.322794,
+            "lon": 16.407231,
+            "score": 972.1,
+            "unknownRoutableM": 1844.1,
+            "unknownMajorM": 0,
+            "pave3x3M": 0,
+            "streets": [
+              "Via Giuseppe Nanni",
+              "Piazza Stazione",
+              "Via Secondo Misostrico"
+            ],
+            "reasons": [
+              "1.844 m senza superficie nota su altre strade percorribili",
+              "1,83% dell'incertezza ponderata dell'area"
+            ]
+          },
+          {
+            "rank": 3,
+            "lat": 38.327317,
+            "lon": 16.398643,
+            "score": 929.6,
+            "unknownRoutableM": 1714,
+            "unknownMajorM": 0,
+            "pave3x3M": 0,
+            "streets": [
+              "Via Trastevere",
+              "Via Ciurria",
+              "Via Serrine"
+            ],
+            "reasons": [
+              "1.714 m senza superficie nota su altre strade percorribili",
+              "1,75% dell'incertezza ponderata dell'area"
+            ]
+          },
+          {
+            "rank": 4,
+            "lat": 38.322794,
+            "lon": 16.404368,
+            "score": 868.8,
+            "unknownRoutableM": 1569.2,
+            "unknownMajorM": 0,
+            "pave3x3M": 0,
+            "streets": [
+              "Viale Venticinque Aprile",
+              "Via Vittorio Emanuele",
+              "Via Umberto I"
+            ],
+            "reasons": [
+              "1.569 m senza superficie nota su altre strade percorribili",
+              "1,63% dell'incertezza ponderata dell'area"
+            ]
+          },
+          {
+            "rank": 5,
+            "lat": 38.325055,
+            "lon": 16.398643,
+            "score": 844.8,
+            "unknownRoutableM": 1536.3,
+            "unknownMajorM": 0,
+            "pave3x3M": 0,
+            "streets": [
+              "Via Trastevere",
+              "Via Bernardo",
+              "Via Giuseppe Garibaldi"
+            ],
+            "reasons": [
+              "1.536 m senza superficie nota su altre strade percorribili",
+              "1,59% dell'incertezza ponderata dell'area"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "hotspotDefinition": {
+    "framing": "Dove un rilievo sul campo ridurrebbe di più l'incertezza di instradamento. NON è una previsione di pavé e non usa il modello della Fase 4.17.",
+    "formula": "H = U × (1 + A) + 0,5 × Q;  U = Σ metri sconosciuti percorribili × peso classe;  Q = Σ metri pavé probabile percorribili × peso classe;  A = min(1, R3 / 300 m), R3 = metri di pavé verificato nella cella e nelle 8 adiacenti.",
+    "params": {
+      "adjacencySaturationMeters": 300,
+      "probableFactor": 0.5,
+      "neighbourhood": "3x3"
+    },
+    "classWeights": {
+      "motorway": 1,
+      "trunk": 1,
+      "primary": 1,
+      "secondary": 0.9,
+      "tertiary": 0.8,
+      "unclassified": 0.6,
+      "cycleway": 0.6,
+      "residential": 0.5,
+      "living_street": 0.4,
+      "pedestrian": 0.3,
+      "unknown": 0.3,
+      "service": 0.2,
+      "track": 0.2,
+      "footway": 0.1,
+      "path": 0.1,
+      "steps": 0
+    },
+    "classWeightMeaning": "Peso = proxy dichiarato a mano della probabilità che un percorso di attraversamento usi la classe; non è probabilità di pavé.",
+    "properties": "Monotono non decrescente in U, Q, R3 e nel peso di classe; i metri verificati lisci/sterrati non lo aumentano; un rilievo che trasforma sconosciuto in noto lo riduce."
+  },
+  "experimentalPredictions": {
+    "status": "experimental_unverified",
+    "label": "Previsione sperimentale — non verificata",
+    "source": {
+      "file": "outputs/phase417/unknown-predictions.json.gz",
+      "sha256": "0ea01ab9bf9afd4f8986ab34bbabf699175cb93d8da37c85d366e3856273479e",
+      "phase": "4.17",
+      "verdict": "NO-GO",
+      "records": 17861
+    },
+    "neverAddedToVerifiedTotals": true,
+    "areas": {
+      "milan": {
+        "ways": 16935,
+        "matchedWays": 5595,
+        "unmatchedWays": 11340,
+        "predictedUnknownKm": 258.044,
+        "knownSegmentsSkipped": 0,
+        "meanP": 0.0539,
+        "maxP": 0.3402,
+        "waysWithPAtLeast05": 0
+      },
+      "roccella": {
+        "ways": 926,
+        "matchedWays": 926,
+        "unmatchedWays": 0,
+        "predictedUnknownKm": 136.854,
+        "knownSegmentsSkipped": 0,
+        "meanP": 0.0163,
+        "maxP": 0.0281,
+        "waysWithPAtLeast05": 0
+      }
+    }
+  },
+  "phase417": {
+    "verdict": "NO-GO",
+    "recommendation": "NO-GO for runtime integration: no validated unknown-road routing truth or positive Roccella transfer evidence",
+    "sha256": "448307353541f3c52805fc3980516df811c47feb595b7e1de392337e578566de"
+  },
+  "performance": {
+    "environment": {
+      "node": "24.18.0",
+      "v8": "13.6.233.17-node.50",
+      "platform": "darwin-arm64",
+      "jitWorkaround": "--no-maglev (set at runtime by lib/jit-guard.mjs)"
+    },
+    "buildRuns": [
+      {
+        "wallMs": 3384.2,
+        "buildMs": 3225.1,
+        "peakRssMB": 603,
+        "peakHeapUsedMB": 306.1
+      },
+      {
+        "wallMs": 4299.8,
+        "buildMs": 4066.7,
+        "peakRssMB": 620,
+        "peakHeapUsedMB": 302.3
+      },
+      {
+        "wallMs": 2862.2,
+        "buildMs": 2662,
+        "peakRssMB": 705.2,
+        "peakHeapUsedMB": 304.2
+      }
+    ],
+    "medianBuildMs": 3225.1,
+    "medianWallMs": 3384.2,
+    "maxPeakRssMB": 705.2,
+    "maxPeakHeapUsedMB": 306.1,
+    "phaseTimingsMs": {
+      "checksums": 1035,
+      "milan-attribution-sets": 1436.3,
+      "milan-aggregate": 2755.5,
+      "roccella-aggregate": 2897.5,
+      "verified-model": 2921.8,
+      "experimental-layer": 3170.3,
+      "write": 3222.7
+    },
+    "memoryCheckpoints": [
+      {
+        "label": "checksums",
+        "rssMB": 446.7,
+        "heapUsedMB": 53.6
+      },
+      {
+        "label": "milan-attribution-sets",
+        "rssMB": 581.1,
+        "heapUsedMB": 173.7
+      },
+      {
+        "label": "milan-aggregate",
+        "rssMB": 324.6,
+        "heapUsedMB": 284.6
+      },
+      {
+        "label": "roccella-aggregate",
+        "rssMB": 346.9,
+        "heapUsedMB": 306.1
+      },
+      {
+        "label": "verified-model",
+        "rssMB": 350.9,
+        "heapUsedMB": 268.6
+      },
+      {
+        "label": "experimental-layer",
+        "rssMB": 409.5,
+        "heapUsedMB": 182.9
+      },
+      {
+        "label": "write",
+        "rssMB": 404.2,
+        "heapUsedMB": 185.3
+      }
+    ],
+    "output": {
+      "files": [
+        {
+          "file": "app.js",
+          "bytes": 32882
+        },
+        {
+          "file": "data/experimental-predictions.json",
+          "bytes": 266864
+        },
+        {
+          "file": "data/geometry-milan.json",
+          "bytes": 900383
+        },
+        {
+          "file": "data/geometry-roccella.json",
+          "bytes": 59968
+        },
+        {
+          "file": "data/research-phase417.json",
+          "bytes": 4008
+        },
+        {
+          "file": "data/verified.json",
+          "bytes": 239022
+        },
+        {
+          "file": "index.html",
+          "bytes": 5137
+        },
+        {
+          "file": "style.css",
+          "bytes": 8659
+        }
+      ],
+      "totalBytes": 1516923,
+      "totalMB": 1.45
+    },
+    "headless": {
+      "performed": true,
+      "browser": "Google Chrome (headless=new, local install)",
+      "viewport": "1440x900",
+      "url": "http://127.0.0.1:<port>/",
+      "loads": [
+        {
+          "ready": "1",
+          "appReadyMs": 847,
+          "domContentLoadedMs": 750.2,
+          "loadEventMs": 751,
+          "wallFromNavigateMs": 918
+        },
+        {
+          "ready": "1",
+          "appReadyMs": 57,
+          "domContentLoadedMs": 18.5,
+          "loadEventMs": 19.3,
+          "wallFromNavigateMs": 406
+        },
+        {
+          "ready": "1",
+          "appReadyMs": 48,
+          "domContentLoadedMs": 12.2,
+          "loadEventMs": 12.9,
+          "wallFromNavigateMs": 94.2
+        }
+      ],
+      "medianAppReadyMs": 57,
+      "medianLoadEventMs": 19.3,
+      "smoke": {
+        "kpisMilan": "1644,7|83,2%|70,7|68,1|1169,3|60,9|275,8|90,3%",
+        "experimentalDefaultOff": true,
+        "experimentalLoadedOnlyOnToggle": true,
+        "bannerVisibleWhenOn": true,
+        "kpisUnchangedWithExperimental": true,
+        "areaSwitchMs": 11.8,
+        "kpisRoccella": "176,5|22,4%|0,0|0,4|30,9|8,2|137,1|28,7%",
+        "hotspotRows": 25
+      },
+      "requests": {
+        "count": 23,
+        "external": 0,
+        "distinctPaths": [
+          "/",
+          "/app.js",
+          "/data/experimental-predictions.json",
+          "/data/geometry-milan.json",
+          "/data/geometry-roccella.json",
+          "/data/manifest.json",
+          "/data/research-phase417.json",
+          "/data/verified.json",
+          "/style.css"
+        ]
+      },
+      "consoleErrorsOrWarnings": []
+    }
+  },
+  "tests": {
+    "command": "node --test experiments/road-dashboard/test/",
+    "exitCode": 0,
+    "tests": 24,
+    "pass": 24,
+    "fail": 0,
+    "wallMs": 10059.5
+  },
+  "determinism": "Two builds of identical inputs are byte-identical (tested). A V8 Maglev miscompilation on Node 24.18.0 broke this for in-process repeated builds; mitigated by lib/jit-guard.mjs (--no-maglev) plus internal consistency checks that abort the build.",
+  "decision": {
+    "verdict": "GO (limited)",
+    "scope": "GO for a dedicated integration phase ONLY as an internal, developer-facing data-quality and survey-planning tool (local or CI artefact). NO-GO for any consumer-facing exposure or for using hotspot scores/predictions in routing.",
+    "maintenanceCostEstimate": "≈0.5–1 developer-day per data refresh to re-run, review hotspots and update thresholds; ≈2–4 days for the integration phase (CI job, refresh script, owner sign-off). No runtime cost: static files, no server component in production.",
+    "risks": [
+      "Hotspot class weights are hand-set proxies, not validated against real route usage; ranking can shift if weights change.",
+      "Expansion-ring coverage is biased upward by the production compile filter (unknown footways/paths/tracks and unnamed service roads dropped).",
+      "«Verified» means explicit OSM tag; tag accuracy and freshness are not independently surveyed.",
+      "Phase 4.17 predictions could be misread as evidence if the separation and labelling were removed in a future refactor.",
+      "Node/V8 JIT defect observed; the build must keep the --no-maglev guard and consistency checks until a fixed Node release is verified."
+    ]
+  }
+}
