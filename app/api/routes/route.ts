@@ -378,9 +378,17 @@ export async function GET(request: NextRequest) {
 
   try {
     const spatialRoadStore = await getSpatialRoadStore(area.id);
-    const baseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal);
+    const rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal);
     const baseRoutingReadyAt = performance.now();
-    if (!baseRoutes.length) throw new Error("Nessun percorso");
+    if (!rawBaseRoutes.length) throw new Error("Nessun percorso");
+
+    // Prune provider alternate routes that exceed 2.5x the primary route's distance or duration.
+    // Such orbital detours (e.g. 26km highway loops for a 4km city trip) are never eligible under
+    // Lastrico's time budgets and waste edge CPU time hydrating and scoring outer regions.
+    const primary = rawBaseRoutes[0];
+    const baseRoutes = rawBaseRoutes.filter((r) =>
+      r === primary || (r.distance <= primary.distance * 2.5 && r.duration <= primary.duration * 2.5),
+    );
 
     const corridorCoords: Coordinate[] = baseRoutes.flatMap((r) => r.coordinates);
     const loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
