@@ -171,16 +171,21 @@ function nearbySegments(
   const minY = Math.floor((point[1] - padLat) / index.cellSize);
   const maxY = Math.floor((point[1] + padLat) / index.cellSize);
 
+  if (minX === maxX && minY === maxY) {
+    const key = cellKey(minX, minY);
+    if (boxCache) {
+      const cached = boxCache.get(key);
+      if (cached) return cached;
+    }
+    const list = index.cells.get(key) ?? [];
+    if (boxCache) boxCache.set(key, list);
+    return list;
+  }
+
   const boxKey = `${minX}:${maxX}:${minY}:${maxY}`;
   if (boxCache) {
     const cached = boxCache.get(boxKey);
     if (cached) return cached;
-  }
-
-  if (minX === maxX && minY === maxY) {
-    const list = index.cells.get(cellKey(minX, minY)) ?? [];
-    if (boxCache) boxCache.set(boxKey, list);
-    return list;
   }
 
   const found = new Set<RoadSegmentRecord>();
@@ -251,6 +256,14 @@ function explicitRestriction(
   return headingsAlign(a, b, start, end, true) ? null : "prohibited";
 }
 
+function verticalGradeDiffers(a: RoadSegmentRecord, b: RoadSegmentRecord): boolean {
+  const at = a.rawTags;
+  const bt = b.rawTags;
+  return (at?.layer ?? "0") !== (bt?.layer ?? "0")
+    || (at?.bridge ?? "no") !== (bt?.bridge ?? "no")
+    || (at?.tunnel ?? "no") !== (bt?.tunnel ?? "no");
+}
+
 function restrictionSample(
   candidates: { segment: RoadSegmentRecord; distance: number }[],
   a: GeoCoordinate,
@@ -267,12 +280,10 @@ function restrictionSample(
   }
   if (!nearest || nearest.segment.osmWayId === null) return null;
   const segment = nearest.segment;
-  const grade = (road: RoadSegmentRecord) => `${road.rawTags?.layer ?? "0"}:${road.rawTags?.bridge ?? "no"}:${road.rawTags?.tunnel ?? "no"}`;
-  const nearestGrade = grade(segment);
   for (let i = 0; i < candidates.length; i += 1) {
     const other = candidates[i];
     if (other.distance <= nearest.distance + 2
-      && (other.segment.osmWayId !== segment.osmWayId || grade(other.segment) !== nearestGrade)) {
+      && (other.segment.osmWayId !== segment.osmWayId || verticalGradeDiffers(other.segment, segment))) {
       return null;
     }
   }
@@ -432,9 +443,8 @@ export function scoreRoadIntelligence(
         ambiguousMatchesCount += 1;
       }
 
-      const grade = (segment: RoadSegmentRecord) => `${segment.rawTags?.layer ?? "0"}:${segment.rawTags?.bridge ?? "no"}:${segment.rawTags?.tunnel ?? "no"}`;
       if (alignedCandidates.some(({ segment, distance }) =>
-        Math.abs(distance - bestDistance) <= 2 && grade(segment) !== grade(selected),
+        Math.abs(distance - bestDistance) <= 2 && verticalGradeDiffers(segment, selected),
       )) continue; // Route geometry alone cannot resolve vertically separated roads.
 
       const sourceKey = best.osmWayId === null ? best.segmentHash : `osm:${best.osmWayId}`;

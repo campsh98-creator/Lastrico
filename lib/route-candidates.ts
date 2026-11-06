@@ -7,8 +7,28 @@ type EquivalencePolicy = {
   equivalentAverageMeters: number;
 };
 
-function distanceToSegment(point: Coordinate, a: Coordinate, b: Coordinate) {
-  const scale = 111_320 * Math.cos(point[1] * Math.PI / 180);
+function distanceToSegment(point: Coordinate, a: Coordinate, b: Coordinate, toleranceMeters?: number) {
+  if (toleranceMeters !== undefined) {
+    const padLat = toleranceMeters / 110_540;
+    const minY = a[1] < b[1] ? a[1] : b[1];
+    const maxY = a[1] > b[1] ? a[1] : b[1];
+    if (point[1] < minY - padLat || point[1] > maxY + padLat) return Infinity;
+
+    const scale = 111_320 * Math.cos((point[1] * Math.PI) / 180);
+    const padLon = toleranceMeters / Math.max(1, scale);
+    const minX = a[0] < b[0] ? a[0] : b[0];
+    const maxX = a[0] > b[0] ? a[0] : b[0];
+    if (point[0] < minX - padLon || point[0] > maxX + padLon) return Infinity;
+
+    const dx = (b[0] - a[0]) * scale;
+    const dy = (b[1] - a[1]) * 110_540;
+    const px = (point[0] - a[0]) * scale;
+    const py = (point[1] - a[1]) * 110_540;
+    const lengthSquared = dx * dx + dy * dy;
+    const ratio = lengthSquared ? Math.max(0, Math.min(1, (px * dx + py * dy) / lengthSquared)) : 0;
+    return Math.hypot(px - ratio * dx, py - ratio * dy);
+  }
+  const scale = 111_320 * Math.cos((point[1] * Math.PI) / 180);
   const dx = (b[0] - a[0]) * scale;
   const dy = (b[1] - a[1]) * 110_540;
   const px = (point[0] - a[0]) * scale;
@@ -42,7 +62,7 @@ function divergentMeters(route: Coordinate[], other: Coordinate[], toleranceMete
     for (let offset = 0; offset < other.length; offset += 1) {
       for (const index of [lastMatch + offset, lastMatch - offset]) {
         if (index >= 1 && index < other.length
-          && distanceToSegment(point, other[index - 1], other[index]) <= toleranceMeters) {
+          && distanceToSegment(point, other[index - 1], other[index], toleranceMeters) <= toleranceMeters) {
           lastMatch = index;
           return true;
         }

@@ -382,13 +382,21 @@ export async function GET(request: NextRequest) {
     const baseRoutingReadyAt = performance.now();
     if (!rawBaseRoutes.length) throw new Error("Nessun percorso");
 
-    // Prune provider alternate routes that exceed 2.5x the primary route's distance or duration.
+    // Prune provider alternate routes that exceed Lastrico policy or budget limits.
     // Such orbital detours (e.g. 26km highway loops for a 4km city trip) are never eligible under
     // Lastrico's time budgets and waste edge CPU time hydrating and scoring outer regions.
     const primary = rawBaseRoutes[0];
-    const baseRoutes = rawBaseRoutes.filter((r) =>
-      r === primary || (r.distance <= primary.distance * 2.5 && r.duration <= primary.duration * 2.5),
-    );
+    const maxAllowedFactor = (policy.limits.maximum.factor ?? 1.7) * 1.15;
+    const maxAllowedDuration = primary.duration * maxAllowedFactor + (policy.limits.maximum.seconds ?? 600) + 60;
+    const baseRoutes = rawBaseRoutes.filter((r) => {
+      if (r === primary) return true;
+      if (r.distance > primary.distance * maxAllowedFactor) return false;
+      if (r.duration > maxAllowedDuration) return false;
+      if (maximumExtraMinutes !== null && !routeFitsExtraMinutes(r.duration, primary.duration, maximumExtraMinutes)) {
+        return false;
+      }
+      return true;
+    });
 
     const corridorCoords: Coordinate[] = baseRoutes.flatMap((r) => r.coordinates);
     const loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
@@ -530,7 +538,7 @@ export async function GET(request: NextRequest) {
         offsetPoint(anchor.a, anchor.b, -baseOffset * 1.55),
       ].filter((point): point is Coordinate => Boolean(point && coordinateInArea(point, area)));
       for (const point of detourPoints.slice(0, navigationRequest ? 1 : 3)) {
-        if (deadline - Date.now() < 1_500) break;
+        if (deadline - Date.now() < (navigationRequest ? 2_200 : 1_500)) break;
         if (request.signal.aborted) break;
         const routes = await fetchEngineRoutes(
           [start, point, end],
