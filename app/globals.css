@@ -356,7 +356,12 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 /* Address fields */
 .address-search-group { position: relative; display: flex; flex-direction: column; gap: var(--space-1); }
 .route-fields { position: relative; display: grid; gap: var(--space-1); }
+.route-field-wrapper { position: relative; width: 100%; }
 .address-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   max-height: 204px;
@@ -366,6 +371,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
   border-radius: var(--radius-control);
   background: var(--white);
   box-shadow: var(--shadow-float);
+  z-index: 30;
 }
 .address-suggestion-option {
   min-height: 48px;

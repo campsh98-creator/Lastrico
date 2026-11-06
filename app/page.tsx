@@ -1468,7 +1468,11 @@ export default function Home() {
 
   function handleAddressInputChange(target: "start" | "end", nextValue: string) {
     discardPlannedRoute();
-    cancelAddressSearch();
+    if (autocompleteTimerRef.current !== null) {
+      window.clearTimeout(autocompleteTimerRef.current);
+      autocompleteTimerRef.current = null;
+    }
+    autocompleteControllerRef.current?.abort();
     focusedAddressFieldRef.current = target;
     if (target === "start") {
       const resetStart: LocationChoice = { label: "", coordinate: startLocationRef.current.coordinate };
@@ -1486,12 +1490,25 @@ export default function Home() {
       setEndLocation((current) => ({ ...current, label: "" }));
     }
     const trimmed = nextValue.trim();
-    if (trimmed.length >= MIN_AUTOCOMPLETE_CHARS) {
-      autocompleteTimerRef.current = window.setTimeout(() => {
-        autocompleteTimerRef.current = null;
-        void runAutocomplete(target, trimmed);
-      }, AUTOCOMPLETE_DEBOUNCE_MS);
+    if (trimmed.length < MIN_AUTOCOMPLETE_CHARS) {
+      setInlineSuggestions([]);
+      setInlineSuggestionTarget(null);
+      setActiveSuggestionIndex(-1);
+      return;
     }
+    // Instant cache check: if client cache already has results for this exact query, display them immediately
+    const requestedArea = areaIdRef.current;
+    const cacheKey = `${requestedArea}:${trimmed.toLocaleLowerCase("it")}`;
+    const cached = geocodeCacheRef.current.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp) < 300_000 && cached.results.length > 0) {
+      setInlineSuggestionTarget(target);
+      setInlineSuggestions(cached.results);
+      setActiveSuggestionIndex(-1);
+    }
+    autocompleteTimerRef.current = window.setTimeout(() => {
+      autocompleteTimerRef.current = null;
+      void runAutocomplete(target, trimmed);
+    }, AUTOCOMPLETE_DEBOUNCE_MS);
   }
 
   function chooseAddress(target: "start" | "end", result: GeocodeResult) {
@@ -1581,43 +1598,13 @@ export default function Home() {
   }
 
   async function searchAddresses(target: "start" | "end") {
-    if (addressSearchLoading) return;
     const text = target === "start" ? startTextRef.current || startText : endTextRef.current || endText;
     if (!text.trim()) {
       setStatus(`Inserisci ${target === "start" ? "la partenza" : "la destinazione"}.`);
       return;
     }
-    cancelAutocomplete();
-    addressRequestRef.current?.abort();
-    const controller = new AbortController();
-    addressRequestRef.current = controller;
-    const searchTimeout = window.setTimeout(
-      () => controller.abort(new DOMException("Ricerca troppo lunga", "TimeoutError")),
-      ADDRESS_SEARCH_TIMEOUT_MS,
-    );
-    const requestedArea = areaIdRef.current;
-    pendingCalculationRef.current = false;
-    setPlanError(null);
-    setAddressQuery(text.trim());
-    setAddressSearchTarget(target);
-    setAddressResults([]);
-    setAddressSearchLoading(true);
-    setStatus(`Cerco “${text.trim()}” a ${PILOT_AREAS[requestedArea].name}…`);
-    try {
-      const results = await fetchAddresses(text, controller.signal);
-      if (controller.signal.aborted || requestedArea !== areaIdRef.current) return;
-      setAddressResults(results);
-      setStatus(`${results.length} ${results.length === 1 ? "risultato trovato" : "risultati trovati"}: scegli l’indirizzo corretto.`);
-    } catch (error) {
-      if (requestedArea !== areaIdRef.current || addressRequestRef.current !== controller) return;
-      setAddressSearchTarget(null);
-      setPlanError(controller.signal.aborted
-        ? "La ricerca dell’indirizzo sta impiegando troppo tempo. Riprova."
-        : plannerErrorMessage(error));
-    } finally {
-      window.clearTimeout(searchTimeout);
-      if (addressRequestRef.current === controller) setAddressSearchLoading(false);
-    }
+    focusedAddressFieldRef.current = target;
+    await runAutocomplete(target, text.trim());
   }
 
   /** Editing a field cancels its search, so a late answer cannot open a list for old text. */
@@ -1964,11 +1951,17 @@ export default function Home() {
     }
     if (event.key === "Enter") {
       event.preventDefault();
-      if (hasInline && activeSuggestionIndex >= 0 && inlineSuggestions[activeSuggestionIndex]) {
-        chooseAddress(target, inlineSuggestions[activeSuggestionIndex]);
-        return;
+      if (hasInline && inlineSuggestions.length > 0) {
+        const chosen = activeSuggestionIndex >= 0 ? inlineSuggestions[activeSuggestionIndex] : inlineSuggestions[0];
+        if (chosen) {
+          chooseAddress(target, chosen);
+          return;
+        }
       }
-      void searchAddresses(target);
+      const currentText = target === "start" ? startTextRef.current : endTextRef.current;
+      if (currentText.trim().length >= MIN_AUTOCOMPLETE_CHARS) {
+        void runAutocomplete(target, currentText.trim());
+      }
     }
   }
 
@@ -2634,96 +2627,128 @@ export default function Home() {
                 <h1 className="visually-hidden">Dove andiamo?</h1>
                 <div className="address-search-group" ref={routeFieldsRef}>
                   <div className="route-fields">
-                    <div className={`route-field ${addressSearchTarget === "start" || inlineSuggestionTarget === "start" ? "searching" : ""}`}>
-                      <i className="origin-dot" aria-hidden="true" />
-                      <label htmlFor="start-search">Partenza</label>
-                      <input
-                        id="start-search"
-                        value={startText}
-                        onFocus={() => handleAddressInputFocus("start")}
-                        onChange={(event) => handleAddressInputChange("start", event.target.value)}
-                        onKeyDown={(event) => handleAddressInputKeyDown("start", event)}
-                        placeholder="Via, numero civico o luogo"
-                        autoComplete="off"
-                        autoCorrect="off"
-                        autoCapitalize="off"
-                        enterKeyHint="search"
-                        spellCheck={false}
-                        role="combobox"
-                        aria-autocomplete="list"
-                        aria-expanded={(addressSearchTarget === "start" && addressResults.length > 0) || (inlineSuggestionTarget === "start" && inlineSuggestions.length > 0)}
-                        aria-controls="start-address-results"
-                        aria-activedescendant={inlineSuggestionTarget === "start" && activeSuggestionIndex >= 0 ? `start-suggestion-${activeSuggestionIndex}` : undefined}
-                      />
-                      <button
-                        type="button"
-                        onClick={startText.trim() ? () => void searchAddresses("start") : useCurrentLocation}
-                        aria-label={startText.trim() ? "Cerca indirizzo di partenza" : "Usa posizione GPS"}
-                      >
-                        {addressSearchLoading && addressSearchTarget === "start"
-                          ? <span className="spinner" aria-hidden="true" />
-                          : <Icon name={startText.trim() ? "search" : "locate"} />}
-                      </button>
+                    <div className="route-field-wrapper" style={{ zIndex: inlineSuggestionTarget === "start" ? 25 : 15 }}>
+                      <div className={`route-field ${addressSearchTarget === "start" || inlineSuggestionTarget === "start" ? "searching" : ""}`}>
+                        <i className="origin-dot" aria-hidden="true" />
+                        <label htmlFor="start-search">Partenza</label>
+                        <input
+                          id="start-search"
+                          value={startText}
+                          onFocus={() => handleAddressInputFocus("start")}
+                          onChange={(event) => handleAddressInputChange("start", event.target.value)}
+                          onKeyDown={(event) => handleAddressInputKeyDown("start", event)}
+                          placeholder="Via, numero civico o luogo"
+                          autoComplete="off"
+                          autoCorrect="off"
+                          autoCapitalize="off"
+                          enterKeyHint="search"
+                          spellCheck={false}
+                          role="combobox"
+                          aria-autocomplete="list"
+                          aria-expanded={(addressSearchTarget === "start" && addressResults.length > 0) || (inlineSuggestionTarget === "start" && inlineSuggestions.length > 0)}
+                          aria-controls="start-address-results"
+                          aria-activedescendant={inlineSuggestionTarget === "start" && activeSuggestionIndex >= 0 ? `start-suggestion-${activeSuggestionIndex}` : undefined}
+                        />
+                        <button
+                          type="button"
+                          onClick={startText.trim() ? () => void searchAddresses("start") : useCurrentLocation}
+                          aria-label={startText.trim() ? "Cerca indirizzo di partenza" : "Usa posizione GPS"}
+                        >
+                          {addressSearchLoading && addressSearchTarget === "start"
+                            ? <span className="spinner" aria-hidden="true" />
+                            : <Icon name={startText.trim() ? "search" : "locate"} />}
+                        </button>
+                      </div>
+                      {inlineSuggestionTarget === "start" && inlineSuggestions.length > 0 && !addressSearchTarget && (
+                        <div
+                          id="start-address-results"
+                          className="address-suggestions"
+                          role="listbox"
+                          data-testid="address-suggestions"
+                          data-target="start"
+                          aria-label="Indirizzi di partenza"
+                        >
+                          {inlineSuggestions.map((result, index) => (
+                            <button
+                              type="button"
+                              role="option"
+                              id={`start-suggestion-${index}`}
+                              aria-selected={activeSuggestionIndex === index}
+                              key={result.id}
+                              className={`address-suggestion-option ${activeSuggestionIndex === index ? "active" : ""}`}
+                              data-testid={`address-suggestion-${index}`}
+                              onPointerDown={(event) => event.preventDefault()}
+                              onMouseDown={(event) => event.preventDefault()}
+                              onClick={() => chooseAddress("start", result)}
+                            >
+                              <b>{result.primary}</b>
+                              <small>{result.secondary || area.name}</small>
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">
                       <Icon name="swap" size={18} />
                     </button>
-                    <div className={`route-field ${addressSearchTarget === "end" || inlineSuggestionTarget === "end" ? "searching" : ""}`}>
-                      <i className="destination-dot" aria-hidden="true" />
-                      <label htmlFor="end-search">Destinazione</label>
-                      <input
-                        id="end-search"
-                        value={endText}
-                        onFocus={() => handleAddressInputFocus("end")}
-                        onChange={(event) => handleAddressInputChange("end", event.target.value)}
-                        onKeyDown={(event) => handleAddressInputKeyDown("end", event)}
-                        placeholder="Via, numero civico o luogo"
-                        autoComplete="off"
-                        autoCorrect="off"
-                        autoCapitalize="off"
-                        enterKeyHint="search"
-                        spellCheck={false}
-                        role="combobox"
-                        aria-autocomplete="list"
-                        aria-expanded={(addressSearchTarget === "end" && addressResults.length > 0) || (inlineSuggestionTarget === "end" && inlineSuggestions.length > 0)}
-                        aria-controls="end-address-results"
-                        aria-activedescendant={inlineSuggestionTarget === "end" && activeSuggestionIndex >= 0 ? `end-suggestion-${activeSuggestionIndex}` : undefined}
-                      />
-                      <button type="button" onClick={() => void searchAddresses("end")} aria-label="Cerca indirizzo di destinazione">
-                        {addressSearchLoading && addressSearchTarget === "end"
-                          ? <span className="spinner" aria-hidden="true" />
-                          : <Icon name="search" />}
-                      </button>
+                    <div className="route-field-wrapper" style={{ zIndex: inlineSuggestionTarget === "end" ? 25 : 10 }}>
+                      <div className={`route-field ${addressSearchTarget === "end" || inlineSuggestionTarget === "end" ? "searching" : ""}`}>
+                        <i className="destination-dot" aria-hidden="true" />
+                        <label htmlFor="end-search">Destinazione</label>
+                        <input
+                          id="end-search"
+                          value={endText}
+                          onFocus={() => handleAddressInputFocus("end")}
+                          onChange={(event) => handleAddressInputChange("end", event.target.value)}
+                          onKeyDown={(event) => handleAddressInputKeyDown("end", event)}
+                          placeholder="Via, numero civico o luogo"
+                          autoComplete="off"
+                          autoCorrect="off"
+                          autoCapitalize="off"
+                          enterKeyHint="search"
+                          spellCheck={false}
+                          role="combobox"
+                          aria-autocomplete="list"
+                          aria-expanded={(addressSearchTarget === "end" && addressResults.length > 0) || (inlineSuggestionTarget === "end" && inlineSuggestions.length > 0)}
+                          aria-controls="end-address-results"
+                          aria-activedescendant={inlineSuggestionTarget === "end" && activeSuggestionIndex >= 0 ? `end-suggestion-${activeSuggestionIndex}` : undefined}
+                        />
+                        <button type="button" onClick={() => void searchAddresses("end")} aria-label="Cerca indirizzo di destinazione">
+                          {addressSearchLoading && addressSearchTarget === "end"
+                            ? <span className="spinner" aria-hidden="true" />
+                            : <Icon name="search" />}
+                        </button>
+                      </div>
+                      {inlineSuggestionTarget === "end" && inlineSuggestions.length > 0 && !addressSearchTarget && (
+                        <div
+                          id="end-address-results"
+                          className="address-suggestions"
+                          role="listbox"
+                          data-testid="address-suggestions"
+                          data-target="end"
+                          aria-label="Indirizzi di destinazione"
+                        >
+                          {inlineSuggestions.map((result, index) => (
+                            <button
+                              type="button"
+                              role="option"
+                              id={`end-suggestion-${index}`}
+                              aria-selected={activeSuggestionIndex === index}
+                              key={result.id}
+                              className={`address-suggestion-option ${activeSuggestionIndex === index ? "active" : ""}`}
+                              data-testid={`address-suggestion-${index}`}
+                              onPointerDown={(event) => event.preventDefault()}
+                              onMouseDown={(event) => event.preventDefault()}
+                              onClick={() => chooseAddress("end", result)}
+                            >
+                              <b>{result.primary}</b>
+                              <small>{result.secondary || area.name}</small>
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
-                  {inlineSuggestionTarget && inlineSuggestions.length > 0 && !addressSearchTarget && (
-                    <div
-                      id={inlineSuggestionTarget === "start" ? "start-address-results" : "end-address-results"}
-                      className="address-suggestions"
-                      role="listbox"
-                      data-testid="address-suggestions"
-                      data-target={inlineSuggestionTarget}
-                      aria-label={inlineSuggestionTarget === "start" ? "Indirizzi di partenza" : "Indirizzi di destinazione"}
-                    >
-                      {inlineSuggestions.map((result, index) => (
-                        <button
-                          type="button"
-                          role="option"
-                          id={`${inlineSuggestionTarget}-suggestion-${index}`}
-                          aria-selected={activeSuggestionIndex === index}
-                          key={result.id}
-                          className={`address-suggestion-option ${activeSuggestionIndex === index ? "active" : ""}`}
-                          data-testid={`address-suggestion-${index}`}
-                          onPointerDown={(event) => event.preventDefault()}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => chooseAddress(inlineSuggestionTarget, result)}
-                        >
-                          <b>{result.primary}</b>
-                          <small>{result.secondary || area.name}</small>
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
 
                 <div

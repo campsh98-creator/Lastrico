@@ -17,7 +17,7 @@ type GeocodeApiResponseItem = {
 };
 
 const geocodeCache = new Map<string, { timestamp: number; results: GeocodeApiResponseItem[] }>();
-const CACHE_MAX_ENTRIES = 200;
+const CACHE_MAX_ENTRIES = 2_000;
 const CACHE_TTL_MS = 60_000;
 
 const DATE_OR_NUMBERED_WAY_PATTERN = /\b\d+\s+(?:gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre|giornate)\b|\b(?:vicolo|vico|traversa)\s+\d+\s+\S+/i;
@@ -231,44 +231,121 @@ export async function GET(request: NextRequest) {
   try {
     let results: GeocodeApiResponseItem[] = [];
     let nominatimFailed = false;
+    let photonFailed = false;
 
-    try {
-      const data = await fetchNominatim(url, request.signal);
-      if (!Array.isArray(data)) throw new Error("Risposta indirizzi non valida");
-      results = mapResults(data);
-      if (results.length === 0 && useStructuredStreet && !request.signal.aborted) {
-        const fallbackUrl = new URL(url.toString());
-        fallbackUrl.searchParams.delete("street");
-        fallbackUrl.searchParams.delete("city");
-        fallbackUrl.searchParams.set(
-          "q",
-          queryWithoutCity.toLowerCase().includes(pilot.name.toLowerCase())
-            ? queryWithoutCity
-            : `${queryWithoutCity}, ${pilot.name}`,
-        );
-        const fallbackData = await fetchNominatim(fallbackUrl, request.signal);
-        if (Array.isArray(fallbackData)) {
-          results = mapResults(fallbackData);
-        }
-      }
-    } catch (nominatimErr) {
-      nominatimFailed = true;
-      console.warn(`[geocode] Nominatim failed for "${query}" (${pilot.id}):`, nominatimErr instanceof Error ? nominatimErr.message : nominatimErr);
-    }
+    const abortNominatim = new AbortController();
+    const abortPhoton = new AbortController();
+    const signalNominatim = typeof AbortSignal.any === "function"
+      ? AbortSignal.any([request.signal, abortNominatim.signal])
+      : request.signal;
+    const signalPhoton = typeof AbortSignal.any === "function"
+      ? AbortSignal.any([request.signal, abortPhoton.signal])
+      : request.signal;
 
-    if (results.length === 0 && !request.signal.aborted) {
+    const runNominatim = async (): Promise<GeocodeApiResponseItem[]> => {
       try {
-        const photonResults = await fetchPhoton(queryWithoutCity, pilot, request.signal);
-        if (photonResults.length > 0) {
-          results = photonResults;
+        const data = await fetchNominatim(url, signalNominatim);
+        if (!Array.isArray(data)) throw new Error("Risposta indirizzi non valida");
+        let mapped = mapResults(data);
+        if (mapped.length === 0 && useStructuredStreet && !signalNominatim.aborted) {
+          const fallbackUrl = new URL(url.toString());
+          fallbackUrl.searchParams.delete("street");
+          fallbackUrl.searchParams.delete("city");
+          fallbackUrl.searchParams.set(
+            "q",
+            queryWithoutCity.toLowerCase().includes(pilot.name.toLowerCase())
+              ? queryWithoutCity
+              : `${queryWithoutCity}, ${pilot.name}`,
+          );
+          const fallbackData = await fetchNominatim(fallbackUrl, signalNominatim);
+          if (Array.isArray(fallbackData)) {
+            mapped = mapResults(fallbackData);
+          }
         }
-      } catch (photonErr) {
-        console.warn(`[geocode] Photon fallback failed for "${query}" (${pilot.id}):`, photonErr instanceof Error ? photonErr.message : photonErr);
+        return mapped;
+      } catch (err) {
+        nominatimFailed = true;
+        if (!signalNominatim.aborted) {
+          console.warn(`[geocode] Nominatim failed for "${query}" (${pilot.id}):`, err instanceof Error ? err.message : err);
+        }
+        throw err;
       }
-    }
+    };
+
+    const runPhoton = async (): Promise<GeocodeApiResponseItem[]> => {
+      try {
+        return await fetchPhoton(queryWithoutCity, pilot, signalPhoton);
+      } catch (err) {
+        photonFailed = true;
+        if (!signalPhoton.aborted) {
+          console.warn(`[geocode] Photon fallback failed for "${query}" (${pilot.id}):`, err instanceof Error ? err.message : err);
+        }
+        throw err;
+      }
+    };
+
+    results = await new Promise<GeocodeApiResponseItem[]>((resolve, reject) => {
+      let nomDone = false;
+      let phoDone = false;
+      let nomResults: GeocodeApiResponseItem[] | null = null;
+      let phoResults: GeocodeApiResponseItem[] | null = null;
+      let photonTimer: ReturnType<typeof setTimeout> | null = null;
+
+      const finishIfReady = () => {
+        if (!nomDone || !phoDone) return;
+        if (nominatimFailed && photonFailed) {
+          reject(new Error("Tutti i servizi di ricerca indirizzi non sono disponibili."));
+          return;
+        }
+        resolve(nomResults ?? phoResults ?? []);
+      };
+
+      const startPhoton = () => {
+        if (photonTimer !== null) {
+          clearTimeout(photonTimer);
+          photonTimer = null;
+        }
+        if (phoDone) return;
+        runPhoton().then((res) => {
+          phoDone = true;
+          phoResults = res;
+          if (res.length > 0) {
+            abortNominatim.abort();
+            resolve(res);
+          } else {
+            finishIfReady();
+          }
+        }).catch(() => {
+          phoDone = true;
+          finishIfReady();
+        });
+      };
+
+      runNominatim().then((res) => {
+        nomDone = true;
+        nomResults = res;
+        if (res.length > 0) {
+          if (photonTimer !== null) {
+            clearTimeout(photonTimer);
+            photonTimer = null;
+          }
+          abortPhoton.abort();
+          resolve(res);
+        } else {
+          startPhoton();
+          finishIfReady();
+        }
+      }).catch(() => {
+        nomDone = true;
+        startPhoton();
+        finishIfReady();
+      });
+
+      photonTimer = setTimeout(startPhoton, 250);
+    });
 
     if (results.length === 0) {
-      if (nominatimFailed) {
+      if (nominatimFailed && photonFailed) {
         throw new Error("Tutti i servizi di ricerca indirizzi non sono disponibili.");
       }
       return NextResponse.json({ results: [] }, {
