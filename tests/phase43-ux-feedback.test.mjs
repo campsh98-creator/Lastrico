@@ -98,14 +98,15 @@ test("Phase 4.3: RouteComparisonPanel renders accurate trade-off comparison & me
   assert.match(html, /Confronto Percorsi · Moto/);
   assert.match(html, /Budget extra: max \+5 min/);
 
-  // Verification 2: Tradeoff banner
-  // Pavé evitato: 850 - 120 = 730 m (86% reduction)
-  // Extra time: 16.5 - 14.0 = +2,5 min
-  assert.match(html, /Pavé evitato/);
-  assert.match(html, /-730 m/);
-  assert.match(html, /\(-86%\)/);
-  assert.match(html, /Tempo extra/);
-  assert.match(html, /\+2,5 min/);
+  // Verification 2: Trade-off sentence
+  // Phase 4.21 replaced the two-metric banner ("Pavé evitato -730 m (-86%) | Tempo extra +2,5 min") with
+  // one visible sentence from lib/route-tradeoff.ts (panel = one sentence + the two cards). These routes
+  // carry no confirmed/probable split, so the 730 m (850 - 120) may only be called "pavé noto", never
+  // "confermato". The percentage is no longer displayed (both absolute values are on the cards), so the
+  // banner assertions are replaced by an exact match of the sentence plus the card's time cost.
+  assert.match(html, /data-testid="p43-selection-rationale"><p class="p43-rationale-text">Evita 730 m di pavé noto, con 2,5 minuti in più\.<\/p>/);
+  assert.doesNotMatch(html, /pavé confermato/);
+  assert.match(html, /<em>\+(?:<!-- -->)?2,5(?:<!-- -->)? min<\/em>/);
 
   // Verification 3: Route cards & selection
   assert.match(html, /data-testid="p43-card-safe"/);
@@ -150,9 +151,13 @@ test("Phase 4.3: RouteComparisonPanel handles 'no distinct alternative' state cl
   // Verification 1: Absence of trade-off banner
   assert.doesNotMatch(html, /class="p43-tradeoff-banner"/);
 
-  // Verification 2: Presence of clear empty state notice
-  assert.match(html, /Nessuna deviazione migliore rilevata/);
-  assert.match(html, /Il percorso rapido presenta già la minima esposizione a pavé noto/);
+  // Verification 2: Clear empty state
+  // Phase 4.21 replaced "Nessuna deviazione migliore rilevata" and its hidden explanation with one
+  // visible sentence. The old claim that the fast route "presenta già la minima esposizione a pavé noto"
+  // is not always true (an alternative can be rejected for time or for unmapped stretches), so the
+  // sentence now states the server's criterion. No saving or time cost may appear without an alternative.
+  assert.match(html, /data-testid="p43-selection-rationale"><p class="p43-rationale-text">Nessuna alternativa migliora il compromesso tra tempo, pavé noto e tratti senza dati\.<\/p>/);
+  assert.doesNotMatch(html, /evita|in più/i);
 
   // Verification 3: Disabled safe card
   assert.match(html, /p43-card-disabled/);

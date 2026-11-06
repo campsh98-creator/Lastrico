@@ -1,26 +1,13 @@
 import React from "react";
-import type { RouteComparisonProps, ComparableRoute } from "./types";
-
-function formatMeters(meters: number): string {
-  if (meters < 1000) return `${Math.round(meters)} m`;
-  return `${(meters / 1000).toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km`;
-}
-
-function formatMinutes(minutes: number): string {
-  return minutes.toLocaleString("it-IT", {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  });
-}
-
-function computeUnknownMeters(route: ComparableRoute): number {
-  if (typeof route.unknownSurfaceMeters === "number" && Number.isFinite(route.unknownSurfaceMeters)) {
-    return route.unknownSurfaceMeters;
-  }
-  const total = route.surfaceTotalMeters ?? (route.distance * 1000);
-  const known = route.paveMeters + (route.smoothSurfaceMeters ?? 0) + (route.unpavedSurfaceMeters ?? 0);
-  return Math.max(0, total - known);
-}
+import {
+  computeRouteTradeoff,
+  computeUnknownMeters,
+  describeRouteTradeoff,
+  formatKilometersIt as formatKilometers,
+  formatMetersIt as formatMeters,
+  formatMinutesIt as formatMinutes,
+} from "@/lib/route-tradeoff";
+import type { RouteComparisonProps } from "./types";
 
 export function RouteComparisonPanel({
   fastRoute,
@@ -35,12 +22,11 @@ export function RouteComparisonPanel({
   const modeLabels = { car: "Auto", motorcycle: "Moto", bicycle: "Bici" };
   const modeLabel = modeLabels[transportMode] ?? "Veicolo";
 
-  const savedPaveMeters = Math.max(0, fastRoute.paveMeters - safeRoute.paveMeters);
-  const paveReductionPercent = fastRoute.paveMeters > 0
-    ? Math.round((savedPaveMeters / fastRoute.paveMeters) * 100)
-    : 0;
-
-  const extraMinutes = Math.max(0, safeRoute.minutes - fastRoute.minutes);
+  // Measured against the fastest legal route (`fast`); route selection itself happens on the server.
+  const tradeoff = computeRouteTradeoff(fastRoute, safeRoute, hasDistinctAlternative);
+  const offersAlternative = tradeoff.kind === "alternative";
+  const extraMinutes = tradeoff.kind === "alternative" ? Math.max(0, tradeoff.extraMinutes) : 0;
+  const selectionRationale = describeRouteTradeoff(tradeoff, activeRoute);
 
   const fastTotalMeters = fastRoute.surfaceTotalMeters ?? (fastRoute.distance * 1000);
   const safeTotalMeters = safeRoute.surfaceTotalMeters ?? (safeRoute.distance * 1000);
@@ -68,17 +54,6 @@ export function RouteComparisonPanel({
   const safeNoVerifiedSurface = safeUnknownPercent >= 100 && safeVerifiedMeters === 0;
   const fastNoVerifiedSurface = fastUnknownPercent >= 100 && fastVerifiedMeters === 0;
 
-  let selectionRationale = "";
-  if (hasDistinctAlternative && savedPaveMeters > 0) {
-    if (activeRoute === "safe") {
-      selectionRationale = `Alternativa Anti-pavé attiva: riduce il pavé confermato di ${formatMeters(savedPaveMeters)} (-${paveReductionPercent}%) con ${extraMinutes > 0 ? `+${formatMinutes(extraMinutes)} min di percorrenza` : "lo stesso tempo"} entro il budget stabilito.`;
-    } else {
-      selectionRationale = `Percorso più rapido attivo: privilegia la velocità minima (${formatMinutes(fastRoute.minutes)} min) rispetto alla riduzione del pavé.`;
-    }
-  } else {
-    selectionRationale = `Percorso più rapido attivo: presenta già la minima esposizione a pavé noto, oppure non sono disponibili alternative legali entro il budget di +${extraTimeBudgetMinutes ?? 5} min.`;
-  }
-
   return (
     <section
       className={`p43-comparison-panel ${className}`}
@@ -92,37 +67,8 @@ export function RouteComparisonPanel({
         )}
       </header>
 
-      {/* Trade-off Highlight Banner */}
-      {hasDistinctAlternative && savedPaveMeters > 0 ? (
-        <div className="p43-tradeoff-banner" role="status">
-          <div className="p43-tradeoff-metric">
-            <span className="p43-metric-label">Pavé evitato</span>
-            <strong className="p43-metric-value p43-value-positive">
-              -{formatMeters(savedPaveMeters)}
-              <small> (-{paveReductionPercent}%)</small>
-            </strong>
-          </div>
-          <div className="p43-tradeoff-divider" aria-hidden="true" />
-          <div className="p43-tradeoff-metric">
-            <span className="p43-metric-label">Tempo extra</span>
-            <strong className="p43-metric-value p43-value-neutral">
-              +{formatMinutes(extraMinutes)} min
-            </strong>
-          </div>
-        </div>
-      ) : (
-        <div className="p43-empty-alternative-notice" role="note">
-          <b>Nessuna deviazione migliore rilevata</b>
-          <p className="p43-sr-only">
-            Il percorso rapido presenta già la minima esposizione a pavé noto entro i vincoli
-            richiesti, oppure le alternative richiedono un tempo superiore al limite consentito.
-          </p>
-        </div>
-      )}
-
-      {/* Selection Rationale */}
-      <div className="p43-selection-rationale p43-sr-only" role="status" data-testid="p43-selection-rationale">
-        <span className="p43-rationale-tag">Motivo selezione:</span>
+      {/* One sentence: the measured trade-off of the route being chosen (lib/route-tradeoff.ts). */}
+      <div className="p43-selection-rationale" role="status" data-testid="p43-selection-rationale">
         <p className="p43-rationale-text">{selectionRationale}</p>
       </div>
 
@@ -133,7 +79,7 @@ export function RouteComparisonPanel({
         aria-label={`Scegli il percorso ${modeLabel}`}
       >
         {/* Anti-pavé Route Option */}
-        {hasDistinctAlternative && savedPaveMeters > 0 ? (
+        {offersAlternative ? (
           <button
             type="button"
             role="radio"
@@ -147,7 +93,7 @@ export function RouteComparisonPanel({
               <div className="p43-card-names">
                 <strong>Anti-pavé · {modeLabel}</strong>
                 <small>
-                  {safeRoute.distance.toFixed(1)} km
+                  {formatKilometers(safeRoute.distance)}
                   {safeUnknownPercent >= 25 ? ` · ${safeUnknownPercent}% del fondo non verificato` : ""}
                 </small>
               </div>
@@ -159,7 +105,7 @@ export function RouteComparisonPanel({
 
             {/* Surface Transparency & Breakdown */}
             <div className={`p43-surface-breakdown ${safeNoVerifiedSurface ? "p43-sr-only" : ""}`}>
-              <span className="p43-breakdown-item p43-item-rough" title="Superficie sconnessa confermata">
+              <span className="p43-breakdown-item p43-item-rough" title="Pavé noto: confermato e probabile">
                 Pavé: <b>{formatMeters(safeRoute.paveMeters)}</b>
               </span>
               {safeRoute.smoothSurfaceMeters !== undefined && (
@@ -217,7 +163,7 @@ export function RouteComparisonPanel({
             <div className="p43-card-names">
               <strong>Più rapido · {modeLabel}</strong>
               <small>
-                {fastRoute.distance.toFixed(1)} km
+                {formatKilometers(fastRoute.distance)}
                 {fastUnknownPercent >= 25 ? ` · ${fastUnknownPercent}% del fondo non verificato` : ""}
               </small>
             </div>
@@ -229,7 +175,7 @@ export function RouteComparisonPanel({
 
           {/* Surface Transparency & Breakdown */}
           <div className={`p43-surface-breakdown ${fastNoVerifiedSurface ? "p43-sr-only" : ""}`}>
-            <span className="p43-breakdown-item p43-item-rough" title="Superficie sconnessa confermata">
+            <span className="p43-breakdown-item p43-item-rough" title="Pavé noto: confermato e probabile">
               Pavé: <b>{formatMeters(fastRoute.paveMeters)}</b>
             </span>
             {fastRoute.smoothSurfaceMeters !== undefined && (

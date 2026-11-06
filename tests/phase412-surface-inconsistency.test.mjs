@@ -114,7 +114,9 @@ test("Phase 4.12: RouteComparisonPanel consumer simplification and transparent r
 
   // Selection rationale explains why fast route is active
   assert.match(html, /data-testid="p43-selection-rationale"/);
-  assert.match(html, /presenta già la minima esposizione a pavé noto/);
+  // Phase 4.21: one visible sentence from lib/route-tradeoff.ts; "minima esposizione" was not always true
+  // (an alternative can be rejected for time or for unmapped stretches).
+  assert.match(html, /Nessuna alternativa migliora il compromesso tra tempo, pavé noto e tratti senza dati\./);
 });
 
 test("Phase 4.12: Prominent 'Avvia navigazione' primary action in app/page.tsx", () => {

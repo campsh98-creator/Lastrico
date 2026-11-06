@@ -112,16 +112,19 @@ test("Phase 4.6: RouteComparisonPanel renders selection rationale and surface br
   });
 
   const htmlSafe = renderToStaticMarkup(elSafe);
-  // JSX treats "$" as literal text, so a template-style percent would render "-$83%".
-  assert.match(htmlSafe, /<small> \(-(?:<!-- -->)?83(?:<!-- -->)?%\)<\/small>/);
+  // JSX treats "$" as literal text, so a template-style value would render a stray "$".
+  // Phase 4.21 removed the percentage banner ("<small> (-83%)</small>"): the panel is one sentence plus
+  // the two cards. The "$" regression guard stays on the whole markup.
   assert.doesNotMatch(htmlSafe, /\$/);
 
-  // Verification: Rationale explains pavé reduction and extra time within budget
+  // Verification: Rationale explains pavé reduction and extra time
+  // Phase 4.21: these routes carry no confirmed/probable split, so the 500 m (600 - 100) are "pavé noto";
+  // the old text called them "pavé confermato" and claimed "entro il budget stabilito", which the panel
+  // cannot verify. The sentence is matched exactly; the time cost is also checked on the card.
   assert.match(htmlSafe, /data-testid="p43-selection-rationale"/);
-  assert.match(htmlSafe, /Motivo selezione:/);
-  assert.match(htmlSafe, /Alternativa Anti-pavé attiva/);
-  assert.match(htmlSafe, /riduce il pavé confermato di 500 m \(-83%\)/);
-  assert.match(htmlSafe, /\+2,0 min di percorrenza/);
+  assert.match(htmlSafe, /<p class="p43-rationale-text">Evita 500 m di pavé noto, con 2 minuti in più\.<\/p>/);
+  assert.doesNotMatch(htmlSafe, /pavé confermato|Motivo selezione/);
+  assert.match(htmlSafe, /<em>\+(?:<!-- -->)?2,0(?:<!-- -->)? min<\/em>/);
 
   // Verification: Surface breakdown shows Rough, Smooth, and Unknown
   assert.match(htmlSafe, /Pavé: <b>100 m<\/b>/);
@@ -139,7 +142,10 @@ test("Phase 4.6: RouteComparisonPanel renders selection rationale and surface br
   });
 
   const htmlFast = renderToStaticMarkup(elFast);
-  assert.match(htmlFast, /Percorso più rapido attivo: privilegia la velocità minima \(12,0 min\)/);
+  // Phase 4.21: "privilegia la velocità minima" (literally "minimum speed") was inaccurate. With the fast
+  // route selected, the sentence states what the alternative would change against it.
+  assert.match(htmlFast, /<p class="p43-rationale-text">L’alternativa evita 500 m di pavé noto, con 2 minuti in più\.<\/p>/);
+  assert.match(htmlFast, /aria-checked="true"[^>]*data-testid="p43-card-fast"/);
 
   // Case 3: No distinct alternative
   const elNoAlt = React.createElement(RouteComparisonPanel, {
@@ -152,7 +158,10 @@ test("Phase 4.6: RouteComparisonPanel renders selection rationale and surface br
   });
 
   const htmlNoAlt = renderToStaticMarkup(elNoAlt);
-  assert.match(htmlNoAlt, /presenta già la minima esposizione a pavé noto/);
+  // Phase 4.21: "presenta già la minima esposizione a pavé noto" is not always true (an alternative can
+  // be rejected for time or for unmapped stretches); the sentence states the server's criterion instead.
+  assert.match(htmlNoAlt, /<p class="p43-rationale-text">Nessuna alternativa migliora il compromesso tra tempo, pavé noto e tratti senza dati\.<\/p>/);
+  assert.doesNotMatch(htmlNoAlt, /evita/i);
 });
 
 test("Phase 4.6: Insufficient OSM surface information is explicitly marked without claiming smooth or safe", async () => {
