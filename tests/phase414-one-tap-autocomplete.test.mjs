@@ -65,6 +65,11 @@ test("shouldApplyAutocompleteResponse blocks stale, superseded, or post-confirma
     "must not reopen suggestions after the field was already confirmed",
   );
   assert.equal(
+    shouldApplyAutocompleteResponse({ ...validInput, activeTarget: null }),
+    true,
+    "response must still apply if target focus was blurred while awaiting geocoding response",
+  );
+  assert.equal(
     shouldApplyAutocompleteResponse({ ...validInput, isCalculating: true }),
     false,
     "must not open suggestions while route calculation is running",

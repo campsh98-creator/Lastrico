@@ -155,7 +155,7 @@ export function shouldApplyAutocompleteResponse(input: {
 }): boolean {
   if (input.activeRequestId !== input.responseRequestId) return false;
   if (input.activeAreaId !== input.responseAreaId) return false;
-  if (input.activeTarget !== input.responseTarget) return false;
+  if (input.activeTarget !== null && input.activeTarget !== input.responseTarget) return false;
   if (input.fieldConfirmed || input.isCalculating) return false;
   const trimmedCurrent = input.currentFieldText.trim();
   const trimmedRequested = input.requestedQuery.trim();

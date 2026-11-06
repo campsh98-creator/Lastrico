@@ -2714,6 +2714,7 @@ export default function Home() {
                           key={result.id}
                           className={`address-suggestion-option ${activeSuggestionIndex === index ? "active" : ""}`}
                           data-testid={`address-suggestion-${index}`}
+                          onPointerDown={(event) => event.preventDefault()}
                           onMouseDown={(event) => event.preventDefault()}
                           onClick={() => chooseAddress(inlineSuggestionTarget, result)}
                         >
@@ -3241,6 +3242,7 @@ export default function Home() {
                 role="option"
                 aria-selected="false"
                 key={result.id}
+                onPointerDown={(event) => event.preventDefault()}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => chooseAddress(addressSearchTarget, result)}
               >

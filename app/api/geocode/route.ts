@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createGeocodeFetcher, validAreaGeocodeResult } from "../../../lib/geocoding";
 
-import { PILOT_AREAS, isPilotAreaId } from "../../../lib/pilot-areas";
+import { PILOT_AREAS, isPilotAreaId, PilotArea } from "../../../lib/pilot-areas";
 const NOMINATIM_MIN_INTERVAL_MS = 1_050;
-const fetchNominatim = createGeocodeFetcher({ minimumIntervalMs: NOMINATIM_MIN_INTERVAL_MS });
+const fetchNominatim = createGeocodeFetcher({ minimumIntervalMs: NOMINATIM_MIN_INTERVAL_MS, timeoutMs: 3_500 });
 // Bound upstream query size while allowing complete street/POI names and addresses.
 const MAX_QUERY_CHARACTERS = 300;
 
@@ -32,6 +32,94 @@ function isStructuredStreetNumberQuery(text: string): boolean {
 
 function nonEmpty(...values: (string | undefined)[]): string | undefined {
   return values.find((value) => typeof value === "string" && value.trim().length > 0)?.trim();
+}
+
+async function fetchPhoton(query: string, pilot: PilotArea, callerSignal: AbortSignal): Promise<GeocodeApiResponseItem[]> {
+  const photonUrl = new URL("https://photon.komoot.io/api/");
+  photonUrl.searchParams.set("q", query);
+  photonUrl.searchParams.set("limit", "10");
+  photonUrl.searchParams.set("bbox", `${pilot.bounds.west},${pilot.bounds.south},${pilot.bounds.east},${pilot.bounds.north}`);
+
+  const timeout = new AbortController();
+  const timer = setTimeout(() => timeout.abort(new DOMException("Photon timed out", "TimeoutError")), 4_000);
+  const signal = typeof AbortSignal.any === "function" ? AbortSignal.any([callerSignal, timeout.signal]) : callerSignal;
+
+  try {
+    const response = await fetch(photonUrl, {
+      headers: {
+        Accept: "application/json",
+        "Accept-Language": "it",
+        "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
+      },
+      signal,
+    });
+    if (!response.ok) throw new Error(`Photon returned HTTP ${response.status}`);
+    const data = await response.json();
+    if (!data || typeof data !== "object" || !Array.isArray((data as { features?: unknown }).features)) {
+      throw new Error("Risposta Photon non valida");
+    }
+    const features = (data as { features: unknown[] }).features;
+    const seen = new Set<string>();
+    const results: GeocodeApiResponseItem[] = [];
+
+    for (const item of features) {
+      if (!item || typeof item !== "object") continue;
+      const feat = item as {
+        properties?: Record<string, unknown>;
+        geometry?: { type?: string; coordinates?: unknown };
+      };
+      const props = feat.properties;
+      const coords = feat.geometry?.coordinates;
+      if (!props || !Array.isArray(coords) || coords.length < 2) continue;
+      const [lon, lat] = coords.map(Number);
+      if (!Number.isFinite(lon) || !Number.isFinite(lat)) continue;
+      if (lon < pilot.bounds.west || lon > pilot.bounds.east || lat < pilot.bounds.south || lat > pilot.bounds.north) continue;
+
+      const city = nonEmpty(
+        typeof props.city === "string" ? props.city : undefined,
+        typeof props.town === "string" ? props.town : undefined,
+      ) ?? (pilot.id === "roccella" ? pilot.name : "Milano");
+
+      if (pilot.id === "milan" && city.toLocaleLowerCase("it").trim() !== "milano") continue;
+
+      const road = nonEmpty(
+        typeof props.street === "string" ? props.street : undefined,
+        typeof props.name === "string" ? props.name : undefined,
+      );
+      const houseNumber = typeof props.housenumber === "string" ? props.housenumber.trim() : undefined;
+      const name = typeof props.name === "string" ? props.name.trim() : undefined;
+
+      const streetAddress = [road, houseNumber].filter(Boolean).join(" ");
+      const primary = (houseNumber && road)
+        ? (name && name.toLocaleLowerCase("it") !== road.toLocaleLowerCase("it") ? `${name} (${streetAddress})` : streetAddress)
+        : name || streetAddress || "";
+      if (!primary) continue;
+
+      const district = typeof props.district === "string" ? props.district : undefined;
+      const locality = typeof props.locality === "string" ? props.locality : undefined;
+      const area = nonEmpty(locality, district);
+      const postcode = typeof props.postcode === "string" ? props.postcode : undefined;
+      const secondaryParts = [area, postcode, city]
+        .filter((value, index, values): value is string => Boolean(value) && values.indexOf(value) === index);
+      const secondary = secondaryParts.join(" · ");
+
+      const key = `${primary}|${secondary}`.toLocaleLowerCase("it");
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      results.push({
+        id: String(props.osm_id ?? `${lon},${lat}`),
+        label: [primary, secondary].filter(Boolean).join(", "),
+        primary,
+        secondary,
+        coordinate: [lon, lat],
+        type: typeof props.type === "string" ? props.type : (typeof props.osm_value === "string" ? props.osm_value : "place"),
+      });
+    }
+    return results;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -141,31 +229,59 @@ export async function GET(request: NextRequest) {
   };
 
   try {
-    const data = await fetchNominatim(url, request.signal);
-    if (!Array.isArray(data)) throw new Error("Risposta indirizzi non valida");
-    let results = mapResults(data);
-    if (results.length === 0 && useStructuredStreet && !request.signal.aborted) {
-      const fallbackUrl = new URL(url.toString());
-      fallbackUrl.searchParams.delete("street");
-      fallbackUrl.searchParams.delete("city");
-      fallbackUrl.searchParams.set(
-        "q",
-        queryWithoutCity.toLowerCase().includes(pilot.name.toLowerCase())
-          ? queryWithoutCity
-          : `${queryWithoutCity}, ${pilot.name}`,
-      );
-      const fallbackData = await fetchNominatim(fallbackUrl, request.signal);
-      if (Array.isArray(fallbackData)) {
-        results = mapResults(fallbackData);
+    let results: GeocodeApiResponseItem[] = [];
+    let nominatimFailed = false;
+
+    try {
+      const data = await fetchNominatim(url, request.signal);
+      if (!Array.isArray(data)) throw new Error("Risposta indirizzi non valida");
+      results = mapResults(data);
+      if (results.length === 0 && useStructuredStreet && !request.signal.aborted) {
+        const fallbackUrl = new URL(url.toString());
+        fallbackUrl.searchParams.delete("street");
+        fallbackUrl.searchParams.delete("city");
+        fallbackUrl.searchParams.set(
+          "q",
+          queryWithoutCity.toLowerCase().includes(pilot.name.toLowerCase())
+            ? queryWithoutCity
+            : `${queryWithoutCity}, ${pilot.name}`,
+        );
+        const fallbackData = await fetchNominatim(fallbackUrl, request.signal);
+        if (Array.isArray(fallbackData)) {
+          results = mapResults(fallbackData);
+        }
+      }
+    } catch (nominatimErr) {
+      nominatimFailed = true;
+      console.warn(`[geocode] Nominatim failed for "${query}" (${pilot.id}):`, nominatimErr instanceof Error ? nominatimErr.message : nominatimErr);
+    }
+
+    if (results.length === 0 && !request.signal.aborted) {
+      try {
+        const photonResults = await fetchPhoton(queryWithoutCity, pilot, request.signal);
+        if (photonResults.length > 0) {
+          results = photonResults;
+        }
+      } catch (photonErr) {
+        console.warn(`[geocode] Photon fallback failed for "${query}" (${pilot.id}):`, photonErr instanceof Error ? photonErr.message : photonErr);
       }
     }
-    if (results.length > 0) {
-      if (geocodeCache.size >= CACHE_MAX_ENTRIES) {
-        const oldestKey = geocodeCache.keys().next().value;
-        if (oldestKey) geocodeCache.delete(oldestKey);
+
+    if (results.length === 0) {
+      if (nominatimFailed) {
+        throw new Error("Tutti i servizi di ricerca indirizzi non sono disponibili.");
       }
-      geocodeCache.set(cacheKey, { timestamp: Date.now(), results });
+      return NextResponse.json({ results: [] }, {
+        headers: { "Cache-Control": "public, max-age=300" },
+      });
     }
+
+    if (geocodeCache.size >= CACHE_MAX_ENTRIES) {
+      const oldestKey = geocodeCache.keys().next().value;
+      if (oldestKey) geocodeCache.delete(oldestKey);
+    }
+    geocodeCache.set(cacheKey, { timestamp: Date.now(), results });
+
     return NextResponse.json({ results }, {
       headers: { "Cache-Control": "public, max-age=3600, s-maxage=86400" },
     });

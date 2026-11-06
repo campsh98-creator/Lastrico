@@ -58,3 +58,44 @@ test("geocoding caches responses within TTL to absorb rapid autocomplete and rep
   assert.equal(data2.results.length, 1);
   assert.equal(data2.results[0].id, "42");
 });
+
+test("geocoding falls back to Photon when Nominatim fails or times out", async (t) => {
+  now += 100_000;
+  t.mock.method(Date, "now", () => now);
+  t.mock.method(globalThis, "fetch", async (input) => {
+    const urlStr = typeof input === "string" ? input : (input instanceof URL ? input.toString() : input?.url ?? "");
+    if (urlStr.includes("nominatim.openstreetmap.org")) {
+      throw new Error("Nominatim gateway timeout");
+    }
+    if (urlStr.includes("photon.komoot.io")) {
+      return Response.json({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {
+              osm_id: 161606053,
+              name: "Porta Romana",
+              locality: "Guastalla",
+              district: "Municipio 1",
+              city: "Milano",
+              postcode: "20135",
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [9.202056, 45.4522392],
+            },
+          },
+        ],
+      });
+    }
+    throw new Error(`Unexpected fetch to ${urlStr}`);
+  });
+
+  const response = await GET(request("Porta Romana"));
+  assert.equal(response.status, 200);
+  const data = await response.json();
+  assert.equal(data.results.length, 1);
+  assert.equal(data.results[0].primary, "Porta Romana");
+  assert.deepEqual(data.results[0].coordinate, [9.202056, 45.4522392]);
+});
