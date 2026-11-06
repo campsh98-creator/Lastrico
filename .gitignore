@@ -63,3 +63,30 @@ next-env.d.ts
 
 # Real GPS traces reveal where a person was and must never be committed.
 /outputs/field-traces/
+
+# Research: regenerable Phase 4.17 outputs (python experiments/surface-ml/run.py --output <tmp>, then copy back)
+/outputs/phase417/map.html
+/outputs/phase417/dataset.json.gz
+/outputs/phase417/heldout-evaluation.json.gz
+
+# Research: third-party image datasets, model weights and feature caches never enter Git
+# (StreetSurfaceVis is CC BY-SA 4.0 and is not redistributed here)
+/experiments/*/data/
+streetSurfaceVis_*.csv
+s_256.zip
+s_1024.zip
+s_2048.zip
+s_original.zip
+*.npz
+*.npy
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.tflite
+*.safetensors

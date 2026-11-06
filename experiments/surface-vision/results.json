@@ -1,0 +1,471 @@
+{
+ "phase": "4.20 Agent B - phase 1 (survey + pipeline, no downloads)",
+ "date": "2026-11-05",
+ "status": "phase2_complete",
+ "recommended_dataset": {
+  "name": "StreetSurfaceVis V1.0",
+  "doi": "10.5281/zenodo.11449977",
+  "licence": "CC-BY-SA-4.0",
+  "why": [
+   "human labels (3 trained annotators, Krippendorff alpha 0.96 for type)",
+   "explicit sett class (1,363 images)",
+   "per-image latitude/longitude and contributor ids enable geographic and contributor-aware splits",
+   "official test split of five geographically distinct German cities (776 images)",
+   "commercially usable licence (share-alike)"
+  ],
+  "limits": [
+   "Germany only: no Italian evaluation possible",
+   "only 32 sett images in the official test split",
+   "class frequencies steered by pre-selection",
+   "sequence ids absent from CSV"
+  ]
+ },
+ "download_proposal": {
+  "files": [
+   {
+    "name": "streetSurfaceVis_v1_0.csv",
+    "url": "https://zenodo.org/api/records/11449977/files/streetSurfaceVis_v1_0.csv/content",
+    "bytes": 967208,
+    "md5": "a6ac6ab1edf7d813ebe7ffb22b922423"
+   },
+   {
+    "name": "s_1024.zip",
+    "url": "https://zenodo.org/api/records/11449977/files/s_1024.zip/content",
+    "bytes": 1283338088,
+    "md5": "3a32ab4f5f2992a267c4274179717c77"
+   }
+  ],
+  "total_bytes": 1284305296,
+  "disk_after_download_estimate": "about 1.3 GB (zip read in place, not extracted; feature cache about 10 MB) of about 13 GB free",
+  "destination": "session scratchpad data directory outside the repository",
+  "cheaper_alternative": {
+   "name": "s_256.zip",
+   "url": "https://zenodo.org/api/records/11449977/files/s_256.zip/content",
+   "bytes": 99052992,
+   "md5": "d2beab4af8f3995bc8789ba27645ddc0",
+   "caveat": "focal crop only ~128x96 px; texture detail of sett joints largely lost"
+  },
+  "licence": "CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); images by Mapillary contributors under CC BY-SA",
+  "attribution": "StreetSurfaceVis V1.0 by Alexandra Kapp, Edith Hoffmann, Esther Weigmann and Helena Mihaljević (HTW Berlin, SurfaceAI), Zenodo, doi:10.5281/zenodo.11449977, licensed CC BY-SA 4.0; street-level images by the Mapillary contributors listed per image (user_name) in streetSurfaceVis_v1_0.csv, CC BY-SA 4.0. Paper: Kapp et al., Scientific Data 12, 92 (2025), doi:10.1038/s41597-024-04295-9.",
+  "phase2_command": "$SCR/venv/bin/python -I experiments/surface-vision/run.py --data-dir $SCR/data --fetch --variant 1024",
+  "not_requested": [
+   "s_2048.zip",
+   "s_original.zip",
+   "any pretrained weights (SurfaceAI weights have no stated licence)"
+  ]
+ },
+ "evaluation_design": {
+  "test": "official train=False split (five German cities, 776 images; sett 32, concrete 16)",
+  "calibration": "whole 0.5-degree cells chosen by salted hash order, >=20% of pool, >=10 images per class",
+  "train": "remaining cells, purged of test cells and of images within 2 km of calibration/test",
+  "diagnostics": [
+   "shared cells/ids/min distance per split pair",
+   "contributor overlap and metrics on test images by contributors unseen in training",
+   "per-test-cell results",
+   "sett recall by quality"
+  ],
+  "baselines": [
+   "majority (training priors)",
+   "colour-only logistic regression"
+  ],
+  "primary_model": "texture_hgb (HistGradientBoosting, fixed hyper-parameters, sigmoid-calibrated on calibration split)",
+  "abstention": "max-probability threshold chosen on calibration for accepted accuracy >= 0.90 (>=20 accepted)",
+  "italy": "not measurable with this dataset; requires a separate human-labelled Milan/Roccella set"
+ },
+ "predeclared_phase2_criteria": {
+  "criteria": [
+   "sett recall >= 0.70 at argmax decision on test, with Wilson 95% lower bound reported",
+   "sett precision >= 0.70 at argmax decision on test, with Wilson 95% lower bound reported",
+   "macro-F1 of primary model exceeds colour-only baseline by >= 0.10",
+   "top-label ECE <= 0.10 after calibration",
+   "zero image-level and cell-level leakage between train, calibration and test"
+  ],
+  "evaluated_on": "official StreetSurfaceVis test cities (train=False), never used for fitting, calibration or thresholds",
+  "interpretation": "Meeting all criteria only justifies an Italian human-labelled evaluation; it never justifies product integration.",
+  "primary_model": "texture_hgb"
+ },
+ "local_availability": {
+  "search": "find for jpg/jpeg/png/webp/heic/tif under the repository, excluding node_modules, .git, dist, .next, .wrangler",
+  "files_found": 33,
+  "breakdown": {
+   "UI screenshots in outputs/": 30,
+   "brand/OG images in public/": 3
+  },
+  "labelled_road_images": 0,
+  "other": "data/surfaces/milan-central.json has 33 OSM objects with mapillary=* (8 unique Mapillary image ids, all surface=asphalt); images are not on disk and contain no pave examples"
+ },
+ "code_tests": {
+  "command": "PYTHONDONTWRITEBYTECODE=1 $SCR/venv/bin/python -m unittest discover -s experiments/surface-vision -p 'test_*.py' -v",
+  "tests": 57,
+  "result": "OK",
+  "deterministic": true,
+  "coverage": [
+   "GLCM counts vs textbook example and hand-computed properties",
+   "LBP uniform LUT",
+   "orientation/FFT on analytic patterns",
+   "box blur vs naive",
+   "HSV vs colorsys",
+   "feature shape/names/determinism/finiteness",
+   "focal crop on PNG and JPEG (draft path)",
+   "seeded synthetic determinism",
+   "confusion/precision/recall/F1/macro-F1, Brier, ECE, abstention threshold, Wilson, AP vs sklearn",
+   "split partition, zero leakage, test-cell purge, 2 km buffer purge, salt dependence, non-vacuous leakage detector",
+   "StreetSurfaceVis CSV+zip adapter, MD5/size verification, refusal of unapproved variants (offline)",
+   "end-to-end synthetic run: structure, byte-identical rerun, majority = prior, label-alignment check, shuffled-label negative control, feature cache"
+  ]
+ },
+ "synthetic_smoke": {
+  "label": "SYNTHETIC_CODE_TEST_NOT_ACCURACY",
+  "file": "phase1/synthetic-smoke-results.json",
+  "sha256": "ab11ccb810fc39b3224a07317cb418a1bf724aeab542b221e26e37c3c255afc8",
+  "n_images": 180,
+  "leakage_image_level": 0,
+  "leakage_cell_level": 0,
+  "note": "Synthetic classes are separable by construction; scores of 1.0 there only confirm plumbing and label alignment and must never be quoted as accuracy."
+ },
+ "runtime": {
+  "per_image_features_ms_synthetic": 29.6,
+  "per_image_decode_plus_features_ms_1024px_jpeg_estimate": 35,
+  "phase2_feature_extraction_estimate_min": "5-6 (9,122 images, single thread)",
+  "model_fit_estimate": "seconds to a few minutes on CPU",
+  "maintenance": "numpy/Pillow/scikit-learn only; no GPU, no torch"
+ },
+ "risks": [
+  "Domain shift Germany -> Italy (porphyry/granite setts, fan patterns, tram rails, different cameras and light); no Italian ground truth",
+  "Viewpoint: Mapillary street-level vs a phone mounted in a car or on a handlebar; per-image labels vs per-way routing decisions",
+  "Class imbalance: only 32 sett and 16 concrete test images -> wide confidence intervals",
+  "Prevalence shift: dataset frequencies are curated, real precision will differ",
+  "Hand-crafted features are expected to fall well short of the published CNN (sett F1 0.90)",
+  "Licence: CC BY-SA share-alike may extend to weights/outputs; keep data and weights outside the MIT repo; never push predictions to OSM; ODbL mixing needs legal review",
+  "Mapillary terms: no de-blurring; any future Milan image collection needs an owner-held API token"
+ ],
+ "provisional_decision": {
+  "phase2_offline_evaluation": "done",
+  "final_decision": "NO-GO",
+  "reason": "Predeclared criteria not all met: sett precision 0.632 < 0.70 (Wilson lower bound 0.47) and ECE 0.113 > 0.10. Recall (0.75) and the gain over the colour baseline (+0.31 macro-F1) passed. Even a pass would only have justified an Italian human-labelled evaluation.",
+  "product_integration": "NO-GO",
+  "possible_future_work_requires_new_approval": [
+   "Italian human-labelled evaluation set (Milan/Roccella) before any model choice",
+   "CNN fine-tuning would need torch plus pretrained weights with a clear licence (separate owner approval)"
+  ]
+ },
+ "inputs_sha256": {
+  "datasets.json": "6045478ebb083476405d7dd33d74efdbd373d0d664825e7c1af8168f0e638baa"
+ },
+ "code_sha256": {
+  "run.py": "86ac0b4d6414741d9db3c9df6d259b4bff70be6a2c5e5953f4262a55e2b8cd79",
+  "surfvis/__init__.py": "9f092b04a6132d463d6e3499bdb7d8c2e7e871996a1fb17d082f40a87843af73",
+  "surfvis/data.py": "7e4a002fec9012233d44eb133065c20acf9ef6e4a78ab6556baa12368e9e5ab2",
+  "surfvis/features.py": "28d93cf499e072c5332ebdbe2153ad8413d06842b0095ec1371874a8b69bf318",
+  "surfvis/imageio.py": "4bfe98efe8b671321a5ec9e50ccae6faf51d49b7cfd83f045c1e359192863ed0",
+  "surfvis/metrics.py": "862dba0fab11c6c2d72e12d995b1bbdf19423129c043138e2d98849719c5762d",
+  "surfvis/models.py": "8dce88a324a3d6e30c3172f02267f98e1ef0fe25371a202709f40b7077644f38",
+  "surfvis/pipeline.py": "e3388a4caae2bf45d65bd9f97785c985a0ee9e4dad5e178b8471e3c148627ec0",
+  "surfvis/splits.py": "d8b3129562185652713824c82dcb4c89bb303af6e607f74bee3d36aeacf831ab",
+  "surfvis/synthetic.py": "8d68ee8b3886818c8c73a0f0ba1562aad233fa0e00c5aec212079eb88a179faa"
+ },
+ "rules_not_followed": [
+  "report.md (Italian) could not be written: the agent harness refuses report files from a subagent. The Italian interpretation is in the agent's final message."
+ ],
+ "phase2": {
+  "date": "2026-11-05",
+  "download_verification": [
+   {
+    "md5": "a6ac6ab1edf7d813ebe7ffb22b922423",
+    "name": "streetSurfaceVis_v1_0.csv",
+    "sha256": "add7ccdb1c55d5c3ffd9c16426337e36a3105dfb59340596ed09666a5fc21a8d",
+    "size": 967208
+   },
+   {
+    "md5": "3a32ab4f5f2992a267c4274179717c77",
+    "name": "s_1024.zip",
+    "sha256": "bdaaed22719888bbd631c1779389367d516bdba626e683a06256ae70fdad2314",
+    "size": 1283338088
+   }
+  ],
+  "data_location": "session scratchpad data directory (zip read in place, never extracted, never in the repo)",
+  "command": "$SCR/venv/bin/python -I experiments/surface-vision/run.py --data-dir $SCR/data --fetch --variant 1024",
+  "full_results_file": "phase2/results.json",
+  "full_results_sha256": "e8def84032f8ee90332d4e47accfcb03461c0f753cdf3067a60d399d0a91d550",
+  "load": {
+   "missing_images": 0,
+   "records": 9122,
+   "rows": 9122,
+   "unknown_labels": {},
+   "zip_members_indexed": 9122
+  },
+  "feature_failures": 0,
+  "split": {
+   "n_train": 6321,
+   "n_calibration": 1620,
+   "n_test": 776,
+   "n_purged_test_cells": 283,
+   "n_purged_buffer_train": 122,
+   "n_cells_train": 167,
+   "n_cells_calibration": 39,
+   "n_cells_test": 6,
+   "class_counts": {
+    "calibration": {
+     "0": 465,
+     "1": 200,
+     "2": 375,
+     "3": 295,
+     "4": 285
+    },
+    "test": {
+     "0": 530,
+     "1": 16,
+     "2": 113,
+     "3": 32,
+     "4": 85
+    },
+    "train": {
+     "0": 2587,
+     "1": 698,
+     "2": 1473,
+     "3": 978,
+     "4": 585
+    }
+   }
+  },
+  "leakage": {
+   "image_level": 0,
+   "cell_level": 0,
+   "min_distance_km_train_test": 4.99,
+   "min_distance_km_train_calibration": 2.0,
+   "fraction_test_images_by_contributors_seen_in_train": 0.6869
+  },
+  "test_models": {
+   "majority": {
+    "accuracy": 0.683,
+    "macro_f1": 0.1623,
+    "brier_multiclass": 0.602,
+    "ece_top_label": 0.2737,
+    "per_class_f1": {
+     "asphalt": 0.812,
+     "concrete": 0.0,
+     "paving_stones": 0.0,
+     "sett": 0.0,
+     "unpaved": 0.0
+    },
+    "sett_precision": 0.0,
+    "sett_precision_wilson95": [
+     null,
+     null
+    ],
+    "sett_recall": 0.0,
+    "sett_recall_wilson95": [
+     0.0,
+     0.107
+    ],
+    "abstention_test": {
+     "accepted": 0,
+     "accuracy_accepted": null,
+     "coverage": 0.0,
+     "threshold": 1.0
+    }
+   },
+   "colour_logistic": {
+    "accuracy": 0.5863,
+    "macro_f1": 0.3382,
+    "brier_multiclass": 0.6129,
+    "ece_top_label": 0.1874,
+    "per_class_f1": {
+     "asphalt": 0.757,
+     "concrete": 0.0,
+     "paving_stones": 0.15,
+     "sett": 0.179,
+     "unpaved": 0.605
+    },
+    "sett_precision": 0.1129,
+    "sett_precision_wilson95": [
+     0.068,
+     0.181
+    ],
+    "sett_recall": 0.4375,
+    "sett_recall_wilson95": [
+     0.282,
+     0.607
+    ],
+    "abstention_test": {
+     "accepted": 11,
+     "accuracy_accepted": 0.9091,
+     "coverage": 0.0142,
+     "threshold": 0.62
+    }
+   },
+   "texture_logistic": {
+    "accuracy": 0.8415,
+    "macro_f1": 0.6097,
+    "brier_multiclass": 0.3022,
+    "ece_top_label": 0.1966,
+    "per_class_f1": {
+     "asphalt": 0.909,
+     "concrete": 0.0,
+     "paving_stones": 0.705,
+     "sett": 0.667,
+     "unpaved": 0.767
+    },
+    "sett_precision": 0.5814,
+    "sett_precision_wilson95": [
+     0.433,
+     0.716
+    ],
+    "sett_recall": 0.7812,
+    "sett_recall_wilson95": [
+     0.612,
+     0.89
+    ],
+    "abstention_test": {
+     "accepted": 539,
+     "accuracy_accepted": 0.9276,
+     "coverage": 0.6946,
+     "threshold": 0.6
+    }
+   },
+   "texture_hgb": {
+    "accuracy": 0.8235,
+    "macro_f1": 0.6475,
+    "brier_multiclass": 0.2878,
+    "ece_top_label": 0.113,
+    "per_class_f1": {
+     "asphalt": 0.9,
+     "concrete": 0.175,
+     "paving_stones": 0.686,
+     "sett": 0.686,
+     "unpaved": 0.79
+    },
+    "sett_precision": 0.6316,
+    "sett_precision_wilson95": [
+     0.473,
+     0.766
+    ],
+    "sett_recall": 0.75,
+    "sett_recall_wilson95": [
+     0.579,
+     0.867
+    ],
+    "abstention_test": {
+     "accepted": 462,
+     "accuracy_accepted": 0.9307,
+     "coverage": 0.5954,
+     "threshold": 0.7
+    }
+   }
+  },
+  "primary_extra": {
+   "sett_p050": {
+    "precision": 0.7097,
+    "recall": 0.6875,
+    "average_precision": 0.7288,
+    "brier": 0.0215,
+    "ece_positive_probability": 0.0328
+   },
+   "sett_threshold_chosen_on_calibration": {
+    "calibration_precision": 0.802013422818792,
+    "calibration_predicted": 298,
+    "calibration_recall": 0.8101694915254237,
+    "reached": true,
+    "target_precision": 0.8,
+    "threshold": 0.42
+   },
+   "sett_at_calibration_threshold_test": {
+    "precision": 0.6410256410256411,
+    "recall": 0.78125,
+    "precision_wilson95": [
+     0.4841814855954854,
+     0.7725791454100714
+    ],
+    "recall_wilson95": [
+     0.6124500635075647,
+     0.8897616374739581
+    ]
+   },
+   "sett_prevalence": {
+    "calibration": 0.1821,
+    "test": 0.0412
+   },
+   "per_test_cell": {
+    "0.5:101:13": {
+     "accuracy": 0.7852760736196319,
+     "n": 163,
+     "sett_recall": 0.75,
+     "sett_support": 4
+    },
+    "0.5:102:27": {
+     "accuracy": 0.8648648648648649,
+     "n": 148,
+     "sett_recall": 0.8181818181818182,
+     "sett_support": 11
+    },
+    "0.5:106:20": {
+     "accuracy": 0.8206896551724138,
+     "n": 145,
+     "sett_recall": 0.75,
+     "sett_support": 8
+    },
+    "0.5:106:21": {
+     "accuracy": 1.0,
+     "n": 1,
+     "sett_recall": null,
+     "sett_support": 0
+    },
+    "0.5:96:23": {
+     "accuracy": 0.8121212121212121,
+     "n": 165,
+     "sett_recall": 0.7142857142857143,
+     "sett_support": 7
+    },
+    "0.5:98:18": {
+     "accuracy": 0.8376623376623377,
+     "n": 154,
+     "sett_recall": 0.5,
+     "sett_support": 2
+    }
+   },
+   "test_contributors_unseen_in_train": {
+    "n": 243,
+    "accuracy": 0.8066,
+    "macro_f1": 0.6682,
+    "sett_support": 12,
+    "sett_recall": 0.5833
+   },
+   "sett_recall_by_quality": {
+    "bad": {
+     "n": 14,
+     "recall": 0.9285714285714286
+    },
+    "good": {
+     "n": 1,
+     "recall": 0.0
+    },
+    "intermediate": {
+     "n": 17,
+     "recall": 0.6470588235294118
+    }
+   }
+  },
+  "published_reference_cnn": {
+   "sett_precision": 0.88,
+   "sett_recall": 0.92,
+   "sett_f1": 0.9,
+   "accuracy": 0.91
+  },
+  "criteria_check": {
+   "all_met": false,
+   "ece_le_0.10": false,
+   "macro_f1_gain_vs_colour_ge_0.10": true,
+   "sett_precision_ge_0.70": false,
+   "sett_recall_ge_0.70": true,
+   "zero_leakage": true
+  },
+  "runtime": {
+   "total_wall_s": 707.1,
+   "feature_extraction_s": 300.6,
+   "per_image_feature_ms": 32.95,
+   "fit_texture_hgb_s": 17.16,
+   "download_verification_indexing_and_evaluation_s_approx": 388.0
+  },
+  "independent_recomputation": "primary sett P=24/38=0.6316, R=24/32=0.75 and macro-F1=0.6475 recomputed from the stored confusion matrix; match reported values"
+ }
+}

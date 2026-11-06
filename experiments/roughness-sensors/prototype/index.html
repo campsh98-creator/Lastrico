@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Lastrico — prototipo vibrazioni (solo sviluppo)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <p class="badge">Prototipo per sviluppatori — non fa parte dell'app Lastrico</p>
+    <h1>Registrazione vibrazioni della strada</h1>
+  </header>
+
+  <main>
+    <section id="consent" aria-labelledby="consent-title">
+      <h2 id="consent-title">Prima di iniziare</h2>
+      <ul>
+        <li><strong>Cosa viene registrato:</strong> accelerometro e giroscopio del telefono (vibrazioni e rotazioni), circa 60 volte al secondo, solo dopo aver premuto «Avvia» e solo mentre questa pagina resta aperta e visibile. Se lo scegli, anche la velocità dal GPS; la posizione solo se la attivi espressamente.</li>
+        <li><strong>Dove restano i dati:</strong> solo nella memoria di questa pagina, su questo dispositivo. Non vengono inviati a nessun server: la pagina blocca ogni connessione di rete. Nulla viene salvato in modo permanente.</li>
+        <li><strong>Come fermare ed eliminare:</strong> «Ferma» interrompe la registrazione; «Elimina» cancella i dati dalla memoria; chiudere o ricaricare la pagina li cancella comunque. «Esporta JSON» crea un file solo se lo chiedi tu, e quel file resta sul tuo dispositivo.</li>
+        <li><strong>Sicurezza:</strong> non usare il telefono mentre guidi o pedali. Fissalo a un supporto, avvia e ferma solo da fermo; chi guida non deve guardare lo schermo.</li>
+        <li><strong>Limiti:</strong> l'indice mostrato è sperimentale, non calibrato e non è l'IRI. I risultati non sono verificati sul campo.</li>
+      </ul>
+      <label class="check"><input type="checkbox" id="consent-check"> Ho letto e voglio registrare</label>
+    </section>
+
+    <section id="settings" aria-labelledby="settings-title">
+      <h2 id="settings-title">Impostazioni</h2>
+      <label>Mezzo
+        <select id="mode">
+          <option value="car">Auto</option>
+          <option value="motorcycle">Moto (parametri non tarati)</option>
+          <option value="bicycle">Bici</option>
+        </select>
+      </label>
+      <fieldset>
+        <legend>GPS (facoltativo, consenso separato)</legend>
+        <label class="check"><input type="radio" name="gps" value="off" checked> Nessun GPS</label>
+        <label class="check"><input type="radio" name="gps" value="speed-only"> Solo velocità (la posizione viene scartata subito)</label>
+        <label class="check"><input type="radio" name="gps" value="speed-and-position"> Velocità e posizione</label>
+      </fieldset>
+      <label class="check"><input type="checkbox" id="wake-lock"> Tieni lo schermo acceso durante la registrazione (se il browser lo supporta)</label>
+    </section>
+
+    <section id="controls" aria-label="Comandi">
+      <button type="button" id="start">Avvia</button>
+      <button type="button" id="stop" disabled>Ferma</button>
+      <button type="button" id="discard" disabled>Elimina</button>
+      <button type="button" id="export" disabled>Esporta JSON</button>
+    </section>
+
+    <p id="message" role="status" aria-live="polite"></p>
+
+    <section id="live" aria-labelledby="live-title">
+      <h2 id="live-title">Stato in tempo reale</h2>
+      <dl>
+        <dt>Stato</dt><dd id="live-state">fermo</dd>
+        <dt>Campioni</dt><dd id="live-samples">0</dd>
+        <dt>Durata</dt><dd id="live-duration">0 s</dd>
+        <dt>Frequenza misurata</dt><dd id="live-rate">—</dd>
+        <dt>Intervallo dichiarato dal browser</dt><dd id="live-interval">—</dd>
+        <dt>Giroscopio / accelerazione lineare</dt><dd id="live-channels">—</dd>
+        <dt>Rotazione massima (ultimo secondo)</dt><dd id="live-rotation">—</dd>
+        <dt>GPS</dt><dd id="live-gps">—</dd>
+        <dt>Memoria stimata</dt><dd id="live-memory">—</dd>
+        <dt>Qualità</dt><dd id="live-quality">—</dd>
+      </dl>
+    </section>
+
+    <section id="replay" aria-labelledby="replay-title">
+      <h2 id="replay-title">Prova senza sensori: traccia SINTETICA</h2>
+      <p>Riproduce un viaggio generato al computer (non una registrazione reale) attraverso la stessa pipeline, per provare la pagina su un computer senza sensori.</p>
+      <label>Scenario
+        <select id="replay-scenario"></select>
+      </label>
+      <button type="button" id="replay-start">Riproduci traccia sintetica</button>
+    </section>
+
+    <section id="results" aria-labelledby="results-title" hidden>
+      <h2 id="results-title">Analisi</h2>
+      <p id="results-kind" class="badge"></p>
+      <p id="results-summary"></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Inizio (s)</th><th>Lunghezza (m)</th><th>Velocità (km/h)</th><th>Etichetta</th><th>LRI</th><th>Motivo / base</th><th>Eventi</th></tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

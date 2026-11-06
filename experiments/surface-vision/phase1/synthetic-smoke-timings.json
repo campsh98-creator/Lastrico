@@ -1,0 +1,9 @@
+{
+ "feature_extraction_s": 5.324650416965596,
+ "fit_colour_logistic_s": 0.0780515840742737,
+ "fit_majority_s": 0.0021158340387046337,
+ "fit_texture_hgb_s": 1.2531532919965684,
+ "fit_texture_logistic_s": 0.010512207983992994,
+ "per_image_feature_ms": 29.581391205364426,
+ "total_s": 8.02927566692233
+}

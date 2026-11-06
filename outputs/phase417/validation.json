@@ -1,0 +1,24 @@
+{
+  "focused_tests": {
+    "passed": 14,
+    "failed": 0
+  },
+  "lint": "npm run lint passed",
+  "typescript": "npx tsc --noEmit --incremental false passed",
+  "reproducibility": {
+    "dataset.json.gz": true,
+    "heldout-evaluation.json.gz": true,
+    "unknown-predictions.json.gz": true,
+    "results.json": true,
+    "report.md": true,
+    "map.html": true
+  },
+  "input_and_experiment_checksums": "all matched after repeat",
+  "recorded_route_checksums": "all matched",
+  "unknown_prediction_rows": 17861,
+  "unique_dataset_way_ids": 63547,
+  "browser_verification": "Local developer map rendered for Milan and Roccella; area and evidence filters changed the map; no console errors. No iPhone or production testing claimed.",
+  "production_changes": "None by this experiment; no build, commit, branch change, push or deploy.",
+  "concurrent_work": "Unrelated app/globals.css, Phase418 outputs/prompt and scratch files appeared during final validation; preserved untouched. Lint/TypeScript were run before the later CSS edit.",
+  "status_at_validation": " M app/globals.css\n?? experiments/\n?? outputs/phase417/\n?? outputs/phase418-ui-artifacts/\n?? outputs/prompt-phase417-surface-ml.md\n?? outputs/prompt-phase418-premium-navigation-ui-2.md\n?? scratch/\n"
+}

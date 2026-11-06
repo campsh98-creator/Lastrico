@@ -1,0 +1,510 @@
+{
+ "survey_date": "2026-11-05",
+ "method": "Dataset cards, Zenodo/GitHub/Hugging Face APIs (metadata and file listings only), HTTP HEAD for sizes, papers (Europe PMC full text, arXiv/ar5iv), licence pages. No image or model file was downloaded.",
+ "evidence_levels": {
+  "verified_primary": "read on the dataset's own record/paper/licence page or API in this run",
+  "verified_secondary": "read in a secondary source (other paper, code, search result) in this run",
+  "inferred": "reasoned from verified facts",
+  "unverified": "could not be checked (page blocked or not documented)"
+ },
+ "datasets": [
+  {
+   "id": "streetsurfacevis_v1_0",
+   "name": "StreetSurfaceVis V1.0",
+   "publisher": "HTW Berlin, SurfaceAI project (Kapp, Hoffmann, Weigmann, Mihaljević)",
+   "doi": "10.5281/zenodo.11449977",
+   "record_url": "https://zenodo.org/records/11449977",
+   "published": "2024-06-04",
+   "paper": {
+    "citation": "Kapp A. et al., Sci Data 12, 92 (2025)",
+    "doi": "10.1038/s41597-024-04295-9",
+    "paper_licence": "CC BY 4.0",
+    "evidence": "verified_primary"
+   },
+   "licence": {
+    "id": "CC-BY-SA-4.0",
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "evidence": "verified_primary",
+    "notes": "Zenodo licence field cc-by-sa-4.0. Paper: dataset provided under CC-BY-SA in accordance with Mapillary's CC-BY-SA licensing of user images; attribution to each image's creator required (mapillary_image_id + user_name in CSV). Mapillary terms forbid reversing face/plate blurring. Mapillary help page itself returned HTTP 403 (licence of Mapillary images therefore verified_secondary via the paper)."
+   },
+   "licence_compatibility": {
+    "mit_app_code": "Compatible if images/weights are never placed in the MIT repository; keep data outside the repo.",
+    "model_weights": "Uncertain: CC FAQ says whether a model/output is an Adaptation depends on applicable law; conservative policy = any distributed weights carry CC BY-SA 4.0 + attribution, separate from MIT code.",
+    "commercial_use": "Allowed by CC BY-SA 4.0 (with attribution and share-alike).",
+    "odbl_osm": "Do not contribute model-derived surface tags to OSM; CC BY-SA material is not ODbL-compatible without a waiver. Mixing CC BY-SA-derived predictions with ODbL data in one public database needs legal review before any integration.",
+    "evidence": "inferred"
+   },
+   "label_provenance": {
+    "type": "human",
+    "evidence": "verified_primary",
+    "details": "Every image manually labelled by one of three annotators (the first three authors) following a written labelling guide; candidates pre-selected with OSM tags, iterative CNN pseudo-labels, GPT-4o prompts and embedding similarity search (pre-selection only). Inter-rater check: 180 images (10 per OSM pre-label class) rated by all three; 12 marked for revision and 49 discarded were excluded; Krippendorff alpha 0.96 (type), 0.74 (quality). OSM pre-labels agreed with manual type labels on only 69% of a 1,800-image batch.",
+    "discrepancies": [
+     "Zenodo description says 1,800 images were annotated by all three annotators; the paper says 180 (the 1,800 figure matches the OSM pre-label batch of 100 x 18 classes).",
+     "Zenodo table lists asphalt-good 1,697 (sum 9,123); paper Table 5 lists 1,696 (sum 9,122 = stated total)."
+    ]
+   },
+   "classes": {
+    "asphalt": 3734,
+    "concrete": 972,
+    "paving_stones": 2037,
+    "sett": 1363,
+    "unpaved": 1016,
+    "total": 9122,
+    "sett_by_quality": {
+     "good": 129,
+     "intermediate": 694,
+     "bad": 540
+    },
+    "source": "paper Table 5",
+    "evidence": "verified_primary"
+   },
+   "official_test_split": {
+    "images": 776,
+    "description": "urban areas of five German cities excluded from training (flag train=False); cities not named",
+    "test_support": {
+     "asphalt": 530,
+     "concrete": 16,
+     "paving_stones": 113,
+     "sett": 32,
+     "unpaved": 85
+    },
+    "evidence": "verified_primary"
+   },
+   "published_baseline": {
+    "model": "EfficientNetV2-S (ImageNet-pretrained), 5 seeds",
+    "test_accuracy": 0.91,
+    "sett": {
+     "precision": 0.88,
+     "recall": 0.92,
+     "f1": 0.9
+    },
+    "concrete_f1": 0.35,
+    "evidence": "verified_primary"
+   },
+   "external_transfer_hint": {
+    "text": "SurfaceAI pipeline paper reports type accuracy 0.76 and paving-stones F1 0.58 in a rural German municipality (urban-trained model)",
+    "source": "arXiv 2409.18922",
+    "evidence": "verified_secondary"
+   },
+   "geography": {
+    "countries": [
+     "Germany"
+    ],
+    "italy": false,
+    "notes": "Images within Germany's bounding box ('mostly from Germany').",
+    "evidence": "verified_primary"
+   },
+   "coordinates_per_image": {
+    "available": true,
+    "fields": [
+     "latitude",
+     "longitude",
+     "user_id",
+     "user_name",
+     "captured_at",
+     "train"
+    ],
+    "evidence": "verified_primary"
+   },
+   "viewpoint": {
+    "type": "crowdsourced street-level (Mapillary; smartphone app and other devices; car, bicycle, on foot); label = focal road at bottom centre",
+    "evidence": "verified_primary"
+   },
+   "sampling_notes": "Max 5 images per zoom-14 tile (~1.5 km) and 10 per Mapillary sequence; class-targeted pre-selection, so class prevalence is NOT real-world prevalence.",
+   "files": [
+    {
+     "name": "streetSurfaceVis_v1_0.csv",
+     "bytes": 967208,
+     "md5": "a6ac6ab1edf7d813ebe7ffb22b922423",
+     "url": "https://zenodo.org/api/records/11449977/files/streetSurfaceVis_v1_0.csv/content"
+    },
+    {
+     "name": "s_256.zip",
+     "bytes": 99052992,
+     "md5": "d2beab4af8f3995bc8789ba27645ddc0",
+     "url": "https://zenodo.org/api/records/11449977/files/s_256.zip/content"
+    },
+    {
+     "name": "s_1024.zip",
+     "bytes": 1283338088,
+     "md5": "3a32ab4f5f2992a267c4274179717c77",
+     "url": "https://zenodo.org/api/records/11449977/files/s_1024.zip/content"
+    },
+    {
+     "name": "s_2048.zip",
+     "bytes": 4476691714,
+     "md5": "909b5cb41de03b74f8e09a0c714b9af3",
+     "url": "https://zenodo.org/api/records/11449977/files/s_2048.zip/content"
+    },
+    {
+     "name": "s_original.zip",
+     "bytes": 18531480454,
+     "md5": "f2d5a490702b3024f1e4c81080b9c0e1",
+     "url": "https://zenodo.org/api/records/11449977/files/s_original.zip/content"
+    },
+    {
+     "name": "labeling_guide.pdf",
+     "bytes": 2213538,
+     "md5": "598da7ba7e93fd995ff30a3de2ac03b0"
+    },
+    {
+     "name": "dataset_description.pdf",
+     "bytes": 621208,
+     "md5": "debc3d9730151b5f6fec88d39a850b0e"
+    },
+    {
+     "name": "Datasheet_for_StreetSurfaceVis.pdf",
+     "bytes": 118336,
+     "md5": "65eee65fce122a56df501b5aeaa86b71"
+    }
+   ],
+   "files_evidence": "verified_primary",
+   "smallest_usable_variant": {
+    "recommended": "s_1024.zip",
+    "reason": "The authors' own production pipeline downloads 1024-px Mapillary thumbnails, crops the lower-middle half and resizes to 384 px. In s_256 the focal crop is only ~128x96 px, below this pipeline's 256x192 working size; sett joints would be largely lost. s_256.zip remains a cheaper fallback (--variant 256).",
+    "evidence": "verified_primary"
+   },
+   "verdict": "RECOMMENDED (only trustworthy candidate found): human labels, explicit sett class, per-image coordinates, geographic test split, share-alike but commercially usable licence. Germany-only: cannot measure Italian performance."
+  },
+  {
+   "id": "cycling_street_surface",
+   "name": "Cycling Street Surface Dataset",
+   "publisher": "Scharf (re:edu GmbH & Co. KG), Karic (University of Münster)",
+   "doi": "10.5281/zenodo.17838875",
+   "published": "2025-12-05",
+   "licence": {
+    "id": "CC-BY-SA-4.0",
+    "evidence": "verified_primary"
+   },
+   "label_provenance": {
+    "type": "annotated by the authors (no protocol, no agreement statistics published)",
+    "evidence": "verified_primary"
+   },
+   "classes": {
+    "names": [
+     "asphalt",
+     "paving_stone",
+     "sett",
+     "unpaved"
+    ],
+    "counts": "not documented",
+    "evidence": "verified_primary"
+   },
+   "geography": {
+    "value": "not documented (authors in Münster, Germany - inferred)",
+    "evidence": "inferred"
+   },
+   "coordinates_per_image": {
+    "available": "not documented",
+    "evidence": "unverified"
+   },
+   "viewpoint": {
+    "type": "close-range bicycle-mounted OV2640 camera; crops 96x96 and 48x192 px",
+    "evidence": "verified_primary"
+   },
+   "files": [
+    {
+     "name": "cycling_street_surface_dataset.zip",
+     "bytes": 6305216,
+     "md5": "c2011eaa1b4086a4acc2b2b826e7dfea",
+     "url": "https://zenodo.org/api/records/17838875/files/cycling_street_surface_dataset.zip/content"
+    }
+   ],
+   "verdict": "OPTIONAL LATER cross-viewpoint check only; undocumented counts, location and label protocol; tiny low-resolution crops. Not proposed for phase 2."
+  },
+  {
+   "id": "rtk",
+   "name": "RTK - Road Traversing Knowledge",
+   "publisher": "UFSC LAPIX (Rateke, Justen, von Wangenheim)",
+   "url": "https://lapix.ufsc.br/pesquisas/projeto-veiculo-autonomo/datasets/?lang=en",
+   "licence": {
+    "id": "none stated",
+    "evidence": "verified_primary",
+    "notes": "Project page asks for citation only; no licence = all rights reserved by default."
+   },
+   "label_provenance": {
+    "type": "human ground truth by the authors; agreement not reported",
+    "evidence": "verified_primary"
+   },
+   "classes": {
+    "surface_type_frames": {
+     "asphalt": 43263,
+     "paved": 13697,
+     "unpaved": 5702
+    },
+    "quality_frames": 6297,
+    "notes": "'paved' lumps all non-asphalt pavements; no separate sett class",
+    "evidence": "verified_primary"
+   },
+   "geography": {
+    "value": "Aguas Mornas and Santo Amaro da Imperatriz, Santa Catarina, Brazil",
+    "evidence": "verified_primary"
+   },
+   "coordinates_per_image": {
+    "available": false,
+    "evidence": "verified_primary"
+   },
+   "viewpoint": {
+    "type": "low-cost HP webcam in a moving vehicle; consecutive video frames (near-duplicates)",
+    "evidence": "verified_primary"
+   },
+   "files": "many zip parts under http://www.lapix.ufsc.br/wp-content/uploads/2019/03/ and 2019/10/; sizes not shown",
+   "verdict": "REJECT: no reuse licence, no sett class, single route of video frames, no coordinates. StreetSurfaceVis paper reports RTK-trained models generalise poorly."
+  },
+  {
+   "id": "rscd",
+   "name": "RSCD - Road Surface Classification Dataset",
+   "publisher": "Tsinghua University",
+   "url": "https://thu-rsxd.com/rscd/",
+   "licence": {
+    "id": "CC BY-NC (author site, per search result)",
+    "evidence": "verified_secondary",
+    "notes": "GitHub repo code is MIT; dataset page shows no licence text."
+   },
+   "classes": {
+    "material": [
+     "asphalt",
+     "concrete",
+     "dirt/mud",
+     "gravel"
+    ],
+    "friction": 6,
+    "unevenness": 3,
+    "total_classes": 27,
+    "sett": false,
+    "evidence": "verified_primary"
+   },
+   "size": "~1,000,000 patches 360x240 px",
+   "geography": {
+    "value": "Beijing, China",
+    "evidence": "verified_primary"
+   },
+   "coordinates_per_image": {
+    "available": "not mentioned",
+    "evidence": "verified_primary"
+   },
+   "viewpoint": {
+    "type": "bonnet-mounted 2 MP camera, road patches",
+    "evidence": "verified_primary"
+   },
+   "verdict": "REJECT: no sett/cobblestone class; non-commercial."
+  },
+  {
+   "id": "roadsaw",
+   "name": "RoadSaW - Road Surface and Wetness",
+   "publisher": "VISCODA GmbH (Cordes et al., CVPRW 2022)",
+   "url": "https://viscoda.com/index.php/en/downloads-en/roadsaw-dataset",
+   "licence": {
+    "id": "CC-BY-NC-SA-4.0",
+    "evidence": "verified_primary"
+   },
+   "classes": {
+    "surface": [
+     "asphalt",
+     "cobblestone",
+     "concrete"
+    ],
+    "wetness_levels": 4,
+    "categories": 12,
+    "balanced": true,
+    "counts": "not stated on page",
+    "evidence": "verified_primary"
+   },
+   "geography": {
+    "value": "not stated (test track mentioned)",
+    "evidence": "verified_primary"
+   },
+   "coordinates_per_image": {
+    "available": "not mentioned",
+    "evidence": "verified_primary"
+   },
+   "viewpoint": {
+    "type": "bird's-eye-view projected road patches from calibrated vehicle cameras (7.5-30 m ahead)",
+    "evidence": "verified_primary"
+   },
+   "files": [
+    {
+     "name": "RoadSaW-075_s.zip",
+     "bytes": 3183408002
+    },
+    {
+     "name": "RoadSaW-300_s.zip",
+     "bytes": 1440048808
+    },
+    {
+     "name": "RoadSaW-075_l.zip",
+     "bytes": 14623716971
+    },
+    {
+     "name": "RoadSaW-CtD1.zip",
+     "bytes": 219961254
+    }
+   ],
+   "files_evidence": "verified_primary (HTTP HEAD content-length, https://downloads.viscoda.com/research/roadsaw/)",
+   "verdict": "REJECT for Lastrico: NonCommercial + ShareAlike, projected patches unlike a phone view, no coordinates for geographic splits. At most a research-only benchmark if the owner confirms purely non-commercial use."
+  },
+  {
+   "id": "mapillary_vistas_v2",
+   "name": "Mapillary Vistas v2.0",
+   "licence": {
+    "id": "research licence reported as CC BY-NC-SA 4.0 by secondary sources; ICCV 2017 paper mentions CC-BY-SA",
+    "evidence": "verified_secondary"
+   },
+   "classes": {
+    "total": 124,
+    "surface_material_classes": false,
+    "road_related": [
+     "Road",
+     "Sidewalk",
+     "Bike Lane",
+     "Service Lane",
+     "Pedestrian Area",
+     "Crosswalk - Plain",
+     "Pothole",
+     "Manhole",
+     "Curb"
+    ],
+    "evidence": "verified_secondary"
+   },
+   "verdict": "REJECT: no surface-material labels."
+  },
+  {
+   "id": "mapillary_osm_weak",
+   "name": "Mapillary images + OSM surface tags (weak labels)",
+   "licence": {
+    "id": "images CC BY-SA 4.0 (Mapillary); tags ODbL 1.0",
+    "evidence": "verified_secondary"
+   },
+   "label_provenance": {
+    "type": "weak/automatic (nearest OSM way)",
+    "quality": "OSM pre-labels agreed with manual surface-type labels on 69% of images in the StreetSurfaceVis study",
+    "evidence": "verified_primary"
+   },
+   "access": "Mapillary API needs a (free) client token tied to an account - an owner action; this agent may not create accounts.",
+   "local_hint": "data/surfaces/milan-central.json contains 33 OSM objects with mapillary=* (8 unique image ids), all surface=asphalt: no pave examples.",
+   "verdict": "REJECT for training (label noise ~31%, circular with Lastrico's own OSM knowledge, ODbL/CC BY-SA mixing). Useful later only as a source of Milan images for a HUMAN-labelled Italian evaluation set."
+  },
+  {
+   "id": "kitti",
+   "name": "KITTI",
+   "licence": {
+    "id": "CC-BY-NC-SA-3.0",
+    "evidence": "verified_primary"
+   },
+   "classes": {
+    "surface_material_classes": false,
+    "evidence": "inferred"
+   },
+   "verdict": "REJECT: non-commercial, no surface-material labels."
+  },
+  {
+   "id": "cityscapes",
+   "name": "Cityscapes",
+   "licence": {
+    "id": "custom: non-commercial, no redistribution",
+    "evidence": "verified_primary"
+   },
+   "classes": {
+    "surface_material_classes": false,
+    "road_related": [
+     "road",
+     "sidewalk",
+     "parking",
+     "rail track",
+     "ground",
+     "terrain"
+    ],
+    "evidence": "verified_primary"
+   },
+   "verdict": "REJECT: non-commercial, no surface-material labels."
+  },
+  {
+   "id": "rome_road_damage",
+   "name": "Road Damage Dataset: Potholes, Cracks, and Manholes (Rome)",
+   "paper_doi": "10.1038/s41598-026-46679-4",
+   "classes": {
+    "names": [
+     "pothole",
+     "crack",
+     "maintenance hole"
+    ],
+    "surface_type": false,
+    "evidence": "verified_secondary"
+   },
+   "geography": {
+    "value": "Rome and nearby towns, Italy",
+    "evidence": "verified_secondary"
+   },
+   "licence": {
+    "id": "not checked",
+    "evidence": "unverified"
+   },
+   "verdict": "REJECT for surface type (damage boxes only). Only Italian street imagery found; not usable for pave."
+  },
+  {
+   "id": "ird_dataset",
+   "name": "IRD-Dataset (Baghdad)",
+   "doi": "10.5281/zenodo.21370736",
+   "licence": {
+    "id": "CC-BY-4.0",
+    "evidence": "verified_primary"
+   },
+   "verdict": "REJECT: road defects, no surface-material classes, 20.9 GB."
+  },
+  {
+   "id": "aerial_osm_naip",
+   "name": "Aerial road-surface patches (Frontiers in Big Data 2025)",
+   "doi": "10.5281/zenodo.15512356",
+   "licence": {
+    "id": "CC-BY (per article)",
+    "evidence": "verified_secondary"
+   },
+   "verdict": "REJECT: US aerial imagery, no sett class."
+  },
+  {
+   "id": "sentinel2_osm",
+   "name": "Large-scale Road Surface Classification Dataset from Sentinel-2 and OpenStreetMap",
+   "doi": "10.5281/zenodo.19388916",
+   "licence": {
+    "id": "CC-BY-4.0",
+    "evidence": "verified_primary"
+   },
+   "verdict": "REJECT: satellite resolution, OSM weak labels."
+  }
+ ],
+ "related_non_dataset_assets": [
+  {
+   "name": "SurfaceAI pretrained models",
+   "url": "https://huggingface.co/SurfaceAI/models-moved",
+   "files": [
+    {
+     "name": "v1/surface_type_v1.pt",
+     "bytes": 81630118
+    }
+   ],
+   "requirements": "torch==2.2.2, torchvision==0.17.2",
+   "licence": {
+    "id": "none stated on the model card",
+    "evidence": "verified_primary"
+   },
+   "status": "Not downloaded. Licence must be clarified with surface-ai@htw-berlin.de before any use."
+  },
+  {
+   "name": "HeiGIT benchmark code (ResNet-50 / ConvNeXt-S / EfficientNet-B4 on StreetSurfaceVis)",
+   "doi": "10.5281/zenodo.15497076",
+   "licence": {
+    "id": "MIT",
+    "evidence": "verified_primary"
+   }
+  },
+  {
+   "name": "SmartRoadSense aggregated roughness (Italy)",
+   "doi": "10.5281/zenodo.1468430",
+   "licence": {
+    "id": "ODbL",
+    "evidence": "verified_primary"
+   },
+   "note": "Not imagery; pointer for the roughness-sensor experiment."
+  }
+ ]
+}

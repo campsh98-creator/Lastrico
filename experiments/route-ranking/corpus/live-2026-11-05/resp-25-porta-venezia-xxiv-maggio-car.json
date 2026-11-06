@@ -1,0 +1,2641 @@
+{
+ "request": {
+  "url": "http://localhost:8799/api/routes?start=9.2056%2C45.4731&end=9.1795%2C45.452&mode=car&avoid=strong",
+  "params": {
+   "start": "9.2056,45.4731",
+   "end": "9.1795,45.452",
+   "mode": "car",
+   "avoid": "strong"
+  },
+  "odId": "porta-venezia-xxiv-maggio",
+  "note": null
+ },
+ "requestedAt": "2026-11-05T12:45:41.580Z",
+ "receivedAt": "2026-11-05T12:45:46.031Z",
+ "elapsedMs": 4446,
+ "status": 200,
+ "error": null,
+ "payload": {
+  "area": "milan",
+  "fast": {
+   "coordinates": [
+    [
+     9.20555,
+     45.4731
+    ],
+    [
+     9.20555,
+     45.473154
+    ],
+    [
+     9.205549,
+     45.473448
+    ],
+    [
+     9.205515,
+     45.473651
+    ],
+    [
+     9.205468,
+     45.473845
+    ],
+    [
+     9.205461,
+     45.47401
+    ],
+    [
+     9.205462,
+     45.474127
+    ],
+    [
+     9.205483,
+     45.474155
+    ],
+    [
+     9.205519,
+     45.474208
+    ],
+    [
+     9.205546,
+     45.474258
+    ],
+    [
+     9.205563,
+     45.47431
+    ],
+    [
+     9.205703,
+     45.474241
+    ],
+    [
+     9.205806,
+     45.474191
+    ],
+    [
+     9.206161,
+     45.474009
+    ],
+    [
+     9.206221,
+     45.473972
+    ],
+    [
+     9.206266,
+     45.473939
+    ],
+    [
+     9.20631,
+     45.473894
+    ],
+    [
+     9.206339,
+     45.473838
+    ],
+    [
+     9.206359,
+     45.473763
+    ],
+    [
+     9.206535,
+     45.472064
+    ],
+    [
+     9.206552,
+     45.471902
+    ],
+    [
+     9.206559,
+     45.471838
+    ],
+    [
+     9.206641,
+     45.470788
+    ],
+    [
+     9.206652,
+     45.470698
+    ],
+    [
+     9.206658,
+     45.470622
+    ],
+    [
+     9.206784,
+     45.469211
+    ],
+    [
+     9.20684,
+     45.468532
+    ],
+    [
+     9.20688,
+     45.468196
+    ],
+    [
+     9.206886,
+     45.468144
+    ],
+    [
+     9.206888,
+     45.468097
+    ],
+    [
+     9.20689,
+     45.46807
+    ],
+    [
+     9.20683,
+     45.468067
+    ],
+    [
+     9.206548,
+     45.468052
+    ],
+    [
+     9.206123,
+     45.468029
+    ],
+    [
+     9.206031,
+     45.468022
+    ],
+    [
+     9.20592,
+     45.467937
+    ],
+    [
+     9.205829,
+     45.467896
+    ],
+    [
+     9.205749,
+     45.46786
+    ],
+    [
+     9.20576,
+     45.467779
+    ],
+    [
+     9.205774,
+     45.467674
+    ],
+    [
+     9.205781,
+     45.467572
+    ],
+    [
+     9.205782,
+     45.467526
+    ],
+    [
+     9.205787,
+     45.467387
+    ],
+    [
+     9.205794,
+     45.467135
+    ],
+    [
+     9.205831,
+     45.46663
+    ],
+    [
+     9.20584,
+     45.466505
+    ],
+    [
+     9.205938,
+     45.465764
+    ],
+    [
+     9.205947,
+     45.465693
+    ],
+    [
+     9.206023,
+     45.465197
+    ],
+    [
+     9.206085,
+     45.464767
+    ],
+    [
+     9.206147,
+     45.464332
+    ],
+    [
+     9.206157,
+     45.464266
+    ],
+    [
+     9.206212,
+     45.463848
+    ],
+    [
+     9.206286,
+     45.463366
+    ],
+    [
+     9.206296,
+     45.463334
+    ],
+    [
+     9.20631,
+     45.463306
+    ],
+    [
+     9.206332,
+     45.46328
+    ],
+    [
+     9.206415,
+     45.463179
+    ],
+    [
+     9.206453,
+     45.463119
+    ],
+    [
+     9.206472,
+     45.463057
+    ],
+    [
+     9.20653,
+     45.462687
+    ],
+    [
+     9.206566,
+     45.462456
+    ],
+    [
+     9.206577,
+     45.462384
+    ],
+    [
+     9.206583,
+     45.46234
+    ],
+    [
+     9.206599,
+     45.462222
+    ],
+    [
+     9.206604,
+     45.462194
+    ],
+    [
+     9.206604,
+     45.462189
+    ],
+    [
+     9.206627,
+     45.462065
+    ],
+    [
+     9.206666,
+     45.461892
+    ],
+    [
+     9.206674,
+     45.461866
+    ],
+    [
+     9.206715,
+     45.461738
+    ],
+    [
+     9.206799,
+     45.461511
+    ],
+    [
+     9.206835,
+     45.461096
+    ],
+    [
+     9.206776,
+     45.461017
+    ],
+    [
+     9.20677,
+     45.461004
+    ],
+    [
+     9.206757,
+     45.460972
+    ],
+    [
+     9.206713,
+     45.460811
+    ],
+    [
+     9.206674,
+     45.460581
+    ],
+    [
+     9.206627,
+     45.46046
+    ],
+    [
+     9.206469,
+     45.460144
+    ],
+    [
+     9.206427,
+     45.46006
+    ],
+    [
+     9.206389,
+     45.459997
+    ],
+    [
+     9.206349,
+     45.459929
+    ],
+    [
+     9.206296,
+     45.459852
+    ],
+    [
+     9.206107,
+     45.459632
+    ],
+    [
+     9.205498,
+     45.458921
+    ],
+    [
+     9.205184,
+     45.458535
+    ],
+    [
+     9.204911,
+     45.458182
+    ],
+    [
+     9.20487,
+     45.458122
+    ],
+    [
+     9.204858,
+     45.458102
+    ],
+    [
+     9.204803,
+     45.458008
+    ],
+    [
+     9.204645,
+     45.457742
+    ],
+    [
+     9.204559,
+     45.457594
+    ],
+    [
+     9.204504,
+     45.457502
+    ],
+    [
+     9.204479,
+     45.45746
+    ],
+    [
+     9.204479,
+     45.457452
+    ],
+    [
+     9.204393,
+     45.457312
+    ],
+    [
+     9.203057,
+     45.455046
+    ],
+    [
+     9.202991,
+     45.454934
+    ],
+    [
+     9.202879,
+     45.454751
+    ],
+    [
+     9.202772,
+     45.454568
+    ],
+    [
+     9.202461,
+     45.454016
+    ],
+    [
+     9.202423,
+     45.453928
+    ],
+    [
+     9.202346,
+     45.453726
+    ],
+    [
+     9.202336,
+     45.453696
+    ],
+    [
+     9.202271,
+     45.453501
+    ],
+    [
+     9.202078,
+     45.452824
+    ],
+    [
+     9.20205,
+     45.452735
+    ],
+    [
+     9.20203,
+     45.452685
+    ],
+    [
+     9.202015,
+     45.452658
+    ],
+    [
+     9.201999,
+     45.452635
+    ],
+    [
+     9.201971,
+     45.452601
+    ],
+    [
+     9.20195,
+     45.45258
+    ],
+    [
+     9.201923,
+     45.452553
+    ],
+    [
+     9.201802,
+     45.452457
+    ],
+    [
+     9.201782,
+     45.452442
+    ],
+    [
+     9.201757,
+     45.452422
+    ],
+    [
+     9.201744,
+     45.452412
+    ],
+    [
+     9.201645,
+     45.452325
+    ],
+    [
+     9.201436,
+     45.452145
+    ],
+    [
+     9.201413,
+     45.452126
+    ],
+    [
+     9.201385,
+     45.452106
+    ],
+    [
+     9.201355,
+     45.452087
+    ],
+    [
+     9.201322,
+     45.452069
+    ],
+    [
+     9.201286,
+     45.452054
+    ],
+    [
+     9.201257,
+     45.452042
+    ],
+    [
+     9.201211,
+     45.452025
+    ],
+    [
+     9.20116,
+     45.452009
+    ],
+    [
+     9.201105,
+     45.451994
+    ],
+    [
+     9.201055,
+     45.451982
+    ],
+    [
+     9.201007,
+     45.451973
+    ],
+    [
+     9.200959,
+     45.451966
+    ],
+    [
+     9.200896,
+     45.451958
+    ],
+    [
+     9.200841,
+     45.451954
+    ],
+    [
+     9.200784,
+     45.451953
+    ],
+    [
+     9.200743,
+     45.451954
+    ],
+    [
+     9.200696,
+     45.451957
+    ],
+    [
+     9.20008,
+     45.452012
+    ],
+    [
+     9.199923,
+     45.452026
+    ],
+    [
+     9.199843,
+     45.452032
+    ],
+    [
+     9.198707,
+     45.452106
+    ],
+    [
+     9.198673,
+     45.452108
+    ],
+    [
+     9.198623,
+     45.45211
+    ],
+    [
+     9.198573,
+     45.452111
+    ],
+    [
+     9.198506,
+     45.452112
+    ],
+    [
+     9.198438,
+     45.452111
+    ],
+    [
+     9.19782,
+     45.452097
+    ],
+    [
+     9.197755,
+     45.452095
+    ],
+    [
+     9.196697,
+     45.45206
+    ],
+    [
+     9.196621,
+     45.452058
+    ],
+    [
+     9.196562,
+     45.452057
+    ],
+    [
+     9.196541,
+     45.452056
+    ],
+    [
+     9.196525,
+     45.452056
+    ],
+    [
+     9.196394,
+     45.452052
+    ],
+    [
+     9.196136,
+     45.452051
+    ],
+    [
+     9.194278,
+     45.452042
+    ],
+    [
+     9.194173,
+     45.452041
+    ],
+    [
+     9.192854,
+     45.452035
+    ],
+    [
+     9.192731,
+     45.452034
+    ],
+    [
+     9.19113,
+     45.452029
+    ],
+    [
+     9.191046,
+     45.452026
+    ],
+    [
+     9.190876,
+     45.452025
+    ],
+    [
+     9.190613,
+     45.452024
+    ],
+    [
+     9.19045,
+     45.452023
+    ],
+    [
+     9.190345,
+     45.452023
+    ],
+    [
+     9.190111,
+     45.452023
+    ],
+    [
+     9.18999,
+     45.452021
+    ],
+    [
+     9.189757,
+     45.452022
+    ],
+    [
+     9.189559,
+     45.452025
+    ],
+    [
+     9.188688,
+     45.452123
+    ],
+    [
+     9.188625,
+     45.452128
+    ],
+    [
+     9.188542,
+     45.452136
+    ],
+    [
+     9.187972,
+     45.45219
+    ],
+    [
+     9.187901,
+     45.452197
+    ],
+    [
+     9.186919,
+     45.452372
+    ],
+    [
+     9.186783,
+     45.452395
+    ],
+    [
+     9.186745,
+     45.452401
+    ],
+    [
+     9.186656,
+     45.452421
+    ],
+    [
+     9.186014,
+     45.45247
+    ],
+    [
+     9.185433,
+     45.452513
+    ],
+    [
+     9.185071,
+     45.452541
+    ],
+    [
+     9.184652,
+     45.452572
+    ],
+    [
+     9.18451,
+     45.452583
+    ],
+    [
+     9.184349,
+     45.452595
+    ],
+    [
+     9.183729,
+     45.452642
+    ],
+    [
+     9.18364,
+     45.452649
+    ],
+    [
+     9.18275,
+     45.452716
+    ],
+    [
+     9.182579,
+     45.452729
+    ],
+    [
+     9.18212,
+     45.452767
+    ],
+    [
+     9.181894,
+     45.45279
+    ],
+    [
+     9.181672,
+     45.452814
+    ],
+    [
+     9.181624,
+     45.452818
+    ],
+    [
+     9.181575,
+     45.45282
+    ],
+    [
+     9.181527,
+     45.452821
+    ],
+    [
+     9.181478,
+     45.45282
+    ],
+    [
+     9.18143,
+     45.45282
+    ],
+    [
+     9.181381,
+     45.452821
+    ],
+    [
+     9.181333,
+     45.452823
+    ],
+    [
+     9.181284,
+     45.452826
+    ],
+    [
+     9.181175,
+     45.452834
+    ],
+    [
+     9.181124,
+     45.452837
+    ],
+    [
+     9.1811,
+     45.452838
+    ],
+    [
+     9.181075,
+     45.452837
+    ],
+    [
+     9.181052,
+     45.452835
+    ],
+    [
+     9.181029,
+     45.452832
+    ],
+    [
+     9.181007,
+     45.452828
+    ],
+    [
+     9.180987,
+     45.452822
+    ],
+    [
+     9.180965,
+     45.452812
+    ],
+    [
+     9.180943,
+     45.452801
+    ],
+    [
+     9.180924,
+     45.452789
+    ],
+    [
+     9.180905,
+     45.452776
+    ],
+    [
+     9.180882,
+     45.452758
+    ],
+    [
+     9.180861,
+     45.45274
+    ],
+    [
+     9.180843,
+     45.452722
+    ],
+    [
+     9.180828,
+     45.452704
+    ],
+    [
+     9.180813,
+     45.452685
+    ],
+    [
+     9.180799,
+     45.452666
+    ],
+    [
+     9.180784,
+     45.452645
+    ],
+    [
+     9.180777,
+     45.452622
+    ],
+    [
+     9.180762,
+     45.452536
+    ],
+    [
+     9.180729,
+     45.452382
+    ],
+    [
+     9.180724,
+     45.452343
+    ],
+    [
+     9.180717,
+     45.452304
+    ],
+    [
+     9.180715,
+     45.452299
+    ],
+    [
+     9.180709,
+     45.452277
+    ],
+    [
+     9.180707,
+     45.452272
+    ],
+    [
+     9.18069,
+     45.452243
+    ],
+    [
+     9.180675,
+     45.452219
+    ],
+    [
+     9.180651,
+     45.452188
+    ],
+    [
+     9.180629,
+     45.45217
+    ],
+    [
+     9.180591,
+     45.452145
+    ],
+    [
+     9.180525,
+     45.452127
+    ],
+    [
+     9.18043,
+     45.452115
+    ],
+    [
+     9.180301,
+     45.452104
+    ],
+    [
+     9.180174,
+     45.452095
+    ],
+    [
+     9.18017,
+     45.452094
+    ],
+    [
+     9.180146,
+     45.452094
+    ],
+    [
+     9.180133,
+     45.452094
+    ],
+    [
+     9.180084,
+     45.452092
+    ],
+    [
+     9.18001,
+     45.45209
+    ],
+    [
+     9.179768,
+     45.452086
+    ],
+    [
+     9.179707,
+     45.452085
+    ],
+    [
+     9.179399,
+     45.452079
+    ],
+    [
+     9.179349,
+     45.452067
+    ],
+    [
+     9.179304,
+     45.452051
+    ],
+    [
+     9.179263,
+     45.452032
+    ],
+    [
+     9.179217,
+     45.452006
+    ],
+    [
+     9.179252,
+     45.452002
+    ],
+    [
+     9.179294,
+     45.451999
+    ],
+    [
+     9.179498,
+     45.452012
+    ]
+   ],
+   "distance": 4.63,
+   "minutes": 13.866266666666666,
+   "paveMeters": 32,
+   "pavePercent": 0.7,
+   "surfaceConfidence": 1,
+   "surfaceClassificationConfidence": 1,
+   "surfaceDataConfidence": null,
+   "unknownSurfaceMeters": 0,
+   "surfaceCoveragePercent": 100,
+   "confirmedPaveMeters": 32,
+   "probablePaveMeters": 0,
+   "smoothSurfaceMeters": 4587,
+   "surfaceTotalMeters": 4619,
+   "unpavedSurfaceMeters": 0,
+   "surfaceSource": "osm",
+   "cyclewayMeters": 148,
+   "terminalPrivateAccessMeters": 0,
+   "instructions": [
+    {
+     "id": "0-depart-9.20555,45.4731",
+     "text": "Guida verso nord su Viale Luigi Majno.",
+     "roadName": "Viale Luigi Majno",
+     "distance": 113,
+     "location": [
+      9.20555,
+      45.4731
+     ],
+     "type": "depart",
+     "modifier": "",
+     "direction": "depart"
+    },
+    {
+     "id": "1-turn-9.205462,45.474127",
+     "text": "Mantieni la destra su Piazza Guglielmo Oberdan.",
+     "roadName": "Piazza Guglielmo Oberdan",
+     "distance": 22,
+     "location": [
+      9.205462,
+      45.474127
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "2-turn-9.205563,45.47431",
+     "text": "Svolta a destra per rimanere su Piazza Guglielmo Oberdan.",
+     "roadName": "Piazza Guglielmo Oberdan",
+     "distance": 64,
+     "location": [
+      9.205563,
+      45.47431
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "3-turn-9.206221,45.473972",
+     "text": "Mantieni la destra su Viale Piave.",
+     "roadName": "Viale Piave",
+     "distance": 661,
+     "location": [
+      9.206221,
+      45.473972
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "4-turn-9.20689,45.46807",
+     "text": "Svolta a destra su Piazza del Tricolore.",
+     "roadName": "Piazza del Tricolore",
+     "distance": 67,
+     "location": [
+      9.20689,
+      45.46807
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "5-turn-9.206031,45.468022",
+     "text": "Svolta a sinistra su Viale Bianca Maria.",
+     "roadName": "Viale Bianca Maria",
+     "distance": 741,
+     "location": [
+      9.206031,
+      45.468022
+     ],
+     "type": "turn",
+     "modifier": "left",
+     "direction": "left"
+    },
+    {
+     "id": "6-turn-9.206799,45.461511",
+     "text": "Mantieni la destra su Viale Regina Margherita.",
+     "roadName": "Viale Regina Margherita",
+     "distance": 2691,
+     "location": [
+      9.206799,
+      45.461511
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "7-turn-9.181672,45.452814",
+     "text": "Mantieni la sinistra per imboccare Piazza Ventiquattro Maggio.",
+     "roadName": "Piazza Ventiquattro Maggio",
+     "distance": 54,
+     "location": [
+      9.181672,
+      45.452814
+     ],
+     "type": "turn",
+     "modifier": "left",
+     "direction": "left"
+    },
+    {
+     "id": "8-turn-9.180987,45.452822",
+     "text": "Svolta a sinistra per rimanere su Piazza Ventiquattro Maggio.",
+     "roadName": "Piazza Ventiquattro Maggio",
+     "distance": 194,
+     "location": [
+      9.180987,
+      45.452822
+     ],
+     "type": "turn",
+     "modifier": "left",
+     "direction": "left"
+    },
+    {
+     "id": "9-turn-9.179217,45.452006",
+     "text": "Fai un'inversione di marcia a sinistraper rimanere su Piazza Ventiquattro Maggio.",
+     "roadName": "Piazza Ventiquattro Maggio",
+     "distance": 22,
+     "location": [
+      9.179217,
+      45.452006
+     ],
+     "type": "turn",
+     "modifier": "uturn",
+     "direction": "uturn"
+    },
+    {
+     "id": "10-arrive-9.179498,45.452012",
+     "text": "Sei arrivato a destinazione.",
+     "roadName": "",
+     "distance": 0,
+     "location": [
+      9.179498,
+      45.452012
+     ],
+     "type": "arrive",
+     "modifier": "",
+     "direction": "arrive"
+    }
+   ],
+   "problemSegments": [
+    [
+     [
+      9.196541,
+      45.452056
+     ],
+     [
+      9.196525,
+      45.452056
+     ],
+     [
+      9.196394,
+      45.452052
+     ],
+     [
+      9.196136,
+      45.452051
+     ]
+    ]
+   ]
+  },
+  "safe": {
+   "coordinates": [
+    [
+     9.20555,
+     45.4731
+    ],
+    [
+     9.20555,
+     45.473154
+    ],
+    [
+     9.205549,
+     45.473448
+    ],
+    [
+     9.205515,
+     45.473651
+    ],
+    [
+     9.205468,
+     45.473845
+    ],
+    [
+     9.205461,
+     45.47401
+    ],
+    [
+     9.205462,
+     45.474127
+    ],
+    [
+     9.205483,
+     45.474155
+    ],
+    [
+     9.205519,
+     45.474208
+    ],
+    [
+     9.205546,
+     45.474258
+    ],
+    [
+     9.205563,
+     45.47431
+    ],
+    [
+     9.205703,
+     45.474241
+    ],
+    [
+     9.205806,
+     45.474191
+    ],
+    [
+     9.206161,
+     45.474009
+    ],
+    [
+     9.206221,
+     45.473972
+    ],
+    [
+     9.206266,
+     45.473939
+    ],
+    [
+     9.20631,
+     45.473894
+    ],
+    [
+     9.206339,
+     45.473838
+    ],
+    [
+     9.206359,
+     45.473763
+    ],
+    [
+     9.206535,
+     45.472064
+    ],
+    [
+     9.206552,
+     45.471902
+    ],
+    [
+     9.206559,
+     45.471838
+    ],
+    [
+     9.206641,
+     45.470788
+    ],
+    [
+     9.206652,
+     45.470698
+    ],
+    [
+     9.206658,
+     45.470622
+    ],
+    [
+     9.206784,
+     45.469211
+    ],
+    [
+     9.20684,
+     45.468532
+    ],
+    [
+     9.20688,
+     45.468196
+    ],
+    [
+     9.206886,
+     45.468144
+    ],
+    [
+     9.206888,
+     45.468097
+    ],
+    [
+     9.20689,
+     45.46807
+    ],
+    [
+     9.20683,
+     45.468067
+    ],
+    [
+     9.206548,
+     45.468052
+    ],
+    [
+     9.206123,
+     45.468029
+    ],
+    [
+     9.206031,
+     45.468022
+    ],
+    [
+     9.20592,
+     45.467937
+    ],
+    [
+     9.205829,
+     45.467896
+    ],
+    [
+     9.205749,
+     45.46786
+    ],
+    [
+     9.20576,
+     45.467779
+    ],
+    [
+     9.205774,
+     45.467674
+    ],
+    [
+     9.205781,
+     45.467572
+    ],
+    [
+     9.205782,
+     45.467526
+    ],
+    [
+     9.205787,
+     45.467387
+    ],
+    [
+     9.205794,
+     45.467135
+    ],
+    [
+     9.205831,
+     45.46663
+    ],
+    [
+     9.20584,
+     45.466505
+    ],
+    [
+     9.205938,
+     45.465764
+    ],
+    [
+     9.205947,
+     45.465693
+    ],
+    [
+     9.206023,
+     45.465197
+    ],
+    [
+     9.206085,
+     45.464767
+    ],
+    [
+     9.206147,
+     45.464332
+    ],
+    [
+     9.206157,
+     45.464266
+    ],
+    [
+     9.206212,
+     45.463848
+    ],
+    [
+     9.206286,
+     45.463366
+    ],
+    [
+     9.206296,
+     45.463334
+    ],
+    [
+     9.20631,
+     45.463306
+    ],
+    [
+     9.206332,
+     45.46328
+    ],
+    [
+     9.206415,
+     45.463179
+    ],
+    [
+     9.206453,
+     45.463119
+    ],
+    [
+     9.206472,
+     45.463057
+    ],
+    [
+     9.20653,
+     45.462687
+    ],
+    [
+     9.206566,
+     45.462456
+    ],
+    [
+     9.206577,
+     45.462384
+    ],
+    [
+     9.206583,
+     45.46234
+    ],
+    [
+     9.206599,
+     45.462222
+    ],
+    [
+     9.206604,
+     45.462194
+    ],
+    [
+     9.206604,
+     45.462189
+    ],
+    [
+     9.206627,
+     45.462065
+    ],
+    [
+     9.206666,
+     45.461892
+    ],
+    [
+     9.206674,
+     45.461866
+    ],
+    [
+     9.206715,
+     45.461738
+    ],
+    [
+     9.206799,
+     45.461511
+    ],
+    [
+     9.206835,
+     45.461096
+    ],
+    [
+     9.206776,
+     45.461017
+    ],
+    [
+     9.20677,
+     45.461004
+    ],
+    [
+     9.206757,
+     45.460972
+    ],
+    [
+     9.206713,
+     45.460811
+    ],
+    [
+     9.206674,
+     45.460581
+    ],
+    [
+     9.206627,
+     45.46046
+    ],
+    [
+     9.206469,
+     45.460144
+    ],
+    [
+     9.206427,
+     45.46006
+    ],
+    [
+     9.206389,
+     45.459997
+    ],
+    [
+     9.206349,
+     45.459929
+    ],
+    [
+     9.206296,
+     45.459852
+    ],
+    [
+     9.206107,
+     45.459632
+    ],
+    [
+     9.205498,
+     45.458921
+    ],
+    [
+     9.205184,
+     45.458535
+    ],
+    [
+     9.204911,
+     45.458182
+    ],
+    [
+     9.20487,
+     45.458122
+    ],
+    [
+     9.204858,
+     45.458102
+    ],
+    [
+     9.204803,
+     45.458008
+    ],
+    [
+     9.204645,
+     45.457742
+    ],
+    [
+     9.204559,
+     45.457594
+    ],
+    [
+     9.204504,
+     45.457502
+    ],
+    [
+     9.204479,
+     45.45746
+    ],
+    [
+     9.204479,
+     45.457452
+    ],
+    [
+     9.204393,
+     45.457312
+    ],
+    [
+     9.203057,
+     45.455046
+    ],
+    [
+     9.202991,
+     45.454934
+    ],
+    [
+     9.202879,
+     45.454751
+    ],
+    [
+     9.202772,
+     45.454568
+    ],
+    [
+     9.202461,
+     45.454016
+    ],
+    [
+     9.202423,
+     45.453928
+    ],
+    [
+     9.202346,
+     45.453726
+    ],
+    [
+     9.202336,
+     45.453696
+    ],
+    [
+     9.202271,
+     45.453501
+    ],
+    [
+     9.202078,
+     45.452824
+    ],
+    [
+     9.20205,
+     45.452735
+    ],
+    [
+     9.20203,
+     45.452685
+    ],
+    [
+     9.202015,
+     45.452658
+    ],
+    [
+     9.201999,
+     45.452635
+    ],
+    [
+     9.201971,
+     45.452601
+    ],
+    [
+     9.20195,
+     45.45258
+    ],
+    [
+     9.201923,
+     45.452553
+    ],
+    [
+     9.201802,
+     45.452457
+    ],
+    [
+     9.201782,
+     45.452442
+    ],
+    [
+     9.201757,
+     45.452422
+    ],
+    [
+     9.201744,
+     45.452412
+    ],
+    [
+     9.201645,
+     45.452325
+    ],
+    [
+     9.201436,
+     45.452145
+    ],
+    [
+     9.201413,
+     45.452126
+    ],
+    [
+     9.201385,
+     45.452106
+    ],
+    [
+     9.201355,
+     45.452087
+    ],
+    [
+     9.201322,
+     45.452069
+    ],
+    [
+     9.201286,
+     45.452054
+    ],
+    [
+     9.201257,
+     45.452042
+    ],
+    [
+     9.201211,
+     45.452025
+    ],
+    [
+     9.20116,
+     45.452009
+    ],
+    [
+     9.201105,
+     45.451994
+    ],
+    [
+     9.201055,
+     45.451982
+    ],
+    [
+     9.201007,
+     45.451973
+    ],
+    [
+     9.200959,
+     45.451966
+    ],
+    [
+     9.200896,
+     45.451958
+    ],
+    [
+     9.200841,
+     45.451954
+    ],
+    [
+     9.200784,
+     45.451953
+    ],
+    [
+     9.200743,
+     45.451954
+    ],
+    [
+     9.200696,
+     45.451957
+    ],
+    [
+     9.20008,
+     45.452012
+    ],
+    [
+     9.199923,
+     45.452026
+    ],
+    [
+     9.199843,
+     45.452032
+    ],
+    [
+     9.198707,
+     45.452106
+    ],
+    [
+     9.198673,
+     45.452108
+    ],
+    [
+     9.198623,
+     45.45211
+    ],
+    [
+     9.198573,
+     45.452111
+    ],
+    [
+     9.198506,
+     45.452112
+    ],
+    [
+     9.198438,
+     45.452111
+    ],
+    [
+     9.19782,
+     45.452097
+    ],
+    [
+     9.197755,
+     45.452095
+    ],
+    [
+     9.196697,
+     45.45206
+    ],
+    [
+     9.196621,
+     45.452058
+    ],
+    [
+     9.196562,
+     45.452057
+    ],
+    [
+     9.196541,
+     45.452056
+    ],
+    [
+     9.196525,
+     45.452056
+    ],
+    [
+     9.196394,
+     45.452052
+    ],
+    [
+     9.196136,
+     45.452051
+    ],
+    [
+     9.194278,
+     45.452042
+    ],
+    [
+     9.194173,
+     45.452041
+    ],
+    [
+     9.192854,
+     45.452035
+    ],
+    [
+     9.192731,
+     45.452034
+    ],
+    [
+     9.19113,
+     45.452029
+    ],
+    [
+     9.191046,
+     45.452026
+    ],
+    [
+     9.190876,
+     45.452025
+    ],
+    [
+     9.190613,
+     45.452024
+    ],
+    [
+     9.19045,
+     45.452023
+    ],
+    [
+     9.190345,
+     45.452023
+    ],
+    [
+     9.190111,
+     45.452023
+    ],
+    [
+     9.18999,
+     45.452021
+    ],
+    [
+     9.189757,
+     45.452022
+    ],
+    [
+     9.189559,
+     45.452025
+    ],
+    [
+     9.188688,
+     45.452123
+    ],
+    [
+     9.188625,
+     45.452128
+    ],
+    [
+     9.188542,
+     45.452136
+    ],
+    [
+     9.187972,
+     45.45219
+    ],
+    [
+     9.187901,
+     45.452197
+    ],
+    [
+     9.186919,
+     45.452372
+    ],
+    [
+     9.186783,
+     45.452395
+    ],
+    [
+     9.186745,
+     45.452401
+    ],
+    [
+     9.186656,
+     45.452421
+    ],
+    [
+     9.186014,
+     45.45247
+    ],
+    [
+     9.185433,
+     45.452513
+    ],
+    [
+     9.185071,
+     45.452541
+    ],
+    [
+     9.184652,
+     45.452572
+    ],
+    [
+     9.18451,
+     45.452583
+    ],
+    [
+     9.184349,
+     45.452595
+    ],
+    [
+     9.183729,
+     45.452642
+    ],
+    [
+     9.18364,
+     45.452649
+    ],
+    [
+     9.18275,
+     45.452716
+    ],
+    [
+     9.182579,
+     45.452729
+    ],
+    [
+     9.18212,
+     45.452767
+    ],
+    [
+     9.181894,
+     45.45279
+    ],
+    [
+     9.181672,
+     45.452814
+    ],
+    [
+     9.181624,
+     45.452818
+    ],
+    [
+     9.181575,
+     45.45282
+    ],
+    [
+     9.181527,
+     45.452821
+    ],
+    [
+     9.181478,
+     45.45282
+    ],
+    [
+     9.18143,
+     45.45282
+    ],
+    [
+     9.181381,
+     45.452821
+    ],
+    [
+     9.181333,
+     45.452823
+    ],
+    [
+     9.181284,
+     45.452826
+    ],
+    [
+     9.181175,
+     45.452834
+    ],
+    [
+     9.181124,
+     45.452837
+    ],
+    [
+     9.1811,
+     45.452838
+    ],
+    [
+     9.181075,
+     45.452837
+    ],
+    [
+     9.181052,
+     45.452835
+    ],
+    [
+     9.181029,
+     45.452832
+    ],
+    [
+     9.181007,
+     45.452828
+    ],
+    [
+     9.180987,
+     45.452822
+    ],
+    [
+     9.180965,
+     45.452812
+    ],
+    [
+     9.180943,
+     45.452801
+    ],
+    [
+     9.180924,
+     45.452789
+    ],
+    [
+     9.180905,
+     45.452776
+    ],
+    [
+     9.180882,
+     45.452758
+    ],
+    [
+     9.180861,
+     45.45274
+    ],
+    [
+     9.180843,
+     45.452722
+    ],
+    [
+     9.180828,
+     45.452704
+    ],
+    [
+     9.180813,
+     45.452685
+    ],
+    [
+     9.180799,
+     45.452666
+    ],
+    [
+     9.180784,
+     45.452645
+    ],
+    [
+     9.180777,
+     45.452622
+    ],
+    [
+     9.180762,
+     45.452536
+    ],
+    [
+     9.180729,
+     45.452382
+    ],
+    [
+     9.180724,
+     45.452343
+    ],
+    [
+     9.180717,
+     45.452304
+    ],
+    [
+     9.180715,
+     45.452299
+    ],
+    [
+     9.180709,
+     45.452277
+    ],
+    [
+     9.180707,
+     45.452272
+    ],
+    [
+     9.18069,
+     45.452243
+    ],
+    [
+     9.180675,
+     45.452219
+    ],
+    [
+     9.180651,
+     45.452188
+    ],
+    [
+     9.180629,
+     45.45217
+    ],
+    [
+     9.180591,
+     45.452145
+    ],
+    [
+     9.180525,
+     45.452127
+    ],
+    [
+     9.18043,
+     45.452115
+    ],
+    [
+     9.180301,
+     45.452104
+    ],
+    [
+     9.180174,
+     45.452095
+    ],
+    [
+     9.18017,
+     45.452094
+    ],
+    [
+     9.180146,
+     45.452094
+    ],
+    [
+     9.180133,
+     45.452094
+    ],
+    [
+     9.180084,
+     45.452092
+    ],
+    [
+     9.18001,
+     45.45209
+    ],
+    [
+     9.179768,
+     45.452086
+    ],
+    [
+     9.179707,
+     45.452085
+    ],
+    [
+     9.179399,
+     45.452079
+    ],
+    [
+     9.179349,
+     45.452067
+    ],
+    [
+     9.179304,
+     45.452051
+    ],
+    [
+     9.179263,
+     45.452032
+    ],
+    [
+     9.179217,
+     45.452006
+    ],
+    [
+     9.179252,
+     45.452002
+    ],
+    [
+     9.179294,
+     45.451999
+    ],
+    [
+     9.179498,
+     45.452012
+    ]
+   ],
+   "distance": 4.63,
+   "minutes": 13.866266666666666,
+   "paveMeters": 32,
+   "pavePercent": 0.7,
+   "surfaceConfidence": 1,
+   "surfaceClassificationConfidence": 1,
+   "surfaceDataConfidence": null,
+   "unknownSurfaceMeters": 0,
+   "surfaceCoveragePercent": 100,
+   "confirmedPaveMeters": 32,
+   "probablePaveMeters": 0,
+   "smoothSurfaceMeters": 4587,
+   "surfaceTotalMeters": 4619,
+   "unpavedSurfaceMeters": 0,
+   "surfaceSource": "osm",
+   "cyclewayMeters": 148,
+   "terminalPrivateAccessMeters": 0,
+   "instructions": [
+    {
+     "id": "0-depart-9.20555,45.4731",
+     "text": "Guida verso nord su Viale Luigi Majno.",
+     "roadName": "Viale Luigi Majno",
+     "distance": 113,
+     "location": [
+      9.20555,
+      45.4731
+     ],
+     "type": "depart",
+     "modifier": "",
+     "direction": "depart"
+    },
+    {
+     "id": "1-turn-9.205462,45.474127",
+     "text": "Mantieni la destra su Piazza Guglielmo Oberdan.",
+     "roadName": "Piazza Guglielmo Oberdan",
+     "distance": 22,
+     "location": [
+      9.205462,
+      45.474127
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "2-turn-9.205563,45.47431",
+     "text": "Svolta a destra per rimanere su Piazza Guglielmo Oberdan.",
+     "roadName": "Piazza Guglielmo Oberdan",
+     "distance": 64,
+     "location": [
+      9.205563,
+      45.47431
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "3-turn-9.206221,45.473972",
+     "text": "Mantieni la destra su Viale Piave.",
+     "roadName": "Viale Piave",
+     "distance": 661,
+     "location": [
+      9.206221,
+      45.473972
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "4-turn-9.20689,45.46807",
+     "text": "Svolta a destra su Piazza del Tricolore.",
+     "roadName": "Piazza del Tricolore",
+     "distance": 67,
+     "location": [
+      9.20689,
+      45.46807
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "5-turn-9.206031,45.468022",
+     "text": "Svolta a sinistra su Viale Bianca Maria.",
+     "roadName": "Viale Bianca Maria",
+     "distance": 741,
+     "location": [
+      9.206031,
+      45.468022
+     ],
+     "type": "turn",
+     "modifier": "left",
+     "direction": "left"
+    },
+    {
+     "id": "6-turn-9.206799,45.461511",
+     "text": "Mantieni la destra su Viale Regina Margherita.",
+     "roadName": "Viale Regina Margherita",
+     "distance": 2691,
+     "location": [
+      9.206799,
+      45.461511
+     ],
+     "type": "turn",
+     "modifier": "right",
+     "direction": "right"
+    },
+    {
+     "id": "7-turn-9.181672,45.452814",
+     "text": "Mantieni la sinistra per imboccare Piazza Ventiquattro Maggio.",
+     "roadName": "Piazza Ventiquattro Maggio",
+     "distance": 54,
+     "location": [
+      9.181672,
+      45.452814
+     ],
+     "type": "turn",
+     "modifier": "left",
+     "direction": "left"
+    },
+    {
+     "id": "8-turn-9.180987,45.452822",
+     "text": "Svolta a sinistra per rimanere su Piazza Ventiquattro Maggio.",
+     "roadName": "Piazza Ventiquattro Maggio",
+     "distance": 194,
+     "location": [
+      9.180987,
+      45.452822
+     ],
+     "type": "turn",
+     "modifier": "left",
+     "direction": "left"
+    },
+    {
+     "id": "9-turn-9.179217,45.452006",
+     "text": "Fai un'inversione di marcia a sinistraper rimanere su Piazza Ventiquattro Maggio.",
+     "roadName": "Piazza Ventiquattro Maggio",
+     "distance": 22,
+     "location": [
+      9.179217,
+      45.452006
+     ],
+     "type": "turn",
+     "modifier": "uturn",
+     "direction": "uturn"
+    },
+    {
+     "id": "10-arrive-9.179498,45.452012",
+     "text": "Sei arrivato a destinazione.",
+     "roadName": "",
+     "distance": 0,
+     "location": [
+      9.179498,
+      45.452012
+     ],
+     "type": "arrive",
+     "modifier": "",
+     "direction": "arrive"
+    }
+   ],
+   "problemSegments": [
+    [
+     [
+      9.196541,
+      45.452056
+     ],
+     [
+      9.196525,
+      45.452056
+     ],
+     [
+      9.196394,
+      45.452052
+     ],
+     [
+      9.196136,
+      45.452051
+     ]
+    ]
+   ]
+  },
+  "problemSegments": [
+   [
+    [
+     9.196541,
+     45.452056
+    ],
+    [
+     9.196525,
+     45.452056
+    ],
+    [
+     9.196394,
+     45.452052
+    ],
+    [
+     9.196136,
+     45.452051
+    ]
+   ]
+  ],
+  "alternativesAnalyzed": 7,
+  "hasDistinctAlternative": false,
+  "surfaceDataAvailable": true,
+  "mode": "car",
+  "transportMode": "car",
+  "routingProfile": {
+   "provider": "valhalla-fossgis",
+   "profile": "auto",
+   "beta": false,
+   "approximate": false,
+   "fallbackUsed": false,
+   "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+  },
+  "calculationMode": "planner",
+  "appliedPreferences": {
+   "avoidance": "strong",
+   "maximumExtraMinutes": null
+  },
+  "performance": {
+   "routingAndSurfaceDataMs": 210,
+   "candidateGenerationAndScoringMs": 4191,
+   "totalMs": 4401
+  },
+  "optimization": {
+   "strategy": "pareto-conservative-unknown",
+   "frontierSize": 1,
+   "unknownMeterPenalty": 1,
+   "directCandidateGenerated": true
+  },
+  "candidateDiagnostics": [
+   {
+    "eligibleModeAndAccess": true,
+    "confirmedRestrictionMeters": 0,
+    "blockingRestrictionMeters": 0,
+    "terminalPrivateAccessMeters": 0,
+    "paretoOptimal": true,
+    "source": "surface-aware-valhalla",
+    "provider": "valhalla-fossgis",
+    "profile": "auto",
+    "distance": 4630,
+    "seconds": 832,
+    "paveMeters": 32,
+    "pavePercent": 0.7,
+    "weightedPaveMeters": 32,
+    "riskMeters": 32,
+    "surfaceConfidence": 1,
+    "surfaceClassificationConfidence": 1,
+    "surfaceDataConfidence": null,
+    "unknownSurfaceMeters": 0,
+    "surfaceCoveragePercent": 100,
+    "smoothSurfaceMeters": 4587,
+    "surfaceTotalMeters": 4619,
+    "unpavedSurfaceMeters": 0,
+    "cyclewayMeters": 148,
+    "matchedSurfaceFeatures": 85,
+    "detourPercent": 0,
+    "distinctFromFast": false
+   },
+   {
+    "eligibleModeAndAccess": true,
+    "confirmedRestrictionMeters": 0,
+    "blockingRestrictionMeters": 0,
+    "terminalPrivateAccessMeters": 0,
+    "paretoOptimal": false,
+    "source": "base-1",
+    "provider": "valhalla-fossgis",
+    "profile": "auto",
+    "distance": 6333,
+    "seconds": 1147,
+    "paveMeters": 448,
+    "pavePercent": 7.1,
+    "weightedPaveMeters": 438,
+    "riskMeters": 438,
+    "surfaceConfidence": 0.98,
+    "surfaceClassificationConfidence": 0.98,
+    "surfaceDataConfidence": null,
+    "unknownSurfaceMeters": 10,
+    "surfaceCoveragePercent": 99.8,
+    "smoothSurfaceMeters": 5858,
+    "surfaceTotalMeters": 6316,
+    "unpavedSurfaceMeters": 0,
+    "cyclewayMeters": 148,
+    "matchedSurfaceFeatures": 121,
+    "detourPercent": 37.8,
+    "distinctFromFast": true
+   },
+   {
+    "eligibleModeAndAccess": true,
+    "confirmedRestrictionMeters": 0,
+    "blockingRestrictionMeters": 0,
+    "terminalPrivateAccessMeters": 0,
+    "paretoOptimal": false,
+    "source": "base-3",
+    "provider": "valhalla-fossgis",
+    "profile": "auto",
+    "distance": 6038,
+    "seconds": 1247,
+    "paveMeters": 1320,
+    "pavePercent": 22,
+    "weightedPaveMeters": 1288,
+    "riskMeters": 1288,
+    "surfaceConfidence": 0.98,
+    "surfaceClassificationConfidence": 0.98,
+    "surfaceDataConfidence": null,
+    "unknownSurfaceMeters": 147,
+    "surfaceCoveragePercent": 97.6,
+    "smoothSurfaceMeters": 4544,
+    "surfaceTotalMeters": 6011,
+    "unpavedSurfaceMeters": 0,
+    "cyclewayMeters": 1849,
+    "matchedSurfaceFeatures": 140,
+    "detourPercent": 49.9,
+    "distinctFromFast": true
+   },
+   {
+    "eligibleModeAndAccess": true,
+    "confirmedRestrictionMeters": 0,
+    "blockingRestrictionMeters": 0,
+    "terminalPrivateAccessMeters": 0,
+    "paretoOptimal": false,
+    "source": "base-2",
+    "provider": "valhalla-fossgis",
+    "profile": "auto",
+    "distance": 6400,
+    "seconds": 1259,
+    "paveMeters": 1328,
+    "pavePercent": 20.8,
+    "weightedPaveMeters": 1308,
+    "riskMeters": 1308,
+    "surfaceConfidence": 0.98,
+    "surfaceClassificationConfidence": 0.98,
+    "surfaceDataConfidence": null,
+    "unknownSurfaceMeters": 0,
+    "surfaceCoveragePercent": 100,
+    "smoothSurfaceMeters": 5051,
+    "surfaceTotalMeters": 6379,
+    "unpavedSurfaceMeters": 0,
+    "cyclewayMeters": 0,
+    "matchedSurfaceFeatures": 121,
+    "detourPercent": 51.3,
+    "distinctFromFast": true
+   },
+   {
+    "eligibleModeAndAccess": true,
+    "confirmedRestrictionMeters": 0,
+    "blockingRestrictionMeters": 0,
+    "terminalPrivateAccessMeters": 0,
+    "paretoOptimal": false,
+    "source": "detour-2",
+    "provider": "valhalla-fossgis",
+    "profile": "auto",
+    "distance": 7399,
+    "seconds": 1378,
+    "paveMeters": 646,
+    "pavePercent": 8.8,
+    "weightedPaveMeters": 636,
+    "riskMeters": 636,
+    "surfaceConfidence": 0.98,
+    "surfaceClassificationConfidence": 0.98,
+    "surfaceDataConfidence": null,
+    "unknownSurfaceMeters": 101,
+    "surfaceCoveragePercent": 98.6,
+    "smoothSurfaceMeters": 6630,
+    "surfaceTotalMeters": 7377,
+    "unpavedSurfaceMeters": 0,
+    "cyclewayMeters": 148,
+    "matchedSurfaceFeatures": 129,
+    "detourPercent": 65.6,
+    "distinctFromFast": true
+   },
+   {
+    "eligibleModeAndAccess": true,
+    "confirmedRestrictionMeters": 0,
+    "blockingRestrictionMeters": 0,
+    "terminalPrivateAccessMeters": 0,
+    "paretoOptimal": false,
+    "source": "detour-3",
+    "provider": "valhalla-fossgis",
+    "profile": "auto",
+    "distance": 7284,
+    "seconds": 1422,
+    "paveMeters": 971,
+    "pavePercent": 13.4,
+    "weightedPaveMeters": 947,
+    "riskMeters": 947,
+    "surfaceConfidence": 0.98,
+    "surfaceClassificationConfidence": 0.98,
+    "surfaceDataConfidence": null,
+    "unknownSurfaceMeters": 38,
+    "surfaceCoveragePercent": 99.5,
+    "smoothSurfaceMeters": 6250,
+    "surfaceTotalMeters": 7259,
+    "unpavedSurfaceMeters": 0,
+    "cyclewayMeters": 337,
+    "matchedSurfaceFeatures": 125,
+    "detourPercent": 71,
+    "distinctFromFast": true
+   },
+   {
+    "eligibleModeAndAccess": true,
+    "confirmedRestrictionMeters": 0,
+    "blockingRestrictionMeters": 0,
+    "terminalPrivateAccessMeters": 0,
+    "paretoOptimal": false,
+    "source": "detour-1",
+    "provider": "valhalla-fossgis",
+    "profile": "auto",
+    "distance": 7465,
+    "seconds": 1503,
+    "paveMeters": 923,
+    "pavePercent": 12.4,
+    "weightedPaveMeters": 903,
+    "riskMeters": 903,
+    "surfaceConfidence": 0.98,
+    "surfaceClassificationConfidence": 0.98,
+    "surfaceDataConfidence": null,
+    "unknownSurfaceMeters": 1,
+    "surfaceCoveragePercent": 100,
+    "smoothSurfaceMeters": 6522,
+    "surfaceTotalMeters": 7446,
+    "unpavedSurfaceMeters": 0,
+    "cyclewayMeters": 148,
+    "matchedSurfaceFeatures": 130,
+    "detourPercent": 80.6,
+    "distinctFromFast": true
+   }
+  ],
+  "dataNotice": "7 percorsi reali controllati: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
+ }
+}

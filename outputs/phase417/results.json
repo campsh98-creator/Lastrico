@@ -1,0 +1,5554 @@
+{
+  "schema": 1,
+  "recommendation": "NO-GO for runtime integration: no validated unknown-road routing truth or positive Roccella transfer evidence",
+  "base_commit": "92257303d3e02a91b8feefb7b056ce97a16d3a35",
+  "environment": {
+    "python": "3.13.2",
+    "node": "v24.18.0",
+    "sklearn": "1.7.2",
+    "numpy": "2.5.4",
+    "seed": 417,
+    "threads": 1
+  },
+  "attribution": "\u00a9 OpenStreetMap contributors; ODbL-1.0. Archived OSM tags are not a physical survey.",
+  "input_sha256": {
+    "data/sources/milan-pilot-osm.source.json": "260c1f91d2defb6876810a15e2bb1fbddc0a390e6fb98996e10f0bef105aeaf2",
+    "data/sources/milan-pilot-sw.osm.json.gz": "f91820c5b2c080db22e20d0fe404b169c8c8cbae71d80892aa15a1d8f99388d9",
+    "data/sources/milan-pilot-se.osm.json.gz": "e74fc9eb424807c2476d4a7c630c94c1636c4e456245899bb501e15209f62cbc",
+    "data/sources/milan-pilot-nw.osm.json.gz": "0af7f0f06ea219a16eba4ac55552ae00c9a72bb3ee296774ef02398410bdcd39",
+    "data/sources/milan-pilot-ne.osm.json.gz": "0d48df58fbf3d3d20d7f06caee3aa624960e90dbd54550e4ba790d1852153969",
+    "data/sources/milan-pilot-w-sw.osm.json.gz": "d549b8f189fbdacb41983b5082d32a138821c67c672f6869771b727a4f630b71",
+    "data/sources/milan-pilot-w-nw.osm.json.gz": "28e63fcf18963dc0865eb63b523b3b2480dc4dc15fe1cca4476eeede7873429a",
+    "data/sources/milan-pilot-n-nw.osm.json.gz": "a4c981b7698ca7b3f2d1d0a2a11266d2695da4722a3ec8447a24051ba2f7e2d9",
+    "data/sources/milan-pilot-n-ne.osm.json.gz": "a24d9a2e810b35778b3788ae402e2262b5f6a5b242814878f3b29151b92cca2a",
+    "data/sources/milan-pilot-e-nw.osm.json.gz": "1a10b0f85358ae4459a4abcf008a902386ee0adfd0a980b60a373beaf3a46b6d",
+    "data/sources/milan-pilot-s-sw.osm.json.gz": "7d3991d7404dc02d17a873f9f84483500993b0a03f4763de91188abf0d1a092d",
+    "data/sources/milan-pilot-s-se.osm.json.gz": "f94158e0692fe08fe6ddd741f42f9aa851b0bbcdfb11d22491513869e7df67ee",
+    "data/sources/milan-citywide-expansion.source.json": "6a07224314116cefff25a1a85a84532ce95a5698fa06682fd3eff8472411b781",
+    "data/sources/milan-citywide-s-central.osm.json.gz": "caf1d01decfb355b5abd15a135dd8a6fc585a69097cc58d7d188345e7214d7e8",
+    "data/sources/milan-citywide-s-west.osm.json.gz": "49e7f4fb1414ea89df7781f93cc7ae8d0295029d42b9d1b8c4323884df8744e0",
+    "data/sources/milan-citywide-s-east.osm.json.gz": "c38dadcb10eacc828f298da9495e7656c41c32d9198b71dd38769484ba82744a",
+    "data/sources/milan-citywide-west.osm.json.gz": "d28135db25b81ae40a39d84f833cbbad25ff3493fa4c8e4a128e7be1ba4dbaa6",
+    "data/sources/milan-citywide-east.osm.json.gz": "d78c857b037c9589c5e8b45cc567147aa73be0c9ac122f71d84a011e9b50995a",
+    "data/sources/milan-citywide-n-west.osm.json.gz": "02b9f465201184651c8aa2f3e9bfef67c19cc44b768cb9f6ec019a2da3ea2505",
+    "data/sources/milan-citywide-n-central.osm.json.gz": "036c52d213c8d5bd8ee3b5c166db2fff81fca40336b614bf19784ff5d7cd66d1",
+    "data/sources/milan-citywide-n-east.osm.json.gz": "e2aaf9058205d44ec70d987a213159e6935b1018a9a1bbe5026ebd5aaf1327a5",
+    "data/sources/roccella-pilot-osm.source.json": "20412691895070b8ef126ebc682d4e78220c9ee639c1d237a1a0f5b75e08cf50",
+    "data/sources/roccella-pilot-sw.osm.json.gz": "21207dd79dfa7a62cead82d88be6c0315b66ce77ed54165fca3be888af77f399",
+    "data/sources/roccella-pilot-se.osm.json.gz": "877c518e9fe0fbad29570786b6d87dec614188bc3f01db11df6b0aa89fa2f2f9",
+    "data/sources/roccella-pilot-nw.osm.json.gz": "d78647ebe133f37de0fc85d535a672749c0233dbb6f52d51b72baf807a308200",
+    "data/sources/roccella-pilot-ne.osm.json.gz": "3066923986b96b7394c38c0d1b0b15bf88f4d9a1c0d5ecf497c30384ce3a6d6a",
+    "scripts/osm/normalize.mjs": "3cdb985dd6140eaef100c2accc7de84ce3704c3ad8d8dbe6211a35fd972b38d4",
+    "scripts/osm/config.mjs": "1dbc0053ff68571a40289641c106ff648a1c71af665e1f512f2af39b14971b84",
+    "scripts/osm/build-representative-network.mjs": "62386740fdd02b8f8e08ecce4e41ed38de25a583ea173af3bcefe4e9f64f2c83"
+  },
+  "experiment_sha256": {
+    "experiments/surface-ml/export.mjs": "ef11c9116e3e773e862d0fee9b8de0d6313d87d08b6da25192d1b3bbb6598fc9",
+    "experiments/surface-ml/requirements.txt": "e381fa220d6ab97ce9730ab569a21ac20ef034dbfa41b765d4dbf4199afae0ca",
+    "experiments/surface-ml/routing.py": "fe634ebf51890af3a0ceeef5dbbe217619d92b2f31c95b21719198d7daf31e30",
+    "experiments/surface-ml/run.py": "3d82b795b98daa7d8945c0a086f4696f7e32e31903906e0040db2f5fe2854bd6",
+    "experiments/surface-ml/test_experiment.py": "5519e5d6045ea39f74125b5d0da6b487937097b7f1681be92ab0c33a84cd4ac7",
+    "experiments/surface-ml/test_routing.py": "bcedb1d31581bcb247a1abdd017ec1474c46622ac7907f05a304793db623f9f1",
+    "experiments/surface-ml/visual.py": "8a6c4aa61a026b69675629fca375a2e1a434c8acf4fcf6fd2e80900364f30581"
+  },
+  "dataset": {
+    "milan": {
+      "sourceHighwayRecords": 75473,
+      "deduplicatedWays": 62907,
+      "duplicateRecordsRemoved": 12566,
+      "excludedPolygons": 412,
+      "excludedEmpty": 0,
+      "ways": 62495,
+      "edges": 236470,
+      "length_m": 3591073.470623102,
+      "class_counts": {
+        "explicit_non_pave": 39025,
+        "genuinely_unknown": 16935,
+        "ambiguous_or_auxiliary_evidence": 4327,
+        "explicit_pave": 2208
+      },
+      "class_length_m": {
+        "explicit_non_pave": 2453126.698196971,
+        "genuinely_unknown": 867915.3609991943,
+        "ambiguous_or_auxiliary_evidence": 183428.23942054258,
+        "explicit_pave": 86603.1720063944
+      },
+      "class_length_percent": {
+        "explicit_non_pave": 68.31179362563469,
+        "genuinely_unknown": 24.168688502176447,
+        "ambiguous_or_auxiliary_evidence": 5.10789436420846,
+        "explicit_pave": 2.4116235079804014
+      },
+      "materials": {
+        "asphalt": 37354,
+        "cobblestone": 64,
+        "cobblestone:flattened": 75,
+        "cobblestone:flattened:large_stone": 1,
+        "cobblestone:rounded": 1,
+        "compacted": 293,
+        "concrete": 577,
+        "concrete:lanes": 3,
+        "concrete:plates": 206,
+        "dirt": 45,
+        "fine_gravel": 288,
+        "grass": 24,
+        "grass_paver": 8,
+        "gravel": 85,
+        "ground": 87,
+        "linoleum": 2,
+        "metal": 52,
+        "metal_grid": 13,
+        "milanese_paving": 13,
+        "missing": 17216,
+        "mud": 1,
+        "paved": 541,
+        "paving_stones": 3379,
+        "pebblestone": 45,
+        "rock": 3,
+        "sand": 3,
+        "sett": 1956,
+        "stone": 14,
+        "unhewn_cobblestone": 54,
+        "unpaved": 87,
+        "wood": 5
+      },
+      "feature_missing_fraction": {
+        "highway": 0.0,
+        "service": 0.9623169853588287,
+        "junction": 0.9866549323945916,
+        "bridge": 0.9935514841187295,
+        "tunnel": 0.964797183774702,
+        "oneway": 0.7362509000720058,
+        "lanes": 0.9004880390431235,
+        "maxspeed": 0.8760700856068485,
+        "lit": 0.5855028402272182,
+        "sidewalk": 0.9508760700856068,
+        "cycleway": 0.9819825586046884,
+        "bicycle": 0.9477398191855348,
+        "access": 0.9285542843427474
+      },
+      "highway_labeled_vs_unknown": {
+        "labeled": {
+          "residential": 8198,
+          "tertiary": 2501,
+          "primary": 1226,
+          "secondary": 1771,
+          "primary_link": 80,
+          "trunk": 61,
+          "construction": 8,
+          "service": 2065,
+          "secondary_link": 89,
+          "unclassified": 422,
+          "pedestrian": 381,
+          "footway": 22371,
+          "cycleway": 1322,
+          "motorway": 11,
+          "trunk_link": 27,
+          "tertiary_link": 41,
+          "steps": 170,
+          "living_street": 3,
+          "motorway_link": 25,
+          "track": 51,
+          "path": 115,
+          "platform": 285,
+          "proposed": 10
+        },
+        "unknown": {
+          "trunk_link": 4,
+          "residential": 1317,
+          "service": 4013,
+          "construction": 40,
+          "secondary_link": 7,
+          "primary_link": 2,
+          "footway": 9518,
+          "pedestrian": 134,
+          "unclassified": 208,
+          "cycleway": 337,
+          "bridleway": 3,
+          "steps": 994,
+          "path": 116,
+          "corridor": 50,
+          "track": 32,
+          "tertiary_link": 5,
+          "platform": 135,
+          "demolished": 2,
+          "elevator": 13,
+          "services": 1,
+          "proposed": 1,
+          "bus_stop": 3
+        }
+      }
+    },
+    "roccella": {
+      "sourceHighwayRecords": 1111,
+      "deduplicatedWays": 1060,
+      "duplicateRecordsRemoved": 51,
+      "excludedPolygons": 8,
+      "excludedEmpty": 0,
+      "ways": 1052,
+      "edges": 8973,
+      "length_m": 197185.09325152286,
+      "class_counts": {
+        "genuinely_unknown": 926,
+        "explicit_non_pave": 122,
+        "ambiguous_or_auxiliary_evidence": 4
+      },
+      "class_length_m": {
+        "genuinely_unknown": 151008.2526575985,
+        "explicit_non_pave": 45569.59930869856,
+        "ambiguous_or_auxiliary_evidence": 607.2412852258035
+      },
+      "class_length_percent": {
+        "genuinely_unknown": 76.58198201878136,
+        "explicit_non_pave": 23.11006301605744,
+        "ambiguous_or_auxiliary_evidence": 0.30795496516119825
+      },
+      "materials": {
+        "asphalt": 113,
+        "missing": 926,
+        "paved": 2,
+        "paving_stones": 2,
+        "unpaved": 9
+      },
+      "feature_missing_fraction": {
+        "highway": 0.0,
+        "service": 0.8745247148288974,
+        "junction": 0.9990494296577946,
+        "bridge": 0.9724334600760456,
+        "tunnel": 0.9847908745247148,
+        "oneway": 0.8783269961977186,
+        "lanes": 0.9182509505703422,
+        "maxspeed": 0.9714828897338403,
+        "lit": 0.9952471482889734,
+        "sidewalk": 1.0,
+        "cycleway": 1.0,
+        "bicycle": 0.9429657794676806,
+        "access": 0.9467680608365019
+      },
+      "highway_labeled_vs_unknown": {
+        "labeled": {
+          "secondary": 18,
+          "trunk": 58,
+          "unclassified": 11,
+          "tertiary": 9,
+          "tertiary_link": 2,
+          "residential": 2,
+          "track": 15,
+          "primary": 4,
+          "footway": 2,
+          "pedestrian": 1
+        },
+        "unknown": {
+          "residential": 118,
+          "unclassified": 238,
+          "track": 216,
+          "steps": 9,
+          "service": 175,
+          "pedestrian": 32,
+          "footway": 130,
+          "cycleway": 4,
+          "path": 4
+        }
+      }
+    }
+  },
+  "features": {
+    "tag_allowlist": [
+      "highway",
+      "service",
+      "junction",
+      "bridge",
+      "tunnel",
+      "oneway",
+      "lanes",
+      "maxspeed",
+      "lit",
+      "sidewalk",
+      "cycleway",
+      "bicycle",
+      "access"
+    ],
+    "geometry": [
+      "x_km",
+      "y_km",
+      "log_length_m",
+      "sinuosity",
+      "axis_x",
+      "axis_y"
+    ],
+    "excluded": [
+      "surface and all namespaces",
+      "smoothness",
+      "tracktype",
+      "material",
+      "roughness",
+      "name",
+      "OSM ID",
+      "version",
+      "timestamp",
+      "neighbor surface labels",
+      "confidence/provenance"
+    ]
+  },
+  "split": {
+    "center_lon_lat": [
+      9.185,
+      45.465
+    ],
+    "boundary_exclusion_each_side_m": 200,
+    "minimum_between_sector_gap_m": 400,
+    "unit": "whole OSM way, every geometry vertex must lie inside buffered sector",
+    "evaluation_ways": 36537,
+    "excluded_boundary_labeled_ways": 4696,
+    "calibration": "Platt sigmoid on one geographically separate sector; fit two sectors, test fourth; fixed hyperparameters, threshold 0.5"
+  },
+  "folds": [
+    {
+      "test_sector": "SW",
+      "calibration_sector": "SE",
+      "train_sectors": [
+        "NE",
+        "NW"
+      ],
+      "train_ways": 23102,
+      "calibration_ways": 6178,
+      "test_ways": 7257,
+      "train_positives": 1101,
+      "calibration_positives": 327,
+      "test_positives": 299,
+      "models": {
+        "prevalence": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6958.0,
+              0.0
+            ],
+            [
+              299.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.04120159845666253,
+          "brier": 0.03954571459211114,
+          "log_loss": 0.17222467898829397,
+          "ece_10_bins": 0.006456612953604973,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 7257,
+              "weight": 7257.0,
+              "mean_probability": 0.047658211410267506,
+              "observed_pave_fraction": 0.04120159845666253
+            }
+          ],
+          "low_pave_probability_count": 7257,
+          "hidden_pave_in_low_probability_count": 299,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "prevalence_calibration_f1_threshold": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.047658211410267506,
+          "precision": 0.04120159845666253,
+          "recall": 1.0,
+          "f1": 0.07914240338803599,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              0.0,
+              6958.0
+            ],
+            [
+              0.0,
+              299.0
+            ]
+          ],
+          "average_precision": 0.04120159845666253,
+          "brier": 0.03954571459211114,
+          "log_loss": 0.17222467898829397,
+          "ece_10_bins": 0.006456612953604973,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 7257,
+              "weight": 7257.0,
+              "mean_probability": 0.047658211410267506,
+              "observed_pave_fraction": 0.04120159845666253
+            }
+          ],
+          "low_pave_probability_count": 7257,
+          "hidden_pave_in_low_probability_count": 299,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "highway_frequency": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6958.0,
+              0.0
+            ],
+            [
+              299.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.0680852510946845,
+          "brier": 0.0389798267649425,
+          "log_loss": 0.16811451911006753,
+          "ece_10_bins": 0.006180113729493197,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 7214,
+              "weight": 7214.0,
+              "mean_probability": 0.045002523346998446,
+              "observed_pave_fraction": 0.03936789575824785
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 15,
+              "weight": 15.0,
+              "mean_probability": 0.19015757978370992,
+              "observed_pave_fraction": 0.3333333333333333
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 28,
+              "weight": 28.0,
+              "mean_probability": 0.28381265691282137,
+              "observed_pave_fraction": 0.35714285714285715
+            }
+          ],
+          "low_pave_probability_count": 7214,
+          "hidden_pave_in_low_probability_count": 284,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "highway_frequency_calibration_f1_threshold": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.040233530371517785,
+          "precision": 0.05185185185185185,
+          "recall": 0.5150501672240803,
+          "f1": 0.09421841541755889,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              4142.0,
+              2816.0
+            ],
+            [
+              145.0,
+              154.0
+            ]
+          ],
+          "average_precision": 0.0680852510946845,
+          "brier": 0.0389798267649425,
+          "log_loss": 0.16811451911006753,
+          "ece_10_bins": 0.006180113729493197,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 7214,
+              "weight": 7214.0,
+              "mean_probability": 0.045002523346998446,
+              "observed_pave_fraction": 0.03936789575824785
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 15,
+              "weight": 15.0,
+              "mean_probability": 0.19015757978370992,
+              "observed_pave_fraction": 0.3333333333333333
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 28,
+              "weight": 28.0,
+              "mean_probability": 0.28381265691282137,
+              "observed_pave_fraction": 0.35714285714285715
+            }
+          ],
+          "low_pave_probability_count": 7214,
+          "hidden_pave_in_low_probability_count": 284,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6958.0,
+              0.0
+            ],
+            [
+              299.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.05919539945078707,
+          "brier": 0.03957499013219957,
+          "log_loss": 0.17260698177893877,
+          "ece_10_bins": 0.009723481722235604,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 7257,
+              "weight": 7257.0,
+              "mean_probability": 0.05092508017889814,
+              "observed_pave_fraction": 0.04120159845666253
+            }
+          ],
+          "low_pave_probability_count": 7257,
+          "hidden_pave_in_low_probability_count": 299,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic_uncalibrated": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.5,
+          "precision": 0.18947368421052632,
+          "recall": 0.06020066889632107,
+          "f1": 0.09137055837563451,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6881.0,
+              77.0
+            ],
+            [
+              281.0,
+              18.0
+            ]
+          ],
+          "average_precision": 0.05919539945078707,
+          "brier": 0.06464337114681352,
+          "log_loss": 0.2625095436009559,
+          "ece_10_bins": 0.11911881579875958,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 2607,
+              "weight": 2607.0,
+              "mean_probability": 0.06261284213911315,
+              "observed_pave_fraction": 0.031070195627157654
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 2604,
+              "weight": 2604.0,
+              "mean_probability": 0.14334605186724014,
+              "observed_pave_fraction": 0.05337941628264209
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 1176,
+              "weight": 1176.0,
+              "mean_probability": 0.2433294284547287,
+              "observed_pave_fraction": 0.030612244897959183
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 584,
+              "weight": 584.0,
+              "mean_probability": 0.3454870232385543,
+              "observed_pave_fraction": 0.023972602739726026
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 191,
+              "weight": 191.0,
+              "mean_probability": 0.4403284227107701,
+              "observed_pave_fraction": 0.05759162303664921
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 69,
+              "weight": 69.0,
+              "mean_probability": 0.5412837208172477,
+              "observed_pave_fraction": 0.17391304347826086
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 19,
+              "weight": 19.0,
+              "mean_probability": 0.6388486339041332,
+              "observed_pave_fraction": 0.2631578947368421
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "n": 4,
+              "weight": 4.0,
+              "mean_probability": 0.7229172375595699,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.8465066099987181,
+              "observed_pave_fraction": 0.3333333333333333
+            }
+          ],
+          "low_pave_probability_count": 2607,
+          "hidden_pave_in_low_probability_count": 81,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic_calibration_f1_threshold": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.046110247478349006,
+          "precision": 0.04328663623484968,
+          "recall": 0.919732441471572,
+          "f1": 0.08268190018039687,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              880.0,
+              6078.0
+            ],
+            [
+              24.0,
+              275.0
+            ]
+          ],
+          "average_precision": 0.05919539945078707,
+          "brier": 0.03957499013219957,
+          "log_loss": 0.17260698177893877,
+          "ece_10_bins": 0.009723481722235604,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 7257,
+              "weight": 7257.0,
+              "mean_probability": 0.05092508017889814,
+              "observed_pave_fraction": 0.04120159845666253
+            }
+          ],
+          "low_pave_probability_count": 7257,
+          "hidden_pave_in_low_probability_count": 299,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6958.0,
+              0.0
+            ],
+            [
+              299.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.1422045296891832,
+          "brier": 0.03781140154062911,
+          "log_loss": 0.15600676165540858,
+          "ece_10_bins": 0.008121677479450433,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 6794,
+              "weight": 6794.0,
+              "mean_probability": 0.03911628183183861,
+              "observed_pave_fraction": 0.032675890491610245
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 460,
+              "weight": 460.0,
+              "mean_probability": 0.1329838433155465,
+              "observed_pave_fraction": 0.16304347826086957
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.21481245732944076,
+              "observed_pave_fraction": 0.6666666666666666
+            }
+          ],
+          "low_pave_probability_count": 6794,
+          "hidden_pave_in_low_probability_count": 222,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting_uncalibrated": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.5,
+          "precision": 0.3333333333333333,
+          "recall": 0.023411371237458192,
+          "f1": 0.04375,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6944.0,
+              14.0
+            ],
+            [
+              292.0,
+              7.0
+            ]
+          ],
+          "average_precision": 0.1422045296891832,
+          "brier": 0.03919136510068606,
+          "log_loss": 0.15954511176958647,
+          "ece_10_bins": 0.017729207178633542,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 6591,
+              "weight": 6591.0,
+              "mean_probability": 0.020326284625414814,
+              "observed_pave_fraction": 0.02928235472614171
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 252,
+              "weight": 252.0,
+              "mean_probability": 0.13622426322321252,
+              "observed_pave_fraction": 0.14285714285714285
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 131,
+              "weight": 131.0,
+              "mean_probability": 0.25302435966258935,
+              "observed_pave_fraction": 0.13740458015267176
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 218,
+              "weight": 218.0,
+              "mean_probability": 0.33739082588994845,
+              "observed_pave_fraction": 0.16972477064220184
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 44,
+              "weight": 44.0,
+              "mean_probability": 0.4446695624231113,
+              "observed_pave_fraction": 0.18181818181818182
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 18,
+              "weight": 18.0,
+              "mean_probability": 0.5372129833387153,
+              "observed_pave_fraction": 0.2777777777777778
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.6575909376065052,
+              "observed_pave_fraction": 0.6666666666666666
+            }
+          ],
+          "low_pave_probability_count": 6591,
+          "hidden_pave_in_low_probability_count": 193,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting_calibration_f1_threshold": {
+          "n": 7257,
+          "positives": 299,
+          "threshold": 0.11591693541001916,
+          "precision": 0.16844919786096257,
+          "recall": 0.21070234113712374,
+          "f1": 0.18722139673105498,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6647.0,
+              311.0
+            ],
+            [
+              236.0,
+              63.0
+            ]
+          ],
+          "average_precision": 0.1422045296891832,
+          "brier": 0.03781140154062911,
+          "log_loss": 0.15600676165540858,
+          "ece_10_bins": 0.008121677479450433,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 6794,
+              "weight": 6794.0,
+              "mean_probability": 0.03911628183183861,
+              "observed_pave_fraction": 0.032675890491610245
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 460,
+              "weight": 460.0,
+              "mean_probability": 0.1329838433155465,
+              "observed_pave_fraction": 0.16304347826086957
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.21481245732944076,
+              "observed_pave_fraction": 0.6666666666666666
+            }
+          ],
+          "low_pave_probability_count": 6794,
+          "hidden_pave_in_low_probability_count": 222,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        }
+      },
+      "masked_current_rules": {
+        "n": 7257,
+        "positives": 299,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            6958.0,
+            0.0
+          ],
+          [
+            299.0,
+            0.0
+          ]
+        ],
+        "abstention_fraction": 0.9995866060355518,
+        "probability_metrics": "not applicable: abstention is not a calibrated negative"
+      }
+    },
+    {
+      "test_sector": "SE",
+      "calibration_sector": "NW",
+      "train_sectors": [
+        "NE",
+        "SW"
+      ],
+      "train_ways": 20384,
+      "calibration_ways": 9975,
+      "test_ways": 6178,
+      "train_positives": 1048,
+      "calibration_positives": 352,
+      "test_positives": 327,
+      "models": {
+        "prevalence": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5851.0,
+              0.0
+            ],
+            [
+              327.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.05292975072839107,
+          "brier": 0.05013049313474535,
+          "log_loss": 0.20707636143422692,
+          "ece_10_bins": 0.0015168778869468144,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 6178,
+              "weight": 6178.0,
+              "mean_probability": 0.05141287284144425,
+              "observed_pave_fraction": 0.05292975072839107
+            }
+          ],
+          "low_pave_probability_count": 6178,
+          "hidden_pave_in_low_probability_count": 327,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "prevalence_calibration_f1_threshold": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.05141287284144427,
+          "precision": 0.05292975072839107,
+          "recall": 1.0,
+          "f1": 0.1005380476556495,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              0.0,
+              5851.0
+            ],
+            [
+              0.0,
+              327.0
+            ]
+          ],
+          "average_precision": 0.05292975072839107,
+          "brier": 0.05013049313474535,
+          "log_loss": 0.20707636143422692,
+          "ece_10_bins": 0.0015168778869468144,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 6178,
+              "weight": 6178.0,
+              "mean_probability": 0.05141287284144425,
+              "observed_pave_fraction": 0.05292975072839107
+            }
+          ],
+          "low_pave_probability_count": 6178,
+          "hidden_pave_in_low_probability_count": 327,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "highway_frequency": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5851.0,
+              0.0
+            ],
+            [
+              327.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.08903069748758516,
+          "brier": 0.0492704278066962,
+          "log_loss": 0.2031060333110798,
+          "ece_10_bins": 0.0013327753956827561,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 6138,
+              "weight": 6138.0,
+              "mean_probability": 0.05022168545444795,
+              "observed_pave_fraction": 0.050342130987292275
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 11,
+              "weight": 11.0,
+              "mean_probability": 0.19515472421041433,
+              "observed_pave_fraction": 0.18181818181818182
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 29,
+              "weight": 29.0,
+              "mean_probability": 0.2983486293925854,
+              "observed_pave_fraction": 0.5517241379310345
+            }
+          ],
+          "low_pave_probability_count": 6138,
+          "hidden_pave_in_low_probability_count": 309,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "highway_frequency_calibration_f1_threshold": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.1951547242104143,
+          "precision": 0.45,
+          "recall": 0.05504587155963303,
+          "f1": 0.09809264305177112,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5829.0,
+              22.0
+            ],
+            [
+              309.0,
+              18.0
+            ]
+          ],
+          "average_precision": 0.08903069748758516,
+          "brier": 0.0492704278066962,
+          "log_loss": 0.2031060333110798,
+          "ece_10_bins": 0.0013327753956827561,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 6138,
+              "weight": 6138.0,
+              "mean_probability": 0.05022168545444795,
+              "observed_pave_fraction": 0.050342130987292275
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 11,
+              "weight": 11.0,
+              "mean_probability": 0.19515472421041433,
+              "observed_pave_fraction": 0.18181818181818182
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 29,
+              "weight": 29.0,
+              "mean_probability": 0.2983486293925854,
+              "observed_pave_fraction": 0.5517241379310345
+            }
+          ],
+          "low_pave_probability_count": 6138,
+          "hidden_pave_in_low_probability_count": 309,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5850.0,
+              1.0
+            ],
+            [
+              327.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.08305027120672676,
+          "brier": 0.04990024315897706,
+          "log_loss": 0.20308668338650218,
+          "ece_10_bins": 0.007418934866706387,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 5916,
+              "weight": 5916.0,
+              "mean_probability": 0.04363470009421359,
+              "observed_pave_fraction": 0.049019607843137254
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 225,
+              "weight": 225.0,
+              "mean_probability": 0.12496072626024968,
+              "observed_pave_fraction": 0.1511111111111111
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 26,
+              "weight": 26.0,
+              "mean_probability": 0.2718451819740996,
+              "observed_pave_fraction": 0.11538461538461539
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 9,
+              "weight": 9.0,
+              "mean_probability": 0.3361234822387282,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.4004929258279514,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.5996497751327187,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 5916,
+          "hidden_pave_in_low_probability_count": 290,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic_uncalibrated": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.5,
+          "precision": 0.09090909090909091,
+          "recall": 0.009174311926605505,
+          "f1": 0.016666666666666666,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5821.0,
+              30.0
+            ],
+            [
+              324.0,
+              3.0
+            ]
+          ],
+          "average_precision": 0.08305027120672676,
+          "brier": 0.05156479570156458,
+          "log_loss": 0.20812428414004974,
+          "ece_10_bins": 0.01640442510147191,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 5308,
+              "weight": 5308.0,
+              "mean_probability": 0.04384427182968246,
+              "observed_pave_fraction": 0.048605877920120576
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 727,
+              "weight": 727.0,
+              "mean_probability": 0.13210956412837244,
+              "observed_pave_fraction": 0.06327372764786796
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 85,
+              "weight": 85.0,
+              "mean_probability": 0.241729512336795,
+              "observed_pave_fraction": 0.15294117647058825
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 21,
+              "weight": 21.0,
+              "mean_probability": 0.344220255351573,
+              "observed_pave_fraction": 0.3333333333333333
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 4,
+              "weight": 4.0,
+              "mean_probability": 0.4558352295446757,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 23,
+              "weight": 23.0,
+              "mean_probability": 0.5488571972914313,
+              "observed_pave_fraction": 0.13043478260869565
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 8,
+              "weight": 8.0,
+              "mean_probability": 0.6470106200755672,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.7302214263712139,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.8992832736531858,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 5308,
+          "hidden_pave_in_low_probability_count": 258,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic_calibration_f1_threshold": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.07062525034129419,
+          "precision": 0.08176795580110498,
+          "recall": 0.22629969418960244,
+          "f1": 0.12012987012987013,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5020.0,
+              831.0
+            ],
+            [
+              253.0,
+              74.0
+            ]
+          ],
+          "average_precision": 0.08305027120672676,
+          "brier": 0.04990024315897706,
+          "log_loss": 0.20308668338650218,
+          "ece_10_bins": 0.007418934866706387,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 5916,
+              "weight": 5916.0,
+              "mean_probability": 0.04363470009421359,
+              "observed_pave_fraction": 0.049019607843137254
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 225,
+              "weight": 225.0,
+              "mean_probability": 0.12496072626024968,
+              "observed_pave_fraction": 0.1511111111111111
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 26,
+              "weight": 26.0,
+              "mean_probability": 0.2718451819740996,
+              "observed_pave_fraction": 0.11538461538461539
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 9,
+              "weight": 9.0,
+              "mean_probability": 0.3361234822387282,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.4004929258279514,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.5996497751327187,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 5916,
+          "hidden_pave_in_low_probability_count": 290,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5851.0,
+              0.0
+            ],
+            [
+              327.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.19816278888687303,
+          "brier": 0.04791771203453705,
+          "log_loss": 0.1991590348668611,
+          "ece_10_bins": 0.029994249856029533,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 5828,
+              "weight": 5828.0,
+              "mean_probability": 0.014725777255519433,
+              "observed_pave_fraction": 0.041866849691146193
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 291,
+              "weight": 291.0,
+              "mean_probability": 0.14152712595036146,
+              "observed_pave_fraction": 0.18556701030927836
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 49,
+              "weight": 49.0,
+              "mean_probability": 0.2313430146775578,
+              "observed_pave_fraction": 0.4897959183673469
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 10,
+              "weight": 10.0,
+              "mean_probability": 0.33534931735267937,
+              "observed_pave_fraction": 0.5
+            }
+          ],
+          "low_pave_probability_count": 5828,
+          "hidden_pave_in_low_probability_count": 244,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting_uncalibrated": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.5,
+          "precision": 0.4838709677419355,
+          "recall": 0.09174311926605505,
+          "f1": 0.15424164524421594,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5819.0,
+              32.0
+            ],
+            [
+              297.0,
+              30.0
+            ]
+          ],
+          "average_precision": 0.19816278888687303,
+          "brier": 0.048419713913876644,
+          "log_loss": 0.1991432261351355,
+          "ece_10_bins": 0.029463742250558155,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 5559,
+              "weight": 5559.0,
+              "mean_probability": 0.011800103582937548,
+              "observed_pave_fraction": 0.03417880913833423
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 206,
+              "weight": 206.0,
+              "mean_probability": 0.15051167895748224,
+              "observed_pave_fraction": 0.16990291262135923
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 160,
+              "weight": 160.0,
+              "mean_probability": 0.24532283176637307,
+              "observed_pave_fraction": 0.2625
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 112,
+              "weight": 112.0,
+              "mean_probability": 0.35015994173764226,
+              "observed_pave_fraction": 0.19642857142857142
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 79,
+              "weight": 79.0,
+              "mean_probability": 0.44288247071253,
+              "observed_pave_fraction": 0.10126582278481013
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 39,
+              "weight": 39.0,
+              "mean_probability": 0.5389026178810097,
+              "observed_pave_fraction": 0.4358974358974359
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 15,
+              "weight": 15.0,
+              "mean_probability": 0.6443161210475682,
+              "observed_pave_fraction": 0.5333333333333333
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "n": 8,
+              "weight": 8.0,
+              "mean_probability": 0.7491577269225572,
+              "observed_pave_fraction": 0.625
+            }
+          ],
+          "low_pave_probability_count": 5559,
+          "hidden_pave_in_low_probability_count": 190,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting_calibration_f1_threshold": {
+          "n": 6178,
+          "positives": 327,
+          "threshold": 0.06065745388193972,
+          "precision": 0.22452504317789293,
+          "recall": 0.39755351681957185,
+          "f1": 0.2869757174392936,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              5402.0,
+              449.0
+            ],
+            [
+              197.0,
+              130.0
+            ]
+          ],
+          "average_precision": 0.19816278888687303,
+          "brier": 0.04791771203453705,
+          "log_loss": 0.1991590348668611,
+          "ece_10_bins": 0.029994249856029533,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 5828,
+              "weight": 5828.0,
+              "mean_probability": 0.014725777255519433,
+              "observed_pave_fraction": 0.041866849691146193
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 291,
+              "weight": 291.0,
+              "mean_probability": 0.14152712595036146,
+              "observed_pave_fraction": 0.18556701030927836
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 49,
+              "weight": 49.0,
+              "mean_probability": 0.2313430146775578,
+              "observed_pave_fraction": 0.4897959183673469
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 10,
+              "weight": 10.0,
+              "mean_probability": 0.33534931735267937,
+              "observed_pave_fraction": 0.5
+            }
+          ],
+          "low_pave_probability_count": 5828,
+          "hidden_pave_in_low_probability_count": 244,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        }
+      },
+      "masked_current_rules": {
+        "n": 6178,
+        "positives": 327,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            5851.0,
+            0.0
+          ],
+          [
+            327.0,
+            0.0
+          ]
+        ],
+        "abstention_fraction": 0.9948203302039494,
+        "probability_metrics": "not applicable: abstention is not a calibrated negative"
+      }
+    },
+    {
+      "test_sector": "NW",
+      "calibration_sector": "NE",
+      "train_sectors": [
+        "SE",
+        "SW"
+      ],
+      "train_ways": 13435,
+      "calibration_ways": 13127,
+      "test_ways": 9975,
+      "train_positives": 626,
+      "calibration_positives": 749,
+      "test_positives": 352,
+      "models": {
+        "prevalence": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              9623.0,
+              0.0
+            ],
+            [
+              352.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.035288220551378445,
+          "brier": 0.03417079886510291,
+          "log_loss": 0.15423455570159592,
+          "ece_10_bins": 0.011306494744490553,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9975,
+              "weight": 9975.0,
+              "mean_probability": 0.046594715295869,
+              "observed_pave_fraction": 0.035288220551378445
+            }
+          ],
+          "low_pave_probability_count": 9975,
+          "hidden_pave_in_low_probability_count": 352,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "prevalence_calibration_f1_threshold": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.046594715295869,
+          "precision": 0.035288220551378445,
+          "recall": 1.0,
+          "f1": 0.0681708143700978,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              0.0,
+              9623.0
+            ],
+            [
+              0.0,
+              352.0
+            ]
+          ],
+          "average_precision": 0.035288220551378445,
+          "brier": 0.03417079886510291,
+          "log_loss": 0.15423455570159592,
+          "ece_10_bins": 0.011306494744490553,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9975,
+              "weight": 9975.0,
+              "mean_probability": 0.046594715295869,
+              "observed_pave_fraction": 0.035288220551378445
+            }
+          ],
+          "low_pave_probability_count": 9975,
+          "hidden_pave_in_low_probability_count": 352,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "highway_frequency": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              9623.0,
+              0.0
+            ],
+            [
+              352.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.08651558762709782,
+          "brier": 0.03316365638471358,
+          "log_loss": 0.14707446030783497,
+          "ece_10_bins": 0.01360534558955093,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9274,
+              "weight": 9274.0,
+              "mean_probability": 0.03994751431632627,
+              "observed_pave_fraction": 0.03008410610308389
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 527,
+              "weight": 527.0,
+              "mean_probability": 0.10698479820115706,
+              "observed_pave_fraction": 0.04364326375711575
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 174,
+              "weight": 174.0,
+              "mean_probability": 0.3497648611158101,
+              "observed_pave_fraction": 0.28735632183908044
+            }
+          ],
+          "low_pave_probability_count": 9274,
+          "hidden_pave_in_low_probability_count": 279,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "highway_frequency_calibration_f1_threshold": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.04232891298961103,
+          "precision": 0.054584373885123084,
+          "recall": 0.4346590909090909,
+          "f1": 0.09698890649762282,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6973.0,
+              2650.0
+            ],
+            [
+              199.0,
+              153.0
+            ]
+          ],
+          "average_precision": 0.08651558762709782,
+          "brier": 0.03316365638471358,
+          "log_loss": 0.14707446030783497,
+          "ece_10_bins": 0.01360534558955093,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9274,
+              "weight": 9274.0,
+              "mean_probability": 0.03994751431632627,
+              "observed_pave_fraction": 0.03008410610308389
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 527,
+              "weight": 527.0,
+              "mean_probability": 0.10698479820115706,
+              "observed_pave_fraction": 0.04364326375711575
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 174,
+              "weight": 174.0,
+              "mean_probability": 0.3497648611158101,
+              "observed_pave_fraction": 0.28735632183908044
+            }
+          ],
+          "low_pave_probability_count": 9274,
+          "hidden_pave_in_low_probability_count": 279,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              9623.0,
+              0.0
+            ],
+            [
+              352.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.0709955510116728,
+          "brier": 0.034359629928033084,
+          "log_loss": 0.15622091025112744,
+          "ece_10_bins": 0.020301090007973185,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9975,
+              "weight": 9975.0,
+              "mean_probability": 0.05558931055935163,
+              "observed_pave_fraction": 0.035288220551378445
+            }
+          ],
+          "low_pave_probability_count": 9975,
+          "hidden_pave_in_low_probability_count": 352,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic_uncalibrated": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.5,
+          "precision": 0.0488997555012225,
+          "recall": 0.2840909090909091,
+          "f1": 0.08343763037129745,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              7678.0,
+              1945.0
+            ],
+            [
+              252.0,
+              100.0
+            ]
+          ],
+          "average_precision": 0.0709955510116728,
+          "brier": 0.15570670117238067,
+          "log_loss": 0.48284808385412137,
+          "ece_10_bins": 0.27954534595783687,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 1677,
+              "weight": 1677.0,
+              "mean_probability": 0.05288993941226473,
+              "observed_pave_fraction": 0.026833631484794274
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 2135,
+              "weight": 2135.0,
+              "mean_probability": 0.14916789185726165,
+              "observed_pave_fraction": 0.03138173302107728
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 1665,
+              "weight": 1665.0,
+              "mean_probability": 0.2476722287705084,
+              "observed_pave_fraction": 0.04504504504504504
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 1266,
+              "weight": 1266.0,
+              "mean_probability": 0.34873759208288174,
+              "observed_pave_fraction": 0.026066350710900472
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 1187,
+              "weight": 1187.0,
+              "mean_probability": 0.4497106576257222,
+              "observed_pave_fraction": 0.02695871946082561
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 821,
+              "weight": 821.0,
+              "mean_probability": 0.548278139960668,
+              "observed_pave_fraction": 0.020706455542021926
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 611,
+              "weight": 611.0,
+              "mean_probability": 0.651644716030267,
+              "observed_pave_fraction": 0.029459901800327332
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "n": 318,
+              "weight": 318.0,
+              "mean_probability": 0.7381995740568538,
+              "observed_pave_fraction": 0.03773584905660377
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "n": 162,
+              "weight": 162.0,
+              "mean_probability": 0.8505640028458975,
+              "observed_pave_fraction": 0.14814814814814814
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "n": 133,
+              "weight": 133.0,
+              "mean_probability": 0.9382123152250252,
+              "observed_pave_fraction": 0.21804511278195488
+            }
+          ],
+          "low_pave_probability_count": 1677,
+          "hidden_pave_in_low_probability_count": 45,
+          "high_pave_probability_count": 133,
+          "non_pave_in_high_probability_count": 104
+        },
+        "logistic_calibration_f1_threshold": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.052502585729011,
+          "precision": 0.037558062375580625,
+          "recall": 0.8039772727272727,
+          "f1": 0.07176366172182072,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              2371.0,
+              7252.0
+            ],
+            [
+              69.0,
+              283.0
+            ]
+          ],
+          "average_precision": 0.0709955510116728,
+          "brier": 0.034359629928033084,
+          "log_loss": 0.15622091025112744,
+          "ece_10_bins": 0.020301090007973185,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9975,
+              "weight": 9975.0,
+              "mean_probability": 0.05558931055935163,
+              "observed_pave_fraction": 0.035288220551378445
+            }
+          ],
+          "low_pave_probability_count": 9975,
+          "hidden_pave_in_low_probability_count": 352,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              9623.0,
+              0.0
+            ],
+            [
+              352.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.1268697940897115,
+          "brier": 0.032886726077804296,
+          "log_loss": 0.1417007802052492,
+          "ece_10_bins": 0.024066520569201794,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9285,
+              "weight": 9285.0,
+              "mean_probability": 0.049958356082960786,
+              "observed_pave_fraction": 0.026817447495961228
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 673,
+              "weight": 673.0,
+              "mean_probability": 0.121086574465918,
+              "observed_pave_fraction": 0.15304606240713226
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 17,
+              "weight": 17.0,
+              "mean_probability": 0.21714535665057602,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 9285,
+          "hidden_pave_in_low_probability_count": 249,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting_uncalibrated": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.5,
+          "precision": 0.21195652173913043,
+          "recall": 0.11079545454545454,
+          "f1": 0.1455223880597015,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              9478.0,
+              145.0
+            ],
+            [
+              313.0,
+              39.0
+            ]
+          ],
+          "average_precision": 0.1268697940897115,
+          "brier": 0.040945849522028496,
+          "log_loss": 0.15795857127275922,
+          "ece_10_bins": 0.05026577972926336,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 6811,
+              "weight": 6811.0,
+              "mean_probability": 0.023776928598328598,
+              "observed_pave_fraction": 0.010130670973425342
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 1953,
+              "weight": 1953.0,
+              "mean_probability": 0.14039365862065656,
+              "observed_pave_fraction": 0.0670762928827445
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 629,
+              "weight": 629.0,
+              "mean_probability": 0.2428984768324378,
+              "observed_pave_fraction": 0.09538950715421304
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 297,
+              "weight": 297.0,
+              "mean_probability": 0.3415757579363578,
+              "observed_pave_fraction": 0.10101010101010101
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 101,
+              "weight": 101.0,
+              "mean_probability": 0.44304370424561396,
+              "observed_pave_fraction": 0.22772277227722773
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 75,
+              "weight": 75.0,
+              "mean_probability": 0.5459192448442952,
+              "observed_pave_fraction": 0.16
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 62,
+              "weight": 62.0,
+              "mean_probability": 0.6485426718137217,
+              "observed_pave_fraction": 0.3387096774193548
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "n": 24,
+              "weight": 24.0,
+              "mean_probability": 0.7345123573232916,
+              "observed_pave_fraction": 0.25
+            },
+            {
+              "lower": 0.8,
+              "upper": 0.9,
+              "n": 22,
+              "weight": 22.0,
+              "mean_probability": 0.8452053174494689,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.9,
+              "upper": 1.0,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.9127180911149556,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 6811,
+          "hidden_pave_in_low_probability_count": 69,
+          "high_pave_probability_count": 1,
+          "non_pave_in_high_probability_count": 1
+        },
+        "hist_gradient_boosting_calibration_f1_threshold": {
+          "n": 9975,
+          "positives": 352,
+          "threshold": 0.07216073739658674,
+          "precision": 0.09110396570203644,
+          "recall": 0.7244318181818182,
+          "f1": 0.16185337987940338,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              7079.0,
+              2544.0
+            ],
+            [
+              97.0,
+              255.0
+            ]
+          ],
+          "average_precision": 0.1268697940897115,
+          "brier": 0.032886726077804296,
+          "log_loss": 0.1417007802052492,
+          "ece_10_bins": 0.024066520569201794,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9285,
+              "weight": 9285.0,
+              "mean_probability": 0.049958356082960786,
+              "observed_pave_fraction": 0.026817447495961228
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 673,
+              "weight": 673.0,
+              "mean_probability": 0.121086574465918,
+              "observed_pave_fraction": 0.15304606240713226
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 17,
+              "weight": 17.0,
+              "mean_probability": 0.21714535665057602,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 9285,
+          "hidden_pave_in_low_probability_count": 249,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        }
+      },
+      "masked_current_rules": {
+        "n": 9975,
+        "positives": 352,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            9623.0,
+            0.0
+          ],
+          [
+            352.0,
+            0.0
+          ]
+        ],
+        "abstention_fraction": 0.9998997493734336,
+        "probability_metrics": "not applicable: abstention is not a calibrated negative"
+      }
+    },
+    {
+      "test_sector": "NE",
+      "calibration_sector": "SW",
+      "train_sectors": [
+        "NW",
+        "SE"
+      ],
+      "train_ways": 16153,
+      "calibration_ways": 7257,
+      "test_ways": 13127,
+      "train_positives": 679,
+      "calibration_positives": 299,
+      "test_positives": 749,
+      "models": {
+        "prevalence": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              12378.0,
+              0.0
+            ],
+            [
+              749.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.05705797211853432,
+          "brier": 0.05402803354738544,
+          "log_loss": 0.22132466757920993,
+          "ece_10_bins": 0.015022436923833649,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 13127,
+              "weight": 13127.0,
+              "mean_probability": 0.04203553519470067,
+              "observed_pave_fraction": 0.05705797211853432
+            }
+          ],
+          "low_pave_probability_count": 13127,
+          "hidden_pave_in_low_probability_count": 749,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "prevalence_calibration_f1_threshold": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.04203553519470068,
+          "precision": 0.05705797211853432,
+          "recall": 1.0,
+          "f1": 0.10795618333813779,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              0.0,
+              12378.0
+            ],
+            [
+              0.0,
+              749.0
+            ]
+          ],
+          "average_precision": 0.05705797211853432,
+          "brier": 0.05402803354738544,
+          "log_loss": 0.22132466757920993,
+          "ece_10_bins": 0.015022436923833649,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 13127,
+              "weight": 13127.0,
+              "mean_probability": 0.04203553519470067,
+              "observed_pave_fraction": 0.05705797211853432
+            }
+          ],
+          "low_pave_probability_count": 13127,
+          "hidden_pave_in_low_probability_count": 749,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "highway_frequency": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              12378.0,
+              0.0
+            ],
+            [
+              749.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.0769883116082758,
+          "brier": 0.053638154737499756,
+          "log_loss": 0.2209566395892375,
+          "ece_10_bins": 0.01715824159390664,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 12988,
+              "weight": 12988.0,
+              "mean_probability": 0.037940272934734016,
+              "observed_pave_fraction": 0.05481983369263936
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 83,
+              "weight": 83.0,
+              "mean_probability": 0.1712094760519202,
+              "observed_pave_fraction": 0.20481927710843373
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 56,
+              "weight": 56.0,
+              "mean_probability": 0.2997341287170135,
+              "observed_pave_fraction": 0.35714285714285715
+            }
+          ],
+          "low_pave_probability_count": 12988,
+          "hidden_pave_in_low_probability_count": 712,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "highway_frequency_calibration_f1_threshold": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.07873837347524065,
+          "precision": 0.07881269191402251,
+          "recall": 0.102803738317757,
+          "f1": 0.08922363847045191,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              11478.0,
+              900.0
+            ],
+            [
+              672.0,
+              77.0
+            ]
+          ],
+          "average_precision": 0.0769883116082758,
+          "brier": 0.053638154737499756,
+          "log_loss": 0.2209566395892375,
+          "ece_10_bins": 0.01715824159390664,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 12988,
+              "weight": 12988.0,
+              "mean_probability": 0.037940272934734016,
+              "observed_pave_fraction": 0.05481983369263936
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 83,
+              "weight": 83.0,
+              "mean_probability": 0.1712094760519202,
+              "observed_pave_fraction": 0.20481927710843373
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 56,
+              "weight": 56.0,
+              "mean_probability": 0.2997341287170135,
+              "observed_pave_fraction": 0.35714285714285715
+            }
+          ],
+          "low_pave_probability_count": 12988,
+          "hidden_pave_in_low_probability_count": 712,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.5,
+          "precision": 1.0,
+          "recall": 0.004005340453938585,
+          "f1": 0.007978723404255319,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              12378.0,
+              0.0
+            ],
+            [
+              746.0,
+              3.0
+            ]
+          ],
+          "average_precision": 0.09371697425425218,
+          "brier": 0.053618340846407514,
+          "log_loss": 0.21582092720899423,
+          "ece_10_bins": 0.010555182945540935,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 11366,
+              "weight": 11366.0,
+              "mean_probability": 0.05571009853585575,
+              "observed_pave_fraction": 0.05094140418792891
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 1555,
+              "weight": 1555.0,
+              "mean_probability": 0.1258750119972871,
+              "observed_pave_fraction": 0.08617363344051447
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 161,
+              "weight": 161.0,
+              "mean_probability": 0.24106955429704255,
+              "observed_pave_fraction": 0.16149068322981366
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 28,
+              "weight": 28.0,
+              "mean_probability": 0.3368960319643581,
+              "observed_pave_fraction": 0.21428571428571427
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 14,
+              "weight": 14.0,
+              "mean_probability": 0.42757689107202784,
+              "observed_pave_fraction": 0.07142857142857142
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.5367002333454153,
+              "observed_pave_fraction": 1.0
+            }
+          ],
+          "low_pave_probability_count": 11366,
+          "hidden_pave_in_low_probability_count": 579,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic_uncalibrated": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.5,
+          "precision": 0.3181818181818182,
+          "recall": 0.009345794392523364,
+          "f1": 0.018158236057068743,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              12363.0,
+              15.0
+            ],
+            [
+              742.0,
+              7.0
+            ]
+          ],
+          "average_precision": 0.09371697425425218,
+          "brier": 0.05409781566754938,
+          "log_loss": 0.2190269430532789,
+          "ece_10_bins": 0.01189696791617602,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 11643,
+              "weight": 11643.0,
+              "mean_probability": 0.0457136734960425,
+              "observed_pave_fraction": 0.051017778922958
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 1176,
+              "weight": 1176.0,
+              "mean_probability": 0.13062722702388538,
+              "observed_pave_fraction": 0.08928571428571429
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 185,
+              "weight": 185.0,
+              "mean_probability": 0.24076497558369964,
+              "observed_pave_fraction": 0.15135135135135136
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 78,
+              "weight": 78.0,
+              "mean_probability": 0.3474031002928714,
+              "observed_pave_fraction": 0.15384615384615385
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 23,
+              "weight": 23.0,
+              "mean_probability": 0.438471015241111,
+              "observed_pave_fraction": 0.13043478260869565
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 15,
+              "weight": 15.0,
+              "mean_probability": 0.5560996681901709,
+              "observed_pave_fraction": 0.26666666666666666
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 5,
+              "weight": 5.0,
+              "mean_probability": 0.6425445821536365,
+              "observed_pave_fraction": 0.2
+            },
+            {
+              "lower": 0.7,
+              "upper": 0.8,
+              "n": 2,
+              "weight": 2.0,
+              "mean_probability": 0.73991711000922,
+              "observed_pave_fraction": 1.0
+            }
+          ],
+          "low_pave_probability_count": 11643,
+          "hidden_pave_in_low_probability_count": 594,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "logistic_calibration_f1_threshold": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.06623430920266984,
+          "precision": 0.06789508632138114,
+          "recall": 0.5460614152202937,
+          "f1": 0.12077366012106895,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              6763.0,
+              5615.0
+            ],
+            [
+              340.0,
+              409.0
+            ]
+          ],
+          "average_precision": 0.09371697425425218,
+          "brier": 0.053618340846407514,
+          "log_loss": 0.21582092720899423,
+          "ece_10_bins": 0.010555182945540935,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 11366,
+              "weight": 11366.0,
+              "mean_probability": 0.05571009853585575,
+              "observed_pave_fraction": 0.05094140418792891
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 1555,
+              "weight": 1555.0,
+              "mean_probability": 0.1258750119972871,
+              "observed_pave_fraction": 0.08617363344051447
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 161,
+              "weight": 161.0,
+              "mean_probability": 0.24106955429704255,
+              "observed_pave_fraction": 0.16149068322981366
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 28,
+              "weight": 28.0,
+              "mean_probability": 0.3368960319643581,
+              "observed_pave_fraction": 0.21428571428571427
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 14,
+              "weight": 14.0,
+              "mean_probability": 0.42757689107202784,
+              "observed_pave_fraction": 0.07142857142857142
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.5367002333454153,
+              "observed_pave_fraction": 1.0
+            }
+          ],
+          "low_pave_probability_count": 11366,
+          "hidden_pave_in_low_probability_count": 579,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              12374.0,
+              4.0
+            ],
+            [
+              749.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.1116543603863595,
+          "brier": 0.053387388781572225,
+          "log_loss": 0.21244406374682417,
+          "ece_10_bins": 0.01513409939354554,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9953,
+              "weight": 9953.0,
+              "mean_probability": 0.045386868776769736,
+              "observed_pave_fraction": 0.03827991560333568
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 2682,
+              "weight": 2682.0,
+              "mean_probability": 0.13653509516599452,
+              "observed_pave_fraction": 0.10961968680089486
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 380,
+              "weight": 380.0,
+              "mean_probability": 0.23545159267551635,
+              "observed_pave_fraction": 0.1394736842105263
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 89,
+              "weight": 89.0,
+              "mean_probability": 0.3348171844348238,
+              "observed_pave_fraction": 0.19101123595505617
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 19,
+              "weight": 19.0,
+              "mean_probability": 0.4338579725510117,
+              "observed_pave_fraction": 0.21052631578947367
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.5287416909861747,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.6428313858625565,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 9953,
+          "hidden_pave_in_low_probability_count": 381,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting_uncalibrated": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              12374.0,
+              4.0
+            ],
+            [
+              749.0,
+              0.0
+            ]
+          ],
+          "average_precision": 0.1116543603863595,
+          "brier": 0.05317442978749922,
+          "log_loss": 0.21888450300921067,
+          "ece_10_bins": 0.02144451945696049,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 12057,
+              "weight": 12057.0,
+              "mean_probability": 0.028532602438086783,
+              "observed_pave_fraction": 0.04934892593514141
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 883,
+              "weight": 883.0,
+              "mean_probability": 0.13279095299754026,
+              "observed_pave_fraction": 0.14156285390713477
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 135,
+              "weight": 135.0,
+              "mean_probability": 0.2397009309708941,
+              "observed_pave_fraction": 0.13333333333333333
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 40,
+              "weight": 40.0,
+              "mean_probability": 0.34031492949535785,
+              "observed_pave_fraction": 0.25
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 8,
+              "weight": 8.0,
+              "mean_probability": 0.4412173274997566,
+              "observed_pave_fraction": 0.125
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.5315672133875212,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.677542883315172,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 12057,
+          "hidden_pave_in_low_probability_count": 595,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        },
+        "hist_gradient_boosting_calibration_f1_threshold": {
+          "n": 13127,
+          "positives": 749,
+          "threshold": 0.10378075997716038,
+          "precision": 0.11634904714142427,
+          "recall": 0.46461949265687585,
+          "f1": 0.18609625668449198,
+          "confusion_matrix_tn_fp_fn_tp": [
+            [
+              9735.0,
+              2643.0
+            ],
+            [
+              401.0,
+              348.0
+            ]
+          ],
+          "average_precision": 0.1116543603863595,
+          "brier": 0.053387388781572225,
+          "log_loss": 0.21244406374682417,
+          "ece_10_bins": 0.01513409939354554,
+          "reliability_bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "n": 9953,
+              "weight": 9953.0,
+              "mean_probability": 0.045386868776769736,
+              "observed_pave_fraction": 0.03827991560333568
+            },
+            {
+              "lower": 0.1,
+              "upper": 0.2,
+              "n": 2682,
+              "weight": 2682.0,
+              "mean_probability": 0.13653509516599452,
+              "observed_pave_fraction": 0.10961968680089486
+            },
+            {
+              "lower": 0.2,
+              "upper": 0.3,
+              "n": 380,
+              "weight": 380.0,
+              "mean_probability": 0.23545159267551635,
+              "observed_pave_fraction": 0.1394736842105263
+            },
+            {
+              "lower": 0.3,
+              "upper": 0.4,
+              "n": 89,
+              "weight": 89.0,
+              "mean_probability": 0.3348171844348238,
+              "observed_pave_fraction": 0.19101123595505617
+            },
+            {
+              "lower": 0.4,
+              "upper": 0.5,
+              "n": 19,
+              "weight": 19.0,
+              "mean_probability": 0.4338579725510117,
+              "observed_pave_fraction": 0.21052631578947367
+            },
+            {
+              "lower": 0.5,
+              "upper": 0.6,
+              "n": 3,
+              "weight": 3.0,
+              "mean_probability": 0.5287416909861747,
+              "observed_pave_fraction": 0.0
+            },
+            {
+              "lower": 0.6,
+              "upper": 0.7,
+              "n": 1,
+              "weight": 1.0,
+              "mean_probability": 0.6428313858625565,
+              "observed_pave_fraction": 0.0
+            }
+          ],
+          "low_pave_probability_count": 9953,
+          "hidden_pave_in_low_probability_count": 381,
+          "high_pave_probability_count": 0,
+          "non_pave_in_high_probability_count": 0
+        }
+      },
+      "masked_current_rules": {
+        "n": 13127,
+        "positives": 749,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            12378.0,
+            0.0
+          ],
+          [
+            749.0,
+            0.0
+          ]
+        ],
+        "abstention_fraction": 0.9997714633960539,
+        "probability_metrics": "not applicable: abstention is not a calibrated negative"
+      }
+    }
+  ],
+  "aggregate": {
+    "prevalence": {
+      "way_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            34810.0,
+            0.0
+          ],
+          [
+            1727.0,
+            0.0
+          ]
+        ],
+        "average_precision": 0.047103912597830935,
+        "brier": 0.04507127439136594,
+        "log_loss": 0.1908468363794075,
+        "ece_10_bins": 0.0012845300874214372,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 36537,
+            "weight": 36537.0,
+            "mean_probability": 0.04598262375662706,
+            "observed_pave_fraction": 0.0472671538440485
+          }
+        ],
+        "low_pave_probability_count": 36537,
+        "hidden_pave_in_low_probability_count": 1727,
+        "high_pave_probability_count": 0,
+        "non_pave_in_high_probability_count": 0
+      },
+      "length_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            2178169.378156088,
+            0.0
+          ],
+          [
+            66400.4050651009,
+            0.0
+          ]
+        ],
+        "average_precision": 0.028622863343840416,
+        "brier": 0.029020560821276273,
+        "log_loss": 0.13724196916247206,
+        "ece_10_bins": 0.016713610804266414,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 36537,
+            "weight": 2244569.7832211875,
+            "mean_probability": 0.04629629767881279,
+            "observed_pave_fraction": 0.029582686874546377
+          }
+        ],
+        "low_pave_probability_count": 36537,
+        "hidden_pave_in_low_probability_count": 1727,
+        "high_pave_probability_count": 0,
+        "non_pave_in_high_probability_count": 0
+      }
+    },
+    "highway_frequency": {
+      "way_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            34810.0,
+            0.0
+          ],
+          [
+            1727.0,
+            0.0
+          ]
+        ],
+        "average_precision": 0.07817347226939085,
+        "brier": 0.04439841353968947,
+        "log_loss": 0.1872721265685794,
+        "ece_10_bins": 0.0038294093498880697,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 35614,
+            "weight": 35614.0,
+            "mean_probability": 0.04201017637419507,
+            "observed_pave_fraction": 0.044476891110237546
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 636,
+            "weight": 636.0,
+            "mean_probability": 0.11885289438268762,
+            "observed_pave_fraction": 0.07389937106918239
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 113,
+            "weight": 113.0,
+            "mean_probability": 0.29543341463802414,
+            "observed_pave_fraction": 0.40707964601769914
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 174,
+            "weight": 174.0,
+            "mean_probability": 0.3497648611158101,
+            "observed_pave_fraction": 0.28735632183908044
+          }
+        ],
+        "low_pave_probability_count": 35614,
+        "hidden_pave_in_low_probability_count": 1584,
+        "high_pave_probability_count": 0,
+        "non_pave_in_high_probability_count": 0
+      },
+      "length_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            2178169.378156088,
+            0.0
+          ],
+          [
+            66400.4050651009,
+            0.0
+          ]
+        ],
+        "average_precision": 0.056503537192002476,
+        "brier": 0.028712449216450338,
+        "log_loss": 0.13340694650478205,
+        "ece_10_bins": 0.016763597020831637,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 35614,
+            "weight": 2196160.9664446684,
+            "mean_probability": 0.0428060201931021,
+            "observed_pave_fraction": 0.027376024097965124
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 636,
+            "weight": 25950.420289958318,
+            "mean_probability": 0.10528811927095831,
+            "observed_pave_fraction": 0.04146461160487854
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 113,
+            "weight": 9979.811062593828,
+            "mean_probability": 0.292762664196927,
+            "observed_pave_fraction": 0.26142036095487964
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 174,
+            "weight": 12478.58542396697,
+            "mean_probability": 0.3497648611158101,
+            "observed_pave_fraction": 0.20781999946637633
+          }
+        ],
+        "low_pave_probability_count": 35614,
+        "hidden_pave_in_low_probability_count": 1584,
+        "high_pave_probability_count": 0,
+        "non_pave_in_high_probability_count": 0
+      }
+    },
+    "logistic": {
+      "way_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.75,
+        "recall": 0.0017371163867979154,
+        "f1": 0.0034662045060658577,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            34809.0,
+            1.0
+          ],
+          [
+            1724.0,
+            3.0
+          ]
+        ],
+        "average_precision": 0.07337549913830643,
+        "brier": 0.044942515106561956,
+        "log_loss": 0.18881307408815812,
+        "ece_10_bins": 0.01042169703593635,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 34514,
+            "weight": 34514.0,
+            "mean_probability": 0.052599250895396084,
+            "observed_pave_fraction": 0.044040099669699254
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 1780,
+            "weight": 1780.0,
+            "mean_probability": 0.12575944217097618,
+            "observed_pave_fraction": 0.09438202247191012
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 187,
+            "weight": 187.0,
+            "mean_probability": 0.24534851857299703,
+            "observed_pave_fraction": 0.15508021390374332
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 37,
+            "weight": 37.0,
+            "mean_probability": 0.33670811446352916,
+            "observed_pave_fraction": 0.16216216216216217
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "n": 15,
+            "weight": 15.0,
+            "mean_probability": 0.4257712933890894,
+            "observed_pave_fraction": 0.06666666666666667
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "n": 4,
+            "weight": 4.0,
+            "mean_probability": 0.5524376187922412,
+            "observed_pave_fraction": 0.75
+          }
+        ],
+        "low_pave_probability_count": 34514,
+        "hidden_pave_in_low_probability_count": 1520,
+        "high_pave_probability_count": 0,
+        "non_pave_in_high_probability_count": 0
+      },
+      "length_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.9281246925454193,
+        "recall": 0.001643551854772042,
+        "f1": 0.0032812930944459803,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            2178160.926778063,
+            8.451378024578455
+          ],
+          [
+            66291.27255619854,
+            109.13250890236148
+          ]
+        ],
+        "average_precision": 0.058185822459628646,
+        "brier": 0.02899535082808881,
+        "log_loss": 0.13472127640717818,
+        "ece_10_bins": 0.02038914635746744,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 34514,
+            "weight": 2167851.910797527,
+            "mean_probability": 0.04646886802059051,
+            "observed_pave_fraction": 0.027697636519165767
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 1780,
+            "weight": 66266.89177635992,
+            "mean_probability": 0.1289048464608002,
+            "observed_pave_fraction": 0.07827665734041096
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 187,
+            "weight": 8658.604071723079,
+            "mean_probability": 0.2463486076017921,
+            "observed_pave_fraction": 0.07272051372649913
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 37,
+            "weight": 1351.38201774414,
+            "mean_probability": 0.3415324753769508,
+            "observed_pave_fraction": 0.24472834296846305
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "n": 15,
+            "weight": 323.4106709061835,
+            "mean_probability": 0.41197616665206,
+            "observed_pave_fraction": 0.3072499262593731
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "n": 4,
+            "weight": 117.58388692693994,
+            "mean_probability": 0.5150311538491081,
+            "observed_pave_fraction": 0.9281246925454193
+          }
+        ],
+        "low_pave_probability_count": 34514,
+        "hidden_pave_in_low_probability_count": 1520,
+        "high_pave_probability_count": 0,
+        "non_pave_in_high_probability_count": 0
+      }
+    },
+    "logistic_uncalibrated": {
+      "way_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.05831435079726652,
+        "recall": 0.07411696583671105,
+        "f1": 0.06527281998980113,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            32743.0,
+            2067.0
+          ],
+          [
+            1599.0,
+            128.0
+          ]
+        ],
+        "average_precision": 0.05541221965900049,
+        "brier": 0.08350440985081177,
+        "log_loss": 0.2978460164555004,
+        "ece_10_bins": 0.10223409605348961,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 21235,
+            "weight": 21235.0,
+            "mean_probability": 0.04788781743524433,
+            "observed_pave_fraction": 0.04605603955733459
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 6642,
+            "weight": 6642.0,
+            "mean_probability": 0.14173559775353253,
+            "observed_pave_fraction": 0.05374887082204156
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 3111,
+            "weight": 3111.0,
+            "mean_probability": 0.24545747277314994,
+            "observed_pave_fraction": 0.04885888781742205
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 1949,
+            "weight": 1949.0,
+            "mean_probability": 0.3476615086369784,
+            "observed_pave_fraction": 0.03386351975371986
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "n": 1405,
+            "weight": 1405.0,
+            "mean_probability": 0.44826865025495644,
+            "observed_pave_fraction": 0.032740213523131674
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "n": 928,
+            "weight": 928.0,
+            "mean_probability": 0.5478988579791529,
+            "observed_pave_fraction": 0.03879310344827586
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "n": 643,
+            "weight": 643.0,
+            "mean_probability": 0.6511381857076896,
+            "observed_pave_fraction": 0.03732503888024884
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "n": 325,
+            "weight": 325.0,
+            "mean_probability": 0.7379975050667922,
+            "observed_pave_fraction": 0.043076923076923075
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "n": 166,
+            "weight": 166.0,
+            "mean_probability": 0.8507841660523178,
+            "observed_pave_fraction": 0.15060240963855423
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "n": 133,
+            "weight": 133.0,
+            "mean_probability": 0.9382123152250252,
+            "observed_pave_fraction": 0.21804511278195488
+          }
+        ],
+        "low_pave_probability_count": 21235,
+        "hidden_pave_in_low_probability_count": 978,
+        "high_pave_probability_count": 133,
+        "non_pave_in_high_probability_count": 104
+      },
+      "length_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.05445420709552795,
+        "recall": 0.08166983184861,
+        "f1": 0.0653413749905879,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            2084005.6774945997,
+            94163.7006614751
+          ],
+          [
+            60977.49514875449,
+            5422.9099163463825
+          ]
+        ],
+        "average_precision": 0.04437577364318582,
+        "brier": 0.05981216308448385,
+        "log_loss": 0.2242514697470417,
+        "ece_10_bins": 0.09234656488325269,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 21235,
+            "weight": 1480463.6890936564,
+            "mean_probability": 0.03861357247038295,
+            "observed_pave_fraction": 0.026312234038557234
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 6642,
+            "weight": 342071.08466036804,
+            "mean_probability": 0.14223679188910582,
+            "observed_pave_fraction": 0.03795758574872138
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 3111,
+            "weight": 154405.86341396725,
+            "mean_probability": 0.24642727124189534,
+            "observed_pave_fraction": 0.028050747745252808
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 1949,
+            "weight": 99045.27640351176,
+            "mean_probability": 0.34648340055534266,
+            "observed_pave_fraction": 0.0183389154345923
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "n": 1405,
+            "weight": 68997.25907186259,
+            "mean_probability": 0.44756912681875216,
+            "observed_pave_fraction": 0.04190619617799315
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "n": 928,
+            "weight": 47409.18447338983,
+            "mean_probability": 0.5479541146839164,
+            "observed_pave_fraction": 0.0354646350817857
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "n": 643,
+            "weight": 24980.188496576677,
+            "mean_probability": 0.6476271604769825,
+            "observed_pave_fraction": 0.041053778396367986
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "n": 325,
+            "weight": 11860.321039523858,
+            "mean_probability": 0.7488626189065456,
+            "observed_pave_fraction": 0.03756721467837656
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "n": 166,
+            "weight": 8739.516946301412,
+            "mean_probability": 0.8475531963418407,
+            "observed_pave_fraction": 0.10353680706183854
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "n": 133,
+            "weight": 6597.399622029931,
+            "mean_probability": 0.934362522469685,
+            "observed_pave_fraction": 0.2069919268715268
+          }
+        ],
+        "low_pave_probability_count": 21235,
+        "hidden_pave_in_low_probability_count": 978,
+        "high_pave_probability_count": 133,
+        "non_pave_in_high_probability_count": 104
+      }
+    },
+    "hist_gradient_boosting": {
+      "way_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            34806.0,
+            4.0
+          ],
+          [
+            1727.0,
+            0.0
+          ]
+        ],
+        "average_precision": 0.11492359912291522,
+        "brier": 0.04377191096946963,
+        "log_loss": 0.17967441481491883,
+        "ece_10_bins": 0.006540765336510562,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 31860,
+            "weight": 31860.0,
+            "mean_probability": 0.039773279653991175,
+            "observed_pave_fraction": 0.03440050219711237
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 4106,
+            "weight": 4106.0,
+            "mean_probability": 0.13395892630966064,
+            "observed_pave_fraction": 0.12810521188504628
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 449,
+            "weight": 449.0,
+            "mean_probability": 0.23417220795310612,
+            "observed_pave_fraction": 0.1759465478841871
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 99,
+            "weight": 99.0,
+            "mean_probability": 0.33487093523460715,
+            "observed_pave_fraction": 0.2222222222222222
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "n": 19,
+            "weight": 19.0,
+            "mean_probability": 0.4338579725510117,
+            "observed_pave_fraction": 0.21052631578947367
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "n": 3,
+            "weight": 3.0,
+            "mean_probability": 0.5287416909861747,
+            "observed_pave_fraction": 0.0
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "n": 1,
+            "weight": 1.0,
+            "mean_probability": 0.6428313858625565,
+            "observed_pave_fraction": 0.0
+          }
+        ],
+        "low_pave_probability_count": 31860,
+        "hidden_pave_in_low_probability_count": 1096,
+        "high_pave_probability_count": 0,
+        "non_pave_in_high_probability_count": 0
+      },
+      "length_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            2178045.836667657,
+            123.54148843085588
+          ],
+          [
+            66400.4050651009,
+            0.0
+          ]
+        ],
+        "average_precision": 0.09673351309269851,
+        "brier": 0.02800089628315224,
+        "log_loss": 0.12390034245585445,
+        "ece_10_bins": 0.013217311570282313,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 31860,
+            "weight": 2074708.0460261838,
+            "mean_probability": 0.0341959116426175,
+            "observed_pave_fraction": 0.021688971786391276
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 4106,
+            "weight": 149483.09426912968,
+            "mean_probability": 0.13278407248702673,
+            "observed_pave_fraction": 0.11734135361734417
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 449,
+            "weight": 15935.383113289035,
+            "mean_probability": 0.23319489783385522,
+            "observed_pave_fraction": 0.18585908543436988
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 99,
+            "weight": 3809.097125791162,
+            "mean_probability": 0.33175772409171606,
+            "observed_pave_fraction": 0.20905822907459018
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "n": 19,
+            "weight": 510.62119836290805,
+            "mean_probability": 0.43584218222820104,
+            "observed_pave_fraction": 0.20272040163994384
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "n": 3,
+            "weight": 87.95281609183039,
+            "mean_probability": 0.5332515638889871,
+            "observed_pave_fraction": 0.0
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "n": 1,
+            "weight": 35.58867233902549,
+            "mean_probability": 0.6428313858625565,
+            "observed_pave_fraction": 0.0
+          }
+        ],
+        "low_pave_probability_count": 31860,
+        "hidden_pave_in_low_probability_count": 1096,
+        "high_pave_probability_count": 0,
+        "non_pave_in_high_probability_count": 0
+      }
+    },
+    "hist_gradient_boosting_uncalibrated": {
+      "way_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.28044280442804426,
+        "recall": 0.04400694846554719,
+        "f1": 0.07607607607607608,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            34615.0,
+            195.0
+          ],
+          [
+            1651.0,
+            76.0
+          ]
+        ],
+        "average_precision": 0.12055868613654941,
+        "brier": 0.04625459993700483,
+        "log_loss": 0.18712700404035462,
+        "ece_10_bins": 0.02395728739752302,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 31018,
+            "weight": 31018.0,
+            "mean_probability": 0.02274581101498766,
+            "observed_pave_fraction": 0.03375459410664775
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 3294,
+            "weight": 3294.0,
+            "mean_probability": 0.138669443527766,
+            "observed_pave_fraction": 0.09927140255009108
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 1055,
+            "weight": 1055.0,
+            "mean_probability": 0.2441143239877659,
+            "observed_pave_fraction": 0.13080568720379146
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 667,
+            "weight": 667.0,
+            "mean_probability": 0.3415737793186466,
+            "observed_pave_fraction": 0.14842578710644677
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "n": 232,
+            "weight": 232.0,
+            "mean_probability": 0.4432341753522061,
+            "observed_pave_fraction": 0.1724137931034483
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "n": 135,
+            "weight": 135.0,
+            "mean_probability": 0.5424124503773405,
+            "observed_pave_fraction": 0.2518518518518518
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "n": 81,
+            "weight": 81.0,
+            "mean_probability": 0.6484531254851723,
+            "observed_pave_fraction": 0.38271604938271603
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "n": 32,
+            "weight": 32.0,
+            "mean_probability": 0.738173699723108,
+            "observed_pave_fraction": 0.34375
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "n": 22,
+            "weight": 22.0,
+            "mean_probability": 0.8452053174494689,
+            "observed_pave_fraction": 0.0
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "n": 1,
+            "weight": 1.0,
+            "mean_probability": 0.9127180911149556,
+            "observed_pave_fraction": 0.0
+          }
+        ],
+        "low_pave_probability_count": 31018,
+        "hidden_pave_in_low_probability_count": 1047,
+        "high_pave_probability_count": 1,
+        "non_pave_in_high_probability_count": 1
+      },
+      "length_weighted": {
+        "n": 36537,
+        "positives": 1727,
+        "threshold": 0.5,
+        "precision": 0.23353207841485493,
+        "recall": 0.04325975445114982,
+        "f1": 0.07299738770532252,
+        "confusion_matrix_tn_fp_fn_tp": [
+          [
+            2168741.754932544,
+            9427.6232235397
+          ],
+          [
+            63527.939846527726,
+            2872.46521857315
+          ]
+        ],
+        "average_precision": 0.10084457544097125,
+        "brier": 0.029595509026244388,
+        "log_loss": 0.12481881556380722,
+        "ece_10_bins": 0.013300439940289047,
+        "reliability_bins": [
+          {
+            "lower": 0.0,
+            "upper": 0.1,
+            "n": 31018,
+            "weight": 2044748.213904074,
+            "mean_probability": 0.01809510070247477,
+            "observed_pave_fraction": 0.021880372834961834
+          },
+          {
+            "lower": 0.1,
+            "upper": 0.2,
+            "n": 3294,
+            "weight": 123810.25860551964,
+            "mean_probability": 0.1385716127762049,
+            "observed_pave_fraction": 0.08242075566904053
+          },
+          {
+            "lower": 0.2,
+            "upper": 0.3,
+            "n": 1055,
+            "weight": 37746.07107834132,
+            "mean_probability": 0.24293266229542335,
+            "observed_pave_fraction": 0.11455596924357964
+          },
+          {
+            "lower": 0.3,
+            "upper": 0.4,
+            "n": 667,
+            "weight": 17286.608315402835,
+            "mean_probability": 0.3421519253564619,
+            "observed_pave_fraction": 0.1503584656068545
+          },
+          {
+            "lower": 0.4,
+            "upper": 0.5,
+            "n": 232,
+            "weight": 8678.54287573691,
+            "mean_probability": 0.4423650962748823,
+            "observed_pave_fraction": 0.19131389488352488
+          },
+          {
+            "lower": 0.5,
+            "upper": 0.6,
+            "n": 135,
+            "weight": 6099.8140193939325,
+            "mean_probability": 0.5463345450223562,
+            "observed_pave_fraction": 0.21513101803853948
+          },
+          {
+            "lower": 0.6,
+            "upper": 0.7,
+            "n": 81,
+            "weight": 3579.7764864069127,
+            "mean_probability": 0.6438556230869624,
+            "observed_pave_fraction": 0.3294740024989246
+          },
+          {
+            "lower": 0.7,
+            "upper": 0.8,
+            "n": 32,
+            "weight": 1510.6094312979985,
+            "mean_probability": 0.7424509923288197,
+            "observed_pave_fraction": 0.2520590192396601
+          },
+          {
+            "lower": 0.8,
+            "upper": 0.9,
+            "n": 22,
+            "weight": 1076.8870026453465,
+            "mean_probability": 0.8406123851376082,
+            "observed_pave_fraction": 0.0
+          },
+          {
+            "lower": 0.9,
+            "upper": 1.0,
+            "n": 1,
+            "weight": 33.00150236866012,
+            "mean_probability": 0.9127180911149556,
+            "observed_pave_fraction": 0.0
+          }
+        ],
+        "low_pave_probability_count": 31018,
+        "hidden_pave_in_low_probability_count": 1047,
+        "high_pave_probability_count": 1,
+        "non_pave_in_high_probability_count": 1
+      }
+    }
+  },
+  "calibration_f1_threshold_sensitivity": {
+    "prevalence": {
+      "n": 36537,
+      "positives": 1727,
+      "precision": 0.0472671538440485,
+      "recall": 1.0,
+      "f1": 0.09026761446790717,
+      "confusion_matrix_tn_fp_fn_tp": [
+        [
+          0.0,
+          34810.0
+        ],
+        [
+          0.0,
+          1727.0
+        ]
+      ]
+    },
+    "highway_frequency": {
+      "n": 36537,
+      "positives": 1727,
+      "precision": 0.059204712812960233,
+      "recall": 0.23277359583092067,
+      "f1": 0.0943994364212751,
+      "confusion_matrix_tn_fp_fn_tp": [
+        [
+          28422.0,
+          6388.0
+        ],
+        [
+          1325.0,
+          402.0
+        ]
+      ]
+    },
+    "logistic": {
+      "n": 36537,
+      "positives": 1727,
+      "precision": 0.050007205649228996,
+      "recall": 0.6027793862188766,
+      "f1": 0.0923527324343506,
+      "confusion_matrix_tn_fp_fn_tp": [
+        [
+          15034.0,
+          19776.0
+        ],
+        [
+          686.0,
+          1041.0
+        ]
+      ]
+    },
+    "hist_gradient_boosting": {
+      "n": 36537,
+      "positives": 1727,
+      "precision": 0.11804834643333828,
+      "recall": 0.4609148812970469,
+      "f1": 0.18795749704840614,
+      "confusion_matrix_tn_fp_fn_tp": [
+        [
+          28863.0,
+          5947.0
+        ],
+        [
+          931.0,
+          796.0
+        ]
+      ]
+    }
+  },
+  "roccella_external": {
+    "n": 122,
+    "positives": 0,
+    "threshold": 0.5,
+    "precision": 0.0,
+    "recall": null,
+    "f1": null,
+    "confusion_matrix_tn_fp_fn_tp": [
+      [
+        122.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "average_precision": null,
+    "brier": 0.0001987701345017265,
+    "log_loss": 0.013928486282622369,
+    "ece_10_bins": 0.013828102930170717,
+    "reliability_bins": [
+      {
+        "lower": 0.0,
+        "upper": 0.1,
+        "n": 122,
+        "weight": 122.0,
+        "mean_probability": 0.013828102930170717,
+        "observed_pave_fraction": 0.0
+      }
+    ],
+    "low_pave_probability_count": 122,
+    "hidden_pave_in_low_probability_count": 0,
+    "high_pave_probability_count": 0,
+    "non_pave_in_high_probability_count": 0
+  },
+  "unknown_predictions": {
+    "ways": 17861,
+    "edges": 69660,
+    "model": "predeclared HGB, equal ensemble of four geographic models",
+    "truth_available": false,
+    "low_pave_probability": 15491,
+    "high_pave_probability": 0,
+    "pave_probability_not_smoothness": true
+  },
+  "routing": {
+    "method": "Historical recorded-choice versus fixed fast/safe candidate sensitivity; not current-selector replay or field validation.",
+    "matching": {
+      "sample_m": 5.0,
+      "proximity_m": 10.0,
+      "ambiguity_margin_m": 3.0,
+      "max_heading_degrees": 35
+    },
+    "false_confidence_thresholds": {
+      "high_pave_probability": 0.9,
+      "low_pave_probability": 0.1
+    },
+    "ranking": "Recorded pave + recorded unknown metres + predicted pav\u00e9 probability \u00d7 matched genuinely unknown metres. Never decrease uncertainty penalties or relabel as smooth. Masked test uses the same additive rule on geographically held-out labeled spans.",
+    "limitations": [
+      "Only archived fast/safe geometries; no new candidate generation or legal graph validation.",
+      "Archived provider transport profiles and a maximum five-minute budget are preserved; matching also filters current modal access/direction.",
+      "Missing/incompatible provider profiles or durations are skipped; recorded profiles alone do not establish present-day legal validity. Missing/null historical budgets use the experiment's five-minute cap.",
+      "No surveyed truth for genuinely unknown roads: correct avoidance and unnecessary detours cannot be certified there.",
+      "Masked results concern mapped OSM labels, not unbiased unknown-road samples; mixed geographical OOF predictions are a sensitivity analysis, not one independent deployment model.",
+      "Unmatched/ambiguous intervals retain uncertainty; low pav\u00e9 probability is never smooth-surface evidence.",
+      "Historical response surface totals can differ from current archive/matcher measurements."
+    ],
+    "summary": {
+      "scenarios": 24,
+      "with_distinct_candidates": 2,
+      "changed_from_recorded": 0,
+      "changed_due_to_ml_penalty": 0,
+      "masked_improved": 0,
+      "masked_worsened": 0,
+      "masked_detours_without_heldout_benefit": 0,
+      "certified_unknown_road_improvements": null
+    },
+    "scenarios": [
+      {
+        "file": "outputs/phase32-benchmark/after-brera-santa-sofia-bicycle.json",
+        "archive_sha256": "fca283b0626661ce961b34ee7e976b1579f4dcf611cff6d682e9aed10fc6cf01",
+        "area": "milan",
+        "mode": "bicycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "bicycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 10.508483333333334,
+            "geometry_sha256": "669c322323f6576e1a2e8f53127d9961f158ec3ce9ea7d9c8917a74b1f28f040",
+            "recorded_pave_m": 86,
+            "recorded_unknown_m": 416,
+            "metrics": {
+              "total_m": 2934.923,
+              "matched_m": 2443.776,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 480.994,
+              "access_or_direction_rejected_m": 10.154,
+              "labeled_m": 2439.88,
+              "reference_pave_m": 0.0,
+              "heldout_m": 1950.879,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 2445.923,
+              "masked_added_risk_m": 177.297,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 1065.983,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 502,
+            "unknown_ml_score": 502.0,
+            "masked_baseline_score": 2445.923,
+            "masked_ml_score": 2623.22
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase32-benchmark/after-brera-santa-sofia-car.json",
+        "archive_sha256": "d0462254fa8a05eb9dac3280d6648e0e58bdcb14a362cbc2c82079ad74dbbd24",
+        "area": "milan",
+        "mode": "car",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "auto",
+          "beta": false,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 13.037933333333333,
+            "geometry_sha256": "baec6d17f2f88ddfb2f5bce547fccfd22f56210adfe4009cea51af8d13fecc6d",
+            "recorded_pave_m": 674,
+            "recorded_unknown_m": 1744,
+            "metrics": {
+              "total_m": 3791.72,
+              "matched_m": 2880.488,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 901.078,
+              "access_or_direction_rejected_m": 10.154,
+              "labeled_m": 2648.419,
+              "reference_pave_m": 475.791,
+              "heldout_m": 1165.11,
+              "heldout_pave_m": 163.774,
+              "masked_baseline_risk_m": 2620.428,
+              "masked_added_risk_m": 91.309,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 770.371,
+              "heldout_false_low_probability_m": 89.675
+            },
+            "fixed_rule_score": 2418,
+            "unknown_ml_score": 2418.0,
+            "masked_baseline_score": 2620.428,
+            "masked_ml_score": 2711.737
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase32-benchmark/after-brera-santa-sofia-motorcycle.json",
+        "archive_sha256": "b96d29abc6327be75d957e205714c8b816dc79f3d211fd30145b8cc98a4ddb70",
+        "area": "milan",
+        "mode": "motorcycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "motorcycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 13.037933333333333,
+            "geometry_sha256": "baec6d17f2f88ddfb2f5bce547fccfd22f56210adfe4009cea51af8d13fecc6d",
+            "recorded_pave_m": 674,
+            "recorded_unknown_m": 1744,
+            "metrics": {
+              "total_m": 3791.72,
+              "matched_m": 2880.488,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 901.078,
+              "access_or_direction_rejected_m": 10.154,
+              "labeled_m": 2648.419,
+              "reference_pave_m": 475.791,
+              "heldout_m": 1165.11,
+              "heldout_pave_m": 163.774,
+              "masked_baseline_risk_m": 2620.428,
+              "masked_added_risk_m": 91.309,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 770.371,
+              "heldout_false_low_probability_m": 89.675
+            },
+            "fixed_rule_score": 2418,
+            "unknown_ml_score": 2418.0,
+            "masked_baseline_score": 2620.428,
+            "masked_ml_score": 2711.737
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase32-benchmark/after-castello-missori-bicycle.json",
+        "archive_sha256": "a36dc1ab289ef96582881efd6fcb70003f4e2a29d9f5c62da36670c21f7eb6c4",
+        "area": "milan",
+        "mode": "bicycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "bicycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+        },
+        "candidate_count": 2,
+        "budget_minutes": 5,
+        "recorded_choice": "safe",
+        "experimental_unknown_choice": "safe",
+        "fixed_rule_control_choice": "safe",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 9.35405,
+            "geometry_sha256": "81d4efaff1741d258a9d2d69934a3cad947e11b9c202d0bfd6e7e7db2f6da7ab",
+            "recorded_pave_m": 1587,
+            "recorded_unknown_m": 97,
+            "metrics": {
+              "total_m": 2661.431,
+              "matched_m": 1761.689,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 899.742,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 998.929,
+              "reference_pave_m": 424.593,
+              "heldout_m": 519.505,
+              "heldout_pave_m": 136.412,
+              "masked_baseline_risk_m": 2470.188,
+              "masked_added_risk_m": 72.784,
+              "unknown_predicted_m": 2.573,
+              "unknown_added_risk_m": 0.514,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 172.291,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 1684,
+            "unknown_ml_score": 1684.514,
+            "masked_baseline_score": 2470.188,
+            "masked_ml_score": 2542.972
+          },
+          {
+            "id": "safe",
+            "minutes": 11.70815,
+            "geometry_sha256": "0d33571ebbcdc8458b5fb29bcf4b0f0a58d1e282568655a1e9c44815f4f44ba7",
+            "recorded_pave_m": 1123,
+            "recorded_unknown_m": 544,
+            "metrics": {
+              "total_m": 3237.458,
+              "matched_m": 2036.456,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 1177.813,
+              "access_or_direction_rejected_m": 23.19,
+              "labeled_m": 1576.526,
+              "reference_pave_m": 384.092,
+              "heldout_m": 618.364,
+              "heldout_pave_m": 142.408,
+              "masked_baseline_risk_m": 2520.98,
+              "masked_added_risk_m": 50.061,
+              "unknown_predicted_m": 17.415,
+              "unknown_added_risk_m": 1.719,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 332.534,
+              "heldout_false_low_probability_m": 47.408
+            },
+            "fixed_rule_score": 1667,
+            "unknown_ml_score": 1668.719,
+            "masked_baseline_score": 2520.98,
+            "masked_ml_score": 2571.041
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase32-benchmark/after-castello-missori-car.json",
+        "archive_sha256": "51dd35ecb9a276d8eb50fec98b3556eefc0c17a6e9d90667e4eef20e05eb2d0f",
+        "area": "milan",
+        "mode": "car",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "auto",
+          "beta": false,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 12.199683333333333,
+            "geometry_sha256": "bf3bbdfa1bcab4c4fa492c5f142ffce51a130495e104e7708b21ce7eb7a082dc",
+            "recorded_pave_m": 475,
+            "recorded_unknown_m": 1719,
+            "metrics": {
+              "total_m": 3517.724,
+              "matched_m": 2589.435,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 928.289,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 2291.164,
+              "reference_pave_m": 322.703,
+              "heldout_m": 1314.958,
+              "heldout_pave_m": 217.678,
+              "masked_baseline_risk_m": 2646.543,
+              "masked_added_risk_m": 103.456,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 805.769,
+              "heldout_false_low_probability_m": 51.963
+            },
+            "fixed_rule_score": 2194,
+            "unknown_ml_score": 2194.0,
+            "masked_baseline_score": 2646.543,
+            "masked_ml_score": 2749.9990000000003
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase32-benchmark/after-castello-missori-motorcycle.json",
+        "archive_sha256": "3a94815fb47b6621957acae1e0430b3e77948825fae5190e213fdae70d6660a5",
+        "area": "milan",
+        "mode": "motorcycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "motorcycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 12.199683333333333,
+            "geometry_sha256": "bf3bbdfa1bcab4c4fa492c5f142ffce51a130495e104e7708b21ce7eb7a082dc",
+            "recorded_pave_m": 475,
+            "recorded_unknown_m": 1719,
+            "metrics": {
+              "total_m": 3517.724,
+              "matched_m": 2589.435,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 928.289,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 2291.164,
+              "reference_pave_m": 322.703,
+              "heldout_m": 1314.958,
+              "heldout_pave_m": 217.678,
+              "masked_baseline_risk_m": 2646.543,
+              "masked_added_risk_m": 103.456,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 805.769,
+              "heldout_false_low_probability_m": 51.963
+            },
+            "fixed_rule_score": 2194,
+            "unknown_ml_score": 2194.0,
+            "masked_baseline_score": 2646.543,
+            "masked_ml_score": 2749.9990000000003
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase32-benchmark/after-san-babila-cordusio-bicycle.json",
+        "archive_sha256": "a844f7711d31d08859ca323dec8230b1453e35024e137e7fa4757f184396180a",
+        "area": "milan",
+        "mode": "bicycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "bicycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+        },
+        "candidate_count": 2,
+        "budget_minutes": 5,
+        "recorded_choice": "safe",
+        "experimental_unknown_choice": "safe",
+        "fixed_rule_control_choice": "safe",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 6.100333333333333,
+            "geometry_sha256": "af7a4e92f65f5f280e5bf6055b4a756c598294d3b8100a67f0f427a4ccae0beb",
+            "recorded_pave_m": 972,
+            "recorded_unknown_m": 50,
+            "metrics": {
+              "total_m": 1752.023,
+              "matched_m": 1012.849,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 739.174,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 646.624,
+              "reference_pave_m": 175.586,
+              "heldout_m": 22.769,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 1303.754,
+              "masked_added_risk_m": 3.426,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 1022,
+            "unknown_ml_score": 1022.0,
+            "masked_baseline_score": 1303.754,
+            "masked_ml_score": 1307.1799999999998
+          },
+          {
+            "id": "safe",
+            "minutes": 6.659966666666667,
+            "geometry_sha256": "f9557074588423a08aeb1eb8d1bae114f72ee5011d240ed8e884115a84084628",
+            "recorded_pave_m": 484,
+            "recorded_unknown_m": 153,
+            "metrics": {
+              "total_m": 1688.191,
+              "matched_m": 975.951,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 572.853,
+              "access_or_direction_rejected_m": 139.387,
+              "labeled_m": 739.325,
+              "reference_pave_m": 120.76,
+              "heldout_m": 322.611,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 1392.237,
+              "masked_added_risk_m": 70.814,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 637,
+            "unknown_ml_score": 637.0,
+            "masked_baseline_score": 1392.237,
+            "masked_ml_score": 1463.0510000000002
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase32-benchmark/after-san-babila-cordusio-car.json",
+        "archive_sha256": "ff325bb01fb5543d2a8ce915c261d81092513192dbd8fe7775bcb47af7b97d88",
+        "area": "milan",
+        "mode": "car",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "auto",
+          "beta": false,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 6.199216666666667,
+            "geometry_sha256": "0d41160f148ff5a9f260469e816a66e62981f7899c9528681821f0daa272d98a",
+            "recorded_pave_m": 295,
+            "recorded_unknown_m": 368,
+            "metrics": {
+              "total_m": 1455.307,
+              "matched_m": 794.605,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 354.891,
+              "access_or_direction_rejected_m": 305.812,
+              "labeled_m": 577.099,
+              "reference_pave_m": 22.085,
+              "heldout_m": 550.033,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 1450.327,
+              "masked_added_risk_m": 70.093,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 111.86,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 663,
+            "unknown_ml_score": 663.0,
+            "masked_baseline_score": 1450.327,
+            "masked_ml_score": 1520.42
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase32-benchmark/after-san-babila-cordusio-motorcycle.json",
+        "archive_sha256": "78784dae3a835d261a3a88c11f0e9d211206f37720b26e28b95953bb11bd7568",
+        "area": "milan",
+        "mode": "motorcycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "motorcycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 4.61915,
+            "geometry_sha256": "e5beab7a44143a1cd00680a0fa31f5c706754ff7efc95e34b32aab243082ae59",
+            "recorded_pave_m": 288,
+            "recorded_unknown_m": 6,
+            "metrics": {
+              "total_m": 1091.019,
+              "matched_m": 734.13,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 356.889,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 516.624,
+              "reference_pave_m": 22.085,
+              "heldout_m": 489.559,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 1086.039,
+              "masked_added_risk_m": 95.103,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 294,
+            "unknown_ml_score": 294.0,
+            "masked_baseline_score": 1086.039,
+            "masked_ml_score": 1181.142
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/borgo-garibaldi-bicycle.json",
+        "archive_sha256": "8250895a6c5975c5d4dd200fb040da3f5371a722a2f2afdeed8d1f51a7f12164",
+        "area": "roccella",
+        "mode": "bicycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "bicycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 2.556633333333333,
+            "geometry_sha256": "9d9ce8899659e958d9c240c2bb3855e56aadb2c84a39a547c6a5cd8320e954b1",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 610,
+            "metrics": {
+              "total_m": 611.575,
+              "matched_m": 597.096,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 14.48,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 0.0,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 611.575,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 597.096,
+              "unknown_added_risk_m": 7.056,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 610,
+            "unknown_ml_score": 617.056,
+            "masked_baseline_score": 611.575,
+            "masked_ml_score": 611.575
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/borgo-garibaldi-car.json",
+        "archive_sha256": "9ea12447561bb82c2ec67d1b303391c985a845538a35fd30a9ab79dbdcc36739",
+        "area": "roccella",
+        "mode": "car",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "auto",
+          "beta": false,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 2.6189833333333334,
+            "geometry_sha256": "9d9ce8899659e958d9c240c2bb3855e56aadb2c84a39a547c6a5cd8320e954b1",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 610,
+            "metrics": {
+              "total_m": 611.575,
+              "matched_m": 597.096,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 14.48,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 0.0,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 611.575,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 597.096,
+              "unknown_added_risk_m": 7.056,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 610,
+            "unknown_ml_score": 617.056,
+            "masked_baseline_score": 611.575,
+            "masked_ml_score": 611.575
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/borgo-garibaldi-motorcycle.json",
+        "archive_sha256": "a1d7314b78f4ad7059a4ca7e069f49bfb4959c63ea3cad24f731cd37ae75c2b5",
+        "area": "roccella",
+        "mode": "motorcycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "motorcycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 2.6189833333333334,
+            "geometry_sha256": "9d9ce8899659e958d9c240c2bb3855e56aadb2c84a39a547c6a5cd8320e954b1",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 610,
+            "metrics": {
+              "total_m": 611.575,
+              "matched_m": 597.096,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 14.48,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 0.0,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 611.575,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 597.096,
+              "unknown_added_risk_m": 7.056,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 610,
+            "unknown_ml_score": 617.056,
+            "masked_baseline_score": 611.575,
+            "masked_ml_score": 611.575
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/lungomare-bicycle.json",
+        "archive_sha256": "472e6f45b74d55b523659639e34726d44698a3358814fae15f248ddc9734a284",
+        "area": "roccella",
+        "mode": "bicycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "bicycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 2.6571,
+            "geometry_sha256": "97c98270cac7acf5e5420b076ee43f3ac589c53ffe92755efff69ac06cd3321e",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 770.37,
+              "matched_m": 753.099,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 17.27,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 753.099,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 17.27,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 17.27,
+            "masked_ml_score": 17.27
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/lungomare-car.json",
+        "archive_sha256": "34f43e0ad5257807bb49e41fd7b43962dee3bc4605ad8c2b22e851edf6a38e5e",
+        "area": "roccella",
+        "mode": "car",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "auto",
+          "beta": false,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 1.6560166666666667,
+            "geometry_sha256": "97c98270cac7acf5e5420b076ee43f3ac589c53ffe92755efff69ac06cd3321e",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 770.37,
+              "matched_m": 753.099,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 17.27,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 753.099,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 17.27,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 17.27,
+            "masked_ml_score": 17.27
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/lungomare-motorcycle.json",
+        "archive_sha256": "97ac90f3c3b00870ed7285bc197c73ddeb61a882dea123328638b843df87b59f",
+        "area": "roccella",
+        "mode": "motorcycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "motorcycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 1.6560166666666667,
+            "geometry_sha256": "97c98270cac7acf5e5420b076ee43f3ac589c53ffe92755efff69ac06cd3321e",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 770.37,
+              "matched_m": 753.099,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 17.27,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 753.099,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 17.27,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 17.27,
+            "masked_ml_score": 17.27
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/lungomare-porto-bicycle.json",
+        "archive_sha256": "b8f920d12ec5bed623ae967b2f76440bbcd400afe504052fd4c67c83f791b5f8",
+        "area": "roccella",
+        "mode": "bicycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "bicycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 5.32425,
+            "geometry_sha256": "2ae6cf2dd348fdefafaa9d48a9986d4026953be9b2b090d659407f158dbd37af",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 1601.25,
+              "matched_m": 1593.48,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 7.77,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 1593.48,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 7.77,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 7.77,
+            "masked_ml_score": 7.77
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/lungomare-porto-car.json",
+        "archive_sha256": "50f536cdf6d393c57900307888e3577260ae31058563f8d189b7ba65fd449ef5",
+        "area": "roccella",
+        "mode": "car",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "auto",
+          "beta": false,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 3.43505,
+            "geometry_sha256": "2ae6cf2dd348fdefafaa9d48a9986d4026953be9b2b090d659407f158dbd37af",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 1601.25,
+              "matched_m": 1593.48,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 7.77,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 1593.48,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 7.77,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 7.77,
+            "masked_ml_score": 7.77
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/lungomare-porto-motorcycle.json",
+        "archive_sha256": "ff48ec7fd2800411df779a78b530af3be1b074acb8d23556453a62df3267374a",
+        "area": "roccella",
+        "mode": "motorcycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "motorcycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 3.43505,
+            "geometry_sha256": "2ae6cf2dd348fdefafaa9d48a9986d4026953be9b2b090d659407f158dbd37af",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 1601.25,
+              "matched_m": 1593.48,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 7.77,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 1593.48,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 7.77,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 7.77,
+            "masked_ml_score": 7.77
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/navigation-bicycle.json",
+        "archive_sha256": "9ca5903862ae4e7cce6cbc1144292f85555501bebb87b7eb48d7de58a3c018b9",
+        "area": "roccella",
+        "mode": "bicycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "bicycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 2.6571,
+            "geometry_sha256": "97c98270cac7acf5e5420b076ee43f3ac589c53ffe92755efff69ac06cd3321e",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 770.37,
+              "matched_m": 753.099,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 17.27,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 753.099,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 17.27,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 17.27,
+            "masked_ml_score": 17.27
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/navigation-car.json",
+        "archive_sha256": "f084abab34bf6505941abc8eb3f0bfa8d09c64cc37b9f0cd413cf87117265382",
+        "area": "roccella",
+        "mode": "car",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "auto",
+          "beta": false,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 1.6560166666666667,
+            "geometry_sha256": "97c98270cac7acf5e5420b076ee43f3ac589c53ffe92755efff69ac06cd3321e",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 770.37,
+              "matched_m": 753.099,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 17.27,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 753.099,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 17.27,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 17.27,
+            "masked_ml_score": 17.27
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/navigation-motorcycle.json",
+        "archive_sha256": "4ebc56b33265b447e451036110003837511e111a3f76975de2366ea323523f03",
+        "area": "roccella",
+        "mode": "motorcycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "motorcycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 1.6560166666666667,
+            "geometry_sha256": "97c98270cac7acf5e5420b076ee43f3ac589c53ffe92755efff69ac06cd3321e",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 0,
+            "metrics": {
+              "total_m": 770.37,
+              "matched_m": 753.099,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 17.27,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 753.099,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 17.27,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 0.0,
+              "unknown_added_risk_m": 0.0,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 0,
+            "unknown_ml_score": 0.0,
+            "masked_baseline_score": 17.27,
+            "masked_ml_score": 17.27
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/reroute-bicycle.json",
+        "archive_sha256": "6cc7d61af3eccd493a948a7be78b2a118cebdf2852e10874f2a0bd8d581016b5",
+        "area": "roccella",
+        "mode": "bicycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "bicycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 2.5566833333333334,
+            "geometry_sha256": "76a7e5e476dd5c600ad7d902d094d725dbd94493edf9d8c17ad5be091895a326",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 651,
+            "metrics": {
+              "total_m": 847.452,
+              "matched_m": 833.013,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 14.439,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 186.019,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 661.433,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 646.994,
+              "unknown_added_risk_m": 8.983,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 651,
+            "unknown_ml_score": 659.983,
+            "masked_baseline_score": 661.433,
+            "masked_ml_score": 661.433
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/reroute-car.json",
+        "archive_sha256": "e590504d09cd7d0dcf6a36ea90a73c04e0c00db505153a0a350c842f1e454cff",
+        "area": "roccella",
+        "mode": "car",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "auto",
+          "beta": false,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo auto Valhalla basato sulla rete OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 2.4981666666666666,
+            "geometry_sha256": "66ae9e5b705c6cdfbfdb46c977cc9fb725251f09dc321a9b6a4852a9cf7df4bf",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 509,
+            "metrics": {
+              "total_m": 841.771,
+              "matched_m": 814.249,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 27.522,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 309.24,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 532.53,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 505.008,
+              "unknown_added_risk_m": 6.104,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 509,
+            "unknown_ml_score": 515.104,
+            "masked_baseline_score": 532.53,
+            "masked_ml_score": 532.53
+          }
+        ]
+      },
+      {
+        "file": "outputs/phase42-validation/reroute-motorcycle.json",
+        "archive_sha256": "61d47c52edc4c4ef05de29c270a0d2c455e94429368a8b64e0ba1954e74c31cd",
+        "area": "roccella",
+        "mode": "motorcycle",
+        "recorded_provider_profile": {
+          "provider": "valhalla-fossgis",
+          "profile": "motorcycle",
+          "beta": true,
+          "approximate": false,
+          "fallbackUsed": false,
+          "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+        },
+        "candidate_count": 1,
+        "budget_minutes": 5,
+        "recorded_choice": "fast",
+        "experimental_unknown_choice": "fast",
+        "fixed_rule_control_choice": "fast",
+        "changed_due_to_ml_penalty": false,
+        "changed_from_recorded": false,
+        "extra_seconds_vs_recorded": 0.0,
+        "matched_reference_pave_reduction_m": 0.0,
+        "unknown_truth": null,
+        "masked": {
+          "baseline_choice": "fast",
+          "ml_choice": "fast",
+          "heldout_pave_reduction_m": 0.0,
+          "extra_seconds": 0.0,
+          "detour_without_heldout_benefit": false
+        },
+        "candidates": [
+          {
+            "id": "fast",
+            "minutes": 2.4981666666666666,
+            "geometry_sha256": "66ae9e5b705c6cdfbfdb46c977cc9fb725251f09dc321a9b6a4852a9cf7df4bf",
+            "recorded_pave_m": 0,
+            "recorded_unknown_m": 509,
+            "metrics": {
+              "total_m": 841.771,
+              "matched_m": 814.249,
+              "unmatched_m": 0.0,
+              "ambiguous_m": 27.522,
+              "access_or_direction_rejected_m": 0.0,
+              "labeled_m": 309.24,
+              "reference_pave_m": 0.0,
+              "heldout_m": 0.0,
+              "heldout_pave_m": 0.0,
+              "masked_baseline_risk_m": 532.53,
+              "masked_added_risk_m": 0.0,
+              "unknown_predicted_m": 505.008,
+              "unknown_added_risk_m": 6.104,
+              "heldout_high_probability_m": 0.0,
+              "heldout_false_high_probability_m": 0.0,
+              "heldout_low_probability_m": 0.0,
+              "heldout_false_low_probability_m": 0.0
+            },
+            "fixed_rule_score": 509,
+            "unknown_ml_score": 515.104,
+            "masked_baseline_score": 532.53,
+            "masked_ml_score": 532.53
+          }
+        ]
+      }
+    ],
+    "skipped": []
+  },
+  "limitations": [
+    "OSM explicit tags, not independently surveyed truth; missing labels are not random.",
+    "Primary target is explicit cobblestone/sett; paving_stones, paved and auxiliary-only labels are excluded, not called smooth.",
+    "All highway classes included; way-level metrics are not modal or lane-kilometre accuracy.",
+    "Non-atomic source snapshots and full ways beyond source bounding boxes; experiment coverage is not runtime tile coverage.",
+    "Four large coordinate sectors are geographic holdouts, not named neighborhood boundaries or independent city replications.",
+    "No Roccella positive labels: recall and F1 undefined, city transfer unproven.",
+    "Low pav\u00e9 probability is never proof of asphalt/smoothness; ensemble dispersion is not an uncertainty guarantee.",
+    "Route matching and OSM labels are partial, no physical road truth; small recorded candidate set cannot prove live routing benefit."
+  ]
+}

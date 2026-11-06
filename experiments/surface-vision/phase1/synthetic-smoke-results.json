@@ -1,0 +1,3474 @@
+{
+ "classes": [
+  "asphalt",
+  "concrete",
+  "paving_stones",
+  "sett",
+  "unpaved"
+ ],
+ "code_sha256": {
+  "run.py": "86ac0b4d6414741d9db3c9df6d259b4bff70be6a2c5e5953f4262a55e2b8cd79",
+  "surfvis/__init__.py": "9f092b04a6132d463d6e3499bdb7d8c2e7e871996a1fb17d082f40a87843af73",
+  "surfvis/data.py": "7e4a002fec9012233d44eb133065c20acf9ef6e4a78ab6556baa12368e9e5ab2",
+  "surfvis/features.py": "28d93cf499e072c5332ebdbe2153ad8413d06842b0095ec1371874a8b69bf318",
+  "surfvis/imageio.py": "4bfe98efe8b671321a5ec9e50ccae6faf51d49b7cfd83f045c1e359192863ed0",
+  "surfvis/metrics.py": "862dba0fab11c6c2d72e12d995b1bbdf19423129c043138e2d98849719c5762d",
+  "surfvis/models.py": "8dce88a324a3d6e30c3172f02267f98e1ef0fe25371a202709f40b7077644f38",
+  "surfvis/pipeline.py": "e3388a4caae2bf45d65bd9f97785c985a0ee9e4dad5e178b8471e3c148627ec0",
+  "surfvis/splits.py": "d8b3129562185652713824c82dcb4c89bb303af6e607f74bee3d36aeacf831ab",
+  "surfvis/synthetic.py": "8d68ee8b3886818c8c73a0f0ba1562aad233fa0e00c5aec212079eb88a179faa"
+ },
+ "config": {
+  "abstention_min_accepted": 20,
+  "abstention_target_accuracy": 0.9,
+  "buffer_km": 2.0,
+  "cal_fraction": 0.2,
+  "cell_deg": 0.5,
+  "min_per_class": 5,
+  "pave_min_predicted": 10,
+  "pave_target_precision": 0.8,
+  "salt": "lastrico-phase420-sv",
+  "seed": 420
+ },
+ "criteria_check": {
+  "applicable": false,
+  "code_path_output": {
+   "all_met": false,
+   "ece_le_0.10": false,
+   "macro_f1_gain_vs_colour_ge_0.10": false,
+   "sett_precision_ge_0.70": true,
+   "sett_recall_ge_0.70": true,
+   "zero_leakage": true
+  },
+  "reason": "synthetic code test; criteria apply to phase-2 real data only"
+ },
+ "feature_matrix_sha256": "b72d8bdfe4c1732e6ef0de46fad4d384e4c74dedb60e7a5c8e08f72ab9b37e81",
+ "feature_version": "fv1",
+ "kind": "SYNTHETIC_CODE_TEST_NOT_ACCURACY",
+ "leakage": {
+  "calibration__test": {
+   "fraction_test_images_by_contributor_seen_in_calibration": 1.0,
+   "min_distance_km": 112.54166288932889,
+   "shared_cells": 0,
+   "shared_contributors": 5,
+   "shared_image_ids": 0,
+   "shared_indices": 0
+  },
+  "cell_level_leakage_total": 0,
+  "image_level_leakage_total": 0,
+  "train__calibration": {
+   "fraction_calibration_images_by_contributor_seen_in_train": 1.0,
+   "min_distance_km": 112.80627848827427,
+   "shared_cells": 0,
+   "shared_contributors": 5,
+   "shared_image_ids": 0,
+   "shared_indices": 0
+  },
+  "train__test": {
+   "fraction_test_images_by_contributor_seen_in_train": 1.0,
+   "min_distance_km": 201.33588620482098,
+   "shared_cells": 0,
+   "shared_contributors": 5,
+   "shared_image_ids": 0,
+   "shared_indices": 0
+  }
+ },
+ "models": {
+  "colour_logistic": {
+   "abstention_selection_on_calibration": {
+    "calibration_accepted": 30,
+    "calibration_accuracy": 1.0,
+    "calibration_coverage": 1.0,
+    "min_accepted": 20,
+    "reached": true,
+    "target_accuracy": 0.9,
+    "threshold": 0.0
+   },
+   "calibrated": true,
+   "calibration_split": {
+    "accuracy": 1.0,
+    "brier_multiclass": 0.09151024298426447,
+    "confusion_matrix": {
+     "labels": [
+      "asphalt",
+      "concrete",
+      "paving_stones",
+      "sett",
+      "unpaved"
+     ],
+     "rows_true_cols_pred": [
+      [
+       6,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       6,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       6,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       6,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       6
+      ]
+     ]
+    },
+    "coverage_accuracy_curve": [
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.0
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.05
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.1
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.15
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.2
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.25
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.3
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.35
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.4
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.45
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.5
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.55
+     },
+     {
+      "accepted": 29,
+      "accuracy": 1.0,
+      "coverage": 0.9666666666666667,
+      "threshold": 0.6
+     },
+     {
+      "accepted": 27,
+      "accuracy": 1.0,
+      "coverage": 0.9,
+      "threshold": 0.65
+     },
+     {
+      "accepted": 21,
+      "accuracy": 1.0,
+      "coverage": 0.7,
+      "threshold": 0.7
+     },
+     {
+      "accepted": 15,
+      "accuracy": 1.0,
+      "coverage": 0.5,
+      "threshold": 0.75
+     },
+     {
+      "accepted": 13,
+      "accuracy": 1.0,
+      "coverage": 0.43333333333333335,
+      "threshold": 0.8
+     },
+     {
+      "accepted": 12,
+      "accuracy": 1.0,
+      "coverage": 0.4,
+      "threshold": 0.85
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.9
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.95
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 1.0
+     }
+    ],
+    "ece_top_label": 0.235487401117415,
+    "macro_f1": 1.0,
+    "mce_top_label": 0.4046125118883783,
+    "n": 30,
+    "per_class": [
+     {
+      "class": "asphalt",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "concrete",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "paving_stones",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "sett",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "unpaved",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     }
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 1,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": 0.5953874881116217
+     },
+     {
+      "accuracy": 1.0,
+      "count": 8,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": 0.6763222418397508
+     },
+     {
+      "accuracy": 1.0,
+      "count": 8,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": 0.734705747130558
+     },
+     {
+      "accuracy": 1.0,
+      "count": 13,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": 0.8501358897387274
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ]
+   },
+   "n_features": 30,
+   "sett_threshold_selection_on_calibration": {
+    "min_predicted": 10,
+    "reached": false,
+    "target_precision": 0.8,
+    "threshold": null
+   },
+   "sett_vs_rest_test_argmax_equivalent": {
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "precision_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "tn": 48,
+    "tp": 12
+   },
+   "sett_vs_rest_test_at_calibration_threshold": null,
+   "sett_vs_rest_test_p050": {
+    "average_precision": 1.0,
+    "brier": 0.03431293108960366,
+    "ece_positive_probability": 0.1140024200230895,
+    "f1": 1.0,
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "precision_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "prevalence": 0.2,
+    "recall": 1.0,
+    "recall_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": 0.0,
+      "count": 44,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": 0.038892439808587316
+     },
+     {
+      "accuracy": 0.0,
+      "count": 4,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": 0.10480120628673165
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 6,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": 0.5545950794848237
+     },
+     {
+      "accuracy": 1.0,
+      "count": 4,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": 0.6233059391124929
+     },
+     {
+      "accuracy": 1.0,
+      "count": 2,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": 0.7347663709902426
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ],
+    "threshold": 0.5,
+    "tn": 48,
+    "tp": 12
+   },
+   "test": {
+    "abstention": {
+     "accepted": 60,
+     "accuracy_accepted": 1.0,
+     "confusion_matrix_accepted": [
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       12,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       12
+      ]
+     ],
+     "coverage": 1.0,
+     "per_class_accepted": [
+      {
+       "class": "asphalt",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "concrete",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "paving_stones",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "sett",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "unpaved",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      }
+     ],
+     "threshold": 0.0
+    },
+    "accuracy": 1.0,
+    "brier_multiclass": 0.15026447668335352,
+    "confusion_matrix": {
+     "labels": [
+      "asphalt",
+      "concrete",
+      "paving_stones",
+      "sett",
+      "unpaved"
+     ],
+     "rows_true_cols_pred": [
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       12,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       12
+      ]
+     ]
+    },
+    "coverage_accuracy_curve": [
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.0
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.05
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.1
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.15
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.2
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.25
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.3
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.35
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.4
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.45
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.5
+     },
+     {
+      "accepted": 58,
+      "accuracy": 1.0,
+      "coverage": 0.9666666666666667,
+      "threshold": 0.55
+     },
+     {
+      "accepted": 48,
+      "accuracy": 1.0,
+      "coverage": 0.8,
+      "threshold": 0.6
+     },
+     {
+      "accepted": 39,
+      "accuracy": 1.0,
+      "coverage": 0.65,
+      "threshold": 0.65
+     },
+     {
+      "accepted": 38,
+      "accuracy": 1.0,
+      "coverage": 0.6333333333333333,
+      "threshold": 0.7
+     },
+     {
+      "accepted": 34,
+      "accuracy": 1.0,
+      "coverage": 0.5666666666666667,
+      "threshold": 0.75
+     },
+     {
+      "accepted": 25,
+      "accuracy": 1.0,
+      "coverage": 0.4166666666666667,
+      "threshold": 0.8
+     },
+     {
+      "accepted": 3,
+      "accuracy": 1.0,
+      "coverage": 0.05,
+      "threshold": 0.85
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.9
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.95
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 1.0
+     }
+    ],
+    "ece_top_label": 0.2709213202984409,
+    "macro_f1": 1.0,
+    "mce_top_label": 0.44266841455457673,
+    "n": 60,
+    "per_class": [
+     {
+      "class": "asphalt",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "concrete",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "paving_stones",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "sett",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "unpaved",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     }
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 12,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": 0.5573315854454233
+     },
+     {
+      "accuracy": 1.0,
+      "count": 10,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": 0.6230215822660649
+     },
+     {
+      "accuracy": 1.0,
+      "count": 13,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": 0.7558621245773967
+     },
+     {
+      "accuracy": 1.0,
+      "count": 25,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": 0.8400127325832665
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ]
+   }
+  },
+  "majority": {
+   "abstention_selection_on_calibration": {
+    "calibration_accepted": 0,
+    "calibration_accuracy": null,
+    "calibration_coverage": 0.0,
+    "min_accepted": 20,
+    "reached": false,
+    "target_accuracy": 0.9,
+    "threshold": 1.000000001
+   },
+   "calibrated": false,
+   "calibration_split": {
+    "accuracy": 0.2,
+    "brier_multiclass": 0.8000000000000004,
+    "confusion_matrix": {
+     "labels": [
+      "asphalt",
+      "concrete",
+      "paving_stones",
+      "sett",
+      "unpaved"
+     ],
+     "rows_true_cols_pred": [
+      [
+       6,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       6,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       6,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       6,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       6,
+       0,
+       0,
+       0,
+       0
+      ]
+     ]
+    },
+    "coverage_accuracy_curve": [
+     {
+      "accepted": 30,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.0
+     },
+     {
+      "accepted": 30,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.05
+     },
+     {
+      "accepted": 30,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.1
+     },
+     {
+      "accepted": 30,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.15
+     },
+     {
+      "accepted": 30,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.2
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.25
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.3
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.35
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.4
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.45
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.5
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.55
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.6
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.65
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.7
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.75
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.8
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.85
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.9
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.95
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 1.0
+     }
+    ],
+    "ece_top_label": 5.551115123125783e-17,
+    "macro_f1": 0.06666666666666668,
+    "mce_top_label": 5.551115123125783e-17,
+    "n": 30,
+    "per_class": [
+     {
+      "class": "asphalt",
+      "f1": 0.33333333333333337,
+      "precision": 0.2,
+      "precision_defined": true,
+      "predicted": 30,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "concrete",
+      "f1": 0.0,
+      "precision": 0.0,
+      "precision_defined": false,
+      "predicted": 0,
+      "recall": 0.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 0
+     },
+     {
+      "class": "paving_stones",
+      "f1": 0.0,
+      "precision": 0.0,
+      "precision_defined": false,
+      "predicted": 0,
+      "recall": 0.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 0
+     },
+     {
+      "class": "sett",
+      "f1": 0.0,
+      "precision": 0.0,
+      "precision_defined": false,
+      "predicted": 0,
+      "recall": 0.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 0
+     },
+     {
+      "class": "unpaved",
+      "f1": 0.0,
+      "precision": 0.0,
+      "precision_defined": false,
+      "predicted": 0,
+      "recall": 0.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 0
+     }
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 0.2,
+      "count": 30,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": 0.20000000000000007
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ]
+   },
+   "n_features": 156,
+   "sett_threshold_selection_on_calibration": {
+    "min_predicted": 10,
+    "reached": false,
+    "target_precision": 0.8,
+    "threshold": null
+   },
+   "sett_vs_rest_test_argmax_equivalent": {
+    "fn": 12,
+    "fp": 0,
+    "precision": 0.0,
+    "precision_wilson95": [
+     null,
+     null
+    ],
+    "recall": 0.0,
+    "recall_wilson95": [
+     2.7755575615628914e-17,
+     0.24249400665524085
+    ],
+    "tn": 48,
+    "tp": 0
+   },
+   "sett_vs_rest_test_at_calibration_threshold": null,
+   "sett_vs_rest_test_p050": {
+    "average_precision": 0.2,
+    "brier": 0.15999999999999998,
+    "ece_positive_probability": 8.326672684688674e-17,
+    "f1": 0.0,
+    "fn": 12,
+    "fp": 0,
+    "precision": 0.0,
+    "precision_wilson95": [
+     null,
+     null
+    ],
+    "prevalence": 0.2,
+    "recall": 0.0,
+    "recall_wilson95": [
+     2.7755575615628914e-17,
+     0.24249400665524085
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 0.2,
+      "count": 60,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": 0.19999999999999993
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ],
+    "threshold": 0.5,
+    "tn": 48,
+    "tp": 0
+   },
+   "test": {
+    "abstention": {
+     "accepted": 0,
+     "accuracy_accepted": null,
+     "coverage": 0.0,
+     "threshold": 1.000000001
+    },
+    "accuracy": 0.2,
+    "brier_multiclass": 0.8000000000000002,
+    "confusion_matrix": {
+     "labels": [
+      "asphalt",
+      "concrete",
+      "paving_stones",
+      "sett",
+      "unpaved"
+     ],
+     "rows_true_cols_pred": [
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ]
+     ]
+    },
+    "coverage_accuracy_curve": [
+     {
+      "accepted": 60,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.0
+     },
+     {
+      "accepted": 60,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.05
+     },
+     {
+      "accepted": 60,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.1
+     },
+     {
+      "accepted": 60,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.15
+     },
+     {
+      "accepted": 60,
+      "accuracy": 0.2,
+      "coverage": 1.0,
+      "threshold": 0.2
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.25
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.3
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.35
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.4
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.45
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.5
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.55
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.6
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.65
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.7
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.75
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.8
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.85
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.9
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.95
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 1.0
+     }
+    ],
+    "ece_top_label": 8.326672684688674e-17,
+    "macro_f1": 0.06666666666666668,
+    "mce_top_label": 8.326672684688674e-17,
+    "n": 60,
+    "per_class": [
+     {
+      "class": "asphalt",
+      "f1": 0.33333333333333337,
+      "precision": 0.2,
+      "precision_defined": true,
+      "predicted": 60,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "concrete",
+      "f1": 0.0,
+      "precision": 0.0,
+      "precision_defined": false,
+      "predicted": 0,
+      "recall": 0.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 0
+     },
+     {
+      "class": "paving_stones",
+      "f1": 0.0,
+      "precision": 0.0,
+      "precision_defined": false,
+      "predicted": 0,
+      "recall": 0.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 0
+     },
+     {
+      "class": "sett",
+      "f1": 0.0,
+      "precision": 0.0,
+      "precision_defined": false,
+      "predicted": 0,
+      "recall": 0.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 0
+     },
+     {
+      "class": "unpaved",
+      "f1": 0.0,
+      "precision": 0.0,
+      "precision_defined": false,
+      "predicted": 0,
+      "recall": 0.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 0
+     }
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 0.2,
+      "count": 60,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": 0.19999999999999993
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ]
+   }
+  },
+  "texture_hgb": {
+   "abstention_selection_on_calibration": {
+    "calibration_accepted": 30,
+    "calibration_accuracy": 1.0,
+    "calibration_coverage": 1.0,
+    "min_accepted": 20,
+    "reached": true,
+    "target_accuracy": 0.9,
+    "threshold": 0.0
+   },
+   "calibrated": true,
+   "calibration_split": {
+    "accuracy": 1.0,
+    "brier_multiclass": 0.03439452644642227,
+    "confusion_matrix": {
+     "labels": [
+      "asphalt",
+      "concrete",
+      "paving_stones",
+      "sett",
+      "unpaved"
+     ],
+     "rows_true_cols_pred": [
+      [
+       6,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       6,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       6,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       6,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       6
+      ]
+     ]
+    },
+    "coverage_accuracy_curve": [
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.0
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.05
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.1
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.15
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.2
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.25
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.3
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.35
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.4
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.45
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.5
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.55
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.6
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.65
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.7
+     },
+     {
+      "accepted": 29,
+      "accuracy": 1.0,
+      "coverage": 0.9666666666666667,
+      "threshold": 0.75
+     },
+     {
+      "accepted": 27,
+      "accuracy": 1.0,
+      "coverage": 0.9,
+      "threshold": 0.8
+     },
+     {
+      "accepted": 14,
+      "accuracy": 1.0,
+      "coverage": 0.4666666666666667,
+      "threshold": 0.85
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.9
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.95
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 1.0
+     }
+    ],
+    "ece_top_label": 0.15673175359184627,
+    "macro_f1": 1.0,
+    "mce_top_label": 0.23381470748880206,
+    "n": 30,
+    "per_class": [
+     {
+      "class": "asphalt",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "concrete",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "paving_stones",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "sett",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "unpaved",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     }
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 3,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": 0.7661852925111979
+     },
+     {
+      "accuracy": 1.0,
+      "count": 27,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": 0.851833019063371
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ]
+   },
+   "n_features": 156,
+   "sett_recall_by_quality_test": {
+    "": {
+     "n": 12,
+     "recall": 1.0
+    }
+   },
+   "sett_threshold_selection_on_calibration": {
+    "min_predicted": 10,
+    "reached": false,
+    "target_precision": 0.8,
+    "threshold": null
+   },
+   "sett_vs_rest_test_argmax_equivalent": {
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "precision_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "tn": 48,
+    "tp": 12
+   },
+   "sett_vs_rest_test_at_calibration_threshold": null,
+   "sett_vs_rest_test_p050": {
+    "average_precision": 1.0,
+    "brier": 0.010134239180882583,
+    "ece_positive_probability": 0.06778066475265256,
+    "f1": 1.0,
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "precision_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "prevalence": 0.2,
+    "recall": 1.0,
+    "recall_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": 0.0,
+      "count": 42,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": 0.026224036425051684
+     },
+     {
+      "accuracy": 0.0,
+      "count": 4,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": 0.13067035221134982
+     },
+     {
+      "accuracy": 0.0,
+      "count": 1,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": 0.2480649737830298
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 0.0,
+      "count": 1,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": 0.4013083818728103
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 12,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": 0.8505520340995214
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ],
+    "threshold": 0.5,
+    "tn": 48,
+    "tp": 12
+   },
+   "test": {
+    "abstention": {
+     "accepted": 60,
+     "accuracy_accepted": 1.0,
+     "confusion_matrix_accepted": [
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       12,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       12
+      ]
+     ],
+     "coverage": 1.0,
+     "per_class_accepted": [
+      {
+       "class": "asphalt",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "concrete",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "paving_stones",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "sett",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "unpaved",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      }
+     ],
+     "threshold": 0.0
+    },
+    "accuracy": 1.0,
+    "brier_multiclass": 0.041291968827093205,
+    "confusion_matrix": {
+     "labels": [
+      "asphalt",
+      "concrete",
+      "paving_stones",
+      "sett",
+      "unpaved"
+     ],
+     "rows_true_cols_pred": [
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       12,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       12
+      ]
+     ]
+    },
+    "coverage_accuracy_curve": [
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.0
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.05
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.1
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.15
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.2
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.25
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.3
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.35
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.4
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.45
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.5
+     },
+     {
+      "accepted": 59,
+      "accuracy": 1.0,
+      "coverage": 0.9833333333333333,
+      "threshold": 0.55
+     },
+     {
+      "accepted": 59,
+      "accuracy": 1.0,
+      "coverage": 0.9833333333333333,
+      "threshold": 0.6
+     },
+     {
+      "accepted": 58,
+      "accuracy": 1.0,
+      "coverage": 0.9666666666666667,
+      "threshold": 0.65
+     },
+     {
+      "accepted": 58,
+      "accuracy": 1.0,
+      "coverage": 0.9666666666666667,
+      "threshold": 0.7
+     },
+     {
+      "accepted": 57,
+      "accuracy": 1.0,
+      "coverage": 0.95,
+      "threshold": 0.75
+     },
+     {
+      "accepted": 52,
+      "accuracy": 1.0,
+      "coverage": 0.8666666666666667,
+      "threshold": 0.8
+     },
+     {
+      "accepted": 39,
+      "accuracy": 1.0,
+      "coverage": 0.65,
+      "threshold": 0.85
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.9
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.95
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 1.0
+     }
+    ],
+    "ece_top_label": 0.16185640908059581,
+    "macro_f1": 1.0,
+    "mce_top_label": 0.4931928755596595,
+    "n": 60,
+    "per_class": [
+     {
+      "class": "asphalt",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "concrete",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "paving_stones",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "sett",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "unpaved",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     }
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 1,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": 0.5068071244403405
+     },
+     {
+      "accuracy": 1.0,
+      "count": 1,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": 0.6182695012003977
+     },
+     {
+      "accuracy": 1.0,
+      "count": 6,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": 0.7657775604523586
+     },
+     {
+      "accuracy": 1.0,
+      "count": 52,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": 0.8570937205155646
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ]
+   },
+   "test_per_cell": {
+    "0.5:100:20": {
+     "accuracy": 1.0,
+     "n": 30,
+     "sett_recall": 1.0,
+     "sett_support": 6
+    },
+    "0.5:98:18": {
+     "accuracy": 1.0,
+     "n": 30,
+     "sett_recall": 1.0,
+     "sett_support": 6
+    }
+   }
+  },
+  "texture_logistic": {
+   "abstention_selection_on_calibration": {
+    "calibration_accepted": 30,
+    "calibration_accuracy": 1.0,
+    "calibration_coverage": 1.0,
+    "min_accepted": 20,
+    "reached": true,
+    "target_accuracy": 0.9,
+    "threshold": 0.0
+   },
+   "calibrated": true,
+   "calibration_split": {
+    "accuracy": 1.0,
+    "brier_multiclass": 0.03363051185412469,
+    "confusion_matrix": {
+     "labels": [
+      "asphalt",
+      "concrete",
+      "paving_stones",
+      "sett",
+      "unpaved"
+     ],
+     "rows_true_cols_pred": [
+      [
+       6,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       6,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       6,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       6,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       6
+      ]
+     ]
+    },
+    "coverage_accuracy_curve": [
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.0
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.05
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.1
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.15
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.2
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.25
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.3
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.35
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.4
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.45
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.5
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.55
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.6
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.65
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.7
+     },
+     {
+      "accepted": 30,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.75
+     },
+     {
+      "accepted": 28,
+      "accuracy": 1.0,
+      "coverage": 0.9333333333333333,
+      "threshold": 0.8
+     },
+     {
+      "accepted": 8,
+      "accuracy": 1.0,
+      "coverage": 0.26666666666666666,
+      "threshold": 0.85
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.9
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.95
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 1.0
+     }
+    ],
+    "ece_top_label": 0.1585469973367732,
+    "macro_f1": 1.0,
+    "mce_top_label": 0.2169199071733371,
+    "n": 30,
+    "per_class": [
+     {
+      "class": "asphalt",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "concrete",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "paving_stones",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "sett",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     },
+     {
+      "class": "unpaved",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 6,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 6,
+      "tp": 6
+     }
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 2,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": 0.7830800928266629
+     },
+     {
+      "accuracy": 1.0,
+      "count": 28,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": 0.8456224962229814
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ]
+   },
+   "n_features": 156,
+   "sett_threshold_selection_on_calibration": {
+    "min_predicted": 10,
+    "reached": false,
+    "target_precision": 0.8,
+    "threshold": null
+   },
+   "sett_vs_rest_test_argmax_equivalent": {
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "precision_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "recall": 1.0,
+    "recall_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "tn": 48,
+    "tp": 12
+   },
+   "sett_vs_rest_test_at_calibration_threshold": null,
+   "sett_vs_rest_test_p050": {
+    "average_precision": 1.0,
+    "brier": 0.008818057465762924,
+    "ece_positive_probability": 0.0698840124573461,
+    "f1": 1.0,
+    "fn": 0,
+    "fp": 0,
+    "precision": 1.0,
+    "precision_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "prevalence": 0.2,
+    "recall": 1.0,
+    "recall_wilson95": [
+     0.7575059933447592,
+     1.0
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": 0.0,
+      "count": 46,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": 0.038004265896502826
+     },
+     {
+      "accuracy": 0.0,
+      "count": 2,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": 0.12111399057000868
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 2,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": 0.7905066939011967
+     },
+     {
+      "accuracy": 1.0,
+      "count": 10,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": 0.8216370077135988
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ],
+    "threshold": 0.5,
+    "tn": 48,
+    "tp": 12
+   },
+   "test": {
+    "abstention": {
+     "accepted": 60,
+     "accuracy_accepted": 1.0,
+     "confusion_matrix_accepted": [
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       12,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       12
+      ]
+     ],
+     "coverage": 1.0,
+     "per_class_accepted": [
+      {
+       "class": "asphalt",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "concrete",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "paving_stones",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "sett",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      },
+      {
+       "class": "unpaved",
+       "f1": 1.0,
+       "precision": 1.0,
+       "precision_defined": true,
+       "predicted": 12,
+       "recall": 1.0,
+       "recall_defined": true,
+       "support": 12,
+       "tp": 12
+      }
+     ],
+     "threshold": 0.0
+    },
+    "accuracy": 1.0,
+    "brier_multiclass": 0.03695780919376011,
+    "confusion_matrix": {
+     "labels": [
+      "asphalt",
+      "concrete",
+      "paving_stones",
+      "sett",
+      "unpaved"
+     ],
+     "rows_true_cols_pred": [
+      [
+       12,
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       12,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       12,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       12,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0,
+       12
+      ]
+     ]
+    },
+    "coverage_accuracy_curve": [
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.0
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.05
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.1
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.15
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.2
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.25
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.3
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.35
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.4
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.45
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.5
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.55
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.6
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.65
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.7
+     },
+     {
+      "accepted": 60,
+      "accuracy": 1.0,
+      "coverage": 1.0,
+      "threshold": 0.75
+     },
+     {
+      "accepted": 56,
+      "accuracy": 1.0,
+      "coverage": 0.9333333333333333,
+      "threshold": 0.8
+     },
+     {
+      "accepted": 7,
+      "accuracy": 1.0,
+      "coverage": 0.11666666666666667,
+      "threshold": 0.85
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.9
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 0.95
+     },
+     {
+      "accepted": 0,
+      "accuracy": null,
+      "coverage": 0.0,
+      "threshold": 1.0
+     }
+    ],
+    "ece_top_label": 0.16547709672275474,
+    "macro_f1": 1.0,
+    "mce_top_label": 0.21193429916040618,
+    "n": 60,
+    "per_class": [
+     {
+      "class": "asphalt",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "concrete",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "paving_stones",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "sett",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     },
+     {
+      "class": "unpaved",
+      "f1": 1.0,
+      "precision": 1.0,
+      "precision_defined": true,
+      "predicted": 12,
+      "recall": 1.0,
+      "recall_defined": true,
+      "support": 12,
+      "tp": 12
+     }
+    ],
+    "reliability_bins": [
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.1,
+      "lo": 0.0,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.2,
+      "lo": 0.1,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.3,
+      "lo": 0.2,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.4,
+      "lo": 0.3,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.5,
+      "lo": 0.4,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.6,
+      "lo": 0.5,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 0.7,
+      "lo": 0.6,
+      "mean_confidence": null
+     },
+     {
+      "accuracy": 1.0,
+      "count": 4,
+      "hi": 0.8,
+      "lo": 0.7,
+      "mean_confidence": 0.7880657008395938
+     },
+     {
+      "accuracy": 1.0,
+      "count": 56,
+      "hi": 0.9,
+      "lo": 0.8,
+      "mean_confidence": 0.8378412748799346
+     },
+     {
+      "accuracy": null,
+      "count": 0,
+      "hi": 1.0,
+      "lo": 0.9,
+      "mean_confidence": null
+     }
+    ]
+   }
+  }
+ },
+ "n_colour_features": 30,
+ "n_features": 156,
+ "n_records": 180,
+ "pave_class": "sett",
+ "predeclared_criteria": {
+  "criteria": [
+   "sett recall >= 0.70 at argmax decision on test, with Wilson 95% lower bound reported",
+   "sett precision >= 0.70 at argmax decision on test, with Wilson 95% lower bound reported",
+   "macro-F1 of primary model exceeds colour-only baseline by >= 0.10",
+   "top-label ECE <= 0.10 after calibration",
+   "zero image-level and cell-level leakage between train, calibration and test"
+  ],
+  "evaluated_on": "official StreetSurfaceVis test cities (train=False), never used for fitting, calibration or thresholds",
+  "interpretation": "Meeting all criteria only justifies an Italian human-labelled evaluation; it never justifies product integration.",
+  "primary_model": "texture_hgb"
+ },
+ "split": {
+  "buffer_km": 2.0,
+  "cal_fraction_target": 0.2,
+  "cell_deg": 0.5,
+  "class_counts": {
+   "calibration": {
+    "0": 6,
+    "1": 6,
+    "2": 6,
+    "3": 6,
+    "4": 6
+   },
+   "test": {
+    "0": 12,
+    "1": 12,
+    "2": 12,
+    "3": 12,
+    "4": 12
+   },
+   "train": {
+    "0": 18,
+    "1": 18,
+    "2": 18,
+    "3": 18,
+    "4": 18
+   }
+  },
+  "min_per_class": 5,
+  "n_calibration": 30,
+  "n_cells_calibration": 1,
+  "n_cells_test": 2,
+  "n_cells_train": 3,
+  "n_purged_buffer_calibration": 0,
+  "n_purged_buffer_train": 0,
+  "n_purged_test_cells": 0,
+  "n_test": 60,
+  "n_total": 180,
+  "n_train": 90,
+  "salt": "lastrico-phase420-sv"
+ },
+ "test_contributor_unseen_fraction": 0.0,
+ "warning": "Procedurally generated textures. These numbers test code paths only and are not, and must never be reported as, road-surface accuracy.",
+ "work_size_wh": [
+  256,
+  192
+ ]
+}
