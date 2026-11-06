@@ -28,10 +28,13 @@ function delay(milliseconds: number, signal: AbortSignal) {
 }
 
 // Per-isolate serialization only. A shared service limit requires shared infrastructure.
-export function createGeocodeFetcher({ minimumIntervalMs = 1_050, timeoutMs = 8_000 } = {}) {
+export function createGeocodeFetcher({ minimumIntervalMs = 1_050, timeoutMs = 12_000 } = {}) {
   let queue: Promise<void> = Promise.resolve();
   let lastStartedAt: number | null = null;
   return async (url: URL, callerSignal: AbortSignal): Promise<unknown> => {
+    if (callerSignal.aborted) {
+      callerSignal.throwIfAborted();
+    }
     const timeout = new AbortController();
     const timer = setTimeout(() => timeout.abort(new DOMException("Geocoding timed out", "TimeoutError")), timeoutMs);
     const signal = AbortSignal.any([callerSignal, timeout.signal]);

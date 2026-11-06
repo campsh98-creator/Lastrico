@@ -7,6 +7,19 @@ const fetchNominatim = createGeocodeFetcher({ minimumIntervalMs: NOMINATIM_MIN_I
 // Bound upstream query size while allowing complete street/POI names and addresses.
 const MAX_QUERY_CHARACTERS = 300;
 
+type GeocodeApiResponseItem = {
+  id: string;
+  label: string;
+  primary: string;
+  secondary: string;
+  coordinate: [number, number];
+  type: string;
+};
+
+const geocodeCache = new Map<string, { timestamp: number; results: GeocodeApiResponseItem[] }>();
+const CACHE_MAX_ENTRIES = 200;
+const CACHE_TTL_MS = 60_000;
+
 const DATE_OR_NUMBERED_WAY_PATTERN = /\b\d+\s+(?:gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre|giornate)\b|\b(?:vicolo|vico|traversa)\s+\d+\s+\S+/i;
 const HIGHWAY_OR_LINE_REF_PATTERN = /^(?:ss|sp|sr|ex\s*ss|strada\s+statale|strada\s+provinciale)\s*\d+|\b[ms]\d+(?:\s+[ms]\d+)*$/i;
 
@@ -44,6 +57,14 @@ export async function GET(request: NextRequest) {
   const queryWithoutCity = secondIsHouseNumber
     ? `${commaParts[0]} ${commaParts[1]}`
     : (commaParts[0] ?? query.split(",")[0].trim());
+
+  const cacheKey = `${pilot.id}:${queryWithoutCity.toLowerCase().trim()}`;
+  const cached = geocodeCache.get(cacheKey);
+  if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS && cached.results.length > 0) {
+    return NextResponse.json({ results: cached.results }, {
+      headers: { "Cache-Control": "public, max-age=3600, s-maxage=86400" },
+    });
+  }
 
   const useStructuredStreet = isStructuredStreetNumberQuery(queryWithoutCity);
   if (useStructuredStreet) {
@@ -113,7 +134,7 @@ export async function GET(request: NextRequest) {
         label: [primary, secondary].filter(Boolean).join(", "),
         primary,
         secondary,
-        coordinate: [Number(item.lon), Number(item.lat)],
+        coordinate: [Number(item.lon), Number(item.lat)] as [number, number],
         type: item.addresstype ?? item.type ?? "place",
       }];
     });
@@ -138,10 +159,18 @@ export async function GET(request: NextRequest) {
         results = mapResults(fallbackData);
       }
     }
+    if (results.length > 0) {
+      if (geocodeCache.size >= CACHE_MAX_ENTRIES) {
+        const oldestKey = geocodeCache.keys().next().value;
+        if (oldestKey) geocodeCache.delete(oldestKey);
+      }
+      geocodeCache.set(cacheKey, { timestamp: Date.now(), results });
+    }
     return NextResponse.json({ results }, {
       headers: { "Cache-Control": "public, max-age=3600, s-maxage=86400" },
     });
-  } catch {
+  } catch (error) {
+    console.error(`[geocode] Search failed for "${query}" (${pilot.id}):`, error instanceof Error ? error.message : error);
     return NextResponse.json(
       { error: "La ricerca indirizzi è temporaneamente indisponibile." },
       { status: 503 },
