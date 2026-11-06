@@ -1,0 +1,164 @@
+[
+  {
+    "name": "iphone-portrait-dark",
+    "theme": "dark",
+    "state": "planner",
+    "width": 390,
+    "height": 844,
+    "size": 40111,
+    "file": "iphone-portrait-dark.png"
+  },
+  {
+    "name": "iphone-portrait-light",
+    "theme": "light",
+    "state": "planner",
+    "width": 390,
+    "height": 844,
+    "size": 36711,
+    "file": "iphone-portrait-light.png"
+  },
+  {
+    "name": "compact-iphone-dark",
+    "theme": "dark",
+    "state": "planner",
+    "width": 375,
+    "height": 667,
+    "size": 36917,
+    "file": "compact-iphone-dark.png"
+  },
+  {
+    "name": "compact-iphone-light",
+    "theme": "light",
+    "state": "planner",
+    "width": 375,
+    "height": 667,
+    "size": 34580,
+    "file": "compact-iphone-light.png"
+  },
+  {
+    "name": "iphone-se-landscape-dark",
+    "theme": "dark",
+    "state": "planner",
+    "width": 667,
+    "height": 375,
+    "size": 46567,
+    "file": "iphone-se-landscape-dark.png"
+  },
+  {
+    "name": "iphone-se-landscape-light",
+    "theme": "light",
+    "state": "planner",
+    "width": 667,
+    "height": 375,
+    "size": 46303,
+    "file": "iphone-se-landscape-light.png"
+  },
+  {
+    "name": "iphone-14-landscape-dark",
+    "theme": "dark",
+    "state": "planner",
+    "width": 844,
+    "height": 390,
+    "size": 49767,
+    "file": "iphone-14-landscape-dark.png"
+  },
+  {
+    "name": "iphone-14-landscape-light",
+    "theme": "light",
+    "state": "planner",
+    "width": 844,
+    "height": 390,
+    "size": 49429,
+    "file": "iphone-14-landscape-light.png"
+  },
+  {
+    "name": "autocomplete-dark",
+    "theme": "dark",
+    "state": "autocomplete",
+    "width": 390,
+    "height": 844,
+    "size": 46836,
+    "file": "autocomplete-dark.png"
+  },
+  {
+    "name": "autocomplete-light",
+    "theme": "light",
+    "state": "autocomplete",
+    "width": 390,
+    "height": 844,
+    "size": 46951,
+    "file": "autocomplete-light.png"
+  },
+  {
+    "name": "routes-comparison-dark",
+    "theme": "dark",
+    "state": "routes",
+    "width": 390,
+    "height": 844,
+    "size": 49873,
+    "file": "routes-comparison-dark.png"
+  },
+  {
+    "name": "routes-comparison-light",
+    "theme": "light",
+    "state": "routes",
+    "width": 390,
+    "height": 844,
+    "size": 49921,
+    "file": "routes-comparison-light.png"
+  },
+  {
+    "name": "navigation-active-dark",
+    "theme": "dark",
+    "state": "nav",
+    "width": 390,
+    "height": 844,
+    "size": 38913,
+    "file": "navigation-active-dark.png"
+  },
+  {
+    "name": "navigation-active-light",
+    "theme": "light",
+    "state": "nav",
+    "width": 390,
+    "height": 844,
+    "size": 39434,
+    "file": "navigation-active-light.png"
+  },
+  {
+    "name": "navigation-landscape-dark",
+    "theme": "dark",
+    "state": "nav",
+    "width": 844,
+    "height": 390,
+    "size": 41016,
+    "file": "navigation-landscape-dark.png"
+  },
+  {
+    "name": "navigation-landscape-light",
+    "theme": "light",
+    "state": "nav",
+    "width": 844,
+    "height": 390,
+    "size": 41907,
+    "file": "navigation-landscape-light.png"
+  },
+  {
+    "name": "desktop-planner-dark",
+    "theme": "dark",
+    "state": "planner",
+    "width": 1200,
+    "height": 800,
+    "size": 59442,
+    "file": "desktop-planner-dark.png"
+  },
+  {
+    "name": "desktop-planner-light",
+    "theme": "light",
+    "state": "planner",
+    "width": 1200,
+    "height": 800,
+    "size": 59894,
+    "file": "desktop-planner-light.png"
+  }
+]

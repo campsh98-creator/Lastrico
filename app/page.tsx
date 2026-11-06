@@ -366,6 +366,7 @@ export default function Home() {
   const [status, setStatus] = useState("Scegli partenza e destinazione.");
   const [planError, setPlanError] = useState<string | null>(null);
   const [isLiveResult, setIsLiveResult] = useState(false);
+  const [mapKeyAtBottom, setMapKeyAtBottom] = useState(false);
   const [routeReady, setRouteReady] = useState(false);
   const [alternativesAnalyzed, setAlternativesAnalyzed] = useState(0);
   const [hasDistinctAlternative, setHasDistinctAlternative] = useState(false);
@@ -996,6 +997,16 @@ export default function Home() {
       viewport?.removeEventListener("resize", handleKeyboard);
       viewport?.removeEventListener("scroll", handleKeyboard);
     };
+  }, []);
+
+  // globals.css moves the legend to the bottom on tablet/desktop and in phone landscape. Declared
+  // as a top overlay there, it pushed the route fit into a strip at the bottom of the map.
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 768px) and (min-height: 501px), (max-height: 500px)");
+    const update = () => setMapKeyAtBottom(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
@@ -2553,7 +2564,7 @@ export default function Home() {
           </p>
         )}
         {isLiveResult && !isJourneyActive && !picking && (
-          <div className="map-key" aria-label="Legenda della mappa" data-map-overlay="top">
+          <div className="map-key" aria-label="Legenda della mappa" data-map-overlay={mapKeyAtBottom ? undefined : "top"}>
             <span><i className="line selected" /> Selezionato</span>
             {hasDistinctAlternative && <span><i className="line alternative" /> Alternativa</span>}
             <span><i className="line pave" /> Pavé</span>
