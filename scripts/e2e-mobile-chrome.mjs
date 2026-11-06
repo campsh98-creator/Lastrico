@@ -95,8 +95,8 @@ try {
     await clickText("Brera");
     await waitFor(`Boolean(document.querySelector('[data-testid="p43-route-comparison"]'))`, 30000, "route comparison");
     await sleep(800);
-    const metric = await evaluate(`document.querySelector(".p43-tradeoff-metric strong")?.textContent ?? ""`);
-    check(`${theme}: savings text has no stray dollar`, /\(-\d+%\)/.test(metric) && !metric.includes("$"), metric);
+    const metric = await evaluate(`document.querySelector("[data-testid=p43-selection-rationale]")?.textContent ?? ""`);
+    check(`${theme}: savings text has no stray dollar`, /^(?:Evita|L’alternativa evita|Nessun)/.test(metric) && !metric.includes("$"), metric);
     const c = await evaluate(contrast);
     check(`${theme}: selected card text reaches 4.5:1`, [c.title, c.detail, c.time, c.extra].every((v) => v >= 4.5), JSON.stringify(c));
     await shot(`route-comparison-${theme}-393x852`);

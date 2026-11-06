@@ -46,7 +46,11 @@ import {
   waitForRenderedRoute,
 } from "./helpers.mjs";
 
-const OUTPUT = new URL("../../outputs/phase411-validation/", import.meta.url);
+// Evidence screenshots and the results file. LASTRICO_E2E_OUTPUT redirects them, for example to a
+// scratch directory, so a verification run does not leave generated files in the repository.
+const OUTPUT = process.env.LASTRICO_E2E_OUTPUT
+  ? pathToFileURL(`${process.env.LASTRICO_E2E_OUTPUT.replace(/\/$/, "")}/`)
+  : new URL("../../outputs/phase411-validation/", import.meta.url);
 const AFTER = new URL("after/", OUTPUT);
 // Failure evidence is for debugging a run, so it stays out of the repository.
 const FAILURES = pathToFileURL(`${process.env.LASTRICO_E2E_FAILURES ?? join(tmpdir(), "lastrico-e2e-failures")}/`);
@@ -861,6 +865,8 @@ const CONTRAST_SELECTORS = [
   ".p43-card-names strong", ".p43-card-names small", ".trip-metric strong", ".trip-metric small", ".hud-badge",
   ".hud-notice p", ".maneuver-copy b", ".disclosure", ".brand", ".city-select select", ".modal h2", ".modal p",
   ".menu-list button", ".surface-breakdown-heading", ".profile-note",
+  // Phase 4.21: the route trade-off is now one visible sentence in the comparison panel.
+  ".p43-rationale-text",
 ];
 
 for (const [width, height] of VIEWPORTS) {

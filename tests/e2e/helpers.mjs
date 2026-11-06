@@ -303,6 +303,11 @@ export async function auditLayout(session, { minTarget = 44 } = {}) {
         if (!parent) problems.push("control is off screen: " + name);
         continue;
       }
+      // Inside a scrolling sheet, a control showing less than 2 px is scrolled out of reach just like
+      // one showing 0 px: a person scrolls to it first. The About sheet's actions are fully below the
+      // fold at 320x568 (accepted) but showed a 1 px sliver at 375x667, where the browser's hit test
+      // on the screen's last pixel returns nothing. Controls with 2 px or more in view are still checked.
+      if (parent && bottom - top < 2) continue;
       const left = Math.max(rect.left, box.left, 0);
       const right = Math.min(rect.right, box.right, viewportWidth);
       const x = (left + right) / 2;
