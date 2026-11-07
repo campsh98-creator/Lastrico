@@ -40,6 +40,92 @@ function computeSegmentHash(a, b, bearing, lengthCm) {
   return `${(h1 >>> 0).toString(16).padStart(8, "0")}${(h2 >>> 0).toString(16).padStart(8, "0")}`;
 }
 
+/** Surface rule sets. "2026-10" reproduces every archive compiled before Phase 4.24
+ * (Rome, Roccella). "2026-11" (Phase 4.24, Milan) differs only where explicit OSM tags
+ * contradict the legacy reading; see outputs/phase424-data-quality/. */
+export const SURFACE_RULE_SETS = ["2026-10", "2026-11"];
+const POOR_SMOOTHNESS = new Set(["bad", "very_bad", "horrible", "very_horrible", "impassable"]);
+const GOOD_SMOOTHNESS = new Set(["excellent", "good"]);
+
+/** Classify a way's surface from its OSM tags only. Never guesses a material. */
+export function classifySurface(tags = {}, highwayClass = "unknown", legacySurface = "", rules = "2026-10") {
+  if (!SURFACE_RULE_SETS.includes(rules)) throw new Error(`Unknown surface rule set: ${rules}`);
+  const corrected = rules !== "2026-10";
+  let rawSurface = (tags.surface || legacySurface || "").trim().toLowerCase();
+  let authority = "osm_curated";
+  let state = "known";
+  let confidence = null;
+  let rule = rawSurface ? "surface" : "none";
+
+  if (!rawSurface && tags.surface_bike) {
+    rawSurface = tags.surface_bike.trim().toLowerCase();
+    rule = "surface_bike";
+  }
+  if (!rawSurface && highwayClass === "cycleway") {
+    rawSurface = (tags["cycleway:surface"] || tags["cycleway:both:surface"] || tags["cycleway:right:surface"] || tags["cycleway:left:surface"] || "").trim().toLowerCase();
+    if (rawSurface) rule = "cycleway:surface";
+  }
+  if (!rawSurface && highwayClass === "footway") {
+    rawSurface = (tags["footway:surface"] || tags["footway:both:surface"] || "").trim().toLowerCase();
+    if (rawSurface) rule = "footway:surface";
+  }
+
+  if (!rawSurface && tags.tracktype) {
+    const tt = String(tags.tracktype).trim().toLowerCase();
+    // grade1 means "solid, usually paved": it does not say which material, so the
+    // corrected rules keep it unknown instead of inferring asphalt.
+    if (tt === "grade1" && !corrected) {
+      rawSurface = "asphalt";
+      authority = "osm_default";
+      state = "inferred";
+      confidence = 0.85;
+      rule = "tracktype";
+    } else if (["grade2", "grade3", "grade4", "grade5"].includes(tt)) {
+      rawSurface = "unpaved";
+      authority = "osm_default";
+      state = "inferred";
+      confidence = 0.85;
+      rule = "tracktype";
+    }
+  }
+
+  const mapped = (corrected && rawSurface === "cobblestone:rounded") ? "unhewn_cobblestone" : SURFACE_MATERIAL_MAP[rawSurface];
+  const material = mapped || (rawSurface ? "other" : "unknown");
+  let surfaceCategory = SURFACE_CATEGORY_MAP[material] || "unknown";
+  let roughnessWeight = SURFACE_ROUGHNESS_WEIGHT[material] ?? 0.0;
+
+  if (corrected) {
+    const smoothness = (tags.smoothness || "").trim().toLowerCase();
+    if (surfaceCategory === "probable_rough" && GOOD_SMOOTHNESS.has(smoothness)) {
+      // paving_stones is only probable pavé because the stones may be rough; an explicit
+      // excellent/good smoothness tag settles that the surface is smooth. Stone (sett,
+      // cobblestone) is never upgraded by smoothness.
+      surfaceCategory = "confirmed_smooth";
+      roughnessWeight = 0;
+      rule = `${rule}+smoothness`;
+    } else if (surfaceCategory === "confirmed_smooth" && POOR_SMOOTHNESS.has(smoothness)) {
+      // Asphalt or concrete explicitly tagged in bad condition is not smooth evidence.
+      surfaceCategory = "unknown";
+      roughnessWeight = 0;
+      state = "conflicting";
+      confidence = 0;
+      rule = `${rule}+smoothness-conflict`;
+    }
+  }
+
+  if (confidence === null) {
+    if (surfaceCategory === "confirmed_rough" || surfaceCategory === "confirmed_smooth") {
+      confidence = 1.0;
+    } else if (surfaceCategory === "probable_rough") {
+      confidence = 0.65;
+    } else {
+      confidence = 0.0;
+    }
+  }
+  if (material === "unknown") state = "unknown";
+  return { rawSurface, material, surfaceCategory, roughnessWeight, state, authority, confidence, rule };
+}
+
 export function normalizeOsmFeature(rawWay, options = {}) {
   const ingestedAt = options.ingestedAt || new Date().toISOString();
 
@@ -56,59 +142,18 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   const isRoccella = pilotArea === "ROCCELLA_PILOT" || pilotArea === "roccella" || (Array.isArray(coordinates) && coordinates[0] && coordinates[0][0] > 15);
 
   // 1. Surface Material
-  let rawSurface = (tags.surface || rawWay.surface || "").trim().toLowerCase();
-  let sourceId = id ? `osm:way:${id}` : null;
-  let authority = "osm_curated";
-  let state = "known";
-  let confidence = null;
-
-  if (!rawSurface && tags.surface_bike) {
-    rawSurface = tags.surface_bike.trim().toLowerCase();
-  }
-  if (!rawSurface && highwayClass === "cycleway") {
-    rawSurface = (tags["cycleway:surface"] || tags["cycleway:both:surface"] || tags["cycleway:right:surface"] || tags["cycleway:left:surface"] || "").trim().toLowerCase();
-  }
-  if (!rawSurface && highwayClass === "footway") {
-    rawSurface = (tags["footway:surface"] || tags["footway:both:surface"] || "").trim().toLowerCase();
-  }
-
-  if (!rawSurface && tags.tracktype) {
-    const tt = String(tags.tracktype).trim().toLowerCase();
-    if (tt === "grade1") {
-      rawSurface = "asphalt";
-      authority = "osm_default";
-      state = "inferred";
-      confidence = 0.85;
-    } else if (["grade2", "grade3", "grade4", "grade5"].includes(tt)) {
-      rawSurface = "unpaved";
-      authority = "osm_default";
-      state = "inferred";
-      confidence = 0.85;
-    }
-  }
-
-  const material = SURFACE_MATERIAL_MAP[rawSurface] || (rawSurface ? "other" : "unknown");
-  const surfaceCategory = SURFACE_CATEGORY_MAP[material] || "unknown";
-  const roughnessWeight = SURFACE_ROUGHNESS_WEIGHT[material] ?? 0.0;
-
-  if (confidence === null) {
-    if (surfaceCategory === "confirmed_rough" || surfaceCategory === "confirmed_smooth") {
-      confidence = 1.0;
-    } else if (surfaceCategory === "probable_rough") {
-      confidence = 0.65;
-    } else {
-      confidence = 0.0;
-    }
-  }
+  const sourceId = id ? `osm:way:${id}` : null;
+  const classified = classifySurface(tags, highwayClass, rawWay.surface, options.surfaceRules);
+  const { material, surfaceCategory, roughnessWeight } = classified;
 
   const surfaceProvenance = {
-    state: material === "unknown" ? "unknown" : state,
+    state: classified.state,
     value: material,
     sourceId,
-    authority,
+    authority: classified.authority,
     observedAt: null, // STRICTLY null: OSM does not record observation time on way tags. Never fabricated.
     ingestedAt,
-    confidence,
+    confidence: classified.confidence,
   };
 
   // 2. Smoothness (NEVER inferred from surface)

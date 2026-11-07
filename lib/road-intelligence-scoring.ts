@@ -211,6 +211,11 @@ const ACCESS_KEYS: Record<TransportMode, string[]> = {
 
 type RestrictionKind = "private" | "prohibited";
 
+// Provider and archive share OSM node positions: a way this close to every sample is the
+// way the route is on, not a parallel street (measured: 99.99% of matched rough metres on
+// the Phase 4.25 Milan benchmark lie within 1.5 m).
+const ON_ROUTE_SURFACE_METERS = 2;
+
 // A courtyard or private road can be the only way to reach an address, so the provider
 // allows it at the ends of a route. Crossing private land mid-route stays disqualifying.
 const TERMINAL_ACCESS_METERS = 150;
@@ -359,6 +364,7 @@ export function scoreRoadIntelligence(
       let bestDistance = Infinity;
       let bestWeight = 0;
       let nearestRejected = Infinity;
+      let nearestRejectedSegment: RoadSegmentRecord | null = null;
       const alignedCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
       const geometricCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
 
@@ -402,7 +408,10 @@ export function scoreRoadIntelligence(
         const start = direction === "backward" ? candidate.coordinates[1] : candidate.coordinates[0];
         const end = direction === "backward" ? candidate.coordinates[0] : candidate.coordinates[1];
         if (!allowed || direction === "unknown" || !headingsAlign(sampleA, sampleB, start, end, direction !== "both", scaleLon)) {
-          nearestRejected = Math.min(nearestRejected, distance);
+          if (distance < nearestRejected) {
+            nearestRejected = distance;
+            nearestRejectedSegment = candidate;
+          }
           continue;
         }
 
@@ -431,11 +440,24 @@ export function scoreRoadIntelligence(
 
       // Reject a closer prohibited road rather than transferring its route samples
       // to an accessible parallel road with unrelated surface evidence.
-      if (!best || nearestRejected <= bestDistance + 0.000001) continue;
+      let competing = alignedCandidates;
+      if (!best || nearestRejected <= bestDistance + 0.000001) {
+        // The route lies on that road itself (e.g. a conditional one-way or a pedestrian
+        // street the profile still uses): its surface is the surface under the route.
+        // Legality is judged above, from the same geometry, and is not changed here.
+        if (!nearestRejectedSegment || nearestRejected > ON_ROUTE_SURFACE_METERS) continue;
+        const rejectedSurface = nearestRejectedSegment;
+        if (best && bestDistance <= ON_ROUTE_SURFACE_METERS
+          && best.surfaceCategory !== rejectedSurface.surfaceCategory) continue;
+        best = rejectedSurface;
+        bestDistance = nearestRejected;
+        bestWeight = rejectedSurface.roughnessWeight;
+        competing = geometricCandidates;
+      }
 
       // Compare against the final nearest road, not a temporary leader in index order.
       const selected = best;
-      if (alignedCandidates.some(({ segment, distance }) =>
+      if (competing.some(({ segment, distance }) =>
         Math.abs(distance - bestDistance) <= 2 &&
         ((segment.osmWayId !== null && selected.osmWayId !== null && segment.osmWayId !== selected.osmWayId) ||
          (segment.name !== null && selected.name !== null && segment.name !== selected.name)),
@@ -443,7 +465,7 @@ export function scoreRoadIntelligence(
         ambiguousMatchesCount += 1;
       }
 
-      if (alignedCandidates.some(({ segment, distance }) =>
+      if (competing.some(({ segment, distance }) =>
         Math.abs(distance - bestDistance) <= 2 && verticalGradeDiffers(segment, selected),
       )) continue; // Route geometry alone cannot resolve vertically separated roads.
 

@@ -273,6 +273,9 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
   const k = K_ENUM[kId] ?? "unknown";
   const cyHasFacility = (flags & 16) !== 0;
   const osmSourceId = w ? `osm:way:${w}` : null;
+  const rawTags = tagSetId >= 0 ? meta.tagSets[tagSetId] : undefined;
+  const explicitSmoothness = rawTags?.smoothness?.trim().toLowerCase();
+  const hasSmoothness = ["excellent", "good", "intermediate", "bad", "very_bad", "horrible", "very_horrible", "impassable"].includes(explicitSmoothness ?? "");
 
   return {
     segmentHash: h,
@@ -297,11 +300,15 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
       ingestedAt: meta.sourceGeneratedAt,
       confidence: k === "unknown" ? 0 : (k === "confirmed_rough" || k === "confirmed_smooth" ? 1 : 0.65),
     },
-    smoothness: SHARED_SMOOTHNESS,
+    smoothness: hasSmoothness ? {
+      state: "known", value: explicitSmoothness as RoadSegmentRecord["smoothness"]["value"],
+      sourceId: osmSourceId, authority: "osm_curated", observedAt: null,
+      ingestedAt: meta.sourceGeneratedAt, confidence: 0.9,
+    } : SHARED_SMOOTHNESS,
     cycling: cyHasFacility ? SHARED_CYCLING_FACILITY : SHARED_CYCLING_NONE,
     surfaceCategory: k,
     roughnessWeight: rw,
-    rawTags: tagSetId >= 0 ? meta.tagSets[tagSetId] : undefined,
+    rawTags,
   };
 }
 
@@ -375,7 +382,7 @@ export class SpatialRoadIntelligenceStore {
   private readonly meta: CompactTileMetadata;
   private readonly loaders: Record<string, () => Promise<{ default: TilePayload }>>;
   private readonly tileKeySet: Set<string>;
-  private readonly isRoccella: boolean;
+  private readonly areaId: "milan" | "roccella";
 
   private tileCache = new Map<string, TilePayload>();
   private tileSegmentCache = new Map<string, RoadSegmentRecord[]>();
@@ -389,11 +396,12 @@ export class SpatialRoadIntelligenceStore {
   constructor(
     meta: CompactTileMetadata = milanMeta as unknown as CompactTileMetadata,
     loaders: Record<string, () => Promise<{ default: TilePayload }>> = milanTileLoaders,
-    isRoccella = false,
+    area: boolean | "milan" | "roccella" = false,
   ) {
     this.meta = meta;
     this.loaders = loaders;
-    this.isRoccella = isRoccella;
+    // Keep the existing boolean constructor contract for Milan/Roccella callers.
+    this.areaId = typeof area === "boolean" ? (area ? "roccella" : "milan") : area;
 
     const keys = meta.tileKeys ?? (meta.tiles ? Object.keys(meta.tiles) : []);
     this.tileKeySet = new Set(keys);
@@ -548,7 +556,7 @@ export class SpatialRoadIntelligenceStore {
           const nodeRequire = createRequire(import.meta.url);
           const fs = nodeRequire("node:fs");
           const fileURLToPath = nodeRequire("node:url").fileURLToPath;
-          const area = this.isRoccella ? "roccella" : "milan";
+          const area = this.areaId;
           const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
           if (fs.existsSync(filePath)) {
             const raw = fs.readFileSync(filePath, "utf8");

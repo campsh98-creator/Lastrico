@@ -15,27 +15,34 @@
   "statistics": {
     "tileCount": 117,
     "pilotSegments": 37106,
-    "addedOutsideSegments": 65188,
-    "totalSegments": 102294,
-    "totalLengthMeters": 1644699,
+    "addedOutsideSegments": 65180,
+    "totalSegments": 102028,
+    "totalLengthMeters": 1637974,
     "surfaceBreakdownMeters": {
-      "confirmed_rough": 70682,
-      "probable_rough": 68141,
-      "confirmed_smooth": 1169262,
-      "unpaved_loose": 60856,
-      "unknown": 275759
+      "confirmed_rough": 70444,
+      "probable_rough": 59534,
+      "confirmed_smooth": 1171696,
+      "unpaved_loose": 60813,
+      "unknown": 275487
     },
     "surfaceBreakdownPercent": {
       "confirmed_rough": 4.3,
-      "probable_rough": 4.1,
-      "confirmed_smooth": 71.1,
+      "probable_rough": 3.6,
+      "confirmed_smooth": 71.5,
       "unpaved_loose": 3.7,
       "unknown": 16.8
-    }
+    },
+    "removedBoundaryStubs": 258,
+    "removedBoundaryStubMeters": 6630
   },
   "checksums": {
     "pilotDatasetSha256": "267b01744a33146e5ec237dc1fa4df907d7427f7e121b3ba0cc3c3aaa67f5586",
-    "compactTilesSha256": "6ec977a5604708e041c6acbcd4e37abfd9261e72a0fe59f9e6450931011c2914",
+    "compactTilesSha256": "e0fbee48aefb123c5702ad241077ec590b7ffbdd0258470f2edad839ae133074",
     "citywideExpansionManifestSha256": "6a07224314116cefff25a1a85a84532ce95a5698fa06682fd3eff8472411b781"
+  },
+  "surfaceRules": {
+    "version": "2026-11",
+    "audit": "outputs/phase424-data-quality/",
+    "summary": "OSM tags only. tracktype=grade1 is not asphalt evidence; paving_stones with smoothness excellent/good is smooth; asphalt/concrete with smoothness bad or worse is not smooth evidence (unknown); cobblestone:rounded is cobblestone. Clipped October pilot stubs duplicated by the citywide snapshot are dropped."
   }
 }

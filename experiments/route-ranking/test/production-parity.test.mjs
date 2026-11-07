@@ -88,6 +88,9 @@ test("adapter reproduces production unit-test vectors", () => {
   assert.equal(productionSelect(trade, { mode: "car", avoidance: "maximum", maxExtraMinutes: 5, equivalentById: never }).safeId, "smooth");
 });
 
+// Phase 4.25: production no longer picks an alternative that adds confirmed stone (+265 m here)
+// to shed probable paving_stones. The only recorded live choice this changes.
+const PHASE_425_INTENTIONAL = { "R:resp-06-duomo-porta-garibaldi-bicycle:live-2026-11-05": "base-1" };
 test("replaying current production on live responses reproduces the recorded choice", (t) => {
   const live = loadScenarios().filter((s) => s.set === "R" && s.codeEra === "dist-2026-11-05");
   if (live.length === 0) {
@@ -100,6 +103,6 @@ test("replaying current production on live responses reproduces the recorded cho
       equivalentById: equivalenceById(scenario),
     });
     assert.equal(result.fastId, scenario.recorded.fastId, `${scenario.id} fast`);
-    assert.equal(result.safeId, scenario.recorded.choiceId, `${scenario.id} choice`);
+    assert.equal(result.safeId, PHASE_425_INTENTIONAL[scenario.id] ?? scenario.recorded.choiceId, `${scenario.id} choice`);
   }
 });

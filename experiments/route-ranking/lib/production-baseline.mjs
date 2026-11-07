@@ -52,6 +52,8 @@ export function toOptimizationCandidate(candidate, geometry = []) {
     riskMeters: candidate.riskM,
     surfaceScore: {
       paveMeters: candidate.confirmedPaveM + candidate.probablePaveM,
+      // Production passes the confirmed split since Phase 4.25 (no added confirmed stone).
+      confirmedMeters: candidate.confirmedPaveM,
       smoothMeters: candidate.smoothM ?? 0,
       unknownMeters: candidate.unknownM,
       totalMeters: candidate.totalM ?? 0,

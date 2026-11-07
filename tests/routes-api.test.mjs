@@ -155,6 +155,14 @@ test("handler honors bicycle counterflow without assigning restricted cycle trac
   }]);
   const bicycle = await (await GET(request({ mode: "bicycle", start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
   assert.ok(bicycle.fast.smoothSurfaceMeters > 300);
+  // Phase 4.24: a car route lying on the cycle track's own geometry reports the surface under it.
+  const carOnTrack = await (await GET(request({ start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
+  assert.ok(carOnTrack.fast.smoothSurfaceMeters > 300);
+  // A cycle track beside the car route never lends its surface to the car.
+  fixtures(t, [trip(reversed, 60)], [{
+    ...roughWay, tags: { highway: "cycleway", surface: "asphalt", oneway: "yes", "oneway:bicycle": "no" },
+    geometry: points.map(([lon, lat]) => ({ lon, lat: lat + 0.00005 })),
+  }]);
   const car = await (await GET(request({ start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
   assert.equal(car.fast.smoothSurfaceMeters, 0);
   assert.ok(car.fast.unknownSurfaceMeters > 300);

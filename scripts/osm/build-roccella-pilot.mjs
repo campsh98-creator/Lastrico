@@ -77,7 +77,7 @@ export async function buildRoccellaPilot({ download = false, outputDirectory = j
     "roccella",
     compactPath,
     join(outputDirectory, "surfaces/roccella-tiles"),
-    join(root, "lib/roccella-tile-index.ts"),
+    outputDirectory === join(root, "data") ? join(root, "lib/roccella-tile-index.ts") : join(outputDirectory, "roccella-tile-index.ts"),
   );
   manifest.checksums.compactSha256 = sha256(compactJson);
   manifest.statistics.compactBytes = Buffer.byteLength(compactJson);

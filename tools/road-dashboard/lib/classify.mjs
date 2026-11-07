@@ -36,13 +36,13 @@ export const CATEGORY_INFO = {
     label: "Pavé probabile (paving_stones)",
     short: "pavé probabile",
     evidence: "osm_tag_weak",
-    definition: "Tag OSM surface=paving_stones (anche paving_stones:lanes): masselli/lastre, possibile superficie irregolare ma non pavé confermato. Categoria produzione probable_rough, peso rugosità 0,65, confidenza 0,65. Conta come superficie nota, non come pavé confermato.",
+    definition: "Tag OSM surface=paving_stones (anche paving_stones:lanes): masselli/lastre, possibile superficie irregolare ma non pavé confermato. Categoria produzione probable_rough, peso rugosità 0,65, confidenza 0,65. Conta come superficie nota, non come pavé confermato. A Milano, con smoothness=excellent/good esplicito, il tratto è liscio.",
   },
   confirmed_smooth: {
     label: "Liscio confermato (tag OSM)",
     short: "liscio confermato",
     evidence: "osm_tag_explicit",
-    definition: "Tag OSM surface esplicito asphalt o concrete (concrete:plates, concrete:lanes). Confermato dal tag, non da un rilievo sul campo. Categoria produzione confirmed_smooth. surface=paved NON rientra qui.",
+    definition: "Tag OSM surface esplicito asphalt o concrete (concrete:plates, concrete:lanes); a Milano anche paving_stones con smoothness=excellent/good esplicito. Confermato dal tag, non da un rilievo sul campo. Categoria produzione confirmed_smooth. surface=paved NON rientra qui, né asfalto/cemento con smoothness=bad o peggiore.",
   },
   unpaved_loose: {
     label: "Sterrato / sciolto (tag OSM)",
@@ -74,6 +74,18 @@ export const MATERIAL_TO_CATEGORY = {
   other: "unknown",
   unknown: "unknown",
 };
+
+// Phase 4.24 Milan rules (scripts/osm/normalize.mjs classifySurface "2026-11"): an explicit OSM
+// smoothness tag settles paving_stones as smooth, and contradicts smooth asphalt/concrete. Only
+// archives that keep the smoothness tag (Milan) are affected; others keep the material mapping.
+const GOOD_SMOOTHNESS = new Set(["excellent", "good"]);
+const POOR_SMOOTHNESS = new Set(["bad", "very_bad", "horrible", "very_horrible", "impassable"]);
+export function expectedCategory(material, smoothness = null) {
+  const base = MATERIAL_TO_CATEGORY[material] ?? "unknown";
+  if (base === "probable_rough" && GOOD_SMOOTHNESS.has(smoothness)) return "confirmed_smooth";
+  if (base === "confirmed_smooth" && POOR_SMOOTHNESS.has(smoothness)) return "unknown";
+  return base;
+}
 
 /** Unknown with a generic but non-classifiable value (e.g. paved/other) vs. no usable value at all. */
 export const GENERIC_UNKNOWN_MATERIALS = new Set(["paved", "other"]);
@@ -134,6 +146,8 @@ export function decodeTuple(tuple, meta) {
   const length = slim ? segmentLengthMeters(c[0], c[1], c[2], c[3]) : tuple[11];
   const category = CATEGORIES[kId] ?? "unknown";
   const material = svId >= 0 ? (meta.surfaceVals[svId] ?? "unknown") : "unknown";
+  const tagSetId = slim ? tuple[10] : tuple[13];
+  const smoothness = tagSetId >= 0 ? (meta.tagSets?.[tagSetId]?.smoothness ?? null) : null;
   // Mode access exactly as scoreRoadIntelligence(): modeAccess wins, else legacy motor/bicycle flags.
   const car = maBits >= 0 ? (maBits & 1) !== 0 : (flags & 2) !== 0;
   const motorcycle = maBits >= 0 ? (maBits & 2) !== 0 : (flags & 2) !== 0;
@@ -146,6 +160,7 @@ export function decodeTuple(tuple, meta) {
     length,
     category,
     material,
+    smoothness,
     highwayClass: hc,
     car, motorcycle, bicycle,
     // A segment is "routable" for the dashboard if at least one Lastrico mode may use it.

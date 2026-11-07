@@ -14,8 +14,18 @@ export type OptimizationCandidate = {
     totalMeters: number;
     confirmedRestrictionMeters?: number;
     blockingRestrictionMeters?: number;
+    /** Confirmed stone (sett, cobblestone) only; probable paving_stones excluded. */
+    confirmedMeters?: number;
   };
 };
+
+/**
+ * An anti-pavé alternative may not add confirmed stone to reduce probable paving_stones or
+ * unpaved risk: that swaps known stone for uncertain evidence (Phase 4.25 benchmark: 7 of the
+ * selected Milan alternatives did this, up to +326 m). The tolerance covers rounding and junction
+ * sampling differences between two routes on the same street.
+ */
+export const CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS = 10;
 export type OptimizationPolicy = {
   minimumPaveReduction: number;
   balancedPaveDivisor: number;
@@ -97,7 +107,11 @@ export function selectOptimizedRoute<T extends OptimizationCandidate>(
   };
   const secondsWeight = avoidance === "maximum" ? 0 : policy.balancedPaveDivisor / (avoidance === "balanced" ? 60 : 600);
   const utility = (candidate: T) => burden(candidate) + (candidate.route.duration - fast.route.duration) * secondsWeight;
+  const confirmed = (candidate: T) => candidate.surfaceScore.confirmedMeters;
+  const addsConfirmed = (candidate: T) => confirmed(candidate) !== undefined && confirmed(fast) !== undefined
+    && confirmed(candidate)! > confirmed(fast)! + CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS;
   const reducing = frontier.filter((candidate) => !equivalent(candidate.route, fast.route)
+    && !addsConfirmed(candidate)
     && rawPave(candidate) <= rawPave(fast)
     && candidate.riskMeters + policy.minimumPaveReduction <= fast.riskMeters
     && burden(candidate) + policy.minimumPaveReduction <= burden(fast)

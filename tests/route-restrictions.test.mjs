@@ -15,7 +15,8 @@ test("explicit restrictions are separate from surface uncertainty and respect mo
   const segments = roads({ access: "no", bicycle: "yes", motorcycle: "private" });
   const car = score(segments);
   assert.equal(car.confirmedRestrictionMeters, car.totalMeters);
-  assert.equal(car.unknownMeters, car.totalMeters);
+  // Surface accounting is separate: the asphalt under the route is still reported.
+  assert.equal(car.smoothMeters, car.totalMeters);
   assert.equal(score(segments, "bicycle").confirmedRestrictionMeters, 0);
   assert.ok(score(segments, "motorcycle").confirmedRestrictionMeters > 100);
   assert.equal(score(roads({ access: "private", motorcar: "yes" })).confirmedRestrictionMeters, 0);
@@ -69,9 +70,11 @@ test("nearby prohibited roads, endpoint touches and ambiguous grades cannot disq
 
 test("restriction evidence is independent of source ordering without changing surface metrics", () => {
   const blocked = roads({ access: "no" });
-  const farther = roads({}, 2, coordinates.map(([lon, lat]) => [lon, lat + 0.00005]));
+  const farther = roads({ surface: "sett" }, 2, coordinates.map(([lon, lat]) => [lon, lat + 0.00005]));
   assert.deepEqual(score([...blocked, ...farther]), score([...farther, ...blocked]));
-  assert.equal(score([...blocked, ...farther]).smoothMeters, 0);
+  // The surface is the blocked road's own, never the farther road's stones.
+  assert.equal(score([...blocked, ...farther]).smoothMeters, score([...blocked, ...farther]).totalMeters);
+  assert.equal(score([...blocked, ...farther]).paveMeters, 0);
   assert.ok(score([...blocked, ...farther]).confirmedRestrictionMeters > 100);
 });
 

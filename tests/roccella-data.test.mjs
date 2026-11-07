@@ -73,9 +73,11 @@ test("Roccella offline rebuild reproduces dataset, compact tiles and manifest wi
   t.after(() => rm(directory, { recursive: true, force: true }));
   const milanPath = "data/surfaces/milan-compact-tiles.json";
   const milanBefore = sha256(await read(milanPath));
+  const indexBefore = await read("lib/roccella-tile-index.ts");
   await buildRoccellaPilot({ outputDirectory: directory });
   for (const file of ["roccella-pilot.json", "roccella-pilot.manifest.json", "roccella-compact-tiles.json"]) {
     assert.equal(await readFile(join(directory, "surfaces", file), "utf8"), await read(`data/surfaces/${file}`));
   }
   assert.equal(sha256(await read(milanPath)), milanBefore);
+  assert.equal(await read("lib/roccella-tile-index.ts"), indexBefore, "temporary rebuild must not overwrite the runtime index");
 });

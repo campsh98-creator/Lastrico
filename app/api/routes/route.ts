@@ -20,6 +20,8 @@ import { parseExtraMinutes, routeFitsExtraMinutes } from "@/lib/route-time-budge
 import {
   extractRoughSlices,
   buildLinearCostFactors,
+  encodePolyline6,
+  pointDistanceMeters,
 } from "@/lib/surface-aware-routing";
 import { fetchValhallaCustomizedRoute } from "@/lib/routing-providers";
 import { logRouteFailure } from "@/lib/server-log";
@@ -198,6 +200,34 @@ function segmentTouchesPave(a: Coordinate, b: Coordinate, paveIndex: PaveSpatial
     }
   }
   return false;
+}
+
+function polylineLength(points: Coordinate[]) {
+  let total = 0;
+  for (let index = 1; index < points.length; index += 1) total += pointDistanceMeters(points[index - 1], points[index]);
+  return total;
+}
+
+/** A rough stretch already penalised from another route (≥80% of it within 8 m). */
+function sliceAlreadyPenalised(slice: Coordinate[], penalised: Coordinate[][]) {
+  if (!penalised.length) return false;
+  let near = 0;
+  let total = 0;
+  for (let index = 1; index < slice.length; index += 1) {
+    const length = segmentLength(slice[index - 1], slice[index]);
+    const samples = Math.max(1, Math.ceil(length / 10));
+    for (let sample = 0; sample < samples; sample += 1) {
+      const ratio = (sample + 0.5) / samples;
+      const point: Coordinate = [
+        slice[index - 1][0] + (slice[index][0] - slice[index - 1][0]) * ratio,
+        slice[index - 1][1] + (slice[index][1] - slice[index - 1][1]) * ratio,
+      ];
+      total += length / samples;
+      if (penalised.some((other) => other.some((_, k) => k > 0
+        && pointToSegmentDistance(point, other[k - 1], other[k]) <= 8))) near += length / samples;
+    }
+  }
+  return total > 0 && near / total >= 0.8;
 }
 
 function routesAreEquivalent(a: EngineRoute, b: EngineRoute, mode: TransportMode) {
@@ -472,7 +502,8 @@ export async function GET(request: NextRequest) {
       ));
     const baseAlreadyImproves = improvesEnough(preliminarySafe, preliminaryFast);
     const detourResponses: EngineRoute[][] = [];
-    let surfaceAwareDirectRoute: EngineRoute | null = null;
+    const surfaceAwareRoutes: EngineRoute[] = [];
+    let pendingRefinement: { shape: string; factor: number }[] | null = null;
     let surfaceAwareDirectMetrics: { roughSlicesCount: number; penalizedMeters: number } | null = null;
 
     const canGenerate = !baseAlreadyImproves && maximumExtraMinutes !== 0
@@ -502,21 +533,50 @@ export async function GET(request: NextRequest) {
           roughSlicesCount: factors.length,
           penalizedMeters: totalPenalizedMeters,
         };
-        surfaceAwareDirectRoute = await fetchValhallaCustomizedRoute(
+        // The established penalised search, unchanged: its candidate always stays in the pool.
+        const first = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
           factors,
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
         );
-        if (surfaceAwareDirectRoute) {
-          await ensureRouteCovered(surfaceAwareDirectRoute.coordinates);
+        if (first) {
+          await ensureRouteCovered(first.coordinates);
+          surfaceAwareRoutes.push(first);
+          // Phase 4.25: penalising only the fastest route's stones often moved the provider onto a
+          // parallel stone street (Milan benchmark: the median penalised candidate kept all its
+          // confirmed pavé). When it still keeps half the stone, a refinement also penalises the
+          // stones seen on the other legal provider routes and on that candidate. It runs after the
+          // established detours, and only if they too leave half the stone: it only adds a
+          // candidate. Every shape is provider geometry, so Valhalla can walk it.
+          const firstScored = scoredCandidate(first, "surface-aware-valhalla");
+          if (!isLegalCandidate(firstScored, mode) || firstScored.surfaceScore.weightedPaveMeters >= Math.max(
+            policy.minimumPaveReduction, preliminaryFast.surfaceScore.weightedPaveMeters * 0.5)) {
+            const penalised = roughSlices.filter((slice) => factors.some((factor) => factor.shape === encodePolyline6(slice)));
+            const seen = [...roughSlices, ...[...baseScored.filter((candidate) => candidate !== preliminaryFast), firstScored]
+              .filter((candidate) => isLegalCandidate(candidate, mode))
+              .flatMap((candidate) => {
+                const indices = candidate.surfaceScore.roughSegmentIndices;
+                return indices && indices.size > 0
+                  ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), 25) : [];
+              })]
+              .sort((a, b) => polylineLength(b) - polylineLength(a));
+            for (const slice of seen) {
+              if (penalised.length >= 12) break;
+              if (!sliceAlreadyPenalised(slice, penalised)) penalised.push(slice);
+            }
+            const refined = buildLinearCostFactors(penalised, 15.0, 12);
+            if (refined.factors.length > factors.length) pendingRefinement = refined.factors;
+          }
         }
       }
     }
+    const surfaceAwareSourcesOf = () => surfaceAwareRoutes.map((route, index) => ({
+      route, source: index === 0 ? "surface-aware-valhalla" : `surface-aware-valhalla-${index + 1}`,
+    }));
 
-    const directScored = surfaceAwareDirectRoute
-      ? [...baseScored, scoredCandidate(surfaceAwareDirectRoute, "surface-aware-valhalla")] : baseScored;
+    const directScored = [...baseScored, ...surfaceAwareSourcesOf().map(({ route, source }) => scoredCandidate(route, source))];
     const directFast = fastestLegalCandidate(directScored, mode)!;
     const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes);
     // Retain waypoint fallback if direct search fails to produce a sufficient distinct alternative.
@@ -551,7 +611,7 @@ export async function GET(request: NextRequest) {
         await ensureRouteCovered(routes.flatMap((r) => r.coordinates));
         const provisionalRoutes = [
           ...baseRoutes,
-          ...(surfaceAwareDirectRoute ? [surfaceAwareDirectRoute] : []),
+          ...surfaceAwareRoutes,
           ...detourResponses.flat(),
         ];
         const provisionalScored: ScoredRoute[] = provisionalRoutes.map((route, index) =>
@@ -567,9 +627,29 @@ export async function GET(request: NextRequest) {
         if (improvesEnough(provisionalSafe, provisionalFast)) break;
       }
     }
+    if (pendingRefinement && deadline - Date.now() >= 4_000 && !request.signal.aborted) {
+      const pool = [...baseRoutes, ...surfaceAwareRoutes, ...detourResponses.flat()]
+        .map((route, index) => scoredCandidate(route, `refinement-check-${index + 1}`));
+      const poolFast = fastestLegalCandidate(pool, mode)!;
+      const poolSafe = selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes);
+      if (poolSafe.surfaceScore.weightedPaveMeters >= Math.max(
+        policy.minimumPaveReduction, poolFast.surfaceScore.weightedPaveMeters * 0.5)) {
+        const refinedRoute = await fetchValhallaCustomizedRoute(
+          [start, end],
+          mode,
+          pendingRefinement,
+          Math.min(deadline - 2_000, Date.now() + 3_500),
+          request.signal,
+        );
+        if (refinedRoute) {
+          await ensureRouteCovered(refinedRoute.coordinates);
+          surfaceAwareRoutes.push(refinedRoute);
+        }
+      }
+    }
     const candidates = deduplicateRoutes([
       ...baseRoutes.map((route, index) => ({ route, source: `base-${index + 1}` })),
-      ...(surfaceAwareDirectRoute ? [{ route: surfaceAwareDirectRoute, source: "surface-aware-valhalla" }] : []),
+      ...surfaceAwareSourcesOf(),
       ...detourResponses.flatMap((routes, index) =>
         routes.map((route) => ({ route, source: `detour-${index + 1}` })),
       ),
@@ -654,7 +734,8 @@ export async function GET(request: NextRequest) {
         strategy: "pareto-conservative-unknown",
         frontierSize: selection.frontier.length,
         unknownMeterPenalty: 1,
-        directCandidateGenerated: surfaceAwareDirectRoute !== null,
+        directCandidateGenerated: surfaceAwareRoutes.length > 0,
+        directCandidates: surfaceAwareRoutes.length,
       },
       candidateDiagnostics: scored.map((candidate) => ({
         eligibleModeAndAccess: isLegalCandidate(candidate, mode),
@@ -689,8 +770,8 @@ export async function GET(request: NextRequest) {
       ...(surfaceAwarePoc ? {
         surfaceAwarePoc: {
           attempted: true,
-          applied: scored.some((c) => c.source === "surface-aware-valhalla" && c.route === safe.route),
-          candidateGenerated: surfaceAwareDirectRoute !== null,
+          applied: scored.some((c) => c.source.startsWith("surface-aware-valhalla") && c.route === safe.route),
+          candidateGenerated: surfaceAwareRoutes.length > 0,
           penalizedMeters: surfaceAwareDirectMetrics?.penalizedMeters ?? 0,
           roughSlicesCount: surfaceAwareDirectMetrics?.roughSlicesCount ?? 0,
         },

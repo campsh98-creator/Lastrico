@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { normalizeOsmFeature } from "./normalize.mjs";
+import { normalizeOsmFeature, classifySurface } from "./normalize.mjs";
 import { extractHighways } from "./build-representative-network.mjs";
 import { generateChunks } from "./generate-tile-chunks.mjs";
 
@@ -18,6 +18,8 @@ const outputPath = join(root, "data/surfaces/milan-compact-tiles.json");
 const compactManifestPath = join(root, "data/surfaces/milan-compact-tiles.manifest.json");
 
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+/** Phase 4.24 surface rules for Milan. "2026-10" reproduces the archive compiled on 2026-11-04. */
+export const MILAN_SURFACE_RULES = "2026-11";
 
 const K_ENUM = ["confirmed_rough", "probable_rough", "confirmed_smooth", "unpaved_loose", "unknown"];
 const HC_ENUM = [
@@ -48,6 +50,7 @@ export function compileCompactSegments(
     addedOutside = 0,
     preserveRawTags = false,
     slim = false,
+    keepSmoothness = false,
   },
 ) {
   function extractRelevantTags(tags) {
@@ -58,7 +61,7 @@ export function compileCompactSegments(
       if (
         k === "layer" || k === "bridge" || k === "tunnel" || k === "service" ||
         k === "motorcar" || k === "motor_vehicle" || k === "vehicle" || k === "access" ||
-        k === "motorcycle" || k === "bicycle" ||
+        k === "motorcycle" || k === "bicycle" || (keepSmoothness && k === "smoothness") ||
         k.includes(":conditional") || k.includes(":forward") || k.includes(":backward") ||
         (k.startsWith("cycleway:") && (k.includes("oneway") || k.includes("conditional")))
       ) {
@@ -205,7 +208,48 @@ export function compileCompactSegments(
   return compactTilesData;
 }
 
-export async function compileMilanCompactTiles() {
+/** Re-derive the surface fields of a stored pilot segment from its own raw OSM tags. */
+function reclassified(segment, surfaceRules) {
+  const c = classifySurface(segment.rawTags ?? {}, segment.highwayClass, "", surfaceRules);
+  if (c.surfaceCategory === segment.surfaceCategory && c.material === segment.surface?.value) return segment;
+  return { ...segment, surfaceCategory: c.surfaceCategory, roughnessWeight: c.roughnessWeight,
+    surface: { ...segment.surface, value: c.material, state: c.state, authority: c.authority, confidence: c.confidence } };
+}
+
+function pointToSegmentMeters(p, a, b) {
+  const sx = 111_320 * Math.cos((p[1] * Math.PI) / 180);
+  const ax = (a[0] - p[0]) * sx, ay = (a[1] - p[1]) * 110_540, bx = (b[0] - p[0]) * sx, by = (b[1] - p[1]) * 110_540;
+  const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy;
+  const t = l ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / l)) : 0;
+  return Math.hypot(ax + t * dx, ay + t * dy);
+}
+
+/** The October pilot clipped ways at its bounding box. Where the citywide snapshot added the
+ * same way's full segment, the clipped stub duplicates part of it: same way, same surface. */
+function dropCoveredBoundaryStubs(segments, pilotHashes, bounds) {
+  const edge = (p) => p[0] === bounds.west || p[0] === bounds.east || p[1] === bounds.south || p[1] === bounds.north;
+  const fullByWay = new Map();
+  for (const s of segments) {
+    if (pilotHashes.has(s.segmentHash) || s.osmWayId === null) continue;
+    const list = fullByWay.get(s.osmWayId) ?? [];
+    list.push(s);
+    fullByWay.set(s.osmWayId, list);
+  }
+  const kept = [], removed = [];
+  for (const s of segments) {
+    const covered = pilotHashes.has(s.segmentHash) && (edge(s.coordinates[0]) || edge(s.coordinates[1]))
+      && (fullByWay.get(s.osmWayId) ?? []).some((o) => o.surfaceCategory === s.surfaceCategory
+        && pointToSegmentMeters(s.coordinates[0], ...o.coordinates) < 0.5 && pointToSegmentMeters(s.coordinates[1], ...o.coordinates) < 0.5);
+    (covered ? removed : kept).push(s);
+  }
+  return { kept, removed };
+}
+
+/**
+ * Rebuild the exact Milan segment list that feeds the compact tiles, with raw OSM tags.
+ * Shared by the compiler and the data-quality audit so both describe the same data.
+ */
+export async function collectMilanSegments({ surfaceRules = MILAN_SURFACE_RULES } = {}) {
   const [datasetRaw, manifestRaw, representativeRaw] = await Promise.all([
     readFile(datasetPath, "utf8"),
     readFile(manifestPath, "utf8"),
@@ -222,7 +266,7 @@ export async function compileMilanCompactTiles() {
   // 1. Start with all 37,106 original pilot segments to guarantee bit-for-bit backward compatibility
   const mergedMap = new Map();
   for (const s of pilotSegments) {
-    mergedMap.set(s.segmentHash, s);
+    mergedMap.set(s.segmentHash, surfaceRules === "2026-10" ? s : reclassified(s, surfaceRules));
   }
 
   // 2. Add genuine unclipped segments extending outside the core pilot bounds from representative network
@@ -237,7 +281,7 @@ export async function compileMilanCompactTiles() {
         a[0] < PILOT.west || a[0] > PILOT.east || a[1] < PILOT.south || a[1] > PILOT.north ||
         b[0] < PILOT.west || b[0] > PILOT.east || b[1] < PILOT.south || b[1] > PILOT.north;
       if (isOutside) {
-        const segs = normalizeOsmFeature({ ...way, coordinates: [a, b] }, { ingestedAt }).segments;
+        const segs = normalizeOsmFeature({ ...way, coordinates: [a, b] }, { ingestedAt, surfaceRules }).segments;
         for (const seg of segs) {
           if (!mergedMap.has(seg.segmentHash)) {
             mergedMap.set(seg.segmentHash, seg);
@@ -284,7 +328,7 @@ export async function compileMilanCompactTiles() {
         // Keep exact October snapshot inside already-covered pilot source bboxes
         if (pointInPilotSourceBboxes(a) && pointInPilotSourceBboxes(b)) continue;
 
-        const segs = normalizeOsmFeature({ ...way, coordinates: [a, b] }, { ingestedAt }).segments;
+        const segs = normalizeOsmFeature({ ...way, coordinates: [a, b] }, { ingestedAt, surfaceRules }).segments;
         for (const seg of segs) {
           // In the expansion ring, retain only segments accessible by at least one Lastrico mode (car, motorcycle, or bicycle)
           // and skip unnamed private courtyard/parking service aisles to keep the Cloudflare Worker bundle well under 3 MB gzipped.
@@ -306,18 +350,34 @@ export async function compileMilanCompactTiles() {
     }
   }
 
-  const allSegments = Array.from(mergedMap.values());
+  let allSegments = Array.from(mergedMap.values());
+  let removedBoundaryStubs = [];
+  if (surfaceRules !== "2026-10") {
+    ({ kept: allSegments, removed: removedBoundaryStubs } = dropCoveredBoundaryStubs(allSegments, new Set(pilotSegments.map((p) => p.segmentHash)), manifest.area.bounds));
+  }
   allSegments.sort((a, b) => a.segmentHash.localeCompare(b.segmentHash) || (a.osmWayId ?? 0) - (b.osmWayId ?? 0));
+  return { allSegments, pilotSegments, manifest, addedOutside, citywideManifestRaw, ingestedAt, surfaceRules, removedBoundaryStubs };
+}
+
+export async function compileMilanCompactTiles({
+  surfaceRules = MILAN_SURFACE_RULES,
+  output = outputPath,
+  compactManifest = compactManifestPath,
+  tilesDir = join(root, "data/surfaces/milan-tiles"),
+  indexTs = join(root, "lib/milan-tile-index.ts"),
+} = {}) {
+  const { allSegments, pilotSegments, manifest, addedOutside, citywideManifestRaw, ingestedAt, removedBoundaryStubs } = await collectMilanSegments({ surfaceRules });
 
   const compactTilesData = compileCompactSegments(allSegments, {
     manifest: { ...manifest, generatedAt: ingestedAt },
     pilotSegmentCount: pilotSegments.length,
     addedOutside,
     slim: true,
+    keepSmoothness: surfaceRules !== "2026-10",
   });
 
   const jsonOutput = JSON.stringify(compactTilesData);
-  await writeFile(outputPath, jsonOutput, "utf8");
+  await writeFile(output, jsonOutput, "utf8");
 
   // Compute statistics and write milan-compact-tiles.manifest.json
   const byCategory = {
@@ -348,7 +408,7 @@ export async function compileMilanCompactTiles() {
     Object.entries(byCategory).map(([k, v]) => [k, Number(((v / totalLengthMeters) * 100).toFixed(1))]),
   );
 
-  const compactManifest = {
+  const compactManifestData = {
     schemaVersion: "2.0.0",
     datasetVersion: "osm-milan-citywide-2026-11-04",
     generatedAt: ingestedAt,
@@ -377,18 +437,22 @@ export async function compileMilanCompactTiles() {
       citywideExpansionManifestSha256: citywideManifestRaw ? sha256(citywideManifestRaw) : null,
     },
   };
-  await writeFile(compactManifestPath, JSON.stringify(compactManifest, null, 2) + "\n", "utf8");
+  if (surfaceRules !== "2026-10") {
+    compactManifestData.surfaceRules = {
+      version: surfaceRules,
+      audit: "outputs/phase424-data-quality/",
+      summary: "OSM tags only. tracktype=grade1 is not asphalt evidence; paving_stones with smoothness excellent/good is smooth; asphalt/concrete with smoothness bad or worse is not smooth evidence (unknown); cobblestone:rounded is cobblestone. Clipped October pilot stubs duplicated by the citywide snapshot are dropped.",
+    };
+    compactManifestData.statistics.removedBoundaryStubs = removedBoundaryStubs.length;
+    compactManifestData.statistics.removedBoundaryStubMeters = Math.round(removedBoundaryStubs.reduce((sum, s) => sum + s.lengthMeters, 0));
+  }
+  await writeFile(compactManifest, JSON.stringify(compactManifestData, null, 2) + "\n", "utf8");
 
-  await generateChunks(
-    "milan",
-    outputPath,
-    join(root, "data/surfaces/milan-tiles"),
-    join(root, "lib/milan-tile-index.ts"),
-  );
+  await generateChunks("milan", output, tilesDir, indexTs);
 
   return {
-    outputPath,
-    compactManifestPath,
+    outputPath: output,
+    compactManifestPath: compactManifest,
     tiles: Object.keys(compactTilesData.tiles).length,
     segments: allSegments.length,
     totalLengthMeters: roundedTotalMeters,

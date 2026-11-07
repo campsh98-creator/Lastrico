@@ -137,8 +137,10 @@ test("spatialRoadStore caches and evicts LRU index entries boundedly with true t
 test("117-tile citywide compact store satisfies reconciliation and oneway restriction invariants", () => {
   assert.equal(spatialRoadStore.tileCount, 117);
   assert.equal(spatialRoadStore.pilotSegments, 37106);
-  assert.equal(spatialRoadStore.totalSegments, 102294);
-  assert.equal(spatialRoadStore.totalSegments - spatialRoadStore.pilotSegments, 65188);
+  // Phase 4.24: 258 clipped pilot stubs duplicated by the citywide snapshot and 8 expansion-ring
+  // segments that became unknown (tracktype=grade1, asphalt in bad condition) are no longer stored.
+  assert.equal(spatialRoadStore.totalSegments, 102028);
+  assert.equal(spatialRoadStore.totalSegments - spatialRoadStore.pilotSegments, 64922);
 
   // Verify Southern Milan (Porta Romana -> Largo Promessi Sposi) tile coverage
   const southernKeys = spatialRoadStore.getTileKeysForCoordinates([

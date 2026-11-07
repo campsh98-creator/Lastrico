@@ -2,7 +2,7 @@
 
 import {
   CATEGORIES, GENERIC_UNKNOWN_MATERIALS, HIGHWAY_CLASSES, MAIN_NETWORK_CLASSES, MAJOR_CLASSES,
-  MATERIAL_TO_CATEGORY, ROUTING_CLASS_WEIGHT, emptyBreakdown, knownShare,
+  ROUTING_CLASS_WEIGHT, expectedCategory, emptyBreakdown, knownShare,
 } from "./classify.mjs";
 import { makeProjection, round, splitOnGrid } from "./geo.mjs";
 import { cellKey, computeHotspots, explainHotspot, topNames, HOTSPOT_PARAMS } from "./hotspots.mjs";
@@ -58,8 +58,9 @@ export function aggregateArea(area, segments, { topN = 25, params = HOTSPOT_PARA
     if (cat === "unknown") {
       if (GENERIC_UNKNOWN_MATERIALS.has(s.material)) unknownSub.generic_value += L; else unknownSub.no_usable_value += L;
     }
-    const auditKey = `${s.material}|${cat}`;
-    const audit = materialAudit.get(auditKey) ?? { material: s.material, category: cat, expected: MATERIAL_TO_CATEGORY[s.material] ?? "unknown", meters: 0, segments: 0 };
+    const expected = expectedCategory(s.material, s.smoothness);
+    const auditKey = `${s.material}|${cat}|${expected}`;
+    const audit = materialAudit.get(auditKey) ?? { material: s.material, category: cat, expected, meters: 0, segments: 0 };
     audit.meters += L; audit.segments += 1; materialAudit.set(auditKey, audit);
 
     if (!byClass.has(s.highwayClass)) byClass.set(s.highwayClass, { ...emptyBreakdown(), routable: 0, unknownRoutable: 0 });
