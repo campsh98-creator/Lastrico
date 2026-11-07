@@ -141,6 +141,8 @@ type RouteResult = {
   surfaceCoveragePercent?: number;
   confirmedPaveMeters?: number;
   probablePaveMeters?: number;
+  /** Bicycle: metres at the start or end on a pedestrian-only street, to be walked. */
+  terminalWalkMeters?: number;
   surfaceConfidence?: number;
   problemSegments?: Coordinate[][];
   instructions?: NavigationInstruction[];
@@ -2950,6 +2952,13 @@ export default function Home() {
                   transportMode={transportMode}
                   extraTimeBudgetMinutes={maxExtraMinutes}
                 />
+
+                {transportMode === "bicycle" && (selectedRoute?.terminalWalkMeters ?? 0) > 0 && (
+                  <div className="plan-alert info" role="note" data-testid="walk-bike-notice">
+                    <Icon name="info" />
+                    <p>{`Alla partenza o all’arrivo, per circa ${selectedRoute?.terminalWalkMeters} m la via è pedonale: scendi e prosegui a piedi con la bici.`}</p>
+                  </div>
+                )}
 
                 <button
                   type="button"

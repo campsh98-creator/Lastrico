@@ -63,3 +63,16 @@ test("the Milan archive is reproducible from checksummed sources with the Phase 
   const runtimeMeta = await readFile(new URL("data/surfaces/milan-tiles/metadata.json", root), "utf8");
   assert.equal(await readFile(join(dir, "tiles", "metadata.json"), "utf8"), runtimeMeta);
 });
+
+test("the Milan archive keeps pedestrian access for the bicycle walking rule (Via Pattari: access=no, foot=yes)", async () => {
+  const { readFile: read, readdir } = await import("node:fs/promises");
+  const dir = new URL("../data/surfaces/milan-tiles/", import.meta.url);
+  const meta = JSON.parse(await read(new URL("metadata.json", dir), "utf8"));
+  const tags = [];
+  for (const file of (await readdir(dir)).filter((name) => /^\d+_\d+\.json$/.test(name))) {
+    const tile = JSON.parse(await read(new URL(file, dir), "utf8"));
+    for (const tuple of tile.tuples) if (tuple[0] === 24815663 && tuple.at(-1) >= 0) tags.push(meta.tagSets[tuple.at(-1)]);
+  }
+  assert.ok(tags.length > 0, "Via Pattari is in the archive");
+  assert.ok(tags.every((set) => set.access === "no" && set.foot === "yes"));
+});

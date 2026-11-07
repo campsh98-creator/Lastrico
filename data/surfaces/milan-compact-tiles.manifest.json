@@ -37,7 +37,7 @@
   },
   "checksums": {
     "pilotDatasetSha256": "267b01744a33146e5ec237dc1fa4df907d7427f7e121b3ba0cc3c3aaa67f5586",
-    "compactTilesSha256": "e0fbee48aefb123c5702ad241077ec590b7ffbdd0258470f2edad839ae133074",
+    "compactTilesSha256": "996c043468389761015b8b487aef14f8c5bb8d323b2dd35d9350fe3508cb1f4d",
     "citywideExpansionManifestSha256": "6a07224314116cefff25a1a85a84532ce95a5698fa06682fd3eff8472411b781"
   },
   "surfaceRules": {

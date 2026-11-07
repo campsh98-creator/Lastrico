@@ -219,6 +219,28 @@ scenario("A5", "Switching city clears the route and the new city plans correctly
   note("Milan → Roccella → Milan with no route carried across");
 });
 
+scenario("A18", "A bicycle route ending on a pedestrian street says to walk the bike; a car route does not", async (session, note) => {
+  const backend = await mockBackend(session);
+  backend.routes = (url) => {
+    const data = fixture(url.searchParams.get("mode") === "bicycle" ? "milan-bicycle" : "milan-car");
+    if (url.searchParams.get("mode") === "bicycle") for (const key of ["fast", "safe"]) data[key].terminalWalkMeters = 91;
+    return { body: data };
+  };
+  await selectTransport(session, "bicycle");
+  await planCadornaDarsenaWithoutMap(session);
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=walk-bike-notice]"))`, 5_000, "walking notice");
+  const text = await session.evaluate(`document.querySelector("[data-testid=walk-bike-notice]").textContent`);
+  assert.match(text, /91 m/);
+  assert.match(text, /a piedi/);
+  assert.ok(await isFullyVisible(session, "[data-testid=walk-bike-notice]"), "notice visible without scrolling");
+  await session.screenshot(new URL("walk-bike-notice-light-390x844.png", AFTER).pathname);
+  await session.tap("[data-testid=edit-route]");
+  await selectTransport(session, "car");
+  await waitForPhase(session, "route-ready");
+  assert.equal(await session.evaluate(`Boolean(document.querySelector("[data-testid=walk-bike-notice]"))`), false);
+  note(text);
+});
+
 scenario("A6", "Transport switch recalculates in that mode, and a failure never swaps it", async (session, note) => {
   const backend = await mockBackend(session);
   await planCadornaDarsena(session);

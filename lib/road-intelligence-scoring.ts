@@ -47,10 +47,13 @@ export type RoadIntelligenceScore = {
   /** Close, unambiguous geometry with explicit forbidden access or known wrong-way travel.
    * Zero is not a legal-route certification; turn and conditional restrictions stay with the provider. */
   confirmedRestrictionMeters: number;
-  /** Restricted distance that disqualifies a route: everything except private access at its ends. */
+  /** Restricted distance that disqualifies a route: everything except private access and bike walking at its ends. */
   blockingRestrictionMeters: number;
   /** Private access next to the start or destination, which the driver must be able to use. */
   terminalPrivateAccessMeters: number;
+  /** Bicycle only, when enabled: a pedestrian-only stretch (generic access/vehicle=no with foot allowed)
+   * next to the start or destination, where the cyclist must walk the bike. Not blocking. */
+  terminalWalkMeters: number;
   /** Set of coordinate indices [1..n] along the route that traverse rough surfaces */
   roughSegmentIndices?: Set<number>;
 };
@@ -209,7 +212,14 @@ const ACCESS_KEYS: Record<TransportMode, string[]> = {
   bicycle: ["bicycle", "vehicle", "access"],
 };
 
-type RestrictionKind = "private" | "prohibited";
+type RestrictionKind = "private" | "prohibited" | "walkable";
+
+export type RoadIntelligenceOptions = {
+  /** Phase 4.25 (Milan): a cyclist may walk the bike on a pedestrian-only stretch at the route ends. */
+  terminalWalkingForBicycle?: boolean;
+};
+
+const PEDESTRIAN_ALLOWED = new Set(["yes", "designated", "permissive"]);
 
 // Provider and archive share OSM node positions: a way this close to every sample is the
 // way the route is on, not a parallel street (measured: 99.99% of matched rough metres on
@@ -227,6 +237,7 @@ function explicitRestriction(
   a: GeoCoordinate,
   b: GeoCoordinate,
   mode: TransportMode,
+  walkingAllowed = false,
 ): RestrictionKind | null {
   const tags = segment.rawTags;
   if (tags) {
@@ -234,7 +245,12 @@ function explicitRestriction(
       if (tags[`${key}:conditional`] || tags[`${key}:forward`] || tags[`${key}:backward`]) return null;
       const value = tags[key]?.trim().toLowerCase();
       if (value) {
-        if (value === "no") return "prohibited";
+        if (value === "no") {
+          // Closed to vehicles but open on foot (e.g. Via Pattari: access=no, foot=yes): walking the
+          // bike is lawful. An explicit bicycle=no stays a prohibition.
+          return walkingAllowed && mode === "bicycle" && key !== "bicycle"
+            && PEDESTRIAN_ALLOWED.has(tags.foot?.trim().toLowerCase() ?? "") ? "walkable" : "prohibited";
+        }
         if (value === "private" && tags.service?.trim().toLowerCase() !== "driveway") return "private";
         break; // A more specific permission overrides a generic prohibition.
       }
@@ -274,6 +290,7 @@ function restrictionSample(
   a: GeoCoordinate,
   b: GeoCoordinate,
   mode: TransportMode,
+  walkingAllowed = false,
 ): RestrictionKind | null {
   if (candidates.length === 0) return null;
   let nearest: { segment: RoadSegmentRecord; distance: number } | null = null;
@@ -299,7 +316,7 @@ function restrictionSample(
   const sx = (d[0] - c[0]) * scaleX, sy = (d[1] - c[1]) * 110_540;
   const denominator = Math.hypot(rx, ry) * Math.hypot(sx, sy);
   if (!denominator || Math.abs((rx * sx + ry * sy) / denominator) < 0.98) return null;
-  return explicitRestriction(segment, a, b, mode);
+  return explicitRestriction(segment, a, b, mode, walkingAllowed);
 }
 
 // Any confirmed restriction must stay visible even when it is shorter than one rounded metre.
@@ -313,7 +330,9 @@ export function scoreRoadIntelligence(
   matchMeters: number,
   mode: "car" | "motorcycle" | "bicycle" = "car",
   skipRestrictions = false,
+  options: RoadIntelligenceOptions = {},
 ): RoadIntelligenceScore {
+  const walkingAllowed = options.terminalWalkingForBicycle === true && mode === "bicycle";
   let paveMeters = 0;
   let weightedPaveMeters = 0;
   let confirmedMeters = 0;
@@ -327,6 +346,7 @@ export function scoreRoadIntelligence(
   let ambiguousMatchesCount = 0;
   let confirmedRestrictionMeters = 0;
   let terminalPrivateAccessMeters = 0;
+  let terminalWalkMeters = 0;
   let traversedMeters = 0;
   const routeMeters = coordinates.reduce((sum, point, index) =>
     index === 0 ? 0 : sum + geographicDistance(coordinates[index - 1], point), 0);
@@ -428,14 +448,15 @@ export function scoreRoadIntelligence(
         }
       }
 
-      const restriction = skipRestrictions ? null : restrictionSample(geometricCandidates, sampleA, sampleB, mode);
+      const restriction = skipRestrictions ? null : restrictionSample(geometricCandidates, sampleA, sampleB, mode, walkingAllowed);
       if (restriction) {
         confirmedRestrictionMeters += sampleLength;
         const sampleStart = traversedMeters + sample * sampleLength;
-        if (restriction === "private" && (sampleStart <= TERMINAL_ACCESS_METERS
-          || routeMeters - sampleStart - sampleLength <= TERMINAL_ACCESS_METERS)) {
-          terminalPrivateAccessMeters += sampleLength;
-        }
+        const terminal = sampleStart <= TERMINAL_ACCESS_METERS
+          || routeMeters - sampleStart - sampleLength <= TERMINAL_ACCESS_METERS;
+        if (restriction === "private" && terminal) terminalPrivateAccessMeters += sampleLength;
+        // Walking the bike is accepted only next to an end; mid-route it stays a blocking restriction.
+        else if (restriction === "walkable" && terminal) terminalWalkMeters += sampleLength;
       }
 
       // Reject a closer prohibited road rather than transferring its route samples
@@ -540,8 +561,9 @@ export function scoreRoadIntelligence(
     matchedFeatures: matchedFeatures.size,
     ambiguousMatchesCount,
     confirmedRestrictionMeters: restrictedMeters(confirmedRestrictionMeters),
-    blockingRestrictionMeters: restrictedMeters(confirmedRestrictionMeters - terminalPrivateAccessMeters),
+    blockingRestrictionMeters: restrictedMeters(confirmedRestrictionMeters - terminalPrivateAccessMeters - terminalWalkMeters),
     terminalPrivateAccessMeters: restrictedMeters(terminalPrivateAccessMeters),
+    terminalWalkMeters: restrictedMeters(terminalWalkMeters),
     roughSegmentIndices,
   };
 }

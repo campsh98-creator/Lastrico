@@ -51,6 +51,8 @@ export function compileCompactSegments(
     preserveRawTags = false,
     slim = false,
     keepSmoothness = false,
+    // Phase 4.25 (Milan): pedestrian access lets a cyclist walk a vehicle-free stretch at the route ends.
+    keepFoot = false,
   },
 ) {
   function extractRelevantTags(tags) {
@@ -61,7 +63,7 @@ export function compileCompactSegments(
       if (
         k === "layer" || k === "bridge" || k === "tunnel" || k === "service" ||
         k === "motorcar" || k === "motor_vehicle" || k === "vehicle" || k === "access" ||
-        k === "motorcycle" || k === "bicycle" || (keepSmoothness && k === "smoothness") ||
+        k === "motorcycle" || k === "bicycle" || (keepSmoothness && k === "smoothness") || (keepFoot && k === "foot") ||
         k.includes(":conditional") || k.includes(":forward") || k.includes(":backward") ||
         (k.startsWith("cycleway:") && (k.includes("oneway") || k.includes("conditional")))
       ) {
@@ -374,6 +376,7 @@ export async function compileMilanCompactTiles({
     addedOutside,
     slim: true,
     keepSmoothness: surfaceRules !== "2026-10",
+    keepFoot: surfaceRules !== "2026-10",
   });
 
   const jsonOutput = JSON.stringify(compactTilesData);

@@ -251,6 +251,24 @@ test("private access beside the destination stays routable with an explicit warn
   assert.match(data.dataNotice, /tratto privato/);
 });
 
+test("Milan: a bicycle trip ending on a pedestrian-only street is routable with a walking notice; a car is refused", async (t) => {
+  const longRoute = [[9.28, 45.53], [9.2942, 45.53], [9.295, 45.53]];
+  const pedestrianEnd = {
+    id: 900000005, tags: { highway: "residential", surface: "asphalt", access: "no", foot: "yes" },
+    geometry: longRoute.slice(1).map(([lon, lat]) => ({ lon, lat })),
+  };
+  fixtures(t, [trip(longRoute, 300)], [pedestrianEnd]);
+  const bicycle = await GET(request({ mode: "bicycle", start: longRoute[0].join(","), end: longRoute[2].join(",") }));
+  assert.equal(bicycle.status, 200);
+  const data = await bicycle.json();
+  assert.ok(data.fast.terminalWalkMeters > 0 && data.fast.terminalWalkMeters <= 150);
+  assert.equal(data.candidateDiagnostics[0].blockingRestrictionMeters, 0);
+  assert.match(data.dataNotice, /scendi e prosegui a piedi/);
+  fixtures(t, [trip(longRoute, 120)], [pedestrianEnd]);
+  const car = await GET(request({ start: longRoute[0].join(","), end: longRoute[2].join(",") }));
+  assert.equal(car.status, 422);
+});
+
 test("access restrictions that retrying cannot solve report 422, not a provider outage", async (t) => {
   const longRoute = [[9.28, 45.53], [9.285, 45.53], [9.286, 45.53], [9.2942, 45.53], [9.295, 45.53]];
   const stretch = ([from, to], tags) => ({

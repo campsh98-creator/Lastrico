@@ -317,6 +317,7 @@ function routePayload(
     surfaceSource: "osm" as const,
     cyclewayMeters: surfaceScore.cyclewayMeters ?? 0,
     terminalPrivateAccessMeters: surfaceScore.terminalPrivateAccessMeters,
+    terminalWalkMeters: surfaceScore.terminalWalkMeters,
     instructions: route.instructions,
     problemSegments,
   };
@@ -457,6 +458,9 @@ export async function GET(request: NextRequest) {
         scoped.surfaceIndex,
         policy.surfaceMatchMeters,
         mode,
+        false,
+        // Validated on the Milan benchmark only; Rome and Roccella keep their 4.23 behaviour.
+        { terminalWalkingForBicycle: area.id === "milan" },
       );
       const score: SurfaceScore = { ...intelligence, confidence: intelligence.classificationConfidence };
       scoreCache.set(route, score);
@@ -707,6 +711,13 @@ export async function GET(request: NextRequest) {
     const terminalAccessNotice = fast.surfaceScore.terminalPrivateAccessMeters + safe.surfaceScore.terminalPrivateAccessMeters > 0
       ? ". Partenza o arrivo su un tratto privato secondo OpenStreetMap: verifica di potervi accedere"
       : "";
+    // Name the route that needs it: the fastest and the anti-pavé route can end on different streets.
+    const fastWalk = fast.surfaceScore.terminalWalkMeters;
+    const safeWalk = safe.surfaceScore.terminalWalkMeters;
+    const walkRoute = fastWalk > 0 && safeWalk > 0 ? "" : fastWalk > 0 ? "Percorso più rapido: " : "Percorso anti-pavé: ";
+    const terminalWalkNotice = fastWalk > 0 || safeWalk > 0
+      ? `. ${walkRoute}${walkRoute ? "p" : "P"}artenza o arrivo su una via pedonale chiusa alle bici secondo OpenStreetMap: per circa ${Math.max(fastWalk, safeWalk)} m scendi e prosegui a piedi`
+      : "";
     const calculationCompletedAt = performance.now();
 
     return NextResponse.json({
@@ -746,6 +757,7 @@ export async function GET(request: NextRequest) {
         confirmedRestrictionMeters: candidate.surfaceScore.confirmedRestrictionMeters,
         blockingRestrictionMeters: candidate.surfaceScore.blockingRestrictionMeters,
         terminalPrivateAccessMeters: candidate.surfaceScore.terminalPrivateAccessMeters,
+        terminalWalkMeters: candidate.surfaceScore.terminalWalkMeters,
         paretoOptimal: selection.frontier.includes(candidate),
         source: candidate.source,
         provider: candidate.route.provider,
@@ -791,7 +803,7 @@ export async function GET(request: NextRequest) {
                 safe.surfaceScore.matchedFeatures,
               )} way OSM abbinate al percorso (archivio OSM locale)`
             : `${routeCountLabel} ${checkedLabel}: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale)`
-      ) + bicycleCoverageNotice + terminalAccessNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
+      ) + bicycleCoverageNotice + terminalAccessNotice + terminalWalkNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
         + (area.id === "rome"
           ? mode === "bicycle"
             ? ". Roma: verifica segnaletica e accessi locali; il percorso non certifica tutte le restrizioni aggiornate"

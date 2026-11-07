@@ -90,3 +90,32 @@ test("only private access at the route ends stops counting as blocking", () => {
   assert.equal(prohibited.terminalPrivateAccessMeters, 0);
   assert.equal(prohibited.blockingRestrictionMeters, prohibited.confirmedRestrictionMeters);
 });
+
+test("Milan rule: a cyclist may walk the bike on a pedestrian-only stretch at the route ends, never mid-route", () => {
+  const walk = { terminalWalkingForBicycle: true };
+  const scoreWith = (segments, mode, points = coordinates, options = walk) =>
+    scoreRoadIntelligence(points, createRoadIntelligenceIndex(segments), 12, mode, false, options);
+  // Via Pattari / Via Santa Margherita: closed to vehicles, open on foot.
+  const pedestrianOnly = roads({ access: "no", foot: "yes" });
+  const walking = scoreWith(pedestrianOnly, "bicycle");
+  assert.ok(walking.confirmedRestrictionMeters > 100);
+  assert.equal(walking.blockingRestrictionMeters, 0);
+  assert.ok(Math.abs(walking.terminalWalkMeters - walking.confirmedRestrictionMeters) <= 1);
+  // Off by default (Rome, Roccella), never for motor vehicles, an explicit bicycle=no or a way closed on foot.
+  for (const [label, result] of [
+    ["rule off", scoreWith(pedestrianOnly, "bicycle", coordinates, {})],
+    ["car", scoreWith(pedestrianOnly, "car")],
+    ["bicycle=no", scoreWith(roads({ access: "no", foot: "yes", bicycle: "no" }), "bicycle")],
+    ["no foot access", scoreWith(roads({ access: "no" }), "bicycle")],
+  ]) {
+    assert.equal(result.terminalWalkMeters, 0, label);
+    assert.equal(result.blockingRestrictionMeters, result.confirmedRestrictionMeters, label);
+    assert.ok(result.blockingRestrictionMeters > 100, label);
+  }
+  // Mid-route the same stretch stays a blocking restriction.
+  const long = [[9.18, 45.46], [9.188, 45.46], [9.192, 45.46], [9.2, 45.46]];
+  const middle = [...roads({}, 2, long.slice(0, 2)), ...roads({ access: "no", foot: "yes" }, 3, long.slice(1, 3)), ...roads({}, 4, long.slice(2))];
+  const crossing = scoreWith(middle, "bicycle", long);
+  assert.equal(crossing.terminalWalkMeters, 0);
+  assert.ok(crossing.blockingRestrictionMeters > 250);
+});
