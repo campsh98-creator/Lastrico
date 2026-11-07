@@ -93,3 +93,9 @@ s_original.zip
 
 # Phase 4.25 benchmark: raw provider recordings stay local; the summaries are versioned
 /outputs/phase425-benchmark/*/
+
+# Rome (Phase 4.23): reproducible byte for byte from data/sources/rome-* with
+# scripts/osm/build-rome-pilot.mjs (verified 2026-11-07). Only the packed runtime tiles are versioned.
+/data/surfaces/rome-compact-tiles.json
+/data/surfaces/rome-tiles/*.json
+!/data/surfaces/rome-tiles/metadata.json
