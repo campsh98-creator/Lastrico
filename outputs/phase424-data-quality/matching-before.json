@@ -1,0 +1,2995 @@
+{
+ "label": "before",
+ "scorer": "legacy (pre-4.24 rejection)",
+ "parityChecked": false,
+ "tiles": "<before-snapshot>/data/surfaces/milan-tiles/",
+ "routes": 1695,
+ "parityFailures": 0,
+ "byMode": {
+  "motorcycle": {
+   "routes": 568,
+   "km": 2846,
+   "categories": {
+    "confirmed_smooth": {
+     "meters": 2272808,
+     "onRouteGeometry": 2235202,
+     "offset1to4m": 2729,
+     "offsetOver4m": 34877,
+     "beyondWayEnd": 1041,
+     "tieWithOtherCategory": 4385,
+     "sameName": 1209282,
+     "unnamed": 20879,
+     "otherNameNearChange": 47123,
+     "otherNameElsewhere": 995525,
+     "offsetOver4mOtherName": 32958
+    },
+    "unknown": {
+     "meters": 186115,
+     "onRouteGeometry": 0,
+     "offset1to4m": 0,
+     "offsetOver4m": 0,
+     "beyondWayEnd": 0,
+     "tieWithOtherCategory": 0,
+     "sameName": 0,
+     "unnamed": 0,
+     "otherNameNearChange": 0,
+     "otherNameElsewhere": 0,
+     "offsetOver4mOtherName": 0,
+     "verticalAmbiguity": 3425,
+     "archivedWayWithoutSurface": 30766,
+     "noArchivedWayWithinRadius": 135457,
+     "nearerForbiddenOrWrongWay": 3662,
+     "onlyForbiddenOrWrongWay": 12805,
+     "onRejectedWay:confirmed_smooth:access:conditional": 1685,
+     "onRejectedWay:confirmed_smooth:wrongWay": 62,
+     "onRejectedWay:confirmed_smooth:directionUnknown:conditional": 1631,
+     "onRejectedWay:unknown:access": 4222,
+     "onRejectedWay:confirmed_smooth:access": 4355,
+     "onRejectedWay:probable_rough:access": 1315,
+     "onRejectedWay:confirmed_rough:access:conditional": 216,
+     "onRejectedWay:confirmed_rough:directionUnknown:conditional": 1460,
+     "onRejectedWay:unpaved_loose:access": 5
+    },
+    "confirmed_rough": {
+     "meters": 263302,
+     "onRouteGeometry": 263203,
+     "offset1to4m": 0,
+     "offsetOver4m": 99,
+     "beyondWayEnd": 99,
+     "tieWithOtherCategory": 2285,
+     "sameName": 151121,
+     "unnamed": 2240,
+     "otherNameNearChange": 9528,
+     "otherNameElsewhere": 100414,
+     "offsetOver4mOtherName": 80
+    },
+    "probable_rough": {
+     "meters": 123783,
+     "onRouteGeometry": 123783,
+     "offset1to4m": 0,
+     "offsetOver4m": 0,
+     "beyondWayEnd": 0,
+     "tieWithOtherCategory": 1273,
+     "sameName": 79476,
+     "unnamed": 33,
+     "otherNameNearChange": 4344,
+     "otherNameElsewhere": 39930,
+     "offsetOver4mOtherName": 0
+    }
+   }
+  },
+  "bicycle": {
+   "routes": 578,
+   "km": 2236.5,
+   "categories": {
+    "confirmed_rough": {
+     "meters": 219447,
+     "onRouteGeometry": 219447,
+     "offset1to4m": 0,
+     "offsetOver4m": 0,
+     "beyondWayEnd": 0,
+     "tieWithOtherCategory": 2356,
+     "sameName": 135002,
+     "unnamed": 4143,
+     "otherNameNearChange": 9390,
+     "otherNameElsewhere": 70911,
+     "offsetOver4mOtherName": 0
+    },
+    "confirmed_smooth": {
+     "meters": 1680995,
+     "onRouteGeometry": 1679230,
+     "offset1to4m": 487,
+     "offsetOver4m": 1279,
+     "beyondWayEnd": 750,
+     "tieWithOtherCategory": 4585,
+     "sameName": 993587,
+     "unnamed": 186831,
+     "otherNameNearChange": 36806,
+     "otherNameElsewhere": 463771,
+     "offsetOver4mOtherName": 201
+    },
+    "probable_rough": {
+     "meters": 178860,
+     "onRouteGeometry": 178860,
+     "offset1to4m": 0,
+     "offsetOver4m": 0,
+     "beyondWayEnd": 0,
+     "tieWithOtherCategory": 2174,
+     "sameName": 120611,
+     "unnamed": 8487,
+     "otherNameNearChange": 6870,
+     "otherNameElsewhere": 42894,
+     "offsetOver4mOtherName": 0
+    },
+    "unknown": {
+     "meters": 141835,
+     "onRouteGeometry": 0,
+     "offset1to4m": 0,
+     "offsetOver4m": 0,
+     "beyondWayEnd": 0,
+     "tieWithOtherCategory": 0,
+     "sameName": 0,
+     "unnamed": 0,
+     "otherNameNearChange": 0,
+     "otherNameElsewhere": 0,
+     "offsetOver4mOtherName": 0,
+     "nearerForbiddenOrWrongWay": 6059,
+     "onRejectedWay:probable_rough:access": 11755,
+     "onlyForbiddenOrWrongWay": 23903,
+     "archivedWayWithoutSurface": 54717,
+     "noArchivedWayWithinRadius": 55826,
+     "onRejectedWay:confirmed_smooth:wrongWay": 149,
+     "verticalAmbiguity": 1330,
+     "onRejectedWay:unknown:access": 3058,
+     "onRejectedWay:confirmed_rough:access": 7123,
+     "onRejectedWay:confirmed_smooth:access": 350,
+     "onRejectedWay:confirmed_rough:directionUnknown:conditional": 5301,
+     "onRejectedWay:unpaved_loose:access": 580,
+     "onRejectedWay:confirmed_smooth:access:conditional": 92,
+     "onRejectedWay:confirmed_smooth:directionUnknown:conditional": 388
+    },
+    "unpaved_loose": {
+     "meters": 15345,
+     "onRouteGeometry": 15327,
+     "offset1to4m": 7,
+     "offsetOver4m": 11,
+     "beyondWayEnd": 23,
+     "tieWithOtherCategory": 60,
+     "sameName": 10904,
+     "unnamed": 4441,
+     "otherNameNearChange": 0,
+     "otherNameElsewhere": 0,
+     "offsetOver4mOtherName": 0
+    }
+   }
+  },
+  "car": {
+   "routes": 549,
+   "km": 3201.4,
+   "categories": {
+    "unknown": {
+     "meters": 680573,
+     "onRouteGeometry": 0,
+     "offset1to4m": 0,
+     "offsetOver4m": 0,
+     "beyondWayEnd": 0,
+     "tieWithOtherCategory": 0,
+     "sameName": 0,
+     "unnamed": 0,
+     "otherNameNearChange": 0,
+     "otherNameElsewhere": 0,
+     "offsetOver4mOtherName": 0,
+     "noArchivedWayWithinRadius": 614664,
+     "nearerForbiddenOrWrongWay": 5431,
+     "onRejectedWay:confirmed_rough:directionUnknown:conditional": 15424,
+     "onlyForbiddenOrWrongWay": 29949,
+     "archivedWayWithoutSurface": 26560,
+     "onRejectedWay:confirmed_smooth:access:conditional": 1512,
+     "verticalAmbiguity": 3969,
+     "onRejectedWay:confirmed_rough:access:conditional": 216,
+     "onRejectedWay:unknown:access": 4983,
+     "onRejectedWay:probable_rough:directionUnknown:conditional": 4142,
+     "onRejectedWay:confirmed_smooth:directionUnknown:conditional": 1794,
+     "onRejectedWay:confirmed_smooth:access": 4219,
+     "onRejectedWay:probable_rough:access": 632,
+     "onRejectedWay:confirmed_smooth:wrongWay": 67,
+     "onRejectedWay:confirmed_rough:access": 46
+    },
+    "confirmed_smooth": {
+     "meters": 2189483,
+     "onRouteGeometry": 2154669,
+     "offset1to4m": 3007,
+     "offsetOver4m": 31808,
+     "beyondWayEnd": 1479,
+     "tieWithOtherCategory": 3237,
+     "sameName": 1179513,
+     "unnamed": 19024,
+     "otherNameNearChange": 43889,
+     "otherNameElsewhere": 947056,
+     "offsetOver4mOtherName": 30231
+    },
+    "confirmed_rough": {
+     "meters": 233451,
+     "onRouteGeometry": 233433,
+     "offset1to4m": 0,
+     "offsetOver4m": 18,
+     "beyondWayEnd": 18,
+     "tieWithOtherCategory": 2079,
+     "sameName": 139139,
+     "unnamed": 1441,
+     "otherNameNearChange": 9332,
+     "otherNameElsewhere": 83538,
+     "offsetOver4mOtherName": 18
+    },
+    "probable_rough": {
+     "meters": 97913,
+     "onRouteGeometry": 97913,
+     "offset1to4m": 0,
+     "offsetOver4m": 0,
+     "beyondWayEnd": 0,
+     "tieWithOtherCategory": 1015,
+     "sameName": 65049,
+     "unnamed": 60,
+     "otherNameNearChange": 3716,
+     "otherNameElsewhere": 29088,
+     "offsetOver4mOtherName": 0
+    }
+   }
+  }
+ },
+ "verificationPriorities": {
+  "confirmed_rough": [
+   {
+    "way": "osm:way:273362685",
+    "name": "Foro Buonaparte",
+    "routes": 166,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 3123
+   },
+   {
+    "way": "osm:way:53896958",
+    "name": "Foro Buonaparte",
+    "routes": 166,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 977
+   },
+   {
+    "way": "osm:way:288311236",
+    "name": "Foro Buonaparte",
+    "routes": 165,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 10864
+   },
+   {
+    "way": "osm:way:146660067",
+    "name": "Foro Buonaparte",
+    "routes": 165,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 6563
+   },
+   {
+    "way": "osm:way:288311235",
+    "name": "Foro Buonaparte",
+    "routes": 165,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 3378
+   },
+   {
+    "way": "osm:way:1164438198",
+    "name": "Foro Buonaparte",
+    "routes": 165,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1798
+   },
+   {
+    "way": "osm:way:56935336",
+    "name": "Foro Buonaparte",
+    "routes": 165,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1612
+   },
+   {
+    "way": "osm:way:1114981112",
+    "name": "Foro Buonaparte",
+    "routes": 165,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1139
+   },
+   {
+    "way": "osm:way:288313993",
+    "name": "Foro Buonaparte",
+    "routes": 161,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 3618
+   },
+   {
+    "way": "osm:way:1183972691",
+    "name": "Via Francesco Sforza",
+    "routes": 155,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 259
+   },
+   {
+    "way": "osm:way:284970400",
+    "name": "Corso Magenta",
+    "routes": 140,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2556
+   },
+   {
+    "way": "osm:way:145019300",
+    "name": "Piazza Cordusio",
+    "routes": 124,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2804
+   },
+   {
+    "way": "osm:way:360721283",
+    "name": "Piazza Fontana",
+    "routes": 120,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2987
+   },
+   {
+    "way": "osm:way:185168099",
+    "name": "Via Orefici",
+    "routes": 113,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1997
+   },
+   {
+    "way": "osm:way:145018316",
+    "name": "Corso Magenta",
+    "routes": 110,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 7601
+   },
+   {
+    "way": "osm:way:274103571",
+    "name": "Via Orefici",
+    "routes": 109,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 6327
+   },
+   {
+    "way": "osm:way:274103572",
+    "name": "Via Orefici",
+    "routes": 109,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 5416
+   },
+   {
+    "way": "osm:way:1221504760",
+    "name": "Via Orefici",
+    "routes": 109,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1556
+   },
+   {
+    "way": "osm:way:273714456",
+    "name": "Corso Magenta",
+    "routes": 107,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 7642
+   },
+   {
+    "way": "osm:way:1072254389",
+    "name": "Via Cordusio",
+    "routes": 106,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1053
+   },
+   {
+    "way": "osm:way:168773934",
+    "name": "Via Silvio Pellico",
+    "routes": 105,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 5432
+   },
+   {
+    "way": "osm:way:193783481",
+    "name": "Piazza della Resistenza Partigiana",
+    "routes": 99,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2390
+   },
+   {
+    "way": "osm:way:289865599",
+    "name": "Via Giovanni Battista Viotti",
+    "routes": 96,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2028
+   },
+   {
+    "way": "osm:way:145019295",
+    "name": "Corso Magenta",
+    "routes": 93,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 10177
+   },
+   {
+    "way": "osm:way:183217902",
+    "name": "Corso Genova",
+    "routes": 93,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 6746
+   }
+  ],
+  "probable_rough": [
+   {
+    "way": "osm:way:281309089",
+    "name": "Via Edmondo De Amicis",
+    "routes": 199,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2960
+   },
+   {
+    "way": "osm:way:997690719",
+    "name": "Via Molino delle Armi",
+    "routes": 172,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1228
+   },
+   {
+    "way": "osm:way:168553843",
+    "name": "Piazza della Resistenza Partigiana",
+    "routes": 169,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 4531
+   },
+   {
+    "way": "osm:way:252376272",
+    "name": "Piazza della Scala",
+    "routes": 168,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 9761
+   },
+   {
+    "way": "osm:way:1191244697",
+    "name": "Piazza della Scala",
+    "routes": 168,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1415
+   },
+   {
+    "way": "osm:way:286577466",
+    "name": "Via Santa Margherita",
+    "routes": 162,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 8505
+   },
+   {
+    "way": "osm:way:51855670",
+    "name": "Piazza della Resistenza Partigiana",
+    "routes": 150,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1402
+   },
+   {
+    "way": "osm:way:273950073",
+    "name": "Piazza della Scala",
+    "routes": 150,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1098
+   },
+   {
+    "way": "osm:way:28660861",
+    "name": "Via Silvio Pellico",
+    "routes": 137,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 3073
+   },
+   {
+    "way": "osm:way:274825185",
+    "name": "Via dell'Orso",
+    "routes": 113,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 14481
+   },
+   {
+    "way": "osm:way:168553866",
+    "name": "Via Edmondo De Amicis",
+    "routes": 113,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 7852
+   },
+   {
+    "way": "osm:way:273287566",
+    "name": "Via dell'Orso",
+    "routes": 113,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 7425
+   },
+   {
+    "way": "osm:way:273287565",
+    "name": "Via dell'Orso",
+    "routes": 113,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 3995
+   },
+   {
+    "way": "osm:way:1216719514",
+    "name": "Via Edmondo De Amicis",
+    "routes": 113,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2316
+   },
+   {
+    "way": "osm:way:286578753",
+    "name": "Via Edmondo De Amicis",
+    "routes": 109,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 12040
+   },
+   {
+    "way": "osm:way:1257808690",
+    "name": "Via Giosuè Carducci",
+    "routes": 108,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 6668
+   },
+   {
+    "way": "osm:way:168773931",
+    "name": "Via Santa Margherita",
+    "routes": 99,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 996
+   },
+   {
+    "way": "osm:way:280774527",
+    "name": "Via Santa Margherita",
+    "routes": 98,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 5867
+   },
+   {
+    "way": "osm:way:173512371",
+    "name": "Via Torino",
+    "routes": 97,
+    "modes": [
+     "bicycle",
+     "motorcycle"
+    ],
+    "meters": 890
+   },
+   {
+    "way": "osm:way:114187491",
+    "name": "Largo Claudio Abbado",
+    "routes": 93,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 4266
+   },
+   {
+    "way": "osm:way:4520078",
+    "name": "Via Cordusio",
+    "routes": 90,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 6263
+   },
+   {
+    "way": "osm:way:273950074",
+    "name": "Via Giuseppe Mengoni",
+    "routes": 88,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 5146
+   },
+   {
+    "way": "osm:way:4998790",
+    "name": "Largo Claudio Treves",
+    "routes": 79,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2686
+   },
+   {
+    "way": "osm:way:143276335",
+    "name": "Carrobbio",
+    "routes": 79,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1200
+   },
+   {
+    "way": "osm:way:271008065",
+    "name": "Via Cesare Correnti",
+    "routes": 77,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1186
+   }
+  ],
+  "unknown": [
+   {
+    "way": "osm:way:273954321",
+    "name": "Piazza del Duomo",
+    "routes": 68,
+    "modes": [
+     "bicycle",
+     "motorcycle"
+    ],
+    "meters": 3353
+   },
+   {
+    "way": "osm:way:185168104",
+    "name": "Via Orefici",
+    "routes": 59,
+    "modes": [
+     "bicycle",
+     "motorcycle"
+    ],
+    "meters": 705
+   },
+   {
+    "way": "osm:way:145019303",
+    "name": "Via Santa Maria alla Porta",
+    "routes": 47,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2249
+   },
+   {
+    "way": "osm:way:273712495",
+    "name": "Via Santa Maria alla Porta",
+    "routes": 47,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1811
+   },
+   {
+    "way": "osm:way:273712496",
+    "name": "Via Santa Maria alla Porta",
+    "routes": 47,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 760
+   },
+   {
+    "way": "osm:way:275503447",
+    "name": "Piazzale Selinunte",
+    "routes": 42,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1422
+   },
+   {
+    "way": "osm:way:275503456",
+    "name": "Via Carlo Maratta",
+    "routes": 40,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 5491
+   },
+   {
+    "way": "osm:way:276072501",
+    "name": "Via Carlo Maratta",
+    "routes": 40,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1760
+   },
+   {
+    "way": "osm:way:249985545",
+    "name": "Via Carlo Maratta",
+    "routes": 40,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1443
+   },
+   {
+    "way": "osm:way:23227471",
+    "name": "Via Agnello",
+    "routes": 36,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 460
+   },
+   {
+    "way": "osm:way:472195958",
+    "name": "Via Agnello",
+    "routes": 35,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 414
+   },
+   {
+    "way": "osm:way:28661081",
+    "name": "Via Agnello",
+    "routes": 35,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 161
+   },
+   {
+    "way": "osm:way:51855671",
+    "name": "Piazza della Resistenza Partigiana",
+    "routes": 32,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 919
+   },
+   {
+    "way": "osm:way:285081314",
+    "name": "Via Collecchio",
+    "routes": 29,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 3667
+   },
+   {
+    "way": "osm:way:48426035",
+    "name": "Via Collecchio",
+    "routes": 29,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 584
+   },
+   {
+    "way": "osm:way:271410537",
+    "name": "Via Ovada",
+    "routes": 27,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 4459
+   },
+   {
+    "way": "osm:way:263800442",
+    "name": "Via Conca del Naviglio",
+    "routes": 27,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 2219
+   },
+   {
+    "way": "osm:way:145019298",
+    "name": "Via Santa Maria alla Porta",
+    "routes": 27,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 801
+   },
+   {
+    "way": "osm:way:85357220",
+    "name": "Via Voltri",
+    "routes": 27,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 759
+   },
+   {
+    "way": "osm:way:1055424545",
+    "name": null,
+    "routes": 25,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 4290
+   },
+   {
+    "way": "osm:way:285858552",
+    "name": "Via Vodice",
+    "routes": 25,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 1998
+   },
+   {
+    "way": "osm:way:109579903",
+    "name": "Via Vodice",
+    "routes": 25,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 640
+   },
+   {
+    "way": "osm:way:285858553",
+    "name": "Via Vodice",
+    "routes": 25,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 495
+   },
+   {
+    "way": "osm:way:285858551",
+    "name": "Via Vodice",
+    "routes": 25,
+    "modes": [
+     "bicycle",
+     "car",
+     "motorcycle"
+    ],
+    "meters": 439
+   },
+   {
+    "way": "osm:way:1152991399",
+    "name": null,
+    "routes": 25,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 231
+   }
+  ],
+  "unpaved_loose": [
+   {
+    "way": "osm:way:120363505",
+    "name": "Viale Gerolamo Gadio",
+    "routes": 44,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 2541
+   },
+   {
+    "way": "osm:way:50845221",
+    "name": "Viale Gerolamo Gadio",
+    "routes": 32,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 1856
+   },
+   {
+    "way": "osm:way:1029875811",
+    "name": "Viale Gerolamo Gadio",
+    "routes": 23,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 2129
+   },
+   {
+    "way": "osm:way:274992016",
+    "name": "Viale Gerolamo Gadio",
+    "routes": 23,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 1768
+   },
+   {
+    "way": "osm:way:618536852",
+    "name": null,
+    "routes": 20,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 1524
+   },
+   {
+    "way": "osm:way:37337308",
+    "name": null,
+    "routes": 20,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 1494
+   },
+   {
+    "way": "osm:way:113310602",
+    "name": null,
+    "routes": 20,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 467
+   },
+   {
+    "way": "osm:way:247982359",
+    "name": "Passeggiata Umberto Eco",
+    "routes": 19,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 463
+   },
+   {
+    "way": "osm:way:471850625",
+    "name": null,
+    "routes": 18,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 37
+   },
+   {
+    "way": "osm:way:114713677",
+    "name": "Viale Comizi di Lione",
+    "routes": 5,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 132
+   },
+   {
+    "way": "osm:way:50845220",
+    "name": null,
+    "routes": 3,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 179
+   },
+   {
+    "way": "osm:way:384671392",
+    "name": "Passeggiata Umberto Eco",
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 258
+   },
+   {
+    "way": "osm:way:384671391",
+    "name": "Passeggiata Umberto Eco",
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 220
+   },
+   {
+    "way": "osm:way:89873771",
+    "name": "Passeggiata Umberto Eco",
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 216
+   },
+   {
+    "way": "osm:way:241544059",
+    "name": null,
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 184
+   },
+   {
+    "way": "osm:way:168770482",
+    "name": "Passeggiata Umberto Eco",
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 169
+   },
+   {
+    "way": "osm:way:274991995",
+    "name": "Viale Malta",
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 169
+   },
+   {
+    "way": "osm:way:384671389",
+    "name": "Passeggiata Umberto Eco",
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 56
+   },
+   {
+    "way": "osm:way:384671390",
+    "name": "Passeggiata Umberto Eco",
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 43
+   },
+   {
+    "way": "osm:way:116344567",
+    "name": null,
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 29
+   },
+   {
+    "way": "osm:way:274992001",
+    "name": "Viale Malta",
+    "routes": 2,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 28
+   },
+   {
+    "way": "osm:way:114713671",
+    "name": "Viale Comizi di Lione",
+    "routes": 1,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 181
+   },
+   {
+    "way": "osm:way:274992003",
+    "name": "Viale Malta",
+    "routes": 1,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 160
+   },
+   {
+    "way": "osm:way:274991999",
+    "name": "Viale Malta",
+    "routes": 1,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 143
+   },
+   {
+    "way": "osm:way:438991490",
+    "name": null,
+    "routes": 1,
+    "modes": [
+     "bicycle"
+    ],
+    "meters": 142
+   }
+  ]
+ },
+ "topRejectedOnRoute": [
+  {
+   "mode": "car",
+   "way": "osm:way:145014444",
+   "name": "Via Alessandro Manzoni",
+   "highway": "residential",
+   "category": "probable_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (07:20-20:00)"
+   },
+   "meters": 4089
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:163757325",
+   "name": "Piazza della Scala",
+   "highway": "pedestrian",
+   "category": "probable_rough",
+   "why": "access",
+   "meters": 3087
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:272654132",
+   "name": "Via Madonnina",
+   "highway": "pedestrian",
+   "category": "confirmed_rough",
+   "why": "access",
+   "meters": 2963
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:273367402",
+   "name": "Via Alessandro Manzoni",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (07:20-20:00)"
+   },
+   "meters": 2690
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:274985648",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 2004
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:24815663",
+   "name": "Via Pattari",
+   "highway": "pedestrian",
+   "category": "confirmed_rough",
+   "why": "access",
+   "tags": {
+    "access": "no"
+   },
+   "meters": 1787
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:319913619",
+   "name": "Via Pattari",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "access",
+   "tags": {
+    "access": "no"
+   },
+   "meters": 1779
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:96017805",
+   "name": "Corso Monforte",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "bicycle": "no"
+   },
+   "meters": 1685
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:96017805",
+   "name": "Corso Monforte",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "bicycle": "no"
+   },
+   "meters": 1685
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:547832991",
+   "name": "Piazza San Fedele",
+   "highway": "pedestrian",
+   "category": "probable_rough",
+   "why": "access",
+   "meters": 1660
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:270309542",
+   "name": "Corso Giuseppe Garibaldi",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "bicycle": "yes",
+    "motor_vehicle": "private"
+   },
+   "meters": 1609
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:270309542",
+   "name": "Corso Giuseppe Garibaldi",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "bicycle": "yes",
+    "motor_vehicle": "private"
+   },
+   "meters": 1609
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:172453240",
+   "name": "Via Fiori Oscuri",
+   "highway": "pedestrian",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "motor_vehicle": "destination"
+   },
+   "meters": 1573
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:273367400",
+   "name": "Via Alessandro Manzoni",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (07:20-20:00)"
+   },
+   "meters": 1479
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:183213444",
+   "name": "Corso San Gottardo",
+   "highway": "tertiary",
+   "category": "confirmed_smooth",
+   "why": "directionUnknown",
+   "tags": {
+    "bicycle": "yes",
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 1309
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:273367405",
+   "name": "Via Alessandro Manzoni",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (07:20-20:00)"
+   },
+   "meters": 1270
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:277620584",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 1201
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:274985648",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 1184
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:267328973",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private"
+   },
+   "meters": 1181
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:267328973",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private"
+   },
+   "meters": 1157
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:37733495",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private"
+   },
+   "meters": 1147
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:183213444",
+   "name": "Corso San Gottardo",
+   "highway": "tertiary",
+   "category": "confirmed_smooth",
+   "why": "directionUnknown",
+   "tags": {
+    "bicycle": "yes",
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 1145
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:273367407",
+   "name": "Via Alessandro Manzoni",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (07:20-20:00)"
+   },
+   "meters": 1115
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:37733495",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private"
+   },
+   "meters": 1042
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:274985650",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 925
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:274985649",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 887
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:4604978",
+   "name": "Via degli Olivetani",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "lanes:psv:backward": "1",
+    "motor_vehicle:conditional": "no @ (00:00-06:00); yes @ \"autorizzati, veicoli di pubblica utilità, residenti in via Azario via Calco e via Bosso\""
+   },
+   "meters": 796
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:277620582",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00;PH off)"
+   },
+   "meters": 795
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:331883966",
+   "name": "Galleria Vittorio Emanuele Secondo",
+   "highway": "pedestrian",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "bicycle": "dismount",
+    "motor_vehicle": "no",
+    "tunnel": "building_passage"
+   },
+   "meters": 760
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:4519593",
+   "name": "Via Giovanni Boccaccio",
+   "highway": "tertiary",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "motor_vehicle:conditional": "no @ (Mo-Fr 07:30-19:30)"
+   },
+   "meters": 733
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:277620583",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 728
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:547833007",
+   "name": "Piazza San Fedele",
+   "highway": "pedestrian",
+   "category": "probable_rough",
+   "why": "access",
+   "meters": 702
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:4519593",
+   "name": "Via Giovanni Boccaccio",
+   "highway": "tertiary",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "motor_vehicle:conditional": "no @ (Mo-Fr 07:30-19:30)"
+   },
+   "meters": 696
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:277620586",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 679
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:273367398",
+   "name": "Via Alessandro Manzoni",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (07:20-20:00)"
+   },
+   "meters": 651
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:267328973",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private"
+   },
+   "meters": 603
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:164111031",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "service": "driveway"
+   },
+   "meters": 599
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:355296033",
+   "name": "Via Madonnina",
+   "highway": "pedestrian",
+   "category": "probable_rough",
+   "why": "access",
+   "meters": 585
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:4604978",
+   "name": "Via degli Olivetani",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "lanes:psv:backward": "1",
+    "motor_vehicle:conditional": "no @ (00:00-06:00); yes @ \"autorizzati, veicoli di pubblica utilità, residenti in via Azario via Calco e via Bosso\""
+   },
+   "meters": 579
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:285197074",
+   "name": "Piazza Castello",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "access": "residents",
+    "bicycle": "yes"
+   },
+   "meters": 549
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:4604808",
+   "name": "Via Lodovico il Moro",
+   "highway": "tertiary",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-10:00)"
+   },
+   "meters": 534
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:4604808",
+   "name": "Via Lodovico il Moro",
+   "highway": "tertiary",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-10:00)"
+   },
+   "meters": 534
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:4604808",
+   "name": "Via Lodovico il Moro",
+   "highway": "tertiary",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-10:00)"
+   },
+   "meters": 534
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:164111031",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "service": "driveway"
+   },
+   "meters": 524
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:277620583",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 520
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:251231855",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "access": "no",
+    "bicycle:forward": "yes",
+    "bus:forward": "yes",
+    "moped:forward": "yes",
+    "motorcycle:forward": "yes",
+    "psv:forward": "yes",
+    "taxi:forward": "yes"
+   },
+   "meters": 505
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:4877686",
+   "name": "Corso Giuseppe Garibaldi",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "motor_vehicle": "private"
+   },
+   "meters": 487
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:277620586",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 485
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:37733495",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private"
+   },
+   "meters": 469
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:120248977",
+   "name": "Piazza del Cannone",
+   "highway": "pedestrian",
+   "category": "unpaved_loose",
+   "why": "access",
+   "meters": 446
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:23083555",
+   "name": null,
+   "highway": "pedestrian",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "tunnel": "building_passage"
+   },
+   "meters": 442
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:277620581",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 430
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:89873767",
+   "name": null,
+   "highway": "footway",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "bicycle": "dismount",
+    "bridge": "yes",
+    "layer": "1",
+    "motor_vehicle": "no"
+   },
+   "meters": 413
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:297275374",
+   "name": "Via Pattari",
+   "highway": "pedestrian",
+   "category": "unknown",
+   "why": "access",
+   "meters": 408
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:115896303",
+   "name": null,
+   "highway": "footway",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "bicycle": "dismount",
+    "motor_vehicle": "no"
+   },
+   "meters": 405
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:396868525",
+   "name": "Galleria Giuseppe Borella",
+   "highway": "pedestrian",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "tunnel": "building_passage"
+   },
+   "meters": 396
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:4877686",
+   "name": "Corso Giuseppe Garibaldi",
+   "highway": "residential",
+   "category": "confirmed_smooth",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "motor_vehicle": "private"
+   },
+   "meters": 390
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:251231855",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "access": "no",
+    "bicycle:forward": "yes",
+    "bus:forward": "yes",
+    "moped:forward": "yes",
+    "motorcycle:forward": "yes",
+    "psv:forward": "yes",
+    "taxi:forward": "yes"
+   },
+   "meters": 372
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:121498335",
+   "name": null,
+   "highway": "footway",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "bicycle": "dismount",
+    "motor_vehicle": "no"
+   },
+   "meters": 368
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:343655453",
+   "name": null,
+   "highway": "footway",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "no",
+    "bicycle": "dismount",
+    "motor_vehicle": "permit"
+   },
+   "meters": 362
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:343655453",
+   "name": null,
+   "highway": "footway",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "no",
+    "bicycle": "dismount",
+    "motor_vehicle": "permit"
+   },
+   "meters": 362
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:36197130",
+   "name": "Via dei Chiostri",
+   "highway": "service",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "motor_vehicle": "private"
+   },
+   "meters": 356
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:37335881",
+   "name": "Galleria De Cristoforis",
+   "highway": "pedestrian",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "tunnel": "building_passage"
+   },
+   "meters": 352
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:273274784",
+   "name": "Via Giuseppe Meda",
+   "highway": "tertiary",
+   "category": "confirmed_smooth",
+   "why": "directionUnknown",
+   "tags": {
+    "bicycle": "yes",
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-09:30)"
+   },
+   "meters": 352
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:277620585",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 337
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:183451617",
+   "name": "Ripa di Porta Ticinese",
+   "highway": "tertiary",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-10:00)"
+   },
+   "meters": 329
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:183451617",
+   "name": "Ripa di Porta Ticinese",
+   "highway": "tertiary",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-10:00)"
+   },
+   "meters": 329
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:183451617",
+   "name": "Ripa di Porta Ticinese",
+   "highway": "tertiary",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-10:00)"
+   },
+   "meters": 329
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:112068187",
+   "name": null,
+   "highway": "pedestrian",
+   "category": "unknown",
+   "why": "access",
+   "meters": 326
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:446539220",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "service": "driveway"
+   },
+   "meters": 323
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:446539220",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "service": "driveway"
+   },
+   "meters": 323
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:291652154",
+   "name": "Corso Vittorio Emanuele Secondo",
+   "highway": "pedestrian",
+   "category": "confirmed_rough",
+   "why": "access",
+   "tags": {
+    "bicycle": "dismount",
+    "motor_vehicle": "no"
+   },
+   "meters": 315
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:277620581",
+   "name": "Via Torino",
+   "highway": "residential",
+   "category": "confirmed_rough",
+   "why": "directionUnknown",
+   "tags": {
+    "oneway:conditional": "yes @ (Mo-Sa 07:30-09:00; PH off)"
+   },
+   "meters": 307
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:267328971",
+   "name": null,
+   "highway": "service",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "tunnel": "building_passage"
+   },
+   "meters": 295
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:267328971",
+   "name": null,
+   "highway": "service",
+   "category": "probable_rough",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "tunnel": "building_passage"
+   },
+   "meters": 295
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:273274783",
+   "name": "Via Giuseppe Meda",
+   "highway": "tertiary",
+   "category": "confirmed_smooth",
+   "why": "directionUnknown",
+   "tags": {
+    "bicycle": "yes",
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-09:30)"
+   },
+   "meters": 274
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:273274783",
+   "name": "Via Giuseppe Meda",
+   "highway": "tertiary",
+   "category": "confirmed_smooth",
+   "why": "directionUnknown",
+   "tags": {
+    "bicycle": "yes",
+    "oneway:conditional": "yes @ (Mo-Fr 07:00-09:30)"
+   },
+   "meters": 274
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:457407360",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private"
+   },
+   "meters": 269
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:270309548",
+   "name": "Via Vasto",
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "service": "parking_aisle"
+   },
+   "meters": 259
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:696816984",
+   "name": null,
+   "highway": "service",
+   "category": "unknown",
+   "why": "access",
+   "tags": {
+    "access": "private",
+    "service": "driveway"
+   },
+   "meters": 212
+  }
+ ],
+ "topSuspects": [
+  {
+   "mode": "bicycle",
+   "way": "osm:way:289381223",
+   "matchedName": "Piazza Giuseppe Missori",
+   "routeStreet": "piazza giuseppe missori",
+   "category": "probable_rough",
+   "meters": 254,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 254.35690265629154,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:136990352",
+   "matchedName": "Carrobbio",
+   "routeStreet": "carrobbio",
+   "category": "probable_rough",
+   "meters": 246,
+   "nearStreetChange": 44,
+   "beyondEnd": 0,
+   "tie": 245.66035638864804,
+   "maxDistance": 0.1
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:273455651",
+   "matchedName": "Via Meravigli",
+   "routeStreet": "via meravigli",
+   "category": "probable_rough",
+   "meters": 206,
+   "nearStreetChange": 206,
+   "beyondEnd": 0,
+   "tie": 206.43413997985292,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:286564810",
+   "matchedName": "Largo Paolo D'Ancona",
+   "routeStreet": "largo paolo d'ancona",
+   "category": "confirmed_rough",
+   "meters": 205,
+   "nearStreetChange": 205,
+   "beyondEnd": 0,
+   "tie": 204.8938280141776,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:136990352",
+   "matchedName": "Carrobbio",
+   "routeStreet": "carrobbio",
+   "category": "probable_rough",
+   "meters": 202,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 201.7924356049609,
+   "maxDistance": 0.1
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:136990352",
+   "matchedName": "Carrobbio",
+   "routeStreet": "carrobbio",
+   "category": "probable_rough",
+   "meters": 184,
+   "nearStreetChange": 105,
+   "beyondEnd": 0,
+   "tie": 184.24526729148604,
+   "maxDistance": 0.1
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:37063200",
+   "matchedName": "Piazza Cavour",
+   "routeStreet": "via alessandro manzoni",
+   "category": "confirmed_rough",
+   "meters": 178,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 178.4584703452789,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:196928988",
+   "matchedName": "Piazza Giuseppe Missori",
+   "routeStreet": "corso di porta romana",
+   "category": "confirmed_rough",
+   "meters": 159,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 158.59157097742502,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:286564810",
+   "matchedName": "Largo Paolo D'Ancona",
+   "routeStreet": "largo paolo d'ancona",
+   "category": "confirmed_rough",
+   "meters": 148,
+   "nearStreetChange": 148,
+   "beyondEnd": 0,
+   "tie": 147.52355617020785,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:173512371",
+   "matchedName": "Via Torino",
+   "routeStreet": "via torino",
+   "category": "probable_rough",
+   "meters": 142,
+   "nearStreetChange": 142,
+   "beyondEnd": 0,
+   "tie": 141.53532462934524,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:1473344659",
+   "matchedName": null,
+   "routeStreet": null,
+   "category": "probable_rough",
+   "meters": 116,
+   "nearStreetChange": 116,
+   "beyondEnd": 0,
+   "tie": 115.85356945403002,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:141633904",
+   "matchedName": "Via Victor Hugo",
+   "routeStreet": "via victor hugo",
+   "category": "confirmed_rough",
+   "meters": 111,
+   "nearStreetChange": 111,
+   "beyondEnd": 0,
+   "tie": 110.67197802705127,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:1183972691",
+   "matchedName": "Via Francesco Sforza",
+   "routeStreet": "via edmondo de amicis",
+   "category": "confirmed_rough",
+   "meters": 110,
+   "nearStreetChange": 50,
+   "beyondEnd": 0,
+   "tie": 110.2409423566645,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:37063200",
+   "matchedName": "Piazza Cavour",
+   "routeStreet": "via alessandro manzoni",
+   "category": "confirmed_rough",
+   "meters": 102,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 102.12551024761044,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:168770529",
+   "matchedName": "Via San Prospero",
+   "routeStreet": "via san prospero",
+   "category": "probable_rough",
+   "meters": 97,
+   "nearStreetChange": 18,
+   "beyondEnd": 0,
+   "tie": 97.49845786898861,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:182246023",
+   "matchedName": null,
+   "routeStreet": "via broletto",
+   "category": "confirmed_rough",
+   "meters": 96,
+   "nearStreetChange": 96,
+   "beyondEnd": 0,
+   "tie": 95.86368114108987,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:379871047",
+   "matchedName": "Piazza Giuseppe Missori",
+   "routeStreet": "piazza giuseppe missori",
+   "category": "confirmed_rough",
+   "meters": 95,
+   "nearStreetChange": 90,
+   "beyondEnd": 0,
+   "tie": 94.92991773607577,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:37063200",
+   "matchedName": "Piazza Cavour",
+   "routeStreet": "via alessandro manzoni",
+   "category": "confirmed_rough",
+   "meters": 91,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 90.77823133120927,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:286564810",
+   "matchedName": "Largo Paolo D'Ancona",
+   "routeStreet": "corso magenta",
+   "category": "confirmed_rough",
+   "meters": 90,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 90.1532843262381,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:182246025",
+   "matchedName": "Piazza Cordusio",
+   "routeStreet": "piazza cordusio",
+   "category": "confirmed_rough",
+   "meters": 88,
+   "nearStreetChange": 88,
+   "beyondEnd": 0,
+   "tie": 88.39163528191304,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:196928988",
+   "matchedName": "Piazza Giuseppe Missori",
+   "routeStreet": "corso di porta romana",
+   "category": "confirmed_rough",
+   "meters": 87,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 87.22536403758374,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:1257808690",
+   "matchedName": "Via Giosuè Carducci",
+   "routeStreet": "via giosuè carducci",
+   "category": "probable_rough",
+   "meters": 85,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 84.68980394495124,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:1257808690",
+   "matchedName": "Via Giosuè Carducci",
+   "routeStreet": "piazzale luigi cadorna",
+   "category": "probable_rough",
+   "meters": 81,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 81.43250379322234,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:1513061174",
+   "matchedName": "Piazza San Marco",
+   "routeStreet": "piazza san marco",
+   "category": "probable_rough",
+   "meters": 80,
+   "nearStreetChange": 80,
+   "beyondEnd": 0,
+   "tie": 80.37871538295305,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:1183972691",
+   "matchedName": "Via Francesco Sforza",
+   "routeStreet": "via edmondo de amicis",
+   "category": "confirmed_rough",
+   "meters": 80,
+   "nearStreetChange": 35,
+   "beyondEnd": 0,
+   "tie": 80.17523080484699,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:287070936",
+   "matchedName": "Piazzale Lodi",
+   "routeStreet": "piazzale lodi",
+   "category": "confirmed_rough",
+   "meters": 80,
+   "nearStreetChange": 75,
+   "beyondEnd": 0,
+   "tie": 79.96462458433942,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:4615474",
+   "matchedName": "Piazzale Francesco Baracca",
+   "routeStreet": "corso magenta",
+   "category": "confirmed_rough",
+   "meters": 80,
+   "nearStreetChange": 35,
+   "beyondEnd": 80,
+   "tie": 0,
+   "maxDistance": 4.4
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:182783239",
+   "matchedName": "Via Mercato",
+   "routeStreet": "via mercato",
+   "category": "confirmed_rough",
+   "meters": 79,
+   "nearStreetChange": 13,
+   "beyondEnd": 0,
+   "tie": 78.71512770190526,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:182783239",
+   "matchedName": "Via Mercato",
+   "routeStreet": "via mercato",
+   "category": "confirmed_rough",
+   "meters": 79,
+   "nearStreetChange": 13,
+   "beyondEnd": 0,
+   "tie": 78.71512770190526,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:277620580",
+   "matchedName": "Via Spadari",
+   "routeStreet": "via spadari",
+   "category": "probable_rough",
+   "meters": 77,
+   "nearStreetChange": 19,
+   "beyondEnd": 0,
+   "tie": 76.53260740507051,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:287070936",
+   "matchedName": "Piazzale Lodi",
+   "routeStreet": "piazzale lodi",
+   "category": "confirmed_rough",
+   "meters": 75,
+   "nearStreetChange": 69,
+   "beyondEnd": 0,
+   "tie": 74.63364961205012,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:114187491",
+   "matchedName": "Largo Claudio Abbado",
+   "routeStreet": "piazza del duomo",
+   "category": "probable_rough",
+   "meters": 72,
+   "nearStreetChange": 72,
+   "beyondEnd": 0,
+   "tie": 71.9615400131022,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:1257808690",
+   "matchedName": "Via Giosuè Carducci",
+   "routeStreet": "piazzale luigi cadorna",
+   "category": "probable_rough",
+   "meters": 72,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 71.66060333803564,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:173512371",
+   "matchedName": "Via Torino",
+   "routeStreet": "via torino",
+   "category": "probable_rough",
+   "meters": 71,
+   "nearStreetChange": 71,
+   "beyondEnd": 0,
+   "tie": 70.76766231467262,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:168553861",
+   "matchedName": "Via Cesare Correnti",
+   "routeStreet": "carrobbio",
+   "category": "probable_rough",
+   "meters": 68,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 68.2568166823832,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:168553861",
+   "matchedName": "Via Cesare Correnti",
+   "routeStreet": "carrobbio",
+   "category": "probable_rough",
+   "meters": 68,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 68.2568166823832,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:162729496",
+   "matchedName": "Piazza Cavour",
+   "routeStreet": "piazza cavour",
+   "category": "confirmed_rough",
+   "meters": 64,
+   "nearStreetChange": 64,
+   "beyondEnd": 0,
+   "tie": 64.32282755618814,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:288800516",
+   "matchedName": "Via Ceresio",
+   "routeStreet": "via ceresio",
+   "category": "confirmed_rough",
+   "meters": 64,
+   "nearStreetChange": 64,
+   "beyondEnd": 0,
+   "tie": 64.14783257882266,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:145016429",
+   "matchedName": "Via Broletto",
+   "routeStreet": "via broletto",
+   "category": "probable_rough",
+   "meters": 64,
+   "nearStreetChange": 64,
+   "beyondEnd": 0,
+   "tie": 63.79867060902605,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:4998790",
+   "matchedName": "Largo Claudio Treves",
+   "routeStreet": "largo claudio treves",
+   "category": "probable_rough",
+   "meters": 62,
+   "nearStreetChange": 62,
+   "beyondEnd": 0,
+   "tie": 62.321192008834366,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:4998790",
+   "matchedName": "Largo Claudio Treves",
+   "routeStreet": "largo claudio treves",
+   "category": "probable_rough",
+   "meters": 62,
+   "nearStreetChange": 62,
+   "beyondEnd": 0,
+   "tie": 62.321192008834366,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:39912952",
+   "matchedName": "Piazza della Repubblica",
+   "routeStreet": "viale monte santo",
+   "category": "confirmed_rough",
+   "meters": 62,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 61.62540336117924,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:277620580",
+   "matchedName": "Via Spadari",
+   "routeStreet": "via spadari",
+   "category": "probable_rough",
+   "meters": 61,
+   "nearStreetChange": 15,
+   "beyondEnd": 0,
+   "tie": 61.226085924056406,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:30656122",
+   "matchedName": "Piazza della Repubblica",
+   "routeStreet": "piazza della repubblica",
+   "category": "probable_rough",
+   "meters": 59,
+   "nearStreetChange": 59,
+   "beyondEnd": 0,
+   "tie": 58.930334049132355,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:30656122",
+   "matchedName": "Piazza della Repubblica",
+   "routeStreet": "piazza della repubblica",
+   "category": "probable_rough",
+   "meters": 59,
+   "nearStreetChange": 59,
+   "beyondEnd": 0,
+   "tie": 58.930334049132355,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:1257808690",
+   "matchedName": "Via Giosuè Carducci",
+   "routeStreet": "via giosuè carducci",
+   "category": "probable_rough",
+   "meters": 59,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 58.631402731120055,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:141633904",
+   "matchedName": "Via Victor Hugo",
+   "routeStreet": "via victor hugo",
+   "category": "confirmed_rough",
+   "meters": 59,
+   "nearStreetChange": 59,
+   "beyondEnd": 0,
+   "tie": 58.59104719079185,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:288800516",
+   "matchedName": "Via Ceresio",
+   "routeStreet": "via ceresio",
+   "category": "confirmed_rough",
+   "meters": 58,
+   "nearStreetChange": 12,
+   "beyondEnd": 0,
+   "tie": 58.316211435293326,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:4998790",
+   "matchedName": "Largo Claudio Treves",
+   "routeStreet": "largo claudio treves",
+   "category": "probable_rough",
+   "meters": 58,
+   "nearStreetChange": 58,
+   "beyondEnd": 0,
+   "tie": 57.704807415587375,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:274825185",
+   "matchedName": "Via dell'Orso",
+   "routeStreet": "via cusani",
+   "category": "probable_rough",
+   "meters": 56,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 56.38214239808556,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:43144536",
+   "matchedName": "Via San Vittore",
+   "routeStreet": "via san vittore",
+   "category": "confirmed_rough",
+   "meters": 56,
+   "nearStreetChange": 30,
+   "beyondEnd": 0,
+   "tie": 55.85778570605974,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:168773901",
+   "matchedName": "Piazza Fontana",
+   "routeStreet": "piazza fontana",
+   "category": "confirmed_rough",
+   "meters": 56,
+   "nearStreetChange": 56,
+   "beyondEnd": 0,
+   "tie": 55.69001950230667,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:196928988",
+   "matchedName": "Piazza Giuseppe Missori",
+   "routeStreet": "piazza giuseppe missori",
+   "category": "confirmed_rough",
+   "meters": 56,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 55.507049842098745,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:1373768825",
+   "matchedName": "Via Vincenzo Foppa",
+   "routeStreet": "via vincenzo foppa",
+   "category": "probable_rough",
+   "meters": 55,
+   "nearStreetChange": 55,
+   "beyondEnd": 0,
+   "tie": 54.67579754599822,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:183706076",
+   "matchedName": "Corso Cristoforo Colombo",
+   "routeStreet": "corso cristoforo colombo",
+   "category": "probable_rough",
+   "meters": 54,
+   "nearStreetChange": 18,
+   "beyondEnd": 0,
+   "tie": 54.22844341533373,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:274825185",
+   "matchedName": "Via dell'Orso",
+   "routeStreet": "via cusani",
+   "category": "probable_rough",
+   "meters": 54,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 54.21359845969766,
+   "maxDistance": 0
+  },
+  {
+   "mode": "bicycle",
+   "way": "osm:way:114187491",
+   "matchedName": "Largo Claudio Abbado",
+   "routeStreet": "piazza del duomo",
+   "category": "probable_rough",
+   "meters": 53,
+   "nearStreetChange": 53,
+   "beyondEnd": 0,
+   "tie": 53.39082000972098,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:1233836825",
+   "matchedName": "Via Circo",
+   "routeStreet": "via circo",
+   "category": "confirmed_rough",
+   "meters": 53,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 53.12877783054406,
+   "maxDistance": 0
+  },
+  {
+   "mode": "motorcycle",
+   "way": "osm:way:1233836825",
+   "matchedName": "Via Circo",
+   "routeStreet": "via circo",
+   "category": "confirmed_rough",
+   "meters": 53,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 53.12877783054406,
+   "maxDistance": 0
+  },
+  {
+   "mode": "car",
+   "way": "osm:way:39912952",
+   "matchedName": "Piazza della Repubblica",
+   "routeStreet": "viale monte santo",
+   "category": "confirmed_rough",
+   "meters": 53,
+   "nearStreetChange": 0,
+   "beyondEnd": 0,
+   "tie": 52.8217743095822,
+   "maxDistance": 0
+  }
+ ]
+}

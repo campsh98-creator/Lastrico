@@ -90,3 +90,6 @@ s_original.zip
 *.hdf5
 *.tflite
 *.safetensors
+
+# Phase 4.25 benchmark: raw provider recordings stay local; the summaries are versioned
+/outputs/phase425-benchmark/*/

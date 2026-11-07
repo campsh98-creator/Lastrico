@@ -1,0 +1,418 @@
+way,name,highway,from,to,reason,surface,smoothness,tracktype,meters,car,bicycle
+osm:way:1037991058,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,448,false,false
+osm:way:750737145,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,404,false,false
+osm:way:1135085231,Piazza Gino Valle,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,278,false,true
+osm:way:685369269,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,268,false,false
+osm:way:691199654,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,261,false,false
+osm:way:331883966,Galleria Vittorio Emanuele Secondo,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,190,false,false
+osm:way:862864598,Piazza Gino Valle,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,186,false,true
+osm:way:1044692938,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,183,false,false
+osm:way:697772567,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,176,false,false
+osm:way:172453240,Via Fiori Oscuri,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,165,true,false
+osm:way:668929354,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,163,false,false
+osm:way:168553830,Alzaia Naviglio Pavese,pedestrian,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,159,true,true
+osm:way:751521268,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,158,false,false
+osm:way:685580219,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,152,false,false
+osm:way:1071904590,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,151,false,false
+osm:way:685636799,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,151,false,false
+osm:way:23331018,Via Milazzo,residential,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,148,true,true
+osm:way:697772568,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,147,false,false
+osm:way:448654337,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,145,false,true
+osm:way:696631775,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,140,false,false
+osm:way:1075791102,Piazza Gae Aulenti,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,139,false,true
+osm:way:987662302,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,136,false,false
+osm:way:685580220,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,134,false,false
+osm:way:1013070677,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,134,false,false
+osm:way:1012478394,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,132,false,false
+osm:way:611521514,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,126,false,false
+osm:way:320095439,Via Varese,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,123,true,true
+osm:way:1139189027,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,122,false,true
+osm:way:725045905,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,120,false,false
+osm:way:804184722,Passerella Serra,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,119,false,true
+osm:way:609329587,Via Andre' Marie Ampere,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,116,false,true
+osm:way:274986448,Piazza del Duomo,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,113,false,true
+osm:way:1046803992,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,113,false,false
+osm:way:23811642,Via Gaetana Agnesi,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,108,true,true
+osm:way:465228184,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,107,false,true
+osm:way:166623693,Galleria Vittorio Emanuele Secondo,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,105,false,false
+osm:way:1457614392,,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,104,false,true
+osm:way:4520462,Via Tortona,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,104,true,true
+osm:way:697781342,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,103,false,false
+osm:way:1526545220,Passeggiata Emenuela Setti Carraro,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,101,false,false
+osm:way:687542363,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,98,false,false
+osm:way:184759167,Via Vincenzo Capelli,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,98,false,true
+osm:way:1073787127,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,96,false,false
+osm:way:1072336486,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,95,false,false
+osm:way:440861114,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,94,false,false
+osm:way:687542362,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,94,false,false
+osm:way:578803617,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,93,false,false
+osm:way:168770509,Via Giuseppe Revere,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,93,true,true
+osm:way:267451258,Via Alessandro Volta,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,91,true,true
+osm:way:690176208,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,89,false,false
+osm:way:705605453,Piazza Duca d'Aosta,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,88,false,true
+osm:way:1013069396,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,84,false,false
+osm:way:172453239,Via Brera,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,83,false,true
+osm:way:843955862,,cycleway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,82,false,true
+osm:way:696631776,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,81,false,false
+osm:way:843955856,,cycleway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,80,false,true
+osm:way:843955859,,cycleway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,79,false,true
+osm:way:1072327736,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,79,false,false
+osm:way:843955857,,cycleway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,78,false,true
+osm:way:1071903831,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,77,false,false
+osm:way:423892879,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,77,false,false
+osm:way:286609086,Via Giuseppe Ripamonti,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,excellent,,77,true,true
+osm:way:843955854,,cycleway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,77,false,true
+osm:way:1473344664,,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,76,false,true
+osm:way:843955851,,cycleway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,76,false,true
+osm:way:1076071580,Passerella Gioia,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,75,false,true
+osm:way:264564178,Corso Lodi,residential,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,74,true,true
+osm:way:1043408643,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,74,false,false
+osm:way:750208362,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,73,false,false
+osm:way:39694766,Piazza della Repubblica,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,73,true,true
+osm:way:688316494,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,72,false,true
+osm:way:163757325,Piazza della Scala,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,72,false,false
+osm:way:686613289,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,70,false,false
+osm:way:1156575200,Piazza Gae Aulenti,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,69,false,true
+osm:way:1136480125,Piazza Gino Valle,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,67,false,true
+osm:way:1071906181,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,66,false,false
+osm:way:1156575199,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,65,false,true
+osm:way:696631774,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,intermediate,,64,false,false
+osm:way:471311421,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,63,false,false
+osm:way:1279276924,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,63,false,false
+osm:way:1363546887,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,62,false,false
+osm:way:204057276,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,62,false,false
+osm:way:352982541,Via Mercanti,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,60,false,true
+osm:way:1037952049,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,59,false,false
+osm:way:448650274,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,59,false,true
+osm:way:199209159,Piazza Venticinque Aprile,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,59,true,true
+osm:way:1071915829,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,59,false,false
+osm:way:111655183,Via Filodrammatici,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,59,true,true
+osm:way:37036128,Corso Lodi,primary,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,57,true,true
+osm:way:1128419329,,track,confirmed_smooth,removed,dropped by the expansion-ring filter once unknown,,,grade1,55,false,true
+osm:way:248196560,Via Giulio e Corrado Venini,residential,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,54,true,true
+osm:way:1073826779,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,52,false,false
+osm:way:248309829,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,51,false,true
+osm:way:45445258,Via Giuseppe Sirtori,residential,unknown,confirmed_rough,cobblestone:rounded is cobblestone,cobblestone:rounded,,,51,true,true
+osm:way:1526545221,Passeggiata Emenuela Setti Carraro,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,51,false,false
+osm:way:406554799,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,50,false,false
+osm:way:286239217,Via dei Mercanti,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,50,false,true
+osm:way:1221721620,,footway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,very_bad,,49,false,false
+osm:way:579331963,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,47,false,false
+osm:way:23811720,Via Cesare Balbo,residential,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,47,true,true
+osm:way:1016849911,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,46,false,true
+osm:way:286220761,Via Venti Settembre,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,46,true,true
+osm:way:4494808,Via Modestino,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,46,true,true
+osm:way:160615610,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,45,false,false
+osm:way:1446734713,Piazzetta Enrico Cuccia,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,45,true,true
+osm:way:330809068,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,44,false,false
+osm:way:441750674,,service,unpaved_loose,removed,clipped pilot stub duplicated by the citywide snapshot,gravel,,,44,false,false
+osm:way:1012752736,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,43,false,false
+osm:way:668929353,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,43,false,false
+osm:way:1152468300,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,42,false,true
+osm:way:24245198,Via Pietro Custodi,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,42,true,true
+osm:way:1012752733,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,42,false,false
+osm:way:175497742,Piazza Duca d'Aosta,service,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,41,true,true
+osm:way:1046802265,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,41,false,false
+osm:way:428920776,Largo ai Caduti Milanesi per la Patria,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,41,false,false
+osm:way:529659468,Galleria Pattari,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,40,false,false
+osm:way:39250264,Via Dino Compagni,unclassified,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,40,true,true
+osm:way:726088328,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,40,false,false
+osm:way:685636800,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,40,false,false
+osm:way:396868525,Galleria Giuseppe Borella,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,40,false,false
+osm:way:1043446899,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,39,false,false
+osm:way:274984082,Viale Bianca Maria,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,38,true,true
+osm:way:739048100,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,38,true,true
+osm:way:23389118,Piazza Lima,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,37,true,true
+osm:way:273253057,Piazzale Lavater,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,37,true,true
+osm:way:1080507953,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,37,false,false
+osm:way:164652739,Via Verona,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,37,true,true
+osm:way:37336031,Via Passarella,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,37,false,false
+osm:way:1071915830,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,37,false,false
+osm:way:315667498,Piazza Duca d'Aosta,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,37,false,true
+osm:way:1261410656,Via Mercanti,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,37,false,true
+osm:way:23227600,Via privata Passarella,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,36,false,false
+osm:way:725088697,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,36,false,false
+osm:way:448654340,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,36,false,true
+osm:way:705605449,Piazza Duca d'Aosta,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,36,false,true
+osm:way:280485838,Piazza del Duomo,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,36,false,true
+osm:way:280237919,Piazza Giovine Italia,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,35,true,true
+osm:way:168773915,Via Guglielmo Marconi,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,35,true,true
+osm:way:264568116,Via Altaguardia,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,35,true,true
+osm:way:264565359,Via San Rocco,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,35,true,true
+osm:way:726088331,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,35,false,false
+osm:way:286578755,Via Gian Battista Vico,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,34,true,true
+osm:way:685433185,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,34,false,false
+osm:way:23227351,Piazzetta Maurilio Bossi,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,34,false,true
+osm:way:4604970,Piazza Venino,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,33,true,true
+osm:way:168770518,Via Pietro Tamburini,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,33,true,true
+osm:way:750512035,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,33,false,false
+osm:way:529556307,Piazzale Lodi,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,33,false,true
+osm:way:594839947,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,33,false,false
+osm:way:286220807,Via Giuseppe Rovani,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,32,true,true
+osm:way:22811690,Via Giuseppe Sommaruga,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,32,true,true
+osm:way:165066410,,footway,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,32,false,false
+osm:way:22817290,Via Sebeto,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,32,true,true
+osm:way:471311376,,service,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,32,false,false
+osm:way:691626285,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,32,false,false
+osm:way:286220766,Via Venti Settembre,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,31,true,true
+osm:way:685636796,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,31,false,false
+osm:way:448654339,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,31,false,true
+osm:way:989334642,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,31,false,false
+osm:way:184759168,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,31,false,true
+osm:way:725088730,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,31,false,false
+osm:way:685406396,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,30,false,false
+osm:way:725045843,,footway,probable_rough,removed,clipped pilot stub duplicated by the citywide snapshot,paving_stones,,,30,false,false
+osm:way:448654338,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,30,false,true
+osm:way:1351614060,,unknown,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,30,false,false
+osm:way:448654341,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,29,false,true
+osm:way:355536823,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,intermediate,,29,false,true
+osm:way:725045844,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,29,false,false
+osm:way:44776254,Piazza Giovine Italia,pedestrian,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,28,false,false
+osm:way:705605442,Piazza Duca d'Aosta,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,28,false,true
+osm:way:726088329,,footway,probable_rough,removed,clipped pilot stub duplicated by the citywide snapshot,paving_stones,,,28,false,false
+osm:way:685433187,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,28,false,false
+osm:way:1433313965,Via Giovanni Battista Niccolini,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,28,true,true
+osm:way:685433206,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,28,false,false
+osm:way:1014567329,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,28,false,true
+osm:way:609329586,Via Dino Compagni,service,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,27,false,true
+osm:way:23330998,Largo La Foppa,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,27,false,true
+osm:way:269513848,Via Galileo Galilei,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,27,true,true
+osm:way:4012050,Via Antonio Canova,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,excellent,,27,true,true
+osm:way:685369267,,footway,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,26,false,false
+osm:way:1029875801,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,26,false,false
+osm:way:688198418,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,26,false,false
+osm:way:1071946337,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,26,false,false
+osm:way:28660861,Via Silvio Pellico,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,26,true,true
+osm:way:1414620597,Via Luca Beltrami,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,26,false,true
+osm:way:685658507,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,25,false,false
+osm:way:369266406,Corso Magenta,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,25,true,true
+osm:way:685433202,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,25,false,false
+osm:way:355514779,Porta Venezia M1,unknown,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,25,false,false
+osm:way:750519951,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,25,false,false
+osm:way:121498335,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,24,false,false
+osm:way:687377671,,footway,confirmed_smooth,removed,dropped by the expansion-ring filter once unknown,asphalt,bad,,24,false,true
+osm:way:101434627,Viale Tunisia,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,24,true,true
+osm:way:263925510,Viale Papiniano,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,24,true,true
+osm:way:279165406,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,24,false,false
+osm:way:705605461,Piazza Duca d'Aosta,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,23,false,true
+osm:way:750731750,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,23,false,false
+osm:way:990291585,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,23,false,false
+osm:way:725074442,,footway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,23,false,false
+osm:way:1189685631,Corso Lodi,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,22,true,true
+osm:way:1152468303,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,22,false,true
+osm:way:685643453,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,22,false,false
+osm:way:687292861,Via Luca Beltrami,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,22,false,true
+osm:way:4012044,Via Torquato Tasso,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,22,true,true
+osm:way:1043439103,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,21,false,false
+osm:way:595377947,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,21,false,false
+osm:way:115896312,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,21,false,false
+osm:way:448654342,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,21,false,true
+osm:way:725074440,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,21,false,false
+osm:way:1179730146,,path,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,21,false,true
+osm:way:724510484,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,21,false,true
+osm:way:40987262,Via Giovanni Morelli,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,21,true,true
+osm:way:1026646581,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,21,false,false
+osm:way:691616707,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,21,false,false
+osm:way:962307477,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,20,false,false
+osm:way:184759169,Via Vincenzo Capelli,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,20,false,true
+osm:way:1029875791,,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,20,false,true
+osm:way:267457733,Via Bramante,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,20,true,true
+osm:way:685433183,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,19,false,false
+osm:way:115896301,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,19,false,false
+osm:way:25764506,Via degli Olivetani,residential,probable_rough,removed,clipped pilot stub duplicated by the citywide snapshot,paving_stones,,,19,true,true
+osm:way:286220758,Via Venti Settembre,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,19,true,true
+osm:way:40987260,Piazza Guglielmo Oberdan,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,19,true,true
+osm:way:1215539445,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,18,false,true
+osm:way:962307476,,footway,probable_rough,removed,clipped pilot stub duplicated by the citywide snapshot,paving_stones,,,18,false,false
+osm:way:1209973808,,service,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,18,true,true
+osm:way:260421763,Bastioni di Porta Volta,service,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,18,true,true
+osm:way:273451155,Via Lamberto De Bernardi,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,17,true,true
+osm:way:59466999,Via Lamberto De Bernardi,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,17,true,true
+osm:way:355514780,Porta Venezia M1,unknown,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,17,false,false
+osm:way:263925507,Viale Papiniano,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,17,true,true
+osm:way:696638521,,footway,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,17,false,false
+osm:way:725074441,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,17,false,false
+osm:way:1071915831,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,16,false,false
+osm:way:578802288,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,good,,16,false,true
+osm:way:28116731,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,16,false,true
+osm:way:1013084746,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,16,false,false
+osm:way:696335938,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,16,false,false
+osm:way:1072317206,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,16,false,false
+osm:way:691612048,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,excellent,,16,false,false
+osm:way:286042714,Via Mario Pagano,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,16,true,true
+osm:way:172023455,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,16,false,false
+osm:way:240863013,Piazzale Principessa Clotilde,residential,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,16,true,true
+osm:way:185302894,Via Galileo Galilei,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,15,true,true
+osm:way:962307473,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,15,false,false
+osm:way:1121696515,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,15,false,false
+osm:way:1027426843,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,15,false,false
+osm:way:1079432246,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,14,false,false
+osm:way:263925482,Via Andrea Solari,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,14,true,true
+osm:way:290014378,Corso San Gottardo,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,14,true,true
+osm:way:597189188,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,14,false,false
+osm:way:224422366,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,14,false,false
+osm:way:4604979,Via Tullo Ostilio,residential,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,14,true,true
+osm:way:1188102465,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,13,true,true
+osm:way:686613282,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,13,false,false
+osm:way:1262159798,Via Guglielmo Marconi,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,13,false,true
+osm:way:326544409,Piazza della Repubblica,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,excellent,,13,true,true
+osm:way:286033263,Via Vincenzo Monti,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,13,true,true
+osm:way:578806489,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,13,false,false
+osm:way:691622319,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,13,false,false
+osm:way:31901719,Viale Coni Zugna,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,13,false,false
+osm:way:268412976,Viale Monte Santo,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,13,true,true
+osm:way:8432333,Bastioni di Porta Nuova,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,13,true,true
+osm:way:1013065871,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,13,false,false
+osm:way:691606685,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,13,false,false
+osm:way:1279276923,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,13,false,false
+osm:way:1080507951,,unknown,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,13,false,false
+osm:way:1013060043,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,12,false,false
+osm:way:267718051,Bastioni di Porta Nuova,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,12,true,true
+osm:way:437049640,,footway,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,12,false,false
+osm:way:1029661109,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,12,false,false
+osm:way:725088733,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,12,false,false
+osm:way:989334644,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,12,false,false
+osm:way:277313731,Via Savona,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,12,true,true
+osm:way:1279276922,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,12,false,false
+osm:way:260581196,Via Pietro Rubens,tertiary,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,12,true,true
+osm:way:263925493,Via Pietro Orseolo,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,12,true,true
+osm:way:273287552,Via Brera,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,12,false,true
+osm:way:1279276921,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,12,false,false
+osm:way:37039789,,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,11,false,true
+osm:way:705605445,Piazza Duca d'Aosta,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,11,false,true
+osm:way:136989963,,unknown,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,11,false,false
+osm:way:987662303,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,11,false,false
+osm:way:267459409,Bastioni di Porta Volta,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,11,true,true
+osm:way:136989962,,unknown,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,11,false,false
+osm:way:85890898,Via Crema,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,11,true,true
+osm:way:273261862,Piazza Guglielmo Oberdan,tertiary,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,11,true,true
+osm:way:758208720,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,11,false,false
+osm:way:612027487,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,11,false,false
+osm:way:1279276920,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,11,false,false
+osm:way:725045836,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,good,,11,false,false
+osm:way:597189185,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,11,false,false
+osm:way:149765131,Bastioni di Porta Volta,service,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,11,false,false
+osm:way:345544201,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,11,false,false
+osm:way:1079953727,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,10,false,false
+osm:way:264835815,Piazza San Luigi,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,10,true,true
+osm:way:406554800,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,10,false,false
+osm:way:687509699,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,10,false,false
+osm:way:278871042,Bastioni di Porta Volta,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,10,true,true
+osm:way:1156575198,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,10,false,true
+osm:way:667685853,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,9,false,false
+osm:way:855487330,,footway,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,9,false,false
+osm:way:989334649,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,9,false,false
+osm:way:273449940,Piazza del Tricolore,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,9,true,true
+osm:way:687544134,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,9,false,false
+osm:way:1014336188,,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,9,false,true
+osm:way:697787512,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,9,false,false
+osm:way:1174301328,,track,confirmed_smooth,removed,dropped by the expansion-ring filter once unknown,,,grade1,8,true,true
+osm:way:406554798,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,8,false,false
+osm:way:224422363,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,8,false,false
+osm:way:1128419301,,track,confirmed_smooth,removed,dropped by the expansion-ring filter once unknown,,,grade1,8,false,true
+osm:way:1229872105,Via Luca Beltrami,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,8,false,true
+osm:way:705605462,Piazza Duca d'Aosta,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,8,false,true
+osm:way:530266037,Piazzale Principessa Clotilde,residential,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,8,true,true
+osm:way:4017861,Via Cola di Rienzo,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,8,true,true
+osm:way:697775478,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,7,false,false
+osm:way:1320031121,Via Cola di Rienzo,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,7,true,true
+osm:way:437049643,,footway,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,7,false,false
+osm:way:273649393,Via Enrico Stendhal,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,7,true,true
+osm:way:406554795,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,7,false,false
+osm:way:690148223,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,7,false,false
+osm:way:554447126,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,7,false,false
+osm:way:1203823923,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,7,false,false
+osm:way:224422364,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,7,false,false
+osm:way:1320031114,Via Enrico Stendhal,residential,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,6,true,true
+osm:way:160520509,Bastioni di Porta Nuova,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,6,true,true
+osm:way:726088332,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,6,false,false
+osm:way:1473344661,,cycleway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,6,false,true
+osm:way:691604040,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,6,false,false
+osm:way:1046812441,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,6,false,false
+osm:way:478492820,Piazzetta Pattari,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,6,false,false
+osm:way:199526610,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,6,false,true
+osm:way:687292863,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,6,false,false
+osm:way:1262159788,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,6,false,false
+osm:way:273253069,Via Lazzaro Spallanzani,pedestrian,probable_rough,removed,clipped pilot stub duplicated by the citywide snapshot,paving_stones,,,6,false,true
+osm:way:1152356800,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,excellent,,6,false,true
+osm:way:1035042780,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,6,false,false
+osm:way:116883173,Piazza Giovine Italia,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,6,true,true
+osm:way:117085883,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,5,false,false
+osm:way:319911429,,steps,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,5,false,false
+osm:way:687547072,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,good,,5,false,false
+osm:way:28611789,Via Luigi Razza,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,5,true,true
+osm:way:25901238,Piazza della Repubblica,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,5,true,true
+osm:way:471850654,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,5,false,false
+osm:way:1152856981,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,5,false,true
+osm:way:471850367,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,5,false,false
+osm:way:157558665,Galleria Giuseppe Borella,pedestrian,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,5,false,false
+osm:way:286042709,Via Francesco Petrarca,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,5,true,true
+osm:way:1262159789,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,5,false,false
+osm:way:1112232894,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,4,false,false
+osm:way:139751202,Via Morozzo della Rocca,pedestrian,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,4,false,false
+osm:way:725088699,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,good,,4,false,false
+osm:way:1057841173,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,false,false
+osm:way:1232861601,Viale Bianca Maria,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,4,true,true
+osm:way:98862148,Via Vincenzo Bellini,secondary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,true,true
+osm:way:594839944,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,false,false
+osm:way:207909449,,steps,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,4,false,false
+osm:way:160540728,Piazza della Repubblica,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,4,true,true
+osm:way:1232861608,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,false,true
+osm:way:277516092,Via Magolfa,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,false,true
+osm:way:274984036,Piazza del Tricolore,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,true,true
+osm:way:989334647,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,false,false
+osm:way:725066398,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,4,false,false
+osm:way:725179976,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,4,false,true
+osm:way:196172805,Via Serviliano Lattuada,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,true,true
+osm:way:23330997,Corso Giuseppe Garibaldi,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,true,true
+osm:way:183474088,Via Andrea Solari,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,4,true,true
+osm:way:687292860,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,3,false,false
+osm:way:351694726,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,3,false,false
+osm:way:457740906,,cycleway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,paved,,,3,false,true
+osm:way:1071890594,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,3,false,false
+osm:way:498026593,Piazzale del Cimitero Monumentale,service,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,3,false,true
+osm:way:465420056,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,paved,,,3,false,false
+osm:way:685594622,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,3,false,false
+osm:way:48588699,,service,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,paved,,,3,true,true
+osm:way:277517503,Via Ascanio Sforza,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,2,true,true
+osm:way:10520042,Via Pontida,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,2,true,true
+osm:way:267457754,Viale Montello,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,2,true,true
+osm:way:612027482,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,2,false,false
+osm:way:184332822,Via Andrea Solari,residential,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,2,false,false
+osm:way:725088735,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,2,false,false
+osm:way:437049645,,footway,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,2,false,false
+osm:way:750409588,,footway,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,2,false,false
+osm:way:293018440,Via Sofia Bisi Albini,residential,confirmed_smooth,unknown,asphalt/concrete with explicit smoothness bad or worse,asphalt,bad,,2,true,true
+osm:way:212393410,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,2,false,false
+osm:way:1262159805,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,2,false,false
+osm:way:1043439102,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,2,false,false
+osm:way:1431156922,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,2,false,false
+osm:way:98862150,Via Ippolito Pindemonte,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,2,true,true
+osm:way:1171928473,,service,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,2,true,true
+osm:way:1072317207,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,2,false,false
+osm:way:1046474545,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,2,false,false
+osm:way:286578774,Via San Vittore,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,2,true,true
+osm:way:688337001,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,1,false,false
+osm:way:333566528,Via Marco Polo,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,1,true,true
+osm:way:381213316,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,excellent,,1,false,false
+osm:way:685609139,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,1,false,false
+osm:way:285900642,Bastioni di Porta Nuova,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,1,true,true
+osm:way:305142397,Via Galileo Galilei,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,1,true,true
+osm:way:118384007,Bastioni di Porta Nuova,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,1,true,true
+osm:way:460401695,,service,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,1,false,false
+osm:way:1046474541,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,1,false,false
+osm:way:1146404878,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,1,false,false
+osm:way:1046474558,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,excellent,,1,false,false
+osm:way:725088724,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,good,,1,false,false
+osm:way:1449900235,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,1,false,false
+osm:way:263925492,Via Pietro Azario,residential,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,1,true,true
+osm:way:184228408,Via Gino Bramieri,residential,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,1,true,true
+osm:way:1046811160,,footway,confirmed_rough,removed,clipped pilot stub duplicated by the citywide snapshot,sett,,,1,false,false
+osm:way:4519595,Piazza Giovine Italia,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,1,true,true
+osm:way:183063802,,footway,unknown,removed,clipped pilot stub duplicated by the citywide snapshot,,,,1,false,false
+osm:way:690149864,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,1,false,false
+osm:way:687545937,,footway,probable_rough,confirmed_smooth,paving_stones with explicit smoothness excellent/good,paving_stones,good,,1,false,false
+osm:way:1016849303,,cycleway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,1,false,true
+osm:way:269827075,Piazza della Repubblica,tertiary,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,0,true,true
+osm:way:749383700,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,,,0,false,false
+osm:way:183063803,,footway,confirmed_smooth,removed,clipped pilot stub duplicated by the citywide snapshot,asphalt,excellent,,0,false,false
