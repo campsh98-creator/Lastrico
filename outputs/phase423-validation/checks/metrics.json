@@ -1,0 +1,23 @@
+{
+  "mainCases": 60,
+  "http200": 59,
+  "http422": 1,
+  "distinctAlternatives": 24,
+  "meanConfirmedSavingsMetersAmongAlternatives": 305.75,
+  "meanExtraSecondsAmongAlternatives": 77.1000833333333,
+  "mainMedianElapsedMs": 1822.490041500001,
+  "mainMaximumElapsedMs": 8069.7748340000035,
+  "replayInvariantFailures": [],
+  "replayMissingCaptures": [],
+  "surfaceCoveragePercent": {
+    "confirmed_rough": 2.520780669960515,
+    "probable_rough": 1.5607624383004968,
+    "confirmed_smooth": 39.70278529976406,
+    "unpaved_loose": 4.0234389821170256,
+    "unknown": 52.1922326098579
+  },
+  "uploadKiB": 69376.05,
+  "gzipKiB": 13363.75,
+  "cloudflareUncompressedLimitMiB": 64,
+  "note": "Local handler latency includes provider rate limiting/cached captures; not cloud CPU time. Node heap includes validation harness, responses and caches; not Worker memory."
+}

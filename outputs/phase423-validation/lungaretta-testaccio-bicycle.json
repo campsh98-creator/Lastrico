@@ -1,0 +1,1948 @@
+{
+  "request": {
+    "area": "rome",
+    "start": "12.4731541,41.8895306",
+    "end": "12.4791796,41.8784672",
+    "mode": "bicycle",
+    "avoid": "strong",
+    "maxExtraMinutes": "5"
+  },
+  "status": 200,
+  "elapsedMs": 5528.121666999999,
+  "payload": {
+    "area": "rome",
+    "fast": {
+      "coordinates": [
+        [
+          12.473154,
+          41.889531
+        ],
+        [
+          12.473117,
+          41.88956
+        ],
+        [
+          12.473102,
+          41.889574
+        ],
+        [
+          12.473096,
+          41.889587
+        ],
+        [
+          12.473095,
+          41.8896
+        ],
+        [
+          12.473109,
+          41.889699
+        ],
+        [
+          12.473111,
+          41.889716
+        ],
+        [
+          12.473109,
+          41.889733
+        ],
+        [
+          12.473108,
+          41.889739
+        ],
+        [
+          12.473105,
+          41.889745
+        ],
+        [
+          12.4731,
+          41.88975
+        ],
+        [
+          12.473095,
+          41.889755
+        ],
+        [
+          12.47308,
+          41.889762
+        ],
+        [
+          12.473062,
+          41.88977
+        ],
+        [
+          12.473041,
+          41.889778
+        ],
+        [
+          12.47303,
+          41.889784
+        ],
+        [
+          12.473021,
+          41.889791
+        ],
+        [
+          12.47301,
+          41.889803
+        ],
+        [
+          12.473003,
+          41.889815
+        ],
+        [
+          12.472996,
+          41.889829
+        ],
+        [
+          12.472993,
+          41.889845
+        ],
+        [
+          12.472993,
+          41.889872
+        ],
+        [
+          12.473034,
+          41.89011
+        ],
+        [
+          12.473037,
+          41.890131
+        ],
+        [
+          12.473041,
+          41.890153
+        ],
+        [
+          12.473093,
+          41.890445
+        ],
+        [
+          12.473114,
+          41.89055
+        ],
+        [
+          12.474031,
+          41.89042
+        ],
+        [
+          12.474096,
+          41.890412
+        ],
+        [
+          12.47431,
+          41.89038
+        ],
+        [
+          12.474391,
+          41.890365
+        ],
+        [
+          12.474426,
+          41.890356
+        ],
+        [
+          12.474477,
+          41.890345
+        ],
+        [
+          12.474576,
+          41.890322
+        ],
+        [
+          12.474773,
+          41.890278
+        ],
+        [
+          12.47537,
+          41.890136
+        ],
+        [
+          12.475851,
+          41.890001
+        ],
+        [
+          12.476658,
+          41.889738
+        ],
+        [
+          12.47683,
+          41.889674
+        ],
+        [
+          12.477046,
+          41.889599
+        ],
+        [
+          12.477117,
+          41.889574
+        ],
+        [
+          12.477226,
+          41.889544
+        ],
+        [
+          12.477507,
+          41.889447
+        ],
+        [
+          12.47759,
+          41.88942
+        ],
+        [
+          12.47778,
+          41.889336
+        ],
+        [
+          12.477883,
+          41.889285
+        ],
+        [
+          12.477951,
+          41.889246
+        ],
+        [
+          12.478002,
+          41.889212
+        ],
+        [
+          12.478044,
+          41.889183
+        ],
+        [
+          12.478116,
+          41.889133
+        ],
+        [
+          12.478159,
+          41.889105
+        ],
+        [
+          12.478197,
+          41.889077
+        ],
+        [
+          12.478527,
+          41.888789
+        ],
+        [
+          12.478574,
+          41.888728
+        ],
+        [
+          12.478654,
+          41.888619
+        ],
+        [
+          12.478709,
+          41.888517
+        ],
+        [
+          12.478798,
+          41.888312
+        ],
+        [
+          12.478836,
+          41.888208
+        ],
+        [
+          12.478856,
+          41.888134
+        ],
+        [
+          12.47887,
+          41.888057
+        ],
+        [
+          12.478875,
+          41.887983
+        ],
+        [
+          12.478874,
+          41.887931
+        ],
+        [
+          12.478871,
+          41.887884
+        ],
+        [
+          12.478866,
+          41.887837
+        ],
+        [
+          12.478856,
+          41.88778
+        ],
+        [
+          12.478846,
+          41.887737
+        ],
+        [
+          12.478824,
+          41.887665
+        ],
+        [
+          12.478776,
+          41.88754
+        ],
+        [
+          12.478747,
+          41.887466
+        ],
+        [
+          12.478713,
+          41.887388
+        ],
+        [
+          12.478646,
+          41.887254
+        ],
+        [
+          12.478603,
+          41.887183
+        ],
+        [
+          12.478561,
+          41.887119
+        ],
+        [
+          12.478475,
+          41.887
+        ],
+        [
+          12.478307,
+          41.886783
+        ],
+        [
+          12.478293,
+          41.886758
+        ],
+        [
+          12.478276,
+          41.886731
+        ],
+        [
+          12.478233,
+          41.88667
+        ],
+        [
+          12.478137,
+          41.886562
+        ],
+        [
+          12.477934,
+          41.886328
+        ],
+        [
+          12.477686,
+          41.886083
+        ],
+        [
+          12.477609,
+          41.886004
+        ],
+        [
+          12.477545,
+          41.88595
+        ],
+        [
+          12.47747,
+          41.885887
+        ],
+        [
+          12.477385,
+          41.885818
+        ],
+        [
+          12.477208,
+          41.885683
+        ],
+        [
+          12.476662,
+          41.885259
+        ],
+        [
+          12.476546,
+          41.885178
+        ],
+        [
+          12.476416,
+          41.885096
+        ],
+        [
+          12.476149,
+          41.884881
+        ],
+        [
+          12.475924,
+          41.8847
+        ],
+        [
+          12.475478,
+          41.884322
+        ],
+        [
+          12.474815,
+          41.883783
+        ],
+        [
+          12.474795,
+          41.883768
+        ],
+        [
+          12.47478,
+          41.883754
+        ],
+        [
+          12.474765,
+          41.883741
+        ],
+        [
+          12.474752,
+          41.883727
+        ],
+        [
+          12.474737,
+          41.88371
+        ],
+        [
+          12.474725,
+          41.883694
+        ],
+        [
+          12.474721,
+          41.883688
+        ],
+        [
+          12.474718,
+          41.883681
+        ],
+        [
+          12.474716,
+          41.883675
+        ],
+        [
+          12.474712,
+          41.883661
+        ],
+        [
+          12.47471,
+          41.883651
+        ],
+        [
+          12.474713,
+          41.883632
+        ],
+        [
+          12.47472,
+          41.883618
+        ],
+        [
+          12.475583,
+          41.882944
+        ],
+        [
+          12.475643,
+          41.882894
+        ],
+        [
+          12.475684,
+          41.882865
+        ],
+        [
+          12.475688,
+          41.882862
+        ],
+        [
+          12.475726,
+          41.882835
+        ],
+        [
+          12.4758,
+          41.882782
+        ],
+        [
+          12.476244,
+          41.882496
+        ],
+        [
+          12.476325,
+          41.88244
+        ],
+        [
+          12.476401,
+          41.88239
+        ],
+        [
+          12.476453,
+          41.88235
+        ],
+        [
+          12.476505,
+          41.882306
+        ],
+        [
+          12.476555,
+          41.882255
+        ],
+        [
+          12.4766,
+          41.882196
+        ],
+        [
+          12.476827,
+          41.881869
+        ],
+        [
+          12.476883,
+          41.881788
+        ],
+        [
+          12.477259,
+          41.881239
+        ],
+        [
+          12.477551,
+          41.880811
+        ],
+        [
+          12.47759,
+          41.880758
+        ],
+        [
+          12.477609,
+          41.880733
+        ],
+        [
+          12.477782,
+          41.880495
+        ],
+        [
+          12.477948,
+          41.880252
+        ],
+        [
+          12.478257,
+          41.879815
+        ],
+        [
+          12.47829,
+          41.879766
+        ],
+        [
+          12.478338,
+          41.879697
+        ],
+        [
+          12.478445,
+          41.879544
+        ],
+        [
+          12.478522,
+          41.879433
+        ],
+        [
+          12.47871,
+          41.879163
+        ],
+        [
+          12.478986,
+          41.878753
+        ],
+        [
+          12.479056,
+          41.878651
+        ],
+        [
+          12.479081,
+          41.878612
+        ],
+        [
+          12.479108,
+          41.878569
+        ],
+        [
+          12.47918,
+          41.878467
+        ]
+      ],
+      "distance": 2.014,
+      "minutes": 6.694249999999999,
+      "paveMeters": 75,
+      "pavePercent": 3.7,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 2,
+      "surfaceCoveragePercent": 99.9,
+      "confirmedPaveMeters": 75,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 1927,
+      "surfaceTotalMeters": 2004,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "terminalPrivateAccessMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-12.473154,41.889531",
+          "text": "Pedala verso nord-ovest su Piazza Giuditta Tavani Arquati.",
+          "roadName": "Piazza Giuditta Tavani Arquati",
+          "distance": 39,
+          "location": [
+            12.473154,
+            41.889531
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-12.472996,41.889829",
+          "text": "Svolta a destra per rimanere su Piazza Giuditta Tavani Arquati.",
+          "roadName": "Piazza Giuditta Tavani Arquati",
+          "distance": 81,
+          "location": [
+            12.472996,
+            41.889829
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "2-turn-12.473114,41.89055",
+          "text": "Svolta a destra su Lungotevere Raffaello Sanzio.",
+          "roadName": "Lungotevere Raffaello Sanzio",
+          "distance": 308,
+          "location": [
+            12.473114,
+            41.89055
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "3-turn-12.476658,41.889738",
+          "text": "Mantieni la destra per imboccare Lungotevere degli Anguillara.",
+          "roadName": "Lungotevere degli Anguillara",
+          "distance": 85,
+          "location": [
+            12.476658,
+            41.889738
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "4-turn-12.47759,41.88942",
+          "text": "Mantieni la destra su Lungotevere Ripa.",
+          "roadName": "Lungotevere Ripa",
+          "distance": 344,
+          "location": [
+            12.47759,
+            41.88942
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "5-turn-12.478307,41.886783",
+          "text": "Mantieni la sinistra per rimanere su Lungotevere Ripa.",
+          "roadName": "Lungotevere Ripa",
+          "distance": 364,
+          "location": [
+            12.478307,
+            41.886783
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "6-turn-12.475478,41.884322",
+          "text": "Mantieni la sinistra per imboccare Lungotevere Porto di Ripa Grande.",
+          "roadName": "Lungotevere Porto di Ripa Grande",
+          "distance": 103,
+          "location": [
+            12.475478,
+            41.884322
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "7-turn-12.47472,41.883618",
+          "text": "Mantieni la sinistra su Ponte Sublicio.",
+          "roadName": "Ponte Sublicio",
+          "distance": 691,
+          "location": [
+            12.47472,
+            41.883618
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "8-arrive-12.47918,41.878467",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            12.47918,
+            41.878467
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": [
+        [
+          [
+            12.473154,
+            41.889531
+          ],
+          [
+            12.473117,
+            41.88956
+          ],
+          [
+            12.473102,
+            41.889574
+          ],
+          [
+            12.473096,
+            41.889587
+          ],
+          [
+            12.473095,
+            41.8896
+          ],
+          [
+            12.473109,
+            41.889699
+          ],
+          [
+            12.473111,
+            41.889716
+          ],
+          [
+            12.473109,
+            41.889733
+          ],
+          [
+            12.473108,
+            41.889739
+          ],
+          [
+            12.473105,
+            41.889745
+          ],
+          [
+            12.4731,
+            41.88975
+          ],
+          [
+            12.473095,
+            41.889755
+          ],
+          [
+            12.47308,
+            41.889762
+          ],
+          [
+            12.473062,
+            41.88977
+          ],
+          [
+            12.473041,
+            41.889778
+          ],
+          [
+            12.47303,
+            41.889784
+          ],
+          [
+            12.473021,
+            41.889791
+          ],
+          [
+            12.47301,
+            41.889803
+          ],
+          [
+            12.473003,
+            41.889815
+          ],
+          [
+            12.472996,
+            41.889829
+          ],
+          [
+            12.472993,
+            41.889845
+          ],
+          [
+            12.472993,
+            41.889872
+          ],
+          [
+            12.473034,
+            41.89011
+          ],
+          [
+            12.473037,
+            41.890131
+          ],
+          [
+            12.473041,
+            41.890153
+          ]
+        ]
+      ]
+    },
+    "safe": {
+      "coordinates": [
+        [
+          12.473154,
+          41.889531
+        ],
+        [
+          12.473117,
+          41.88956
+        ],
+        [
+          12.473102,
+          41.889574
+        ],
+        [
+          12.473096,
+          41.889587
+        ],
+        [
+          12.473095,
+          41.8896
+        ],
+        [
+          12.473109,
+          41.889699
+        ],
+        [
+          12.473111,
+          41.889716
+        ],
+        [
+          12.473109,
+          41.889733
+        ],
+        [
+          12.473108,
+          41.889739
+        ],
+        [
+          12.473105,
+          41.889745
+        ],
+        [
+          12.4731,
+          41.88975
+        ],
+        [
+          12.473095,
+          41.889755
+        ],
+        [
+          12.47308,
+          41.889762
+        ],
+        [
+          12.473062,
+          41.88977
+        ],
+        [
+          12.473041,
+          41.889778
+        ],
+        [
+          12.47303,
+          41.889784
+        ],
+        [
+          12.473021,
+          41.889791
+        ],
+        [
+          12.47301,
+          41.889803
+        ],
+        [
+          12.473003,
+          41.889815
+        ],
+        [
+          12.472996,
+          41.889829
+        ],
+        [
+          12.472993,
+          41.889845
+        ],
+        [
+          12.472993,
+          41.889872
+        ],
+        [
+          12.473034,
+          41.89011
+        ],
+        [
+          12.473037,
+          41.890131
+        ],
+        [
+          12.473041,
+          41.890153
+        ],
+        [
+          12.473093,
+          41.890445
+        ],
+        [
+          12.473114,
+          41.89055
+        ],
+        [
+          12.474031,
+          41.89042
+        ],
+        [
+          12.474096,
+          41.890412
+        ],
+        [
+          12.47431,
+          41.89038
+        ],
+        [
+          12.474391,
+          41.890365
+        ],
+        [
+          12.474426,
+          41.890356
+        ],
+        [
+          12.474477,
+          41.890345
+        ],
+        [
+          12.474576,
+          41.890322
+        ],
+        [
+          12.474773,
+          41.890278
+        ],
+        [
+          12.47537,
+          41.890136
+        ],
+        [
+          12.475851,
+          41.890001
+        ],
+        [
+          12.476658,
+          41.889738
+        ],
+        [
+          12.47683,
+          41.889674
+        ],
+        [
+          12.477046,
+          41.889599
+        ],
+        [
+          12.477117,
+          41.889574
+        ],
+        [
+          12.477226,
+          41.889544
+        ],
+        [
+          12.477507,
+          41.889447
+        ],
+        [
+          12.47759,
+          41.88942
+        ],
+        [
+          12.47778,
+          41.889336
+        ],
+        [
+          12.477883,
+          41.889285
+        ],
+        [
+          12.477951,
+          41.889246
+        ],
+        [
+          12.478002,
+          41.889212
+        ],
+        [
+          12.478044,
+          41.889183
+        ],
+        [
+          12.478116,
+          41.889133
+        ],
+        [
+          12.478159,
+          41.889105
+        ],
+        [
+          12.478197,
+          41.889077
+        ],
+        [
+          12.478527,
+          41.888789
+        ],
+        [
+          12.478574,
+          41.888728
+        ],
+        [
+          12.478654,
+          41.888619
+        ],
+        [
+          12.478709,
+          41.888517
+        ],
+        [
+          12.478798,
+          41.888312
+        ],
+        [
+          12.478836,
+          41.888208
+        ],
+        [
+          12.478856,
+          41.888134
+        ],
+        [
+          12.47887,
+          41.888057
+        ],
+        [
+          12.478875,
+          41.887983
+        ],
+        [
+          12.478874,
+          41.887931
+        ],
+        [
+          12.478871,
+          41.887884
+        ],
+        [
+          12.478866,
+          41.887837
+        ],
+        [
+          12.478856,
+          41.88778
+        ],
+        [
+          12.478846,
+          41.887737
+        ],
+        [
+          12.478824,
+          41.887665
+        ],
+        [
+          12.478776,
+          41.88754
+        ],
+        [
+          12.478747,
+          41.887466
+        ],
+        [
+          12.478713,
+          41.887388
+        ],
+        [
+          12.478646,
+          41.887254
+        ],
+        [
+          12.478603,
+          41.887183
+        ],
+        [
+          12.478561,
+          41.887119
+        ],
+        [
+          12.478475,
+          41.887
+        ],
+        [
+          12.478307,
+          41.886783
+        ],
+        [
+          12.478293,
+          41.886758
+        ],
+        [
+          12.478276,
+          41.886731
+        ],
+        [
+          12.478233,
+          41.88667
+        ],
+        [
+          12.478137,
+          41.886562
+        ],
+        [
+          12.477934,
+          41.886328
+        ],
+        [
+          12.477686,
+          41.886083
+        ],
+        [
+          12.477609,
+          41.886004
+        ],
+        [
+          12.477545,
+          41.88595
+        ],
+        [
+          12.47747,
+          41.885887
+        ],
+        [
+          12.477385,
+          41.885818
+        ],
+        [
+          12.477208,
+          41.885683
+        ],
+        [
+          12.476662,
+          41.885259
+        ],
+        [
+          12.476546,
+          41.885178
+        ],
+        [
+          12.476416,
+          41.885096
+        ],
+        [
+          12.476149,
+          41.884881
+        ],
+        [
+          12.475924,
+          41.8847
+        ],
+        [
+          12.475478,
+          41.884322
+        ],
+        [
+          12.474815,
+          41.883783
+        ],
+        [
+          12.474795,
+          41.883768
+        ],
+        [
+          12.47478,
+          41.883754
+        ],
+        [
+          12.474765,
+          41.883741
+        ],
+        [
+          12.474752,
+          41.883727
+        ],
+        [
+          12.474737,
+          41.88371
+        ],
+        [
+          12.474725,
+          41.883694
+        ],
+        [
+          12.474721,
+          41.883688
+        ],
+        [
+          12.474718,
+          41.883681
+        ],
+        [
+          12.474716,
+          41.883675
+        ],
+        [
+          12.474712,
+          41.883661
+        ],
+        [
+          12.47471,
+          41.883651
+        ],
+        [
+          12.474713,
+          41.883632
+        ],
+        [
+          12.47472,
+          41.883618
+        ],
+        [
+          12.475583,
+          41.882944
+        ],
+        [
+          12.475643,
+          41.882894
+        ],
+        [
+          12.475684,
+          41.882865
+        ],
+        [
+          12.475688,
+          41.882862
+        ],
+        [
+          12.475726,
+          41.882835
+        ],
+        [
+          12.4758,
+          41.882782
+        ],
+        [
+          12.476244,
+          41.882496
+        ],
+        [
+          12.476325,
+          41.88244
+        ],
+        [
+          12.476401,
+          41.88239
+        ],
+        [
+          12.476453,
+          41.88235
+        ],
+        [
+          12.476505,
+          41.882306
+        ],
+        [
+          12.476555,
+          41.882255
+        ],
+        [
+          12.4766,
+          41.882196
+        ],
+        [
+          12.476827,
+          41.881869
+        ],
+        [
+          12.476883,
+          41.881788
+        ],
+        [
+          12.477259,
+          41.881239
+        ],
+        [
+          12.477551,
+          41.880811
+        ],
+        [
+          12.47759,
+          41.880758
+        ],
+        [
+          12.477609,
+          41.880733
+        ],
+        [
+          12.477782,
+          41.880495
+        ],
+        [
+          12.477948,
+          41.880252
+        ],
+        [
+          12.478257,
+          41.879815
+        ],
+        [
+          12.47829,
+          41.879766
+        ],
+        [
+          12.478338,
+          41.879697
+        ],
+        [
+          12.478445,
+          41.879544
+        ],
+        [
+          12.478522,
+          41.879433
+        ],
+        [
+          12.47871,
+          41.879163
+        ],
+        [
+          12.478986,
+          41.878753
+        ],
+        [
+          12.479056,
+          41.878651
+        ],
+        [
+          12.479081,
+          41.878612
+        ],
+        [
+          12.479108,
+          41.878569
+        ],
+        [
+          12.47918,
+          41.878467
+        ]
+      ],
+      "distance": 2.014,
+      "minutes": 6.694249999999999,
+      "paveMeters": 75,
+      "pavePercent": 3.7,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 2,
+      "surfaceCoveragePercent": 99.9,
+      "confirmedPaveMeters": 75,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 1927,
+      "surfaceTotalMeters": 2004,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "terminalPrivateAccessMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-12.473154,41.889531",
+          "text": "Pedala verso nord-ovest su Piazza Giuditta Tavani Arquati.",
+          "roadName": "Piazza Giuditta Tavani Arquati",
+          "distance": 39,
+          "location": [
+            12.473154,
+            41.889531
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-12.472996,41.889829",
+          "text": "Svolta a destra per rimanere su Piazza Giuditta Tavani Arquati.",
+          "roadName": "Piazza Giuditta Tavani Arquati",
+          "distance": 81,
+          "location": [
+            12.472996,
+            41.889829
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "2-turn-12.473114,41.89055",
+          "text": "Svolta a destra su Lungotevere Raffaello Sanzio.",
+          "roadName": "Lungotevere Raffaello Sanzio",
+          "distance": 308,
+          "location": [
+            12.473114,
+            41.89055
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "3-turn-12.476658,41.889738",
+          "text": "Mantieni la destra per imboccare Lungotevere degli Anguillara.",
+          "roadName": "Lungotevere degli Anguillara",
+          "distance": 85,
+          "location": [
+            12.476658,
+            41.889738
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "4-turn-12.47759,41.88942",
+          "text": "Mantieni la destra su Lungotevere Ripa.",
+          "roadName": "Lungotevere Ripa",
+          "distance": 344,
+          "location": [
+            12.47759,
+            41.88942
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "5-turn-12.478307,41.886783",
+          "text": "Mantieni la sinistra per rimanere su Lungotevere Ripa.",
+          "roadName": "Lungotevere Ripa",
+          "distance": 364,
+          "location": [
+            12.478307,
+            41.886783
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "6-turn-12.475478,41.884322",
+          "text": "Mantieni la sinistra per imboccare Lungotevere Porto di Ripa Grande.",
+          "roadName": "Lungotevere Porto di Ripa Grande",
+          "distance": 103,
+          "location": [
+            12.475478,
+            41.884322
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "7-turn-12.47472,41.883618",
+          "text": "Mantieni la sinistra su Ponte Sublicio.",
+          "roadName": "Ponte Sublicio",
+          "distance": 691,
+          "location": [
+            12.47472,
+            41.883618
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "8-arrive-12.47918,41.878467",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            12.47918,
+            41.878467
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": [
+        [
+          [
+            12.473154,
+            41.889531
+          ],
+          [
+            12.473117,
+            41.88956
+          ],
+          [
+            12.473102,
+            41.889574
+          ],
+          [
+            12.473096,
+            41.889587
+          ],
+          [
+            12.473095,
+            41.8896
+          ],
+          [
+            12.473109,
+            41.889699
+          ],
+          [
+            12.473111,
+            41.889716
+          ],
+          [
+            12.473109,
+            41.889733
+          ],
+          [
+            12.473108,
+            41.889739
+          ],
+          [
+            12.473105,
+            41.889745
+          ],
+          [
+            12.4731,
+            41.88975
+          ],
+          [
+            12.473095,
+            41.889755
+          ],
+          [
+            12.47308,
+            41.889762
+          ],
+          [
+            12.473062,
+            41.88977
+          ],
+          [
+            12.473041,
+            41.889778
+          ],
+          [
+            12.47303,
+            41.889784
+          ],
+          [
+            12.473021,
+            41.889791
+          ],
+          [
+            12.47301,
+            41.889803
+          ],
+          [
+            12.473003,
+            41.889815
+          ],
+          [
+            12.472996,
+            41.889829
+          ],
+          [
+            12.472993,
+            41.889845
+          ],
+          [
+            12.472993,
+            41.889872
+          ],
+          [
+            12.473034,
+            41.89011
+          ],
+          [
+            12.473037,
+            41.890131
+          ],
+          [
+            12.473041,
+            41.890153
+          ]
+        ]
+      ]
+    },
+    "problemSegments": [
+      [
+        [
+          12.473154,
+          41.889531
+        ],
+        [
+          12.473117,
+          41.88956
+        ],
+        [
+          12.473102,
+          41.889574
+        ],
+        [
+          12.473096,
+          41.889587
+        ],
+        [
+          12.473095,
+          41.8896
+        ],
+        [
+          12.473109,
+          41.889699
+        ],
+        [
+          12.473111,
+          41.889716
+        ],
+        [
+          12.473109,
+          41.889733
+        ],
+        [
+          12.473108,
+          41.889739
+        ],
+        [
+          12.473105,
+          41.889745
+        ],
+        [
+          12.4731,
+          41.88975
+        ],
+        [
+          12.473095,
+          41.889755
+        ],
+        [
+          12.47308,
+          41.889762
+        ],
+        [
+          12.473062,
+          41.88977
+        ],
+        [
+          12.473041,
+          41.889778
+        ],
+        [
+          12.47303,
+          41.889784
+        ],
+        [
+          12.473021,
+          41.889791
+        ],
+        [
+          12.47301,
+          41.889803
+        ],
+        [
+          12.473003,
+          41.889815
+        ],
+        [
+          12.472996,
+          41.889829
+        ],
+        [
+          12.472993,
+          41.889845
+        ],
+        [
+          12.472993,
+          41.889872
+        ],
+        [
+          12.473034,
+          41.89011
+        ],
+        [
+          12.473037,
+          41.890131
+        ],
+        [
+          12.473041,
+          41.890153
+        ]
+      ]
+    ],
+    "alternativesAnalyzed": 6,
+    "hasDistinctAlternative": false,
+    "surfaceDataAvailable": true,
+    "mode": "bicycle",
+    "transportMode": "bicycle",
+    "routingProfile": {
+      "provider": "valhalla-fossgis",
+      "profile": "bicycle",
+      "beta": true,
+      "approximate": false,
+      "fallbackUsed": false,
+      "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+    },
+    "calculationMode": "planner",
+    "appliedPreferences": {
+      "avoidance": "strong",
+      "maximumExtraMinutes": 5
+    },
+    "performance": {
+      "routingAndSurfaceDataMs": 1140,
+      "candidateGenerationAndScoringMs": 4375,
+      "totalMs": 5514
+    },
+    "optimization": {
+      "strategy": "pareto-conservative-unknown",
+      "frontierSize": 1,
+      "unknownMeterPenalty": 1,
+      "directCandidateGenerated": true
+    },
+    "candidateDiagnostics": [
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-1",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 2014,
+        "seconds": 402,
+        "paveMeters": 75,
+        "pavePercent": 3.7,
+        "weightedPaveMeters": 75,
+        "riskMeters": 75,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 2,
+        "surfaceCoveragePercent": 99.9,
+        "smoothSurfaceMeters": 1927,
+        "surfaceTotalMeters": 2004,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 33,
+        "detourPercent": 0,
+        "distinctFromFast": false
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "detour-2",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 2110,
+        "seconds": 430,
+        "paveMeters": 255,
+        "pavePercent": 12.2,
+        "weightedPaveMeters": 255,
+        "riskMeters": 255,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 83,
+        "surfaceCoveragePercent": 96,
+        "smoothSurfaceMeters": 1759,
+        "surfaceTotalMeters": 2097,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 36,
+        "detourPercent": 7.1,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "base-2",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 2274,
+        "seconds": 470,
+        "paveMeters": 953,
+        "pavePercent": 42.1,
+        "weightedPaveMeters": 953,
+        "riskMeters": 953,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 66,
+        "surfaceCoveragePercent": 97.1,
+        "smoothSurfaceMeters": 1246,
+        "surfaceTotalMeters": 2265,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 37,
+        "detourPercent": 17,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "base-3",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 2473,
+        "seconds": 509,
+        "paveMeters": 336,
+        "pavePercent": 13.6,
+        "weightedPaveMeters": 336,
+        "riskMeters": 336,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 1,
+        "surfaceCoveragePercent": 100,
+        "smoothSurfaceMeters": 2125,
+        "surfaceTotalMeters": 2462,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 35,
+        "detourPercent": 26.8,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "detour-1",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 3085,
+        "seconds": 625,
+        "paveMeters": 612,
+        "pavePercent": 19.9,
+        "weightedPaveMeters": 612,
+        "riskMeters": 612,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 533,
+        "surfaceCoveragePercent": 82.6,
+        "smoothSurfaceMeters": 1927,
+        "surfaceTotalMeters": 3072,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 42,
+        "detourPercent": 55.5,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "detour-3",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 3133,
+        "seconds": 650,
+        "paveMeters": 591,
+        "pavePercent": 19,
+        "weightedPaveMeters": 591,
+        "riskMeters": 591,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 369,
+        "surfaceCoveragePercent": 88.2,
+        "smoothSurfaceMeters": 2158,
+        "surfaceTotalMeters": 3118,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 45,
+        "detourPercent": 61.9,
+        "distinctFromFast": true
+      }
+    ],
+    "dataNotice": "6 percorsi reali controllati: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale). La copertura locale dei fondi ciclabili può essere incompleta. I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio. Roma: verifica segnaletica e accessi locali; il percorso non certifica tutte le restrizioni aggiornate"
+  },
+  "calls": [
+    {
+      "key": "535b84c3964c9fb294639da0c7b09c3d9460088c8a83a54c344acee67ffb8f69",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 706.3911250000019
+    },
+    {
+      "key": "ca9db8883b0e891ed31bda80b4b26361d39816ad393fe2f107dd2ee1cde5a624",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 709.7412499999991
+    },
+    {
+      "key": "4b3770c2bdcb402ae2fa0283a097a5c73fc793f863a92568a976d617176d7b7a",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 733.4102500000008
+    },
+    {
+      "key": "67c4049708177a5bf7860f0807a93f787337f26ab9dc43c403cfc2c069f96ece",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 826.7382080000098
+    },
+    {
+      "key": "0b9e7b14f229409bda5b31d013d4e9b6ca83c1ec064befbe6f57d304b29d8503",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 828.8295840000064
+    }
+  ]
+}

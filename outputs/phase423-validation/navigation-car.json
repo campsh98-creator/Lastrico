@@ -1,0 +1,27 @@
+{
+  "request": {
+    "area": "rome",
+    "start": "12.4774499,41.9081066",
+    "end": "12.493142,41.8946376",
+    "mode": "car",
+    "avoid": "strong",
+    "maxExtraMinutes": "5",
+    "navigation": "1"
+  },
+  "status": 422,
+  "elapsedMs": 451.9382499999774,
+  "payload": {
+    "error": "Tutti i percorsi trovati attraversano tratti vietati secondo OpenStreetMap. Prova una partenza o una destinazione vicina.",
+    "mode": "car",
+    "transportMode": "car"
+  },
+  "calls": [
+    {
+      "key": "532640e796dc046d3fc942ce490e05f378bdf6af0732414db2241b6afbd5d6cd",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 435.2174580000001
+    }
+  ]
+}

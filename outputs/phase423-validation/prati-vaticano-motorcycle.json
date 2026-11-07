@@ -1,0 +1,1974 @@
+{
+  "request": {
+    "area": "rome",
+    "start": "12.4650017,41.9079215",
+    "end": "12.460704,41.9021521",
+    "mode": "motorcycle",
+    "avoid": "strong",
+    "maxExtraMinutes": "5"
+  },
+  "status": 200,
+  "elapsedMs": 5760.947250000001,
+  "payload": {
+    "area": "rome",
+    "fast": {
+      "coordinates": [
+        [
+          12.465002,
+          41.907922
+        ],
+        [
+          12.464957,
+          41.90791
+        ],
+        [
+          12.464051,
+          41.907686
+        ],
+        [
+          12.463964,
+          41.907665
+        ],
+        [
+          12.462972,
+          41.907414
+        ],
+        [
+          12.462929,
+          41.907403
+        ],
+        [
+          12.462791,
+          41.90737
+        ],
+        [
+          12.462826,
+          41.907288
+        ],
+        [
+          12.462861,
+          41.907195
+        ],
+        [
+          12.46296,
+          41.906938
+        ],
+        [
+          12.463117,
+          41.906556
+        ],
+        [
+          12.463141,
+          41.906496
+        ],
+        [
+          12.463387,
+          41.905872
+        ],
+        [
+          12.463394,
+          41.905848
+        ],
+        [
+          12.463404,
+          41.90582
+        ],
+        [
+          12.46341,
+          41.905795
+        ],
+        [
+          12.463417,
+          41.905754
+        ],
+        [
+          12.463291,
+          41.905763
+        ],
+        [
+          12.463253,
+          41.905764
+        ],
+        [
+          12.462941,
+          41.905785
+        ],
+        [
+          12.462241,
+          41.905834
+        ],
+        [
+          12.462158,
+          41.90584
+        ],
+        [
+          12.462146,
+          41.90575
+        ],
+        [
+          12.4621,
+          41.905159
+        ],
+        [
+          12.462096,
+          41.905107
+        ],
+        [
+          12.462069,
+          41.904688
+        ],
+        [
+          12.462067,
+          41.90466
+        ],
+        [
+          12.462072,
+          41.904567
+        ],
+        [
+          12.462126,
+          41.904549
+        ],
+        [
+          12.462867,
+          41.904273
+        ],
+        [
+          12.463035,
+          41.904212
+        ],
+        [
+          12.463072,
+          41.9042
+        ],
+        [
+          12.4632,
+          41.904152
+        ],
+        [
+          12.463184,
+          41.904125
+        ],
+        [
+          12.463175,
+          41.904043
+        ],
+        [
+          12.463171,
+          41.904022
+        ],
+        [
+          12.463094,
+          41.90363
+        ],
+        [
+          12.463047,
+          41.903481
+        ],
+        [
+          12.463038,
+          41.903409
+        ],
+        [
+          12.463037,
+          41.903384
+        ],
+        [
+          12.463043,
+          41.903367
+        ],
+        [
+          12.463086,
+          41.903315
+        ],
+        [
+          12.463081,
+          41.903258
+        ],
+        [
+          12.463072,
+          41.903212
+        ],
+        [
+          12.462975,
+          41.902559
+        ],
+        [
+          12.462972,
+          41.902542
+        ],
+        [
+          12.462965,
+          41.902498
+        ],
+        [
+          12.462958,
+          41.902455
+        ],
+        [
+          12.462952,
+          41.902418
+        ],
+        [
+          12.46295,
+          41.902384
+        ],
+        [
+          12.462948,
+          41.902365
+        ],
+        [
+          12.462948,
+          41.902275
+        ],
+        [
+          12.46295,
+          41.902248
+        ],
+        [
+          12.462956,
+          41.902226
+        ],
+        [
+          12.462884,
+          41.902223
+        ],
+        [
+          12.462792,
+          41.902221
+        ],
+        [
+          12.46202,
+          41.90219
+        ],
+        [
+          12.461932,
+          41.902187
+        ],
+        [
+          12.461457,
+          41.902173
+        ],
+        [
+          12.460704,
+          41.902152
+        ]
+      ],
+      "distance": 1.135,
+      "minutes": 4.261416666666666,
+      "paveMeters": 760,
+      "pavePercent": 67.1,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 1,
+      "surfaceCoveragePercent": 99.9,
+      "confirmedPaveMeters": 760,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 371,
+      "surfaceTotalMeters": 1132,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "terminalPrivateAccessMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-12.465002,41.907922",
+          "text": "Guida verso ovest su Via Cola di Rienzo.",
+          "roadName": "Via Cola di Rienzo",
+          "distance": 194,
+          "location": [
+            12.465002,
+            41.907922
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-12.462791,41.90737",
+          "text": "Svolta a sinistra su Via Terenzio.",
+          "roadName": "Via Terenzio",
+          "distance": 188,
+          "location": [
+            12.462791,
+            41.90737
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "2-turn-12.463417,41.905754",
+          "text": "Svolta a destra su Via Crescenzio.",
+          "roadName": "Via Crescenzio",
+          "distance": 104,
+          "location": [
+            12.463417,
+            41.905754
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "3-turn-12.462158,41.90584",
+          "text": "Svolta a sinistra su Via Francesco Cancellieri.",
+          "roadName": "Via Francesco Cancellieri",
+          "distance": 142,
+          "location": [
+            12.462158,
+            41.90584
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "4-turn-12.462072,41.904567",
+          "text": "Svolta a sinistra su Via Giovanni Vitelleschi.",
+          "roadName": "Via Giovanni Vitelleschi",
+          "distance": 105,
+          "location": [
+            12.462072,
+            41.904567
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "5-turn-12.4632,41.904152",
+          "text": "Svolta a destra su Via di Porta Castello.",
+          "roadName": "Via di Porta Castello",
+          "distance": 95,
+          "location": [
+            12.4632,
+            41.904152
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "6-turn-12.463086,41.903315",
+          "text": "Mantieni la destra su Via della Traspontina.",
+          "roadName": "Via della Traspontina",
+          "distance": 121,
+          "location": [
+            12.463086,
+            41.903315
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "7-turn-12.462956,41.902226",
+          "text": "Svolta a destra su Via della Conciliazione.",
+          "roadName": "Via della Conciliazione",
+          "distance": 186,
+          "location": [
+            12.462956,
+            41.902226
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "8-arrive-12.460704,41.902152",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            12.460704,
+            41.902152
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": [
+        [
+          [
+            12.465002,
+            41.907922
+          ],
+          [
+            12.464957,
+            41.90791
+          ],
+          [
+            12.464051,
+            41.907686
+          ],
+          [
+            12.463964,
+            41.907665
+          ],
+          [
+            12.462972,
+            41.907414
+          ],
+          [
+            12.462929,
+            41.907403
+          ],
+          [
+            12.462791,
+            41.90737
+          ]
+        ],
+        [
+          [
+            12.463417,
+            41.905754
+          ],
+          [
+            12.463291,
+            41.905763
+          ],
+          [
+            12.463253,
+            41.905764
+          ],
+          [
+            12.462941,
+            41.905785
+          ],
+          [
+            12.462241,
+            41.905834
+          ],
+          [
+            12.462158,
+            41.90584
+          ]
+        ],
+        [
+          [
+            12.462096,
+            41.905107
+          ],
+          [
+            12.462069,
+            41.904688
+          ],
+          [
+            12.462067,
+            41.90466
+          ],
+          [
+            12.462072,
+            41.904567
+          ]
+        ],
+        [
+          [
+            12.4632,
+            41.904152
+          ],
+          [
+            12.463184,
+            41.904125
+          ],
+          [
+            12.463175,
+            41.904043
+          ],
+          [
+            12.463171,
+            41.904022
+          ],
+          [
+            12.463094,
+            41.90363
+          ],
+          [
+            12.463047,
+            41.903481
+          ],
+          [
+            12.463038,
+            41.903409
+          ],
+          [
+            12.463037,
+            41.903384
+          ],
+          [
+            12.463043,
+            41.903367
+          ],
+          [
+            12.463086,
+            41.903315
+          ],
+          [
+            12.463081,
+            41.903258
+          ],
+          [
+            12.463072,
+            41.903212
+          ],
+          [
+            12.462975,
+            41.902559
+          ],
+          [
+            12.462972,
+            41.902542
+          ],
+          [
+            12.462965,
+            41.902498
+          ],
+          [
+            12.462958,
+            41.902455
+          ],
+          [
+            12.462952,
+            41.902418
+          ],
+          [
+            12.46295,
+            41.902384
+          ],
+          [
+            12.462948,
+            41.902365
+          ],
+          [
+            12.462948,
+            41.902275
+          ],
+          [
+            12.46295,
+            41.902248
+          ],
+          [
+            12.462956,
+            41.902226
+          ],
+          [
+            12.462884,
+            41.902223
+          ],
+          [
+            12.462792,
+            41.902221
+          ],
+          [
+            12.46202,
+            41.90219
+          ],
+          [
+            12.461932,
+            41.902187
+          ],
+          [
+            12.461457,
+            41.902173
+          ],
+          [
+            12.460704,
+            41.902152
+          ]
+        ]
+      ]
+    },
+    "safe": {
+      "coordinates": [
+        [
+          12.465002,
+          41.907922
+        ],
+        [
+          12.465105,
+          41.907946
+        ],
+        [
+          12.465218,
+          41.907973
+        ],
+        [
+          12.465256,
+          41.907983
+        ],
+        [
+          12.465891,
+          41.908143
+        ],
+        [
+          12.465938,
+          41.908058
+        ],
+        [
+          12.466263,
+          41.907434
+        ],
+        [
+          12.46654,
+          41.90688
+        ],
+        [
+          12.466572,
+          41.906811
+        ],
+        [
+          12.466602,
+          41.906755
+        ],
+        [
+          12.466838,
+          41.906289
+        ],
+        [
+          12.466876,
+          41.906215
+        ],
+        [
+          12.466908,
+          41.906155
+        ],
+        [
+          12.467203,
+          41.905575
+        ],
+        [
+          12.467252,
+          41.905483
+        ],
+        [
+          12.467861,
+          41.905442
+        ],
+        [
+          12.468245,
+          41.905417
+        ],
+        [
+          12.468374,
+          41.905407
+        ],
+        [
+          12.468405,
+          41.905407
+        ],
+        [
+          12.468437,
+          41.905408
+        ],
+        [
+          12.468484,
+          41.905338
+        ],
+        [
+          12.468545,
+          41.905227
+        ],
+        [
+          12.468668,
+          41.905035
+        ],
+        [
+          12.468874,
+          41.90468
+        ],
+        [
+          12.468951,
+          41.904543
+        ],
+        [
+          12.468935,
+          41.904494
+        ],
+        [
+          12.468927,
+          41.904473
+        ],
+        [
+          12.46892,
+          41.90446
+        ],
+        [
+          12.468907,
+          41.90444
+        ],
+        [
+          12.468895,
+          41.904425
+        ],
+        [
+          12.468876,
+          41.904404
+        ],
+        [
+          12.468847,
+          41.904375
+        ],
+        [
+          12.468803,
+          41.904324
+        ],
+        [
+          12.468767,
+          41.904338
+        ],
+        [
+          12.468737,
+          41.904348
+        ],
+        [
+          12.468705,
+          41.904356
+        ],
+        [
+          12.468674,
+          41.904365
+        ],
+        [
+          12.468589,
+          41.904386
+        ],
+        [
+          12.468118,
+          41.904482
+        ],
+        [
+          12.467468,
+          41.904633
+        ],
+        [
+          12.467402,
+          41.904649
+        ],
+        [
+          12.467345,
+          41.904667
+        ],
+        [
+          12.467299,
+          41.904684
+        ],
+        [
+          12.46724,
+          41.904721
+        ],
+        [
+          12.467177,
+          41.904766
+        ],
+        [
+          12.467062,
+          41.904857
+        ],
+        [
+          12.466906,
+          41.904977
+        ],
+        [
+          12.466823,
+          41.90504
+        ],
+        [
+          12.466319,
+          41.905411
+        ],
+        [
+          12.466263,
+          41.905449
+        ],
+        [
+          12.466238,
+          41.905461
+        ],
+        [
+          12.466206,
+          41.905467
+        ],
+        [
+          12.466176,
+          41.905465
+        ],
+        [
+          12.466151,
+          41.905458
+        ],
+        [
+          12.466127,
+          41.905445
+        ],
+        [
+          12.466107,
+          41.905432
+        ],
+        [
+          12.466093,
+          41.90542
+        ],
+        [
+          12.466009,
+          41.905335
+        ],
+        [
+          12.465676,
+          41.905003
+        ],
+        [
+          12.465531,
+          41.904852
+        ],
+        [
+          12.465251,
+          41.904553
+        ],
+        [
+          12.46523,
+          41.904533
+        ],
+        [
+          12.465181,
+          41.904506
+        ],
+        [
+          12.465138,
+          41.904487
+        ],
+        [
+          12.464776,
+          41.904337
+        ],
+        [
+          12.464038,
+          41.904047
+        ],
+        [
+          12.464017,
+          41.904034
+        ],
+        [
+          12.463992,
+          41.904015
+        ],
+        [
+          12.463976,
+          41.903996
+        ],
+        [
+          12.463963,
+          41.903972
+        ],
+        [
+          12.463954,
+          41.903933
+        ],
+        [
+          12.46396,
+          41.903898
+        ],
+        [
+          12.463972,
+          41.90386
+        ],
+        [
+          12.463985,
+          41.903847
+        ],
+        [
+          12.464241,
+          41.903538
+        ],
+        [
+          12.464243,
+          41.903533
+        ],
+        [
+          12.464246,
+          41.903526
+        ],
+        [
+          12.464248,
+          41.90352
+        ],
+        [
+          12.464249,
+          41.903511
+        ],
+        [
+          12.46425,
+          41.903382
+        ],
+        [
+          12.464251,
+          41.903363
+        ],
+        [
+          12.464253,
+          41.903323
+        ],
+        [
+          12.464238,
+          41.903311
+        ],
+        [
+          12.464228,
+          41.903304
+        ],
+        [
+          12.464214,
+          41.903299
+        ],
+        [
+          12.464192,
+          41.903294
+        ],
+        [
+          12.464167,
+          41.903293
+        ],
+        [
+          12.463874,
+          41.903298
+        ],
+        [
+          12.463829,
+          41.903298
+        ],
+        [
+          12.463184,
+          41.903311
+        ],
+        [
+          12.463086,
+          41.903315
+        ],
+        [
+          12.463081,
+          41.903258
+        ],
+        [
+          12.463072,
+          41.903212
+        ],
+        [
+          12.462975,
+          41.902559
+        ],
+        [
+          12.462972,
+          41.902542
+        ],
+        [
+          12.462965,
+          41.902498
+        ],
+        [
+          12.462958,
+          41.902455
+        ],
+        [
+          12.462952,
+          41.902418
+        ],
+        [
+          12.46295,
+          41.902384
+        ],
+        [
+          12.462948,
+          41.902365
+        ],
+        [
+          12.462948,
+          41.902275
+        ],
+        [
+          12.46295,
+          41.902248
+        ],
+        [
+          12.462956,
+          41.902226
+        ],
+        [
+          12.462884,
+          41.902223
+        ],
+        [
+          12.462792,
+          41.902221
+        ],
+        [
+          12.46202,
+          41.90219
+        ],
+        [
+          12.461932,
+          41.902187
+        ],
+        [
+          12.461457,
+          41.902173
+        ],
+        [
+          12.460704,
+          41.902152
+        ]
+      ],
+      "distance": 1.621,
+      "minutes": 5.8113,
+      "paveMeters": 680,
+      "pavePercent": 42,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 3,
+      "surfaceCoveragePercent": 99.8,
+      "confirmedPaveMeters": 680,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 937,
+      "surfaceTotalMeters": 1620,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "terminalPrivateAccessMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-12.465002,41.907922",
+          "text": "Guida verso est su Via Cola di Rienzo.",
+          "roadName": "Via Cola di Rienzo",
+          "distance": 78,
+          "location": [
+            12.465002,
+            41.907922
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-12.465891,41.908143",
+          "text": "Svolta a destra su Via Orazio.",
+          "roadName": "Via Orazio",
+          "distance": 317,
+          "location": [
+            12.465891,
+            41.908143
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "2-turn-12.467252,41.905483",
+          "text": "Svolta a sinistra su Via Crescenzio.",
+          "roadName": "Via Crescenzio",
+          "distance": 99,
+          "location": [
+            12.467252,
+            41.905483
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "3-turn-12.468437,41.905408",
+          "text": "Svolta a destra su Piazza Cavour.",
+          "roadName": "Piazza Cavour",
+          "distance": 105,
+          "location": [
+            12.468437,
+            41.905408
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "4-turn-12.468951,41.904543",
+          "text": "Svolta a destra.",
+          "roadName": "",
+          "distance": 27,
+          "location": [
+            12.468951,
+            41.904543
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "5-turn-12.468803,41.904324",
+          "text": "Svolta a destra su Piazza Adriana.",
+          "roadName": "Piazza Adriana",
+          "distance": 187,
+          "location": [
+            12.468803,
+            41.904324
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "6-turn-12.466823,41.90504",
+          "text": "Mantieni la sinistra per rimanere su Piazza Adriana.",
+          "roadName": "Piazza Adriana",
+          "distance": 315,
+          "location": [
+            12.466823,
+            41.90504
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "7-turn-12.464038,41.904047",
+          "text": "Svolta a sinistra per rimanere su Piazza Adriana.",
+          "roadName": "Piazza Adriana",
+          "distance": 65,
+          "location": [
+            12.464038,
+            41.904047
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "8-turn-12.464241,41.903538",
+          "text": "Svolta a destra per rimanere su Piazza Adriana.",
+          "roadName": "Piazza Adriana",
+          "distance": 23,
+          "location": [
+            12.464241,
+            41.903538
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "9-turn-12.464253,41.903323",
+          "text": "Svolta a destra su Borgo Sant'Angelo.",
+          "roadName": "Borgo Sant'Angelo",
+          "distance": 96,
+          "location": [
+            12.464253,
+            41.903323
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "10-turn-12.463086,41.903315",
+          "text": "Svolta a sinistra su Via della Traspontina.",
+          "roadName": "Via della Traspontina",
+          "distance": 121,
+          "location": [
+            12.463086,
+            41.903315
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "11-turn-12.462956,41.902226",
+          "text": "Svolta a destra su Via della Conciliazione.",
+          "roadName": "Via della Conciliazione",
+          "distance": 186,
+          "location": [
+            12.462956,
+            41.902226
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "12-arrive-12.460704,41.902152",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            12.460704,
+            41.902152
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": [
+        [
+          [
+            12.465002,
+            41.907922
+          ],
+          [
+            12.465105,
+            41.907946
+          ],
+          [
+            12.465218,
+            41.907973
+          ],
+          [
+            12.465256,
+            41.907983
+          ],
+          [
+            12.465891,
+            41.908143
+          ]
+        ],
+        [
+          [
+            12.467252,
+            41.905483
+          ],
+          [
+            12.467861,
+            41.905442
+          ],
+          [
+            12.468245,
+            41.905417
+          ],
+          [
+            12.468374,
+            41.905407
+          ],
+          [
+            12.468405,
+            41.905407
+          ],
+          [
+            12.468437,
+            41.905408
+          ],
+          [
+            12.468484,
+            41.905338
+          ],
+          [
+            12.468545,
+            41.905227
+          ],
+          [
+            12.468668,
+            41.905035
+          ],
+          [
+            12.468874,
+            41.90468
+          ],
+          [
+            12.468951,
+            41.904543
+          ]
+        ],
+        [
+          [
+            12.464192,
+            41.903294
+          ],
+          [
+            12.464167,
+            41.903293
+          ],
+          [
+            12.463874,
+            41.903298
+          ],
+          [
+            12.463829,
+            41.903298
+          ],
+          [
+            12.463184,
+            41.903311
+          ],
+          [
+            12.463086,
+            41.903315
+          ],
+          [
+            12.463081,
+            41.903258
+          ],
+          [
+            12.463072,
+            41.903212
+          ],
+          [
+            12.462975,
+            41.902559
+          ],
+          [
+            12.462972,
+            41.902542
+          ],
+          [
+            12.462965,
+            41.902498
+          ],
+          [
+            12.462958,
+            41.902455
+          ],
+          [
+            12.462952,
+            41.902418
+          ],
+          [
+            12.46295,
+            41.902384
+          ],
+          [
+            12.462948,
+            41.902365
+          ],
+          [
+            12.462948,
+            41.902275
+          ],
+          [
+            12.46295,
+            41.902248
+          ],
+          [
+            12.462956,
+            41.902226
+          ],
+          [
+            12.462884,
+            41.902223
+          ],
+          [
+            12.462792,
+            41.902221
+          ],
+          [
+            12.46202,
+            41.90219
+          ],
+          [
+            12.461932,
+            41.902187
+          ],
+          [
+            12.461457,
+            41.902173
+          ],
+          [
+            12.460704,
+            41.902152
+          ]
+        ]
+      ]
+    },
+    "problemSegments": [
+      [
+        [
+          12.465002,
+          41.907922
+        ],
+        [
+          12.464957,
+          41.90791
+        ],
+        [
+          12.464051,
+          41.907686
+        ],
+        [
+          12.463964,
+          41.907665
+        ],
+        [
+          12.462972,
+          41.907414
+        ],
+        [
+          12.462929,
+          41.907403
+        ],
+        [
+          12.462791,
+          41.90737
+        ]
+      ],
+      [
+        [
+          12.463417,
+          41.905754
+        ],
+        [
+          12.463291,
+          41.905763
+        ],
+        [
+          12.463253,
+          41.905764
+        ],
+        [
+          12.462941,
+          41.905785
+        ],
+        [
+          12.462241,
+          41.905834
+        ],
+        [
+          12.462158,
+          41.90584
+        ]
+      ],
+      [
+        [
+          12.462096,
+          41.905107
+        ],
+        [
+          12.462069,
+          41.904688
+        ],
+        [
+          12.462067,
+          41.90466
+        ],
+        [
+          12.462072,
+          41.904567
+        ]
+      ],
+      [
+        [
+          12.4632,
+          41.904152
+        ],
+        [
+          12.463184,
+          41.904125
+        ],
+        [
+          12.463175,
+          41.904043
+        ],
+        [
+          12.463171,
+          41.904022
+        ],
+        [
+          12.463094,
+          41.90363
+        ],
+        [
+          12.463047,
+          41.903481
+        ],
+        [
+          12.463038,
+          41.903409
+        ],
+        [
+          12.463037,
+          41.903384
+        ],
+        [
+          12.463043,
+          41.903367
+        ],
+        [
+          12.463086,
+          41.903315
+        ],
+        [
+          12.463081,
+          41.903258
+        ],
+        [
+          12.463072,
+          41.903212
+        ],
+        [
+          12.462975,
+          41.902559
+        ],
+        [
+          12.462972,
+          41.902542
+        ],
+        [
+          12.462965,
+          41.902498
+        ],
+        [
+          12.462958,
+          41.902455
+        ],
+        [
+          12.462952,
+          41.902418
+        ],
+        [
+          12.46295,
+          41.902384
+        ],
+        [
+          12.462948,
+          41.902365
+        ],
+        [
+          12.462948,
+          41.902275
+        ],
+        [
+          12.46295,
+          41.902248
+        ],
+        [
+          12.462956,
+          41.902226
+        ],
+        [
+          12.462884,
+          41.902223
+        ],
+        [
+          12.462792,
+          41.902221
+        ],
+        [
+          12.46202,
+          41.90219
+        ],
+        [
+          12.461932,
+          41.902187
+        ],
+        [
+          12.461457,
+          41.902173
+        ],
+        [
+          12.460704,
+          41.902152
+        ]
+      ],
+      [
+        [
+          12.465002,
+          41.907922
+        ],
+        [
+          12.465105,
+          41.907946
+        ],
+        [
+          12.465218,
+          41.907973
+        ],
+        [
+          12.465256,
+          41.907983
+        ],
+        [
+          12.465891,
+          41.908143
+        ]
+      ],
+      [
+        [
+          12.467252,
+          41.905483
+        ],
+        [
+          12.467861,
+          41.905442
+        ],
+        [
+          12.468245,
+          41.905417
+        ],
+        [
+          12.468374,
+          41.905407
+        ],
+        [
+          12.468405,
+          41.905407
+        ],
+        [
+          12.468437,
+          41.905408
+        ],
+        [
+          12.468484,
+          41.905338
+        ],
+        [
+          12.468545,
+          41.905227
+        ],
+        [
+          12.468668,
+          41.905035
+        ],
+        [
+          12.468874,
+          41.90468
+        ],
+        [
+          12.468951,
+          41.904543
+        ]
+      ],
+      [
+        [
+          12.464192,
+          41.903294
+        ],
+        [
+          12.464167,
+          41.903293
+        ],
+        [
+          12.463874,
+          41.903298
+        ],
+        [
+          12.463829,
+          41.903298
+        ],
+        [
+          12.463184,
+          41.903311
+        ],
+        [
+          12.463086,
+          41.903315
+        ],
+        [
+          12.463081,
+          41.903258
+        ],
+        [
+          12.463072,
+          41.903212
+        ],
+        [
+          12.462975,
+          41.902559
+        ],
+        [
+          12.462972,
+          41.902542
+        ],
+        [
+          12.462965,
+          41.902498
+        ],
+        [
+          12.462958,
+          41.902455
+        ],
+        [
+          12.462952,
+          41.902418
+        ],
+        [
+          12.46295,
+          41.902384
+        ],
+        [
+          12.462948,
+          41.902365
+        ],
+        [
+          12.462948,
+          41.902275
+        ],
+        [
+          12.46295,
+          41.902248
+        ],
+        [
+          12.462956,
+          41.902226
+        ],
+        [
+          12.462884,
+          41.902223
+        ],
+        [
+          12.462792,
+          41.902221
+        ],
+        [
+          12.46202,
+          41.90219
+        ],
+        [
+          12.461932,
+          41.902187
+        ],
+        [
+          12.461457,
+          41.902173
+        ],
+        [
+          12.460704,
+          41.902152
+        ]
+      ]
+    ],
+    "alternativesAnalyzed": 6,
+    "hasDistinctAlternative": true,
+    "surfaceDataAvailable": true,
+    "mode": "motorcycle",
+    "transportMode": "motorcycle",
+    "routingProfile": {
+      "provider": "valhalla-fossgis",
+      "profile": "motorcycle",
+      "beta": true,
+      "approximate": false,
+      "fallbackUsed": false,
+      "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+    },
+    "calculationMode": "planner",
+    "appliedPreferences": {
+      "avoidance": "strong",
+      "maximumExtraMinutes": 5
+    },
+    "performance": {
+      "routingAndSurfaceDataMs": 911,
+      "candidateGenerationAndScoringMs": 4824,
+      "totalMs": 5735
+    },
+    "optimization": {
+      "strategy": "pareto-conservative-unknown",
+      "frontierSize": 2,
+      "unknownMeterPenalty": 1,
+      "directCandidateGenerated": true
+    },
+    "candidateDiagnostics": [
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-2",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 1135,
+        "seconds": 256,
+        "paveMeters": 760,
+        "pavePercent": 67.1,
+        "weightedPaveMeters": 760,
+        "riskMeters": 760,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 1,
+        "surfaceCoveragePercent": 99.9,
+        "smoothSurfaceMeters": 371,
+        "surfaceTotalMeters": 1132,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 18,
+        "detourPercent": 0,
+        "distinctFromFast": false
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "base-1",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 1352,
+        "seconds": 284,
+        "paveMeters": 819,
+        "pavePercent": 60.7,
+        "weightedPaveMeters": 819,
+        "riskMeters": 819,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 2,
+        "surfaceCoveragePercent": 99.9,
+        "smoothSurfaceMeters": 529,
+        "surfaceTotalMeters": 1350,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 21,
+        "detourPercent": 11,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-3",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 1621,
+        "seconds": 349,
+        "paveMeters": 680,
+        "pavePercent": 42,
+        "weightedPaveMeters": 680,
+        "riskMeters": 680,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 3,
+        "surfaceCoveragePercent": 99.8,
+        "smoothSurfaceMeters": 937,
+        "surfaceTotalMeters": 1620,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 25,
+        "detourPercent": 36.4,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "detour-2",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 2285,
+        "seconds": 568,
+        "paveMeters": 635,
+        "pavePercent": 27.9,
+        "weightedPaveMeters": 635,
+        "riskMeters": 635,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 35,
+        "surfaceCoveragePercent": 98.5,
+        "smoothSurfaceMeters": 1609,
+        "surfaceTotalMeters": 2279,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 30,
+        "detourPercent": 122,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "detour-3",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 2896,
+        "seconds": 615,
+        "paveMeters": 1150,
+        "pavePercent": 39.8,
+        "weightedPaveMeters": 1150,
+        "riskMeters": 1150,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 425,
+        "surfaceCoveragePercent": 85.3,
+        "smoothSurfaceMeters": 1317,
+        "surfaceTotalMeters": 2892,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 112,
+        "matchedSurfaceFeatures": 46,
+        "detourPercent": 140.6,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "surface-aware-valhalla",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 3421,
+        "seconds": 709,
+        "paveMeters": 610,
+        "pavePercent": 17.9,
+        "weightedPaveMeters": 610,
+        "riskMeters": 610,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 502,
+        "surfaceCoveragePercent": 85.3,
+        "smoothSurfaceMeters": 2293,
+        "surfaceTotalMeters": 3405,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 43,
+        "detourPercent": 177.5,
+        "distinctFromFast": true
+      }
+    ],
+    "dataNotice": "6 percorsi reali confrontati; 25 way OSM abbinate al percorso (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio. Roma: accesso ZTL, orari e permessi non verificati. Controlla Centro Storico, Trastevere e Tridente A1; le limitazioni del Tridente riguardano anche le moto"
+  },
+  "calls": [
+    {
+      "key": "78074a353a0003850843fee672958fdba627883b6042ba2c704b084d32bc1550",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 880.28125
+    },
+    {
+      "key": "d19087e19d5e6beec156e8b425365cbd559ed118745f0376cabc6ce2c5d9148b",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 989.4978750000009
+    },
+    {
+      "key": "46ae6a5f08e2bbc2b783d60245b5c735752ffc26f8041fab21d9b58967c640d2",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 997.3102089999993
+    },
+    {
+      "key": "3080b547d81b6547b8fed556664b4858ddfdb8938d6cd14788e6f219ac90f0af",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 1001.843208000002
+    },
+    {
+      "key": "b793d52b5e935a1e6afdb18fb517229ad0ace104a45bad5be4150ab90e40f753",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 1089.989625000002
+    }
+  ]
+}

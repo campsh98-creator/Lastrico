@@ -1,0 +1,1875 @@
+[
+  {
+    "id": "corso-cavour",
+    "mode": "car",
+    "workerStatus": 422,
+    "nodeStatus": 422,
+    "workerMs": 320,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": null,
+      "safe": null
+    },
+    "node": {
+      "fast": null,
+      "safe": null
+    }
+  },
+  {
+    "id": "corso-cavour",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 4422,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 4.929,
+        "minutes": 16.325516666666665,
+        "paveMeters": 878,
+        "confirmedPaveMeters": 878,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 3884,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 151,
+        "surfaceTotalMeters": 4913,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 4.929,
+        "minutes": 16.325516666666665,
+        "paveMeters": 878,
+        "confirmedPaveMeters": 878,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 3884,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 151,
+        "surfaceTotalMeters": 4913,
+        "cyclewayMeters": 0
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 4.929,
+        "minutes": 16.325516666666665,
+        "paveMeters": 878,
+        "confirmedPaveMeters": 878,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 3884,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 151,
+        "surfaceTotalMeters": 4913,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 4.929,
+        "minutes": 16.325516666666665,
+        "paveMeters": 878,
+        "confirmedPaveMeters": 878,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 3884,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 151,
+        "surfaceTotalMeters": 4913,
+        "cyclewayMeters": 0
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "corso-cavour",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 5655,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 3.104,
+        "minutes": 11.490283333333334,
+        "paveMeters": 1161,
+        "confirmedPaveMeters": 649,
+        "probablePaveMeters": 512,
+        "smoothSurfaceMeters": 1847,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 89,
+        "surfaceTotalMeters": 3097,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 3.104,
+        "minutes": 11.490283333333334,
+        "paveMeters": 1161,
+        "confirmedPaveMeters": 649,
+        "probablePaveMeters": 512,
+        "smoothSurfaceMeters": 1847,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 89,
+        "surfaceTotalMeters": 3097,
+        "cyclewayMeters": 0
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 3.104,
+        "minutes": 11.490283333333334,
+        "paveMeters": 1161,
+        "confirmedPaveMeters": 649,
+        "probablePaveMeters": 512,
+        "smoothSurfaceMeters": 1847,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 89,
+        "surfaceTotalMeters": 3097,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 3.104,
+        "minutes": 11.490283333333334,
+        "paveMeters": 1161,
+        "confirmedPaveMeters": 649,
+        "probablePaveMeters": 512,
+        "smoothSurfaceMeters": 1847,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 89,
+        "surfaceTotalMeters": 3097,
+        "cyclewayMeters": 0
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "prati-vaticano",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 5494,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 1.135,
+        "minutes": 4.261416666666666,
+        "paveMeters": 760,
+        "confirmedPaveMeters": 760,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 371,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1,
+        "surfaceTotalMeters": 1132,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.621,
+        "minutes": 5.8113,
+        "paveMeters": 680,
+        "confirmedPaveMeters": 680,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 937,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 1620,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 1.135,
+        "minutes": 4.261416666666666,
+        "paveMeters": 760,
+        "confirmedPaveMeters": 760,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 371,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1,
+        "surfaceTotalMeters": 1132,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.621,
+        "minutes": 5.8113,
+        "paveMeters": 680,
+        "confirmedPaveMeters": 680,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 937,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 1620,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "prati-vaticano",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 5349,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 1.135,
+        "minutes": 4.261416666666666,
+        "paveMeters": 760,
+        "confirmedPaveMeters": 760,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 371,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1,
+        "surfaceTotalMeters": 1132,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.621,
+        "minutes": 5.8113,
+        "paveMeters": 680,
+        "confirmedPaveMeters": 680,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 937,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 1620,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 1.135,
+        "minutes": 4.261416666666666,
+        "paveMeters": 760,
+        "confirmedPaveMeters": 760,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 371,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1,
+        "surfaceTotalMeters": 1132,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.621,
+        "minutes": 5.8113,
+        "paveMeters": 680,
+        "confirmedPaveMeters": 680,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 937,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 1620,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "prati-vaticano",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 5347,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 1.135,
+        "minutes": 3.9257,
+        "paveMeters": 760,
+        "confirmedPaveMeters": 760,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 371,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1,
+        "surfaceTotalMeters": 1132,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.623,
+        "minutes": 5.7889,
+        "paveMeters": 658,
+        "confirmedPaveMeters": 658,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 960,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1618,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 1.135,
+        "minutes": 3.9257,
+        "paveMeters": 760,
+        "confirmedPaveMeters": 760,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 371,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1,
+        "surfaceTotalMeters": 1132,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.623,
+        "minutes": 5.7889,
+        "paveMeters": 658,
+        "confirmedPaveMeters": 658,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 960,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1618,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "lungaretta-testaccio",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 5390,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 2.014,
+        "minutes": 5.809283333333334,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 2.014,
+        "minutes": 5.809283333333334,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 2.014,
+        "minutes": 5.809283333333334,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 2.014,
+        "minutes": 5.809283333333334,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "lungaretta-testaccio",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 5374,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 2.014,
+        "minutes": 5.809283333333334,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 2.014,
+        "minutes": 5.809283333333334,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 2.014,
+        "minutes": 5.809283333333334,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 2.014,
+        "minutes": 5.809283333333334,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "lungaretta-testaccio",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 5350,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 2.014,
+        "minutes": 6.694249999999999,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 2.014,
+        "minutes": 6.694249999999999,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 2.014,
+        "minutes": 6.694249999999999,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 2.014,
+        "minutes": 6.694249999999999,
+        "paveMeters": 75,
+        "confirmedPaveMeters": 75,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1927,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 2,
+        "surfaceTotalMeters": 2004,
+        "cyclewayMeters": 0
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "termini-sangiovanni",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 354,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 1.654,
+        "minutes": 5.691066666666667,
+        "paveMeters": 296,
+        "confirmedPaveMeters": 296,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1351,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1647,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.844,
+        "minutes": 5.91145,
+        "paveMeters": 63,
+        "confirmedPaveMeters": 63,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1772,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1835,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 1.654,
+        "minutes": 5.691066666666667,
+        "paveMeters": 296,
+        "confirmedPaveMeters": 296,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1351,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1647,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.844,
+        "minutes": 5.91145,
+        "paveMeters": 63,
+        "confirmedPaveMeters": 63,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1772,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1835,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "termini-sangiovanni",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 379,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 1.654,
+        "minutes": 5.691066666666667,
+        "paveMeters": 296,
+        "confirmedPaveMeters": 296,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1351,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1647,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.844,
+        "minutes": 5.91145,
+        "paveMeters": 63,
+        "confirmedPaveMeters": 63,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1772,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1835,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 1.654,
+        "minutes": 5.691066666666667,
+        "paveMeters": 296,
+        "confirmedPaveMeters": 296,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1351,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1647,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.844,
+        "minutes": 5.91145,
+        "paveMeters": 63,
+        "confirmedPaveMeters": 63,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1772,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1835,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "termini-sangiovanni",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 226,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 1.667,
+        "minutes": 6.190616666666667,
+        "paveMeters": 419,
+        "confirmedPaveMeters": 419,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1240,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1659,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.927,
+        "minutes": 7.032966666666667,
+        "paveMeters": 138,
+        "confirmedPaveMeters": 138,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1782,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1920,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 1.667,
+        "minutes": 6.190616666666667,
+        "paveMeters": 419,
+        "confirmedPaveMeters": 419,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1240,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1659,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 1.927,
+        "minutes": 7.032966666666667,
+        "paveMeters": 138,
+        "confirmedPaveMeters": 138,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 1782,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 1920,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "ostiense-eur",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 344,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 5.479,
+        "minutes": 16.04955,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5454,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5454,
+        "cyclewayMeters": 106
+      },
+      "safe": {
+        "distance": 5.479,
+        "minutes": 16.04955,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5454,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5454,
+        "cyclewayMeters": 106
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 5.479,
+        "minutes": 16.04955,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5454,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5454,
+        "cyclewayMeters": 106
+      },
+      "safe": {
+        "distance": 5.479,
+        "minutes": 16.04955,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5454,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5454,
+        "cyclewayMeters": 106
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "ostiense-eur",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 301,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 5.479,
+        "minutes": 16.04955,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5454,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5454,
+        "cyclewayMeters": 106
+      },
+      "safe": {
+        "distance": 5.479,
+        "minutes": 16.04955,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5454,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5454,
+        "cyclewayMeters": 106
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 5.479,
+        "minutes": 16.04955,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5454,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5454,
+        "cyclewayMeters": 106
+      },
+      "safe": {
+        "distance": 5.479,
+        "minutes": 16.04955,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5454,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5454,
+        "cyclewayMeters": 106
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "ostiense-eur",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 279,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 4.994,
+        "minutes": 17.573583333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4436,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 538,
+        "surfaceTotalMeters": 4974,
+        "cyclewayMeters": 408
+      },
+      "safe": {
+        "distance": 4.994,
+        "minutes": 17.573583333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4436,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 538,
+        "surfaceTotalMeters": 4974,
+        "cyclewayMeters": 408
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 4.994,
+        "minutes": 17.573583333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4436,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 538,
+        "surfaceTotalMeters": 4974,
+        "cyclewayMeters": 408
+      },
+      "safe": {
+        "distance": 4.994,
+        "minutes": 17.573583333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4436,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 538,
+        "surfaceTotalMeters": 4974,
+        "cyclewayMeters": 408
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "flaminia-ripetta",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 4410,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 5.38,
+        "minutes": 15.116233333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4972,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 36,
+        "surfaceTotalMeters": 5350,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.38,
+        "minutes": 15.116233333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4972,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 36,
+        "surfaceTotalMeters": 5350,
+        "cyclewayMeters": 0
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 5.38,
+        "minutes": 15.116233333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4972,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 36,
+        "surfaceTotalMeters": 5350,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.38,
+        "minutes": 15.116233333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4972,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 36,
+        "surfaceTotalMeters": 5350,
+        "cyclewayMeters": 0
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "flaminia-ripetta",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 4530,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 5.38,
+        "minutes": 15.116233333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4972,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 36,
+        "surfaceTotalMeters": 5350,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.38,
+        "minutes": 15.116233333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4972,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 36,
+        "surfaceTotalMeters": 5350,
+        "cyclewayMeters": 0
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 5.38,
+        "minutes": 15.116233333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4972,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 36,
+        "surfaceTotalMeters": 5350,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.38,
+        "minutes": 15.116233333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 4972,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 36,
+        "surfaceTotalMeters": 5350,
+        "cyclewayMeters": 0
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "flaminia-ripetta",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 4447,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 5.632,
+        "minutes": 19.489533333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5222,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 38,
+        "surfaceTotalMeters": 5602,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.773,
+        "minutes": 19.98391666666667,
+        "paveMeters": 285,
+        "confirmedPaveMeters": 285,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5418,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 38,
+        "surfaceTotalMeters": 5741,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 5.632,
+        "minutes": 19.489533333333334,
+        "paveMeters": 342,
+        "confirmedPaveMeters": 342,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5222,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 38,
+        "surfaceTotalMeters": 5602,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.773,
+        "minutes": 19.98391666666667,
+        "paveMeters": 285,
+        "confirmedPaveMeters": 285,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5418,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 38,
+        "surfaceTotalMeters": 5741,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "tuscolana-sangiovanni",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 602,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 6.384,
+        "minutes": 16.173533333333335,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6361,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6364,
+        "cyclewayMeters": 3207
+      },
+      "safe": {
+        "distance": 6.384,
+        "minutes": 16.173533333333335,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6361,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6364,
+        "cyclewayMeters": 3207
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 6.384,
+        "minutes": 16.173533333333335,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6361,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6364,
+        "cyclewayMeters": 3207
+      },
+      "safe": {
+        "distance": 6.384,
+        "minutes": 16.173533333333335,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6361,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6364,
+        "cyclewayMeters": 3207
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "tuscolana-sangiovanni",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 321,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 6.384,
+        "minutes": 16.173533333333335,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6361,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6364,
+        "cyclewayMeters": 3207
+      },
+      "safe": {
+        "distance": 6.384,
+        "minutes": 16.173533333333335,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6361,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6364,
+        "cyclewayMeters": 3207
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 6.384,
+        "minutes": 16.173533333333335,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6361,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6364,
+        "cyclewayMeters": 3207
+      },
+      "safe": {
+        "distance": 6.384,
+        "minutes": 16.173533333333335,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6361,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6364,
+        "cyclewayMeters": 3207
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "tuscolana-sangiovanni",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 317,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 6.383,
+        "minutes": 21.473433333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6358,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6361,
+        "cyclewayMeters": 3207
+      },
+      "safe": {
+        "distance": 6.383,
+        "minutes": 21.473433333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6358,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6361,
+        "cyclewayMeters": 3207
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 6.383,
+        "minutes": 21.473433333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6358,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6361,
+        "cyclewayMeters": 3207
+      },
+      "safe": {
+        "distance": 6.383,
+        "minutes": 21.473433333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6358,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 3,
+        "surfaceTotalMeters": 6361,
+        "cyclewayMeters": 3207
+      },
+      "alt": false
+    }
+  },
+  {
+    "id": "portuense-testaccio",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 1177,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 5.681,
+        "minutes": 16.494766666666667,
+        "paveMeters": 120,
+        "confirmedPaveMeters": 120,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5532,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 7,
+        "surfaceTotalMeters": 5659,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.904,
+        "minutes": 17.202133333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5887,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5887,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 5.681,
+        "minutes": 16.494766666666667,
+        "paveMeters": 120,
+        "confirmedPaveMeters": 120,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5532,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 7,
+        "surfaceTotalMeters": 5659,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.904,
+        "minutes": 17.202133333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5887,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5887,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "portuense-testaccio",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 1266,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 5.681,
+        "minutes": 16.494766666666667,
+        "paveMeters": 120,
+        "confirmedPaveMeters": 120,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5532,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 7,
+        "surfaceTotalMeters": 5659,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.904,
+        "minutes": 17.202133333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5887,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5887,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 5.681,
+        "minutes": 16.494766666666667,
+        "paveMeters": 120,
+        "confirmedPaveMeters": 120,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5532,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 7,
+        "surfaceTotalMeters": 5659,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.904,
+        "minutes": 17.202133333333332,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5887,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5887,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "portuense-testaccio",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 1182,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 5.413,
+        "minutes": 18.706083333333332,
+        "paveMeters": 120,
+        "confirmedPaveMeters": 120,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5266,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 7,
+        "surfaceTotalMeters": 5393,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.636,
+        "minutes": 19.522299999999998,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5621,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5621,
+        "cyclewayMeters": 0
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 5.413,
+        "minutes": 18.706083333333332,
+        "paveMeters": 120,
+        "confirmedPaveMeters": 120,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5266,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 7,
+        "surfaceTotalMeters": 5393,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 5.636,
+        "minutes": 19.522299999999998,
+        "paveMeters": 0,
+        "confirmedPaveMeters": 0,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 5621,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 0,
+        "surfaceTotalMeters": 5621,
+        "cyclewayMeters": 0
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "prenestina-termini",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 1357,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 10.455,
+        "minutes": 21.93208333333333,
+        "paveMeters": 176,
+        "confirmedPaveMeters": 176,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 9976,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 273,
+        "surfaceTotalMeters": 10425,
+        "cyclewayMeters": 171
+      },
+      "safe": {
+        "distance": 10.483,
+        "minutes": 22.970266666666664,
+        "paveMeters": 66,
+        "confirmedPaveMeters": 66,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 10118,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 273,
+        "surfaceTotalMeters": 10457,
+        "cyclewayMeters": 119
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 10.455,
+        "minutes": 21.93208333333333,
+        "paveMeters": 176,
+        "confirmedPaveMeters": 176,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 9976,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 273,
+        "surfaceTotalMeters": 10425,
+        "cyclewayMeters": 171
+      },
+      "safe": {
+        "distance": 10.483,
+        "minutes": 22.970266666666664,
+        "paveMeters": 66,
+        "confirmedPaveMeters": 66,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 10118,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 273,
+        "surfaceTotalMeters": 10457,
+        "cyclewayMeters": 119
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "prenestina-termini",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 1341,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 10.455,
+        "minutes": 21.93208333333333,
+        "paveMeters": 176,
+        "confirmedPaveMeters": 176,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 9976,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 273,
+        "surfaceTotalMeters": 10425,
+        "cyclewayMeters": 171
+      },
+      "safe": {
+        "distance": 10.483,
+        "minutes": 22.970266666666664,
+        "paveMeters": 66,
+        "confirmedPaveMeters": 66,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 10118,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 273,
+        "surfaceTotalMeters": 10457,
+        "cyclewayMeters": 119
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 10.455,
+        "minutes": 21.93208333333333,
+        "paveMeters": 176,
+        "confirmedPaveMeters": 176,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 9976,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 273,
+        "surfaceTotalMeters": 10425,
+        "cyclewayMeters": 171
+      },
+      "safe": {
+        "distance": 10.483,
+        "minutes": 22.970266666666664,
+        "paveMeters": 66,
+        "confirmedPaveMeters": 66,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 10118,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 273,
+        "surfaceTotalMeters": 10457,
+        "cyclewayMeters": 119
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "prenestina-termini",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 1297,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 8.15,
+        "minutes": 29.298366666666666,
+        "paveMeters": 176,
+        "confirmedPaveMeters": 176,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6610,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1362,
+        "surfaceTotalMeters": 8148,
+        "cyclewayMeters": 5252
+      },
+      "safe": {
+        "distance": 8.178,
+        "minutes": 29.748583333333332,
+        "paveMeters": 66,
+        "confirmedPaveMeters": 66,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6759,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1354,
+        "surfaceTotalMeters": 8179,
+        "cyclewayMeters": 5200
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 8.15,
+        "minutes": 29.298366666666666,
+        "paveMeters": 176,
+        "confirmedPaveMeters": 176,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6610,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1362,
+        "surfaceTotalMeters": 8148,
+        "cyclewayMeters": 5252
+      },
+      "safe": {
+        "distance": 8.178,
+        "minutes": 29.748583333333332,
+        "paveMeters": 66,
+        "confirmedPaveMeters": 66,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 6759,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 1354,
+        "surfaceTotalMeters": 8179,
+        "cyclewayMeters": 5200
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "eur-prati",
+    "mode": "car",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 790,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 14.693,
+        "minutes": 29.290766666666666,
+        "paveMeters": 524,
+        "confirmedPaveMeters": 524,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 13783,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 318,
+        "surfaceTotalMeters": 14625,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 10.408,
+        "minutes": 30.137733333333333,
+        "paveMeters": 52,
+        "confirmedPaveMeters": 52,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 10274,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 26,
+        "surfaceTotalMeters": 10352,
+        "cyclewayMeters": 230
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 14.693,
+        "minutes": 29.290766666666666,
+        "paveMeters": 524,
+        "confirmedPaveMeters": 524,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 13783,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 318,
+        "surfaceTotalMeters": 14625,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 10.408,
+        "minutes": 30.137733333333333,
+        "paveMeters": 52,
+        "confirmedPaveMeters": 52,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 10274,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 26,
+        "surfaceTotalMeters": 10352,
+        "cyclewayMeters": 230
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "eur-prati",
+    "mode": "motorcycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 771,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 14.693,
+        "minutes": 29.290766666666666,
+        "paveMeters": 524,
+        "confirmedPaveMeters": 524,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 13783,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 318,
+        "surfaceTotalMeters": 14625,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 10.408,
+        "minutes": 30.137733333333333,
+        "paveMeters": 52,
+        "confirmedPaveMeters": 52,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 10274,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 26,
+        "surfaceTotalMeters": 10352,
+        "cyclewayMeters": 230
+      },
+      "alt": true,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 14.693,
+        "minutes": 29.290766666666666,
+        "paveMeters": 524,
+        "confirmedPaveMeters": 524,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 13783,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 318,
+        "surfaceTotalMeters": 14625,
+        "cyclewayMeters": 0
+      },
+      "safe": {
+        "distance": 10.408,
+        "minutes": 30.137733333333333,
+        "paveMeters": 52,
+        "confirmedPaveMeters": 52,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 10274,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 26,
+        "surfaceTotalMeters": 10352,
+        "cyclewayMeters": 230
+      },
+      "alt": true
+    }
+  },
+  {
+    "id": "eur-prati",
+    "mode": "bicycle",
+    "workerStatus": 200,
+    "nodeStatus": 200,
+    "workerMs": 5475,
+    "sameGeometry": true,
+    "sameMetrics": true,
+    "worker": {
+      "fast": {
+        "distance": 10.049,
+        "minutes": 35.51318333333334,
+        "paveMeters": 355,
+        "confirmedPaveMeters": 355,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 9617,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 23,
+        "surfaceTotalMeters": 9995,
+        "cyclewayMeters": 230
+      },
+      "safe": {
+        "distance": 10.049,
+        "minutes": 35.51318333333334,
+        "paveMeters": 355,
+        "confirmedPaveMeters": 355,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 9617,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 23,
+        "surfaceTotalMeters": 9995,
+        "cyclewayMeters": 230
+      },
+      "alt": false,
+      "area": "rome"
+    },
+    "node": {
+      "fast": {
+        "distance": 10.049,
+        "minutes": 35.51318333333334,
+        "paveMeters": 355,
+        "confirmedPaveMeters": 355,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 9617,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 23,
+        "surfaceTotalMeters": 9995,
+        "cyclewayMeters": 230
+      },
+      "safe": {
+        "distance": 10.049,
+        "minutes": 35.51318333333334,
+        "paveMeters": 355,
+        "confirmedPaveMeters": 355,
+        "probablePaveMeters": 0,
+        "smoothSurfaceMeters": 9617,
+        "unpavedSurfaceMeters": 0,
+        "unknownSurfaceMeters": 23,
+        "surfaceTotalMeters": 9995,
+        "cyclewayMeters": 230
+      },
+      "alt": false
+    }
+  }
+]
