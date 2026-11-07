@@ -1206,7 +1206,10 @@ scenario("E5", "Live: suggested journeys calculate in both cities", async (sessi
       await selectCity(session, area);
       await sleep(300);
     }
-    await session.tap("[data-testid=preferences-toggle]");
+    // The panel keeps the state the person left it in, across routes and cities: open it only if closed.
+    if (await session.evaluate(`document.querySelector("[data-testid=preferences-toggle]").getAttribute("aria-expanded") !== "true"`)) {
+      await session.tap("[data-testid=preferences-toggle]");
+    }
     await session.tap(`[data-testid=pilot-journey-${preset}]`);
     await waitForPhase(session, "route-ready", 30_000);
     await waitForRenderedRoute(session);
