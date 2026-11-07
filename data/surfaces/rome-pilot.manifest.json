@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "2.0.0",
+  "datasetVersion": "osm-rome-2026-11-06",
+  "generatedAt": "2026-11-06T20:10:04.445Z",
+  "area": {
+    "zoneId": "ROME_PILOT",
+    "bounds": {
+      "west": 12.4,
+      "south": 41.8,
+      "east": 12.6,
+      "north": 41.97
+    },
+    "description": "Connected rectangular urban Rome pilot: EUR to northern urban corridors. Not complete municipal coverage.",
+    "denominator": "All linear OSM highway way edges clipped to bounds, each way once; includes restricted and unknown roads. Centreline km, not lane-km."
+  },
+  "sources": [
+    {
+      "provider": "OpenStreetMap via public Overpass",
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "licenseUrl": "https://opendatacommons.org/licenses/odbl/1.0/",
+      "bounds": {
+        "west": 12.4,
+        "south": 41.8,
+        "east": 12.6,
+        "north": 41.97
+      },
+      "temporalScope": "Sequential live responses, not an atomic snapshot or field survey.",
+      "selection": "All highway ways, including unknown surfaces and restricted roads; area=yes excluded; edges clipped to rectangular operational bounds. Not the entire municipality.",
+      "sources": [
+        {
+          "file": "rome-sw.osm.json.gz",
+          "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+          "query": "[out:json][timeout:90];way[\"highway\"](41.8,12.4,41.885,12.5);out meta;>;out skel qt;",
+          "bbox": [
+            12.4,
+            41.8,
+            12.5,
+            41.885
+          ],
+          "retrievedAt": "2026-11-06T20:07:21.719Z",
+          "serverDate": "Fri, 06 Nov 2026 20:07:14 GMT",
+          "osmBaseTimestamp": "2026-11-06T20:05:51Z",
+          "sha256": "fb02e28e4ce87224b426cfc1a6269318ba370ed236696a3860b9263328c5eae8",
+          "gzipSha256": "9571b2403e881edfedff30025cb33cc01ca213f2d618bf1a74a6859841805d4b",
+          "ways": 30780
+        },
+        {
+          "file": "rome-se.osm.json.gz",
+          "url": "https://overpass-api.de/api/interpreter",
+          "query": "[out:json][timeout:90];way[\"highway\"](41.8,12.5,41.885,12.6);out meta;>;out skel qt;",
+          "bbox": [
+            12.5,
+            41.8,
+            12.6,
+            41.885
+          ],
+          "retrievedAt": "2026-11-06T20:08:59.018Z",
+          "serverDate": "Fri, 06 Nov 2026 20:08:56 GMT",
+          "osmBaseTimestamp": "2026-11-06T20:07:51Z",
+          "sha256": "06d859b2cd9c0ff4f85534ec9c7510bba81f6e58cb4d87390cacd3e1d6f1d384",
+          "gzipSha256": "e4716e35f80f50a1f1b549c505324732d5f931d0a6c1f5694cd04de964a334a1",
+          "ways": 21442
+        },
+        {
+          "file": "rome-nw.osm.json.gz",
+          "url": "https://overpass-api.de/api/interpreter",
+          "query": "[out:json][timeout:90];way[\"highway\"](41.885,12.4,41.97,12.5);out meta;>;out skel qt;",
+          "bbox": [
+            12.4,
+            41.885,
+            12.5,
+            41.97
+          ],
+          "retrievedAt": "2026-11-06T20:09:43.785Z",
+          "serverDate": "Fri, 06 Nov 2026 20:09:39 GMT",
+          "osmBaseTimestamp": "2026-11-06T20:07:51Z",
+          "sha256": "ae38e122db552fe75adaae586aef818997383e12a1146bf8e1968ba24eb2cd8e",
+          "gzipSha256": "e90d9f6484a3b6be5862ea37f908a947dc209b0c25ffd93f3d25855daba9ec38",
+          "ways": 34264
+        },
+        {
+          "file": "rome-ne.osm.json.gz",
+          "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+          "query": "[out:json][timeout:90];way[\"highway\"](41.885,12.5,41.97,12.6);out meta;>;out skel qt;",
+          "bbox": [
+            12.5,
+            41.885,
+            12.6,
+            41.97
+          ],
+          "retrievedAt": "2026-11-06T20:10:04.445Z",
+          "serverDate": "Fri, 06 Nov 2026 20:10:00 GMT",
+          "osmBaseTimestamp": "2026-11-06T20:07:51Z",
+          "sha256": "1cd32a0d1b23a9881a9704c15acffc3413d5032446f0abfe30977f9cd40fac8d",
+          "gzipSha256": "6d838e32f444cbbfb2e9152ea516c8e213a1ae2cd093f80ce9ff5e26904a81fb",
+          "ways": 33117
+        }
+      ]
+    }
+  ],
+  "statistics": {
+    "ways": 118934,
+    "excludedAreaWays": 889,
+    "totalSegments": 583970,
+    "totalLengthMeters": 7984304.661267623,
+    "surfaceBreakdownMeters": {
+      "confirmed_rough": 201266.8085319906,
+      "probable_rough": 124616.02811254078,
+      "confirmed_smooth": 3169991.3373421384,
+      "unpaved_loose": 321243.6261924283,
+      "unknown": 4167186.861088525
+    },
+    "restrictions": {
+      "conditionalSegments": 2096,
+      "restrictedAllModes": 234016,
+      "motorcycleCarDifferences": 530,
+      "smoothnessTagged": 8947
+    },
+    "tileCount": 378,
+    "compactBytes": 52658115,
+    "compactGzipBytes": 8416494
+  },
+  "checksums": {
+    "datasetSha256": "63299a52391f6a292d40af7814cc7d8b5a6b5276cfdfc32aed165166a0122407",
+    "sourceManifestSha256": "9ba437b9484985449d1712867c8a086e5902f419bce3788b4034b76e323a7bde",
+    "compactSha256": "c238484b2e10efb260645d608874b09a81697bbf37cb7d700f02205ad431e575"
+  }
+}
