@@ -242,7 +242,7 @@ export function LocalFieldFeedback({
     setHistoryList([]);
   };
 
-  const areaLabel = areaId === "roccella" ? "Roccella Ionica" : areaId === "milan" ? "Milano" : null;
+  const areaLabel = areaId === "roccella" ? "Roccella Ionica" : areaId === "milan" ? "Milano" : areaId === "rome" ? "Roma" : null;
   const modeLabels = { car: "Auto", motorcycle: "Moto", bicycle: "Bici" };
   const modeLabel = modeLabels[transportMode] ?? "Veicolo";
   const routeLabel = activeRoute === "safe" ? "Anti-pavé" : activeRoute === "fast" ? "Rapido" : null;

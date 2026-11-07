@@ -1,0 +1,620 @@
+{
+  "provenance": "Exact vertices of named highway ways from checksum-verified archived OpenStreetMap responses; not POI entrances or legality guarantees.",
+  "manifestPath": "data/sources/rome-osm.source.json",
+  "manifestSha256": "9ba437b9484985449d1712867c8a086e5902f419bce3788b4034b76e323a7bde",
+  "anchors": {
+    "corso": {
+      "coordinate": [
+        12.4774499,
+        41.9081066
+      ],
+      "osmWayId": 122705896,
+      "name": "Via del Corso",
+      "surface": "asphalt",
+      "highway": "pedestrian",
+      "access": null,
+      "distanceFromSearchHintMeters": 47.07249294470961,
+      "source": "https://www.openstreetmap.org/way/122705896"
+    },
+    "ripetta": {
+      "coordinate": [
+        12.4761213,
+        41.9091445
+      ],
+      "osmWayId": 185272198,
+      "name": "Via di Ripetta",
+      "surface": "sett",
+      "highway": "residential",
+      "access": null,
+      "distanceFromSearchHintMeters": 94.25735451466988,
+      "source": "https://www.openstreetmap.org/way/185272198"
+    },
+    "nazionale": {
+      "coordinate": [
+        12.4922509,
+        41.9000793
+      ],
+      "osmWayId": 128672638,
+      "name": "Via Nazionale",
+      "surface": "sett",
+      "highway": "tertiary",
+      "access": null,
+      "distanceFromSearchHintMeters": 22.561287638285517,
+      "source": "https://www.openstreetmap.org/way/128672638"
+    },
+    "cavour": {
+      "coordinate": [
+        12.493142,
+        41.8946376
+      ],
+      "osmWayId": 232183086,
+      "name": "Via Cavour",
+      "surface": "asphalt",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 41.752035459069695,
+      "source": "https://www.openstreetmap.org/way/232183086"
+    },
+    "termini": {
+      "coordinate": [
+        12.5041007,
+        41.898306
+      ],
+      "osmWayId": 26804062,
+      "name": "Via Giovanni Giolitti",
+      "surface": "asphalt",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 34.839170701150685,
+      "source": "https://www.openstreetmap.org/way/26804062"
+    },
+    "merulana": {
+      "coordinate": [
+        12.5020788,
+        41.8917317
+      ],
+      "osmWayId": 232183093,
+      "name": "Via Merulana",
+      "surface": "asphalt",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 190.30886751848422,
+      "source": "https://www.openstreetmap.org/way/232183093"
+    },
+    "sangiovanni": {
+      "coordinate": [
+        12.5063018,
+        41.8870216
+      ],
+      "osmWayId": 22878472,
+      "name": "Piazza di San Giovanni in Laterano",
+      "surface": "asphalt",
+      "highway": "primary",
+      "access": null,
+      "distanceFromSearchHintMeters": 115.66429888509572,
+      "source": "https://www.openstreetmap.org/way/22878472"
+    },
+    "prati": {
+      "coordinate": [
+        12.4650017,
+        41.9079215
+      ],
+      "osmWayId": 118709895,
+      "name": "Via Cola di Rienzo",
+      "surface": "sett",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 8.67853287247454,
+      "source": "https://www.openstreetmap.org/way/118709895"
+    },
+    "vaticano": {
+      "coordinate": [
+        12.460704,
+        41.9021521
+      ],
+      "osmWayId": 104994564,
+      "name": "Via della Conciliazione",
+      "surface": "sett",
+      "highway": "residential",
+      "access": null,
+      "distanceFromSearchHintMeters": 29.734617630051734,
+      "source": "https://www.openstreetmap.org/way/104994564"
+    },
+    "giuliocesare": {
+      "coordinate": [
+        12.4581661,
+        41.9095873
+      ],
+      "osmWayId": 248727767,
+      "name": "Viale Giulio Cesare",
+      "surface": null,
+      "highway": "construction",
+      "access": null,
+      "distanceFromSearchHintMeters": 389.4122386000915,
+      "source": "https://www.openstreetmap.org/way/248727767"
+    },
+    "trastevere": {
+      "coordinate": [
+        12.4677344,
+        41.8814782
+      ],
+      "osmWayId": 169787247,
+      "name": "Viale di Trastevere",
+      "surface": "asphalt",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 248.91724431757666,
+      "source": "https://www.openstreetmap.org/way/169787247"
+    },
+    "lungaretta": {
+      "coordinate": [
+        12.4731541,
+        41.8895306
+      ],
+      "osmWayId": 33654862,
+      "name": "Via della Lungaretta",
+      "surface": "sett",
+      "highway": "service",
+      "access": null,
+      "distanceFromSearchHintMeters": 60.02666907769124,
+      "source": "https://www.openstreetmap.org/way/33654862"
+    },
+    "testaccio": {
+      "coordinate": [
+        12.4791796,
+        41.8784672
+      ],
+      "osmWayId": 181371885,
+      "name": "Via Marmorata",
+      "surface": "asphalt",
+      "highway": "primary",
+      "access": null,
+      "distanceFromSearchHintMeters": 110.57273172378022,
+      "source": "https://www.openstreetmap.org/way/181371885"
+    },
+    "ostiense": {
+      "coordinate": [
+        12.4791534,
+        41.8670131
+      ],
+      "osmWayId": 140943595,
+      "name": "Via Ostiense",
+      "surface": "asphalt",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 12.79897342511013,
+      "source": "https://www.openstreetmap.org/way/140943595"
+    },
+    "garbatella": {
+      "coordinate": [
+        12.4872377,
+        41.8606637
+      ],
+      "osmWayId": 35023082,
+      "name": "Via delle Sette Chiese",
+      "surface": null,
+      "highway": "residential",
+      "access": null,
+      "distanceFromSearchHintMeters": 295.10418756069924,
+      "source": "https://www.openstreetmap.org/way/35023082"
+    },
+    "eur": {
+      "coordinate": [
+        12.4698785,
+        41.8306274
+      ],
+      "osmWayId": 121898328,
+      "name": "Viale Europa",
+      "surface": "asphalt",
+      "highway": "tertiary",
+      "access": null,
+      "distanceFromSearchHintMeters": 42.4022615509953,
+      "source": "https://www.openstreetmap.org/way/121898328"
+    },
+    "colombo": {
+      "coordinate": [
+        12.4675076,
+        41.823667
+      ],
+      "osmWayId": 97177663,
+      "name": "Via Cristoforo Colombo",
+      "surface": "asphalt",
+      "highway": "primary",
+      "access": null,
+      "distanceFromSearchHintMeters": 885.6749955550606,
+      "source": "https://www.openstreetmap.org/way/97177663"
+    },
+    "flaminia": {
+      "coordinate": [
+        12.4732198,
+        41.9459161
+      ],
+      "osmWayId": 26816684,
+      "name": "Via Flaminia",
+      "surface": "asphalt",
+      "highway": "tertiary",
+      "access": null,
+      "distanceFromSearchHintMeters": 20.425699208257708,
+      "source": "https://www.openstreetmap.org/way/26816684"
+    },
+    "nomentana": {
+      "coordinate": [
+        12.537631,
+        41.9358471
+      ],
+      "osmWayId": 95806962,
+      "name": "Via Nomentana",
+      "surface": "asphalt",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 233.54085081664903,
+      "source": "https://www.openstreetmap.org/way/95806962"
+    },
+    "tuscolana": {
+      "coordinate": [
+        12.565189,
+        41.8553254
+      ],
+      "osmWayId": 190525644,
+      "name": "Via Tuscolana",
+      "surface": "asphalt",
+      "highway": "primary",
+      "access": null,
+      "distanceFromSearchHintMeters": 376.4703828260538,
+      "source": "https://www.openstreetmap.org/way/190525644"
+    },
+    "aurelia": {
+      "coordinate": [
+        12.4152197,
+        41.8946577
+      ],
+      "osmWayId": 105754725,
+      "name": "Via Aurelia",
+      "surface": null,
+      "highway": "service",
+      "access": null,
+      "distanceFromSearchHintMeters": 259.55705414765515,
+      "source": "https://www.openstreetmap.org/way/105754725"
+    },
+    "portuense": {
+      "coordinate": [
+        12.4358998,
+        41.8526108
+      ],
+      "osmWayId": 121906066,
+      "name": "Via Portuense",
+      "surface": "asphalt",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 86.12489613262963,
+      "source": "https://www.openstreetmap.org/way/121906066"
+    },
+    "laurentina": {
+      "coordinate": [
+        12.481946,
+        41.8036873
+      ],
+      "osmWayId": 1036835325,
+      "name": "Via Laurentina",
+      "surface": "asphalt",
+      "highway": "secondary",
+      "access": null,
+      "distanceFromSearchHintMeters": 165.13987501590833,
+      "source": "https://www.openstreetmap.org/way/1036835325"
+    },
+    "prenestina": {
+      "coordinate": [
+        12.589822,
+        41.8941147
+      ],
+      "osmWayId": 112482617,
+      "name": "Via Prenestina",
+      "surface": "asphalt",
+      "highway": "tertiary",
+      "access": null,
+      "distanceFromSearchHintMeters": 455.078050434046,
+      "source": "https://www.openstreetmap.org/way/112482617"
+    },
+    "salaria": {
+      "coordinate": [
+        12.5060826,
+        41.9618579
+      ],
+      "osmWayId": 97701990,
+      "name": "Via Salaria",
+      "surface": "asphalt",
+      "highway": "primary",
+      "access": null,
+      "distanceFromSearchHintMeters": 17.13131490644045,
+      "source": "https://www.openstreetmap.org/way/97701990"
+    }
+  },
+  "routes": [
+    {
+      "id": "corso-cavour",
+      "startId": "corso",
+      "endId": "cavour",
+      "coverage": "Centro storico / Monti; ZTL",
+      "start": [
+        12.4774499,
+        41.9081066
+      ],
+      "end": [
+        12.493142,
+        41.8946376
+      ]
+    },
+    {
+      "id": "ripetta-nazionale",
+      "startId": "ripetta",
+      "endId": "nazionale",
+      "coverage": "Tridente A1 / Centro; ZTL",
+      "start": [
+        12.4761213,
+        41.9091445
+      ],
+      "end": [
+        12.4922509,
+        41.9000793
+      ]
+    },
+    {
+      "id": "prati-vaticano",
+      "startId": "prati",
+      "endId": "vaticano",
+      "coverage": "Prati / Vaticano short",
+      "start": [
+        12.4650017,
+        41.9079215
+      ],
+      "end": [
+        12.460704,
+        41.9021521
+      ]
+    },
+    {
+      "id": "giuliocesare-termini",
+      "startId": "giuliocesare",
+      "endId": "termini",
+      "coverage": "Prati / Termini medium",
+      "start": [
+        12.4581661,
+        41.9095873
+      ],
+      "end": [
+        12.5041007,
+        41.898306
+      ]
+    },
+    {
+      "id": "lungaretta-testaccio",
+      "startId": "lungaretta",
+      "endId": "testaccio",
+      "coverage": "Trastevere / Testaccio; ZTL",
+      "start": [
+        12.4731541,
+        41.8895306
+      ],
+      "end": [
+        12.4791796,
+        41.8784672
+      ]
+    },
+    {
+      "id": "trastevere-garbatella",
+      "startId": "trastevere",
+      "endId": "garbatella",
+      "coverage": "Southern mixed urban",
+      "start": [
+        12.4677344,
+        41.8814782
+      ],
+      "end": [
+        12.4872377,
+        41.8606637
+      ]
+    },
+    {
+      "id": "termini-sangiovanni",
+      "startId": "termini",
+      "endId": "sangiovanni",
+      "coverage": "Esquilino / San Giovanni",
+      "start": [
+        12.5041007,
+        41.898306
+      ],
+      "end": [
+        12.5063018,
+        41.8870216
+      ]
+    },
+    {
+      "id": "merulana-cavour",
+      "startId": "merulana",
+      "endId": "cavour",
+      "coverage": "Monti short mixed stone",
+      "start": [
+        12.5020788,
+        41.8917317
+      ],
+      "end": [
+        12.493142,
+        41.8946376
+      ]
+    },
+    {
+      "id": "ostiense-eur",
+      "startId": "ostiense",
+      "endId": "eur",
+      "coverage": "Ostiense / EUR medium",
+      "start": [
+        12.4791534,
+        41.8670131
+      ],
+      "end": [
+        12.4698785,
+        41.8306274
+      ]
+    },
+    {
+      "id": "garbatella-colombo",
+      "startId": "garbatella",
+      "endId": "colombo",
+      "coverage": "Garbatella / EUR",
+      "start": [
+        12.4872377,
+        41.8606637
+      ],
+      "end": [
+        12.4675076,
+        41.823667
+      ]
+    },
+    {
+      "id": "flaminia-ripetta",
+      "startId": "flaminia",
+      "endId": "ripetta",
+      "coverage": "Northern corridor / Tridente",
+      "start": [
+        12.4732198,
+        41.9459161
+      ],
+      "end": [
+        12.4761213,
+        41.9091445
+      ]
+    },
+    {
+      "id": "nomentana-termini",
+      "startId": "nomentana",
+      "endId": "termini",
+      "coverage": "Northeastern corridor",
+      "start": [
+        12.537631,
+        41.9358471
+      ],
+      "end": [
+        12.5041007,
+        41.898306
+      ]
+    },
+    {
+      "id": "tuscolana-sangiovanni",
+      "startId": "tuscolana",
+      "endId": "sangiovanni",
+      "coverage": "Southeastern corridor",
+      "start": [
+        12.565189,
+        41.8553254
+      ],
+      "end": [
+        12.5063018,
+        41.8870216
+      ]
+    },
+    {
+      "id": "aurelia-vaticano",
+      "startId": "aurelia",
+      "endId": "vaticano",
+      "coverage": "Western boundary corridor",
+      "start": [
+        12.4152197,
+        41.8946577
+      ],
+      "end": [
+        12.460704,
+        41.9021521
+      ]
+    },
+    {
+      "id": "portuense-testaccio",
+      "startId": "portuense",
+      "endId": "testaccio",
+      "coverage": "Southwestern corridor",
+      "start": [
+        12.4358998,
+        41.8526108
+      ],
+      "end": [
+        12.4791796,
+        41.8784672
+      ]
+    },
+    {
+      "id": "laurentina-eur",
+      "startId": "laurentina",
+      "endId": "eur",
+      "coverage": "Southern dataset boundary",
+      "start": [
+        12.481946,
+        41.8036873
+      ],
+      "end": [
+        12.4698785,
+        41.8306274
+      ]
+    },
+    {
+      "id": "prenestina-termini",
+      "startId": "prenestina",
+      "endId": "termini",
+      "coverage": "Eastern dataset boundary",
+      "start": [
+        12.589822,
+        41.8941147
+      ],
+      "end": [
+        12.5041007,
+        41.898306
+      ]
+    },
+    {
+      "id": "salaria-nazionale",
+      "startId": "salaria",
+      "endId": "nazionale",
+      "coverage": "Northern dataset boundary",
+      "start": [
+        12.5060826,
+        41.9618579
+      ],
+      "end": [
+        12.4922509,
+        41.9000793
+      ]
+    },
+    {
+      "id": "eur-prati",
+      "startId": "eur",
+      "endId": "prati",
+      "coverage": "Long cross-city route",
+      "start": [
+        12.4698785,
+        41.8306274
+      ],
+      "end": [
+        12.4650017,
+        41.9079215
+      ]
+    },
+    {
+      "id": "aurelia-tuscolana",
+      "startId": "aurelia",
+      "endId": "tuscolana",
+      "coverage": "Long west-east route",
+      "start": [
+        12.4152197,
+        41.8946577
+      ],
+      "end": [
+        12.565189,
+        41.8553254
+      ]
+    }
+  ],
+  "reroute": {
+    "start": [
+      12.5020788,
+      41.8917317
+    ]
+  }
+}

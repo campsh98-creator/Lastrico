@@ -2603,6 +2603,7 @@ export default function Home() {
             >
               <option value="milan">Milano</option>
               <option value="roccella">Roccella Ionica</option>
+              <option value="rome">Roma</option>
             </select>
             <Icon name="chevronDown" size={16} />
           </div>

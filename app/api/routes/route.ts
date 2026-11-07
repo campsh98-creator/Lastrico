@@ -658,7 +658,11 @@ export async function GET(request: NextRequest) {
       scoredCandidate(candidate.route, candidate.source));
     const fast = fastestLegalCandidate(scored, mode);
     if (!fast) throw new NoLegalRouteError("Nessun percorso compatibile con le restrizioni note");
-    const selection = selectOptimizedRoute(scored, fast, mode, avoidance, maximumExtraMinutes, policy,
+    // Rome's anti-sampietrini option must save confirmed stone exposure, not only
+    // probable paving_stones or unpaved risk. Keep established cities unchanged.
+    const selectable = area.id === "rome" ? scored.filter((candidate) => candidate === fast
+      || candidate.surfaceScore.confirmedMeters + policy.minimumPaveReduction <= fast.surfaceScore.confirmedMeters) : scored;
+    const selection = selectOptimizedRoute(selectable, fast, mode, avoidance, maximumExtraMinutes, policy,
       (a, b) => routesAreEquivalent(a, b, mode));
     const hasDistinctAlternative = !routesAreEquivalent(fast.route, selection.safe.route, mode)
       && selection.safe.paveMeters < fast.paveMeters
@@ -787,7 +791,12 @@ export async function GET(request: NextRequest) {
                 safe.surfaceScore.matchedFeatures,
               )} way OSM abbinate al percorso (archivio OSM locale)`
             : `${routeCountLabel} ${checkedLabel}: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale)`
-      ) + bicycleCoverageNotice + terminalAccessNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
+      ) + bicycleCoverageNotice + terminalAccessNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
+        + (area.id === "rome"
+          ? mode === "bicycle"
+            ? ". Roma: verifica segnaletica e accessi locali; il percorso non certifica tutte le restrizioni aggiornate"
+            : ". Roma: accesso ZTL, orari e permessi non verificati. Controlla Centro Storico, Trastevere e Tridente A1; le limitazioni del Tridente riguardano anche le moto"
+          : ""),
     }, {
       headers: {
         "Cache-Control": "private, no-store",

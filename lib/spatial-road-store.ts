@@ -382,7 +382,7 @@ export class SpatialRoadIntelligenceStore {
   private readonly meta: CompactTileMetadata;
   private readonly loaders: Record<string, () => Promise<{ default: TilePayload }>>;
   private readonly tileKeySet: Set<string>;
-  private readonly areaId: "milan" | "roccella";
+  private readonly areaId: "milan" | "roccella" | "rome";
 
   private tileCache = new Map<string, TilePayload>();
   private tileSegmentCache = new Map<string, RoadSegmentRecord[]>();
@@ -396,7 +396,7 @@ export class SpatialRoadIntelligenceStore {
   constructor(
     meta: CompactTileMetadata = milanMeta as unknown as CompactTileMetadata,
     loaders: Record<string, () => Promise<{ default: TilePayload }>> = milanTileLoaders,
-    area: boolean | "milan" | "roccella" = false,
+    area: boolean | "milan" | "roccella" | "rome" = false,
   ) {
     this.meta = meta;
     this.loaders = loaders;
@@ -560,6 +560,14 @@ export class SpatialRoadIntelligenceStore {
           const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
           if (fs.existsSync(filePath)) {
             const raw = fs.readFileSync(filePath, "utf8");
+            const payload = JSON.parse(raw) as TilePayload;
+            this.tileCache.set(tileKey, payload);
+            return payload;
+          }
+          // Rome versions only its packed runtime tiles; the JSON tiles are a reproducible intermediate.
+          const packedPath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles-packed/${tileKey}.bin`, import.meta.url));
+          if (fs.existsSync(packedPath)) {
+            const raw = nodeRequire("node:zlib").gunzipSync(fs.readFileSync(packedPath)).toString("utf8");
             const payload = JSON.parse(raw) as TilePayload;
             this.tileCache.set(tileKey, payload);
             return payload;
@@ -746,6 +754,7 @@ export const roccellaSpatialRoadStore = new SpatialRoadIntelligenceStore(roccell
 
 // Separate dictionaries and caches: hydrating one area must never resolve names or
 // restrictions through another area's tuple IDs. Milan remains the default export.
-export async function getSpatialRoadStore(area: "milan" | "roccella") {
+export async function getSpatialRoadStore(area: "milan" | "roccella" | "rome") {
+  if (area === "rome") return (await import("./rome-road-store.ts")).romeSpatialRoadStore;
   return area === "milan" ? spatialRoadStore : roccellaSpatialRoadStore;
 }

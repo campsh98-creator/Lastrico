@@ -78,7 +78,7 @@ async function fetchPhoton(query: string, pilot: PilotArea, callerSignal: AbortS
       const city = nonEmpty(
         typeof props.city === "string" ? props.city : undefined,
         typeof props.town === "string" ? props.town : undefined,
-      ) ?? (pilot.id === "roccella" ? pilot.name : "Milano");
+      ) ?? pilot.name;
 
       if (pilot.id === "milan" && city.toLocaleLowerCase("it").trim() !== "milano") continue;
 
@@ -183,7 +183,7 @@ export async function GET(request: NextRequest) {
         address.municipality,
         address.village,
         address.hamlet,
-      ) ?? (pilot.id === "roccella" ? pilot.name : "");
+      ) ?? (pilot.id === "milan" ? "" : pilot.name);
       if (pilot.id === "milan" && city.toLocaleLowerCase("it").trim() !== "milano") return [];
       const road = nonEmpty(
         address.road,
