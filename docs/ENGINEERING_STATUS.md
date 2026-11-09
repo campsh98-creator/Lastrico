@@ -1,14 +1,15 @@
 # Engineering status
 
-Status on 9 November 2026, branch `fix/mobile-navigation-stability`. This page separates what
-exists locally from what is online, and fixed defects from open problems. Every claim points to
+Status on 9 November 2026, `main` at `c31d073`. This page separates what exists locally from
+what is online, and fixed defects from open problems. Every claim points to
 the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
 ## 1. Where each feature stands
 
 **Legend**
-- **Local:** implemented on this branch and covered by the 447 unit and integration tests.
-- **Pilot:** included in the public pilot, version `03a6776e` (Phase 4.28 code, deployed on 7 November 2026).
+- **Local:** implemented on `main` and covered by the 461 unit and integration tests.
+- **Pilot:** included in the public pilot, version `170ac277` (Phase 4.33 release, Milan and
+  Roccella only, deployed on 9 November 2026). The previous version was `03a6776e` (Phase 4.28).
 - **Emulated:** passed the end-to-end suite in headless Chrome with simulated GPS.
 - **iPhone:** checked on a physical iPhone.
 
@@ -19,20 +20,20 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Confirmed, probable and unknown surface shown separately | ✅ | ✅ | ✅ | ✅ Phase 4.28 |
 | Bicycle "walk this stretch" notice at pedestrian-only ends | ✅ | ✅ | ✅ | — |
 | Premium UI 2.0 (light and dark, phone, landscape, desktop) | ✅ | ✅ | ✅ | ✅ Phase 4.28 |
-| GPS navigation, voice, arrival detection | ✅ | ✅ (older engine) | ✅ | ✅ Phase 4.28, issues found |
-| GPS fusion, smooth arrow and camera follow (Phase 4.29) | ✅ | ❌ | ✅ | ❌ |
-| Upcoming-surface warnings with street name and length (4.29 and 4.31) | ✅ | ❌ | ✅ | ❌ |
-| Faster wrong-turn and parallel-street detection (Phase 4.31) | ✅ | ❌ | ✅ | ❌ |
-| Surface-aware search during reroutes; objective kept for the journey (Phase 4.31) | ✅ | ❌ | ✅ | ❌ |
-| Traffic lights, stop and give-way signs from OSM, central Milan (Phase 4.31) | ✅ | ❌ | ✅ | ❌ |
-| Milan ZTL avoidance with per-zone, per-mode authorisations (Phase 4.31) | ✅ | ❌ | ✅ | ❌ |
-| Reverse A/B button (Phase 4.31) | ✅ | ❌ | ✅ | ❌ |
-| Proportional confirmed-pavé tolerance in selection (Phase 4.31 review) | ✅ | ❌ | ✅ | ❌ |
-| Worker CPU and memory reductions (Phase 4.30) | ✅ | ❌ | ✅ | — |
-| Shared-edge scoring and other CPU cuts, routes identical (Phase 4.33) | ✅ | ❌ | ✅ | — |
-| Route computation in a Durable Object, explicit 503 on failure (Phase 4.33) | ✅ | ❌ (verified on a separate Free test Worker) | ✅ local Worker runtime | — |
-| Provider timers cleared after each call (Phase 4.33) | ✅ | ❌ (verified on a separate Free test Worker) | ✅ | — |
-| Homepage served as a static snapshot (Phase 4.33) | ✅ | ❌ (verified on a separate Free test Worker) | ✅ | — |
+| GPS navigation, voice, arrival detection | ✅ | ✅ | ✅ | ✅ Phase 4.28 version, issues found |
+| GPS fusion, smooth arrow and camera follow (Phase 4.29) | ✅ | ✅ | ✅ | ❌ |
+| Upcoming-surface warnings with street name and length (4.29 and 4.31) | ✅ | ✅ | ✅ | ❌ |
+| Faster wrong-turn and parallel-street detection (Phase 4.31) | ✅ | ✅ | ✅ | ❌ |
+| Surface-aware search during reroutes; objective kept for the journey (Phase 4.31) | ✅ | ✅ | ✅ | ❌ |
+| Traffic lights, stop and give-way signs from OSM, central Milan (Phase 4.31) | ✅ | ✅ | ✅ | ❌ |
+| Milan ZTL avoidance with per-zone, per-mode authorisations (Phase 4.31) | ✅ | ✅ | ✅ | ❌ |
+| Reverse A/B button (Phase 4.31) | ✅ | ✅ | ✅ | ❌ |
+| Proportional confirmed-pavé tolerance in selection (Phase 4.31 review) | ✅ | ✅ | ✅ | ❌ |
+| Worker CPU and memory reductions (Phase 4.30) | ✅ | ✅ | ✅ | — |
+| Shared-edge scoring and other CPU cuts, routes identical (Phase 4.33) | ✅ | ✅ | ✅ | — |
+| Route computation in a Durable Object, explicit 503 on failure (Phase 4.33) | ✅ | ✅ | ✅ local Worker runtime | — |
+| Provider timers cleared after each call (Phase 4.33) | ✅ | ✅ | ✅ | — |
+| Homepage served as a static snapshot (Phase 4.33) | ✅ | ✅ | ✅ | — |
 | "Descrivi la tua preferenza" rule-based preference prompt | ✅ | ✅ | ✅ | — |
 | Moderated community surface reports (D1) | ✅ | ✅ | ✅ | — |
 | Milan coverage | ✅ citywide | ✅ | ✅ | ✅ |
@@ -40,7 +41,8 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Rome coverage (Phases 4.23 and 4.27) | 🧪 experimental | ❌ never deployed | ❌ (data, unit and API validation only) | ❌ |
 
 **About the iPhone column**
-- "Phase 4.28 road test" means the author drove and rode with the public pilot on 7–8 November 2026.
+- "Phase 4.28 road test" means the author drove and rode with the public pilot on 7–8 November
+  2026, when it ran version `03a6776e`. No physical iPhone has run the Phase 4.33 release yet.
 - No physical iPhone has run the Phase 4.29–4.31 code. All GPS figures for those phases come from
   simulation.
 
@@ -59,26 +61,20 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
 ## 3. Open problems
 
-1. **The public pilot fails route calculations intermittently.** Measured with Cloudflare analytics
-   for version `03a6776e` (`outputs/phase433/`).
-   - **The limit:** Workers Free allows 10 ms of CPU per request. Each isolate tolerates
-     occasional overruns, and requests of up to 985 ms succeeded.
-   - **The failures:** when overruns are consistent, requests are stopped at 10 ms, which the
-     visitor sees as error 1102 or 503.
+1. **Workers Free CPU limit: mitigated on the pilot, not guaranteed.**
+   - **Before:** version `03a6776e` failed route calculations intermittently. Workers Free allows
+     10 ms of CPU per request, with some per-isolate tolerance, and stops requests at that limit,
+     which the visitor sees as error 1102 or 503 (`outputs/phase433/`).
      - In real use there were 1 failure in 297 requests on 7 November and 7 in 128 on 8 November.
-     - In a controlled burst of 14 route requests within one minute, 12 failed.
-   - **Cause:** every failure was a CPU stop; none was memory or the provider.
-   - **Phase 4.33 response, local only:**
-     - Routing CPU fell by 39 %, with identical routes. Warm planner requests now take a median
-       of 9 ms and a p90 of 26 ms.
-     - A heavy route that is the first request on a fresh isolate still takes 60–280 ms.
-     - Route computation now runs in a SQLite-backed Durable Object, which allows 30 s of CPU per
-       request on Workers Free.
-   - **Verified on Cloudflare:** on 9 November, a separate Milan-only test Worker on Workers
-     Free (`lastrico-free-test`) served 40 of 40 route requests in two runs, including bursts,
-     with up to 319 ms of CPU in the Durable Object and no stops (§4).
-   - **Release:** the pilot deployment is a separate, authorised step after this merge, built with
-     `scripts/prepare-milan-release.mjs`. A physical iPhone test is still missing. Workers Paid
+     - In a controlled burst of 14 route requests within one minute, 12 failed. Every failure was
+       a CPU stop.
+   - **Now:** the Phase 4.33 release (`170ac277`, 9 November) computes routes in a SQLite-backed
+     Durable Object, which allows 30 s of CPU per request on Workers Free, and serves the homepage
+     as a static file. Routing CPU was also cut by 39 % with identical routes.
+   - **Measured on the pilot after the release** (§4, `outputs/phase433/pilot-170ac277-*`): 52 of 52
+     route requests succeeded, with up to 345 ms of CPU in the Durable Object and no CPU stops.
+   - **Remaining risk:** the community-report list (up to 26 ms) and address search (up to 10 ms)
+     still run in the ordinary Worker; the Free quotas are not a capacity guarantee. Workers Paid
      remains only a fallback.
 2. **No physical iPhone validation of Phases 4.29–4.31.**
    - GPS fusion, the reroute timing and the surface warnings are verified only in emulation.
@@ -120,6 +116,15 @@ Measured with `wrangler tail` and Cloudflare analytics on the separate test Work
 twice: at 16:12 UTC before the final fixes, and at 19:17 UTC with them. Evidence:
 `outputs/phase433/free-test-*` and `outputs/phase433/release-*`.
 
+- **On the public pilot after the release** (`170ac277`, 9 November, 19:51–20:03 UTC,
+  `outputs/phase433/pilot-170ac277-*`):
+  - 52 of 52 route requests ok, including a burst of six and four in parallel; 20 of 20 benchmark
+    routes identical to the test Worker run;
+  - Durable Object CPU median 85 ms, maximum 345 ms; Worker in front 0–3 ms;
+  - Durable Object wall time median 1.2 s, maximum 5.5 s, never longer than the response;
+  - Cloudflare analytics: 141 Worker requests, 0 errors, no CPU stops, CPU p99 11.5 ms; 0 Worker
+    runs for the homepage;
+  - mobile end-to-end suite 81 of 81 against the pilot.
 - **Durable Object CPU**
   - Route computation in the `RouteEngine` Durable Object took a median of 127–156 ms of CPU, and
     up to 319 ms.
@@ -154,8 +159,9 @@ twice: at 16:12 UTC before the final fixes, and at 19:17 UTC with them. Evidence
   traffic, and 40 requests are not enough to estimate it.
   - If a Durable Object quota is exhausted, routes answer `503` until the quota resets. The CPU
     limit is not bypassed.
-- **Rollback.** Cloudflare refuses a rollback past a Durable Object lifecycle change, so once the
-  release is live `wrangler rollback 03a6776e` is refused.
+- **Rollback.** Cloudflare refuses a rollback past a Durable Object lifecycle change. The release
+  created the class, so `wrangler rollback 03a6776e` is now refused; rollbacks between versions that
+  have the class work normally.
   - The rollback build (`scripts/prepare-pilot-rollback.mjs`) is the `03a6776e` code with the same,
     unused `RouteEngine` class.
   - Rebuilt, it matches the deployed `03a6776e` module for module, apart from per-build ids and that

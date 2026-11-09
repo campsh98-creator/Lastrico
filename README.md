@@ -121,28 +121,28 @@ Rome is a local experiment.
 
 | Area | Local development build | Public pilot | Notes |
 | --- | --- | --- | --- |
-| **Milan** | ✅ Citywide surface data, ZTL, central traffic signals | ✅ Phase 4.28 version | Main test area |
-| **Roccella Ionica** | ✅ | ✅ Phase 4.28 version | Small pilot area |
+| **Milan** | ✅ Citywide surface data, ZTL, central traffic signals | ✅ Phase 4.33 version | Main test area |
+| **Roccella Ionica** | ✅ | ✅ Phase 4.33 version | Small pilot area |
 | **Rome** | 🧪 Experimental (Phase 4.23) | ❌ Never deployed | Local only; not advertised as supported |
 
 **Public pilot:** [lastrico-pilot.campsh.workers.dev](https://lastrico-pilot.campsh.workers.dev).
-- It runs an earlier version (Phase 4.28, 7 November 2026). It does not include continuous
-  anti-pavé rerouting, surface warnings, traffic signals, ZTL handling or reverse A/B.
-- Its route calculations fail intermittently on Cloudflare's Workers Free plan, which allows
-  10 ms of CPU per request with some tolerance for occasional overruns.
-  - In real use on 7–8 November, about 1 request in 300 failed one day and about 1 in 18 the next.
-  - In a burst of 14 requests within one minute, 12 failed.
-  - Every failure was a CPU-limit stop.
-- Phase 4.33 cut routing CPU by about 39 % locally, with identical routes. Measured
-  locally, a heavy route that is the first request on a fresh Worker still needs 60–280 ms.
-- It also moves route computation into a Durable Object: these are available on Workers Free and
-  allow 30 s of CPU per request.
-- On a separate test Worker on the Free plan, it served 40 of 40 route requests in two runs,
-  including bursts, with up to 319 ms of CPU and no stops. The homepage is served as a static
-  file, and provider timers no longer keep the Durable Object running: 3.6 s of billed time per
-  route instead of 9.7 s.
-- Updating the pilot is a separate, authorised step after this merge.
-- The full breakdown is in the [engineering status](docs/ENGINEERING_STATUS.md).
+- It runs the Phase 4.33 release, Milan and Roccella only, deployed on 9 November 2026 (version
+  `170ac277`). That includes continuous anti-pavé rerouting, surface warnings, traffic signals,
+  ZTL handling and reverse A/B.
+- It runs on Cloudflare's Workers Free plan, which allows 10 ms of CPU per ordinary request.
+  - Before, route calculations failed intermittently on that limit: about 1 request in 300 on
+    7 November, 1 in 18 on 8 November, and 12 of 14 in a one-minute burst.
+  - Now route computation runs in a Durable Object, which allows 30 s of CPU per request on the
+    Free plan, and the homepage is a static file.
+- Measured on the pilot after the release:
+  - 52 of 52 route requests succeeded, including a burst and parallel requests;
+  - up to 345 ms of CPU in the Durable Object, and 0–3 ms in the Worker in front of it;
+  - no CPU stops, 503 responses or exceptions;
+  - the mobile end-to-end suite passed 81 of 81 against it.
+- This is a small sample, not a capacity guarantee. The community-report list and address search
+  still run in the ordinary Worker, and no physical iPhone has tested this version yet.
+- The full breakdown is in the [engineering status](docs/ENGINEERING_STATUS.md) and the release
+  report, `outputs/phase433-final-release-report.md` (Italian).
 
 ## Architecture
 
