@@ -137,8 +137,11 @@ Rome is a local experiment.
   locally, a heavy route that is the first request on a fresh Worker still needs 60–280 ms.
 - It also moves route computation into a Durable Object: these are available on Workers Free and
   allow 30 s of CPU per request.
-- On a separate test Worker on the Free plan, it served 20 of 20 route requests, including a
-  burst, with up to 314 ms of CPU and no stops. The public pilot itself has not been updated yet.
+- On a separate test Worker on the Free plan, it served 40 of 40 route requests in two runs,
+  including bursts, with up to 319 ms of CPU and no stops. The homepage is served as a static
+  file, and provider timers no longer keep the Durable Object running: 3.6 s of billed time per
+  route instead of 9.7 s.
+- Updating the pilot is a separate, authorised step after this merge.
 - The full breakdown is in the [engineering status](docs/ENGINEERING_STATUS.md).
 
 ## Architecture
@@ -194,7 +197,7 @@ npm run lint
 npm test
 ```
 
-`npm test` builds the app and runs the whole unit and integration suite: 447 tests on
+`npm test` builds the app and runs the whole unit and integration suite: 461 tests on
 9 November 2026. They cover routing selection, access rules, GPS processing and
 reroute objectives, and they include Milan, Rome and Roccella data checks.
 

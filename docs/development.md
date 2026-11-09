@@ -140,6 +140,19 @@ It prints the current version before uploading. To roll back, pass that version 
 npx wrangler rollback <version-id> --name lastrico-pilot
 ```
 
+**Rolling back past the Durable Object (Phase 4.33).** Cloudflare refuses a rollback to a version
+older than a Durable Object lifecycle change, and the Phase 4.33 release creates the `RouteEngine`
+class. So `wrangler rollback` works between versions that have the class, but not back to
+`03a6776e` (Phase 4.28). To restore that behaviour, deploy the rollback build: the `03a6776e` code
+with the same class, unused.
+
+```bash
+node scripts/prepare-pilot-rollback.mjs <empty-directory-outside-the-repo>
+```
+
+Then, inside that directory, `npm test` and `npm run deploy:pilot`. Rebuilt, it matches the
+deployed `03a6776e` module for module, apart from per-build ids and the added class.
+
 This path does not touch the ChatGPT Sites deployment or run database migrations. The
 `RouteEngine` Durable Object migration (`v1-route-engine`) is applied by `wrangler deploy` the first
 time and adds no data; the D1 database is only bound, never changed.

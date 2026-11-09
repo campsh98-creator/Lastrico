@@ -66,3 +66,17 @@ test("the pilot deploy takes the homepage snapshot, then runs the Rome check, be
   assert.ok(check < deploy.indexOf('wrangler("deploy", "--dry-run")'), "checked right after the build");
   assert.ok(ROME_SOURCE_PATTERN.test('import("./rome-road-store.ts")') && !ROME_SOURCE_PATTERN.test("Europe/Rome"));
 });
+
+test("the pilot rollback build keeps exactly the release's Durable Object binding and migration", async () => {
+  const [vite, rollback] = await Promise.all([read("vite.config.ts"), read("scripts/prepare-pilot-rollback.mjs")]);
+  for (const line of [
+    'bindings: [{ name: "ROUTE_ENGINE", class_name: "RouteEngine" }],',
+    'migrations: [{ tag: "v1-route-engine", new_sqlite_classes: ["RouteEngine"] }],',
+  ]) {
+    assert.ok(vite.includes(line), `release: ${line}`);
+    assert.ok(rollback.includes(line), `rollback: ${line}`);
+  }
+  assert.match(rollback, /export class RouteEngine/);
+  assert.match(rollback, /commit: "69678e3"/, "the commit 03a6776e was built from");
+  assert.match(rollback, /--commit=\$\{PILOT_0428\.commit\}/, "made by the release script, Rome excluded");
+});

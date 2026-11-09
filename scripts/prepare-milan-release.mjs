@@ -17,8 +17,11 @@ import {
 } from "./milan-release.mjs";
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const target = resolve(process.argv[2] ?? "");
-if (!process.argv[2]) throw new Error("Usage: node scripts/prepare-milan-release.mjs <empty-directory-outside-the-repo>");
+const positional = process.argv.slice(2).filter((argument) => !argument.startsWith("--"));
+// --commit=<ref> exports that commit instead of HEAD (scripts/prepare-pilot-rollback.mjs uses it).
+const commitArgument = process.argv.slice(2).find((argument) => argument.startsWith("--commit="))?.slice("--commit=".length);
+const target = resolve(positional[0] ?? "");
+if (!positional[0]) throw new Error("Usage: node scripts/prepare-milan-release.mjs <empty-directory-outside-the-repo> [--commit=<ref>]");
 if (!relative(repo, target).startsWith("..")) throw new Error("The release copy must be outside the repository");
 if (existsSync(target) && readdirSync(target).length) throw new Error(`${target} is not empty`);
 const git = (...args) => execFileSync("git", args, { cwd: repo, encoding: "utf8", maxBuffer: 1 << 28 });
@@ -26,10 +29,10 @@ const git = (...args) => execFileSync("git", args, { cwd: repo, encoding: "utf8"
 // 1. The committed tree at HEAD, exactly: `git archive`, so untracked files never enter the release
 //    (this folder syncs through iCloud, which leaves "name 2.json" conflict copies). Local edits to
 //    tracked files are refused rather than silently left out.
-if (git("status", "--porcelain", "--untracked-files=no").trim()) {
+if (!commitArgument && git("status", "--porcelain", "--untracked-files=no").trim()) {
   throw new Error("Tracked files have uncommitted changes; commit them first, so the release is exactly HEAD");
 }
-const head = git("rev-parse", "HEAD").trim();
+const head = git("rev-parse", "--verify", `${commitArgument ?? "HEAD"}^{commit}`).trim();
 const untracked = git("ls-files", "-o", "--exclude-standard", "-z").split("\0").filter(Boolean).length;
 mkdirSync(target, { recursive: true });
 execFileSync("sh", ["-c", 'git -C "$1" archive --format=tar "$2" | tar -x -C "$3"', "sh", repo, head, target], { stdio: "inherit" });

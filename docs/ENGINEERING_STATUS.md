@@ -30,7 +30,9 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Proportional confirmed-pavé tolerance in selection (Phase 4.31 review) | ✅ | ❌ | ✅ | ❌ |
 | Worker CPU and memory reductions (Phase 4.30) | ✅ | ❌ | ✅ | — |
 | Shared-edge scoring and other CPU cuts, routes identical (Phase 4.33) | ✅ | ❌ | ✅ | — |
-| Route computation in a Durable Object (Phase 4.33) | ✅ | ❌ (verified on a separate Free test Worker) | ✅ local Worker runtime | — |
+| Route computation in a Durable Object, explicit 503 on failure (Phase 4.33) | ✅ | ❌ (verified on a separate Free test Worker) | ✅ local Worker runtime | — |
+| Provider timers cleared after each call (Phase 4.33) | ✅ | ❌ (verified on a separate Free test Worker) | ✅ | — |
+| Homepage served as a static snapshot (Phase 4.33) | ✅ | ❌ (verified on a separate Free test Worker) | ✅ | — |
 | "Descrivi la tua preferenza" rule-based preference prompt | ✅ | ✅ | ✅ | — |
 | Moderated community surface reports (D1) | ✅ | ✅ | ✅ | — |
 | Milan coverage | ✅ citywide | ✅ | ✅ | ✅ |
@@ -73,11 +75,11 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
      - Route computation now runs in a SQLite-backed Durable Object, which allows 30 s of CPU per
        request on Workers Free.
    - **Verified on Cloudflare:** on 9 November, a separate Milan-only test Worker on Workers
-     Free (`lastrico-free-test`) served 20 of 20 route requests, including a burst. They took
-     median 156 ms and up to 314 ms of CPU in the Durable Object, with no stops.
-     Evidence: `outputs/phase433/free-test-*`.
-   - **Still blocking release:** deploying that build to the pilot, which needs authorisation,
-     and a physical iPhone test. Workers Paid remains only a fallback.
+     Free (`lastrico-free-test`) served 40 of 40 route requests in two runs, including bursts,
+     with up to 319 ms of CPU in the Durable Object and no stops (§4).
+   - **Release:** the pilot deployment is a separate, authorised step after this merge, built with
+     `scripts/prepare-milan-release.mjs`. A physical iPhone test is still missing. Workers Paid
+     remains only a fallback.
 2. **No physical iPhone validation of Phases 4.29–4.31.**
    - GPS fusion, the reroute timing and the surface warnings are verified only in emulation.
    - iOS may also suspend a PWA in the background or with the screen locked.
@@ -113,35 +115,53 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
 ## 4. Workers Free: verified behaviour (Phase 4.33)
 
-Measured with `wrangler tail` on the separate test Worker `lastrico-free-test` on 9 November 2026:
-20 route requests and 5 page loads, Milan and Roccella only. Evidence: `outputs/phase433/free-test-*`.
+Measured with `wrangler tail` and Cloudflare analytics on the separate test Worker
+`lastrico-free-test`, Milan and Roccella only, on 9 November 2026. The same 20 route requests ran
+twice: at 16:12 UTC before the final fixes, and at 19:17 UTC with them. Evidence:
+`outputs/phase433/free-test-*` and `outputs/phase433/release-*`.
 
 - **Durable Object CPU**
-  - Route computation in the `RouteEngine` Durable Object took a median of 156 ms of CPU, and up
-    to 314 ms.
-  - All 20 calls ended `ok`, including a burst of six requests two seconds apart and a fresh object.
+  - Route computation in the `RouteEngine` Durable Object took a median of 127–156 ms of CPU, and
+    up to 319 ms.
+  - All 40 calls ended `ok`, including a burst of six requests two seconds apart and a fresh object.
   - The Worker in front of it used 0–2 ms per request.
+  - The routes of the two runs are identical, and identical to the local runs.
   - This matches Cloudflare's documented 30 s of CPU per Durable Object request on the Free plan.
-  - It is measured behaviour, not a guarantee.
-- **Remaining homepage CPU risk**
-  - The page is rendered by the ordinary Worker and measured 6–37 ms of CPU, above the 10 ms limit.
-    It passed through the per-isolate tolerance.
-  - On the pilot, page requests failed only right after bursts of heavy route requests on
-    8 November.
-  - With routes moved out, that pressure is lower, but the page remains the most exposed request.
-  - Possible follow-ups, not done: render the page in the Durable Object too, or serve a cached or
-    prerendered page.
+    It is measured behaviour, not a guarantee.
+- **When the Durable Object fails**
+  - With the binding present, the ordinary Worker never computes a route.
+  - An error Cloudflare marks retryable and not overloaded, such as the reset every deployment
+    causes, is retried once on another shard and logged as `route_engine_retry`.
+  - Any other failure answers `503` with an Italian message, `Retry-After: 60` and `no-store`, and
+    is logged as `route_engine_unavailable`. During navigation the app keeps the current route.
+- **Homepage**
+  - The server render of `/` used 6–37 ms of CPU, above the 10 ms limit.
+  - It has no per-request content, so the deploy now writes it once to `dist/client/index.html`
+    (`scripts/homepage-snapshot.mjs`), and Cloudflare serves it before the Worker.
+  - In the second run, 7 page loads invoked the Worker 0 times.
 - **Pending timers and Free-tier consumption**
-  - Provider calls use `AbortSignal.timeout`, whose timers stay pending after the response.
-  - Each Durable Object invocation therefore stayed active for 4–12 s, while the person received
-    the route in 1–6 s.
-  - Durable Object duration is billed against the Free quota of 13,000 GB-s per day, at 128 MB per
-    object: 0.5–1.5 GB-s per route at the measured durations.
-  - Clearing the timers once a call completes would shorten this. Not done yet.
+  - Provider calls used `AbortSignal.timeout`, whose timers cannot be cleared. Each Durable
+    Object invocation stayed active until they fired: exactly 4, 8 or 12.2 s, while the route was
+    ready in 1–6 s.
+  - The timers are now cleared when the call ends. The deadline still covers a stalled response or
+    body (unit tests).
+  - **Measured active time, which is the billed duration:**
+    - before: 194.5 s for 20 requests, 9.7 s each, about 1.2 GB-s at 128 MB;
+    - after: 74.5 s for 21 requests, 3.6 s each, about 0.44 GB-s;
+    - the Free quota is 13,000 GB-s per day.
+  - Invocation wall time now matches the response: median 5.3 s, maximum 5.4 s, against 12.2 s.
 - **Daily capacity:** none is guaranteed. Consumption depends on provider wait times, reroutes and
-  traffic, and 20 requests are not enough to estimate it.
-  - If a Durable Object quota is exhausted, the Worker computes the route itself, as before Phase
-    4.33. That keeps the CPU risk, and the fallback is logged (`route_engine_unavailable`).
+  traffic, and 40 requests are not enough to estimate it.
+  - If a Durable Object quota is exhausted, routes answer `503` until the quota resets. The CPU
+    limit is not bypassed.
+- **Rollback.** Cloudflare refuses a rollback past a Durable Object lifecycle change, so once the
+  release is live `wrangler rollback 03a6776e` is refused.
+  - The rollback build (`scripts/prepare-pilot-rollback.mjs`) is the `03a6776e` code with the same,
+    unused `RouteEngine` class.
+  - Rebuilt, it matches the deployed `03a6776e` module for module, apart from per-build ids and that
+    class, and it passes its 367 tests.
+  - It was deployed over an existing `RouteEngine` namespace on the test Worker: accepted, serving
+    the same assets as `03a6776e`, routes computed in the Worker.
 
 ## 5. Data and backup inventory
 

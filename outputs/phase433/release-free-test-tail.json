@@ -1,0 +1,568 @@
+{
+ "source": "wrangler tail lastrico-free-test --format json, 2026-11-09 19:17–19:20 UTC. Only outcome, timing, status and path are kept: no IPs, headers or coordinates.",
+ "summary": {
+  "workerRoutes": {
+   "count": 21,
+   "outcomes": [
+    "ok"
+   ],
+   "statuses": [
+    400,
+    200
+   ],
+   "cpuMs": {
+    "median": 0,
+    "max": 2,
+    "min": 0
+   },
+   "wallMs": {
+    "median": 5335,
+    "max": 5903,
+    "min": 79
+   }
+  },
+  "durableObjectRoutes": {
+   "count": 21,
+   "outcomes": [
+    "ok"
+   ],
+   "statuses": [
+    400,
+    200
+   ],
+   "cpuMs": {
+    "median": 127,
+    "max": 319,
+    "min": 7
+   },
+   "wallMs": {
+    "median": 5293,
+    "max": 5392,
+    "min": 9
+   }
+  },
+  "workerPage": {
+   "count": 0,
+   "outcomes": [],
+   "statuses": [],
+   "cpuMs": null,
+   "wallMs": null
+  },
+  "workerOther": {
+   "count": 0,
+   "outcomes": [],
+   "statuses": [],
+   "cpuMs": null,
+   "wallMs": null
+  },
+  "logEvents": []
+ },
+ "invocations": [
+  {
+   "time": "2026-11-09T19:17:29.326Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 2,
+   "wallMs": 275,
+   "status": 400,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:29.862Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 8,
+   "wallMs": 9,
+   "status": 400,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:30.423Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 808,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:30.896Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 123,
+   "wallMs": 318,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:35.448Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 2808,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:35.977Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 264,
+   "wallMs": 2257,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:42.468Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 1226,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:42.499Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 141,
+   "wallMs": 1176,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:47.833Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 1,
+   "wallMs": 5903,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:48.357Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 263,
+   "wallMs": 5356,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:58.019Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5426,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:17:58.042Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 151,
+   "wallMs": 5392,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:07.657Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5714,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:08.014Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 187,
+   "wallMs": 5348,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:17.529Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5863,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:18.005Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 319,
+   "wallMs": 5359,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:27.538Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5373,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:27.550Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 78,
+   "wallMs": 5350,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:37.116Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5380,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:37.143Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 231,
+   "wallMs": 5332,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:44.567Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5406,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:44.583Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 128,
+   "wallMs": 5378,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:52.043Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 4767,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:52.512Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 222,
+   "wallMs": 4275,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:58.948Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5532,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:18:59.145Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 180,
+   "wallMs": 5320,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:06.535Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5355,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:06.570Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 87,
+   "wallMs": 5299,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:13.950Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5335,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:13.973Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 71,
+   "wallMs": 5293,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:21.350Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 2234,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:21.397Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 47,
+   "wallMs": 2161,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:26.624Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 1144,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:26.639Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 39,
+   "wallMs": 1120,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:30.858Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 1,
+   "wallMs": 2203,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:30.874Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 29,
+   "wallMs": 2176,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:36.159Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 1,
+   "wallMs": 79,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:36.174Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 7,
+   "wallMs": 44,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:39.310Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 1,
+   "wallMs": 2238,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:39.326Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 66,
+   "wallMs": 2209,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:39.355Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5414,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  },
+  {
+   "time": "2026-11-09T19:19:39.384Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 127,
+   "wallMs": 5362,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0,
+   "version": "28b211de",
+   "logs": []
+  }
+ ],
+ "worker": "lastrico-free-test (Workers Free, version 28b211de-f18f-44f9-9062-de326f685d6b, release copy of a0b5148, Milan and Roccella only, no D1 binding)",
+ "pageLoads": "7 loads of / (5 by curl, 2 by the runner) produced no Worker invocation: the homepage is a static asset"
+}

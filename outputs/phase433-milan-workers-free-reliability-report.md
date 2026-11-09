@@ -77,7 +77,7 @@ Le misure sono fatte con le risposte di routing registrate, sullo stesso codice 
    - **Perché funziona sul piano gratuito:** i Durable Objects con archivio SQLite sono inclusi nel piano gratuito e hanno **30 secondi di CPU per richiesta** ([limiti](https://developers.cloudflare.com/durable-objects/platform/limits/)).
    - **Cosa fa il Worker:** inoltra soltanto `/api/routes` a uno di 8 oggetti, e tutto il resto resta com'era.
    - **Risultati identici:** l'oggetto esegue la stessa app.
-   - **Se l'oggetto non risponde,** per esempio perché la quota giornaliera è finita, il Worker calcola come prima e lo registra nei log.
+   - **Se l'oggetto non risponde,** per esempio perché la quota giornaliera è finita, il Worker risponde 503 con un messaggio chiaro e lo registra nei log; non calcola più il percorso da sé (aggiornamento del rilascio finale, §9).
    - **Verifica in produzione:** le risposte portano l'intestazione `x-lastrico-route-engine: durable-object`, così una prova futura può controllare dove è avvenuto il calcolo.
 
 **Rilascio solo Milano, ripetibile:**
@@ -174,14 +174,14 @@ Con la tua autorizzazione ho pubblicato una copia **solo Milano e Roccella** su 
 - **Ogni richiesta resta attiva più a lungo della risposta.** Nel Durable Object dura 4–12 s, contro 1–6 s di risposta, perché i timer di scadenza delle chiamate al servizio di routing (`AbortSignal.timeout`) restano in sospeso.
   - Con 128 MB fanno 0,5–1,5 GB-s per percorso. La quota gratuita è di 13.000 GB-s al giorno.
   - Non indico una capacità giornaliera garantita: dipende da quanto si attende il servizio di routing, dai ricalcoli e dal traffico. 20 richieste non bastano per stimarla.
-  - Annullare quei timer a risposta arrivata accorcerebbe la durata e quindi il consumo. È un piccolo miglioramento successivo; non l'ho fatto.
+  - Annullare quei timer a risposta arrivata accorcerebbe la durata e quindi il consumo. Fatto nel rilascio finale (§9): da 9,7 a 3,6 s attivi per percorso.
 - **La pagina principale ha usato fino a 37 ms**, oltre i 10. È passata grazie alla tolleranza, ma resta il punto più fragile rimasto nel Worker principale.
 
 ## 7. Limiti che restano sul piano gratuito
 
 - **Senza Durable Object il piano gratuito non regge.** Anche ottimizzato, il calcolo resta sopra i 10 ms nel 41% dei casi a isolato caldo. A isolato nuovo, i percorsi pesanti richiedono 64–281 ms, cioè 6–28 volte il limite: con poco traffico è il caso più comune.
 - **Con il Durable Object:**
-  - **Quote giornaliere gratuite:** 100.000 richieste e 13.000 GB-s. Il consumo misurato è di 0,5–1,5 GB-s per percorso, aumentato dai timer in sospeso (§6 bis). Nessuna capacità giornaliera è garantita: se una quota finisce, il Worker calcola da sé, come prima, con il rischio di CPU.
+  - **Quote giornaliere gratuite:** 100.000 richieste e 13.000 GB-s. Il consumo misurato è di 0,5–1,5 GB-s per percorso, aumentato dai timer in sospeso (§6 bis). Nessuna capacità giornaliera è garantita: se una quota finisce, i percorsi rispondono 503 fino al rinnovo della quota (§9).
   - **Ogni oggetto calcola un percorso alla volta,** quindi ce ne sono 8.
   - **La pagina principale resta nel Worker,** con 6–16 ms di CPU: oggi passa grazie alla tolleranza.
 - **Il servizio di routing gratuito (FOSSGIS)** resta il limite di velocità: circa 1 richiesta al secondo per isolato.
@@ -210,3 +210,13 @@ La verifica su un Worker separato è **fatta e superata**. Il passo più piccolo
 Workers Paid resta solo come riserva: per ora non serve.
 
 **Il Worker di prova `lastrico-free-test` resta online per altre prove.** Usa il piano gratuito, non ha database e non costa nulla.
+
+## 9. Rilascio finale: correzioni verificate prima del merge
+
+Sul Worker di prova, con le stesse 20 richieste (dettagli in `docs/ENGINEERING_STATUS.md` §4 e `outputs/phase433/release-*`):
+- **Guasto del Durable Object:** niente più calcolo nel Worker principale. Un errore che Cloudflare segna come ripetibile, come il riavvio a ogni pubblicazione, si ripete una volta su un altro oggetto; altrimenti la risposta è 503 con un messaggio in italiano.
+- **Timer annullati:** ogni chiamata dura quanto la risposta, mediana 5,3 s contro 12,2 s. Il tempo attivo fatturato scende da 9,7 a 3,6 s per percorso, circa 0,44 GB-s.
+- **Pagina principale statica:** 7 caricamenti, 0 esecuzioni del Worker.
+- **Percorsi identici:** 20 su 20 uguali alla prova del pomeriggio; la riproduzione locale dà 264 su 264 calcoli e 275 su 275 ricalcoli identici.
+- **Ripristino:** Cloudflare non permette di tornare a `03a6776e` dopo aver creato il Durable Object. La build di ripristino (`scripts/prepare-pilot-rollback.mjs`) è il codice di `03a6776e` con la stessa classe, inutilizzata. È verificata modulo per modulo contro il pacchetto pubblicato e accettata da Cloudflare sul Worker di prova.
+

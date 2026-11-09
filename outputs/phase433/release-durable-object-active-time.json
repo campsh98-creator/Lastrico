@@ -1,0 +1,141 @@
+{
+ "source": "Cloudflare GraphQL durableObjectsInvocationsAdaptiveGroups and durableObjectsPeriodicGroups (read-only), lastrico-free-test, the only Worker with Durable Object traffic in the account",
+ "billing": "Durable Object duration is billed on active time at 128 MB; 1 s of active time ≈ 0.125 GB-s. Workers Free includes 13,000 GB-s per day.",
+ "before": {
+  "window": "2026-11-09 16:10–16:20 UTC",
+  "version": "44a8466a (AbortSignal.timeout)",
+  "requests": 20,
+  "activeTimeS": 194.5,
+  "activeTimePerRequestS": 9.73,
+  "gbSecondsPerRequest": 1.22,
+  "detail": {
+   "invocations": [
+    {
+     "minute": "2026-11-09T16:12:00Z",
+     "status": "success",
+     "requests": 5,
+     "errors": 0,
+     "cpuP50Ms": 218,
+     "cpuP99Ms": 298,
+     "wallP50Ms": 8002,
+     "wallP99Ms": 12202
+    },
+    {
+     "minute": "2026-11-09T16:13:00Z",
+     "status": "success",
+     "requests": 8,
+     "errors": 0,
+     "cpuP50Ms": 156,
+     "cpuP99Ms": 314,
+     "wallP50Ms": 12201,
+     "wallP99Ms": 12202
+    },
+    {
+     "minute": "2026-11-09T16:14:00Z",
+     "status": "success",
+     "requests": 7,
+     "errors": 0,
+     "cpuP50Ms": 92,
+     "cpuP99Ms": 171,
+     "wallP50Ms": 4067,
+     "wallP99Ms": 12238
+    }
+   ],
+   "periodic": [
+    {
+     "minute": "2026-11-09T16:12:00Z",
+     "activeTimeS": 48.41,
+     "cpuTimeMs": 1092,
+     "exceededCpuErrors": 0,
+     "exceededMemoryErrors": 0,
+     "fatalInternalErrors": 0
+    },
+    {
+     "minute": "2026-11-09T16:13:00Z",
+     "activeTimeS": 97.61,
+     "cpuTimeMs": 1461,
+     "exceededCpuErrors": 0,
+     "exceededMemoryErrors": 0,
+     "fatalInternalErrors": 0
+    },
+    {
+     "minute": "2026-11-09T16:14:00Z",
+     "activeTimeS": 48.51,
+     "cpuTimeMs": 621,
+     "exceededCpuErrors": 0,
+     "exceededMemoryErrors": 0,
+     "fatalInternalErrors": 0
+    }
+   ]
+  }
+ },
+ "after": {
+  "window": "2026-11-09 19:15–19:25 UTC",
+  "version": "28b211de (timers cleared)",
+  "requests": 21,
+  "activeTimeS": 74.5,
+  "activeTimePerRequestS": 3.55,
+  "gbSecondsPerRequest": 0.44,
+  "detail": {
+   "invocations": [
+    {
+     "minute": "2026-11-09T19:17:00Z",
+     "status": "success",
+     "requests": 6,
+     "errors": 0,
+     "cpuP50Ms": 141,
+     "cpuP99Ms": 264,
+     "wallP50Ms": 1177,
+     "wallP99Ms": 5393
+    },
+    {
+     "minute": "2026-11-09T19:18:00Z",
+     "status": "success",
+     "requests": 7,
+     "errors": 0,
+     "cpuP50Ms": 187,
+     "cpuP99Ms": 319,
+     "wallP50Ms": 5348,
+     "wallP99Ms": 5379
+    },
+    {
+     "minute": "2026-11-09T19:19:00Z",
+     "status": "success",
+     "requests": 8,
+     "errors": 0,
+     "cpuP50Ms": 48,
+     "cpuP99Ms": 128,
+     "wallP50Ms": 2177,
+     "wallP99Ms": 5363
+    }
+   ],
+   "periodic": [
+    {
+     "minute": "2026-11-09T19:17:00Z",
+     "activeTimeS": 14.51,
+     "cpuTimeMs": 952,
+     "exceededCpuErrors": 0,
+     "exceededMemoryErrors": 0,
+     "fatalInternalErrors": 0
+    },
+    {
+     "minute": "2026-11-09T19:18:00Z",
+     "activeTimeS": 36.37,
+     "cpuTimeMs": 1349,
+     "exceededCpuErrors": 0,
+     "exceededMemoryErrors": 0,
+     "fatalInternalErrors": 0
+    },
+    {
+     "minute": "2026-11-09T19:19:00Z",
+     "activeTimeS": 23.62,
+     "cpuTimeMs": 471,
+     "exceededCpuErrors": 0,
+     "exceededMemoryErrors": 0,
+     "fatalInternalErrors": 0
+    }
+   ]
+  }
+ },
+ "caveat": "Two small samples; not a daily capacity estimate."
+}
