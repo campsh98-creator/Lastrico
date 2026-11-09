@@ -14,7 +14,7 @@
 | Areas | Milan, Roccella Ionica, experimental Rome: bounds, geocoding, datasets | `lib/pilot-areas.ts`, `lib/*-tile-index.ts`, `lib/rome-*.ts` |
 | Reports | validation, privacy, persistence, export | `app/api/reports/`, `lib/reporting.ts`, `db/` |
 | Map | MapLibre rendering and GeoJSON sources | `app/page.tsx`, `lib/map-route-style.ts`, `lib/map-appearance.ts` |
-| Hosting | Cloudflare Worker, the `RouteEngine` Durable Object for `/api/routes` (Phase 4.33), D1, Milan-only pilot release | `worker/index.ts`, `worker/route-engine.ts`, `deploy/pilot.json`, `scripts/deploy-pilot.mjs`, `scripts/prepare-milan-release.mjs`, `drizzle/` |
+| Hosting | Cloudflare Worker, the `RouteEngine` Durable Object for `/api/routes` (Phase 4.33), the homepage as a static snapshot, D1, Milan-only pilot release | `worker/index.ts`, `worker/route-engine.ts`, `deploy/pilot.json`, `scripts/deploy-pilot.mjs`, `scripts/homepage-snapshot.mjs`, `scripts/prepare-milan-release.mjs`, `drizzle/` |
 
 `app/page.tsx` remains the main coordinator. The directions sheet and community panel receive
 explicit data and callbacks and do not depend directly on MapLibre.

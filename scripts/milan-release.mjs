@@ -2,7 +2,7 @@
  * Phase 4.33: the Milan and Roccella release, without Rome.
  *
  * Rome (Phases 4.23 and 4.27) lives on `main` but is frozen and must never be deployed. Releasing
- * means building from a copy of the working tree with Rome taken out, as in Phases 4.28 and 4.33:
+ * means building from a copy of the committed tree with Rome taken out, as in Phases 4.28 and 4.33:
  * 1. delete every file the four Rome commits added (data, modules, scripts, tests, evidence);
  * 2. take the Rome hunks out of the six shared files with a three-way merge (`git merge-file`),
  *    which keeps every later change;
@@ -13,7 +13,7 @@
  * Pure helpers here, so they are tested (tests/phase433-milan-release.test.mjs). The runner is
  * scripts/prepare-milan-release.mjs.
  */
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /** The Rome commits on main, oldest first: e084138 (sources), 6b77681 (tiles), 2b56e3b (app), 7bc22ff (evidence). */
@@ -73,10 +73,14 @@ export function removeRomeBlocksFromRoutesHandler(source) {
 /** Source references that would bring Rome into a build (comments mentioning Rome are fine). */
 export const ROME_SOURCE_PATTERN = /rome-road-store|rome-tile-index|rome-tile-codec|rome-tiles-packed|["']rome["']/;
 
+/** The pilot area id as a string literal: quotes, or backticks as the minifier writes it. */
+export const ROME_BUILD_LITERAL = /["'`]rome["'`]/;
+
 /**
  * Evidence of Rome in a build directory (`dist/`):
  * - `.bin` data modules, which only the packed Rome tiles use;
- * - a "rome" string literal in the server bundle, for the pilot area id.
+ * - a "rome" string literal in the server bundle, the browser bundle or the homepage snapshot,
+ *   for the pilot area id and its city option.
  * An empty list means the build is Milan and Roccella only.
  */
 export function findRomeInBuild(distDirectory) {
@@ -86,11 +90,11 @@ export function findRomeInBuild(distDirectory) {
       const path = join(directory, entry);
       if (statSync(path).isDirectory()) walk(path);
       else if (entry.endsWith(".bin")) evidence.push(`data module ${path.slice(distDirectory.length + 1)}`);
-      else if (/\.(m?js)$/.test(entry) && /["']rome["']/.test(readFileSync(path, "utf8"))) {
+      else if (/\.(m?js|html)$/.test(entry) && ROME_BUILD_LITERAL.test(readFileSync(path, "utf8"))) {
         evidence.push(`"rome" literal in ${path.slice(distDirectory.length + 1)}`);
       }
     }
   };
-  walk(join(distDirectory, "server"));
+  for (const part of ["server", "client"]) if (existsSync(join(distDirectory, part))) walk(join(distDirectory, part));
   return evidence;
 }
