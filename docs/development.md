@@ -104,6 +104,18 @@ and never commit them.
 
 ## Pilot deployment
 
+`main` contains the frozen Rome work (Phases 4.23 and 4.27), which must never be deployed.
+- Releases are built from a Milan and Roccella copy of the working tree:
+
+  ```bash
+  node scripts/prepare-milan-release.mjs <empty-directory-outside-the-repo>
+  ```
+
+- Then run every command below inside that directory, starting with `npm test`.
+- The method, and the two Rome blocks it removes by hand, are in `scripts/milan-release.mjs`.
+- `npm run deploy:pilot` refuses any build that still contains Rome (`.bin` tile modules or a
+  `"rome"` area id), dry runs included.
+
 The isolated pilot runs on the `lastrico-pilot` Worker. `npm run build` and `npm test` always
 regenerate `dist/server/wrangler.json` with a placeholder database id, so never deploy that
 file directly. Use the single command, which applies `deploy/pilot.json` and refuses a

@@ -5,6 +5,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { applyPilotConfig, assertPilotConfig } from "./pilot-config.mjs";
+import { findRomeInBuild } from "./milan-release.mjs";
 
 const root = new URL("../", import.meta.url);
 const rootPath = fileURLToPath(root);
@@ -38,6 +39,15 @@ const pilot = JSON.parse(await readFile(new URL("deploy/pilot.json", root), "utf
 rmSync(distPath, { recursive: true, force: true });
 run("npm", ["run", "build"]);
 cleanDuplicateSync(distPath);
+
+// Phase 4.33: Rome is on main but must never reach the pilot. Build from the Milan and Roccella
+// copy made by scripts/prepare-milan-release.mjs; a build that contains Rome is refused.
+const rome = findRomeInBuild(distPath);
+if (rome.length) {
+  console.error(`Refusing to deploy: the build contains Rome (${rome.length} items, e.g. ${rome[0]}).`);
+  console.error("Prepare the release copy with: node scripts/prepare-milan-release.mjs <directory>");
+  process.exit(1);
+}
 
 const generated = JSON.parse(await readFile(generatedConfigPath, "utf8"));
 const config = applyPilotConfig(generated, pilot);
