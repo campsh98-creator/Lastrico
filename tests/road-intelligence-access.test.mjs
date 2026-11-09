@@ -10,14 +10,24 @@ const way = (tags = {}, id = 1, points = coordinates) => normalizeOsmFeature({
 const score = (segments, mode = "car", reverse = false) => scoreRoadIntelligence(
   reverse ? [...coordinates].reverse() : coordinates, createRoadIntelligenceIndex(segments), 12, mode,
 );
+// The same way 5.5 m beside the route: it must never lend surface evidence to a mode that may
+// not use it. A way under the route reports its own surface (Phase 4.24); legality is separate.
+const besideRoute = coordinates.map(([lon, lat]) => [lon, lat + 0.00005]);
 
 test("specific modal access overrides generic access without leaking to other modes", () => {
-  const segments = way({ access: "no", bicycle: "yes", motorcar: "yes", motorcycle: "no" });
-  assert.equal(score(segments, "bicycle").matchedCoveragePercent, 100);
-  assert.equal(score(segments, "car").matchedCoveragePercent, 100);
-  assert.equal(score(segments, "motorcycle").matchedCoveragePercent, 0);
-  assert.equal(score(way({ vehicle: "no" }), "bicycle").matchedCoveragePercent, 0);
-  assert.equal(score(way({ highway: "cycleway" }), "car").matchedCoveragePercent, 0);
+  const tags = { access: "no", bicycle: "yes", motorcar: "yes", motorcycle: "no" };
+  const beside = way(tags, 1, besideRoute);
+  assert.equal(score(beside, "bicycle").matchedCoveragePercent, 100);
+  assert.equal(score(beside, "car").matchedCoveragePercent, 100);
+  assert.equal(score(beside, "motorcycle").matchedCoveragePercent, 0);
+  assert.equal(score(way({ vehicle: "no" }, 1, besideRoute), "bicycle").matchedCoveragePercent, 0);
+  assert.equal(score(way({ highway: "cycleway" }, 1, besideRoute), "car").matchedCoveragePercent, 0);
+  // Under the route the surface is reported for every mode; only the forbidden mode is flagged.
+  const under = way(tags);
+  for (const mode of ["car", "motorcycle", "bicycle"]) assert.equal(score(under, mode).matchedCoveragePercent, 100);
+  assert.equal(score(under, "car").confirmedRestrictionMeters, 0);
+  assert.equal(score(under, "bicycle").confirmedRestrictionMeters, 0);
+  assert.ok(score(under, "motorcycle").confirmedRestrictionMeters > 100);
 });
 
 test("bicycle exceptions and reversed base oneway preserve legal surface matching", () => {
@@ -32,17 +42,27 @@ test("bicycle exceptions and reversed base oneway preserve legal surface matchin
   }
   const reversedBike = way({ oneway: "-1", "oneway:bicycle": "yes" });
   assert.equal(score(reversedBike, "bicycle").matchedCoveragePercent, 100);
-  assert.equal(score(reversedBike, "bicycle", true).matchedCoveragePercent, 0);
-  assert.equal(score(way({ oneway: "yes", "oneway:bicycle": "no" }), "car", true).matchedCoveragePercent, 0);
+  assert.equal(score(reversedBike, "bicycle").confirmedRestrictionMeters, 0);
+  // Wrong-way travel on the route's own road: surface reported, travel flagged as prohibited.
+  assert.equal(score(reversedBike, "bicycle", true).matchedCoveragePercent, 100);
+  assert.ok(score(reversedBike, "bicycle", true).confirmedRestrictionMeters > 100);
+  assert.ok(score(way({ oneway: "yes", "oneway:bicycle": "no" }), "car", true).confirmedRestrictionMeters > 100);
+  assert.equal(score(way({ oneway: "-1", "oneway:bicycle": "yes" }, 1, besideRoute), "bicycle", true).matchedCoveragePercent, 0);
 });
 
 test("blocked nearest geometry cannot borrow surface from an accessible parallel road", () => {
-  const blocked = way({ motor_vehicle: "no" });
-  const parallel = way({}, 2, coordinates.map(([lon, lat]) => [lon, lat + 0.00005]));
+  // Blocked road 3 m away (not under the route), accessible asphalt 7 m on the other side.
+  const blocked = way({ motor_vehicle: "no", surface: "sett" }, 1, coordinates.map(([lon, lat]) => [lon, lat + 0.000027]));
+  const parallel = way({}, 2, coordinates.map(([lon, lat]) => [lon, lat - 0.000063]));
   const result = score([...blocked, ...parallel]);
   assert.equal(result.matchedCoveragePercent, 0);
   assert.equal(result.unknownMeters, result.totalMeters);
   assert.equal(result.matchedFeatures, 0);
+  // Under the route, the blocked road's own stones are reported, never the parallel asphalt.
+  const under = score([...way({ motor_vehicle: "no", surface: "sett" }), ...way({}, 2, besideRoute)]);
+  assert.equal(under.confirmedMeters, under.totalMeters);
+  assert.equal(under.smoothMeters, 0);
+  assert.ok(under.confirmedRestrictionMeters > 100);
 });
 
 test("overlapping grades remain unknown instead of sharing a geometric identity", () => {
@@ -68,8 +88,13 @@ test("conditional or unresolved access and direction cannot imply permitted trav
     { "motor_vehicle:conditional": "no @ (08:00-18:00)" },
     { oneway: "reversible" },
     { "oneway:conditional": "yes @ (08:00-18:00)" },
-  ]) assert.equal(score(way(tags)).matchedCoveragePercent, 0);
-  assert.equal(score(way({ junction: "roundabout" }), "car", true).matchedCoveragePercent, 0);
+  ]) {
+    assert.equal(score(way(tags, 1, besideRoute)).matchedCoveragePercent, 0);
+    // Under the route the surface is still the surface; no permission is inferred from it.
+    assert.equal(score(way(tags)).matchedCoveragePercent, 100);
+  }
+  assert.equal(score(way({ junction: "roundabout" }, 1, besideRoute), "car", true).matchedCoveragePercent, 0);
+  assert.ok(score(way({ junction: "roundabout" }), "car", true).confirmedRestrictionMeters > 100);
 });
 
 test("explicit mode-specific oneway overrides generic conditional oneway without leaking to cars", () => {
@@ -79,7 +104,10 @@ test("explicit mode-specific oneway overrides generic conditional oneway without
     "oneway:motorcycle": "no",
     "oneway:bicycle": "no",
   });
-  assert.equal(score(segments, "car").matchedCoveragePercent, 0);
+  assert.equal(score(way({
+    oneway: "yes", "oneway:conditional": "no @ (00:00-06:00)", "oneway:motorcycle": "no", "oneway:bicycle": "no",
+  }, 1, besideRoute), "car").matchedCoveragePercent, 0);
+  assert.equal(score(segments, "car").confirmedRestrictionMeters, 0);
   assert.equal(score(segments, "motorcycle").matchedCoveragePercent, 100);
   assert.equal(score(segments, "motorcycle", true).matchedCoveragePercent, 100);
   assert.equal(score(segments, "bicycle").matchedCoveragePercent, 100);

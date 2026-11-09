@@ -1,0 +1,506 @@
+{
+  "generatedAt": "2026-11-07T13:11:39.027Z",
+  "sources": "data/surfaces/milan-central.json (OSM API 2026-10-28), data/milan-road-network-representative.json, data/sources/milan-citywide-*.osm.json.gz (Overpass 2026-11-04); ODbL © OpenStreetMap contributors",
+  "segments": {
+    "before": 102294,
+    "after": 102028
+  },
+  "coverage": {
+    "before": {
+      "all": {
+        "totalKm": 1644.7,
+        "confirmed_roughKm": 70.68,
+        "probable_roughKm": 68.14,
+        "confirmed_smoothKm": 1169.26,
+        "unpaved_looseKm": 60.86,
+        "unknownKm": 275.76,
+        "knownPercent": 83.2,
+        "confirmedEvidencePercent": 79.1
+      },
+      "car": {
+        "totalKm": 1113.03,
+        "confirmed_roughKm": 44.95,
+        "probable_roughKm": 20.37,
+        "confirmed_smoothKm": 910.02,
+        "unpaved_looseKm": 11.19,
+        "unknownKm": 126.5,
+        "knownPercent": 88.6,
+        "confirmedEvidencePercent": 86.8
+      },
+      "motorcycle": {
+        "totalKm": 1127.78,
+        "confirmed_roughKm": 45.29,
+        "probable_roughKm": 20.58,
+        "confirmed_smoothKm": 915.58,
+        "unpaved_looseKm": 11.19,
+        "unknownKm": 135.13,
+        "knownPercent": 88,
+        "confirmedEvidencePercent": 86.2
+      },
+      "bicycle": {
+        "totalKm": 1279.54,
+        "confirmed_roughKm": 54.95,
+        "probable_roughKm": 37.3,
+        "confirmed_smoothKm": 982.71,
+        "unpaved_looseKm": 53.48,
+        "unknownKm": 151.08,
+        "knownPercent": 88.2,
+        "confirmedEvidencePercent": 85.3
+      }
+    },
+    "after": {
+      "all": {
+        "totalKm": 1637.97,
+        "confirmed_roughKm": 70.44,
+        "probable_roughKm": 59.53,
+        "confirmed_smoothKm": 1171.7,
+        "unpaved_looseKm": 60.81,
+        "unknownKm": 275.49,
+        "knownPercent": 83.2,
+        "confirmedEvidencePercent": 79.5
+      },
+      "car": {
+        "totalKm": 1110.91,
+        "confirmed_roughKm": 44.81,
+        "probable_roughKm": 19.5,
+        "confirmed_smoothKm": 908.89,
+        "unpaved_looseKm": 11.19,
+        "unknownKm": 126.52,
+        "knownPercent": 88.6,
+        "confirmedEvidencePercent": 86.9
+      },
+      "motorcycle": {
+        "totalKm": 1125.66,
+        "confirmed_roughKm": 45.14,
+        "probable_roughKm": 19.72,
+        "confirmed_smoothKm": 914.45,
+        "unpaved_looseKm": 11.19,
+        "unknownKm": 135.15,
+        "knownPercent": 88,
+        "confirmedEvidencePercent": 86.2
+      },
+      "bicycle": {
+        "totalKm": 1277.1,
+        "confirmed_roughKm": 54.81,
+        "probable_roughKm": 33.51,
+        "confirmed_smoothKm": 983.75,
+        "unpaved_looseKm": 53.48,
+        "unknownKm": 151.56,
+        "knownPercent": 88.1,
+        "confirmedEvidencePercent": 85.5
+      }
+    }
+  },
+  "transitions": [
+    {
+      "from": "probable_rough",
+      "to": "confirmed_smooth",
+      "reason": "paving_stones with explicit smoothness excellent/good",
+      "segments": 746,
+      "ways": 177,
+      "km": 8.5,
+      "carKm": 0.85,
+      "motorcycleKm": 0.85,
+      "bicycleKm": 3.77
+    },
+    {
+      "from": "unknown",
+      "to": "removed",
+      "reason": "clipped pilot stub duplicated by the citywide snapshot",
+      "segments": 38,
+      "ways": 32,
+      "km": 0.92,
+      "carKm": 0.07,
+      "motorcycleKm": 0.07,
+      "bicycleKm": 0.09
+    },
+    {
+      "from": "confirmed_smooth",
+      "to": "removed",
+      "reason": "clipped pilot stub duplicated by the citywide snapshot",
+      "segments": 198,
+      "ways": 171,
+      "km": 5.27,
+      "carKm": 1.82,
+      "motorcycleKm": 1.82,
+      "bicycleKm": 2.03
+    },
+    {
+      "from": "confirmed_smooth",
+      "to": "unknown",
+      "reason": "asphalt/concrete with explicit smoothness bad or worse",
+      "segments": 60,
+      "ways": 13,
+      "km": 0.7,
+      "carKm": 0.14,
+      "motorcycleKm": 0.14,
+      "bicycleKm": 0.62
+    },
+    {
+      "from": "confirmed_rough",
+      "to": "removed",
+      "reason": "clipped pilot stub duplicated by the citywide snapshot",
+      "segments": 15,
+      "ways": 13,
+      "km": 0.29,
+      "carKm": 0.2,
+      "motorcycleKm": 0.2,
+      "bicycleKm": 0.2
+    },
+    {
+      "from": "probable_rough",
+      "to": "removed",
+      "reason": "clipped pilot stub duplicated by the citywide snapshot",
+      "segments": 6,
+      "ways": 6,
+      "km": 0.1,
+      "carKm": 0.02,
+      "motorcycleKm": 0.02,
+      "bicycleKm": 0.03
+    },
+    {
+      "from": "confirmed_smooth",
+      "to": "removed",
+      "reason": "dropped by the expansion-ring filter once unknown",
+      "segments": 8,
+      "ways": 4,
+      "km": 0.09,
+      "carKm": 0.01,
+      "motorcycleKm": 0.01,
+      "bicycleKm": 0.09
+    },
+    {
+      "from": "unknown",
+      "to": "confirmed_rough",
+      "reason": "cobblestone:rounded is cobblestone",
+      "segments": 3,
+      "ways": 1,
+      "km": 0.05,
+      "carKm": 0.05,
+      "motorcycleKm": 0.05,
+      "bicycleKm": 0.05
+    },
+    {
+      "from": "unpaved_loose",
+      "to": "removed",
+      "reason": "clipped pilot stub duplicated by the citywide snapshot",
+      "segments": 1,
+      "ways": 1,
+      "km": 0.04,
+      "carKm": 0,
+      "motorcycleKm": 0,
+      "bicycleKm": 0
+    }
+  ],
+  "retainedUncertain": [
+    {
+      "rule": "pebblestone kept as confirmed pavé (OSM: rounded pebbles, loose or set; Milan uses it for park paths and rizzada)",
+      "ways": 31,
+      "km": 2.25,
+      "carKm": 0.26,
+      "bicycleKm": 1.66
+    },
+    {
+      "rule": "surface_bike used when surface is missing (non-standard key, Milan cycling mapping)",
+      "ways": 24,
+      "km": 0.71,
+      "carKm": 0.67,
+      "bicycleKm": 0.69
+    },
+    {
+      "rule": "concrete:plates kept as smooth (jointed slabs; ride quality not verified)",
+      "ways": 170,
+      "km": 13.4,
+      "carKm": 13.34,
+      "bicycleKm": 13.36
+    },
+    {
+      "rule": "sett/cobblestone with smoothness excellent/good stays confirmed pavé (stone is never upgraded)",
+      "ways": 60,
+      "km": 1.45,
+      "carKm": 0.33,
+      "bicycleKm": 0.56
+    },
+    {
+      "rule": "paving_stones with smoothness bad or worse stays probable, not confirmed",
+      "ways": 2,
+      "km": 0.19,
+      "carKm": 0,
+      "bicycleKm": 0
+    },
+    {
+      "rule": "generic surface=paved stays unknown, also with smoothness",
+      "ways": 284,
+      "km": 11.5,
+      "carKm": 0.83,
+      "bicycleKm": 6.45
+    },
+    {
+      "rule": "missing surface with only a smoothness tag stays unknown",
+      "ways": 141,
+      "km": 4.53,
+      "carKm": 0,
+      "bicycleKm": 0.85
+    },
+    {
+      "rule": "unsupported values (wood, metal, stone, linoleum, rock…) stay unknown",
+      "ways": 13,
+      "km": 0.24,
+      "carKm": 0.01,
+      "bicycleKm": 0.04
+    }
+  ],
+  "rawSurfaceValues": [
+    {
+      "value": "asphalt",
+      "category": "confirmed_smooth",
+      "km": 1140.08
+    },
+    {
+      "value": "(none)",
+      "category": "unknown",
+      "km": 263.04
+    },
+    {
+      "value": "paving_stones",
+      "category": "probable_rough",
+      "km": 59.53
+    },
+    {
+      "value": "sett",
+      "category": "confirmed_rough",
+      "km": 58.06
+    },
+    {
+      "value": "compacted",
+      "category": "unpaved_loose",
+      "km": 21.61
+    },
+    {
+      "value": "concrete:plates",
+      "category": "confirmed_smooth",
+      "km": 13.4
+    },
+    {
+      "value": "fine_gravel",
+      "category": "unpaved_loose",
+      "km": 11.91
+    },
+    {
+      "value": "ground",
+      "category": "unpaved_loose",
+      "km": 11.81
+    },
+    {
+      "value": "paved",
+      "category": "unknown",
+      "km": 11.5
+    },
+    {
+      "value": "paving_stones",
+      "category": "confirmed_smooth",
+      "km": 8.5
+    },
+    {
+      "value": "gravel",
+      "category": "unpaved_loose",
+      "km": 7.93
+    },
+    {
+      "value": "concrete",
+      "category": "confirmed_smooth",
+      "km": 7.83
+    },
+    {
+      "value": "cobblestone:flattened",
+      "category": "confirmed_rough",
+      "km": 3.53
+    },
+    {
+      "value": "cobblestone",
+      "category": "confirmed_rough",
+      "km": 2.91
+    },
+    {
+      "value": "(none)",
+      "category": "unpaved_loose",
+      "km": 2.76
+    },
+    {
+      "value": "unhewn_cobblestone",
+      "category": "confirmed_rough",
+      "km": 2.71
+    },
+    {
+      "value": "dirt",
+      "category": "unpaved_loose",
+      "km": 2.57
+    },
+    {
+      "value": "pebblestone",
+      "category": "confirmed_rough",
+      "km": 2.25
+    },
+    {
+      "value": "unpaved",
+      "category": "unpaved_loose",
+      "km": 2.23
+    },
+    {
+      "value": "(none)",
+      "category": "confirmed_smooth",
+      "km": 1.68
+    },
+    {
+      "value": "asphalt",
+      "category": "unknown",
+      "km": 0.7
+    },
+    {
+      "value": "surface_bike=milanese_paving",
+      "category": "confirmed_rough",
+      "km": 0.49
+    },
+    {
+      "value": "surface_bike=sett",
+      "category": "confirmed_rough",
+      "km": 0.22
+    },
+    {
+      "value": "concrete:lanes",
+      "category": "confirmed_smooth",
+      "km": 0.2
+    },
+    {
+      "value": "milanese_paving",
+      "category": "confirmed_rough",
+      "km": 0.19
+    },
+    {
+      "value": "wood",
+      "category": "unknown",
+      "km": 0.09
+    },
+    {
+      "value": "linoleum",
+      "category": "unknown",
+      "km": 0.05
+    },
+    {
+      "value": "stone",
+      "category": "unknown",
+      "km": 0.05
+    },
+    {
+      "value": "cobblestone:rounded",
+      "category": "confirmed_rough",
+      "km": 0.05
+    },
+    {
+      "value": "cobblestone:flattened:large_stone",
+      "category": "confirmed_rough",
+      "km": 0.03
+    },
+    {
+      "value": "metal",
+      "category": "unknown",
+      "km": 0.03
+    },
+    {
+      "value": "rock",
+      "category": "unknown",
+      "km": 0.02
+    },
+    {
+      "value": "surface_bike=milanese_paving:rails",
+      "category": "confirmed_rough",
+      "km": 0
+    }
+  ],
+  "carUnknownByClass": [
+    {
+      "highway": "residential",
+      "totalKm": 658.45,
+      "unknownKm": 86.32,
+      "unknownPercent": 13.1
+    },
+    {
+      "highway": "service",
+      "totalKm": 50.66,
+      "unknownKm": 24.12,
+      "unknownPercent": 47.6
+    },
+    {
+      "highway": "unclassified",
+      "totalKm": 44.58,
+      "unknownKm": 15.16,
+      "unknownPercent": 34
+    },
+    {
+      "highway": "pedestrian",
+      "totalKm": 5.72,
+      "unknownKm": 0.37,
+      "unknownPercent": 6.5
+    },
+    {
+      "highway": "trunk",
+      "totalKm": 13.83,
+      "unknownKm": 0.2,
+      "unknownPercent": 1.4
+    },
+    {
+      "highway": "secondary",
+      "totalKm": 100.25,
+      "unknownKm": 0.11,
+      "unknownPercent": 0.1
+    },
+    {
+      "highway": "tertiary",
+      "totalKm": 138.18,
+      "unknownKm": 0.11,
+      "unknownPercent": 0.1
+    },
+    {
+      "highway": "unknown",
+      "totalKm": 0.06,
+      "unknownKm": 0.06,
+      "unknownPercent": 100
+    },
+    {
+      "highway": "primary",
+      "totalKm": 78.99,
+      "unknownKm": 0.03,
+      "unknownPercent": 0
+    },
+    {
+      "highway": "steps",
+      "totalKm": 0.37,
+      "unknownKm": 0.03,
+      "unknownPercent": 8.2
+    },
+    {
+      "highway": "motorway",
+      "totalKm": 6.7,
+      "unknownKm": 0,
+      "unknownPercent": 0
+    },
+    {
+      "highway": "track",
+      "totalKm": 11.18,
+      "unknownKm": 0,
+      "unknownPercent": 0
+    },
+    {
+      "highway": "footway",
+      "totalKm": 1.64,
+      "unknownKm": 0,
+      "unknownPercent": 0
+    },
+    {
+      "highway": "living_street",
+      "totalKm": 0.3,
+      "unknownKm": 0,
+      "unknownPercent": 0
+    }
+  ]
+}

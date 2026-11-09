@@ -1,0 +1,5223 @@
+{
+  "dataKind": "synthetic",
+  "notice": "All metrics are computed on SYNTHETIC data produced by src/synthetic.mjs. They validate code behaviour and class separability under the generator's own assumptions. They are not road truth and say nothing about real-world accuracy.",
+  "experiment": "Phase 4.20 / Agent C — road roughness sensors",
+  "generatedBy": "node --expose-gc experiments/roughness-sensors/scripts/run-evaluation.mjs",
+  "node": "v24.18.0",
+  "provenance": {
+    "inputs": "No external input files: every trace is generated from seeded specs in src/scenarios.mjs.",
+    "sourceSha256": {
+      "src/analyse.mjs": "557a8f0d1644851c38ae964ebd23637fa6265492606004a155b0ec6e3ccfdb47",
+      "src/dsp.mjs": "3839a13200542cf6965cffc90282fa4d4228f4a7c4efc653e7e0210f1977e0da",
+      "src/evaluate.mjs": "0a5deedc3a0bc2de26aa10bae9030738d8e70b1157041109a2609b233002fc51",
+      "src/features.mjs": "c1467c8641cb2fc46529e20aa6f9d4e079e960a70cab7517ed18d0966809249c",
+      "src/orientation.mjs": "0e533238a59b23d4cd3b9102762937ce716106aa166b4e0e02c8dd7b1c567d42",
+      "src/prng.mjs": "8d36d96df45df462e13e5a6ed129222aff5a825cba060befccf327358f8a3fef",
+      "src/recorder.mjs": "b1d2a31afe5128f053c8aee4df924c61ad2bdd270b7cc363d553e1c4c2bdfc60",
+      "src/regularise.mjs": "9edeb2a4fa301f547480a74b27180ded19c611d9ec661d5ea6d22f4597043206",
+      "src/scenarios.mjs": "1aaf85a856d012cea1b76c468d280f9e4a7a725f38ef5203a07078bec691053e",
+      "src/schema.mjs": "fb8228c0eb53841eed07b5814968b4b8bcf4c45968c029a3eff9fbe1cb4e9f26",
+      "src/speed.mjs": "b3166d2e4d7cddc081b099f45a44c13f7e95224089dd81cf7355b64e46f88902",
+      "src/synthetic.mjs": "4deb950bfd61836c65a71701e5d6a77a3e5e01d17b5895996102592dc5dce5bb",
+      "scripts/benchmark.mjs": "696bcb56a352b56d9e34faa31c3f570cf6d14fc69e2d78a3e7593ade487dc55f",
+      "scripts/run-evaluation.mjs": "d8381c6314f2066d71fa78da70d2b11ad9986115eda78a22d76e13b678a60a5d",
+      "prototype/app.mjs": "f3039fa0663c88e5a2e2d9eb16079924246be41c59544ed56ae98e86faf77801",
+      "prototype/index.html": "64cc08590ada331d9416e638e07f2655da5e4ee79fa0c75c2b635d55352a8df9",
+      "prototype/style.css": "9ede42b15efab652a2d10f08005e3c0dfa5846d9318f9426ed504c5821602703",
+      "serve.mjs": "a2972aa4a30c54dd32d7dd5a305a73672e942e8300c8dc3ca726faf742ca6ae5"
+    },
+    "deterministicSha256": "0c1520460568c5ac2b625f5aaf1eee9bc696024354cdf3f0513922b1b9cb8a3c",
+    "deterministicSha256Covers": "suite, sweeps, speedModel, modeDefaults (runtime excluded)"
+  },
+  "index": "LRI — Lastrico relative roughness index (uncalibrated, dimensionless, not IRI)",
+  "suite": {
+    "overall": {
+      "confusion": {
+        "smooth": {
+          "smooth": 420,
+          "rough-periodic": 0,
+          "uncertain": 11
+        },
+        "rough-periodic": {
+          "smooth": 0,
+          "rough-periodic": 220,
+          "uncertain": 5
+        },
+        "rough-other": {
+          "smooth": 0,
+          "rough-periodic": 9,
+          "uncertain": 2
+        },
+        "mixed": {
+          "smooth": 11,
+          "rough-periodic": 39,
+          "uncertain": 66
+        }
+      },
+      "metrics": {
+        "scoredSegments": 667,
+        "mixedSegmentsExcluded": 116,
+        "coverage": 0.973,
+        "balancedAccuracyWhenDecided": 1,
+        "perClass": {
+          "smooth": {
+            "support": 431,
+            "predicted": 420,
+            "precision": 1,
+            "recall": 0.9745,
+            "recallWhenDecided": 1,
+            "abstentionRate": 0.0255
+          },
+          "rough-periodic": {
+            "support": 225,
+            "predicted": 229,
+            "precision": 0.9607,
+            "recall": 0.9778,
+            "recallWhenDecided": 1,
+            "abstentionRate": 0.0222
+          }
+        },
+        "roughOther": {
+          "support": 11,
+          "calledRoughPeriodic": 0.8182,
+          "calledSmooth": 0,
+          "abstained": 0.1818
+        }
+      }
+    },
+    "baselines": {
+      "naiveThreshold": {
+        "thresholdsMs2": {
+          "car": 0.45,
+          "motorcycle": 0.75,
+          "bicycle": 2.2
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 413,
+            "rough-periodic": 18,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 17,
+            "rough-periodic": 208,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 2,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 34,
+            "rough-periodic": 82,
+            "uncertain": 0
+          }
+        },
+        "metrics": {
+          "scoredSegments": 667,
+          "mixedSegmentsExcluded": 116,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 0.9413,
+          "perClass": {
+            "smooth": {
+              "support": 431,
+              "predicted": 432,
+              "precision": 0.956,
+              "recall": 0.9582,
+              "recallWhenDecided": 0.9582,
+              "abstentionRate": 0
+            },
+            "rough-periodic": {
+              "support": 225,
+              "predicted": 235,
+              "precision": 0.8851,
+              "recall": 0.9244,
+              "recallWhenDecided": 0.9244,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 11,
+            "calledRoughPeriodic": 0.8182,
+            "calledSmooth": 0.1818,
+            "abstained": 0
+          }
+        }
+      },
+      "prevalence": {
+        "majority": "smooth",
+        "metrics": {
+          "scoredSegments": 667,
+          "mixedSegmentsExcluded": 0,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 0.5,
+          "perClass": {
+            "smooth": {
+              "support": 431,
+              "predicted": 667,
+              "precision": 0.6462,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            },
+            "rough-periodic": {
+              "support": 225,
+              "predicted": 0,
+              "precision": null,
+              "recall": 0,
+              "recallWhenDecided": 0,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 11,
+            "calledRoughPeriodic": 0,
+            "calledSmooth": 1,
+            "abstained": 0
+          }
+        }
+      }
+    },
+    "groups": {
+      "smooth-asphalt": {
+        "trips": [
+          "car-asphalt-8",
+          "car-asphalt-12"
+        ],
+        "metrics": {
+          "scoredSegments": 39,
+          "mixedSegmentsExcluded": 0,
+          "coverage": 0.9744,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 39,
+              "predicted": 38,
+              "precision": 1,
+              "recall": 0.9744,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0.0256
+            },
+            "rough-periodic": {
+              "support": 0,
+              "predicted": 0,
+              "precision": null,
+              "recall": null,
+              "recallWhenDecided": null,
+              "abstentionRate": null
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 38,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          }
+        }
+      },
+      "sett-car": {
+        "trips": [
+          "car-mixed-p0.1-v4",
+          "car-mixed-p0.1-v8",
+          "car-mixed-p0.1-v12",
+          "car-mixed-p0.15-v4",
+          "car-mixed-p0.15-v8",
+          "car-mixed-p0.15-v12",
+          "car-mixed-p0.2-v4",
+          "car-mixed-p0.2-v8",
+          "car-mixed-p0.2-v12",
+          "car-mixed-slower-on-sett"
+        ],
+        "metrics": {
+          "scoredSegments": 222,
+          "mixedSegmentsExcluded": 41,
+          "coverage": 0.9865,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 135,
+              "predicted": 132,
+              "precision": 1,
+              "recall": 0.9778,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0.0222
+            },
+            "rough-periodic": {
+              "support": 87,
+              "predicted": 87,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 132,
+            "rough-periodic": 0,
+            "uncertain": 3
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 87,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 2,
+            "rough-periodic": 14,
+            "uncertain": 25
+          }
+        }
+      },
+      "sett-bicycle": {
+        "trips": [
+          "bike-mixed-p0.1-v3",
+          "bike-mixed-p0.1-v5",
+          "bike-mixed-p0.15-v3",
+          "bike-mixed-p0.15-v5",
+          "bike-mixed-p0.2-v3",
+          "bike-mixed-p0.2-v5",
+          "bike-mixed-slow-periodic"
+        ],
+        "metrics": {
+          "scoredSegments": 83,
+          "mixedSegmentsExcluded": 24,
+          "coverage": 0.9759,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 51,
+              "predicted": 51,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            },
+            "rough-periodic": {
+              "support": 32,
+              "predicted": 30,
+              "precision": 1,
+              "recall": 0.9375,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0.0625
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 51,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 30,
+            "uncertain": 2
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 2,
+            "rough-periodic": 5,
+            "uncertain": 17
+          }
+        }
+      },
+      "events-on-asphalt": {
+        "trips": [
+          "car-asphalt-events"
+        ],
+        "metrics": {
+          "scoredSegments": 21,
+          "mixedSegmentsExcluded": 0,
+          "coverage": 0.9524,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 21,
+              "predicted": 20,
+              "precision": 1,
+              "recall": 0.9524,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0.0476
+            },
+            "rough-periodic": {
+              "support": 0,
+              "predicted": 0,
+              "precision": null,
+              "recall": null,
+              "recallWhenDecided": null,
+              "abstentionRate": null
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 20,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          }
+        }
+      },
+      "phone-in-hand": {
+        "trips": [
+          "car-hand-mixed"
+        ],
+        "metrics": {
+          "scoredSegments": 22,
+          "mixedSegmentsExcluded": 4,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 13,
+              "predicted": 13,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            },
+            "rough-periodic": {
+              "support": 9,
+              "predicted": 9,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 3
+          }
+        }
+      },
+      "orientation-change": {
+        "trips": [
+          "car-orientation-change"
+        ],
+        "metrics": {
+          "scoredSegments": 22,
+          "mixedSegmentsExcluded": 4,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 13,
+              "predicted": 13,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            },
+            "rough-periodic": {
+              "support": 9,
+              "predicted": 9,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        }
+      },
+      "irregular-sampling": {
+        "trips": [
+          "car-ios-like-jitter-drops",
+          "car-30hz",
+          "car-60hz-gaps"
+        ],
+        "metrics": {
+          "scoredSegments": 67,
+          "mixedSegmentsExcluded": 10,
+          "coverage": 0.9851,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 41,
+              "predicted": 40,
+              "precision": 1,
+              "recall": 0.9756,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0.0244
+            },
+            "rough-periodic": {
+              "support": 26,
+              "predicted": 26,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 40,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 26,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 2,
+            "rough-periodic": 5,
+            "uncertain": 3
+          }
+        }
+      },
+      "gps-dropout": {
+        "trips": [
+          "car-gps-dropouts"
+        ],
+        "metrics": {
+          "scoredSegments": 26,
+          "mixedSegmentsExcluded": 3,
+          "coverage": 0.7308,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 16,
+              "predicted": 12,
+              "precision": 1,
+              "recall": 0.75,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0.25
+            },
+            "rough-periodic": {
+              "support": 10,
+              "predicted": 7,
+              "precision": 1,
+              "recall": 0.7,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0.3
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 12,
+            "rough-periodic": 0,
+            "uncertain": 4
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 7,
+            "uncertain": 3
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        }
+      },
+      "low-speed": {
+        "trips": [
+          "car-walking-pace"
+        ],
+        "metrics": {
+          "scoredSegments": 2,
+          "mixedSegmentsExcluded": 5,
+          "coverage": 0,
+          "balancedAccuracyWhenDecided": null,
+          "perClass": {
+            "smooth": {
+              "support": 2,
+              "predicted": 0,
+              "precision": null,
+              "recall": 0,
+              "recallWhenDecided": null,
+              "abstentionRate": 1
+            },
+            "rough-periodic": {
+              "support": 0,
+              "predicted": 0,
+              "precision": null,
+              "recall": null,
+              "recallWhenDecided": null,
+              "abstentionRate": null
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 2
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 5
+          }
+        }
+      },
+      "no-gps": {
+        "trips": [
+          "car-gps-off"
+        ],
+        "metrics": {
+          "scoredSegments": 12,
+          "mixedSegmentsExcluded": 4,
+          "coverage": 0,
+          "balancedAccuracyWhenDecided": null,
+          "perClass": {
+            "smooth": {
+              "support": 8,
+              "predicted": 0,
+              "precision": null,
+              "recall": 0,
+              "recallWhenDecided": null,
+              "abstentionRate": 1
+            },
+            "rough-periodic": {
+              "support": 4,
+              "predicted": 0,
+              "precision": null,
+              "recall": 0,
+              "recallWhenDecided": null,
+              "abstentionRate": 1
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 8
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 4
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 4
+          }
+        }
+      },
+      "clipping": {
+        "trips": [
+          "bike-sett-clipping",
+          "car-potholes-clipping"
+        ],
+        "metrics": {
+          "scoredSegments": 34,
+          "mixedSegmentsExcluded": 3,
+          "coverage": 0.9706,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 29,
+              "predicted": 28,
+              "precision": 1,
+              "recall": 0.9655,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0.0345
+            },
+            "rough-periodic": {
+              "support": 5,
+              "predicted": 5,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 28,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 5,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        }
+      },
+      "sett-majority": {
+        "trips": [
+          "car-sett-majority"
+        ],
+        "metrics": {
+          "scoredSegments": 14,
+          "mixedSegmentsExcluded": 3,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 3,
+              "predicted": 3,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            },
+            "rough-periodic": {
+              "support": 11,
+              "predicted": 11,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 3,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 11,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        }
+      },
+      "all-sett": {
+        "trips": [
+          "car-all-sett"
+        ],
+        "metrics": {
+          "scoredSegments": 15,
+          "mixedSegmentsExcluded": 0,
+          "coverage": 0,
+          "balancedAccuracyWhenDecided": null,
+          "perClass": {
+            "smooth": {
+              "support": 0,
+              "predicted": 0,
+              "precision": null,
+              "recall": null,
+              "recallWhenDecided": null,
+              "abstentionRate": null
+            },
+            "rough-periodic": {
+              "support": 15,
+              "predicted": 0,
+              "precision": null,
+              "recall": 0,
+              "recallWhenDecided": null,
+              "abstentionRate": 1
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 15
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          }
+        }
+      },
+      "confounder-rough-asphalt": {
+        "trips": [
+          "car-rough-asphalt-confounder",
+          "bike-rough-asphalt-slow"
+        ],
+        "metrics": {
+          "scoredSegments": 29,
+          "mixedSegmentsExcluded": 8,
+          "coverage": 0.931,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 18,
+              "predicted": 18,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            },
+            "rough-periodic": {
+              "support": 0,
+              "predicted": 9,
+              "precision": 0,
+              "recall": null,
+              "recallWhenDecided": null,
+              "abstentionRate": null
+            }
+          },
+          "roughOther": {
+            "support": 11,
+            "calledRoughPeriodic": 0.8182,
+            "calledSmooth": 0,
+            "abstained": 0.1818
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 18,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 2
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 6
+          }
+        }
+      },
+      "platform-variants": {
+        "trips": [
+          "car-ios-sign-inverted",
+          "car-no-gyro-no-linear",
+          "car-quantized-0.1",
+          "moto-mixed-untuned"
+        ],
+        "metrics": {
+          "scoredSegments": 88,
+          "mixedSegmentsExcluded": 16,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "perClass": {
+            "smooth": {
+              "support": 52,
+              "predicted": 52,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            },
+            "rough-periodic": {
+              "support": 36,
+              "predicted": 36,
+              "precision": 1,
+              "recall": 1,
+              "recallWhenDecided": 1,
+              "abstentionRate": 0
+            }
+          },
+          "roughOther": {
+            "support": 0,
+            "calledRoughPeriodic": null,
+            "calledSmooth": null,
+            "abstained": null
+          }
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 52,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 36,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 4,
+            "rough-periodic": 6,
+            "uncertain": 6
+          }
+        }
+      }
+    },
+    "trips": [
+      {
+        "id": "car-asphalt-8",
+        "group": "smooth-asphalt",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 150,
+        "motionRows": 8999,
+        "gpsRows": 150,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1662,
+          "poolWindows": 278,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 19,
+          "rough-periodic": 0,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "run-edge": 1
+        },
+        "bases": {
+          "low-relative-level": 19
+        },
+        "lriByTruth": {
+          "smooth": 1.09
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 19,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 20
+      },
+      {
+        "id": "car-asphalt-12",
+        "group": "smooth-asphalt",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 100,
+        "motionRows": 6000,
+        "gpsRows": 100,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.31,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1544,
+          "poolWindows": 185,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 19,
+          "rough-periodic": 0,
+          "uncertain": 0
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {},
+        "bases": {
+          "low-relative-level": 19
+        },
+        "lriByTruth": {
+          "smooth": 1.085
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 19,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 19
+      },
+      {
+        "id": "car-mixed-p0.1-v4",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 405,
+        "motionRows": 24300,
+        "gpsRows": 405,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.175,
+          "poolWindows": 756,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 10,
+          "uncertain": 3
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "intermediate": 3
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 10
+        },
+        "lriByTruth": {
+          "smooth": 1.044,
+          "rough-periodic": 4.304
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 14,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 8,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 3
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 27
+      },
+      {
+        "id": "car-mixed-p0.1-v8",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 202.5,
+        "motionRows": 12149,
+        "gpsRows": 203,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.34,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1751,
+          "poolWindows": 373,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 11,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.048,
+          "rough-periodic": 4.651
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 14,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 8,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 3,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 2,
+          "unmatchedOnAsphalt": 1
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-mixed-p0.1-v12",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 135,
+        "motionRows": 8101,
+        "gpsRows": 135,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.31,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1606,
+          "poolWindows": 242,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 12,
+          "rough-periodic": 9,
+          "uncertain": 5
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "intermediate": 4,
+          "run-edge": 1
+        },
+        "bases": {
+          "low-relative-level": 12,
+          "sustained-only-periodicity-unresolvable": 9
+        },
+        "lriByTruth": {
+          "smooth": 1.038,
+          "rough-periodic": 5.565
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 12,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 4
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "bike-mixed-p0.1-v3",
+        "group": "sett-bicycle",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 324,
+        "motionRows": 19440,
+        "gpsRows": 324,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.33,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7769,
+          "poolWindows": 605,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 7,
+          "rough-periodic": 3,
+          "uncertain": 6
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 4,
+          "rough-not-periodic": 2
+        },
+        "bases": {
+          "low-relative-level": 7,
+          "sustained-and-periodic": 3
+        },
+        "lriByTruth": {
+          "smooth": 1.036,
+          "rough-periodic": 2.862
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 7,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 3,
+            "uncertain": 2
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 4
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 16
+      },
+      {
+        "id": "bike-mixed-p0.1-v5",
+        "group": "sett-bicycle",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 194.4,
+        "motionRows": 11663,
+        "gpsRows": 195,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7525,
+          "poolWindows": 350,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 8,
+          "rough-periodic": 6,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 8,
+          "sustained-only-periodicity-unresolvable": 6
+        },
+        "lriByTruth": {
+          "smooth": 1.038,
+          "rough-periodic": 5.75
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 8,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 5,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 16
+      },
+      {
+        "id": "car-mixed-p0.15-v4",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 405,
+        "motionRows": 24300,
+        "gpsRows": 405,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.33,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1735,
+          "poolWindows": 756,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 10,
+          "uncertain": 3
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "intermediate": 3
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 10
+        },
+        "lriByTruth": {
+          "smooth": 1.045,
+          "rough-periodic": 3.579
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 14,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 3
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 27
+      },
+      {
+        "id": "car-mixed-p0.15-v8",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 202.5,
+        "motionRows": 12150,
+        "gpsRows": 203,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.178,
+          "poolWindows": 375,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 10,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 10
+        },
+        "lriByTruth": {
+          "smooth": 1.05,
+          "rough-periodic": 4.455
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-mixed-p0.15-v12",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 135,
+        "motionRows": 8101,
+        "gpsRows": 135,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1553,
+          "poolWindows": 242,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 12,
+          "rough-periodic": 9,
+          "uncertain": 5
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "intermediate": 4,
+          "run-edge": 1
+        },
+        "bases": {
+          "low-relative-level": 12,
+          "sustained-only-periodicity-unresolvable": 9
+        },
+        "lriByTruth": {
+          "smooth": 1.042,
+          "rough-periodic": 5.318
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 12,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 4
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "bike-mixed-p0.15-v3",
+        "group": "sett-bicycle",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 324,
+        "motionRows": 19439,
+        "gpsRows": 324,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.34,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7119,
+          "poolWindows": 601,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 9,
+          "rough-periodic": 5,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 9,
+          "sustained-and-periodic": 5
+        },
+        "lriByTruth": {
+          "smooth": 1.051,
+          "rough-periodic": 3.437
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 7,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 5,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 2,
+            "rough-periodic": 0,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 16
+      },
+      {
+        "id": "bike-mixed-p0.15-v5",
+        "group": "sett-bicycle",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 194.4,
+        "motionRows": 11663,
+        "gpsRows": 195,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.33,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7442,
+          "poolWindows": 353,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 8,
+          "rough-periodic": 6,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 8,
+          "sustained-only-periodicity-unresolvable": 6
+        },
+        "lriByTruth": {
+          "smooth": 1.051,
+          "rough-periodic": 4.792
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 8,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 5,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 1,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 16
+      },
+      {
+        "id": "car-mixed-p0.2-v4",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 405,
+        "motionRows": 24301,
+        "gpsRows": 405,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.33,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1659,
+          "poolWindows": 756,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 15,
+          "rough-periodic": 11,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 15,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.06,
+          "rough-periodic": 4.432
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 15,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 27
+      },
+      {
+        "id": "car-mixed-p0.2-v8",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 202.5,
+        "motionRows": 12150,
+        "gpsRows": 203,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.33,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1724,
+          "poolWindows": 373,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 13,
+          "rough-periodic": 10,
+          "uncertain": 3
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 3
+        },
+        "bases": {
+          "low-relative-level": 13,
+          "sustained-only-periodicity-unresolvable": 10
+        },
+        "lriByTruth": {
+          "smooth": 1.059,
+          "rough-periodic": 4.678
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 8,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 3
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-mixed-p0.2-v12",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 135,
+        "motionRows": 8100,
+        "gpsRows": 135,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.34,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1564,
+          "poolWindows": 248,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 12,
+          "rough-periodic": 10,
+          "uncertain": 4
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "intermediate": 3,
+          "run-edge": 1
+        },
+        "bases": {
+          "low-relative-level": 12,
+          "sustained-only-periodicity-unresolvable": 10
+        },
+        "lriByTruth": {
+          "smooth": 1.054,
+          "rough-periodic": 4.46
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 12,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 3
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "bike-mixed-p0.2-v3",
+        "group": "sett-bicycle",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 324,
+        "motionRows": 19440,
+        "gpsRows": 324,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.31,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7774,
+          "poolWindows": 597,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 8,
+          "rough-periodic": 5,
+          "uncertain": 3
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 3
+        },
+        "bases": {
+          "low-relative-level": 8,
+          "sustained-and-periodic": 5
+        },
+        "lriByTruth": {
+          "smooth": 1.04,
+          "rough-periodic": 2.809
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 8,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 5,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 3
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 1,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 16
+      },
+      {
+        "id": "bike-mixed-p0.2-v5",
+        "group": "sett-bicycle",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 194.4,
+        "motionRows": 11665,
+        "gpsRows": 195,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.32,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7712,
+          "poolWindows": 352,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 8,
+          "rough-periodic": 6,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 8,
+          "sustained-only-periodicity-unresolvable": 6
+        },
+        "lriByTruth": {
+          "smooth": 1.046,
+          "rough-periodic": 4.344
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 8,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 5,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 16
+      },
+      {
+        "id": "car-mixed-slower-on-sett",
+        "group": "sett-car",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 165.8,
+        "motionRows": 9945,
+        "gpsRows": 166,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1641,
+          "poolWindows": 302,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 11,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.015,
+          "rough-periodic": 4.612
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 2,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-asphalt-events",
+        "group": "events-on-asphalt",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 140.4,
+        "motionRows": 8424,
+        "gpsRows": 141,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.36,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1643,
+          "poolWindows": 250,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 20,
+          "rough-periodic": 0,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "run-edge": 1
+        },
+        "bases": {
+          "low-relative-level": 20
+        },
+        "lriByTruth": {
+          "smooth": 1.079
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 20,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          }
+        },
+        "events": {
+          "truthEvents": 6,
+          "matched": 5,
+          "byKind": {
+            "pothole": {
+              "truth": 3,
+              "detected": 3
+            },
+            "speed-bump": {
+              "truth": 2,
+              "detected": 1
+            },
+            "kerb": {
+              "truth": 1,
+              "detected": 1
+            }
+          },
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 21
+      },
+      {
+        "id": "car-hand-mixed",
+        "group": "phone-in-hand",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10800,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.33,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.0734,
+          "poolWindows": 290,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 13,
+          "rough-periodic": 10,
+          "uncertain": 3
+        },
+        "windowFlagCounts": {
+          "run-edge": 1,
+          "handling": 45,
+          "orientation-change": 43
+        },
+        "reasonCounts": {
+          "intermediate": 3
+        },
+        "bases": {
+          "low-relative-level": 13,
+          "sustained-only-periodicity-unresolvable": 10
+        },
+        "lriByTruth": {
+          "smooth": 1.069,
+          "rough-periodic": 3.815
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 3
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-orientation-change",
+        "group": "orientation-change",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10800,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.29,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.177,
+          "poolWindows": 320,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 11,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 1,
+          "handling": 9,
+          "orientation-change": 9
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.028,
+          "rough-periodic": 4.151
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-ios-like-jitter-drops",
+        "group": "irregular-sampling",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10312,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 55.62,
+          "jitterMs": 2.68,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1626,
+          "poolWindows": 331,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 11,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.055,
+          "rough-periodic": 4.326
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-30hz",
+        "group": "irregular-sampling",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 5400,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 30,
+          "jitterMs": 1.66,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1472,
+          "poolWindows": 331,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 11,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.041,
+          "rough-periodic": 4.336
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-60hz-gaps",
+        "group": "irregular-sampling",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 9957,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.36,
+          "runs": 3,
+          "gaps": 2
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1679,
+          "poolWindows": 300,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 9,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 5
+        },
+        "reasonCounts": {
+          "run-edge": 1,
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 9
+        },
+        "lriByTruth": {
+          "smooth": 1.074,
+          "rough-periodic": 4.053
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 14,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 8,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 25
+      },
+      {
+        "id": "car-gps-dropouts",
+        "group": "gps-dropout",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10800,
+        "gpsRows": 145,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.31,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1636,
+          "poolWindows": 276,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 12,
+          "rough-periodic": 8,
+          "uncertain": 9
+        },
+        "windowFlagCounts": {
+          "run-edge": 1,
+          "gps-missing": 57
+        },
+        "reasonCounts": {
+          "intermediate": 2,
+          "gps-missing": 6,
+          "too-few-usable-windows": 1
+        },
+        "bases": {
+          "low-relative-level": 12,
+          "sustained-only-periodicity-unresolvable": 8
+        },
+        "lriByTruth": {
+          "smooth": 1.035,
+          "rough-periodic": 4.384
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 12,
+            "rough-periodic": 0,
+            "uncertain": 4
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 7,
+            "uncertain": 3
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 29
+      },
+      {
+        "id": "car-walking-pace",
+        "group": "low-speed",
+        "expect": "abstain",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 270,
+        "motionRows": 16200,
+        "gpsRows": 270,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.31,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "mode-prior",
+          "nrms": 0.18,
+          "poolWindows": 0,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 0,
+          "rough-periodic": 0,
+          "uncertain": 7
+        },
+        "windowFlagCounts": {
+          "too-slow": 505,
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "too-slow": 7
+        },
+        "bases": {},
+        "lriByTruth": {},
+        "confusion": {
+          "smooth": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 2
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 5
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 7
+      },
+      {
+        "id": "car-gps-off",
+        "group": "no-gps",
+        "expect": "abstain",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 90,
+        "motionRows": 5399,
+        "gpsRows": 0,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.32,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "mode-prior",
+          "nrms": 0.18,
+          "poolWindows": 0,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 0,
+          "rough-periodic": 0,
+          "uncertain": 16
+        },
+        "windowFlagCounts": {
+          "gps-missing": 167,
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "gps-missing": 16
+        },
+        "bases": {},
+        "lriByTruth": {},
+        "confusion": {
+          "smooth": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 8
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 4
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 4
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 16
+      },
+      {
+        "id": "bike-sett-clipping",
+        "group": "clipping",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 162,
+        "motionRows": 9720,
+        "gpsRows": 162,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.33,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7437,
+          "poolWindows": 288,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 8,
+          "rough-periodic": 6,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "clipping-lower-bound": 6,
+          "clipping": 1,
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 8,
+          "sustained-only-periodicity-unresolvable": 6
+        },
+        "lriByTruth": {
+          "smooth": 1.05,
+          "rough-periodic": 6.171
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 8,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 5,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 3,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 16
+      },
+      {
+        "id": "car-potholes-clipping",
+        "group": "clipping",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 140.4,
+        "motionRows": 8424,
+        "gpsRows": 141,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.31,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1547,
+          "poolWindows": 250,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 20,
+          "rough-periodic": 0,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "run-edge": 1
+        },
+        "bases": {
+          "low-relative-level": 20
+        },
+        "lriByTruth": {
+          "smooth": 1.106
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 20,
+            "rough-periodic": 0,
+            "uncertain": 1
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          }
+        },
+        "events": {
+          "truthEvents": 6,
+          "matched": 5,
+          "byKind": {
+            "pothole": {
+              "truth": 3,
+              "detected": 3
+            },
+            "speed-bump": {
+              "truth": 2,
+              "detected": 1
+            },
+            "kerb": {
+              "truth": 1,
+              "detected": 1
+            }
+          },
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 21
+      },
+      {
+        "id": "car-sett-majority",
+        "group": "sett-majority",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 118.9,
+        "motionRows": 7134,
+        "gpsRows": 119,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.34,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.2013,
+          "poolWindows": 220,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 3,
+          "rough-periodic": 13,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 3,
+          "sustained-only-periodicity-unresolvable": 13
+        },
+        "lriByTruth": {
+          "smooth": 0.837,
+          "rough-periodic": 4.024
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 3,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 11,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 17
+      },
+      {
+        "id": "car-all-sett",
+        "group": "all-sett",
+        "expect": "no-smooth",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 112.5,
+        "motionRows": 6750,
+        "gpsRows": 113,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.29,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7465,
+          "poolWindows": 208,
+          "percentile": 20,
+          "suspect": true
+        },
+        "labelCounts": {
+          "smooth": 0,
+          "rough-periodic": 0,
+          "uncertain": 15
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "absolute-level-high": 15
+        },
+        "bases": {},
+        "lriByTruth": {
+          "rough-periodic": 1.061
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 15
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 15
+      },
+      {
+        "id": "car-rough-asphalt-confounder",
+        "group": "confounder-rough-asphalt",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10799,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.3,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1774,
+          "poolWindows": 335,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 13,
+          "rough-periodic": 11,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 13,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.044,
+          "rough-other": 4.212
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "bike-rough-asphalt-slow",
+        "group": "confounder-rough-asphalt",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 259.2,
+        "motionRows": 15551,
+        "gpsRows": 260,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7474,
+          "poolWindows": 483,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 5,
+          "rough-periodic": 0,
+          "uncertain": 6
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "rough-not-periodic": 4,
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 5
+        },
+        "lriByTruth": {
+          "smooth": 1.056,
+          "rough-other": 4.107
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 5,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 2
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 4
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 11
+      },
+      {
+        "id": "car-ios-sign-inverted",
+        "group": "platform-variants",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10799,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1674,
+          "poolWindows": 331,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 10,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 10
+        },
+        "lriByTruth": {
+          "smooth": 1.035,
+          "rough-periodic": 4.311
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-no-gyro-no-linear",
+        "group": "platform-variants",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10800,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.35,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.166,
+          "poolWindows": 331,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 11,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.048,
+          "rough-periodic": 4.297
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "car-quantized-0.1",
+        "group": "platform-variants",
+        "expect": "classify",
+        "mode": "car",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10799,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 57.2,
+          "jitterMs": 1.4,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.1756,
+          "poolWindows": 333,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 11,
+          "uncertain": 1
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 11
+        },
+        "lriByTruth": {
+          "smooth": 1.04,
+          "rough-periodic": 4.222
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 2,
+            "uncertain": 1
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "moto-mixed-untuned",
+        "group": "platform-variants",
+        "expect": "classify",
+        "mode": "motorcycle",
+        "dataKind": "synthetic",
+        "durationS": 180,
+        "motionRows": 10799,
+        "gpsRows": 180,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.31,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.3024,
+          "poolWindows": 327,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 14,
+          "rough-periodic": 10,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 1
+        },
+        "reasonCounts": {
+          "intermediate": 2
+        },
+        "bases": {
+          "low-relative-level": 14,
+          "sustained-only-periodicity-unresolvable": 10
+        },
+        "lriByTruth": {
+          "smooth": 1.028,
+          "rough-periodic": 4.486
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 13,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 9,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 1,
+            "rough-periodic": 1,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 26
+      },
+      {
+        "id": "bike-mixed-slow-periodic",
+        "group": "sett-bicycle",
+        "expect": "classify",
+        "mode": "bicycle",
+        "dataKind": "synthetic",
+        "durationS": 294.5,
+        "motionRows": 17673,
+        "gpsRows": 295,
+        "sampling": {
+          "rateHz": 60,
+          "jitterMs": 1.32,
+          "runs": 1,
+          "gaps": 0
+        },
+        "baseline": {
+          "source": "trip-percentile",
+          "nrms": 0.7675,
+          "poolWindows": 545,
+          "percentile": 20,
+          "suspect": false
+        },
+        "labelCounts": {
+          "smooth": 5,
+          "rough-periodic": 4,
+          "uncertain": 2
+        },
+        "windowFlagCounts": {
+          "run-edge": 2
+        },
+        "reasonCounts": {
+          "rough-not-periodic": 1,
+          "intermediate": 1
+        },
+        "bases": {
+          "low-relative-level": 5,
+          "sustained-and-periodic": 4
+        },
+        "lriByTruth": {
+          "smooth": 1.039,
+          "rough-periodic": 2.732
+        },
+        "confusion": {
+          "smooth": {
+            "smooth": 5,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "rough-periodic": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 0
+          },
+          "rough-other": {
+            "smooth": 0,
+            "rough-periodic": 0,
+            "uncertain": 0
+          },
+          "mixed": {
+            "smooth": 0,
+            "rough-periodic": 2,
+            "uncertain": 2
+          }
+        },
+        "events": {
+          "truthEvents": 0,
+          "matched": 0,
+          "byKind": {},
+          "unmatchedDetections": 0,
+          "unmatchedOnAsphalt": 0
+        },
+        "segments": 11
+      }
+    ]
+  },
+  "sweeps": {
+    "dataKind": "synthetic",
+    "mode": "car",
+    "seeds": [
+      1,
+      2
+    ],
+    "results": {
+      "settSeverity": [
+        {
+          "value": 0.1,
+          "coverage": 0.6087,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": null,
+          "roughRecall": 0,
+          "settToAsphaltLriRatio": 1.54,
+          "bases": {
+            "low-relative-level": 31
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 18
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 3,
+              "rough-periodic": 0,
+              "uncertain": 3
+            }
+          }
+        },
+        {
+          "value": 0.2,
+          "coverage": 0.7391,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 0.3333,
+          "settToAsphaltLriRatio": 1.7,
+          "bases": {
+            "low-relative-level": 30,
+            "sustained-only-periodicity-unresolvable": 6
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 6,
+              "uncertain": 12
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 2,
+              "rough-periodic": 0,
+              "uncertain": 4
+            }
+          }
+        },
+        {
+          "value": 0.3,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 1.91,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 20
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 2,
+              "uncertain": 3
+            }
+          }
+        },
+        {
+          "value": 0.5,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 2.53,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-only-periodicity-unresolvable": 20
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 2,
+              "uncertain": 4
+            }
+          }
+        },
+        {
+          "value": 1,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.36,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        }
+      ],
+      "sensorNoiseMs2": [
+        {
+          "value": 0.02,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.36,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 0.1,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 3.95,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 3,
+              "uncertain": 2
+            }
+          }
+        },
+        {
+          "value": 0.4,
+          "coverage": 0.9783,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 0.9643,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 2.18,
+          "bases": {
+            "low-relative-level": 27,
+            "sustained-only-periodicity-unresolvable": 20
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 27,
+              "rough-periodic": 0,
+              "uncertain": 1
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 2,
+              "uncertain": 4
+            }
+          }
+        },
+        {
+          "value": 0.8,
+          "coverage": 0,
+          "balancedAccuracyWhenDecided": null,
+          "smoothPrecision": null,
+          "smoothRecall": 0,
+          "roughPrecision": null,
+          "roughRecall": 0,
+          "settToAsphaltLriRatio": 1.43,
+          "bases": {},
+          "confusion": {
+            "smooth": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 28
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 18
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 6
+            }
+          }
+        },
+        {
+          "value": 1.6,
+          "coverage": 0,
+          "balancedAccuracyWhenDecided": null,
+          "smoothPrecision": null,
+          "smoothRecall": 0,
+          "roughPrecision": null,
+          "roughRecall": 0,
+          "settToAsphaltLriRatio": 1.13,
+          "bases": {},
+          "confusion": {
+            "smooth": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 28
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 18
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 6
+            }
+          }
+        }
+      ],
+      "speedMs": [
+        {
+          "value": 2,
+          "coverage": 0,
+          "balancedAccuracyWhenDecided": null,
+          "smoothPrecision": null,
+          "smoothRecall": 0,
+          "roughPrecision": null,
+          "roughRecall": 0,
+          "settToAsphaltLriRatio": null,
+          "bases": {},
+          "confusion": {
+            "smooth": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 29
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 19
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 6
+            }
+          }
+        },
+        {
+          "value": 3,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.19,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-and-periodic": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 3,
+              "uncertain": 5
+            }
+          }
+        },
+        {
+          "value": 5,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 3.42,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 17,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 4,
+              "uncertain": 5
+            }
+          }
+        },
+        {
+          "value": 8,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.36,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 11,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.95,
+          "bases": {
+            "low-relative-level": 24,
+            "sustained-only-periodicity-unresolvable": 18
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 24,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 16,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 2,
+              "uncertain": 8
+            }
+          }
+        },
+        {
+          "value": 14,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 6.79,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-only-periodicity-unresolvable": 19
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 25,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 16,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 3,
+              "rough-periodic": 3,
+              "uncertain": 3
+            }
+          }
+        },
+        {
+          "value": 17,
+          "coverage": 0.9524,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 0.9231,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 8.03,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-only-periodicity-unresolvable": 20
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 24,
+              "rough-periodic": 0,
+              "uncertain": 2
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 16,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 4,
+              "rough-periodic": 4,
+              "uncertain": 2
+            }
+          }
+        },
+        {
+          "value": 22,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 8.58,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-only-periodicity-unresolvable": 18
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 22,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 14,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 6,
+              "rough-periodic": 4,
+              "uncertain": 0
+            }
+          }
+        }
+      ],
+      "pitchM": [
+        {
+          "value": 0.08,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.64,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 0.12,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.35,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 0.16,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.44,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 3,
+              "uncertain": 2
+            }
+          }
+        },
+        {
+          "value": 0.2,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.47,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 3,
+              "uncertain": 3
+            }
+          }
+        },
+        {
+          "value": 0.24,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 3.76,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 3,
+              "uncertain": 3
+            }
+          }
+        }
+      ],
+      "samplingHz": [
+        {
+          "value": 20,
+          "coverage": 0.9545,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 0.9231,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.71,
+          "bases": {
+            "low-relative-level": 24,
+            "sustained-only-periodicity-unresolvable": 18
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 24,
+              "rough-periodic": 0,
+              "uncertain": 2
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 8
+            }
+          }
+        },
+        {
+          "value": 30,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.73,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 3,
+              "uncertain": 2
+            }
+          }
+        },
+        {
+          "value": 50,
+          "coverage": 0.9545,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 0.9286,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.04,
+          "bases": {
+            "low-relative-level": 26,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 26,
+              "rough-periodic": 0,
+              "uncertain": 2
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 16,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 5,
+              "uncertain": 5
+            }
+          }
+        },
+        {
+          "value": 60,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.36,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 100,
+          "coverage": 0.9545,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 0.9286,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 3.5,
+          "bases": {
+            "low-relative-level": 26,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 26,
+              "rough-periodic": 0,
+              "uncertain": 2
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 16,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 5,
+              "uncertain": 5
+            }
+          }
+        }
+      ],
+      "timestampJitterMs": [
+        {
+          "value": 0,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.3,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 2,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.36,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 5,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.43,
+          "bases": {
+            "low-relative-level": 28,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 4,
+              "uncertain": 2
+            }
+          }
+        },
+        {
+          "value": 10,
+          "coverage": 0.9783,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 0.9643,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.53,
+          "bases": {
+            "low-relative-level": 27,
+            "sustained-only-periodicity-unresolvable": 21
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 27,
+              "rough-periodic": 0,
+              "uncertain": 1
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 0,
+              "rough-periodic": 3,
+              "uncertain": 3
+            }
+          }
+        }
+      ],
+      "quantizeMs2": [
+        {
+          "value": 0,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.36,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 0.1,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.35,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        },
+        {
+          "value": 0.3,
+          "coverage": 1,
+          "balancedAccuracyWhenDecided": 1,
+          "smoothPrecision": 1,
+          "smoothRecall": 1,
+          "roughPrecision": 1,
+          "roughRecall": 1,
+          "settToAsphaltLriRatio": 4.65,
+          "bases": {
+            "low-relative-level": 29,
+            "sustained-only-periodicity-unresolvable": 22
+          },
+          "confusion": {
+            "smooth": {
+              "smooth": 28,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "rough-periodic": {
+              "smooth": 0,
+              "rough-periodic": 18,
+              "uncertain": 0
+            },
+            "rough-other": {
+              "smooth": 0,
+              "rough-periodic": 0,
+              "uncertain": 0
+            },
+            "mixed": {
+              "smooth": 1,
+              "rough-periodic": 4,
+              "uncertain": 1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "speedModel": {
+    "assumedBeta": 0.5,
+    "fittedBetaOnSynthetic": {
+      "asphalt": 0.499,
+      "sett": 0.949
+    },
+    "medianBandRmsBySpeed": {
+      "asphalt": [
+        {
+          "speedMs": 3,
+          "rmsMs2": 0.0998
+        },
+        {
+          "speedMs": 5,
+          "rmsMs2": 0.133
+        },
+        {
+          "speedMs": 8,
+          "rmsMs2": 0.1688
+        },
+        {
+          "speedMs": 11,
+          "rmsMs2": 0.1936
+        },
+        {
+          "speedMs": 14,
+          "rmsMs2": 0.2204
+        },
+        {
+          "speedMs": 17,
+          "rmsMs2": 0.2361
+        },
+        {
+          "speedMs": 22,
+          "rmsMs2": 0.276
+        }
+      ],
+      "sett": [
+        {
+          "speedMs": 3,
+          "rmsMs2": 0.4188
+        },
+        {
+          "speedMs": 5,
+          "rmsMs2": 0.4622
+        },
+        {
+          "speedMs": 8,
+          "rmsMs2": 0.7344
+        },
+        {
+          "speedMs": 11,
+          "rmsMs2": 0.9625
+        },
+        {
+          "speedMs": 14,
+          "rmsMs2": 1.476
+        },
+        {
+          "speedMs": 17,
+          "rmsMs2": 1.893
+        },
+        {
+          "speedMs": 22,
+          "rmsMs2": 2.4916
+        }
+      ]
+    },
+    "note": "Asphalt follows beta=0.5 by construction of the generator; sett does not, so its LRI still rises with speed."
+  },
+  "modeDefaults": {
+    "car": {
+      "minSpeedMs": 2.5,
+      "handlingRotationDegS": 45,
+      "orientationShiftDeg": 10,
+      "eventMinMs2": 2.5,
+      "priorBaselineNrms": 0.18,
+      "smoothCeilingNrms": 0.45
+    },
+    "motorcycle": {
+      "minSpeedMs": 2.5,
+      "handlingRotationDegS": 60,
+      "orientationShiftDeg": 20,
+      "eventMinMs2": 3,
+      "priorBaselineNrms": 0.3,
+      "smoothCeilingNrms": 0.75
+    },
+    "bicycle": {
+      "minSpeedMs": 1.5,
+      "handlingRotationDegS": 80,
+      "orientationShiftDeg": 20,
+      "eventMinMs2": 6,
+      "priorBaselineNrms": 0.9,
+      "smoothCeilingNrms": 2.2
+    }
+  },
+  "runtime": {
+    "dataKind": "synthetic",
+    "machineDependent": true,
+    "machine": {
+      "platform": "darwin",
+      "arch": "arm64",
+      "cpu": "Apple M1",
+      "node": "v24.18.0"
+    },
+    "trip": {
+      "minutes": 10,
+      "samples": 36000,
+      "samplingHz": 60,
+      "segments": 94,
+      "windows": 1123
+    },
+    "generationMs": 241.9,
+    "analysis": {
+      "repetitions": 5,
+      "medianMs": 69.4,
+      "minMs": 65.5,
+      "maxMs": 73.3,
+      "samplesPerSecond": 518935,
+      "msPerMinuteOfData": 6.94,
+      "realTimeFactor": 8649
+    },
+    "memory": {
+      "gcExposed": true,
+      "heapGrowthDuringAnalysisMB": 30.1,
+      "estimatedWorkingSetMB": 7.1,
+      "exportedJsonMB": 2.73,
+      "exportedJsonMBPerMinute": 0.27
+    }
+  },
+  "evaluationWallClockSeconds": 15.8
+}

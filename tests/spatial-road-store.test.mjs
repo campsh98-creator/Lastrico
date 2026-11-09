@@ -14,7 +14,7 @@ test("spatialRoadStore satisfies integrity and segment count invariants", async 
   assert.equal(spatialRoadStore.pilotSegments, manifest.statistics.totalSegments);
   assert.ok(spatialRoadStore.totalSegments >= manifest.statistics.totalSegments);
   assert.equal(spatialRoadStore.sourceSha256, manifest.checksums.datasetSha256);
-  assert.equal(spatialRoadStore.tileCount, 23);
+  assert.equal(spatialRoadStore.tileCount, 117);
 
   const allRoads = spatialRoadStore.getAllRoads();
   assert.equal(allRoads.length, spatialRoadStore.totalSegments);
@@ -134,11 +134,28 @@ test("spatialRoadStore caches and evicts LRU index entries boundedly with true t
   assert.equal(spatialRoadStore.indexCacheSize, 8);
 });
 
-test("23-tile compact store satisfies reconciliation and oneway restriction invariants", () => {
-  assert.equal(spatialRoadStore.tileCount, 23);
+test("117-tile citywide compact store satisfies reconciliation and oneway restriction invariants", () => {
+  assert.equal(spatialRoadStore.tileCount, 117);
   assert.equal(spatialRoadStore.pilotSegments, 37106);
-  assert.equal(spatialRoadStore.totalSegments, 37844);
-  assert.equal(spatialRoadStore.totalSegments - spatialRoadStore.pilotSegments, 738);
+  // Phase 4.24: 258 clipped pilot stubs duplicated by the citywide snapshot and 8 expansion-ring
+  // segments that became unknown (tracktype=grade1, asphalt in bad condition) are no longer stored.
+  assert.equal(spatialRoadStore.totalSegments, 102028);
+  assert.equal(spatialRoadStore.totalSegments - spatialRoadStore.pilotSegments, 64922);
+
+  // Verify Southern Milan (Porta Romana -> Largo Promessi Sposi) tile coverage
+  const southernKeys = spatialRoadStore.getTileKeysForCoordinates([
+    [9.2022, 45.4521],
+    [9.1880, 45.4420],
+    [9.1765, 45.4351],
+  ], 80);
+  assert.ok(southernKeys.includes("917_4543"), "Largo Promessi Sposi tile 917_4543 must be present");
+  assert.ok(southernKeys.includes("918_4544"), "Corso Lodi / Ripamonti tile 918_4544 must be present");
+  const southernScoped = spatialRoadStore.getScopedIntelligence([
+    [9.2022, 45.4521],
+    [9.1880, 45.4420],
+    [9.1765, 45.4351],
+  ], 80);
+  assert.ok(southernScoped.roads.length > 1000, "Southern Milan corridor must serve > 1,000 authentic road segments");
 
   // Test oneway evaluation on a segment without rawTags
   const testSegment = {

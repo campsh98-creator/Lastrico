@@ -1,6 +1,8 @@
 /** Failure handling and session persistence for the route planner, free of React. */
 
 export const ADDRESS_SEARCH_TIMEOUT_MS = 12_000;
+export const AUTOCOMPLETE_DEBOUNCE_MS = 320;
+export const MIN_AUTOCOMPLETE_CHARS = 3;
 export const ROUTE_TIMEOUT_MS = 20_000;
 export const REROUTE_TIMEOUT_MS = 8_000;
 export const MINIMUM_ROUTE_METERS = 15;
@@ -123,4 +125,83 @@ export function setStoredPlanJourney(
   storage?: Pick<Storage, "getItem" | "setItem" | "removeItem">,
 ) {
   updateStoredPlan({ journey }, storage);
+}
+
+export function isConfirmedAddressField(
+  text: string,
+  location: PlanLocation | null | undefined,
+): boolean {
+  if (!location || !location.label.trim()) return false;
+  if (text.trim() !== location.label.trim()) return false;
+  return (
+    Array.isArray(location.coordinate)
+    && location.coordinate.length === 2
+    && Number.isFinite(location.coordinate[0])
+    && Number.isFinite(location.coordinate[1])
+  );
+}
+
+export function shouldApplyAutocompleteResponse(input: {
+  activeRequestId: number;
+  responseRequestId: number;
+  activeAreaId: string;
+  responseAreaId: string;
+  activeTarget: "start" | "end" | null;
+  responseTarget: "start" | "end";
+  currentFieldText: string;
+  requestedQuery: string;
+  fieldConfirmed: boolean;
+  isCalculating: boolean;
+}): boolean {
+  if (input.activeRequestId !== input.responseRequestId) return false;
+  if (input.activeAreaId !== input.responseAreaId) return false;
+  if (input.activeTarget !== null && input.activeTarget !== input.responseTarget) return false;
+  if (input.fieldConfirmed || input.isCalculating) return false;
+  const trimmedCurrent = input.currentFieldText.trim();
+  const trimmedRequested = input.requestedQuery.trim();
+  return trimmedCurrent.length >= MIN_AUTOCOMPLETE_CHARS && trimmedCurrent === trimmedRequested;
+}
+
+export function shouldAutoCalculateAfterAddressSelection(input: {
+  target: "start" | "end";
+  selected: PlanLocation;
+  startText: string;
+  startLocation: PlanLocation;
+  endText: string;
+  endLocation: PlanLocation;
+  pendingCalculation: boolean;
+  isLoading: boolean;
+}): {
+  shouldCalculate: boolean;
+  startOverride?: PlanLocation;
+  endOverride?: PlanLocation;
+} {
+  if (input.isLoading) return { shouldCalculate: false };
+  if (!isConfirmedAddressField(input.selected.label, input.selected)) {
+    return { shouldCalculate: false };
+  }
+
+  if (input.target === "start") {
+    const endConfirmed = isConfirmedAddressField(input.endText, input.endLocation);
+    const endHasValidText = input.endText.trim().length >= MIN_AUTOCOMPLETE_CHARS;
+    if (!endConfirmed && !endHasValidText && !input.pendingCalculation) {
+      return { shouldCalculate: false };
+    }
+    return {
+      shouldCalculate: endConfirmed || endHasValidText,
+      startOverride: input.selected,
+      ...(endConfirmed ? { endOverride: input.endLocation } : {}),
+    };
+  }
+
+  const startConfirmed = isConfirmedAddressField(input.startText, input.startLocation);
+  const startHasValidText = input.startText.trim().length >= MIN_AUTOCOMPLETE_CHARS;
+  if (!startConfirmed && !startHasValidText && !input.pendingCalculation) {
+    return { shouldCalculate: false };
+  }
+  return {
+    shouldCalculate: startConfirmed || startHasValidText,
+    ...(startConfirmed ? { startOverride: input.startLocation } : {}),
+    endOverride: input.selected,
+  };
 }

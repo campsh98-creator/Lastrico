@@ -6,7 +6,11 @@ export type ComparableRoute = {
   label?: string;
   distance: number;
   minutes: number;
+  /** Known pavé: confirmed + probable metres. */
   paveMeters: number;
+  /** Optional split of `paveMeters`; without it the panel only speaks of "pavé noto". */
+  confirmedPaveMeters?: number;
+  probablePaveMeters?: number;
   smoothSurfaceMeters?: number;
   unknownSurfaceMeters?: number;
   unpavedSurfaceMeters?: number;
@@ -23,6 +27,8 @@ export type RouteComparisonProps = {
   onSelectRoute?: (route: "fast" | "safe") => void;
   transportMode: TransportMode;
   extraTimeBudgetMinutes?: number | null;
+  /** Phase 4.31: the server's anti-pavé outcome for this response. */
+  antiPave?: import("@/lib/route-tradeoff").AntiPaveOutcome | null;
   className?: string;
 };
 

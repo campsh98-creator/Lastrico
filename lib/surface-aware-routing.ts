@@ -47,7 +47,7 @@ export function pointDistanceMeters(a: Coordinate, b: Coordinate): number {
  */
 export function extractRoughSlices(
   coordinates: Coordinate[],
-  isSegmentRough: (prev: Coordinate, current: Coordinate) => boolean,
+  isSegmentRough: (prev: Coordinate, current: Coordinate, index: number) => boolean,
   minMeters = 20,
   mergeGapMeters = 0,
 ): Coordinate[][] {
@@ -62,7 +62,7 @@ export function extractRoughSlices(
     if (i > 0) {
       const prev = coordinates[i - 1];
       const segLen = pointDistanceMeters(prev, pt);
-      isRough = segLen < 1 && currentSlice.length > 0 ? true : isSegmentRough(prev, pt);
+      isRough = segLen < 1 && currentSlice.length > 0 ? true : isSegmentRough(prev, pt, i);
     }
 
     if (isRough) {

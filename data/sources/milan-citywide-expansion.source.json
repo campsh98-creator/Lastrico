@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "2.0.0",
+  "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+  "license": "ODbL-1.0",
+  "licenseUrl": "https://opendatacommons.org/licenses/odbl/1.0/",
+  "attribution": "© OpenStreetMap contributors",
+  "bounds": {
+    "west": 9.135,
+    "south": 45.425,
+    "east": 9.24,
+    "north": 45.502
+  },
+  "selection": "All OSM ways with a highway tag and their constituent nodes across 8 urban Milan sectors covering Southern, Western, Northern, and Eastern Milan.",
+  "generatedAt": "2026-11-04T11:54:37.027Z",
+  "sources": [
+    {
+      "file": "milan-citywide-s-central.osm.json.gz",
+      "sector": "s-central",
+      "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "query": "[out:json][timeout:30];way[\"highway\"](45.425,9.17,45.455,9.205);out meta;>;out skel qt;",
+      "bbox": [
+        9.17,
+        45.425,
+        9.205,
+        45.455
+      ],
+      "retrievedAt": "2026-11-04T11:40:01Z",
+      "serverDate": "Wed, 04 Nov 2026 11:53:52 GMT",
+      "sha256": "fc3b002189c42cbd75eda188e98df4137e35aa1cf1bf790f89317292dd727cac",
+      "gzipSha256": "caf1d01decfb355b5abd15a135dd8a6fc585a69097cc58d7d188345e7214d7e8",
+      "rawBytes": 3567045,
+      "gzipBytes": 515371,
+      "wayCount": 6622,
+      "nodeCount": 22813,
+      "description": "Southern Milan Central (Porta Romana, Porta Lodovica, Bocconi, Tibaldi, Largo Promessi Sposi, Viale Toscana, Ripamonti, Vigentino)"
+    },
+    {
+      "file": "milan-citywide-s-west.osm.json.gz",
+      "sector": "s-west",
+      "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "query": "[out:json][timeout:30];way[\"highway\"](45.425,9.135,45.455,9.17);out meta;>;out skel qt;",
+      "bbox": [
+        9.135,
+        45.425,
+        9.17,
+        45.455
+      ],
+      "retrievedAt": "2026-11-04T11:41:02Z",
+      "serverDate": "Wed, 04 Nov 2026 11:53:52 GMT",
+      "sha256": "a648183eb2206262e2916450ae6fcb41341165e05eb55318528a4fb77dcdefb8",
+      "gzipSha256": "49e7f4fb1414ea89df7781f93cc7ae8d0295029d42b9d1b8c4323884df8744e0",
+      "rawBytes": 3137168,
+      "gzipBytes": 450434,
+      "wayCount": 5673,
+      "nodeCount": 21184,
+      "description": "Southern Milan West (Naviglio Pavese, Naviglio Grande, Porta Ticinese, Romolo, Famagosta, Barona, Giambellino)"
+    },
+    {
+      "file": "milan-citywide-s-east.osm.json.gz",
+      "sector": "s-east",
+      "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "query": "[out:json][timeout:30];way[\"highway\"](45.425,9.205,45.455,9.24);out meta;>;out skel qt;",
+      "bbox": [
+        9.205,
+        45.425,
+        9.24,
+        45.455
+      ],
+      "retrievedAt": "2026-11-04T11:43:06Z",
+      "serverDate": "Wed, 04 Nov 2026 11:53:52 GMT",
+      "sha256": "1a811938064c49edd7169318d2c04651ba680e18278f20a90f68a2afd67f15a0",
+      "gzipSha256": "c38dadcb10eacc828f298da9495e7656c41c32d9198b71dd38769484ba82744a",
+      "rawBytes": 2667568,
+      "gzipBytes": 381855,
+      "wayCount": 4638,
+      "nodeCount": 18329,
+      "description": "Southern Milan East (Lodi TIBB, Fondazione Prada, Brenta, Corvetto, Corso Lodi, Calvairate)"
+    },
+    {
+      "file": "milan-citywide-west.osm.json.gz",
+      "sector": "west",
+      "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "query": "[out:json][timeout:30];way[\"highway\"](45.45,9.135,45.48,9.175);out meta;>;out skel qt;",
+      "bbox": [
+        9.135,
+        45.45,
+        9.175,
+        45.48
+      ],
+      "retrievedAt": "2026-11-04T11:43:06Z",
+      "serverDate": "Wed, 04 Nov 2026 11:53:52 GMT",
+      "sha256": "a3cc8543d96b20eb685589dffb2fb36c474773e0b11268c23cd0a444bcbae51a",
+      "gzipSha256": "d28135db25b81ae40a39d84f833cbbad25ff3493fa4c8e4a128e7be1ba4dbaa6",
+      "rawBytes": 5662241,
+      "gzipBytes": 791839,
+      "wayCount": 11057,
+      "nodeCount": 34134,
+      "description": "Western Milan (Porta Genova, Tortona, Solari, Washington, Wagner, De Angeli, Pagano, Bande Nere, CityLife South)"
+    },
+    {
+      "file": "milan-citywide-east.osm.json.gz",
+      "sector": "east",
+      "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "query": "[out:json][timeout:30];way[\"highway\"](45.45,9.2,45.48,9.24);out meta;>;out skel qt;",
+      "bbox": [
+        9.2,
+        45.45,
+        9.24,
+        45.48
+      ],
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "serverDate": "Wed, 04 Nov 2026 11:53:52 GMT",
+      "sha256": "108ccd8be1464eeb0cfc0f652037552733c07919ce7ea9085a0f5a4063aaf8ad",
+      "gzipSha256": "d78c857b037c9589c5e8b45cc567147aa73be0c9ac122f71d84a011e9b50995a",
+      "rawBytes": 5379792,
+      "gzipBytes": 758947,
+      "wayCount": 10212,
+      "nodeCount": 32345,
+      "description": "Eastern Milan (Cinque Giornate, Premuda, Tricolore, Porta Vittoria, Corso XXII Marzo, Dateo, Indipendenza, Città Studi South, Argonne)"
+    },
+    {
+      "file": "milan-citywide-n-west.osm.json.gz",
+      "sector": "n-west",
+      "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "query": "[out:json][timeout:30];way[\"highway\"](45.475,9.135,45.502,9.175);out meta;>;out skel qt;",
+      "bbox": [
+        9.135,
+        45.475,
+        9.175,
+        45.502
+      ],
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "serverDate": "Wed, 04 Nov 2026 11:53:52 GMT",
+      "sha256": "5dfb26f8d16fdd0ac680536a05c8cafed1ff3d2af0c3d8dcf87202a02606c7ba",
+      "gzipSha256": "02b9f465201184651c8aa2f3e9bfef67c19cc44b768cb9f6ec019a2da3ea2505",
+      "rawBytes": 4570476,
+      "gzipBytes": 649467,
+      "wayCount": 8411,
+      "nodeCount": 29600,
+      "description": "North-Western Milan (Arco della Pace, Sempione, CityLife North, Portello, Cenisio, Ghisolfa, Bovisa)"
+    },
+    {
+      "file": "milan-citywide-n-central.osm.json.gz",
+      "sector": "n-central",
+      "url": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+      "query": "[out:json][timeout:30];way[\"highway\"](45.475,9.169,45.502,9.21);out meta;>;out skel qt;",
+      "bbox": [
+        9.169,
+        45.475,
+        9.21,
+        45.502
+      ],
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "serverDate": "Wed, 04 Nov 2026 11:53:52 GMT",
+      "sha256": "c0ec58095d90f19e55b0435ef571daaa75edf875c48cdbbe198910ff80ccd63d",
+      "gzipSha256": "036c52d213c8d5bd8ee3b5c166db2fff81fca40336b614bf19784ff5d7cd66d1",
+      "rawBytes": 6465046,
+      "gzipBytes": 920215,
+      "wayCount": 12427,
+      "nodeCount": 38452,
+      "description": "Northern Milan Central (Arena, Sarpi, Porta Garibaldi, Isola, Monumentale, Farini, Maciachini, Melchiorre Gioia, Stazione Centrale)"
+    },
+    {
+      "file": "milan-citywide-n-east.osm.json.gz",
+      "sector": "n-east",
+      "url": "https://api.openstreetmap.org/api/0.6/map.json",
+      "query": "bbox=9.21,45.48,9.24,45.502",
+      "bbox": [
+        9.21,
+        45.48,
+        9.24,
+        45.502
+      ],
+      "retrievedAt": "2026-11-04T11:54:35.817Z",
+      "serverDate": "Wed, 04 Nov 2026 11:54:35 GMT",
+      "sha256": "f8fb3a87d914bee248e953b5eea209cb4b15178c4dad0b129845dd08f4280ba5",
+      "gzipSha256": "e2aaf9058205d44ec70d987a213159e6935b1018a9a1bbe5026ebd5aaf1327a5",
+      "rawBytes": 9988932,
+      "gzipBytes": 1150664,
+      "wayCount": 4853,
+      "nodeCount": 76105,
+      "description": "North-Eastern Milan (Corso Buenos Aires, Loreto, Pasteur, NoLo, Città Studi / Politecnico, Piola, Lambrate)"
+    }
+  ]
+}

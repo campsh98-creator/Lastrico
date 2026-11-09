@@ -90,7 +90,7 @@ test("scoring correctly accounts for confirmed smooth surfaces without misclassi
   assert.equal(score.classificationConfidence, 1.0);
 });
 
-test("vehicular scoring ignores footway and pedestrian segments", () => {
+test("a forbidden footway beside the route is ignored; one under the route reports its own surface", () => {
   const footwaySegment = {
     segmentHash: "0000000000000002",
     osmWayId: 102,
@@ -118,19 +118,24 @@ test("vehicular scoring ignores footway and pedestrian segments", () => {
     roughnessWeight: 0.65,
   };
 
-  const index = createRoadIntelligenceIndex([footwaySegment]);
-
-  // Car score ignores the footway
+  // A sidewalk 5.5 m beside the route: never evidence for a mode that may not use it.
+  const beside = { ...footwaySegment, coordinates: footwaySegment.coordinates.map(([lon, lat]) => [lon, lat + 0.00005]) };
+  const index = createRoadIntelligenceIndex([beside]);
   const carScore = scoreRoadIntelligence(sampleRoute, index, 12, "car");
   assert.equal(carScore.paveMeters, 0);
-  assert.ok(carScore.unknownMeters > 0);
-
-  // A forbidden bicycle segment must not be treated as available infrastructure.
+  assert.equal(carScore.unknownMeters, carScore.totalMeters);
   const biciScore = scoreRoadIntelligence(sampleRoute, index, 12, "bicycle");
   assert.equal(biciScore.paveMeters, 0);
   assert.equal(biciScore.unknownMeters, biciScore.totalMeters);
-  const allowedIndex = createRoadIntelligenceIndex([{ ...footwaySegment, isBicycleAllowed: true }]);
+  const allowedIndex = createRoadIntelligenceIndex([{ ...beside, isBicycleAllowed: true }]);
   assert.ok(scoreRoadIntelligence(sampleRoute, allowedIndex, 12, "bicycle").paveMeters > 0);
+
+  // Phase 4.24: the provider route lies on the footway's own geometry, so its stones are the
+  // surface under the route. Reporting them grants no access: no permission is inferred.
+  const underIndex = createRoadIntelligenceIndex([footwaySegment]);
+  const under = scoreRoadIntelligence(sampleRoute, underIndex, 12, "car");
+  assert.equal(under.probableMeters, under.totalMeters);
+  assert.equal(under.confirmedMeters, 0);
 });
 
 test("zero-coverage route remains 100% unknown and is never assumed smooth", () => {

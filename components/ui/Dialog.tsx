@@ -8,18 +8,30 @@ type DialogProps = {
   as?: "section" | "form";
   onSubmit?: React.FormEventHandler<HTMLFormElement>;
   testId?: string;
+  restoreFocus?: boolean;
 };
 
 const FOCUSABLE = "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])";
 
 /** A modal that takes focus, closes on Escape, keeps Tab inside and returns focus when it closes. */
-export function Dialog({ labelledBy, onClose, className = "", children, as = "section", onSubmit, testId }: DialogProps) {
+export function Dialog({
+  labelledBy,
+  onClose,
+  className = "",
+  children,
+  as = "section",
+  onSubmit,
+  testId,
+  restoreFocus = true,
+}: DialogProps) {
   const surfaceRef = useRef<HTMLElement & HTMLFormElement>(null);
   const onCloseRef = useRef(onClose);
+  const restoreFocusRef = useRef(restoreFocus);
 
   useEffect(() => {
     onCloseRef.current = onClose;
-  }, [onClose]);
+    restoreFocusRef.current = restoreFocus;
+  }, [onClose, restoreFocus]);
 
   useEffect(() => {
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -46,7 +58,7 @@ export function Dialog({ labelledBy, onClose, className = "", children, as = "se
     window.addEventListener("keydown", handleKeys);
     return () => {
       window.removeEventListener("keydown", handleKeys);
-      previousFocus?.focus();
+      if (restoreFocusRef.current) previousFocus?.focus();
     };
   }, []);
 

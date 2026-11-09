@@ -1,0 +1,4 @@
+dist/
+.test-*/
+.cache/
+.tmp-*/

@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "main": "run-all.mjs",
+  "private": true,
+  "description": "Lets `node --test experiments/route-ranking/test/` (directory form) run every suite; the glob form test/*.test.mjs also works."
+}

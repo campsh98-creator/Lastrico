@@ -1,0 +1,50 @@
+total sampled 11206 ms
+TOP SELF:
+    4135 ms  36.9%  divergentMeters  lib/route-candidates.ts:58
+    2622 ms  23.4%  distanceToSegment  lib/route-candidates.ts:10
+    1414 ms  12.6%  scoreRoadIntelligence  lib/road-intelligence-scoring.ts:329
+     375 ms   3.3%  nearbySegments  lib/road-intelligence-scoring.ts:164
+     332 ms   3.0%  (idle)  :0
+     124 ms   1.1%  explicitRestriction  lib/road-intelligence-scoring.ts:237
+     124 ms   1.1%  (garbage collector)  :0
+     121 ms   1.1%  restrictionSample  lib/road-intelligence-scoring.ts:290
+     105 ms   0.9%  headingsAlign  lib/road-intelligence-scoring.ts:108
+      96 ms   0.9%  (program)  :0
+      81 ms   0.7%  detectModuleFormat  node:internal/modules/esm/get_format:87
+      74 ms   0.7%  processChunkSync  node:zlib:400
+      70 ms   0.6%  scoreCandidate  route.ts(data-url):362
+      61 ms   0.5%  metersPerLongitude  lib/road-intelligence-scoring.ts:69
+      56 ms   0.5%  pointToSegmentDistance  route.ts(data-url):98
+      56 ms   0.5%  getHydratedSegment  lib/spatial-road-store.ts:515
+      51 ms   0.5%  getCellSegments  lib/spatial-road-store.ts:533
+      49 ms   0.4%  compare  lib/route-optimization.ts:50
+      45 ms   0.4%  readDelta  lib/routing-providers.ts:128
+      43 ms   0.4%  read  :0
+      43 ms   0.4%  hydrateTuple  lib/spatial-road-store.ts:230
+      42 ms   0.4%  (anonymous)  lib/route-candidates.ts:50
+TOP INCLUSIVE (lib/app only):
+    9580 ms  85.5%  GET  route.ts(data-url):293
+    6632 ms  59.2%  routesShareCorridor  lib/route-candidates.ts:99
+    6306 ms  56.3%  divergentMeters  lib/route-candidates.ts:58
+    5310 ms  47.4%  selectOptimizedRoute  lib/route-optimization.ts:72
+    4104 ms  36.6%  selectSafeRoute  route.ts(data-url):219
+    4089 ms  36.5%  (anonymous)  route.ts(data-url):220
+    3452 ms  30.8%  (anonymous)  lib/route-optimization.ts:78
+    2622 ms  23.4%  distanceToSegment  lib/route-candidates.ts:10
+    2523 ms  22.5%  scoreCandidate  route.ts(data-url):362
+    2523 ms  22.5%  scoredCandidate  route.ts(data-url):373
+    2453 ms  21.9%  scoreRoadIntelligence  lib/road-intelligence-scoring.ts:329
+    2092 ms  18.7%  isNear  lib/route-candidates.ts:61
+    1845 ms  16.5%  (anonymous)  lib/route-optimization.ts:113
+    1454 ms  13.0%  routesAreEquivalent  route.ts(data-url):171
+    1442 ms  12.9%  (anonymous)  route.ts(data-url):383
+    1205 ms  10.8%  (anonymous)  route.ts(data-url):526
+     835 ms   7.5%  (anonymous)  route.ts(data-url):602
+     661 ms   5.9%  (anonymous)  route.ts(data-url):493
+     556 ms   5.0%  nearbySegments  lib/road-intelligence-scoring.ts:164
+     292 ms   2.6%  restrictionSample  lib/road-intelligence-scoring.ts:290
+     238 ms   2.1%  improvesEnough  route.ts(data-url):394
+     197 ms   1.8%  pointDistance  lib/route-candidates.ts:41
+     180 ms   1.6%  get  lib/spatial-road-store.ts:352
+     176 ms   1.6%  (anonymous)  route.ts(data-url):517
+     162 ms   1.4%  (anonymous)  lib/route-candidates.ts:50

@@ -1,0 +1,27 @@
+{
+  "responseKey": "532640e796dc046d3fc942ce490e05f378bdf6af0732414db2241b6afbd5d6cd",
+  "interpretation": "Primary has blocking local OSM contradiction; other supplied alternatives exceed five-minute budget. HTTP422 is conservative rejection, not unavailable provider. This is not a permit/ZTL certification.",
+  "candidates": [
+    {
+      "durationSeconds": 694.649,
+      "withinFiveMinuteBudget": true,
+      "restrictionMeters": 181,
+      "blockingRestrictionMeters": 30,
+      "terminalPrivateAccessMeters": 151
+    },
+    {
+      "durationSeconds": 1047.106,
+      "withinFiveMinuteBudget": false,
+      "restrictionMeters": 116,
+      "blockingRestrictionMeters": 0,
+      "terminalPrivateAccessMeters": 116
+    },
+    {
+      "durationSeconds": 1010.821,
+      "withinFiveMinuteBudget": false,
+      "restrictionMeters": 77,
+      "blockingRestrictionMeters": 0,
+      "terminalPrivateAccessMeters": 77
+    }
+  ]
+}

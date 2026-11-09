@@ -1,10 +1,14 @@
 /**
  * Lastrico Road Intelligence — Compact Spatial Tile Store
  * Phase 3.8: Memory-Efficient Spatially Scoped Road Intelligence
+ * Phase 4.16: Per-Tile Lazy Hydration for Sub-Millisecond Cloudflare Edge Execution
  */
 
-import compactData from "../data/surfaces/milan-compact-tiles.json" with { type: "json" };
-import roccellaCompactData from "../data/surfaces/roccella-compact-tiles.json" with { type: "json" };
+import { createRequire } from "node:module";
+import milanMeta from "../data/surfaces/milan-tiles/metadata.json" with { type: "json" };
+import roccellaMeta from "../data/surfaces/roccella-tiles/metadata.json" with { type: "json" };
+import { milanTileLoaders } from "./milan-tile-index.ts";
+import { roccellaTileLoaders } from "./roccella-tile-index.ts";
 import type {
   RoadSegmentRecord,
   HighwayClassification,
@@ -12,11 +16,15 @@ import type {
   SurfaceMaterial,
 } from "./road-intelligence-types.ts";
 import {
-  createRoadIntelligenceIndex,
   type RoadIntelligenceIndex,
 } from "./road-intelligence-scoring.ts";
 
 export type Coordinate = [number, number];
+
+export type TilePayload = {
+  cells?: Record<string, number[]>;
+  tuples: CompactTuple[];
+} | CompactTuple[];
 
 export type PaveDetail = {
   id: number;
@@ -69,7 +77,7 @@ export function createPaveSpatialIndex(details: PaveDetail[], cellSize = 0.001):
   return { cellSize, cells };
 }
 
-type CompactTuple = [
+export type LegacyCompactTuple = [
   h: string,
   w: number | null,
   nameId: number,
@@ -86,7 +94,23 @@ type CompactTuple = [
   tagSetId: number,
 ];
 
-export interface CompactTileJson {
+export type SlimCompactTuple = [
+  w: number | null,
+  nameId: number,
+  c: [number, number, number, number],
+  kId: number,
+  rw: number,
+  svId: number,
+  flags: number,
+  mdBits: number,
+  maBits: number,
+  hcId: number,
+  tagSetId: number,
+];
+
+export type CompactTuple = LegacyCompactTuple | SlimCompactTuple;
+
+export interface CompactTileMetadata {
   version: string;
   sourceDatasetSha256: string;
   sourceGeneratedAt: string;
@@ -98,10 +122,12 @@ export interface CompactTileJson {
   names: (string | null)[];
   surfaceVals: string[];
   tagSets: (Record<string, string> | undefined)[];
-  tiles: Record<string, CompactTuple[]>;
+  tileKeys?: string[];
+  tiles?: Record<string, CompactTuple[]>;
 }
 
-const typedData = compactData as unknown as CompactTileJson;
+export type CompactTileJson = CompactTileMetadata;
+
 const K_ENUM: SurfaceCategory[] = [
   "confirmed_rough",
   "probable_rough",
@@ -109,32 +135,152 @@ const K_ENUM: SurfaceCategory[] = [
   "unpaved_loose",
   "unknown",
 ];
+const HC_ENUM: HighwayClassification[] = [
+  "unknown",
+  "steps",
+  "motorway",
+  "trunk",
+  "primary",
+  "secondary",
+  "tertiary",
+  "unclassified",
+  "residential",
+  "living_street",
+  "service",
+  "pedestrian",
+  "cycleway",
+  "footway",
+  "path",
+  "track",
+];
 const DIRS = ["both", "forward", "backward", "unknown"] as const;
 
-function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegmentRecord {
-  const [
-    h, w, nameId, c, kId, rw, svId, flags, mdBits, maBits, hc, l, b, tagSetId,
-  ] = tuple;
+const MA_CACHE = new Array(8);
+for (let b = 0; b < 8; b++) {
+  MA_CACHE[b] = Object.freeze({
+    car: (b & 1) !== 0,
+    motorcycle: (b & 2) !== 0,
+    bicycle: (b & 4) !== 0,
+  });
+}
 
-  const ma = maBits >= 0 ? {
-    car: (maBits & 1) !== 0,
-    motorcycle: (maBits & 2) !== 0,
-    bicycle: (maBits & 4) !== 0,
-  } : undefined;
+const MD_CACHE = new Array(64);
+for (let b = 0; b < 64; b++) {
+  MD_CACHE[b] = Object.freeze({
+    car: DIRS[(b >> 4) & 3] ?? "both",
+    motorcycle: DIRS[(b >> 2) & 3] ?? "both",
+    bicycle: DIRS[b & 3] ?? "both",
+  });
+}
 
-  const md = mdBits >= 0 ? {
-    car: DIRS[(mdBits >> 4) & 3] ?? "both",
-    motorcycle: DIRS[(mdBits >> 2) & 3] ?? "both",
-    bicycle: DIRS[mdBits & 3] ?? "both",
-  } : undefined;
+function geographicDistance(a: Coordinate, b: Coordinate): number {
+  const lat = (a[1] + b[1]) * 0.5;
+  const metersPerLon = 111320 * Math.cos((lat * Math.PI) / 180);
+  const dx = (b[0] - a[0]) * metersPerLon;
+  const dy = (b[1] - a[1]) * 110540;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+const NO_CYCLING_VALUE = Object.freeze({
+  hasFacility: false,
+  typology: "none" as const,
+  direction: "bidirezionale" as const,
+  surface: null,
+  source: "none" as const,
+});
+
+const FACILITY_CYCLING_VALUE = Object.freeze({
+  hasFacility: true,
+  typology: "none" as const,
+  direction: "bidirezionale" as const,
+  surface: null,
+  source: "none" as const,
+});
+
+const SHARED_SMOOTHNESS: RoadSegmentRecord["smoothness"] = Object.freeze({
+  state: "unknown" as const,
+  value: "unknown" as const,
+  sourceId: null,
+  authority: "osm_curated" as const,
+  observedAt: null,
+  ingestedAt: milanMeta.sourceGeneratedAt,
+  confidence: 0,
+});
+
+const SHARED_CYCLING_NONE: RoadSegmentRecord["cycling"] = Object.freeze({
+  state: "unknown" as const,
+  value: NO_CYCLING_VALUE,
+  sourceId: null,
+  authority: "osm_curated" as const,
+  observedAt: null,
+  ingestedAt: milanMeta.sourceGeneratedAt,
+  confidence: 0,
+});
+
+const SHARED_CYCLING_FACILITY: RoadSegmentRecord["cycling"] = Object.freeze({
+  state: "known" as const,
+  value: FACILITY_CYCLING_VALUE,
+  sourceId: null,
+  authority: "osm_curated" as const,
+  observedAt: null,
+  ingestedAt: milanMeta.sourceGeneratedAt,
+  confidence: 1,
+});
+
+function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegmentRecord {
+  let h: string;
+  let w: number | null;
+  let nameId: number;
+  let c: [number, number, number, number];
+  let kId: number;
+  let rw: number;
+  let svId: number;
+  let flags: number;
+  let mdBits: number;
+  let maBits: number;
+  let hc: HighwayClassification;
+  let l: number;
+  let b: number;
+  let tagSetId: number;
+
+  if (tuple.length === 11) {
+    const [wSlim, nameIdSlim, cSlim, kIdSlim, rwSlim, svIdSlim, flagsSlim, mdBitsSlim, maBitsSlim, hcIdSlim, tagSetIdSlim] = tuple;
+    w = wSlim;
+    nameId = nameIdSlim;
+    c = cSlim;
+    kId = kIdSlim;
+    rw = rwSlim;
+    svId = svIdSlim;
+    flags = flagsSlim;
+    mdBits = mdBitsSlim;
+    maBits = maBitsSlim;
+    hc = HC_ENUM[hcIdSlim] ?? "unknown";
+    tagSetId = tagSetIdSlim;
+    const lat = (c[1] + c[3]) * 0.5;
+    const mLon = 111_320 * Math.cos((lat * Math.PI) / 180);
+    const dx = (c[2] - c[0]) * mLon;
+    const dy = (c[3] - c[1]) * 110_540;
+    l = Math.sqrt(dx * dx + dy * dy);
+    b = 0;
+    h = `${c[0]},${c[1]}->${c[2]},${c[3]}`;
+  } else {
+    [h, w, nameId, c, kId, rw, svId, flags, mdBits, maBits, hc, l, b, tagSetId] = tuple;
+  }
+
+  const ma = maBits >= 0 ? MA_CACHE[maBits & 7] : undefined;
+  const md = mdBits >= 0 ? MD_CACHE[mdBits & 63] : undefined;
 
   const k = K_ENUM[kId] ?? "unknown";
   const cyHasFacility = (flags & 16) !== 0;
+  const osmSourceId = w ? `osm:way:${w}` : null;
+  const rawTags = tagSetId >= 0 ? meta.tagSets[tagSetId] : undefined;
+  const explicitSmoothness = rawTags?.smoothness?.trim().toLowerCase();
+  const hasSmoothness = ["excellent", "good", "intermediate", "bad", "very_bad", "horrible", "very_horrible", "impassable"].includes(explicitSmoothness ?? "");
 
   return {
     segmentHash: h,
     osmWayId: w,
-    name: nameId >= 0 ? (typedData.names[nameId] ?? null) : null,
+    name: nameId >= 0 ? (meta.names[nameId] ?? null) : null,
     coordinates: [[c[0], c[1]], [c[2], c[3]]],
     lengthMeters: l,
     bearing: b,
@@ -147,40 +293,22 @@ function hydrateTuple(tuple: CompactTuple, typedData: CompactTileJson): RoadSegm
     embeddedRails: (flags & 8) !== 0,
     surface: {
       state: k === "unknown" ? "unknown" : "known",
-      value: (svId >= 0 ? (typedData.surfaceVals[svId] ?? "unknown") : "unknown") as SurfaceMaterial,
-      sourceId: w ? `osm:way:${w}` : null,
+      value: (svId >= 0 ? (meta.surfaceVals[svId] ?? "unknown") : "unknown") as SurfaceMaterial,
+      sourceId: osmSourceId,
       authority: "osm_curated",
       observedAt: null,
-      ingestedAt: typedData.sourceGeneratedAt,
+      ingestedAt: meta.sourceGeneratedAt,
       confidence: k === "unknown" ? 0 : (k === "confirmed_rough" || k === "confirmed_smooth" ? 1 : 0.65),
     },
-    smoothness: {
-      state: "unknown",
-      value: "unknown",
-      sourceId: w ? `osm:way:${w}` : null,
-      authority: "osm_curated",
-      observedAt: null,
-      ingestedAt: typedData.sourceGeneratedAt,
-      confidence: 0,
-    },
-    cycling: {
-      state: cyHasFacility ? "known" : "unknown",
-      value: {
-        hasFacility: cyHasFacility,
-        typology: "none",
-        direction: "bidirezionale",
-        surface: null,
-        source: "none",
-      },
-      sourceId: w ? `osm:way:${w}` : null,
-      authority: "osm_curated",
-      observedAt: null,
-      ingestedAt: typedData.sourceGeneratedAt,
-      confidence: cyHasFacility ? 1 : 0,
-    },
+    smoothness: hasSmoothness ? {
+      state: "known", value: explicitSmoothness as RoadSegmentRecord["smoothness"]["value"],
+      sourceId: osmSourceId, authority: "osm_curated", observedAt: null,
+      ingestedAt: meta.sourceGeneratedAt, confidence: 0.9,
+    } : SHARED_SMOOTHNESS,
+    cycling: cyHasFacility ? SHARED_CYCLING_FACILITY : SHARED_CYCLING_NONE,
     surfaceCategory: k,
     roughnessWeight: rw,
-    rawTags: tagSetId >= 0 ? typedData.tagSets[tagSetId] : undefined,
+    rawTags,
   };
 }
 
@@ -195,19 +323,107 @@ function roughDetailsFromSegments(segments: RoadSegmentRecord[]): PaveDetail[] {
     }));
 }
 
+export type ScopedIntelligenceResult = {
+  roads: RoadSegmentRecord[];
+  paveDetails: PaveDetail[];
+  surfaceIndex: RoadIntelligenceIndex;
+  paveIndex: PaveSpatialIndex;
+  addTileKey(tileKey: string): void;
+};
+
+export class LazySurfaceCellMap extends Map<string, RoadSegmentRecord[]> {
+  private readonly store: SpatialRoadIntelligenceStore;
+  private readonly tileKeys: Set<string>;
+
+  constructor(store: SpatialRoadIntelligenceStore, tileKeys: Set<string>) {
+    super();
+    this.store = store;
+    this.tileKeys = tileKeys;
+  }
+
+  public addTileKey(tileKey: string): void {
+    this.tileKeys.add(tileKey);
+  }
+
+  public hasTileKey(tileKey: string): boolean {
+    return this.tileKeys.has(tileKey);
+  }
+
+  override get(cellKey: string): RoadSegmentRecord[] | undefined {
+    const existing = super.get(cellKey);
+    if (existing !== undefined) {
+      return existing;
+    }
+    const colonIdx = cellKey.indexOf(":");
+    if (colonIdx === -1) return undefined;
+    const x = Number(cellKey.slice(0, colonIdx));
+    const y = Number(cellKey.slice(colonIdx + 1));
+    const tileKey = `${Math.floor(x / 10)}_${Math.floor(y / 10)}`;
+    if (!this.tileKeys.has(tileKey)) {
+      return undefined;
+    }
+    const segs = this.store.getCellSegments(tileKey, cellKey);
+    super.set(cellKey, segs);
+    return segs;
+  }
+
+  override has(cellKey: string): boolean {
+    if (super.has(cellKey)) return true;
+    const colonIdx = cellKey.indexOf(":");
+    if (colonIdx === -1) return false;
+    const x = Number(cellKey.slice(0, colonIdx));
+    const y = Number(cellKey.slice(colonIdx + 1));
+    const tileKey = `${Math.floor(x / 10)}_${Math.floor(y / 10)}`;
+    return this.tileKeys.has(tileKey);
+  }
+}
+
 export class SpatialRoadIntelligenceStore {
-  private readonly data: CompactTileJson;
-  constructor(data: CompactTileJson = typedData) { this.data = data; }
+  private readonly meta: CompactTileMetadata;
+  private readonly loaders: Record<string, () => Promise<{ default: TilePayload }>>;
+  private readonly tileKeySet: Set<string>;
+  private readonly areaId: "milan" | "roccella" | "rome";
+
+  private tileCache = new Map<string, TilePayload>();
   private tileSegmentCache = new Map<string, RoadSegmentRecord[]>();
+  private tileIndexCache = new Map<string, Map<string, RoadSegmentRecord[]>>();
   private tilePaveCache = new Map<string, PaveDetail[]>();
-  private indexCache = new Map<string, { surfaceIndex: RoadIntelligenceIndex; paveIndex: PaveSpatialIndex; roads: RoadSegmentRecord[]; paveDetails: PaveDetail[] }>();
+  private tileHydratedCache = new Map<string, (RoadSegmentRecord | undefined)[]>();
+  private indexCache = new Map<string, ScopedIntelligenceResult>();
+  /**
+   * Phase 4.30: hydrated segments cost about 0.7 MB per Milan tile; all 117 tiles reach ~107 MB,
+   * close to the 128 MB a Worker isolate may use. At most this many tiles stay hydrated; the
+   * oldest is dropped first and re-hydrated identically from its raw tuples if needed again.
+   */
+  static readonly MAX_HYDRATED_TILES = 64;
+  private hydratedTiles = new Set<string>();
   private allRoadsCache: RoadSegmentRecord[] | null = null;
   private allPaveCache: PaveDetail[] | null = null;
 
-  public get sourceSha256() { return this.data.sourceDatasetSha256; }
-  public get totalSegments() { return this.data.totalSegments; }
-  public get pilotSegments() { return this.data.pilotSegments ?? this.data.totalSegments; }
-  public get tileCount() { return Object.keys(this.data.tiles).length; }
+  constructor(
+    meta: CompactTileMetadata = milanMeta as unknown as CompactTileMetadata,
+    loaders: Record<string, () => Promise<{ default: TilePayload }>> = milanTileLoaders,
+    area: boolean | "milan" | "roccella" | "rome" = false,
+  ) {
+    this.meta = meta;
+    this.loaders = loaders;
+    // Keep the existing boolean constructor contract for Milan/Roccella callers.
+    this.areaId = typeof area === "boolean" ? (area ? "roccella" : "milan") : area;
+
+    const keys = meta.tileKeys ?? (meta.tiles ? Object.keys(meta.tiles) : []);
+    this.tileKeySet = new Set(keys);
+
+    if (meta.tiles) {
+      for (const [k, v] of Object.entries(meta.tiles)) {
+        this.tileCache.set(k, v);
+      }
+    }
+  }
+
+  public get sourceSha256() { return this.meta.sourceDatasetSha256; }
+  public get totalSegments() { return this.meta.totalSegments; }
+  public get pilotSegments() { return this.meta.pilotSegments ?? this.meta.totalSegments; }
+  public get tileCount() { return this.tileKeySet.size; }
 
   public get indexCacheSize(): number {
     return this.indexCache.size;
@@ -222,7 +438,7 @@ export class SpatialRoadIntelligenceStore {
     const padLat = paddingMeters / 110_540;
     const keys = new Set<string>();
 
-    for (const [lon, lat] of coordinates) {
+    const addPointTiles = (lon: number, lat: number) => {
       const padLon = paddingMeters / (111_320 * Math.cos(lat * Math.PI / 180));
       const minX = Math.floor((lon - padLon) * 100);
       const maxX = Math.floor((lon + padLon) * 100);
@@ -231,8 +447,27 @@ export class SpatialRoadIntelligenceStore {
       for (let x = minX; x <= maxX; x++) {
         for (let y = minY; y <= maxY; y++) {
           const key = `${x}_${y}`;
-          if (this.data.tiles[key]) {
+          if (this.tileKeySet.has(key)) {
             keys.add(key);
+          }
+        }
+      }
+    };
+
+    for (let i = 0; i < coordinates.length; i++) {
+      const [lon, lat] = coordinates[i];
+      addPointTiles(lon, lat);
+      if (i > 0) {
+        const prev = coordinates[i - 1];
+        const segLen = geographicDistance(prev, [lon, lat]);
+        if (segLen > 100) {
+          const steps = Math.ceil(segLen / 100);
+          for (let step = 1; step < steps; step++) {
+            const t = step / steps;
+            addPointTiles(
+              prev[0] + (lon - prev[0]) * t,
+              prev[1] + (lat - prev[1]) * t,
+            );
           }
         }
       }
@@ -250,14 +485,177 @@ export class SpatialRoadIntelligenceStore {
     return needed.filter((k) => !loadedSet.has(k));
   }
 
+  /**
+   * Preload specific tiles asynchronously before calling getScopedIntelligence
+   */
+  public async preloadTiles(tileKeys: string[]): Promise<void> {
+    const needed = tileKeys.filter((k) => !this.tileCache.has(k) && this.loaders[k]);
+    if (!needed.length) return;
+    await Promise.all(
+      needed.map(async (key) => {
+        try {
+          const mod = await this.loaders[key]();
+          const payload = (mod as { default?: TilePayload })?.default ?? (mod as unknown as TilePayload);
+          if (payload) {
+            this.tileCache.set(key, payload);
+          } else {
+            this.loadTileSync(key);
+          }
+        } catch {
+          this.loadTileSync(key);
+        }
+      }),
+    );
+  }
+
+  public getTilePayload(tileKey: string): TilePayload | null {
+    if (this.tileCache.has(tileKey)) return this.tileCache.get(tileKey)!;
+    return this.loadTileSync(tileKey);
+  }
+
+  public getTileTuples(tileKey: string): CompactTuple[] | null {
+    const payload = this.getTilePayload(tileKey);
+    if (!payload) return null;
+    return Array.isArray(payload) ? payload : payload.tuples;
+  }
+
+  /** Records that a tile holds hydrated data, evicting the oldest beyond the bound. */
+  private noteHydrated(tileKey: string) {
+    if (this.hydratedTiles.has(tileKey)) return;
+    this.hydratedTiles.add(tileKey);
+    while (this.hydratedTiles.size > SpatialRoadIntelligenceStore.MAX_HYDRATED_TILES) {
+      const oldest = this.hydratedTiles.values().next().value as string;
+      this.hydratedTiles.delete(oldest);
+      this.tileHydratedCache.delete(oldest);
+      this.tileSegmentCache.delete(oldest);
+      this.tileIndexCache.delete(oldest);
+      this.tilePaveCache.delete(oldest);
+    }
+  }
+
+  /** Number of tiles currently holding hydrated segments (for memory tests). */
+  public get hydratedTileCount() {
+    return this.hydratedTiles.size;
+  }
+
+  public getHydratedSegment(tileKey: string, idx: number): RoadSegmentRecord {
+    let list = this.tileHydratedCache.get(tileKey);
+    if (!list) {
+      list = [];
+      this.tileHydratedCache.set(tileKey, list);
+      this.noteHydrated(tileKey);
+    }
+    let seg = list[idx];
+    if (!seg) {
+      const tuples = this.getTileTuples(tileKey);
+      if (!tuples || !tuples[idx]) {
+        throw new Error(`Invalid tuple index ${idx} in tile ${tileKey}`);
+      }
+      seg = hydrateTuple(tuples[idx], this.meta);
+      list[idx] = seg;
+    }
+    return seg;
+  }
+
+  public getCellSegments(tileKey: string, cellKey: string): RoadSegmentRecord[] {
+    const payload = this.getTilePayload(tileKey);
+    if (!payload) return [];
+    if (!Array.isArray(payload) && payload.cells) {
+      const indices = payload.cells[cellKey];
+      if (!indices || indices.length === 0) return [];
+      const segs = new Array<RoadSegmentRecord>(indices.length);
+      for (let i = 0; i < indices.length; i++) {
+        segs[i] = this.getHydratedSegment(tileKey, indices[i]);
+      }
+      return segs;
+    }
+    // Fallback if tile has no precomputed cells
+    const tIndex = this.getTileIndex(tileKey);
+    return tIndex.get(cellKey) ?? [];
+  }
+
+  private loadTileSync(tileKey: string): TilePayload | null {
+    if (this.tileCache.has(tileKey)) return this.tileCache.get(tileKey)!;
+    // In Node.js testing/benchmarking environment, fall back to synchronous read
+    if (typeof process !== "undefined" && process.versions?.node) {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const nodeRequire = createRequire(import.meta.url);
+          const fs = nodeRequire("node:fs");
+          const fileURLToPath = nodeRequire("node:url").fileURLToPath;
+          const area = this.areaId;
+          const filePath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles/${tileKey}.json`, import.meta.url));
+          if (fs.existsSync(filePath)) {
+            const raw = fs.readFileSync(filePath, "utf8");
+            const payload = JSON.parse(raw) as TilePayload;
+            this.tileCache.set(tileKey, payload);
+            return payload;
+          }
+          // Rome versions only its packed runtime tiles; the JSON tiles are a reproducible intermediate.
+          const packedPath = fileURLToPath(new URL(`../data/surfaces/${area}-tiles-packed/${tileKey}.bin`, import.meta.url));
+          if (fs.existsSync(packedPath)) {
+            const raw = nodeRequire("node:zlib").gunzipSync(fs.readFileSync(packedPath)).toString("utf8");
+            const payload = JSON.parse(raw) as TilePayload;
+            this.tileCache.set(tileKey, payload);
+            return payload;
+          }
+        } catch {
+          // Transient parallel lock retry
+        }
+      }
+    }
+    return null;
+  }
+
   public getTileSegments(tileKey: string): RoadSegmentRecord[] {
     const cached = this.tileSegmentCache.get(tileKey);
     if (cached) return cached;
-    const tuples = this.data.tiles[tileKey];
+    const tuples = this.getTileTuples(tileKey);
     if (!tuples) return [];
-    const segments = tuples.map((tuple) => hydrateTuple(tuple, this.data));
+    const segments = new Array<RoadSegmentRecord>(tuples.length);
+    for (let i = 0; i < tuples.length; i++) {
+      segments[i] = this.getHydratedSegment(tileKey, i);
+    }
     this.tileSegmentCache.set(tileKey, segments);
     return segments;
+  }
+
+  public getTileIndex(tileKey: string): Map<string, RoadSegmentRecord[]> {
+    const cached = this.tileIndexCache.get(tileKey);
+    if (cached) return cached;
+    const payload = this.getTilePayload(tileKey);
+    if (!payload) return new Map();
+    const cells = new Map<string, RoadSegmentRecord[]>();
+    if (!Array.isArray(payload) && payload.cells) {
+      for (const [cellKey, indices] of Object.entries(payload.cells)) {
+        const segs = new Array<RoadSegmentRecord>(indices.length);
+        for (let i = 0; i < indices.length; i++) {
+          segs[i] = this.getHydratedSegment(tileKey, indices[i]);
+        }
+        cells.set(cellKey, segs);
+      }
+    } else {
+      const segs = this.getTileSegments(tileKey);
+      const cellSize = 0.001;
+      for (let i = 0; i < segs.length; i += 1) {
+        const seg = segs[i];
+        const [a, b] = seg.coordinates;
+        const minX = Math.floor(Math.min(a[0], b[0]) / cellSize);
+        const maxX = Math.floor(Math.max(a[0], b[0]) / cellSize);
+        const minY = Math.floor(Math.min(a[1], b[1]) / cellSize);
+        const maxY = Math.floor(Math.max(a[1], b[1]) / cellSize);
+        for (let x = minX; x <= maxX; x += 1) {
+          for (let y = minY; y <= maxY; y += 1) {
+            const key = `${x}:${y}`;
+            const existing = cells.get(key);
+            if (existing) existing.push(seg);
+            else cells.set(key, [seg]);
+          }
+        }
+      }
+    }
+    this.tileIndexCache.set(tileKey, cells);
+    return cells;
   }
 
   public getTilePaveDetails(tileKey: string): PaveDetail[] {
@@ -269,50 +667,76 @@ export class SpatialRoadIntelligenceStore {
     return pave;
   }
 
-  public getScopedIntelligence(
-    coordinates: Coordinate[],
-    paddingMeters = 500,
-  ): {
-    roads: RoadSegmentRecord[];
-    paveDetails: PaveDetail[];
-    surfaceIndex: RoadIntelligenceIndex;
-    paveIndex: PaveSpatialIndex;
-  } {
-    const tileKeys = this.getTileKeysForCoordinates(coordinates, paddingMeters);
+  public getScopedIntelligenceForTiles(tileKeys: string[]): ScopedIntelligenceResult {
     tileKeys.sort();
     const cacheKey = tileKeys.join(";");
 
     const existing = this.indexCache.get(cacheKey);
     if (existing) {
-      // Refresh key for true LRU eviction order
       this.indexCache.delete(cacheKey);
       this.indexCache.set(cacheKey, existing);
       return existing;
     }
 
-    const roadMap = new Map<string, RoadSegmentRecord>();
-    const paveMap = new Map<string, PaveDetail>();
+    const tileKeySet = new Set(tileKeys);
+    const lazyCells = new LazySurfaceCellMap(this, tileKeySet);
 
-    for (const key of tileKeys) {
-      const segs = this.getTileSegments(key);
-      for (const s of segs) {
-        const identity = `${s.osmWayId ?? ""}:${s.segmentHash}`;
-        if (!roadMap.has(identity)) roadMap.set(identity, s);
+    const surfaceIndex: RoadIntelligenceIndex = {
+      cellSize: 0.001,
+      cells: lazyCells,
+      allSegments: [],
+    };
+
+    let _roads: RoadSegmentRecord[] | null = null;
+    let _paveDetails: PaveDetail[] | null = null;
+    let _paveIndex: PaveSpatialIndex | null = null;
+
+    const getRoads = () => {
+      if (!_roads) {
+        const roadMap = new Map<string, RoadSegmentRecord>();
+        for (const key of tileKeySet) {
+          const segs = this.getTileSegments(key);
+          for (let i = 0; i < segs.length; i += 1) {
+            const s = segs[i];
+            const identity = `${s.osmWayId ?? ""}:${s.segmentHash}`;
+            if (!roadMap.has(identity)) roadMap.set(identity, s);
+          }
+        }
+        _roads = Array.from(roadMap.values());
       }
-      const pave = this.getTilePaveDetails(key);
-      for (const p of pave) {
-        const pKey = `${p.id}:${p.coordinates[0][0]},${p.coordinates[0][1]}`;
-        if (!paveMap.has(pKey)) paveMap.set(pKey, p);
+      return _roads;
+    };
+
+    const getPaveDetails = () => {
+      if (!_paveDetails) {
+        _paveDetails = roughDetailsFromSegments(getRoads());
       }
-    }
+      return _paveDetails;
+    };
 
-    const roads = Array.from(roadMap.values());
-    const paveDetails = Array.from(paveMap.values());
-    const surfaceIndex = createRoadIntelligenceIndex(roads);
-    const paveIndex = createPaveSpatialIndex(paveDetails);
+    const result: ScopedIntelligenceResult = {
+      get roads() {
+        return getRoads();
+      },
+      get paveDetails() {
+        return getPaveDetails();
+      },
+      surfaceIndex,
+      get paveIndex() {
+        if (!_paveIndex) {
+          _paveIndex = createPaveSpatialIndex(this.paveDetails);
+        }
+        return _paveIndex;
+      },
+      addTileKey(tileKey: string) {
+        tileKeySet.add(tileKey);
+        lazyCells.addTileKey(tileKey);
+        _roads = null;
+        _paveDetails = null;
+        _paveIndex = null;
+      },
+    };
 
-    const result = { roads, paveDetails, surfaceIndex, paveIndex };
-    // Keep LRU strictly bounded to 8 active corridor indexes
     const MAX_INDEX_CACHE = 8;
     while (this.indexCache.size >= MAX_INDEX_CACHE) {
       const oldestKey = this.indexCache.keys().next().value;
@@ -323,10 +747,18 @@ export class SpatialRoadIntelligenceStore {
     return result;
   }
 
+  public getScopedIntelligence(
+    coordinates: Coordinate[],
+    paddingMeters = 500,
+  ): ScopedIntelligenceResult {
+    const tileKeys = this.getTileKeysForCoordinates(coordinates, paddingMeters);
+    return this.getScopedIntelligenceForTiles(tileKeys);
+  }
+
   public getAllRoads(): RoadSegmentRecord[] {
     if (this.allRoadsCache) return this.allRoadsCache;
     const roadMap = new Map<string, RoadSegmentRecord>();
-    for (const key of Object.keys(this.data.tiles)) {
+    for (const key of this.tileKeySet) {
       const segs = this.getTileSegments(key);
       for (const s of segs) {
         const identity = `${s.osmWayId ?? ""}:${s.segmentHash}`;
@@ -344,11 +776,12 @@ export class SpatialRoadIntelligenceStore {
   }
 }
 
-export const spatialRoadStore = new SpatialRoadIntelligenceStore();
-export const roccellaSpatialRoadStore = new SpatialRoadIntelligenceStore(roccellaCompactData as unknown as CompactTileJson);
+export const spatialRoadStore = new SpatialRoadIntelligenceStore(milanMeta as unknown as CompactTileMetadata, milanTileLoaders, false);
+export const roccellaSpatialRoadStore = new SpatialRoadIntelligenceStore(roccellaMeta as unknown as CompactTileMetadata, roccellaTileLoaders, true);
 
 // Separate dictionaries and caches: hydrating one area must never resolve names or
 // restrictions through another area's tuple IDs. Milan remains the default export.
-export async function getSpatialRoadStore(area: "milan" | "roccella") {
+export async function getSpatialRoadStore(area: "milan" | "roccella" | "rome") {
+  if (area === "rome") return (await import("./rome-road-store.ts")).romeSpatialRoadStore;
   return area === "milan" ? spatialRoadStore : roccellaSpatialRoadStore;
 }

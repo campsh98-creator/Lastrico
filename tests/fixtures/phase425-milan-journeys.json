@@ -1,0 +1,1984 @@
+{
+  "description": "Phase 4.25 Milan anti-pavé benchmark matrix (car, motorcycle, bicycle; avoid=strong, no time budget = app defaults)",
+  "generatedBy": "scripts/prepare-milan-benchmark.mjs",
+  "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+  ],
+  "request": {
+    "avoid": "strong"
+  },
+  "shift": {
+    "eastMeters": 18,
+    "northMeters": 12
+  },
+  "journeys": [
+    {
+      "id": "castello-porta-venezia",
+      "origin": "previously-validated",
+      "start": [
+        9.1785,
+        45.4705
+      ],
+      "end": [
+        9.2056,
+        45.4731
+      ],
+      "straightLineMeters": 2135,
+      "lengthClass": "medium",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "duomo-porta-garibaldi",
+      "origin": "previously-validated",
+      "start": [
+        9.19,
+        45.4642
+      ],
+      "end": [
+        9.1872,
+        45.4848
+      ],
+      "straightLineMeters": 2288,
+      "lengthClass": "medium",
+      "zones": "centre-periphery"
+    },
+    {
+      "id": "cordusio-porta-romana",
+      "origin": "previously-validated",
+      "start": [
+        9.1858,
+        45.4655
+      ],
+      "end": [
+        9.201,
+        45.452
+      ],
+      "straightLineMeters": 1907,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "santambrogio-san-babila",
+      "origin": "previously-validated",
+      "start": [
+        9.1756,
+        45.4622
+      ],
+      "end": [
+        9.1985,
+        45.4668
+      ],
+      "straightLineMeters": 1859,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "colonne-repubblica",
+      "origin": "previously-validated",
+      "start": [
+        9.1813,
+        45.458
+      ],
+      "end": [
+        9.1975,
+        45.48
+      ],
+      "straightLineMeters": 2741,
+      "lengthClass": "medium",
+      "zones": "centre-periphery"
+    },
+    {
+      "id": "arco-pace-duomo",
+      "origin": "previously-validated",
+      "start": [
+        9.1726,
+        45.4757
+      ],
+      "end": [
+        9.19,
+        45.4642
+      ],
+      "straightLineMeters": 1860,
+      "lengthClass": "short",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "cenacolo-missori",
+      "origin": "previously-validated",
+      "start": [
+        9.1708,
+        45.4659
+      ],
+      "end": [
+        9.1887,
+        45.4607
+      ],
+      "straightLineMeters": 1511,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "brera-darsena",
+      "origin": "previously-validated",
+      "start": [
+        9.1886,
+        45.4721
+      ],
+      "end": [
+        9.1771,
+        45.4523
+      ],
+      "straightLineMeters": 2366,
+      "lengthClass": "medium",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "porta-venezia-xxiv-maggio",
+      "origin": "previously-validated",
+      "start": [
+        9.2056,
+        45.4731
+      ],
+      "end": [
+        9.1795,
+        45.452
+      ],
+      "straightLineMeters": 3097,
+      "lengthClass": "medium",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "centrale-piazza-fontana",
+      "origin": "previously-validated",
+      "start": [
+        9.204,
+        45.4847
+      ],
+      "end": [
+        9.1937,
+        45.4637
+      ],
+      "straightLineMeters": 2457,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "gae-aulenti-porta-romana",
+      "origin": "previously-validated",
+      "start": [
+        9.1895,
+        45.4836
+      ],
+      "end": [
+        9.1975,
+        45.456
+      ],
+      "straightLineMeters": 3114,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "cadorna-cinque-giornate",
+      "origin": "previously-validated",
+      "start": [
+        9.1765,
+        45.4682
+      ],
+      "end": [
+        9.2075,
+        45.4625
+      ],
+      "straightLineMeters": 2501,
+      "lengthClass": "medium",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "brera-santa-sofia",
+      "origin": "previously-validated",
+      "start": [
+        9.1886,
+        45.4721
+      ],
+      "end": [
+        9.1887,
+        45.4607
+      ],
+      "straightLineMeters": 1260,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "cadorna-darsena",
+      "origin": "previously-validated",
+      "start": [
+        9.1765,
+        45.4682
+      ],
+      "end": [
+        9.1771,
+        45.4523
+      ],
+      "straightLineMeters": 1758,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "duomo-brera",
+      "origin": "phase425",
+      "start": [
+        9.1892538,
+        45.4649092
+      ],
+      "end": [
+        9.1895955,
+        45.4725833
+      ],
+      "snapMeters": [
+        98,
+        94
+      ],
+      "straightLineMeters": 849,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "cordusio-moscova",
+      "origin": "phase425",
+      "start": [
+        9.1860965,
+        45.4651506
+      ],
+      "end": [
+        9.1867958,
+        45.4773049
+      ],
+      "snapMeters": [
+        45,
+        27
+      ],
+      "straightLineMeters": 1345,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "missori-crocetta",
+      "origin": "phase425",
+      "start": [
+        9.1884989,
+        45.460628
+      ],
+      "end": [
+        9.1950386,
+        45.4565486
+      ],
+      "snapMeters": [
+        18,
+        81
+      ],
+      "straightLineMeters": 681,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "via-torino-santambrogio",
+      "origin": "phase425",
+      "start": [
+        9.1836004,
+        45.4613157
+      ],
+      "end": [
+        9.1744935,
+        45.4620655
+      ],
+      "snapMeters": [
+        16,
+        88
+      ],
+      "straightLineMeters": 716,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "corso-magenta-cordusio",
+      "origin": "phase425",
+      "start": [
+        9.1780884,
+        45.4654557
+      ],
+      "end": [
+        9.1860965,
+        45.4651506
+      ],
+      "snapMeters": [
+        8,
+        45
+      ],
+      "straightLineMeters": 626,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "piazza-fontana-san-babila",
+      "origin": "phase425",
+      "start": [
+        9.1936722,
+        45.463721
+      ],
+      "end": [
+        9.1981131,
+        45.4667997
+      ],
+      "snapMeters": [
+        3,
+        30
+      ],
+      "straightLineMeters": 486,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "colonne-porta-genova",
+      "origin": "phase425",
+      "start": [
+        9.180947,
+        45.4573964
+      ],
+      "end": [
+        9.1701298,
+        45.4529505
+      ],
+      "snapMeters": [
+        72,
+        12
+      ],
+      "straightLineMeters": 977,
+      "lengthClass": "short",
+      "zones": "centre-periphery"
+    },
+    {
+      "id": "xxiv-maggio-bocconi",
+      "origin": "phase425",
+      "start": [
+        9.1795747,
+        45.4520169
+      ],
+      "end": [
+        9.1905568,
+        45.44904
+      ],
+      "snapMeters": [
+        6,
+        44
+      ],
+      "straightLineMeters": 919,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "corso-garibaldi-castello",
+      "origin": "phase425",
+      "start": [
+        9.1841387,
+        45.4765965
+      ],
+      "end": [
+        9.1770954,
+        45.4698538
+      ],
+      "snapMeters": [
+        46,
+        131
+      ],
+      "straightLineMeters": 926,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "via-manzoni-porta-venezia",
+      "origin": "phase425",
+      "start": [
+        9.192621,
+        45.4699004
+      ],
+      "end": [
+        9.2055504,
+        45.4731544
+      ],
+      "snapMeters": [
+        15,
+        7
+      ],
+      "straightLineMeters": 1072,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "policlinico-cinque-giornate",
+      "origin": "phase425",
+      "start": [
+        9.1960079,
+        45.4602982
+      ],
+      "end": [
+        9.2074285,
+        45.4625039
+      ],
+      "snapMeters": [
+        33,
+        6
+      ],
+      "straightLineMeters": 924,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "cadorna-conciliazione",
+      "origin": "phase425",
+      "start": [
+        9.1767854,
+        45.468161
+      ],
+      "end": [
+        9.166011,
+        45.4660318
+      ],
+      "snapMeters": [
+        23,
+        4
+      ],
+      "straightLineMeters": 873,
+      "lengthClass": "short",
+      "zones": "centre-periphery"
+    },
+    {
+      "id": "sant-agostino-colonne",
+      "origin": "phase425",
+      "start": [
+        9.169,
+        45.4587398
+      ],
+      "end": [
+        9.180947,
+        45.4573964
+      ],
+      "snapMeters": [
+        29,
+        72
+      ],
+      "straightLineMeters": 945,
+      "lengthClass": "short",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "corso-venezia-repubblica",
+      "origin": "phase425",
+      "start": [
+        9.2005455,
+        45.470126
+      ],
+      "end": [
+        9.1976771,
+        45.4799214
+      ],
+      "snapMeters": [
+        38,
+        16
+      ],
+      "straightLineMeters": 1106,
+      "lengthClass": "short",
+      "zones": "centre-periphery"
+    },
+    {
+      "id": "brera-corso-garibaldi",
+      "origin": "phase425",
+      "start": [
+        9.1895955,
+        45.4725833
+      ],
+      "end": [
+        9.1841387,
+        45.4765965
+      ],
+      "snapMeters": [
+        94,
+        46
+      ],
+      "straightLineMeters": 615,
+      "lengthClass": "short",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "castello-porta-romana",
+      "origin": "phase425",
+      "start": [
+        9.1770954,
+        45.4698538
+      ],
+      "end": [
+        9.2010067,
+        45.451973
+      ],
+      "snapMeters": [
+        131,
+        3
+      ],
+      "straightLineMeters": 2719,
+      "lengthClass": "medium",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "porta-genova-san-babila",
+      "origin": "phase425",
+      "start": [
+        9.1701298,
+        45.4529505
+      ],
+      "end": [
+        9.1981131,
+        45.4667997
+      ],
+      "snapMeters": [
+        12,
+        30
+      ],
+      "straightLineMeters": 2668,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "duomo-isola",
+      "origin": "phase425",
+      "start": [
+        9.1892538,
+        45.4649092
+      ],
+      "end": [
+        9.1892231,
+        45.4889901
+      ],
+      "snapMeters": [
+        98,
+        22
+      ],
+      "straightLineMeters": 2662,
+      "lengthClass": "medium",
+      "zones": "centre-periphery"
+    },
+    {
+      "id": "moscova-crocetta",
+      "origin": "phase425",
+      "start": [
+        9.1867958,
+        45.4773049
+      ],
+      "end": [
+        9.1950386,
+        45.4565486
+      ],
+      "snapMeters": [
+        27,
+        81
+      ],
+      "straightLineMeters": 2383,
+      "lengthClass": "medium",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "conciliazione-piazza-fontana",
+      "origin": "phase425",
+      "start": [
+        9.166011,
+        45.4660318
+      ],
+      "end": [
+        9.1936722,
+        45.463721
+      ],
+      "snapMeters": [
+        4,
+        3
+      ],
+      "straightLineMeters": 2175,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "porta-garibaldi-missori",
+      "origin": "phase425",
+      "start": [
+        9.1865304,
+        45.485277
+      ],
+      "end": [
+        9.1884989,
+        45.460628
+      ],
+      "snapMeters": [
+        74,
+        18
+      ],
+      "straightLineMeters": 2729,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "bocconi-brera",
+      "origin": "phase425",
+      "start": [
+        9.1905568,
+        45.44904
+      ],
+      "end": [
+        9.1895955,
+        45.4725833
+      ],
+      "snapMeters": [
+        44,
+        94
+      ],
+      "straightLineMeters": 2604,
+      "lengthClass": "medium",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "repubblica-santambrogio",
+      "origin": "phase425",
+      "start": [
+        9.1976771,
+        45.4799214
+      ],
+      "end": [
+        9.1744935,
+        45.4620655
+      ],
+      "snapMeters": [
+        16,
+        88
+      ],
+      "straightLineMeters": 2678,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "monumentale-duomo",
+      "origin": "phase425",
+      "start": [
+        9.1801512,
+        45.4845709
+      ],
+      "end": [
+        9.1892538,
+        45.4649092
+      ],
+      "snapMeters": [
+        182,
+        98
+      ],
+      "straightLineMeters": 2287,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "corso-magenta-porta-venezia",
+      "origin": "phase425",
+      "start": [
+        9.1780884,
+        45.4654557
+      ],
+      "end": [
+        9.2055504,
+        45.4731544
+      ],
+      "snapMeters": [
+        8,
+        7
+      ],
+      "straightLineMeters": 2307,
+      "lengthClass": "medium",
+      "zones": "centre-centre"
+    },
+    {
+      "id": "citta-studi-duomo",
+      "origin": "phase425",
+      "start": [
+        9.2257024,
+        45.4779695
+      ],
+      "end": [
+        9.1892538,
+        45.4649092
+      ],
+      "snapMeters": [
+        101,
+        98
+      ],
+      "straightLineMeters": 3190,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "lambrate-cadorna",
+      "origin": "phase425",
+      "start": [
+        9.2371839,
+        45.4840514
+      ],
+      "end": [
+        9.1767854,
+        45.468161
+      ],
+      "snapMeters": [
+        15,
+        23
+      ],
+      "straightLineMeters": 5031,
+      "lengthClass": "long",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "corvetto-duomo",
+      "origin": "phase425",
+      "start": [
+        9.223982,
+        45.4400351
+      ],
+      "end": [
+        9.1892538,
+        45.4649092
+      ],
+      "snapMeters": [
+        4,
+        98
+      ],
+      "straightLineMeters": 3862,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "rogoredo-porta-romana",
+      "origin": "phase425",
+      "start": [
+        9.2387797,
+        45.4331088
+      ],
+      "end": [
+        9.2010067,
+        45.451973
+      ],
+      "snapMeters": [
+        47,
+        3
+      ],
+      "straightLineMeters": 3613,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "abbiategrasso-colonne",
+      "origin": "phase425",
+      "start": [
+        9.1798015,
+        45.429992
+      ],
+      "end": [
+        9.180947,
+        45.4573964
+      ],
+      "snapMeters": [
+        16,
+        72
+      ],
+      "straightLineMeters": 3031,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "famagosta-castello",
+      "origin": "phase425",
+      "start": [
+        9.1680065,
+        45.4374176
+      ],
+      "end": [
+        9.1770954,
+        45.4698538
+      ],
+      "snapMeters": [
+        46,
+        131
+      ],
+      "straightLineMeters": 3655,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "bande-nere-duomo",
+      "origin": "phase425",
+      "start": [
+        9.1421441,
+        45.4602329
+      ],
+      "end": [
+        9.1892538,
+        45.4649092
+      ],
+      "snapMeters": [
+        28,
+        98
+      ],
+      "straightLineMeters": 3714,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "de-angeli-san-babila",
+      "origin": "phase425",
+      "start": [
+        9.1523352,
+        45.4675986
+      ],
+      "end": [
+        9.1981131,
+        45.4667997
+      ],
+      "snapMeters": [
+        68,
+        30
+      ],
+      "straightLineMeters": 3575,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "qt8-brera",
+      "origin": "phase425",
+      "start": [
+        9.1409776,
+        45.4857476
+      ],
+      "end": [
+        9.1895955,
+        45.4725833
+      ],
+      "snapMeters": [
+        28,
+        94
+      ],
+      "straightLineMeters": 4064,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "bovisa-castello",
+      "origin": "phase425",
+      "start": [
+        9.1619181,
+        45.5001857
+      ],
+      "end": [
+        9.1770954,
+        45.4698538
+      ],
+      "snapMeters": [
+        131,
+        131
+      ],
+      "straightLineMeters": 3556,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "ca-granda-repubblica",
+      "origin": "phase425",
+      "start": [
+        9.1930383,
+        45.4994194
+      ],
+      "end": [
+        9.1976771,
+        45.4799214
+      ],
+      "snapMeters": [
+        46,
+        16
+      ],
+      "straightLineMeters": 2185,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "greco-centrale",
+      "origin": "phase425",
+      "start": [
+        9.2121754,
+        45.4990284
+      ],
+      "end": [
+        9.2045575,
+        45.4845423
+      ],
+      "snapMeters": [
+        14,
+        47
+      ],
+      "straightLineMeters": 1708,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "ortica-porta-venezia",
+      "origin": "phase425",
+      "start": [
+        9.2383031,
+        45.4698507
+      ],
+      "end": [
+        9.2055504,
+        45.4731544
+      ],
+      "snapMeters": [
+        29,
+        7
+      ],
+      "straightLineMeters": 2583,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "forlanini-cinque-giornate",
+      "origin": "phase425",
+      "start": [
+        9.2400787,
+        45.4609988
+      ],
+      "end": [
+        9.2074285,
+        45.4625039
+      ],
+      "snapMeters": [
+        6,
+        6
+      ],
+      "straightLineMeters": 2555,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "barona-porta-genova",
+      "origin": "phase425",
+      "start": [
+        9.1566848,
+        45.4358697
+      ],
+      "end": [
+        9.1701298,
+        45.4529505
+      ],
+      "snapMeters": [
+        110,
+        12
+      ],
+      "straightLineMeters": 2161,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "lorenteggio-santambrogio",
+      "origin": "phase425",
+      "start": [
+        9.1358343,
+        45.4531536
+      ],
+      "end": [
+        9.1744935,
+        45.4620655
+      ],
+      "snapMeters": [
+        67,
+        88
+      ],
+      "straightLineMeters": 3176,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "san-siro-cadorna",
+      "origin": "phase425",
+      "start": [
+        9.1380457,
+        45.4720715
+      ],
+      "end": [
+        9.1767854,
+        45.468161
+      ],
+      "snapMeters": [
+        9,
+        23
+      ],
+      "straightLineMeters": 3055,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "maciachini-moscova",
+      "origin": "phase425",
+      "start": [
+        9.1850429,
+        45.4973066
+      ],
+      "end": [
+        9.1867958,
+        45.4773049
+      ],
+      "snapMeters": [
+        34,
+        27
+      ],
+      "straightLineMeters": 2215,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "nolo-piazza-fontana",
+      "origin": "phase425",
+      "start": [
+        9.2212268,
+        45.4908257
+      ],
+      "end": [
+        9.1936722,
+        45.463721
+      ],
+      "snapMeters": [
+        26,
+        3
+      ],
+      "straightLineMeters": 3688,
+      "lengthClass": "medium",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "dergano-porta-garibaldi",
+      "origin": "phase425",
+      "start": [
+        9.178414,
+        45.4993816
+      ],
+      "end": [
+        9.1865304,
+        45.485277
+      ],
+      "snapMeters": [
+        53,
+        74
+      ],
+      "straightLineMeters": 1683,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "san-siro-citta-studi",
+      "origin": "phase425",
+      "start": [
+        9.1380457,
+        45.4720715
+      ],
+      "end": [
+        9.2257024,
+        45.4779695
+      ],
+      "snapMeters": [
+        9,
+        101
+      ],
+      "straightLineMeters": 6874,
+      "lengthClass": "long",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "bovisa-lambrate",
+      "origin": "phase425",
+      "start": [
+        9.1619181,
+        45.5001857
+      ],
+      "end": [
+        9.2371839,
+        45.4840514
+      ],
+      "snapMeters": [
+        131,
+        15
+      ],
+      "straightLineMeters": 6137,
+      "lengthClass": "long",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "famagosta-corvetto",
+      "origin": "phase425",
+      "start": [
+        9.1680065,
+        45.4374176
+      ],
+      "end": [
+        9.223982,
+        45.4400351
+      ],
+      "snapMeters": [
+        46,
+        4
+      ],
+      "straightLineMeters": 4382,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "qt8-ca-granda",
+      "origin": "phase425",
+      "start": [
+        9.1409776,
+        45.4857476
+      ],
+      "end": [
+        9.1930383,
+        45.4994194
+      ],
+      "snapMeters": [
+        28,
+        46
+      ],
+      "straightLineMeters": 4335,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "bande-nere-abbiategrasso",
+      "origin": "phase425",
+      "start": [
+        9.1421441,
+        45.4602329
+      ],
+      "end": [
+        9.1798015,
+        45.429992
+      ],
+      "snapMeters": [
+        28,
+        16
+      ],
+      "straightLineMeters": 4452,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "de-angeli-portello",
+      "origin": "phase425",
+      "start": [
+        9.1523352,
+        45.4675986
+      ],
+      "end": [
+        9.1520719,
+        45.4816444
+      ],
+      "snapMeters": [
+        68,
+        102
+      ],
+      "straightLineMeters": 1553,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "forlanini-rogoredo",
+      "origin": "phase425",
+      "start": [
+        9.2400787,
+        45.4609988
+      ],
+      "end": [
+        9.2387797,
+        45.4331088
+      ],
+      "snapMeters": [
+        6,
+        47
+      ],
+      "straightLineMeters": 3085,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "greco-lambrate",
+      "origin": "phase425",
+      "start": [
+        9.2121754,
+        45.4990284
+      ],
+      "end": [
+        9.2371839,
+        45.4840514
+      ],
+      "snapMeters": [
+        14,
+        15
+      ],
+      "straightLineMeters": 2559,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "ortica-calvairate",
+      "origin": "phase425",
+      "start": [
+        9.2383031,
+        45.4698507
+      ],
+      "end": [
+        9.2242056,
+        45.4573747
+      ],
+      "snapMeters": [
+        29,
+        75
+      ],
+      "straightLineMeters": 1764,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "barona-lodi-tibb",
+      "origin": "phase425",
+      "start": [
+        9.1566848,
+        45.4358697
+      ],
+      "end": [
+        9.209714,
+        45.4447224
+      ],
+      "snapMeters": [
+        110,
+        38
+      ],
+      "straightLineMeters": 4256,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "lorenteggio-famagosta",
+      "origin": "phase425",
+      "start": [
+        9.1358343,
+        45.4531536
+      ],
+      "end": [
+        9.1680065,
+        45.4374176
+      ],
+      "snapMeters": [
+        67,
+        46
+      ],
+      "straightLineMeters": 3056,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "turro-citta-studi",
+      "origin": "phase425",
+      "start": [
+        9.2235738,
+        45.4979224
+      ],
+      "end": [
+        9.2257024,
+        45.4779695
+      ],
+      "snapMeters": [
+        34,
+        101
+      ],
+      "straightLineMeters": 2212,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "crescenzago-nolo",
+      "origin": "phase425",
+      "start": [
+        9.2373809,
+        45.4950185
+      ],
+      "end": [
+        9.2212268,
+        45.4908257
+      ],
+      "snapMeters": [
+        48,
+        26
+      ],
+      "straightLineMeters": 1343,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "sempione-portello",
+      "origin": "phase425",
+      "start": [
+        9.1655953,
+        45.4781481
+      ],
+      "end": [
+        9.1520719,
+        45.4816444
+      ],
+      "snapMeters": [
+        49,
+        102
+      ],
+      "straightLineMeters": 1124,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "tortona-naviglio-pavese",
+      "origin": "phase425",
+      "start": [
+        9.1654901,
+        45.453646
+      ],
+      "end": [
+        9.1758428,
+        45.4419394
+      ],
+      "snapMeters": [
+        55,
+        14
+      ],
+      "straightLineMeters": 1526,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "dateo-piola",
+      "origin": "phase425",
+      "start": [
+        9.2171313,
+        45.4679414
+      ],
+      "end": [
+        9.2230097,
+        45.4808514
+      ],
+      "snapMeters": [
+        12,
+        16
+      ],
+      "straightLineMeters": 1499,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "buenos-aires-dateo",
+      "origin": "phase425",
+      "start": [
+        9.2119267,
+        45.4802856
+      ],
+      "end": [
+        9.2171313,
+        45.4679414
+      ],
+      "snapMeters": [
+        32,
+        12
+      ],
+      "straightLineMeters": 1424,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "lodi-tibb-vigentino",
+      "origin": "phase425",
+      "start": [
+        9.209714,
+        45.4447224
+      ],
+      "end": [
+        9.2022914,
+        45.4362404
+      ],
+      "snapMeters": [
+        38,
+        61
+      ],
+      "straightLineMeters": 1102,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "wagner-de-angeli",
+      "origin": "phase425",
+      "start": [
+        9.1617234,
+        45.4682812
+      ],
+      "end": [
+        9.1523352,
+        45.4675986
+      ],
+      "snapMeters": [
+        38,
+        68
+      ],
+      "straightLineMeters": 737,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "calvairate-porta-vittoria",
+      "origin": "phase425",
+      "start": [
+        9.2242056,
+        45.4573747
+      ],
+      "end": [
+        9.2163675,
+        45.458062
+      ],
+      "snapMeters": [
+        75,
+        30
+      ],
+      "straightLineMeters": 617,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "san-siro-forlanini",
+      "origin": "phase425",
+      "start": [
+        9.1380457,
+        45.4720715
+      ],
+      "end": [
+        9.2400787,
+        45.4609988
+      ],
+      "snapMeters": [
+        9,
+        6
+      ],
+      "straightLineMeters": 8059,
+      "lengthClass": "long",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "bovisa-rogoredo",
+      "origin": "phase425",
+      "start": [
+        9.1619181,
+        45.5001857
+      ],
+      "end": [
+        9.2387797,
+        45.4331088
+      ],
+      "snapMeters": [
+        131,
+        47
+      ],
+      "straightLineMeters": 9536,
+      "lengthClass": "long",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "ca-granda-famagosta",
+      "origin": "phase425",
+      "start": [
+        9.1930383,
+        45.4994194
+      ],
+      "end": [
+        9.1680065,
+        45.4374176
+      ],
+      "snapMeters": [
+        46,
+        46
+      ],
+      "straightLineMeters": 7127,
+      "lengthClass": "long",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "lorenteggio-lambrate",
+      "origin": "phase425",
+      "start": [
+        9.1358343,
+        45.4531536
+      ],
+      "end": [
+        9.2371839,
+        45.4840514
+      ],
+      "snapMeters": [
+        67,
+        15
+      ],
+      "straightLineMeters": 8620,
+      "lengthClass": "long",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "qt8-corvetto",
+      "origin": "phase425",
+      "start": [
+        9.1409776,
+        45.4857476
+      ],
+      "end": [
+        9.223982,
+        45.4400351
+      ],
+      "snapMeters": [
+        28,
+        4
+      ],
+      "straightLineMeters": 8216,
+      "lengthClass": "long",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "greco-bocconi",
+      "origin": "phase425",
+      "start": [
+        9.2121754,
+        45.4990284
+      ],
+      "end": [
+        9.1905568,
+        45.44904
+      ],
+      "snapMeters": [
+        14,
+        44
+      ],
+      "straightLineMeters": 5777,
+      "lengthClass": "long",
+      "zones": "periphery-centre"
+    },
+    {
+      "id": "bicocca-niguarda",
+      "origin": "outside-archive",
+      "start": [
+        9.2115,
+        45.5135
+      ],
+      "end": [
+        9.1935,
+        45.5105
+      ],
+      "straightLineMeters": 1443,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "baggio-san-siro",
+      "origin": "outside-archive",
+      "start": [
+        9.093,
+        45.462
+      ],
+      "end": [
+        9.124,
+        45.478
+      ],
+      "straightLineMeters": 2998,
+      "lengthClass": "medium",
+      "zones": "periphery-periphery"
+    },
+    {
+      "id": "gratosoglio-abbiategrasso",
+      "origin": "outside-archive",
+      "start": [
+        9.175,
+        45.413
+      ],
+      "end": [
+        9.18,
+        45.43
+      ],
+      "straightLineMeters": 1919,
+      "lengthClass": "short",
+      "zones": "periphery-periphery"
+    }
+  ],
+  "stability": [
+    {
+      "id": "castello-porta-venezia~shift",
+      "baseId": "castello-porta-venezia",
+      "start": [
+        9.1787306,
+        45.4706086
+      ],
+      "end": [
+        9.2058306,
+        45.4732086
+      ]
+    },
+    {
+      "id": "santambrogio-san-babila~shift",
+      "baseId": "santambrogio-san-babila",
+      "start": [
+        9.1758305,
+        45.4623086
+      ],
+      "end": [
+        9.1987306,
+        45.4669086
+      ]
+    },
+    {
+      "id": "cenacolo-missori~shift",
+      "baseId": "cenacolo-missori",
+      "start": [
+        9.1710306,
+        45.4660086
+      ],
+      "end": [
+        9.1889305,
+        45.4608086
+      ]
+    },
+    {
+      "id": "centrale-piazza-fontana~shift",
+      "baseId": "centrale-piazza-fontana",
+      "start": [
+        9.2042306,
+        45.4848086
+      ],
+      "end": [
+        9.1939305,
+        45.4638086
+      ]
+    },
+    {
+      "id": "brera-santa-sofia~shift",
+      "baseId": "brera-santa-sofia",
+      "start": [
+        9.1888306,
+        45.4722086
+      ],
+      "end": [
+        9.1889305,
+        45.4608086
+      ]
+    },
+    {
+      "id": "cordusio-moscova~shift",
+      "baseId": "cordusio-moscova",
+      "start": [
+        9.1863271,
+        45.4652592
+      ],
+      "end": [
+        9.1870264,
+        45.4774135
+      ]
+    },
+    {
+      "id": "corso-magenta-cordusio~shift",
+      "baseId": "corso-magenta-cordusio",
+      "start": [
+        9.178319,
+        45.4655643
+      ],
+      "end": [
+        9.1863271,
+        45.4652592
+      ]
+    },
+    {
+      "id": "xxiv-maggio-bocconi~shift",
+      "baseId": "xxiv-maggio-bocconi",
+      "start": [
+        9.1798052,
+        45.4521255
+      ],
+      "end": [
+        9.1907873,
+        45.4491486
+      ]
+    },
+    {
+      "id": "policlinico-cinque-giornate~shift",
+      "baseId": "policlinico-cinque-giornate",
+      "start": [
+        9.1962384,
+        45.4604068
+      ],
+      "end": [
+        9.207659,
+        45.4626125
+      ]
+    },
+    {
+      "id": "corso-venezia-repubblica~shift",
+      "baseId": "corso-venezia-repubblica",
+      "start": [
+        9.2007761,
+        45.4702346
+      ],
+      "end": [
+        9.1979077,
+        45.48003
+      ]
+    },
+    {
+      "id": "porta-genova-san-babila~shift",
+      "baseId": "porta-genova-san-babila",
+      "start": [
+        9.1703603,
+        45.4530591
+      ],
+      "end": [
+        9.1983437,
+        45.4669083
+      ]
+    },
+    {
+      "id": "conciliazione-piazza-fontana~shift",
+      "baseId": "conciliazione-piazza-fontana",
+      "start": [
+        9.1662416,
+        45.4661404
+      ],
+      "end": [
+        9.1939027,
+        45.4638296
+      ]
+    },
+    {
+      "id": "repubblica-santambrogio~shift",
+      "baseId": "repubblica-santambrogio",
+      "start": [
+        9.1979077,
+        45.48003
+      ],
+      "end": [
+        9.174724,
+        45.4621741
+      ]
+    },
+    {
+      "id": "citta-studi-duomo~shift",
+      "baseId": "citta-studi-duomo",
+      "start": [
+        9.225933,
+        45.4780781
+      ],
+      "end": [
+        9.1894844,
+        45.4650178
+      ]
+    },
+    {
+      "id": "rogoredo-porta-romana~shift",
+      "baseId": "rogoredo-porta-romana",
+      "start": [
+        9.2390101,
+        45.4332174
+      ],
+      "end": [
+        9.2012372,
+        45.4520816
+      ]
+    },
+    {
+      "id": "bande-nere-duomo~shift",
+      "baseId": "bande-nere-duomo",
+      "start": [
+        9.1423746,
+        45.4603415
+      ],
+      "end": [
+        9.1894844,
+        45.4650178
+      ]
+    },
+    {
+      "id": "bovisa-castello~shift",
+      "baseId": "bovisa-castello",
+      "start": [
+        9.1621488,
+        45.5002943
+      ],
+      "end": [
+        9.177326,
+        45.4699624
+      ]
+    },
+    {
+      "id": "ortica-porta-venezia~shift",
+      "baseId": "ortica-porta-venezia",
+      "start": [
+        9.2385337,
+        45.4699593
+      ],
+      "end": [
+        9.205781,
+        45.473263
+      ]
+    },
+    {
+      "id": "lorenteggio-santambrogio~shift",
+      "baseId": "lorenteggio-santambrogio",
+      "start": [
+        9.1360648,
+        45.4532622
+      ],
+      "end": [
+        9.174724,
+        45.4621741
+      ]
+    },
+    {
+      "id": "nolo-piazza-fontana~shift",
+      "baseId": "nolo-piazza-fontana",
+      "start": [
+        9.2214575,
+        45.4909343
+      ],
+      "end": [
+        9.1939027,
+        45.4638296
+      ]
+    },
+    {
+      "id": "bovisa-lambrate~shift",
+      "baseId": "bovisa-lambrate",
+      "start": [
+        9.1621488,
+        45.5002943
+      ],
+      "end": [
+        9.2374145,
+        45.48416
+      ]
+    },
+    {
+      "id": "bande-nere-abbiategrasso~shift",
+      "baseId": "bande-nere-abbiategrasso",
+      "start": [
+        9.1423746,
+        45.4603415
+      ],
+      "end": [
+        9.1800319,
+        45.4301006
+      ]
+    },
+    {
+      "id": "greco-lambrate~shift",
+      "baseId": "greco-lambrate",
+      "start": [
+        9.2124061,
+        45.499137
+      ],
+      "end": [
+        9.2374145,
+        45.48416
+      ]
+    },
+    {
+      "id": "lorenteggio-famagosta~shift",
+      "baseId": "lorenteggio-famagosta",
+      "start": [
+        9.1360648,
+        45.4532622
+      ],
+      "end": [
+        9.1682369,
+        45.4375262
+      ]
+    },
+    {
+      "id": "sempione-portello~shift",
+      "baseId": "sempione-portello",
+      "start": [
+        9.1658259,
+        45.4782567
+      ],
+      "end": [
+        9.1523025,
+        45.481753
+      ]
+    },
+    {
+      "id": "buenos-aires-dateo~shift",
+      "baseId": "buenos-aires-dateo",
+      "start": [
+        9.2121573,
+        45.4803942
+      ],
+      "end": [
+        9.2173619,
+        45.46805
+      ]
+    },
+    {
+      "id": "calvairate-porta-vittoria~shift",
+      "baseId": "calvairate-porta-vittoria",
+      "start": [
+        9.2244361,
+        45.4574833
+      ],
+      "end": [
+        9.216598,
+        45.4581706
+      ]
+    },
+    {
+      "id": "ca-granda-famagosta~shift",
+      "baseId": "ca-granda-famagosta",
+      "start": [
+        9.193269,
+        45.499528
+      ],
+      "end": [
+        9.1682369,
+        45.4375262
+      ]
+    },
+    {
+      "id": "greco-bocconi~shift",
+      "baseId": "greco-bocconi",
+      "start": [
+        9.2124061,
+        45.499137
+      ],
+      "end": [
+        9.1907873,
+        45.4491486
+      ]
+    },
+    {
+      "id": "gratosoglio-abbiategrasso~shift",
+      "baseId": "gratosoglio-abbiategrasso",
+      "start": [
+        9.1752303,
+        45.4131086
+      ],
+      "end": [
+        9.1802304,
+        45.4301086
+      ]
+    }
+  ]
+}

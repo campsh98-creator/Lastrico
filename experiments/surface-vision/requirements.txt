@@ -1,0 +1,9 @@
+# Offline research experiment only; never install into or bundle with the app or the Worker.
+# Install into a venv in the session scratchpad (Python 3.13).
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.7.2
+joblib==1.6.0
+threadpoolctl==3.7.0
+cloudpickle==3.1.2
+pillow==13.0.0

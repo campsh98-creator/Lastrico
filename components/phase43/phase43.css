@@ -3,11 +3,11 @@
 .p43-comparison-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: var(--surface, #faf8f5);
-  border: 1px solid var(--border, #e2ded9);
-  border-radius: 14px;
-  padding: 12px;
+  gap: 3px;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  padding: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: var(--ink, #122023);
 }
@@ -16,6 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -27,7 +28,7 @@
 }
 
 .p43-budget-tag {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   padding: 2px 7px;
   background: rgba(22, 136, 110, 0.12);
@@ -40,102 +41,114 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background: rgba(22, 136, 110, 0.08);
-  border: 1px solid rgba(22, 136, 110, 0.2);
+  background: var(--p43-notice-surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 8px 12px;
+  padding: 6px 10px;
+  gap: 4px;
 }
 
 .p43-tradeoff-metric {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
   text-align: center;
+  min-width: 0;
 }
 
 .p43-metric-label {
-  font-size: 11px;
-  color: var(--muted, #697876);
+  font-size: 12px;
+  color: var(--muted);
   font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.1;
 }
 
 .p43-metric-value {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.2px;
 }
 
 .p43-value-positive {
-  color: var(--green, #16886e);
+  color: var(--green);
 }
 
 .p43-value-neutral {
-  color: var(--ink, #122023);
+  color: var(--ink);
 }
 
 .p43-value-warn {
-  color: var(--coral, #d84a35);
+  color: var(--coral);
 }
 
 .p43-tradeoff-divider {
   width: 1px;
-  height: 28px;
-  background: rgba(22, 136, 110, 0.2);
+  height: 18px;
+  background: var(--border);
 }
 
 .p43-empty-alternative-notice {
-  background: rgba(105, 120, 118, 0.08);
-  border: 1px dashed var(--border, #e2ded9);
+  background: var(--p43-notice-surface);
+  border: 1px dashed var(--border);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 6px 12px;
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.25;
 }
 
 .p43-empty-alternative-notice b {
   display: block;
-  font-size: 13px;
-  margin-bottom: 3px;
+  font-size: 12px;
+  margin-bottom: 0;
 }
 
 .p43-empty-alternative-notice p {
   margin: 0;
-  color: var(--muted, #697876);
+  color: var(--muted);
 }
 
 /* Route Cards */
 .p43-route-cards {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .p43-route-card {
   width: 100%;
-  min-height: 52px;
+  min-height: 48px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 10px 12px;
-  background: var(--white, #ffffff);
-  border: 1.5px solid var(--border, #e2ded9);
-  border-radius: 10px;
+  /* 6px/2px keeps the routes sheet at about 38% of a 390×844 screen; 8px/4px left the map under 55%. */
+  gap: 2px;
+  padding: 6px 12px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
   font: inherit;
   color: inherit;
 }
 
+.p43-route-card:active {
+  transform: scale(0.99);
+}
+
 .p43-route-card:focus-visible {
-  outline: 3px solid var(--green, #16886e);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
 .p43-route-card.p43-selected {
-  border-color: var(--green, #16886e);
+  border-color: var(--green);
   background: var(--p43-selected-surface);
-  box-shadow: 0 2px 10px rgba(22, 136, 110, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 .p43-route-card.p43-card-disabled {
@@ -146,7 +159,7 @@
 
 .p43-card-head {
   display: grid;
-  grid-template-columns: 14px 1fr auto;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
 }
@@ -155,12 +168,12 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid var(--border, #b5bebc);
+  border: 2px solid var(--border);
 }
 
 .p43-indicator-safe {
-  border-color: var(--green, #16886e);
-  background: var(--green, #16886e);
+  border-color: var(--green);
+  background: var(--green);
 }
 
 .p43-indicator-fast {
@@ -169,35 +182,47 @@
 }
 
 .p43-indicator-disabled {
-  border-color: #aaa;
+  border-color: var(--muted);
   background: transparent;
+}
+
+.p43-card-names {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .p43-card-names strong {
   display: block;
-  font-size: 14px;
+  font-size: 13.5px;
+  line-height: 1.15;
 }
 
 .p43-card-names small {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.15;
   color: var(--p43-card-detail);
 }
 
 .p43-card-time {
   text-align: right;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: max-content;
 }
 
 .p43-card-time span {
   display: block;
-  font-size: 17px;
+  font-size: 15.5px;
   font-weight: 800;
+  line-height: 1.1;
 }
 
 .p43-card-time em {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-style: normal;
+  line-height: 1.1;
   color: var(--p43-card-detail);
 }
 
@@ -207,7 +232,7 @@
   justify-content: space-between;
   padding-top: 4px;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .p43-unknown-label {
@@ -229,7 +254,7 @@
   background: rgba(229, 154, 47, 0.12);
   border-left: 3px solid #e59a2f;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.35;
   color: var(--p43-warn-ink);
 }
@@ -269,7 +294,7 @@
 
 .p43-modal-eyebrow {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--muted, #697876);
@@ -301,7 +326,7 @@
 }
 
 .p43-privacy-notice {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.4;
   margin: 0 0 14px;
   padding: 8px 10px;
@@ -385,12 +410,12 @@
 
 .p43-option-text strong {
   display: block;
-  font-size: 13px;
+  font-size: 13.5px;
 }
 
 .p43-option-text small {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted, #697876);
 }
 
@@ -398,7 +423,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 12px;
   padding: 4px 8px;
   background: var(--p43-pill-surface);
   border-radius: 6px;
@@ -416,7 +441,7 @@
 .p43-field-block label {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--muted, #697876);
 }
@@ -542,7 +567,7 @@
 }
 
 .p43-net-badge {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   padding: 2px 6px;
   border-radius: 4px;
@@ -553,7 +578,7 @@
 .p43-privacy-badge {
   display: flex;
   gap: 6px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.35;
   background: var(--p43-notice-surface);
   padding: 6px 8px;
@@ -577,7 +602,7 @@
 }
 
 .p43-tile-label {
-  font-size: 9.5px;
+  font-size: 11.5px;
   color: var(--muted, #697876);
   font-weight: 700;
   text-transform: uppercase;
@@ -597,7 +622,7 @@
   border: 1px solid var(--border, #e2ded9);
   border-radius: 8px;
   padding: 6px 8px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .p43-signal-item {
@@ -809,7 +834,7 @@
 }
 
 .p43-history-time {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted, #697876);
   font-weight: 600;
 }
@@ -832,7 +857,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  font-size: 10.5px;
+  font-size: 12px;
 }
 
 .p43-history-note {
@@ -843,23 +868,23 @@
 }
 
 .p43-history-coords {
-  font-size: 10.5px;
+  font-size: 11.5px;
   color: var(--muted, #697876);
 }
 
 /* Phase 4.6 Route Quality & Selection Rationale */
+/* The panel's trade-off is one sentence; theme tokens keep it AA in Day and Night. */
 .p43-selection-rationale {
-  background: rgba(22, 136, 110, 0.06);
-  border: 1px solid rgba(22, 136, 110, 0.18);
-  border-radius: 8px;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+  background: var(--p43-notice-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px 12px;
+  display: block;
+  min-width: 0;
 }
 
 .p43-rationale-tag {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
   color: var(--green, #16886e);
@@ -868,24 +893,30 @@
 
 .p43-rationale-text {
   margin: 0;
-  font-size: 11.5px;
-  line-height: 1.4;
-  color: var(--ink, #122023);
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--p43-notice-ink);
+  overflow-wrap: anywhere;
 }
 
 .p43-surface-breakdown {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  padding: 6px 0 2px;
+  gap: 5px;
+  padding: 0;
+}
+
+.p43-comparison-panel .p43-sr-only {
+  display: none;
 }
 
 .p43-breakdown-item {
-  font-size: 10.5px;
-  padding: 3px 6px;
+  font-size: 12px;
+  padding: 2px 7px;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.04);
   color: var(--ink, #122023);
+  line-height: 1.25;
 }
 
 .p43-breakdown-item b {
@@ -916,7 +947,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 6px;
@@ -946,7 +977,7 @@
 }
 
 .pilot-journeys-label {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--muted, #697876);
 }
@@ -999,7 +1030,7 @@
 .p43-trace-controls small {
   display: block;
   margin-top: 2px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.35;
   color: var(--p43-card-detail);
 }
@@ -1008,7 +1039,7 @@
   margin: 0;
   padding: 6px 8px;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 12px;
   background: var(--p43-notice-surface);
   color: var(--p43-notice-ink);
 }

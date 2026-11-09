@@ -1,0 +1,47 @@
+{
+  "elapsed_seconds": 21.186606083996594,
+  "model_timings": [
+    {
+      "model": "logistic",
+      "test_sector": "SW",
+      "fit_calibrate_evaluate_seconds": 0.07094366697128862
+    },
+    {
+      "model": "hist_gradient_boosting",
+      "test_sector": "SW",
+      "fit_calibrate_evaluate_seconds": 1.6337483340175822
+    },
+    {
+      "model": "logistic",
+      "test_sector": "SE",
+      "fit_calibrate_evaluate_seconds": 0.050552874978166074
+    },
+    {
+      "model": "hist_gradient_boosting",
+      "test_sector": "SE",
+      "fit_calibrate_evaluate_seconds": 1.5916671250015497
+    },
+    {
+      "model": "logistic",
+      "test_sector": "NW",
+      "fit_calibrate_evaluate_seconds": 0.03162258298834786
+    },
+    {
+      "model": "hist_gradient_boosting",
+      "test_sector": "NW",
+      "fit_calibrate_evaluate_seconds": 1.1063674170291051
+    },
+    {
+      "model": "logistic",
+      "test_sector": "NE",
+      "fit_calibrate_evaluate_seconds": 0.03217183402739465
+    },
+    {
+      "model": "hist_gradient_boosting",
+      "test_sector": "NE",
+      "fit_calibrate_evaluate_seconds": 1.152769416978117
+    }
+  ],
+  "python_peak_rss_mib": 729.890625,
+  "memory_scope": "Python process only; does not measure Node exporter child peak or Cloudflare Worker"
+}

@@ -9,7 +9,8 @@ import { loadApi, encodePolyline } from "./helpers/load-api.mjs";
 test("pilot bounds are disjoint; unsupported and invalid coordinates are rejected", () => {
   assert.equal(areaForCoordinate([9.19, 45.46])?.id, "milan");
   assert.equal(areaForCoordinate([16.4, 38.322])?.id, "roccella");
-  for (const point of [[12.5, 41.9], [16.4, 45.46], [NaN, 38.32], [Infinity, 38.32]]) {
+  assert.equal(areaForCoordinate([12.5, 41.9])?.id, "rome");
+  for (const point of [[11.25, 43.77], [16.4, 45.46], [NaN, 38.32], [Infinity, 38.32]]) {
     assert.equal(areaForCoordinate(point), undefined);
   }
   assert.equal(coordinateInArea([16.4, 38.322], PILOT_AREAS.milan), false);

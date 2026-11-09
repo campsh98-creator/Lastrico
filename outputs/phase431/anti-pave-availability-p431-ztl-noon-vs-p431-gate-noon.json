@@ -1,0 +1,6898 @@
+{
+ "summary": {
+  "cases": 264,
+  "statusBefore": {
+   "alternative": 137,
+   "no-better-route-or-no-pave": 117,
+   "error": 1,
+   "fastest-avoids-pave": 9
+  },
+  "statusAfter": {
+   "alternative": 137,
+   "no-better-route": 44,
+   "error": 1,
+   "no-pave": 65,
+   "fastest-avoids-pave": 9,
+   "access-restricted": 8
+  },
+  "usefulAntiPaveBefore": 124,
+  "usefulAntiPaveAfter": 124,
+  "missedBefore": 1,
+  "missedAfter": 1,
+  "shownKnownPaveBefore": 84918,
+  "shownKnownPaveAfter": 80890,
+  "shownConfirmedBefore": 53552,
+  "shownConfirmedAfter": 50459,
+  "standardKnownPave": 146932,
+  "savedVsStandardAfter": 68165,
+  "extraSecondsVsStandardAfter": 12986,
+  "changed": [
+   "brera-darsena-car: alternative 667 m 1214s → alternative 420 m 1216s (standard 1235 m 862s)",
+   "colonne-repubblica-motorcycle: alternative 131 m 975s → alternative 131 m 891s (standard 783 m 834s)",
+   "corso-magenta-porta-venezia-bicycle: alternative 1089 m 775s → alternative 394 m 1057s (standard 1822 m 668s)",
+   "corso-magenta-porta-venezia-car: alternative 695 m 933s → alternative 599 m 994s (standard 1430 m 834s)",
+   "duomo-porta-garibaldi-motorcycle: alternative 1275 m 1162s → alternative 116 m 1391s (standard 2098 m 1035s)",
+   "nolo-piazza-fontana-bicycle: alternative 223 m 1248s → alternative 214 m 1030s (standard 397 m 985s)",
+   "nolo-piazza-fontana-car: alternative 429 m 1277s → alternative 155 m 1155s (standard 777 m 1188s)",
+   "nolo-piazza-fontana-motorcycle: alternative 429 m 1277s → alternative 155 m 1155s (standard 777 m 1188s)",
+   "porta-garibaldi-missori-car: alternative 1116 m 1453s → alternative 688 m 1659s (standard 1523 m 1305s)",
+   "porta-garibaldi-missori-motorcycle: alternative 1116 m 1453s → alternative 996 m 1372s (standard 1523 m 1305s)",
+   "porta-genova-san-babila-car: alternative 456 m 956s → alternative 231 m 783s (standard 750 m 713s)",
+   "porta-genova-san-babila-motorcycle: alternative 456 m 956s → alternative 683 m 748s (standard 750 m 713s)",
+   "qt8-brera-car: alternative 740 m 1258s → alternative 573 m 1195s (standard 1225 m 1162s)",
+   "qt8-brera-motorcycle: alternative 740 m 1258s → alternative 573 m 1195s (standard 1225 m 1162s)",
+   "qt8-corvetto-motorcycle: alternative 304 m 1825s → alternative 0 m 1898s (standard 304 m 1825s)",
+   "repubblica-santambrogio-bicycle: alternative 562 m 870s → alternative 472 m 886s (standard 991 m 735s)"
+  ]
+ },
+ "rows": [
+  {
+   "case": "abbiategrasso-colonne-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 158,
+    "shownConfirmed": 143,
+    "shownSeconds": 871,
+    "standardPave": 447,
+    "standardSeconds": 729,
+    "savedVsStandard": 289,
+    "extraVsStandard": 142,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 158,
+    "shownConfirmed": 143,
+    "shownSeconds": 871,
+    "standardPave": 447,
+    "standardSeconds": 729,
+    "savedVsStandard": 289,
+    "extraVsStandard": 142,
+    "missed": false
+   }
+  },
+  {
+   "case": "abbiategrasso-colonne-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 158,
+    "shownConfirmed": 143,
+    "shownSeconds": 757,
+    "standardPave": 158,
+    "standardSeconds": 792,
+    "savedVsStandard": 0,
+    "extraVsStandard": -35,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 158,
+    "shownConfirmed": 143,
+    "shownSeconds": 757,
+    "standardPave": 158,
+    "standardSeconds": 792,
+    "savedVsStandard": 0,
+    "extraVsStandard": -35,
+    "missed": false
+   }
+  },
+  {
+   "case": "abbiategrasso-colonne-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 158,
+    "shownConfirmed": 143,
+    "shownSeconds": 792,
+    "standardPave": 500,
+    "standardSeconds": 800,
+    "savedVsStandard": 342,
+    "extraVsStandard": -8,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 158,
+    "shownConfirmed": 143,
+    "shownSeconds": 792,
+    "standardPave": 500,
+    "standardSeconds": 800,
+    "savedVsStandard": 342,
+    "extraVsStandard": -8,
+    "missed": false
+   }
+  },
+  {
+   "case": "arco-pace-duomo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "error"
+   },
+   "after": {
+    "status": "error"
+   }
+  },
+  {
+   "case": "arco-pace-duomo-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 570,
+    "shownConfirmed": 448,
+    "shownSeconds": 1284,
+    "standardPave": 1123,
+    "standardSeconds": 1209,
+    "savedVsStandard": 553,
+    "extraVsStandard": 75,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 570,
+    "shownConfirmed": 448,
+    "shownSeconds": 1284,
+    "standardPave": 1123,
+    "standardSeconds": 1209,
+    "savedVsStandard": 553,
+    "extraVsStandard": 75,
+    "missed": false
+   }
+  },
+  {
+   "case": "arco-pace-duomo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 780,
+    "shownConfirmed": 718,
+    "shownSeconds": 1181,
+    "standardPave": 1123,
+    "standardSeconds": 1209,
+    "savedVsStandard": 343,
+    "extraVsStandard": -28,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 780,
+    "shownConfirmed": 718,
+    "shownSeconds": 1181,
+    "standardPave": 1123,
+    "standardSeconds": 1209,
+    "savedVsStandard": 343,
+    "extraVsStandard": -28,
+    "missed": false
+   }
+  },
+  {
+   "case": "baggio-san-siro-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1246,
+    "standardPave": 0,
+    "standardSeconds": 1246,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1246,
+    "standardPave": 0,
+    "standardSeconds": 1246,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "baggio-san-siro-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 924,
+    "standardPave": 0,
+    "standardSeconds": 1011,
+    "savedVsStandard": 0,
+    "extraVsStandard": -87,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 924,
+    "standardPave": 0,
+    "standardSeconds": 1011,
+    "savedVsStandard": 0,
+    "extraVsStandard": -87,
+    "missed": false
+   }
+  },
+  {
+   "case": "baggio-san-siro-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1011,
+    "standardPave": 0,
+    "standardSeconds": 1011,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1011,
+    "standardPave": 0,
+    "standardSeconds": 1011,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bande-nere-abbiategrasso-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1193,
+    "standardPave": 0,
+    "standardSeconds": 1193,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1193,
+    "standardPave": 0,
+    "standardSeconds": 1193,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bande-nere-abbiategrasso-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 997,
+    "standardPave": 0,
+    "standardSeconds": 997,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 997,
+    "standardPave": 0,
+    "standardSeconds": 997,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bande-nere-abbiategrasso-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 997,
+    "standardPave": 0,
+    "standardSeconds": 997,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 997,
+    "standardPave": 0,
+    "standardSeconds": 997,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bande-nere-duomo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 789,
+    "shownConfirmed": 397,
+    "shownSeconds": 1049,
+    "standardPave": 1371,
+    "standardSeconds": 1035,
+    "savedVsStandard": 582,
+    "extraVsStandard": 14,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 789,
+    "shownConfirmed": 397,
+    "shownSeconds": 1049,
+    "standardPave": 1371,
+    "standardSeconds": 1035,
+    "savedVsStandard": 582,
+    "extraVsStandard": 14,
+    "missed": false
+   }
+  },
+  {
+   "case": "bande-nere-duomo-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 789,
+    "shownConfirmed": 397,
+    "shownSeconds": 983,
+    "standardPave": 789,
+    "standardSeconds": 983,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 789,
+    "shownConfirmed": 397,
+    "shownSeconds": 983,
+    "standardPave": 789,
+    "standardSeconds": 983,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bande-nere-duomo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 789,
+    "shownConfirmed": 397,
+    "shownSeconds": 983,
+    "standardPave": 789,
+    "standardSeconds": 983,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 789,
+    "shownConfirmed": 397,
+    "shownSeconds": 983,
+    "standardPave": 789,
+    "standardSeconds": 983,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "barona-lodi-tibb-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1068,
+    "standardPave": 0,
+    "standardSeconds": 1068,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1068,
+    "standardPave": 0,
+    "standardSeconds": 1068,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "barona-lodi-tibb-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 941,
+    "standardPave": 70,
+    "standardSeconds": 941,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 941,
+    "standardPave": 70,
+    "standardSeconds": 941,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "barona-lodi-tibb-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 941,
+    "standardPave": 70,
+    "standardSeconds": 941,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 941,
+    "standardPave": 70,
+    "standardSeconds": 941,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "barona-porta-genova-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 812,
+    "standardPave": 315,
+    "standardSeconds": 605,
+    "savedVsStandard": 315,
+    "extraVsStandard": 207,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 812,
+    "standardPave": 315,
+    "standardSeconds": 605,
+    "savedVsStandard": 315,
+    "extraVsStandard": 207,
+    "missed": false
+   }
+  },
+  {
+   "case": "barona-porta-genova-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 315,
+    "shownConfirmed": 315,
+    "shownSeconds": 651,
+    "standardPave": 1706,
+    "standardSeconds": 692,
+    "savedVsStandard": 1391,
+    "extraVsStandard": -41,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 315,
+    "shownConfirmed": 315,
+    "shownSeconds": 651,
+    "standardPave": 1706,
+    "standardSeconds": 692,
+    "savedVsStandard": 1391,
+    "extraVsStandard": -41,
+    "missed": false
+   }
+  },
+  {
+   "case": "barona-porta-genova-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 315,
+    "shownConfirmed": 315,
+    "shownSeconds": 651,
+    "standardPave": 1706,
+    "standardSeconds": 692,
+    "savedVsStandard": 1391,
+    "extraVsStandard": -41,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 315,
+    "shownConfirmed": 315,
+    "shownSeconds": 651,
+    "standardPave": 1706,
+    "standardSeconds": 692,
+    "savedVsStandard": 1391,
+    "extraVsStandard": -41,
+    "missed": false
+   }
+  },
+  {
+   "case": "bicocca-niguarda-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 460,
+    "standardPave": 0,
+    "standardSeconds": 460,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 460,
+    "standardPave": 0,
+    "standardSeconds": 460,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bicocca-niguarda-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 492,
+    "standardPave": 0,
+    "standardSeconds": 498,
+    "savedVsStandard": 0,
+    "extraVsStandard": -6,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 492,
+    "standardPave": 0,
+    "standardSeconds": 498,
+    "savedVsStandard": 0,
+    "extraVsStandard": -6,
+    "missed": false
+   }
+  },
+  {
+   "case": "bicocca-niguarda-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 492,
+    "standardPave": 0,
+    "standardSeconds": 498,
+    "savedVsStandard": 0,
+    "extraVsStandard": -6,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 492,
+    "standardPave": 0,
+    "standardSeconds": 498,
+    "savedVsStandard": 0,
+    "extraVsStandard": -6,
+    "missed": false
+   }
+  },
+  {
+   "case": "bocconi-brera-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1000,
+    "shownConfirmed": 320,
+    "shownSeconds": 910,
+    "standardPave": 2398,
+    "standardSeconds": 764,
+    "savedVsStandard": 1398,
+    "extraVsStandard": 146,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1000,
+    "shownConfirmed": 320,
+    "shownSeconds": 910,
+    "standardPave": 2398,
+    "standardSeconds": 764,
+    "savedVsStandard": 1398,
+    "extraVsStandard": 146,
+    "missed": false
+   }
+  },
+  {
+   "case": "bocconi-brera-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 551,
+    "shownConfirmed": 235,
+    "shownSeconds": 974,
+    "standardPave": 1273,
+    "standardSeconds": 943,
+    "savedVsStandard": 722,
+    "extraVsStandard": 31,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 551,
+    "shownConfirmed": 235,
+    "shownSeconds": 974,
+    "standardPave": 1273,
+    "standardSeconds": 943,
+    "savedVsStandard": 722,
+    "extraVsStandard": 31,
+    "missed": false
+   }
+  },
+  {
+   "case": "bocconi-brera-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 778,
+    "shownConfirmed": 461,
+    "shownSeconds": 995,
+    "standardPave": 1005,
+    "standardSeconds": 882,
+    "savedVsStandard": 227,
+    "extraVsStandard": 113,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 778,
+    "shownConfirmed": 461,
+    "shownSeconds": 995,
+    "standardPave": 1005,
+    "standardSeconds": 882,
+    "savedVsStandard": 227,
+    "extraVsStandard": 113,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-castello-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 46,
+    "shownConfirmed": 0,
+    "shownSeconds": 1019,
+    "standardPave": 46,
+    "standardSeconds": 1019,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 46,
+    "shownConfirmed": 0,
+    "shownSeconds": 1019,
+    "standardPave": 46,
+    "standardSeconds": 1019,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-castello-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 18,
+    "shownConfirmed": 18,
+    "shownSeconds": 898,
+    "standardPave": 18,
+    "standardSeconds": 898,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 18,
+    "shownConfirmed": 18,
+    "shownSeconds": 898,
+    "standardPave": 18,
+    "standardSeconds": 898,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-castello-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 18,
+    "shownConfirmed": 18,
+    "shownSeconds": 898,
+    "standardPave": 18,
+    "standardSeconds": 898,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 18,
+    "shownConfirmed": 18,
+    "shownSeconds": 898,
+    "standardPave": 18,
+    "standardSeconds": 898,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-lambrate-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 16,
+    "shownConfirmed": 16,
+    "shownSeconds": 1527,
+    "standardPave": 105,
+    "standardSeconds": 1433,
+    "savedVsStandard": 89,
+    "extraVsStandard": 94,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 16,
+    "shownConfirmed": 16,
+    "shownSeconds": 1527,
+    "standardPave": 105,
+    "standardSeconds": 1433,
+    "savedVsStandard": 89,
+    "extraVsStandard": 94,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-lambrate-car",
+   "mode": "car",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 105,
+    "shownConfirmed": 105,
+    "shownSeconds": 1340,
+    "standardPave": 336,
+    "standardSeconds": 1398,
+    "savedVsStandard": 231,
+    "extraVsStandard": -58,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 105,
+    "shownConfirmed": 105,
+    "shownSeconds": 1340,
+    "standardPave": 336,
+    "standardSeconds": 1398,
+    "savedVsStandard": 231,
+    "extraVsStandard": -58,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-lambrate-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 105,
+    "shownConfirmed": 105,
+    "shownSeconds": 1312,
+    "standardPave": 336,
+    "standardSeconds": 1398,
+    "savedVsStandard": 231,
+    "extraVsStandard": -86,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 105,
+    "shownConfirmed": 105,
+    "shownSeconds": 1312,
+    "standardPave": 336,
+    "standardSeconds": 1398,
+    "savedVsStandard": 231,
+    "extraVsStandard": -86,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-rogoredo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 2527,
+    "standardPave": 59,
+    "standardSeconds": 2461,
+    "savedVsStandard": 59,
+    "extraVsStandard": 66,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 2527,
+    "standardPave": 59,
+    "standardSeconds": 2461,
+    "savedVsStandard": 59,
+    "extraVsStandard": 66,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-rogoredo-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 88,
+    "shownConfirmed": 88,
+    "shownSeconds": 1750,
+    "standardPave": 88,
+    "standardSeconds": 1750,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 88,
+    "shownConfirmed": 88,
+    "shownSeconds": 1750,
+    "standardPave": 88,
+    "standardSeconds": 1750,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "bovisa-rogoredo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 88,
+    "shownConfirmed": 88,
+    "shownSeconds": 1750,
+    "standardPave": 88,
+    "standardSeconds": 1750,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 88,
+    "shownConfirmed": 88,
+    "shownSeconds": 1750,
+    "standardPave": 88,
+    "standardSeconds": 1750,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-corso-garibaldi-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 175,
+    "shownConfirmed": 114,
+    "shownSeconds": 340,
+    "standardPave": 175,
+    "standardSeconds": 340,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 175,
+    "shownConfirmed": 114,
+    "shownSeconds": 340,
+    "standardPave": 175,
+    "standardSeconds": 340,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-corso-garibaldi-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 499,
+    "shownConfirmed": 403,
+    "shownSeconds": 370,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   },
+   "after": {
+    "status": "access-restricted",
+    "shownPave": 499,
+    "shownConfirmed": 403,
+    "shownSeconds": 370,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-corso-garibaldi-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 499,
+    "shownConfirmed": 403,
+    "shownSeconds": 370,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   },
+   "after": {
+    "status": "access-restricted",
+    "shownPave": 499,
+    "shownConfirmed": 403,
+    "shownSeconds": 370,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-darsena-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1195,
+    "shownConfirmed": 922,
+    "shownSeconds": 781,
+    "standardPave": 1195,
+    "standardSeconds": 781,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1195,
+    "shownConfirmed": 922,
+    "shownSeconds": 781,
+    "standardPave": 1195,
+    "standardSeconds": 781,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-darsena-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 667,
+    "shownConfirmed": 515,
+    "shownSeconds": 1214,
+    "standardPave": 1235,
+    "standardSeconds": 862,
+    "savedVsStandard": 568,
+    "extraVsStandard": 352,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 420,
+    "shownConfirmed": 394,
+    "shownSeconds": 1216,
+    "standardPave": 1235,
+    "standardSeconds": 862,
+    "savedVsStandard": 815,
+    "extraVsStandard": 354,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-darsena-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 667,
+    "shownConfirmed": 515,
+    "shownSeconds": 1214,
+    "standardPave": 1235,
+    "standardSeconds": 862,
+    "savedVsStandard": 568,
+    "extraVsStandard": 352,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 667,
+    "shownConfirmed": 515,
+    "shownSeconds": 1214,
+    "standardPave": 1235,
+    "standardSeconds": 862,
+    "savedVsStandard": 568,
+    "extraVsStandard": 352,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-santa-sofia-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 524,
+    "shownConfirmed": 469,
+    "shownSeconds": 650,
+    "standardPave": 1491,
+    "standardSeconds": 504,
+    "savedVsStandard": 967,
+    "extraVsStandard": 146,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 524,
+    "shownConfirmed": 469,
+    "shownSeconds": 650,
+    "standardPave": 1491,
+    "standardSeconds": 504,
+    "savedVsStandard": 967,
+    "extraVsStandard": 146,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-santa-sofia-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 827,
+    "shownConfirmed": 622,
+    "shownSeconds": 1154,
+    "standardPave": 1431,
+    "standardSeconds": 970,
+    "savedVsStandard": 604,
+    "extraVsStandard": 184,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 827,
+    "shownConfirmed": 622,
+    "shownSeconds": 1154,
+    "standardPave": 1431,
+    "standardSeconds": 970,
+    "savedVsStandard": 604,
+    "extraVsStandard": 184,
+    "missed": false
+   }
+  },
+  {
+   "case": "brera-santa-sofia-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1124,
+    "shownConfirmed": 918,
+    "shownSeconds": 1175,
+    "standardPave": 1431,
+    "standardSeconds": 970,
+    "savedVsStandard": 307,
+    "extraVsStandard": 205,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1124,
+    "shownConfirmed": 918,
+    "shownSeconds": 1175,
+    "standardPave": 1431,
+    "standardSeconds": 970,
+    "savedVsStandard": 307,
+    "extraVsStandard": 205,
+    "missed": false
+   }
+  },
+  {
+   "case": "buenos-aires-dateo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 71,
+    "shownConfirmed": 59,
+    "shownSeconds": 350,
+    "standardPave": 71,
+    "standardSeconds": 350,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 71,
+    "shownConfirmed": 59,
+    "shownSeconds": 350,
+    "standardPave": 71,
+    "standardSeconds": 350,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "buenos-aires-dateo-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 71,
+    "shownConfirmed": 59,
+    "shownSeconds": 332,
+    "standardPave": 71,
+    "standardSeconds": 332,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 71,
+    "shownConfirmed": 59,
+    "shownSeconds": 332,
+    "standardPave": 71,
+    "standardSeconds": 332,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "buenos-aires-dateo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 71,
+    "shownConfirmed": 59,
+    "shownSeconds": 332,
+    "standardPave": 71,
+    "standardSeconds": 332,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 71,
+    "shownConfirmed": 59,
+    "shownSeconds": 332,
+    "standardPave": 71,
+    "standardSeconds": 332,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "ca-granda-famagosta-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 2216,
+    "standardPave": 241,
+    "standardSeconds": 2196,
+    "savedVsStandard": 241,
+    "extraVsStandard": 20,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 2216,
+    "standardPave": 241,
+    "standardSeconds": 2196,
+    "savedVsStandard": 241,
+    "extraVsStandard": 20,
+    "missed": false
+   }
+  },
+  {
+   "case": "ca-granda-famagosta-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1961,
+    "standardPave": 0,
+    "standardSeconds": 2224,
+    "savedVsStandard": 0,
+    "extraVsStandard": -263,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1961,
+    "standardPave": 0,
+    "standardSeconds": 2224,
+    "savedVsStandard": 0,
+    "extraVsStandard": -263,
+    "missed": false
+   }
+  },
+  {
+   "case": "ca-granda-famagosta-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1961,
+    "standardPave": 0,
+    "standardSeconds": 1961,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1961,
+    "standardPave": 0,
+    "standardSeconds": 1961,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "ca-granda-repubblica-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 763,
+    "standardPave": 0,
+    "standardSeconds": 788,
+    "savedVsStandard": 0,
+    "extraVsStandard": -25,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 763,
+    "standardPave": 0,
+    "standardSeconds": 788,
+    "savedVsStandard": 0,
+    "extraVsStandard": -25,
+    "missed": false
+   }
+  },
+  {
+   "case": "ca-granda-repubblica-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 686,
+    "standardPave": 0,
+    "standardSeconds": 691,
+    "savedVsStandard": 0,
+    "extraVsStandard": -5,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 686,
+    "standardPave": 0,
+    "standardSeconds": 691,
+    "savedVsStandard": 0,
+    "extraVsStandard": -5,
+    "missed": false
+   }
+  },
+  {
+   "case": "ca-granda-repubblica-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 686,
+    "standardPave": 0,
+    "standardSeconds": 691,
+    "savedVsStandard": 0,
+    "extraVsStandard": -5,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 686,
+    "standardPave": 0,
+    "standardSeconds": 691,
+    "savedVsStandard": 0,
+    "extraVsStandard": -5,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-cinque-giornate-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 436,
+    "shownConfirmed": 91,
+    "shownSeconds": 901,
+    "standardPave": 966,
+    "standardSeconds": 730,
+    "savedVsStandard": 530,
+    "extraVsStandard": 171,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 436,
+    "shownConfirmed": 91,
+    "shownSeconds": 901,
+    "standardPave": 966,
+    "standardSeconds": 730,
+    "savedVsStandard": 530,
+    "extraVsStandard": 171,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-cinque-giornate-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 322,
+    "shownConfirmed": 2,
+    "shownSeconds": 840,
+    "standardPave": 322,
+    "standardSeconds": 840,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 322,
+    "shownConfirmed": 2,
+    "shownSeconds": 840,
+    "standardPave": 322,
+    "standardSeconds": 840,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-cinque-giornate-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 62,
+    "shownConfirmed": 0,
+    "shownSeconds": 1109,
+    "standardPave": 322,
+    "standardSeconds": 840,
+    "savedVsStandard": 260,
+    "extraVsStandard": 269,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 62,
+    "shownConfirmed": 0,
+    "shownSeconds": 1109,
+    "standardPave": 322,
+    "standardSeconds": 840,
+    "savedVsStandard": 260,
+    "extraVsStandard": 269,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-conciliazione-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 20,
+    "shownConfirmed": 20,
+    "shownSeconds": 286,
+    "standardPave": 134,
+    "standardSeconds": 298,
+    "savedVsStandard": 114,
+    "extraVsStandard": -12,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 20,
+    "shownConfirmed": 20,
+    "shownSeconds": 286,
+    "standardPave": 134,
+    "standardSeconds": 298,
+    "savedVsStandard": 114,
+    "extraVsStandard": -12,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-conciliazione-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 20,
+    "shownConfirmed": 20,
+    "shownSeconds": 229,
+    "standardPave": 20,
+    "standardSeconds": 229,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 20,
+    "shownConfirmed": 20,
+    "shownSeconds": 229,
+    "standardPave": 20,
+    "standardSeconds": 229,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-conciliazione-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 20,
+    "shownConfirmed": 20,
+    "shownSeconds": 229,
+    "standardPave": 20,
+    "standardSeconds": 229,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 20,
+    "shownConfirmed": 20,
+    "shownSeconds": 229,
+    "standardPave": 20,
+    "standardSeconds": 229,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-darsena-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 513,
+    "shownConfirmed": 475,
+    "shownSeconds": 510,
+    "standardPave": 513,
+    "standardSeconds": 510,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 513,
+    "shownConfirmed": 475,
+    "shownSeconds": 510,
+    "standardPave": 513,
+    "standardSeconds": 510,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-darsena-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 172,
+    "shownConfirmed": 110,
+    "shownSeconds": 551,
+    "standardPave": 566,
+    "standardSeconds": 508,
+    "savedVsStandard": 394,
+    "extraVsStandard": 43,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 172,
+    "shownConfirmed": 110,
+    "shownSeconds": 551,
+    "standardPave": 566,
+    "standardSeconds": 508,
+    "savedVsStandard": 394,
+    "extraVsStandard": 43,
+    "missed": false
+   }
+  },
+  {
+   "case": "cadorna-darsena-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 172,
+    "shownConfirmed": 110,
+    "shownSeconds": 551,
+    "standardPave": 566,
+    "standardSeconds": 508,
+    "savedVsStandard": 394,
+    "extraVsStandard": 43,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 172,
+    "shownConfirmed": 110,
+    "shownSeconds": 551,
+    "standardPave": 566,
+    "standardSeconds": 508,
+    "savedVsStandard": 394,
+    "extraVsStandard": 43,
+    "missed": false
+   }
+  },
+  {
+   "case": "calvairate-porta-vittoria-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 179,
+    "standardPave": 0,
+    "standardSeconds": 179,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 179,
+    "standardPave": 0,
+    "standardSeconds": 179,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "calvairate-porta-vittoria-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 172,
+    "standardPave": 0,
+    "standardSeconds": 172,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 172,
+    "standardPave": 0,
+    "standardSeconds": 172,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "calvairate-porta-vittoria-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 172,
+    "standardPave": 0,
+    "standardSeconds": 172,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 172,
+    "standardPave": 0,
+    "standardSeconds": 172,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "castello-porta-romana-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 761,
+    "shownConfirmed": 447,
+    "shownSeconds": 870,
+    "standardPave": 1195,
+    "standardSeconds": 798,
+    "savedVsStandard": 434,
+    "extraVsStandard": 72,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 761,
+    "shownConfirmed": 447,
+    "shownSeconds": 870,
+    "standardPave": 1195,
+    "standardSeconds": 798,
+    "savedVsStandard": 434,
+    "extraVsStandard": 72,
+    "missed": false
+   }
+  },
+  {
+   "case": "castello-porta-romana-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 62,
+    "shownConfirmed": 0,
+    "shownSeconds": 859,
+    "standardPave": 1195,
+    "standardSeconds": 735,
+    "savedVsStandard": 1133,
+    "extraVsStandard": 124,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 62,
+    "shownConfirmed": 0,
+    "shownSeconds": 859,
+    "standardPave": 1195,
+    "standardSeconds": 735,
+    "savedVsStandard": 1133,
+    "extraVsStandard": 124,
+    "missed": false
+   }
+  },
+  {
+   "case": "castello-porta-romana-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 62,
+    "shownConfirmed": 0,
+    "shownSeconds": 859,
+    "standardPave": 1195,
+    "standardSeconds": 735,
+    "savedVsStandard": 1133,
+    "extraVsStandard": 124,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 62,
+    "shownConfirmed": 0,
+    "shownSeconds": 859,
+    "standardPave": 1195,
+    "standardSeconds": 735,
+    "savedVsStandard": 1133,
+    "extraVsStandard": 124,
+    "missed": false
+   }
+  },
+  {
+   "case": "castello-porta-venezia-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 364,
+    "shownConfirmed": 271,
+    "shownSeconds": 872,
+    "standardPave": 541,
+    "standardSeconds": 727,
+    "savedVsStandard": 177,
+    "extraVsStandard": 145,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 364,
+    "shownConfirmed": 271,
+    "shownSeconds": 872,
+    "standardPave": 541,
+    "standardSeconds": 727,
+    "savedVsStandard": 177,
+    "extraVsStandard": 145,
+    "missed": false
+   }
+  },
+  {
+   "case": "castello-porta-venezia-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 383,
+    "shownConfirmed": 383,
+    "shownSeconds": 935,
+    "standardPave": 1290,
+    "standardSeconds": 799,
+    "savedVsStandard": 907,
+    "extraVsStandard": 136,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 383,
+    "shownConfirmed": 383,
+    "shownSeconds": 935,
+    "standardPave": 1290,
+    "standardSeconds": 799,
+    "savedVsStandard": 907,
+    "extraVsStandard": 136,
+    "missed": false
+   }
+  },
+  {
+   "case": "castello-porta-venezia-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 383,
+    "shownConfirmed": 383,
+    "shownSeconds": 935,
+    "standardPave": 1290,
+    "standardSeconds": 799,
+    "savedVsStandard": 907,
+    "extraVsStandard": 136,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 383,
+    "shownConfirmed": 383,
+    "shownSeconds": 935,
+    "standardPave": 1290,
+    "standardSeconds": 799,
+    "savedVsStandard": 907,
+    "extraVsStandard": 136,
+    "missed": false
+   }
+  },
+  {
+   "case": "cenacolo-missori-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 938,
+    "shownConfirmed": 463,
+    "shownSeconds": 568,
+    "standardPave": 938,
+    "standardSeconds": 568,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 938,
+    "shownConfirmed": 463,
+    "shownSeconds": 568,
+    "standardPave": 938,
+    "standardSeconds": 568,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "cenacolo-missori-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 902,
+    "shownConfirmed": 582,
+    "shownSeconds": 654,
+    "standardPave": 902,
+    "standardSeconds": 654,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 902,
+    "shownConfirmed": 582,
+    "shownSeconds": 654,
+    "standardPave": 902,
+    "standardSeconds": 654,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "cenacolo-missori-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 902,
+    "shownConfirmed": 582,
+    "shownSeconds": 654,
+    "standardPave": 902,
+    "standardSeconds": 654,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 902,
+    "shownConfirmed": 582,
+    "shownSeconds": 654,
+    "standardPave": 902,
+    "standardSeconds": 654,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "centrale-piazza-fontana-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 447,
+    "shownConfirmed": 298,
+    "shownSeconds": 727,
+    "standardPave": 447,
+    "standardSeconds": 727,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 447,
+    "shownConfirmed": 298,
+    "shownSeconds": 727,
+    "standardPave": 447,
+    "standardSeconds": 727,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "centrale-piazza-fontana-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 179,
+    "shownConfirmed": 155,
+    "shownSeconds": 929,
+    "standardPave": 521,
+    "standardSeconds": 889,
+    "savedVsStandard": 342,
+    "extraVsStandard": 40,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 179,
+    "shownConfirmed": 155,
+    "shownSeconds": 929,
+    "standardPave": 521,
+    "standardSeconds": 889,
+    "savedVsStandard": 342,
+    "extraVsStandard": 40,
+    "missed": false
+   }
+  },
+  {
+   "case": "centrale-piazza-fontana-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 179,
+    "shownConfirmed": 155,
+    "shownSeconds": 929,
+    "standardPave": 521,
+    "standardSeconds": 889,
+    "savedVsStandard": 342,
+    "extraVsStandard": 40,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 179,
+    "shownConfirmed": 155,
+    "shownSeconds": 929,
+    "standardPave": 521,
+    "standardSeconds": 889,
+    "savedVsStandard": 342,
+    "extraVsStandard": 40,
+    "missed": false
+   }
+  },
+  {
+   "case": "citta-studi-duomo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 338,
+    "shownConfirmed": 222,
+    "shownSeconds": 1038,
+    "standardPave": 848,
+    "standardSeconds": 880,
+    "savedVsStandard": 510,
+    "extraVsStandard": 158,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 338,
+    "shownConfirmed": 222,
+    "shownSeconds": 1038,
+    "standardPave": 848,
+    "standardSeconds": 880,
+    "savedVsStandard": 510,
+    "extraVsStandard": 158,
+    "missed": false
+   }
+  },
+  {
+   "case": "citta-studi-duomo-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 1186,
+    "shownConfirmed": 884,
+    "shownSeconds": 1042,
+    "standardPave": 1097,
+    "standardSeconds": 1100,
+    "savedVsStandard": -89,
+    "extraVsStandard": -58,
+    "missed": false
+   },
+   "after": {
+    "status": "access-restricted",
+    "shownPave": 1186,
+    "shownConfirmed": 884,
+    "shownSeconds": 1042,
+    "standardPave": 1097,
+    "standardSeconds": 1100,
+    "savedVsStandard": -89,
+    "extraVsStandard": -58,
+    "missed": false
+   }
+  },
+  {
+   "case": "citta-studi-duomo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 1097,
+    "shownConfirmed": 857,
+    "shownSeconds": 1100,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   },
+   "after": {
+    "status": "access-restricted",
+    "shownPave": 1097,
+    "shownConfirmed": 857,
+    "shownSeconds": 1100,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   }
+  },
+  {
+   "case": "colonne-porta-genova-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 249,
+    "shownConfirmed": 205,
+    "shownSeconds": 265,
+    "standardPave": 734,
+    "standardSeconds": 253,
+    "savedVsStandard": 485,
+    "extraVsStandard": 12,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 249,
+    "shownConfirmed": 205,
+    "shownSeconds": 265,
+    "standardPave": 734,
+    "standardSeconds": 253,
+    "savedVsStandard": 485,
+    "extraVsStandard": 12,
+    "missed": false
+   }
+  },
+  {
+   "case": "colonne-porta-genova-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 242,
+    "shownConfirmed": 205,
+    "shownSeconds": 410,
+    "standardPave": 242,
+    "standardSeconds": 410,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 242,
+    "shownConfirmed": 205,
+    "shownSeconds": 410,
+    "standardPave": 242,
+    "standardSeconds": 410,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "colonne-porta-genova-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 92,
+    "shownConfirmed": 85,
+    "shownSeconds": 544,
+    "standardPave": 242,
+    "standardSeconds": 410,
+    "savedVsStandard": 150,
+    "extraVsStandard": 134,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 92,
+    "shownConfirmed": 85,
+    "shownSeconds": 544,
+    "standardPave": 242,
+    "standardSeconds": 410,
+    "savedVsStandard": 150,
+    "extraVsStandard": 134,
+    "missed": false
+   }
+  },
+  {
+   "case": "colonne-repubblica-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1406,
+    "shownConfirmed": 974,
+    "shownSeconds": 1077,
+    "standardPave": 2830,
+    "standardSeconds": 768,
+    "savedVsStandard": 1424,
+    "extraVsStandard": 309,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1406,
+    "shownConfirmed": 974,
+    "shownSeconds": 1077,
+    "standardPave": 2830,
+    "standardSeconds": 768,
+    "savedVsStandard": 1424,
+    "extraVsStandard": 309,
+    "missed": false
+   }
+  },
+  {
+   "case": "colonne-repubblica-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 59,
+    "shownConfirmed": 55,
+    "shownSeconds": 858,
+    "standardPave": 711,
+    "standardSeconds": 801,
+    "savedVsStandard": 652,
+    "extraVsStandard": 57,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 59,
+    "shownConfirmed": 55,
+    "shownSeconds": 858,
+    "standardPave": 711,
+    "standardSeconds": 801,
+    "savedVsStandard": 652,
+    "extraVsStandard": 57,
+    "missed": false
+   }
+  },
+  {
+   "case": "colonne-repubblica-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 131,
+    "shownConfirmed": 62,
+    "shownSeconds": 975,
+    "standardPave": 783,
+    "standardSeconds": 834,
+    "savedVsStandard": 652,
+    "extraVsStandard": 141,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 131,
+    "shownConfirmed": 62,
+    "shownSeconds": 891,
+    "standardPave": 783,
+    "standardSeconds": 834,
+    "savedVsStandard": 652,
+    "extraVsStandard": 57,
+    "missed": false
+   }
+  },
+  {
+   "case": "conciliazione-piazza-fontana-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1005,
+    "shownConfirmed": 546,
+    "shownSeconds": 638,
+    "standardPave": 1005,
+    "standardSeconds": 638,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1005,
+    "shownConfirmed": 546,
+    "shownSeconds": 638,
+    "standardPave": 1005,
+    "standardSeconds": 638,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "conciliazione-piazza-fontana-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 247,
+    "shownConfirmed": 247,
+    "shownSeconds": 1029,
+    "standardPave": 726,
+    "standardSeconds": 899,
+    "savedVsStandard": 479,
+    "extraVsStandard": 130,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 247,
+    "shownConfirmed": 247,
+    "shownSeconds": 1029,
+    "standardPave": 726,
+    "standardSeconds": 899,
+    "savedVsStandard": 479,
+    "extraVsStandard": 130,
+    "missed": false
+   }
+  },
+  {
+   "case": "conciliazione-piazza-fontana-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 325,
+    "shownConfirmed": 303,
+    "shownSeconds": 1115,
+    "standardPave": 726,
+    "standardSeconds": 899,
+    "savedVsStandard": 401,
+    "extraVsStandard": 216,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 325,
+    "shownConfirmed": 303,
+    "shownSeconds": 1115,
+    "standardPave": 726,
+    "standardSeconds": 899,
+    "savedVsStandard": 401,
+    "extraVsStandard": 216,
+    "missed": false
+   }
+  },
+  {
+   "case": "cordusio-moscova-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 1303,
+    "shownConfirmed": 561,
+    "shownSeconds": 426,
+    "standardPave": 1303,
+    "standardSeconds": 426,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 1303,
+    "shownConfirmed": 561,
+    "shownSeconds": 426,
+    "standardPave": 1303,
+    "standardSeconds": 426,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "cordusio-moscova-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1206,
+    "shownConfirmed": 670,
+    "shownSeconds": 1026,
+    "standardPave": 1378,
+    "standardSeconds": 906,
+    "savedVsStandard": 172,
+    "extraVsStandard": 120,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1206,
+    "shownConfirmed": 670,
+    "shownSeconds": 1026,
+    "standardPave": 1378,
+    "standardSeconds": 906,
+    "savedVsStandard": 172,
+    "extraVsStandard": 120,
+    "missed": false
+   }
+  },
+  {
+   "case": "cordusio-moscova-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1378,
+    "shownConfirmed": 842,
+    "shownSeconds": 906,
+    "standardPave": 1783,
+    "standardSeconds": 604,
+    "savedVsStandard": 405,
+    "extraVsStandard": 302,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1378,
+    "shownConfirmed": 842,
+    "shownSeconds": 906,
+    "standardPave": 1783,
+    "standardSeconds": 604,
+    "savedVsStandard": 405,
+    "extraVsStandard": 302,
+    "missed": false
+   }
+  },
+  {
+   "case": "cordusio-porta-romana-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1498,
+    "shownConfirmed": 422,
+    "shownSeconds": 709,
+    "standardPave": 1859,
+    "standardSeconds": 567,
+    "savedVsStandard": 361,
+    "extraVsStandard": 142,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1498,
+    "shownConfirmed": 422,
+    "shownSeconds": 709,
+    "standardPave": 1859,
+    "standardSeconds": 567,
+    "savedVsStandard": 361,
+    "extraVsStandard": 142,
+    "missed": false
+   }
+  },
+  {
+   "case": "cordusio-porta-romana-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1200,
+    "shownConfirmed": 671,
+    "shownSeconds": 1319,
+    "standardPave": 2350,
+    "standardSeconds": 797,
+    "savedVsStandard": 1150,
+    "extraVsStandard": 522,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1200,
+    "shownConfirmed": 671,
+    "shownSeconds": 1319,
+    "standardPave": 2350,
+    "standardSeconds": 797,
+    "savedVsStandard": 1150,
+    "extraVsStandard": 522,
+    "missed": false
+   }
+  },
+  {
+   "case": "cordusio-porta-romana-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1405,
+    "shownConfirmed": 880,
+    "shownSeconds": 986,
+    "standardPave": 2350,
+    "standardSeconds": 797,
+    "savedVsStandard": 945,
+    "extraVsStandard": 189,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1405,
+    "shownConfirmed": 880,
+    "shownSeconds": 986,
+    "standardPave": 2350,
+    "standardSeconds": 797,
+    "savedVsStandard": 945,
+    "extraVsStandard": 189,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-garibaldi-castello-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 130,
+    "shownConfirmed": 32,
+    "shownSeconds": 377,
+    "standardPave": 130,
+    "standardSeconds": 377,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 130,
+    "shownConfirmed": 32,
+    "shownSeconds": 377,
+    "standardPave": 130,
+    "standardSeconds": 377,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-garibaldi-castello-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 107,
+    "shownConfirmed": 83,
+    "shownSeconds": 540,
+    "standardPave": 833,
+    "standardSeconds": 506,
+    "savedVsStandard": 726,
+    "extraVsStandard": 34,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 107,
+    "shownConfirmed": 83,
+    "shownSeconds": 540,
+    "standardPave": 833,
+    "standardSeconds": 506,
+    "savedVsStandard": 726,
+    "extraVsStandard": 34,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-garibaldi-castello-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 107,
+    "shownConfirmed": 83,
+    "shownSeconds": 540,
+    "standardPave": 833,
+    "standardSeconds": 506,
+    "savedVsStandard": 726,
+    "extraVsStandard": 34,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 107,
+    "shownConfirmed": 83,
+    "shownSeconds": 540,
+    "standardPave": 833,
+    "standardSeconds": 506,
+    "savedVsStandard": 726,
+    "extraVsStandard": 34,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-magenta-cordusio-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 398,
+    "shownConfirmed": 210,
+    "shownSeconds": 199,
+    "standardPave": 502,
+    "standardSeconds": 171,
+    "savedVsStandard": 104,
+    "extraVsStandard": 28,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 398,
+    "shownConfirmed": 210,
+    "shownSeconds": 199,
+    "standardPave": 502,
+    "standardSeconds": 171,
+    "savedVsStandard": 104,
+    "extraVsStandard": 28,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-magenta-cordusio-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 398,
+    "shownConfirmed": 210,
+    "shownSeconds": 233,
+    "standardPave": 398,
+    "standardSeconds": 233,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 398,
+    "shownConfirmed": 210,
+    "shownSeconds": 233,
+    "standardPave": 398,
+    "standardSeconds": 233,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-magenta-cordusio-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 398,
+    "shownConfirmed": 210,
+    "shownSeconds": 233,
+    "standardPave": 502,
+    "standardSeconds": 206,
+    "savedVsStandard": 104,
+    "extraVsStandard": 27,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 398,
+    "shownConfirmed": 210,
+    "shownSeconds": 233,
+    "standardPave": 502,
+    "standardSeconds": 206,
+    "savedVsStandard": 104,
+    "extraVsStandard": 27,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-magenta-porta-venezia-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1089,
+    "shownConfirmed": 606,
+    "shownSeconds": 775,
+    "standardPave": 1822,
+    "standardSeconds": 668,
+    "savedVsStandard": 733,
+    "extraVsStandard": 107,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 394,
+    "shownConfirmed": 38,
+    "shownSeconds": 1057,
+    "standardPave": 1822,
+    "standardSeconds": 668,
+    "savedVsStandard": 1428,
+    "extraVsStandard": 389,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-magenta-porta-venezia-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 695,
+    "shownConfirmed": 695,
+    "shownSeconds": 933,
+    "standardPave": 1430,
+    "standardSeconds": 834,
+    "savedVsStandard": 735,
+    "extraVsStandard": 99,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 599,
+    "shownConfirmed": 279,
+    "shownSeconds": 994,
+    "standardPave": 1430,
+    "standardSeconds": 834,
+    "savedVsStandard": 831,
+    "extraVsStandard": 160,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-magenta-porta-venezia-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 695,
+    "shownConfirmed": 695,
+    "shownSeconds": 870,
+    "standardPave": 1430,
+    "standardSeconds": 781,
+    "savedVsStandard": 735,
+    "extraVsStandard": 89,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 695,
+    "shownConfirmed": 695,
+    "shownSeconds": 870,
+    "standardPave": 1430,
+    "standardSeconds": 781,
+    "savedVsStandard": 735,
+    "extraVsStandard": 89,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-venezia-repubblica-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 394,
+    "standardPave": 0,
+    "standardSeconds": 418,
+    "savedVsStandard": 0,
+    "extraVsStandard": -24,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 394,
+    "standardPave": 0,
+    "standardSeconds": 418,
+    "savedVsStandard": 0,
+    "extraVsStandard": -24,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-venezia-repubblica-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 400,
+    "standardPave": 54,
+    "standardSeconds": 361,
+    "savedVsStandard": 54,
+    "extraVsStandard": 39,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 400,
+    "standardPave": 54,
+    "standardSeconds": 361,
+    "savedVsStandard": 54,
+    "extraVsStandard": 39,
+    "missed": false
+   }
+  },
+  {
+   "case": "corso-venezia-repubblica-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 400,
+    "standardPave": 54,
+    "standardSeconds": 361,
+    "savedVsStandard": 54,
+    "extraVsStandard": 39,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 400,
+    "standardPave": 54,
+    "standardSeconds": 361,
+    "savedVsStandard": 54,
+    "extraVsStandard": 39,
+    "missed": false
+   }
+  },
+  {
+   "case": "corvetto-duomo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1236,
+    "shownConfirmed": 201,
+    "shownSeconds": 1198,
+    "standardPave": 1762,
+    "standardSeconds": 990,
+    "savedVsStandard": 526,
+    "extraVsStandard": 208,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1236,
+    "shownConfirmed": 201,
+    "shownSeconds": 1198,
+    "standardPave": 1762,
+    "standardSeconds": 990,
+    "savedVsStandard": 526,
+    "extraVsStandard": 208,
+    "missed": false
+   }
+  },
+  {
+   "case": "corvetto-duomo-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 949,
+    "shownConfirmed": 687,
+    "shownSeconds": 1414,
+    "standardPave": 2726,
+    "standardSeconds": 1224,
+    "savedVsStandard": 1777,
+    "extraVsStandard": 190,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 949,
+    "shownConfirmed": 687,
+    "shownSeconds": 1414,
+    "standardPave": 2726,
+    "standardSeconds": 1224,
+    "savedVsStandard": 1777,
+    "extraVsStandard": 190,
+    "missed": false
+   }
+  },
+  {
+   "case": "corvetto-duomo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1695,
+    "shownConfirmed": 653,
+    "shownSeconds": 1203,
+    "standardPave": 2841,
+    "standardSeconds": 992,
+    "savedVsStandard": 1146,
+    "extraVsStandard": 211,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1695,
+    "shownConfirmed": 653,
+    "shownSeconds": 1203,
+    "standardPave": 2841,
+    "standardSeconds": 992,
+    "savedVsStandard": 1146,
+    "extraVsStandard": 211,
+    "missed": false
+   }
+  },
+  {
+   "case": "crescenzago-nolo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 454,
+    "standardPave": 0,
+    "standardSeconds": 454,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 454,
+    "standardPave": 0,
+    "standardSeconds": 454,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "crescenzago-nolo-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 470,
+    "standardPave": 693,
+    "standardSeconds": 413,
+    "savedVsStandard": 693,
+    "extraVsStandard": 57,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 470,
+    "standardPave": 693,
+    "standardSeconds": 413,
+    "savedVsStandard": 693,
+    "extraVsStandard": 57,
+    "missed": false
+   }
+  },
+  {
+   "case": "crescenzago-nolo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 470,
+    "standardPave": 693,
+    "standardSeconds": 413,
+    "savedVsStandard": 693,
+    "extraVsStandard": 57,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 470,
+    "standardPave": 693,
+    "standardSeconds": 413,
+    "savedVsStandard": 693,
+    "extraVsStandard": 57,
+    "missed": false
+   }
+  },
+  {
+   "case": "dateo-piola-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 474,
+    "standardPave": 126,
+    "standardSeconds": 454,
+    "savedVsStandard": 126,
+    "extraVsStandard": 20,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 474,
+    "standardPave": 126,
+    "standardSeconds": 454,
+    "savedVsStandard": 126,
+    "extraVsStandard": 20,
+    "missed": false
+   }
+  },
+  {
+   "case": "dateo-piola-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 399,
+    "standardPave": 105,
+    "standardSeconds": 394,
+    "savedVsStandard": 105,
+    "extraVsStandard": 5,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 399,
+    "standardPave": 105,
+    "standardSeconds": 394,
+    "savedVsStandard": 105,
+    "extraVsStandard": 5,
+    "missed": false
+   }
+  },
+  {
+   "case": "dateo-piola-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 399,
+    "standardPave": 105,
+    "standardSeconds": 394,
+    "savedVsStandard": 105,
+    "extraVsStandard": 5,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 399,
+    "standardPave": 105,
+    "standardSeconds": 394,
+    "savedVsStandard": 105,
+    "extraVsStandard": 5,
+    "missed": false
+   }
+  },
+  {
+   "case": "de-angeli-portello-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 411,
+    "standardPave": 0,
+    "standardSeconds": 489,
+    "savedVsStandard": 0,
+    "extraVsStandard": -78,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 411,
+    "standardPave": 0,
+    "standardSeconds": 489,
+    "savedVsStandard": 0,
+    "extraVsStandard": -78,
+    "missed": false
+   }
+  },
+  {
+   "case": "de-angeli-portello-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 411,
+    "standardPave": 0,
+    "standardSeconds": 419,
+    "savedVsStandard": 0,
+    "extraVsStandard": -8,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 411,
+    "standardPave": 0,
+    "standardSeconds": 419,
+    "savedVsStandard": 0,
+    "extraVsStandard": -8,
+    "missed": false
+   }
+  },
+  {
+   "case": "de-angeli-portello-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 411,
+    "standardPave": 0,
+    "standardSeconds": 419,
+    "savedVsStandard": 0,
+    "extraVsStandard": -8,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 411,
+    "standardPave": 0,
+    "standardSeconds": 419,
+    "savedVsStandard": 0,
+    "extraVsStandard": -8,
+    "missed": false
+   }
+  },
+  {
+   "case": "de-angeli-san-babila-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 539,
+    "shownConfirmed": 281,
+    "shownSeconds": 1173,
+    "standardPave": 856,
+    "standardSeconds": 913,
+    "savedVsStandard": 317,
+    "extraVsStandard": 260,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 539,
+    "shownConfirmed": 281,
+    "shownSeconds": 1173,
+    "standardPave": 856,
+    "standardSeconds": 913,
+    "savedVsStandard": 317,
+    "extraVsStandard": 260,
+    "missed": false
+   }
+  },
+  {
+   "case": "de-angeli-san-babila-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 35,
+    "shownConfirmed": 35,
+    "shownSeconds": 1193,
+    "standardPave": 522,
+    "standardSeconds": 1145,
+    "savedVsStandard": 487,
+    "extraVsStandard": 48,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 35,
+    "shownConfirmed": 35,
+    "shownSeconds": 1193,
+    "standardPave": 522,
+    "standardSeconds": 1145,
+    "savedVsStandard": 487,
+    "extraVsStandard": 48,
+    "missed": false
+   }
+  },
+  {
+   "case": "de-angeli-san-babila-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 336,
+    "shownConfirmed": 86,
+    "shownSeconds": 1192,
+    "standardPave": 522,
+    "standardSeconds": 1145,
+    "savedVsStandard": 186,
+    "extraVsStandard": 47,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 336,
+    "shownConfirmed": 86,
+    "shownSeconds": 1192,
+    "standardPave": 522,
+    "standardSeconds": 1145,
+    "savedVsStandard": 186,
+    "extraVsStandard": 47,
+    "missed": false
+   }
+  },
+  {
+   "case": "dergano-porta-garibaldi-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 654,
+    "standardPave": 215,
+    "standardSeconds": 593,
+    "savedVsStandard": 215,
+    "extraVsStandard": 61,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 654,
+    "standardPave": 215,
+    "standardSeconds": 593,
+    "savedVsStandard": 215,
+    "extraVsStandard": 61,
+    "missed": false
+   }
+  },
+  {
+   "case": "dergano-porta-garibaldi-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 699,
+    "standardPave": 215,
+    "standardSeconds": 624,
+    "savedVsStandard": 215,
+    "extraVsStandard": 75,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 699,
+    "standardPave": 215,
+    "standardSeconds": 624,
+    "savedVsStandard": 215,
+    "extraVsStandard": 75,
+    "missed": false
+   }
+  },
+  {
+   "case": "dergano-porta-garibaldi-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 699,
+    "standardPave": 215,
+    "standardSeconds": 624,
+    "savedVsStandard": 215,
+    "extraVsStandard": 75,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 699,
+    "standardPave": 215,
+    "standardSeconds": 624,
+    "savedVsStandard": 215,
+    "extraVsStandard": 75,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-brera-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 808,
+    "shownConfirmed": 298,
+    "shownSeconds": 619,
+    "standardPave": 1188,
+    "standardSeconds": 276,
+    "savedVsStandard": 380,
+    "extraVsStandard": 343,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 808,
+    "shownConfirmed": 298,
+    "shownSeconds": 619,
+    "standardPave": 1188,
+    "standardSeconds": 276,
+    "savedVsStandard": 380,
+    "extraVsStandard": 343,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-brera-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 1171,
+    "shownConfirmed": 444,
+    "shownSeconds": 347,
+    "standardPave": 1171,
+    "standardSeconds": 347,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 1171,
+    "shownConfirmed": 444,
+    "shownSeconds": 347,
+    "standardPave": 1171,
+    "standardSeconds": 347,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-brera-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 1171,
+    "shownConfirmed": 444,
+    "shownSeconds": 347,
+    "standardPave": 1171,
+    "standardSeconds": 347,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 1171,
+    "shownConfirmed": 444,
+    "shownSeconds": 347,
+    "standardPave": 1171,
+    "standardSeconds": 347,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-isola-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 945,
+    "shownConfirmed": 368,
+    "shownSeconds": 847,
+    "standardPave": 1176,
+    "standardSeconds": 758,
+    "savedVsStandard": 231,
+    "extraVsStandard": 89,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 945,
+    "shownConfirmed": 368,
+    "shownSeconds": 847,
+    "standardPave": 1176,
+    "standardSeconds": 758,
+    "savedVsStandard": 231,
+    "extraVsStandard": 89,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-isola-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1180,
+    "shownConfirmed": 769,
+    "shownSeconds": 893,
+    "standardPave": 1662,
+    "standardSeconds": 846,
+    "savedVsStandard": 482,
+    "extraVsStandard": 47,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1180,
+    "shownConfirmed": 769,
+    "shownSeconds": 893,
+    "standardPave": 1662,
+    "standardSeconds": 846,
+    "savedVsStandard": 482,
+    "extraVsStandard": 47,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-isola-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1180,
+    "shownConfirmed": 769,
+    "shownSeconds": 893,
+    "standardPave": 1662,
+    "standardSeconds": 846,
+    "savedVsStandard": 482,
+    "extraVsStandard": 47,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 1180,
+    "shownConfirmed": 769,
+    "shownSeconds": 893,
+    "standardPave": 1662,
+    "standardSeconds": 846,
+    "savedVsStandard": 482,
+    "extraVsStandard": 47,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-porta-garibaldi-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 1322,
+    "shownConfirmed": 532,
+    "shownSeconds": 599,
+    "standardPave": 1322,
+    "standardSeconds": 599,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 1322,
+    "shownConfirmed": 532,
+    "shownSeconds": 599,
+    "standardPave": 1322,
+    "standardSeconds": 599,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-porta-garibaldi-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 437,
+    "shownConfirmed": 281,
+    "shownSeconds": 1127,
+    "standardPave": 437,
+    "standardSeconds": 1127,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 437,
+    "shownConfirmed": 281,
+    "shownSeconds": 1127,
+    "standardPave": 437,
+    "standardSeconds": 1127,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "duomo-porta-garibaldi-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1275,
+    "shownConfirmed": 654,
+    "shownSeconds": 1162,
+    "standardPave": 2098,
+    "standardSeconds": 1035,
+    "savedVsStandard": 823,
+    "extraVsStandard": 127,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 116,
+    "shownConfirmed": 54,
+    "shownSeconds": 1391,
+    "standardPave": 2098,
+    "standardSeconds": 1035,
+    "savedVsStandard": 1982,
+    "extraVsStandard": 356,
+    "missed": false
+   }
+  },
+  {
+   "case": "famagosta-castello-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 69,
+    "shownConfirmed": 38,
+    "shownSeconds": 1297,
+    "standardPave": 768,
+    "standardSeconds": 1044,
+    "savedVsStandard": 699,
+    "extraVsStandard": 253,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 69,
+    "shownConfirmed": 38,
+    "shownSeconds": 1297,
+    "standardPave": 768,
+    "standardSeconds": 1044,
+    "savedVsStandard": 699,
+    "extraVsStandard": 253,
+    "missed": false
+   }
+  },
+  {
+   "case": "famagosta-castello-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 43,
+    "shownConfirmed": 43,
+    "shownSeconds": 1124,
+    "standardPave": 43,
+    "standardSeconds": 1124,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 43,
+    "shownConfirmed": 43,
+    "shownSeconds": 1124,
+    "standardPave": 43,
+    "standardSeconds": 1124,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "famagosta-castello-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 43,
+    "shownConfirmed": 43,
+    "shownSeconds": 1124,
+    "standardPave": 43,
+    "standardSeconds": 1124,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 43,
+    "shownConfirmed": 43,
+    "shownSeconds": 1124,
+    "standardPave": 43,
+    "standardSeconds": 1124,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "famagosta-corvetto-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 1043,
+    "standardPave": 70,
+    "standardSeconds": 1077,
+    "savedVsStandard": 0,
+    "extraVsStandard": -34,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 1043,
+    "standardPave": 70,
+    "standardSeconds": 1077,
+    "savedVsStandard": 0,
+    "extraVsStandard": -34,
+    "missed": false
+   }
+  },
+  {
+   "case": "famagosta-corvetto-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 737,
+    "standardPave": 70,
+    "standardSeconds": 737,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 737,
+    "standardPave": 70,
+    "standardSeconds": 737,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "famagosta-corvetto-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 737,
+    "standardPave": 70,
+    "standardSeconds": 737,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 737,
+    "standardPave": 70,
+    "standardSeconds": 737,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "forlanini-cinque-giornate-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 575,
+    "standardPave": 0,
+    "standardSeconds": 575,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 575,
+    "standardPave": 0,
+    "standardSeconds": 575,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "forlanini-cinque-giornate-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 472,
+    "standardPave": 0,
+    "standardSeconds": 472,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 472,
+    "standardPave": 0,
+    "standardSeconds": 472,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "forlanini-cinque-giornate-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 472,
+    "standardPave": 0,
+    "standardSeconds": 472,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 472,
+    "standardPave": 0,
+    "standardSeconds": 472,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "forlanini-rogoredo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1149,
+    "standardPave": 0,
+    "standardSeconds": 1149,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1149,
+    "standardPave": 0,
+    "standardSeconds": 1149,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "forlanini-rogoredo-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 496,
+    "standardPave": 0,
+    "standardSeconds": 496,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 496,
+    "standardPave": 0,
+    "standardSeconds": 496,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "forlanini-rogoredo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 496,
+    "standardPave": 0,
+    "standardSeconds": 496,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 496,
+    "standardPave": 0,
+    "standardSeconds": 496,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "gae-aulenti-porta-romana-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 668,
+    "shownConfirmed": 668,
+    "shownSeconds": 930,
+    "standardPave": 668,
+    "standardSeconds": 930,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "access-restricted",
+    "shownPave": 668,
+    "shownConfirmed": 668,
+    "shownSeconds": 930,
+    "standardPave": 668,
+    "standardSeconds": 930,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "gae-aulenti-porta-romana-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 519,
+    "shownConfirmed": 434,
+    "shownSeconds": 950,
+    "standardPave": 956,
+    "standardSeconds": 929,
+    "savedVsStandard": 437,
+    "extraVsStandard": 21,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 519,
+    "shownConfirmed": 434,
+    "shownSeconds": 950,
+    "standardPave": 956,
+    "standardSeconds": 929,
+    "savedVsStandard": 437,
+    "extraVsStandard": 21,
+    "missed": false
+   }
+  },
+  {
+   "case": "gae-aulenti-porta-romana-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 212,
+    "shownConfirmed": 212,
+    "shownSeconds": 880,
+    "standardPave": 715,
+    "standardSeconds": 904,
+    "savedVsStandard": 503,
+    "extraVsStandard": -24,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 212,
+    "shownConfirmed": 212,
+    "shownSeconds": 880,
+    "standardPave": 715,
+    "standardSeconds": 904,
+    "savedVsStandard": 503,
+    "extraVsStandard": -24,
+    "missed": false
+   }
+  },
+  {
+   "case": "gratosoglio-abbiategrasso-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 439,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 439,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   }
+  },
+  {
+   "case": "gratosoglio-abbiategrasso-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 271,
+    "standardPave": 0,
+    "standardSeconds": 271,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 271,
+    "standardPave": 0,
+    "standardSeconds": 271,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "gratosoglio-abbiategrasso-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 271,
+    "standardPave": 0,
+    "standardSeconds": 271,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 271,
+    "standardPave": 0,
+    "standardSeconds": 271,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-bocconi-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 1548,
+    "standardPave": 454,
+    "standardSeconds": 1492,
+    "savedVsStandard": 422,
+    "extraVsStandard": 56,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 1548,
+    "standardPave": 454,
+    "standardSeconds": 1492,
+    "savedVsStandard": 422,
+    "extraVsStandard": 56,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-bocconi-car",
+   "mode": "car",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 1374,
+    "standardPave": 84,
+    "standardSeconds": 1504,
+    "savedVsStandard": 52,
+    "extraVsStandard": -130,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 1374,
+    "standardPave": 84,
+    "standardSeconds": 1504,
+    "savedVsStandard": 52,
+    "extraVsStandard": -130,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-bocconi-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 1374,
+    "standardPave": 84,
+    "standardSeconds": 1504,
+    "savedVsStandard": 52,
+    "extraVsStandard": -130,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 1374,
+    "standardPave": 84,
+    "standardSeconds": 1504,
+    "savedVsStandard": 52,
+    "extraVsStandard": -130,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-centrale-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 17,
+    "shownConfirmed": 0,
+    "shownSeconds": 533,
+    "standardPave": 99,
+    "standardSeconds": 483,
+    "savedVsStandard": 82,
+    "extraVsStandard": 50,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 17,
+    "shownConfirmed": 0,
+    "shownSeconds": 533,
+    "standardPave": 99,
+    "standardSeconds": 483,
+    "savedVsStandard": 82,
+    "extraVsStandard": 50,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-centrale-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 23,
+    "shownConfirmed": 23,
+    "shownSeconds": 568,
+    "standardPave": 99,
+    "standardSeconds": 545,
+    "savedVsStandard": 76,
+    "extraVsStandard": 23,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 23,
+    "shownConfirmed": 23,
+    "shownSeconds": 568,
+    "standardPave": 99,
+    "standardSeconds": 545,
+    "savedVsStandard": 76,
+    "extraVsStandard": 23,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-centrale-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 23,
+    "shownConfirmed": 23,
+    "shownSeconds": 568,
+    "standardPave": 99,
+    "standardSeconds": 545,
+    "savedVsStandard": 76,
+    "extraVsStandard": 23,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 23,
+    "shownConfirmed": 23,
+    "shownSeconds": 568,
+    "standardPave": 99,
+    "standardSeconds": 545,
+    "savedVsStandard": 76,
+    "extraVsStandard": 23,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-lambrate-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 16,
+    "shownConfirmed": 16,
+    "shownSeconds": 709,
+    "standardPave": 16,
+    "standardSeconds": 709,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 16,
+    "shownConfirmed": 16,
+    "shownSeconds": 709,
+    "standardPave": 16,
+    "standardSeconds": 709,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-lambrate-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 96,
+    "shownConfirmed": 79,
+    "shownSeconds": 990,
+    "standardPave": 248,
+    "standardSeconds": 907,
+    "savedVsStandard": 152,
+    "extraVsStandard": 83,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 96,
+    "shownConfirmed": 79,
+    "shownSeconds": 990,
+    "standardPave": 248,
+    "standardSeconds": 907,
+    "savedVsStandard": 152,
+    "extraVsStandard": 83,
+    "missed": false
+   }
+  },
+  {
+   "case": "greco-lambrate-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 96,
+    "shownConfirmed": 79,
+    "shownSeconds": 990,
+    "standardPave": 248,
+    "standardSeconds": 907,
+    "savedVsStandard": 152,
+    "extraVsStandard": 83,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 96,
+    "shownConfirmed": 79,
+    "shownSeconds": 990,
+    "standardPave": 248,
+    "standardSeconds": 907,
+    "savedVsStandard": 152,
+    "extraVsStandard": 83,
+    "missed": false
+   }
+  },
+  {
+   "case": "lambrate-cadorna-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 843,
+    "shownConfirmed": 334,
+    "shownSeconds": 1369,
+    "standardPave": 660,
+    "standardSeconds": 1369,
+    "savedVsStandard": -183,
+    "extraVsStandard": 0,
+    "missed": true
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 843,
+    "shownConfirmed": 334,
+    "shownSeconds": 1369,
+    "standardPave": 660,
+    "standardSeconds": 1369,
+    "savedVsStandard": -183,
+    "extraVsStandard": 0,
+    "missed": true
+   }
+  },
+  {
+   "case": "lambrate-cadorna-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 329,
+    "shownConfirmed": 329,
+    "shownSeconds": 1505,
+    "standardPave": 718,
+    "standardSeconds": 1333,
+    "savedVsStandard": 389,
+    "extraVsStandard": 172,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 329,
+    "shownConfirmed": 329,
+    "shownSeconds": 1505,
+    "standardPave": 718,
+    "standardSeconds": 1333,
+    "savedVsStandard": 389,
+    "extraVsStandard": 172,
+    "missed": false
+   }
+  },
+  {
+   "case": "lambrate-cadorna-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 329,
+    "shownConfirmed": 329,
+    "shownSeconds": 1505,
+    "standardPave": 718,
+    "standardSeconds": 1333,
+    "savedVsStandard": 389,
+    "extraVsStandard": 172,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 329,
+    "shownConfirmed": 329,
+    "shownSeconds": 1505,
+    "standardPave": 718,
+    "standardSeconds": 1333,
+    "savedVsStandard": 389,
+    "extraVsStandard": 172,
+    "missed": false
+   }
+  },
+  {
+   "case": "lodi-tibb-vigentino-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 343,
+    "standardPave": 0,
+    "standardSeconds": 343,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 343,
+    "standardPave": 0,
+    "standardSeconds": 343,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "lodi-tibb-vigentino-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 297,
+    "standardPave": 0,
+    "standardSeconds": 297,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 297,
+    "standardPave": 0,
+    "standardSeconds": 297,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "lodi-tibb-vigentino-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 297,
+    "standardPave": 0,
+    "standardSeconds": 297,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 297,
+    "standardPave": 0,
+    "standardSeconds": 297,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-famagosta-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 848,
+    "standardPave": 0,
+    "standardSeconds": 848,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 848,
+    "standardPave": 0,
+    "standardSeconds": 848,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-famagosta-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 713,
+    "standardPave": 0,
+    "standardSeconds": 713,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 713,
+    "standardPave": 0,
+    "standardSeconds": 713,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-famagosta-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 713,
+    "standardPave": 0,
+    "standardSeconds": 713,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 713,
+    "standardPave": 0,
+    "standardSeconds": 713,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-lambrate-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 465,
+    "shownConfirmed": 327,
+    "shownSeconds": 2430,
+    "standardPave": 1488,
+    "standardSeconds": 2186,
+    "savedVsStandard": 1023,
+    "extraVsStandard": 244,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 465,
+    "shownConfirmed": 327,
+    "shownSeconds": 2430,
+    "standardPave": 1488,
+    "standardSeconds": 2186,
+    "savedVsStandard": 1023,
+    "extraVsStandard": 244,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-lambrate-car",
+   "mode": "car",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 318,
+    "shownConfirmed": 248,
+    "shownSeconds": 2245,
+    "standardPave": 552,
+    "standardSeconds": 2258,
+    "savedVsStandard": 234,
+    "extraVsStandard": -13,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 318,
+    "shownConfirmed": 248,
+    "shownSeconds": 2245,
+    "standardPave": 552,
+    "standardSeconds": 2258,
+    "savedVsStandard": 234,
+    "extraVsStandard": -13,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-lambrate-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 16,
+    "shownConfirmed": 16,
+    "shownSeconds": 2334,
+    "standardPave": 552,
+    "standardSeconds": 2258,
+    "savedVsStandard": 536,
+    "extraVsStandard": 76,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 16,
+    "shownConfirmed": 16,
+    "shownSeconds": 2334,
+    "standardPave": 552,
+    "standardSeconds": 2258,
+    "savedVsStandard": 536,
+    "extraVsStandard": 76,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-santambrogio-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 95,
+    "shownConfirmed": 37,
+    "shownSeconds": 901,
+    "standardPave": 95,
+    "standardSeconds": 901,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 95,
+    "shownConfirmed": 37,
+    "shownSeconds": 901,
+    "standardPave": 95,
+    "standardSeconds": 901,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-santambrogio-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 75,
+    "shownConfirmed": 75,
+    "shownSeconds": 945,
+    "standardPave": 274,
+    "standardSeconds": 938,
+    "savedVsStandard": 199,
+    "extraVsStandard": 7,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 75,
+    "shownConfirmed": 75,
+    "shownSeconds": 945,
+    "standardPave": 274,
+    "standardSeconds": 938,
+    "savedVsStandard": 199,
+    "extraVsStandard": 7,
+    "missed": false
+   }
+  },
+  {
+   "case": "lorenteggio-santambrogio-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 75,
+    "shownConfirmed": 75,
+    "shownSeconds": 945,
+    "standardPave": 274,
+    "standardSeconds": 938,
+    "savedVsStandard": 199,
+    "extraVsStandard": 7,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 75,
+    "shownConfirmed": 75,
+    "shownSeconds": 945,
+    "standardPave": 274,
+    "standardSeconds": 938,
+    "savedVsStandard": 199,
+    "extraVsStandard": 7,
+    "missed": false
+   }
+  },
+  {
+   "case": "maciachini-moscova-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 298,
+    "shownConfirmed": 298,
+    "shownSeconds": 905,
+    "standardPave": 418,
+    "standardSeconds": 662,
+    "savedVsStandard": 120,
+    "extraVsStandard": 243,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 298,
+    "shownConfirmed": 298,
+    "shownSeconds": 905,
+    "standardPave": 418,
+    "standardSeconds": 662,
+    "savedVsStandard": 120,
+    "extraVsStandard": 243,
+    "missed": false
+   }
+  },
+  {
+   "case": "maciachini-moscova-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 305,
+    "shownConfirmed": 71,
+    "shownSeconds": 811,
+    "standardPave": 728,
+    "standardSeconds": 647,
+    "savedVsStandard": 423,
+    "extraVsStandard": 164,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 305,
+    "shownConfirmed": 71,
+    "shownSeconds": 811,
+    "standardPave": 728,
+    "standardSeconds": 647,
+    "savedVsStandard": 423,
+    "extraVsStandard": 164,
+    "missed": false
+   }
+  },
+  {
+   "case": "maciachini-moscova-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 305,
+    "shownConfirmed": 71,
+    "shownSeconds": 788,
+    "standardPave": 728,
+    "standardSeconds": 647,
+    "savedVsStandard": 423,
+    "extraVsStandard": 141,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 305,
+    "shownConfirmed": 71,
+    "shownSeconds": 788,
+    "standardPave": 728,
+    "standardSeconds": 647,
+    "savedVsStandard": 423,
+    "extraVsStandard": 141,
+    "missed": false
+   }
+  },
+  {
+   "case": "missori-crocetta-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 369,
+    "shownConfirmed": 369,
+    "shownSeconds": 345,
+    "standardPave": 761,
+    "standardSeconds": 210,
+    "savedVsStandard": 392,
+    "extraVsStandard": 135,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 369,
+    "shownConfirmed": 369,
+    "shownSeconds": 345,
+    "standardPave": 761,
+    "standardSeconds": 210,
+    "savedVsStandard": 392,
+    "extraVsStandard": 135,
+    "missed": false
+   }
+  },
+  {
+   "case": "missori-crocetta-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 761,
+    "shownConfirmed": 740,
+    "shownSeconds": 329,
+    "standardPave": 761,
+    "standardSeconds": 329,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 761,
+    "shownConfirmed": 740,
+    "shownSeconds": 329,
+    "standardPave": 761,
+    "standardSeconds": 329,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "missori-crocetta-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 477,
+    "shownConfirmed": 477,
+    "shownSeconds": 735,
+    "standardPave": 761,
+    "standardSeconds": 329,
+    "savedVsStandard": 284,
+    "extraVsStandard": 406,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 477,
+    "shownConfirmed": 477,
+    "shownSeconds": 735,
+    "standardPave": 761,
+    "standardSeconds": 329,
+    "savedVsStandard": 284,
+    "extraVsStandard": 406,
+    "missed": false
+   }
+  },
+  {
+   "case": "monumentale-duomo-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 820,
+    "shownConfirmed": 424,
+    "shownSeconds": 621,
+    "standardPave": 1025,
+    "standardSeconds": 545,
+    "savedVsStandard": 205,
+    "extraVsStandard": 76,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 820,
+    "shownConfirmed": 424,
+    "shownSeconds": 621,
+    "standardPave": 1025,
+    "standardSeconds": 545,
+    "savedVsStandard": 205,
+    "extraVsStandard": 76,
+    "missed": false
+   }
+  },
+  {
+   "case": "monumentale-duomo-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 579,
+    "shownConfirmed": 187,
+    "shownSeconds": 723,
+    "standardPave": 579,
+    "standardSeconds": 723,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 579,
+    "shownConfirmed": 187,
+    "shownSeconds": 723,
+    "standardPave": 579,
+    "standardSeconds": 723,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "monumentale-duomo-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 579,
+    "shownConfirmed": 187,
+    "shownSeconds": 723,
+    "standardPave": 579,
+    "standardSeconds": 723,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "access-restricted",
+    "shownPave": 579,
+    "shownConfirmed": 187,
+    "shownSeconds": 723,
+    "standardPave": 579,
+    "standardSeconds": 723,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "moscova-crocetta-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 596,
+    "shownConfirmed": 562,
+    "shownSeconds": 721,
+    "standardPave": 596,
+    "standardSeconds": 721,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 596,
+    "shownConfirmed": 562,
+    "shownSeconds": 721,
+    "standardPave": 596,
+    "standardSeconds": 721,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "moscova-crocetta-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 1328,
+    "shownConfirmed": 940,
+    "shownSeconds": 936,
+    "standardPave": 1328,
+    "standardSeconds": 936,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 1328,
+    "shownConfirmed": 940,
+    "shownSeconds": 936,
+    "standardPave": 1328,
+    "standardSeconds": 936,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "moscova-crocetta-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 719,
+    "shownConfirmed": 633,
+    "shownSeconds": 1145,
+    "standardPave": 1328,
+    "standardSeconds": 936,
+    "savedVsStandard": 609,
+    "extraVsStandard": 209,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 719,
+    "shownConfirmed": 633,
+    "shownSeconds": 1145,
+    "standardPave": 1328,
+    "standardSeconds": 936,
+    "savedVsStandard": 609,
+    "extraVsStandard": 209,
+    "missed": false
+   }
+  },
+  {
+   "case": "nolo-piazza-fontana-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 223,
+    "shownConfirmed": 191,
+    "shownSeconds": 1248,
+    "standardPave": 397,
+    "standardSeconds": 985,
+    "savedVsStandard": 174,
+    "extraVsStandard": 263,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 214,
+    "shownConfirmed": 191,
+    "shownSeconds": 1030,
+    "standardPave": 397,
+    "standardSeconds": 985,
+    "savedVsStandard": 183,
+    "extraVsStandard": 45,
+    "missed": false
+   }
+  },
+  {
+   "case": "nolo-piazza-fontana-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 429,
+    "shownConfirmed": 429,
+    "shownSeconds": 1277,
+    "standardPave": 777,
+    "standardSeconds": 1188,
+    "savedVsStandard": 348,
+    "extraVsStandard": 89,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 155,
+    "shownConfirmed": 155,
+    "shownSeconds": 1155,
+    "standardPave": 777,
+    "standardSeconds": 1188,
+    "savedVsStandard": 622,
+    "extraVsStandard": -33,
+    "missed": false
+   }
+  },
+  {
+   "case": "nolo-piazza-fontana-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 429,
+    "shownConfirmed": 429,
+    "shownSeconds": 1277,
+    "standardPave": 777,
+    "standardSeconds": 1188,
+    "savedVsStandard": 348,
+    "extraVsStandard": 89,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 155,
+    "shownConfirmed": 155,
+    "shownSeconds": 1155,
+    "standardPave": 777,
+    "standardSeconds": 1188,
+    "savedVsStandard": 622,
+    "extraVsStandard": -33,
+    "missed": false
+   }
+  },
+  {
+   "case": "ortica-calvairate-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 586,
+    "standardPave": 0,
+    "standardSeconds": 602,
+    "savedVsStandard": 0,
+    "extraVsStandard": -16,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 586,
+    "standardPave": 0,
+    "standardSeconds": 602,
+    "savedVsStandard": 0,
+    "extraVsStandard": -16,
+    "missed": false
+   }
+  },
+  {
+   "case": "ortica-calvairate-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 544,
+    "standardPave": 0,
+    "standardSeconds": 544,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 544,
+    "standardPave": 0,
+    "standardSeconds": 544,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "ortica-calvairate-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 574,
+    "standardPave": 0,
+    "standardSeconds": 574,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 574,
+    "standardPave": 0,
+    "standardSeconds": 574,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "ortica-porta-venezia-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 657,
+    "standardPave": 0,
+    "standardSeconds": 657,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 657,
+    "standardPave": 0,
+    "standardSeconds": 657,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "ortica-porta-venezia-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 612,
+    "standardPave": 0,
+    "standardSeconds": 612,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 612,
+    "standardPave": 0,
+    "standardSeconds": 612,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "ortica-porta-venezia-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 612,
+    "standardPave": 0,
+    "standardSeconds": 612,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 612,
+    "standardPave": 0,
+    "standardSeconds": 612,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "piazza-fontana-san-babila-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 204,
+    "shownConfirmed": 165,
+    "shownSeconds": 190,
+    "standardPave": 437,
+    "standardSeconds": 164,
+    "savedVsStandard": 233,
+    "extraVsStandard": 26,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 204,
+    "shownConfirmed": 165,
+    "shownSeconds": 190,
+    "standardPave": 437,
+    "standardSeconds": 164,
+    "savedVsStandard": 233,
+    "extraVsStandard": 26,
+    "missed": false
+   }
+  },
+  {
+   "case": "piazza-fontana-san-babila-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 53,
+    "shownConfirmed": 53,
+    "shownSeconds": 303,
+    "standardPave": 53,
+    "standardSeconds": 303,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 53,
+    "shownConfirmed": 53,
+    "shownSeconds": 303,
+    "standardPave": 53,
+    "standardSeconds": 303,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "piazza-fontana-san-babila-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 53,
+    "shownConfirmed": 53,
+    "shownSeconds": 303,
+    "standardPave": 53,
+    "standardSeconds": 303,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 53,
+    "shownConfirmed": 53,
+    "shownSeconds": 303,
+    "standardPave": 53,
+    "standardSeconds": 303,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "policlinico-cinque-giornate-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 246,
+    "standardPave": 0,
+    "standardSeconds": 246,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 246,
+    "standardPave": 0,
+    "standardSeconds": 246,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "policlinico-cinque-giornate-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 221,
+    "standardPave": 0,
+    "standardSeconds": 221,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 221,
+    "standardPave": 0,
+    "standardSeconds": 221,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "policlinico-cinque-giornate-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 221,
+    "standardPave": 0,
+    "standardSeconds": 221,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 221,
+    "standardPave": 0,
+    "standardSeconds": 221,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-garibaldi-missori-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 659,
+    "shownConfirmed": 394,
+    "shownSeconds": 1212,
+    "standardPave": 1849,
+    "standardSeconds": 1010,
+    "savedVsStandard": 1190,
+    "extraVsStandard": 202,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 659,
+    "shownConfirmed": 394,
+    "shownSeconds": 1212,
+    "standardPave": 1849,
+    "standardSeconds": 1010,
+    "savedVsStandard": 1190,
+    "extraVsStandard": 202,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-garibaldi-missori-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1116,
+    "shownConfirmed": 795,
+    "shownSeconds": 1453,
+    "standardPave": 1523,
+    "standardSeconds": 1305,
+    "savedVsStandard": 407,
+    "extraVsStandard": 148,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 688,
+    "shownConfirmed": 688,
+    "shownSeconds": 1659,
+    "standardPave": 1523,
+    "standardSeconds": 1305,
+    "savedVsStandard": 835,
+    "extraVsStandard": 354,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-garibaldi-missori-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 1116,
+    "shownConfirmed": 795,
+    "shownSeconds": 1453,
+    "standardPave": 1523,
+    "standardSeconds": 1305,
+    "savedVsStandard": 407,
+    "extraVsStandard": 148,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 996,
+    "shownConfirmed": 731,
+    "shownSeconds": 1372,
+    "standardPave": 1523,
+    "standardSeconds": 1305,
+    "savedVsStandard": 527,
+    "extraVsStandard": 67,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-genova-san-babila-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 723,
+    "shownConfirmed": 319,
+    "shownSeconds": 892,
+    "standardPave": 2274,
+    "standardSeconds": 699,
+    "savedVsStandard": 1551,
+    "extraVsStandard": 193,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 723,
+    "shownConfirmed": 319,
+    "shownSeconds": 892,
+    "standardPave": 2274,
+    "standardSeconds": 699,
+    "savedVsStandard": 1551,
+    "extraVsStandard": 193,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-genova-san-babila-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 456,
+    "shownConfirmed": 456,
+    "shownSeconds": 956,
+    "standardPave": 750,
+    "standardSeconds": 713,
+    "savedVsStandard": 294,
+    "extraVsStandard": 243,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 231,
+    "shownConfirmed": 231,
+    "shownSeconds": 783,
+    "standardPave": 750,
+    "standardSeconds": 713,
+    "savedVsStandard": 519,
+    "extraVsStandard": 70,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-genova-san-babila-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 456,
+    "shownConfirmed": 456,
+    "shownSeconds": 956,
+    "standardPave": 750,
+    "standardSeconds": 713,
+    "savedVsStandard": 294,
+    "extraVsStandard": 243,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 683,
+    "shownConfirmed": 319,
+    "shownSeconds": 748,
+    "standardPave": 750,
+    "standardSeconds": 713,
+    "savedVsStandard": 67,
+    "extraVsStandard": 35,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-venezia-xxiv-maggio-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 977,
+    "standardPave": 406,
+    "standardSeconds": 818,
+    "savedVsStandard": 374,
+    "extraVsStandard": 159,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 977,
+    "standardPave": 406,
+    "standardSeconds": 818,
+    "savedVsStandard": 374,
+    "extraVsStandard": 159,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-venezia-xxiv-maggio-car",
+   "mode": "car",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 832,
+    "standardPave": 448,
+    "standardSeconds": 1147,
+    "savedVsStandard": 416,
+    "extraVsStandard": -315,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 832,
+    "standardPave": 448,
+    "standardSeconds": 1147,
+    "savedVsStandard": 416,
+    "extraVsStandard": -315,
+    "missed": false
+   }
+  },
+  {
+   "case": "porta-venezia-xxiv-maggio-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 847,
+    "standardPave": 32,
+    "standardSeconds": 847,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 32,
+    "shownConfirmed": 32,
+    "shownSeconds": 847,
+    "standardPave": 32,
+    "standardSeconds": 847,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-brera-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 555,
+    "shownConfirmed": 205,
+    "shownSeconds": 1307,
+    "standardPave": 1547,
+    "standardSeconds": 1262,
+    "savedVsStandard": 992,
+    "extraVsStandard": 45,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 555,
+    "shownConfirmed": 205,
+    "shownSeconds": 1307,
+    "standardPave": 1547,
+    "standardSeconds": 1262,
+    "savedVsStandard": 992,
+    "extraVsStandard": 45,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-brera-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 740,
+    "shownConfirmed": 244,
+    "shownSeconds": 1258,
+    "standardPave": 1225,
+    "standardSeconds": 1162,
+    "savedVsStandard": 485,
+    "extraVsStandard": 96,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 573,
+    "shownConfirmed": 222,
+    "shownSeconds": 1195,
+    "standardPave": 1225,
+    "standardSeconds": 1162,
+    "savedVsStandard": 652,
+    "extraVsStandard": 33,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-brera-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 740,
+    "shownConfirmed": 244,
+    "shownSeconds": 1258,
+    "standardPave": 1225,
+    "standardSeconds": 1162,
+    "savedVsStandard": 485,
+    "extraVsStandard": 96,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 573,
+    "shownConfirmed": 222,
+    "shownSeconds": 1195,
+    "standardPave": 1225,
+    "standardSeconds": 1162,
+    "savedVsStandard": 652,
+    "extraVsStandard": 33,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-ca-granda-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1068,
+    "standardPave": 0,
+    "standardSeconds": 1068,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1068,
+    "standardPave": 0,
+    "standardSeconds": 1068,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-ca-granda-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 761,
+    "standardPave": 0,
+    "standardSeconds": 761,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 761,
+    "standardPave": 0,
+    "standardSeconds": 761,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-ca-granda-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 761,
+    "standardPave": 0,
+    "standardSeconds": 761,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 761,
+    "standardPave": 0,
+    "standardSeconds": 761,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-corvetto-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 155,
+    "shownConfirmed": 0,
+    "shownSeconds": 2199,
+    "standardPave": 1749,
+    "standardSeconds": 2053,
+    "savedVsStandard": 1594,
+    "extraVsStandard": 146,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 155,
+    "shownConfirmed": 0,
+    "shownSeconds": 2199,
+    "standardPave": 1749,
+    "standardSeconds": 2053,
+    "savedVsStandard": 1594,
+    "extraVsStandard": 146,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-corvetto-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 1952,
+    "standardPave": 304,
+    "standardSeconds": 1825,
+    "savedVsStandard": 234,
+    "extraVsStandard": 127,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 70,
+    "shownConfirmed": 0,
+    "shownSeconds": 1952,
+    "standardPave": 304,
+    "standardSeconds": 1825,
+    "savedVsStandard": 234,
+    "extraVsStandard": 127,
+    "missed": false
+   }
+  },
+  {
+   "case": "qt8-corvetto-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 304,
+    "shownConfirmed": 304,
+    "shownSeconds": 1825,
+    "standardPave": 304,
+    "standardSeconds": 1825,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 1898,
+    "standardPave": 304,
+    "standardSeconds": 1825,
+    "savedVsStandard": 304,
+    "extraVsStandard": 73,
+    "missed": false
+   }
+  },
+  {
+   "case": "repubblica-santambrogio-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 562,
+    "shownConfirmed": 379,
+    "shownSeconds": 870,
+    "standardPave": 991,
+    "standardSeconds": 735,
+    "savedVsStandard": 429,
+    "extraVsStandard": 135,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 472,
+    "shownConfirmed": 420,
+    "shownSeconds": 886,
+    "standardPave": 991,
+    "standardSeconds": 735,
+    "savedVsStandard": 519,
+    "extraVsStandard": 151,
+    "missed": false
+   }
+  },
+  {
+   "case": "repubblica-santambrogio-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 599,
+    "shownConfirmed": 599,
+    "shownSeconds": 785,
+    "standardPave": 991,
+    "standardSeconds": 696,
+    "savedVsStandard": 392,
+    "extraVsStandard": 89,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 599,
+    "shownConfirmed": 599,
+    "shownSeconds": 785,
+    "standardPave": 991,
+    "standardSeconds": 696,
+    "savedVsStandard": 392,
+    "extraVsStandard": 89,
+    "missed": false
+   }
+  },
+  {
+   "case": "repubblica-santambrogio-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 599,
+    "shownConfirmed": 599,
+    "shownSeconds": 785,
+    "standardPave": 991,
+    "standardSeconds": 696,
+    "savedVsStandard": 392,
+    "extraVsStandard": 89,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 599,
+    "shownConfirmed": 599,
+    "shownSeconds": 785,
+    "standardPave": 991,
+    "standardSeconds": 696,
+    "savedVsStandard": 392,
+    "extraVsStandard": 89,
+    "missed": false
+   }
+  },
+  {
+   "case": "rogoredo-porta-romana-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 28,
+    "shownConfirmed": 28,
+    "shownSeconds": 1032,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 28,
+    "shownConfirmed": 28,
+    "shownSeconds": 1032,
+    "standardPave": null,
+    "standardSeconds": null,
+    "savedVsStandard": null,
+    "extraVsStandard": null,
+    "missed": false
+   }
+  },
+  {
+   "case": "rogoredo-porta-romana-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 240,
+    "shownConfirmed": 240,
+    "shownSeconds": 825,
+    "standardPave": 930,
+    "standardSeconds": 541,
+    "savedVsStandard": 690,
+    "extraVsStandard": 284,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 240,
+    "shownConfirmed": 240,
+    "shownSeconds": 825,
+    "standardPave": 930,
+    "standardSeconds": 541,
+    "savedVsStandard": 690,
+    "extraVsStandard": 284,
+    "missed": false
+   }
+  },
+  {
+   "case": "rogoredo-porta-romana-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 240,
+    "shownConfirmed": 240,
+    "shownSeconds": 825,
+    "standardPave": 930,
+    "standardSeconds": 541,
+    "savedVsStandard": 690,
+    "extraVsStandard": 284,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 240,
+    "shownConfirmed": 240,
+    "shownSeconds": 825,
+    "standardPave": 930,
+    "standardSeconds": 541,
+    "savedVsStandard": 690,
+    "extraVsStandard": 284,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-cadorna-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 836,
+    "standardPave": 0,
+    "standardSeconds": 836,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 836,
+    "standardPave": 0,
+    "standardSeconds": 836,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-cadorna-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 867,
+    "standardPave": 0,
+    "standardSeconds": 867,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 867,
+    "standardPave": 0,
+    "standardSeconds": 867,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-cadorna-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 867,
+    "standardPave": 0,
+    "standardSeconds": 867,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 867,
+    "standardPave": 0,
+    "standardSeconds": 867,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-citta-studi-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 422,
+    "shownConfirmed": 164,
+    "shownSeconds": 1949,
+    "standardPave": 1220,
+    "standardSeconds": 1914,
+    "savedVsStandard": 798,
+    "extraVsStandard": 35,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 422,
+    "shownConfirmed": 164,
+    "shownSeconds": 1949,
+    "standardPave": 1220,
+    "standardSeconds": 1914,
+    "savedVsStandard": 798,
+    "extraVsStandard": 35,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-citta-studi-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 164,
+    "shownConfirmed": 141,
+    "shownSeconds": 1500,
+    "standardPave": 243,
+    "standardSeconds": 1485,
+    "savedVsStandard": 79,
+    "extraVsStandard": 15,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 164,
+    "shownConfirmed": 141,
+    "shownSeconds": 1500,
+    "standardPave": 243,
+    "standardSeconds": 1485,
+    "savedVsStandard": 79,
+    "extraVsStandard": 15,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-citta-studi-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 164,
+    "shownConfirmed": 141,
+    "shownSeconds": 1500,
+    "standardPave": 243,
+    "standardSeconds": 1485,
+    "savedVsStandard": 79,
+    "extraVsStandard": 15,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 164,
+    "shownConfirmed": 141,
+    "shownSeconds": 1500,
+    "standardPave": 243,
+    "standardSeconds": 1485,
+    "savedVsStandard": 79,
+    "extraVsStandard": 15,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-forlanini-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 237,
+    "shownConfirmed": 216,
+    "shownSeconds": 2301,
+    "standardPave": 460,
+    "standardSeconds": 2201,
+    "savedVsStandard": 223,
+    "extraVsStandard": 100,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 237,
+    "shownConfirmed": 216,
+    "shownSeconds": 2301,
+    "standardPave": 460,
+    "standardSeconds": 2201,
+    "savedVsStandard": 223,
+    "extraVsStandard": 100,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-forlanini-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 2356,
+    "standardPave": 0,
+    "standardSeconds": 2579,
+    "savedVsStandard": 0,
+    "extraVsStandard": -223,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 2356,
+    "standardPave": 0,
+    "standardSeconds": 2579,
+    "savedVsStandard": 0,
+    "extraVsStandard": -223,
+    "missed": false
+   }
+  },
+  {
+   "case": "san-siro-forlanini-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 2269,
+    "standardPave": 0,
+    "standardSeconds": 2269,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 2269,
+    "standardPave": 0,
+    "standardSeconds": 2269,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "sant-agostino-colonne-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 204,
+    "shownConfirmed": 153,
+    "shownSeconds": 279,
+    "standardPave": 307,
+    "standardSeconds": 290,
+    "savedVsStandard": 103,
+    "extraVsStandard": -11,
+    "missed": false
+   },
+   "after": {
+    "status": "fastest-avoids-pave",
+    "shownPave": 204,
+    "shownConfirmed": 153,
+    "shownSeconds": 279,
+    "standardPave": 307,
+    "standardSeconds": 290,
+    "savedVsStandard": 103,
+    "extraVsStandard": -11,
+    "missed": false
+   }
+  },
+  {
+   "case": "sant-agostino-colonne-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 265,
+    "shownConfirmed": 223,
+    "shownSeconds": 286,
+    "standardPave": 307,
+    "standardSeconds": 295,
+    "savedVsStandard": 42,
+    "extraVsStandard": -9,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 265,
+    "shownConfirmed": 223,
+    "shownSeconds": 286,
+    "standardPave": 307,
+    "standardSeconds": 295,
+    "savedVsStandard": 42,
+    "extraVsStandard": -9,
+    "missed": false
+   }
+  },
+  {
+   "case": "sant-agostino-colonne-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 158,
+    "shownConfirmed": 143,
+    "shownSeconds": 386,
+    "standardPave": 307,
+    "standardSeconds": 295,
+    "savedVsStandard": 149,
+    "extraVsStandard": 91,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 158,
+    "shownConfirmed": 143,
+    "shownSeconds": 386,
+    "standardPave": 307,
+    "standardSeconds": 295,
+    "savedVsStandard": 149,
+    "extraVsStandard": 91,
+    "missed": false
+   }
+  },
+  {
+   "case": "santambrogio-san-babila-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 906,
+    "shownConfirmed": 455,
+    "shownSeconds": 921,
+    "standardPave": 1409,
+    "standardSeconds": 583,
+    "savedVsStandard": 503,
+    "extraVsStandard": 338,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 906,
+    "shownConfirmed": 455,
+    "shownSeconds": 921,
+    "standardPave": 1409,
+    "standardSeconds": 583,
+    "savedVsStandard": 503,
+    "extraVsStandard": 338,
+    "missed": false
+   }
+  },
+  {
+   "case": "santambrogio-san-babila-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 793,
+    "shownConfirmed": 415,
+    "shownSeconds": 896,
+    "standardPave": 793,
+    "standardSeconds": 896,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "access-restricted",
+    "shownPave": 793,
+    "shownConfirmed": 415,
+    "shownSeconds": 896,
+    "standardPave": 793,
+    "standardSeconds": 896,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "santambrogio-san-babila-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 793,
+    "shownConfirmed": 415,
+    "shownSeconds": 896,
+    "standardPave": 793,
+    "standardSeconds": 896,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 793,
+    "shownConfirmed": 415,
+    "shownSeconds": 896,
+    "standardPave": 793,
+    "standardSeconds": 896,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "sempione-portello-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 460,
+    "standardPave": 0,
+    "standardSeconds": 460,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 460,
+    "standardPave": 0,
+    "standardSeconds": 460,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "sempione-portello-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 18,
+    "shownConfirmed": 18,
+    "shownSeconds": 463,
+    "standardPave": 18,
+    "standardSeconds": 463,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 18,
+    "shownConfirmed": 18,
+    "shownSeconds": 463,
+    "standardPave": 18,
+    "standardSeconds": 463,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "sempione-portello-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 18,
+    "shownConfirmed": 18,
+    "shownSeconds": 463,
+    "standardPave": 18,
+    "standardSeconds": 463,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 18,
+    "shownConfirmed": 18,
+    "shownSeconds": 463,
+    "standardPave": 18,
+    "standardSeconds": 463,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "tortona-naviglio-pavese-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 658,
+    "standardPave": 0,
+    "standardSeconds": 658,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 658,
+    "standardPave": 0,
+    "standardSeconds": 658,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "tortona-naviglio-pavese-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 698,
+    "standardPave": 0,
+    "standardSeconds": 698,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 698,
+    "standardPave": 0,
+    "standardSeconds": 698,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "tortona-naviglio-pavese-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 698,
+    "standardPave": 0,
+    "standardSeconds": 698,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 698,
+    "standardPave": 0,
+    "standardSeconds": 698,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "turro-citta-studi-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 155,
+    "shownConfirmed": 155,
+    "shownSeconds": 530,
+    "standardPave": 155,
+    "standardSeconds": 530,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-better-route",
+    "shownPave": 155,
+    "shownConfirmed": 155,
+    "shownSeconds": 530,
+    "standardPave": 155,
+    "standardSeconds": 530,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "turro-citta-studi-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 155,
+    "shownConfirmed": 155,
+    "shownSeconds": 630,
+    "standardPave": 774,
+    "standardSeconds": 598,
+    "savedVsStandard": 619,
+    "extraVsStandard": 32,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 155,
+    "shownConfirmed": 155,
+    "shownSeconds": 630,
+    "standardPave": 774,
+    "standardSeconds": 598,
+    "savedVsStandard": 619,
+    "extraVsStandard": 32,
+    "missed": false
+   }
+  },
+  {
+   "case": "turro-citta-studi-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 155,
+    "shownConfirmed": 155,
+    "shownSeconds": 630,
+    "standardPave": 774,
+    "standardSeconds": 598,
+    "savedVsStandard": 619,
+    "extraVsStandard": 32,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 155,
+    "shownConfirmed": 155,
+    "shownSeconds": 630,
+    "standardPave": 774,
+    "standardSeconds": 598,
+    "savedVsStandard": 619,
+    "extraVsStandard": 32,
+    "missed": false
+   }
+  },
+  {
+   "case": "via-manzoni-porta-venezia-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 20,
+    "shownConfirmed": 20,
+    "shownSeconds": 351,
+    "standardPave": 417,
+    "standardSeconds": 317,
+    "savedVsStandard": 397,
+    "extraVsStandard": 34,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 20,
+    "shownConfirmed": 20,
+    "shownSeconds": 351,
+    "standardPave": 417,
+    "standardSeconds": 317,
+    "savedVsStandard": 397,
+    "extraVsStandard": 34,
+    "missed": false
+   }
+  },
+  {
+   "case": "via-manzoni-porta-venezia-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 417,
+    "shownConfirmed": 417,
+    "shownSeconds": 410,
+    "standardPave": 417,
+    "standardSeconds": 410,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "access-restricted",
+    "shownPave": 417,
+    "shownConfirmed": 417,
+    "shownSeconds": 410,
+    "standardPave": 417,
+    "standardSeconds": 410,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "via-manzoni-porta-venezia-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 398,
+    "shownConfirmed": 398,
+    "shownSeconds": 387,
+    "standardPave": 417,
+    "standardSeconds": 357,
+    "savedVsStandard": 19,
+    "extraVsStandard": 30,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 398,
+    "shownConfirmed": 398,
+    "shownSeconds": 387,
+    "standardPave": 417,
+    "standardSeconds": 357,
+    "savedVsStandard": 19,
+    "extraVsStandard": 30,
+    "missed": false
+   }
+  },
+  {
+   "case": "via-torino-santambrogio-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 831,
+    "shownConfirmed": 186,
+    "shownSeconds": 396,
+    "standardPave": 935,
+    "standardSeconds": 300,
+    "savedVsStandard": 104,
+    "extraVsStandard": 96,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 831,
+    "shownConfirmed": 186,
+    "shownSeconds": 396,
+    "standardPave": 935,
+    "standardSeconds": 300,
+    "savedVsStandard": 104,
+    "extraVsStandard": 96,
+    "missed": false
+   }
+  },
+  {
+   "case": "via-torino-santambrogio-car",
+   "mode": "car",
+   "before": {
+    "status": "alternative",
+    "shownPave": 931,
+    "shownConfirmed": 428,
+    "shownSeconds": 578,
+    "standardPave": 1272,
+    "standardSeconds": 542,
+    "savedVsStandard": 341,
+    "extraVsStandard": 36,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 931,
+    "shownConfirmed": 428,
+    "shownSeconds": 578,
+    "standardPave": 1272,
+    "standardSeconds": 542,
+    "savedVsStandard": 341,
+    "extraVsStandard": 36,
+    "missed": false
+   }
+  },
+  {
+   "case": "via-torino-santambrogio-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "alternative",
+    "shownPave": 931,
+    "shownConfirmed": 428,
+    "shownSeconds": 578,
+    "standardPave": 1272,
+    "standardSeconds": 542,
+    "savedVsStandard": 341,
+    "extraVsStandard": 36,
+    "missed": false
+   },
+   "after": {
+    "status": "alternative",
+    "shownPave": 931,
+    "shownConfirmed": 428,
+    "shownSeconds": 578,
+    "standardPave": 1272,
+    "standardSeconds": 542,
+    "savedVsStandard": 341,
+    "extraVsStandard": 36,
+    "missed": false
+   }
+  },
+  {
+   "case": "wagner-de-angeli-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 189,
+    "standardPave": 0,
+    "standardSeconds": 189,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 189,
+    "standardPave": 0,
+    "standardSeconds": 189,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "wagner-de-angeli-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 189,
+    "standardPave": 0,
+    "standardSeconds": 229,
+    "savedVsStandard": 0,
+    "extraVsStandard": -40,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 189,
+    "standardPave": 0,
+    "standardSeconds": 229,
+    "savedVsStandard": 0,
+    "extraVsStandard": -40,
+    "missed": false
+   }
+  },
+  {
+   "case": "wagner-de-angeli-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 189,
+    "standardPave": 0,
+    "standardSeconds": 229,
+    "savedVsStandard": 0,
+    "extraVsStandard": -40,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 189,
+    "standardPave": 0,
+    "standardSeconds": 229,
+    "savedVsStandard": 0,
+    "extraVsStandard": -40,
+    "missed": false
+   }
+  },
+  {
+   "case": "xxiv-maggio-bocconi-bicycle",
+   "mode": "bicycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 227,
+    "standardPave": 0,
+    "standardSeconds": 227,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 227,
+    "standardPave": 0,
+    "standardSeconds": 227,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "xxiv-maggio-bocconi-car",
+   "mode": "car",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 218,
+    "standardPave": 0,
+    "standardSeconds": 218,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 218,
+    "standardPave": 0,
+    "standardSeconds": 218,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  },
+  {
+   "case": "xxiv-maggio-bocconi-motorcycle",
+   "mode": "motorcycle",
+   "before": {
+    "status": "no-better-route-or-no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 218,
+    "standardPave": 0,
+    "standardSeconds": 218,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   },
+   "after": {
+    "status": "no-pave",
+    "shownPave": 0,
+    "shownConfirmed": 0,
+    "shownSeconds": 218,
+    "standardPave": 0,
+    "standardSeconds": 218,
+    "savedVsStandard": 0,
+    "extraVsStandard": 0,
+    "missed": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,1081 @@
+{
+ "label": "before",
+ "generatedAt": "2026-11-07T13:28:46.610Z",
+ "note": "Node process CPU (user+system) of the real handler with archived provider responses; excludes network. Not workerd CPU.",
+ "cases": 21,
+ "missingResponses": 0,
+ "coldCpuMs": {
+  "median": 219.7,
+  "p90": 706.6,
+  "max": 824.6
+ },
+ "warmCpuMs": {
+  "median": 70.5,
+  "p90": 454.8,
+  "max": 551.5
+ },
+ "moduleImportMs": {
+  "median": 290.8
+ },
+ "recordedProviderMsPerRequest": {
+  "median": 329.3,
+  "p90": 1004.7,
+  "max": 1079.8
+ },
+ "providerCallsPerRequest": {
+  "median": 3,
+  "max": 5
+ },
+ "rows": [
+  {
+   "id": "duomo-brera",
+   "mode": "car",
+   "importMs": 514.554208,
+   "cold": {
+    "status": 200,
+    "wallMs": 89.63779199999999,
+    "cpuMs": 174.332,
+    "providerMs": 869.182248999999,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 27.198082999999997,
+     "cpuMs": 37.578,
+     "providerMs": 869.182248999999,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 31.152624999999944,
+     "cpuMs": 53.419,
+     "providerMs": 869.182248999999,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 18.898290999999972,
+     "cpuMs": 22.732,
+     "providerMs": 869.182248999999,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 16.38379199999997,
+     "cpuMs": 19.797,
+     "providerMs": 869.182248999999,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 16.340624999999932,
+     "cpuMs": 23.323,
+     "providerMs": 869.182248999999,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "duomo-brera",
+   "mode": "motorcycle",
+   "importMs": 330.132708,
+   "cold": {
+    "status": 200,
+    "wallMs": 72.48920900000002,
+    "cpuMs": 135.131,
+    "providerMs": 668.4816250000013,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 36.25812500000001,
+     "cpuMs": 95.515,
+     "providerMs": 668.4816250000013,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 17.316665999999998,
+     "cpuMs": 45.658,
+     "providerMs": 668.4816250000013,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 14.597624999999994,
+     "cpuMs": 19.774,
+     "providerMs": 668.4816250000013,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 15.358207999999934,
+     "cpuMs": 22.366,
+     "providerMs": 668.4816250000013,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 16.618790999999987,
+     "cpuMs": 23.827,
+     "providerMs": 668.4816250000013,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "duomo-brera",
+   "mode": "bicycle",
+   "importMs": 304.660708,
+   "cold": {
+    "status": 200,
+    "wallMs": 77.76241699999997,
+    "cpuMs": 178.948,
+    "providerMs": 417.87487500000134,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 21.150875000000042,
+     "cpuMs": 43.109,
+     "providerMs": 417.87487500000134,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 17.226084000000014,
+     "cpuMs": 30.781,
+     "providerMs": 417.87487500000134,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 15.819165999999996,
+     "cpuMs": 16.03,
+     "providerMs": 417.87487500000134,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 14.384208000000001,
+     "cpuMs": 21.334,
+     "providerMs": 417.87487500000134,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 14.786417000000029,
+     "cpuMs": 19.552,
+     "providerMs": 417.87487500000134,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "castello-porta-romana",
+   "mode": "car",
+   "importMs": 306.18699999999995,
+   "cold": {
+    "status": 200,
+    "wallMs": 79.55737499999998,
+    "cpuMs": 154.539,
+    "providerMs": 74.37062500003958,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 25.75758400000001,
+     "cpuMs": 68.362,
+     "providerMs": 74.37062500003958,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 21.401749999999993,
+     "cpuMs": 49.614,
+     "providerMs": 74.37062500003958,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 16.187749999999994,
+     "cpuMs": 24.18,
+     "providerMs": 74.37062500003958,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 13.170916999999974,
+     "cpuMs": 14.272,
+     "providerMs": 74.37062500003958,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 13.075375000000008,
+     "cpuMs": 17.784,
+     "providerMs": 74.37062500003958,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "castello-porta-romana",
+   "mode": "motorcycle",
+   "importMs": 323.128959,
+   "cold": {
+    "status": 200,
+    "wallMs": 78.70250000000004,
+    "cpuMs": 168.463,
+    "providerMs": 64.3823750000447,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 25.995416999999975,
+     "cpuMs": 70.451,
+     "providerMs": 64.3823750000447,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 21.634416999999985,
+     "cpuMs": 50.638,
+     "providerMs": 64.3823750000447,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 17.41025000000002,
+     "cpuMs": 29.887,
+     "providerMs": 64.3823750000447,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 12.415082999999981,
+     "cpuMs": 13.651,
+     "providerMs": 64.3823750000447,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 13.507207999999991,
+     "cpuMs": 17.588,
+     "providerMs": 64.3823750000447,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "castello-porta-romana",
+   "mode": "bicycle",
+   "importMs": 317.61725,
+   "cold": {
+    "status": 200,
+    "wallMs": 78.75100000000003,
+    "cpuMs": 144.71,
+    "providerMs": 106.05133300001035,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 38.48908399999999,
+     "cpuMs": 91.315,
+     "providerMs": 106.05133300001035,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 21.714166999999975,
+     "cpuMs": 47.962,
+     "providerMs": 106.05133300001035,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 18.291125000000022,
+     "cpuMs": 52.675,
+     "providerMs": 106.05133300001035,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 13.883167000000014,
+     "cpuMs": 22.385,
+     "providerMs": 106.05133300001035,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 13.625291000000061,
+     "cpuMs": 15.731,
+     "providerMs": 106.05133300001035,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "cordusio-porta-romana",
+   "mode": "car",
+   "importMs": 437.85695799999996,
+   "cold": {
+    "status": 200,
+    "wallMs": 111.36795799999999,
+    "cpuMs": 219.66,
+    "providerMs": 121.62583400000221,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 33.42387499999995,
+     "cpuMs": 74.991,
+     "providerMs": 121.62583400000221,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 34.708124999999995,
+     "cpuMs": 73.887,
+     "providerMs": 121.62583400000221,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 18.388458000000014,
+     "cpuMs": 20.136,
+     "providerMs": 121.62583400000221,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 17.009667000000036,
+     "cpuMs": 24.299,
+     "providerMs": 121.62583400000221,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 16.557249999999954,
+     "cpuMs": 20.47,
+     "providerMs": 121.62583400000221,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "cordusio-porta-romana",
+   "mode": "motorcycle",
+   "importMs": 458.544667,
+   "cold": {
+    "status": 200,
+    "wallMs": 165.09199999999998,
+    "cpuMs": 247.917,
+    "providerMs": 114.52037500000006,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 61.622209,
+     "cpuMs": 138.331,
+     "providerMs": 114.52037500000006,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 38.69841699999995,
+     "cpuMs": 60.087,
+     "providerMs": 114.52037500000006,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 27.875375000000076,
+     "cpuMs": 39.555,
+     "providerMs": 114.52037500000006,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 25.91112499999997,
+     "cpuMs": 28.467,
+     "providerMs": 114.52037500000006,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 22.845540999999912,
+     "cpuMs": 22.927,
+     "providerMs": 114.52037500000006,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "cordusio-porta-romana",
+   "mode": "bicycle",
+   "importMs": 274.594833,
+   "cold": {
+    "status": 200,
+    "wallMs": 117.23554200000001,
+    "cpuMs": 250.045,
+    "providerMs": 549.0881669999981,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 45.70354200000003,
+     "cpuMs": 75.089,
+     "providerMs": 549.0881669999981,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 35.83412499999997,
+     "cpuMs": 41.954,
+     "providerMs": 549.0881669999981,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 34.81608399999993,
+     "cpuMs": 44.404,
+     "providerMs": 549.0881669999981,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 35.74574999999993,
+     "cpuMs": 38.283,
+     "providerMs": 549.0881669999981,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 35.17508399999997,
+     "cpuMs": 40.208,
+     "providerMs": 549.0881669999981,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "corvetto-duomo",
+   "mode": "car",
+   "importMs": 290.788375,
+   "cold": {
+    "status": 200,
+    "wallMs": 128.653708,
+    "cpuMs": 225.082,
+    "providerMs": 136.6479999999865,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 81.19374999999997,
+     "cpuMs": 180.739,
+     "providerMs": 136.6479999999865,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 65.92491600000005,
+     "cpuMs": 101.056,
+     "providerMs": 136.6479999999865,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 68.05391600000007,
+     "cpuMs": 107.149,
+     "providerMs": 136.6479999999865,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 69.27308300000004,
+     "cpuMs": 98.443,
+     "providerMs": 136.6479999999865,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 64.08512500000006,
+     "cpuMs": 91.515,
+     "providerMs": 136.6479999999865,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "corvetto-duomo",
+   "mode": "motorcycle",
+   "importMs": 288.832041,
+   "cold": {
+    "status": 200,
+    "wallMs": 109.61212499999999,
+    "cpuMs": 188.134,
+    "providerMs": 115.92099999997299,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 81.42475000000002,
+     "cpuMs": 166.524,
+     "providerMs": 115.92099999997299,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 69.38491700000003,
+     "cpuMs": 100.946,
+     "providerMs": 115.92099999997299,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 58.056375,
+     "cpuMs": 91.401,
+     "providerMs": 115.92099999997299,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 65.33137499999998,
+     "cpuMs": 101.668,
+     "providerMs": 115.92099999997299,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 72.16866600000003,
+     "cpuMs": 108.401,
+     "providerMs": 115.92099999997299,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "corvetto-duomo",
+   "mode": "bicycle",
+   "importMs": 282.72412499999996,
+   "cold": {
+    "status": 200,
+    "wallMs": 122.62379099999998,
+    "cpuMs": 241.175,
+    "providerMs": 329.3180009999778,
+    "calls": 3
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 77.67387500000001,
+     "cpuMs": 127.411,
+     "providerMs": 329.3180009999778,
+     "calls": 3
+    },
+    {
+     "status": 200,
+     "wallMs": 73.78983300000004,
+     "cpuMs": 131.632,
+     "providerMs": 329.3180009999778,
+     "calls": 3
+    },
+    {
+     "status": 200,
+     "wallMs": 73.58391700000004,
+     "cpuMs": 113.669,
+     "providerMs": 329.3180009999778,
+     "calls": 3
+    },
+    {
+     "status": 200,
+     "wallMs": 68.63133300000004,
+     "cpuMs": 110.337,
+     "providerMs": 329.3180009999778,
+     "calls": 3
+    },
+    {
+     "status": 200,
+     "wallMs": 65.86154099999999,
+     "cpuMs": 112.833,
+     "providerMs": 329.3180009999778,
+     "calls": 3
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "san-siro-forlanini",
+   "mode": "car",
+   "importMs": 286.395792,
+   "cold": {
+    "status": 200,
+    "wallMs": 284.84933400000006,
+    "cpuMs": 435.732,
+    "providerMs": 1009.1026240000501,
+    "calls": 3
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 203.14820800000007,
+     "cpuMs": 277.603,
+     "providerMs": 1009.1026240000501,
+     "calls": 3
+    },
+    {
+     "status": 200,
+     "wallMs": 239.77095799999995,
+     "cpuMs": 257.56,
+     "providerMs": 1009.1026240000501,
+     "calls": 3
+    },
+    {
+     "status": 200,
+     "wallMs": 196.21445799999992,
+     "cpuMs": 234.248,
+     "providerMs": 1009.1026240000501,
+     "calls": 3
+    },
+    {
+     "status": 200,
+     "wallMs": 193.69170800000006,
+     "cpuMs": 238.292,
+     "providerMs": 1009.1026240000501,
+     "calls": 3
+    },
+    {
+     "status": 200,
+     "wallMs": 197.530708,
+     "cpuMs": 240.076,
+     "providerMs": 1009.1026240000501,
+     "calls": 3
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "san-siro-forlanini",
+   "mode": "motorcycle",
+   "importMs": 287.047667,
+   "cold": {
+    "status": 200,
+    "wallMs": 496.7632919999999,
+    "cpuMs": 706.599,
+    "providerMs": 832.145915000001,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 389.75195800000006,
+     "cpuMs": 471.622,
+     "providerMs": 832.145915000001,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 381.5401670000001,
+     "cpuMs": 450.673,
+     "providerMs": 832.145915000001,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 390.4222500000001,
+     "cpuMs": 465.272,
+     "providerMs": 832.145915000001,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 388.6594580000001,
+     "cpuMs": 458.951,
+     "providerMs": 832.145915000001,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 390.8491250000002,
+     "cpuMs": 454.758,
+     "providerMs": 832.145915000001,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "san-siro-forlanini",
+   "mode": "bicycle",
+   "importMs": 277.07399999999996,
+   "cold": {
+    "status": 200,
+    "wallMs": 190.25400000000002,
+    "cpuMs": 349.112,
+    "providerMs": 263.72804199997336,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 133.35187500000006,
+     "cpuMs": 184.37,
+     "providerMs": 263.72804199997336,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 135.33275000000003,
+     "cpuMs": 184.339,
+     "providerMs": 263.72804199997336,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 173.677458,
+     "cpuMs": 179.136,
+     "providerMs": 263.72804199997336,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 122.62700000000007,
+     "cpuMs": 159.803,
+     "providerMs": 263.72804199997336,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 114.65374999999995,
+     "cpuMs": 148.008,
+     "providerMs": 263.72804199997336,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "bovisa-rogoredo",
+   "mode": "car",
+   "importMs": 285.177709,
+   "cold": {
+    "status": 200,
+    "wallMs": 364.39745800000003,
+    "cpuMs": 555.018,
+    "providerMs": 1004.6722920001484,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 291.929208,
+     "cpuMs": 366.139,
+     "providerMs": 1004.6722920001484,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 284.944875,
+     "cpuMs": 345.92,
+     "providerMs": 1004.6722920001484,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 287.777333,
+     "cpuMs": 350.678,
+     "providerMs": 1004.6722920001484,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 287.57674999999995,
+     "cpuMs": 350.682,
+     "providerMs": 1004.6722920001484,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 284.746541,
+     "cpuMs": 332.828,
+     "providerMs": 1004.6722920001484,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "bovisa-rogoredo",
+   "mode": "motorcycle",
+   "importMs": 285.38958299999996,
+   "cold": {
+    "status": 200,
+    "wallMs": 568.6822910000001,
+    "cpuMs": 824.644,
+    "providerMs": 736.1562919999706,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 433.6021250000001,
+     "cpuMs": 510.402,
+     "providerMs": 736.1562919999706,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 450.80833299999995,
+     "cpuMs": 533.679,
+     "providerMs": 736.1562919999706,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 478.0289579999999,
+     "cpuMs": 527.846,
+     "providerMs": 736.1562919999706,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 466.18604200000027,
+     "cpuMs": 551.468,
+     "providerMs": 736.1562919999706,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 424.402458,
+     "cpuMs": 498.353,
+     "providerMs": 736.1562919999706,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "bovisa-rogoredo",
+   "mode": "bicycle",
+   "importMs": 291.578458,
+   "cold": {
+    "status": 200,
+    "wallMs": 473.790625,
+    "cpuMs": 723.443,
+    "providerMs": 1079.7575410001446,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 359.31995900000004,
+     "cpuMs": 464.33,
+     "providerMs": 1079.7575410001446,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 347.9160410000002,
+     "cpuMs": 440.087,
+     "providerMs": 1079.7575410001446,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 335.775709,
+     "cpuMs": 422.406,
+     "providerMs": 1079.7575410001446,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 373.32174999999984,
+     "cpuMs": 458.822,
+     "providerMs": 1079.7575410001446,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 388.8101660000002,
+     "cpuMs": 446.716,
+     "providerMs": 1079.7575410001446,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "dateo-piola",
+   "mode": "car",
+   "importMs": 294.671584,
+   "cold": {
+    "status": 200,
+    "wallMs": 36.30341600000003,
+    "cpuMs": 85.938,
+    "providerMs": 99.02412499999627,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 16.30116700000002,
+     "cpuMs": 27.745,
+     "providerMs": 99.02412499999627,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 19.430833000000007,
+     "cpuMs": 28.984,
+     "providerMs": 99.02412499999627,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 17.219457999999975,
+     "cpuMs": 28.264,
+     "providerMs": 99.02412499999627,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 59.30741699999999,
+     "cpuMs": 30.415,
+     "providerMs": 99.02412499999627,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 16.82808399999999,
+     "cpuMs": 27.968,
+     "providerMs": 99.02412499999627,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "dateo-piola",
+   "mode": "motorcycle",
+   "importMs": 281.159,
+   "cold": {
+    "status": 200,
+    "wallMs": 36.478290999999956,
+    "cpuMs": 78.854,
+    "providerMs": 105.0927499999525,
+    "calls": 1
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 14.278624999999977,
+     "cpuMs": 24.8,
+     "providerMs": 105.0927499999525,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 12.25245799999999,
+     "cpuMs": 20.12,
+     "providerMs": 105.0927499999525,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 13.918125000000032,
+     "cpuMs": 25.59,
+     "providerMs": 105.0927499999525,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 15.134916999999973,
+     "cpuMs": 28.049,
+     "providerMs": 105.0927499999525,
+     "calls": 1
+    },
+    {
+     "status": 200,
+     "wallMs": 12.199958999999978,
+     "cpuMs": 19.762,
+     "providerMs": 105.0927499999525,
+     "calls": 1
+    }
+   ],
+   "missing": 0
+  },
+  {
+   "id": "dateo-piola",
+   "mode": "bicycle",
+   "importMs": 280.028584,
+   "cold": {
+    "status": 200,
+    "wallMs": 80.30658399999999,
+    "cpuMs": 138.896,
+    "providerMs": 357.9330000000773,
+    "calls": 5
+   },
+   "warm": [
+    {
+     "status": 200,
+     "wallMs": 36.64241700000002,
+     "cpuMs": 66.204,
+     "providerMs": 357.9330000000773,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 33.74754100000001,
+     "cpuMs": 55.325,
+     "providerMs": 357.9330000000773,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 33.813417000000015,
+     "cpuMs": 62.454,
+     "providerMs": 357.9330000000773,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 33.18779200000006,
+     "cpuMs": 56.759,
+     "providerMs": 357.9330000000773,
+     "calls": 5
+    },
+    {
+     "status": 200,
+     "wallMs": 42.896082999999976,
+     "cpuMs": 104.689,
+     "providerMs": 357.9330000000773,
+     "calls": 5
+    }
+   ],
+   "missing": 0
+  }
+ ]
+}

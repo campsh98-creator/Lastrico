@@ -1,0 +1,112 @@
+[
+  {
+    "label": "home",
+    "status": 503,
+    "ms": 252,
+    "ray": "a574f8ad09bdea6e-FCO",
+    "at": "2026-11-08T13:37:16.058Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route car/strong GaeAulenti→PromessiSposi",
+    "status": 503,
+    "ms": 578,
+    "ray": "a574f8c6fedb752d-FCO",
+    "at": "2026-11-08T13:37:20.315Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route car/balanced GaeAulenti→PromessiSposi",
+    "status": 503,
+    "ms": 359,
+    "ray": "a574f8e39e64ea61-FCO",
+    "at": "2026-11-08T13:37:24.897Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route motorcycle/strong GaeAulenti→PromessiSposi",
+    "status": 503,
+    "ms": 224,
+    "ray": "a574f8fecdadea58-FCO",
+    "at": "2026-11-08T13:37:29.258Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route motorcycle/balanced GaeAulenti→PromessiSposi",
+    "status": 503,
+    "ms": 285,
+    "ray": "a574f9197c42ea65-FCO",
+    "at": "2026-11-08T13:37:33.490Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route bicycle/strong GaeAulenti→PromessiSposi",
+    "status": 503,
+    "ms": 249,
+    "ray": "a574f9340e97ea5f-FCO",
+    "at": "2026-11-08T13:37:37.782Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route bicycle/balanced GaeAulenti→PromessiSposi",
+    "status": 503,
+    "ms": 328,
+    "ray": "a574f94f1e39a0f9-FCO",
+    "at": "2026-11-08T13:37:42.033Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "home",
+    "status": 503,
+    "ms": 112,
+    "ray": "a574f969aa4bea35-FCO",
+    "at": "2026-11-08T13:37:46.362Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "geocode",
+    "status": 200,
+    "ms": 384,
+    "ray": "a574f983ed58ea71-FCO",
+    "at": "2026-11-08T13:37:50.475Z"
+  },
+  {
+    "label": "route car/strong Cordusio→PortaRomana",
+    "status": 503,
+    "ms": 160,
+    "ray": "a574f99eb9efea39-FCO",
+    "at": "2026-11-08T13:37:54.861Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route bicycle/strong Duomo→Isola",
+    "status": 503,
+    "ms": 190,
+    "ray": "a574f9b8dc91ea66-FCO",
+    "at": "2026-11-08T13:37:59.023Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route car/strong Corvetto→Duomo",
+    "status": 503,
+    "ms": 199,
+    "ray": "a574f9d2fcb2ea6d-FCO",
+    "at": "2026-11-08T13:38:03.215Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "route car/strong Cadorna→Darsena",
+    "status": 503,
+    "ms": 219,
+    "ray": "a574f9ed5d10ea51-FCO",
+    "at": "2026-11-08T13:38:07.416Z",
+    "error": "<!DOCTYPE html> <!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]--> <!--[if IE 7]> <html class"
+  },
+  {
+    "label": "home",
+    "status": 200,
+    "ms": 115,
+    "ray": "a574fa079c61a321-FCO",
+    "at": "2026-11-08T13:38:11.638Z"
+  }
+]

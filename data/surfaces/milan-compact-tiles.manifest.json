@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "datasetVersion": "osm-milan-citywide-2026-11-04",
+  "generatedAt": "2026-10-28T23:03:26.733Z",
+  "area": {
+    "zoneId": "MILAN_URBAN_EXPANDED",
+    "description": "Milan urban road-surface network (central pilot + Southern, Western, Northern, Eastern Milan expansion)",
+    "bounds": {
+      "west": 9.1203,
+      "south": 45.4135,
+      "east": 9.2553,
+      "north": 45.511
+    }
+  },
+  "statistics": {
+    "tileCount": 117,
+    "pilotSegments": 37106,
+    "addedOutsideSegments": 65180,
+    "totalSegments": 102028,
+    "totalLengthMeters": 1637974,
+    "surfaceBreakdownMeters": {
+      "confirmed_rough": 70444,
+      "probable_rough": 59534,
+      "confirmed_smooth": 1171696,
+      "unpaved_loose": 60813,
+      "unknown": 275487
+    },
+    "surfaceBreakdownPercent": {
+      "confirmed_rough": 4.3,
+      "probable_rough": 3.6,
+      "confirmed_smooth": 71.5,
+      "unpaved_loose": 3.7,
+      "unknown": 16.8
+    },
+    "removedBoundaryStubs": 258,
+    "removedBoundaryStubMeters": 6630
+  },
+  "checksums": {
+    "pilotDatasetSha256": "267b01744a33146e5ec237dc1fa4df907d7427f7e121b3ba0cc3c3aaa67f5586",
+    "compactTilesSha256": "996c043468389761015b8b487aef14f8c5bb8d323b2dd35d9350fe3508cb1f4d",
+    "citywideExpansionManifestSha256": "6a07224314116cefff25a1a85a84532ce95a5698fa06682fd3eff8472411b781"
+  },
+  "surfaceRules": {
+    "version": "2026-11",
+    "audit": "outputs/phase424-data-quality/",
+    "summary": "OSM tags only. tracktype=grade1 is not asphalt evidence; paving_stones with smoothness excellent/good is smooth; asphalt/concrete with smoothness bad or worse is not smooth evidence (unknown); cobblestone:rounded is cobblestone. Clipped October pilot stubs duplicated by the citywide snapshot are dropped."
+  }
+}

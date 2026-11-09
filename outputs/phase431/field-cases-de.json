@@ -1,0 +1,194 @@
+{
+ "assumption": "origin on Corso di Porta Vittoria and destination Largo Promessi Sposi are assumed; the field trace was not recorded",
+ "departure": "2026-11-09T12:00",
+ "results": [
+  {
+   "mode": "car",
+   "app": {
+    "fast": {
+     "minutes": 20.5,
+     "km": 6.21,
+     "confirmedPave": 567,
+     "probablePave": 0,
+     "unknown": 298,
+     "streets": [
+      "Corso di Porta Vittoria",
+      "Largo Marco Biagi",
+      "Piazza Cinque Giornate",
+      "Viale Regina Margherita",
+      "Piazzale Medaglie d'Oro",
+      "Viale Sabotino",
+      "Via Giuseppe Ripamonti",
+      "Viale Toscana",
+      "Alzaia Naviglio Pavese",
+      "Via Fra Cristoforo",
+      "Via Don Rodrigo",
+      "Largo Promessi Sposi"
+     ]
+    },
+    "antiPave": {
+     "minutes": 20.8,
+     "km": 6.29,
+     "confirmedPave": 74,
+     "probablePave": 0,
+     "unknown": 299,
+     "streets": [
+      "Corso di Porta Vittoria",
+      "Largo Marco Biagi",
+      "Piazza Cinque Giornate",
+      "Viale Regina Margherita",
+      "Piazza Ventiquattro Maggio",
+      "Corso San Gottardo",
+      "Viale Tibaldi",
+      "Alzaia Naviglio Pavese",
+      "Via Fra Cristoforo",
+      "Via Don Rodrigo",
+      "Largo Promessi Sposi"
+     ]
+    },
+    "candidates": 3,
+    "sources": [
+     {
+      "source": "base-1",
+      "seconds": 1228,
+      "meters": 6206,
+      "pave": 567,
+      "risk": 567
+     },
+     {
+      "source": "base-2",
+      "seconds": 1248,
+      "meters": 6287,
+      "pave": 74,
+      "risk": 74
+     },
+     {
+      "source": "base-3",
+      "seconds": 1331,
+      "meters": 7399,
+      "pave": 567,
+      "risk": 567
+     }
+    ]
+   },
+   "viaCarloVariant": {
+    "minutes": 21.8,
+    "km": 6.34,
+    "confirmedPave": 459,
+    "probablePave": 0,
+    "unknown": 361,
+    "blockingRestrictionMeters": 0,
+    "streets": [
+     "Corso di Porta Vittoria",
+     "Largo Marco Biagi",
+     "Piazza Cinque Giornate",
+     "Viale Regina Margherita",
+     "Piazzale Medaglie d'Oro",
+     "Viale Sabotino",
+     "Via Giuseppe Ripamonti",
+     "Via Giovanni Bellezza",
+     "Via Carlo Vittadini",
+     "Viale Toscana",
+     "Alzaia Naviglio Pavese",
+     "Via Fra Cristoforo",
+     "Via Don Rodrigo",
+     "Largo Promessi Sposi"
+    ]
+   }
+  },
+  {
+   "mode": "motorcycle",
+   "app": {
+    "fast": {
+     "minutes": 20.5,
+     "km": 6.21,
+     "confirmedPave": 567,
+     "probablePave": 0,
+     "unknown": 298,
+     "streets": [
+      "Corso di Porta Vittoria",
+      "Largo Marco Biagi",
+      "Piazza Cinque Giornate",
+      "Viale Regina Margherita",
+      "Piazzale Medaglie d'Oro",
+      "Viale Sabotino",
+      "Via Giuseppe Ripamonti",
+      "Viale Toscana",
+      "Alzaia Naviglio Pavese",
+      "Via Fra Cristoforo",
+      "Via Don Rodrigo",
+      "Largo Promessi Sposi"
+     ]
+    },
+    "antiPave": {
+     "minutes": 20.8,
+     "km": 6.29,
+     "confirmedPave": 74,
+     "probablePave": 0,
+     "unknown": 299,
+     "streets": [
+      "Corso di Porta Vittoria",
+      "Largo Marco Biagi",
+      "Piazza Cinque Giornate",
+      "Viale Regina Margherita",
+      "Piazza Ventiquattro Maggio",
+      "Corso San Gottardo",
+      "Viale Tibaldi",
+      "Alzaia Naviglio Pavese",
+      "Via Fra Cristoforo",
+      "Via Don Rodrigo",
+      "Largo Promessi Sposi"
+     ]
+    },
+    "candidates": 3,
+    "sources": [
+     {
+      "source": "base-1",
+      "seconds": 1228,
+      "meters": 6206,
+      "pave": 567,
+      "risk": 567
+     },
+     {
+      "source": "base-2",
+      "seconds": 1248,
+      "meters": 6287,
+      "pave": 74,
+      "risk": 74
+     },
+     {
+      "source": "base-3",
+      "seconds": 1331,
+      "meters": 7399,
+      "pave": 567,
+      "risk": 567
+     }
+    ]
+   },
+   "viaCarloVariant": {
+    "minutes": 21.8,
+    "km": 6.34,
+    "confirmedPave": 459,
+    "probablePave": 0,
+    "unknown": 361,
+    "blockingRestrictionMeters": 0,
+    "streets": [
+     "Corso di Porta Vittoria",
+     "Largo Marco Biagi",
+     "Piazza Cinque Giornate",
+     "Viale Regina Margherita",
+     "Piazzale Medaglie d'Oro",
+     "Viale Sabotino",
+     "Via Giuseppe Ripamonti",
+     "Via Giovanni Bellezza",
+     "Via Carlo Vittadini",
+     "Viale Toscana",
+     "Alzaia Naviglio Pavese",
+     "Via Fra Cristoforo",
+     "Via Don Rodrigo",
+     "Largo Promessi Sposi"
+    ]
+   }
+  }
+ ]
+}

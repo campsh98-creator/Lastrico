@@ -1,0 +1,231 @@
+{
+ "note": "Provider routes between the reported end points through the Phase 4.31 handler; not the person's actual GPS traces.",
+ "generatedAt": "2026-11-08T17:32:49.158Z",
+ "results": [
+  {
+   "test": "A",
+   "label": "Piazza Gae Aulenti → Largo Promessi Sposi",
+   "mode": "car",
+   "hasDistinctAlternative": true,
+   "alternativesAnalyzed": 3,
+   "fast": {
+    "minutes": 28.4,
+    "km": 8.57,
+    "confirmedPave": 359,
+    "probablePave": 62,
+    "unknown": 327,
+    "roughSections": [
+     {
+      "at": 830,
+      "length": 54,
+      "confirmed": 54,
+      "probable": 0,
+      "name": "Piazza Venticinque Aprile",
+      "surface": "sett"
+     },
+     {
+      "at": 1537,
+      "length": 105,
+      "confirmed": 105,
+      "probable": 0,
+      "name": "Piazzale Biancamano",
+      "surface": "sett"
+     },
+     {
+      "at": 2884,
+      "length": 201,
+      "confirmed": 201,
+      "probable": 0,
+      "name": "Foro Buonaparte",
+      "surface": "sett"
+     },
+     {
+      "at": 3997,
+      "length": 62,
+      "confirmed": 0,
+      "probable": 62,
+      "name": "Via Giosuè Carducci",
+      "surface": "paving_stones"
+     }
+    ],
+    "roadFeatures": {
+     "coverage": "partial",
+     "counts": {
+      "crossing_signals": 2,
+      "traffic_signals": 23,
+      "give_way": 3
+     }
+    }
+   },
+   "antiPave": {
+    "minutes": 28.9,
+    "km": 9.06,
+    "confirmedPave": 252,
+    "probablePave": 0,
+    "unknown": 334,
+    "roughSections": [
+     {
+      "at": 800,
+      "length": 152,
+      "confirmed": 152,
+      "probable": 0,
+      "name": "Piazzale Principessa Clotilde",
+      "surface": "sett"
+     },
+     {
+      "at": 1209,
+      "length": 68,
+      "confirmed": 68,
+      "probable": 0,
+      "name": "Piazza della Repubblica",
+      "surface": "sett"
+     },
+     {
+      "at": 4955,
+      "length": 32,
+      "confirmed": 32,
+      "probable": 0,
+      "name": "Viale Beatrice d'Este",
+      "surface": "sett"
+     }
+    ],
+    "roadFeatures": {
+     "coverage": "partial",
+     "counts": {
+      "traffic_signals": 24,
+      "give_way": 4,
+      "crossing_signals": 1
+     }
+    }
+   }
+  },
+  {
+   "test": "B",
+   "label": "Largo Promessi Sposi → M4 Vetra",
+   "mode": "car",
+   "hasDistinctAlternative": false,
+   "alternativesAnalyzed": 7,
+   "fast": {
+    "minutes": 14.3,
+    "km": 4.02,
+    "confirmedPave": 143,
+    "probablePave": 22,
+    "unknown": 468,
+    "roughSections": [
+     {
+      "at": 3152,
+      "length": 143,
+      "confirmed": 143,
+      "probable": 0,
+      "name": "Via Conca del Naviglio",
+      "surface": "sett"
+     },
+     {
+      "at": 3874,
+      "length": 22,
+      "confirmed": 0,
+      "probable": 22,
+      "name": "Via Edmondo De Amicis",
+      "surface": "paving_stones"
+     }
+    ],
+    "roadFeatures": {
+     "coverage": "partial",
+     "counts": {
+      "traffic_signals": 5,
+      "give_way": 2
+     }
+    }
+   },
+   "antiPave": null
+  },
+  {
+   "test": "B",
+   "label": "Largo Promessi Sposi → M4 Vetra",
+   "mode": "motorcycle",
+   "hasDistinctAlternative": false,
+   "alternativesAnalyzed": 6,
+   "fast": {
+    "minutes": 14.3,
+    "km": 4.02,
+    "confirmedPave": 143,
+    "probablePave": 22,
+    "unknown": 468,
+    "roughSections": [
+     {
+      "at": 3152,
+      "length": 143,
+      "confirmed": 143,
+      "probable": 0,
+      "name": "Via Conca del Naviglio",
+      "surface": "sett"
+     },
+     {
+      "at": 3874,
+      "length": 22,
+      "confirmed": 0,
+      "probable": 22,
+      "name": "Via Edmondo De Amicis",
+      "surface": "paving_stones"
+     }
+    ],
+    "roadFeatures": {
+     "coverage": "partial",
+     "counts": {
+      "traffic_signals": 5,
+      "give_way": 2
+     }
+    }
+   },
+   "antiPave": null
+  },
+  {
+   "test": "C",
+   "label": "M4 Vetra → Largo Promessi Sposi",
+   "mode": "car",
+   "hasDistinctAlternative": false,
+   "alternativesAnalyzed": 4,
+   "fast": {
+    "minutes": 14,
+    "km": 3.67,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "unknown": 310,
+    "roughSections": [],
+    "roadFeatures": {
+     "coverage": "partial",
+     "counts": {
+      "traffic_signals": 4,
+      "stop": 2,
+      "give_way": 3
+     }
+    }
+   },
+   "antiPave": null
+  },
+  {
+   "test": "C",
+   "label": "M4 Vetra → Largo Promessi Sposi",
+   "mode": "motorcycle",
+   "hasDistinctAlternative": false,
+   "alternativesAnalyzed": 5,
+   "fast": {
+    "minutes": 14,
+    "km": 3.67,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "unknown": 310,
+    "roughSections": [],
+    "roadFeatures": {
+     "coverage": "partial",
+     "counts": {
+      "traffic_signals": 4,
+      "stop": 2,
+      "give_way": 3
+     }
+    }
+   },
+   "antiPave": null
+  }
+ ]
+}

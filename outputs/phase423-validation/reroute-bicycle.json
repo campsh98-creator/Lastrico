@@ -1,0 +1,644 @@
+{
+  "request": {
+    "area": "rome",
+    "start": "12.5020788,41.8917317",
+    "end": "12.493142,41.8946376",
+    "mode": "bicycle",
+    "avoid": "strong",
+    "maxExtraMinutes": "5",
+    "navigation": "1"
+  },
+  "status": 200,
+  "elapsedMs": 1280.249125000002,
+  "payload": {
+    "area": "rome",
+    "fast": {
+      "coordinates": [
+        [
+          12.502079,
+          41.891732
+        ],
+        [
+          12.501556,
+          41.892654
+        ],
+        [
+          12.501464,
+          41.892821
+        ],
+        [
+          12.501113,
+          41.893449
+        ],
+        [
+          12.501069,
+          41.893527
+        ],
+        [
+          12.501002,
+          41.893646
+        ],
+        [
+          12.50073,
+          41.894127
+        ],
+        [
+          12.500492,
+          41.89456
+        ],
+        [
+          12.500334,
+          41.894841
+        ],
+        [
+          12.500315,
+          41.894874
+        ],
+        [
+          12.500259,
+          41.894978
+        ],
+        [
+          12.500244,
+          41.895005
+        ],
+        [
+          12.500178,
+          41.895006
+        ],
+        [
+          12.500111,
+          41.895008
+        ],
+        [
+          12.499848,
+          41.895013
+        ],
+        [
+          12.49968,
+          41.895016
+        ],
+        [
+          12.499188,
+          41.895028
+        ],
+        [
+          12.499149,
+          41.895029
+        ],
+        [
+          12.498284,
+          41.895037
+        ],
+        [
+          12.498117,
+          41.895039
+        ],
+        [
+          12.498058,
+          41.895041
+        ],
+        [
+          12.497838,
+          41.895041
+        ],
+        [
+          12.497421,
+          41.895045
+        ],
+        [
+          12.497231,
+          41.895046
+        ],
+        [
+          12.496884,
+          41.89505
+        ],
+        [
+          12.495868,
+          41.895058
+        ],
+        [
+          12.495715,
+          41.895058
+        ],
+        [
+          12.495605,
+          41.895059
+        ],
+        [
+          12.495502,
+          41.895058
+        ],
+        [
+          12.495464,
+          41.895059
+        ],
+        [
+          12.495424,
+          41.895059
+        ],
+        [
+          12.49538,
+          41.895059
+        ],
+        [
+          12.495326,
+          41.895058
+        ],
+        [
+          12.495264,
+          41.895056
+        ],
+        [
+          12.495196,
+          41.895054
+        ],
+        [
+          12.495136,
+          41.895051
+        ],
+        [
+          12.495074,
+          41.895045
+        ],
+        [
+          12.495007,
+          41.895039
+        ],
+        [
+          12.494944,
+          41.895033
+        ],
+        [
+          12.494871,
+          41.895025
+        ],
+        [
+          12.494826,
+          41.895018
+        ],
+        [
+          12.494788,
+          41.895014
+        ],
+        [
+          12.494751,
+          41.895008
+        ],
+        [
+          12.494654,
+          41.894993
+        ],
+        [
+          12.494583,
+          41.89498
+        ],
+        [
+          12.494513,
+          41.894966
+        ],
+        [
+          12.494418,
+          41.894947
+        ],
+        [
+          12.494287,
+          41.894918
+        ],
+        [
+          12.494006,
+          41.894853
+        ],
+        [
+          12.493829,
+          41.894809
+        ],
+        [
+          12.493701,
+          41.894778
+        ],
+        [
+          12.493358,
+          41.894693
+        ],
+        [
+          12.493282,
+          41.894675
+        ],
+        [
+          12.493142,
+          41.894638
+        ]
+      ],
+      "distance": 0.99,
+      "minutes": 3.3693,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 0,
+      "surfaceCoveragePercent": 100,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 988,
+      "surfaceTotalMeters": 988,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "terminalPrivateAccessMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-12.502079,41.891732",
+          "text": "Pedala verso nord su Via Merulana.",
+          "roadName": "Via Merulana",
+          "distance": 394,
+          "location": [
+            12.502079,
+            41.891732
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-12.500244,41.895005",
+          "text": "Svolta a sinistra su Largo Brancaccio.",
+          "roadName": "Largo Brancaccio",
+          "distance": 596,
+          "location": [
+            12.500244,
+            41.895005
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "2-arrive-12.493142,41.894638",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            12.493142,
+            41.894638
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "safe": {
+      "coordinates": [
+        [
+          12.502079,
+          41.891732
+        ],
+        [
+          12.501556,
+          41.892654
+        ],
+        [
+          12.501464,
+          41.892821
+        ],
+        [
+          12.501113,
+          41.893449
+        ],
+        [
+          12.501069,
+          41.893527
+        ],
+        [
+          12.501002,
+          41.893646
+        ],
+        [
+          12.50073,
+          41.894127
+        ],
+        [
+          12.500492,
+          41.89456
+        ],
+        [
+          12.500334,
+          41.894841
+        ],
+        [
+          12.500315,
+          41.894874
+        ],
+        [
+          12.500259,
+          41.894978
+        ],
+        [
+          12.500244,
+          41.895005
+        ],
+        [
+          12.500178,
+          41.895006
+        ],
+        [
+          12.500111,
+          41.895008
+        ],
+        [
+          12.499848,
+          41.895013
+        ],
+        [
+          12.49968,
+          41.895016
+        ],
+        [
+          12.499188,
+          41.895028
+        ],
+        [
+          12.499149,
+          41.895029
+        ],
+        [
+          12.498284,
+          41.895037
+        ],
+        [
+          12.498117,
+          41.895039
+        ],
+        [
+          12.498058,
+          41.895041
+        ],
+        [
+          12.497838,
+          41.895041
+        ],
+        [
+          12.497421,
+          41.895045
+        ],
+        [
+          12.497231,
+          41.895046
+        ],
+        [
+          12.496884,
+          41.89505
+        ],
+        [
+          12.495868,
+          41.895058
+        ],
+        [
+          12.495715,
+          41.895058
+        ],
+        [
+          12.495605,
+          41.895059
+        ],
+        [
+          12.495502,
+          41.895058
+        ],
+        [
+          12.495464,
+          41.895059
+        ],
+        [
+          12.495424,
+          41.895059
+        ],
+        [
+          12.49538,
+          41.895059
+        ],
+        [
+          12.495326,
+          41.895058
+        ],
+        [
+          12.495264,
+          41.895056
+        ],
+        [
+          12.495196,
+          41.895054
+        ],
+        [
+          12.495136,
+          41.895051
+        ],
+        [
+          12.495074,
+          41.895045
+        ],
+        [
+          12.495007,
+          41.895039
+        ],
+        [
+          12.494944,
+          41.895033
+        ],
+        [
+          12.494871,
+          41.895025
+        ],
+        [
+          12.494826,
+          41.895018
+        ],
+        [
+          12.494788,
+          41.895014
+        ],
+        [
+          12.494751,
+          41.895008
+        ],
+        [
+          12.494654,
+          41.894993
+        ],
+        [
+          12.494583,
+          41.89498
+        ],
+        [
+          12.494513,
+          41.894966
+        ],
+        [
+          12.494418,
+          41.894947
+        ],
+        [
+          12.494287,
+          41.894918
+        ],
+        [
+          12.494006,
+          41.894853
+        ],
+        [
+          12.493829,
+          41.894809
+        ],
+        [
+          12.493701,
+          41.894778
+        ],
+        [
+          12.493358,
+          41.894693
+        ],
+        [
+          12.493282,
+          41.894675
+        ],
+        [
+          12.493142,
+          41.894638
+        ]
+      ],
+      "distance": 0.99,
+      "minutes": 3.3693,
+      "paveMeters": 0,
+      "pavePercent": 0,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 0,
+      "surfaceCoveragePercent": 100,
+      "confirmedPaveMeters": 0,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 988,
+      "surfaceTotalMeters": 988,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "terminalPrivateAccessMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-12.502079,41.891732",
+          "text": "Pedala verso nord su Via Merulana.",
+          "roadName": "Via Merulana",
+          "distance": 394,
+          "location": [
+            12.502079,
+            41.891732
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-12.500244,41.895005",
+          "text": "Svolta a sinistra su Largo Brancaccio.",
+          "roadName": "Largo Brancaccio",
+          "distance": 596,
+          "location": [
+            12.500244,
+            41.895005
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "2-arrive-12.493142,41.894638",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            12.493142,
+            41.894638
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": []
+    },
+    "problemSegments": [],
+    "alternativesAnalyzed": 1,
+    "hasDistinctAlternative": false,
+    "surfaceDataAvailable": true,
+    "mode": "bicycle",
+    "transportMode": "bicycle",
+    "routingProfile": {
+      "provider": "valhalla-fossgis",
+      "profile": "bicycle",
+      "beta": true,
+      "approximate": false,
+      "fallbackUsed": false,
+      "notice": "Profilo ciclabile Valhalla: preferisce infrastrutture adatte ma non certifica la sicurezza del percorso."
+    },
+    "calculationMode": "navigation",
+    "appliedPreferences": {
+      "avoidance": "strong",
+      "maximumExtraMinutes": 5
+    },
+    "performance": {
+      "routingAndSurfaceDataMs": 1277,
+      "candidateGenerationAndScoringMs": 2,
+      "totalMs": 1280
+    },
+    "optimization": {
+      "strategy": "pareto-conservative-unknown",
+      "frontierSize": 1,
+      "unknownMeterPenalty": 1,
+      "directCandidateGenerated": false
+    },
+    "candidateDiagnostics": [
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-1",
+        "provider": "valhalla-fossgis",
+        "profile": "bicycle",
+        "distance": 990,
+        "seconds": 202,
+        "paveMeters": 0,
+        "pavePercent": 0,
+        "weightedPaveMeters": 0,
+        "riskMeters": 0,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 0,
+        "surfaceCoveragePercent": 100,
+        "smoothSurfaceMeters": 988,
+        "surfaceTotalMeters": 988,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 9,
+        "detourPercent": 0,
+        "distinctFromFast": false
+      }
+    ],
+    "dataNotice": "1 percorso reale controllato: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale). La copertura locale dei fondi ciclabili può essere incompleta. I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio. Roma: verifica segnaletica e accessi locali; il percorso non certifica tutte le restrizioni aggiornate"
+  },
+  "calls": [
+    {
+      "key": "98c00eada53ead6b70a39aee1acb998a42dd720123b811618bf765a8a04f0f50",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 808.0750419999968
+    }
+  ]
+}

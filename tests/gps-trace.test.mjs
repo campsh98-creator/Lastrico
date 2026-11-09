@@ -114,7 +114,11 @@ test("the synthetic fixture demonstrates that multipath no longer jumps or rerou
   assert.equal(report.reroutes, 0);
   assert.deepEqual(report.skippedInstructions, []);
   assert.ok(report.largestForwardAdvanceMeters < 100, `advance ${report.largestForwardAdvanceMeters}`);
-  assert.ok(report.heldFixes >= 1, "the fix near the return leg must be held, not followed");
+  // Phase 4.29: accuracy-weighted fusion with a velocity prediction absorbs the multipath fix, so
+  // progress never comes near the return leg and the forward-jump hold is not needed here (it is
+  // still exercised directly in navigation-fix-processor.test.mjs).
+  const peak = Math.max(...trace.decisions.filter((d) => d.outcome === "accepted").map((d) => d.offRouteMeters ?? 0));
+  assert.ok(peak < 45, `the multipath fix stays near the leg being driven (${peak} m)`);
 });
 
 test("the replay script reports on a trace file", async () => {

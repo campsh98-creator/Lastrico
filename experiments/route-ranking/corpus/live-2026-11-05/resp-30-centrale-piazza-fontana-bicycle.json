@@ -1,0 +1,23 @@
+{
+ "request": {
+  "url": "http://localhost:8799/api/routes?start=9.204%2C45.4847&end=9.1937%2C45.4637&mode=bicycle&avoid=strong",
+  "params": {
+   "start": "9.204,45.4847",
+   "end": "9.1937,45.4637",
+   "mode": "bicycle",
+   "avoid": "strong"
+  },
+  "odId": "centrale-piazza-fontana",
+  "note": null
+ },
+ "requestedAt": "2026-11-05T12:46:43.479Z",
+ "receivedAt": "2026-11-05T12:46:43.904Z",
+ "elapsedMs": 424,
+ "status": 422,
+ "error": null,
+ "payload": {
+  "error": "Tutti i percorsi trovati attraversano tratti vietati secondo OpenStreetMap. Prova una partenza o una destinazione vicina.",
+  "mode": "bicycle",
+  "transportMode": "bicycle"
+ }
+}

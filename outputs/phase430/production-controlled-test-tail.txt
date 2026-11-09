@@ -1,0 +1,14 @@
+13:37:16 exceededCpu  cpu   16 ms wall    19 ms  503  /  03a6776e Worker exceeded CPU time limit.
+13:37:20 exceededCpu  cpu   10 ms wall   379 ms  503  /api/routes car/strong  03a6776e Worker exceeded CPU time limit.
+13:37:25 exceededCpu  cpu   10 ms wall   230 ms  503  /api/routes car/balanced  03a6776e Worker exceeded CPU time limit.
+13:37:29 exceededCpu  cpu   10 ms wall   117 ms  503  /api/routes motorcycle/strong  03a6776e Worker exceeded CPU time limit.
+13:37:33 exceededCpu  cpu   10 ms wall   127 ms  503  /api/routes motorcycle/balanced  03a6776e Worker exceeded CPU time limit.
+13:37:37 exceededCpu  cpu   10 ms wall   149 ms  503  /api/routes bicycle/strong  03a6776e Worker exceeded CPU time limit.
+13:37:42 exceededCpu  cpu   10 ms wall   145 ms  503  /api/routes bicycle/balanced  03a6776e Worker exceeded CPU time limit.
+13:37:46 exceededCpu  cpu   10 ms wall    11 ms  503  /  03a6776e Worker exceeded CPU time limit.
+13:37:50 ok           cpu    3 ms wall   192 ms  200  /api/geocode  03a6776e 
+13:37:55 exceededCpu  cpu   16 ms wall    73 ms  503  /api/routes car/strong  03a6776e Worker exceeded CPU time limit.
+13:37:59 exceededCpu  cpu   10 ms wall    95 ms  503  /api/routes bicycle/strong  03a6776e Worker exceeded CPU time limit.
+13:38:03 exceededCpu  cpu   10 ms wall   119 ms  503  /api/routes car/strong  03a6776e Worker exceeded CPU time limit.
+13:38:07 exceededCpu  cpu   10 ms wall    89 ms  503  /api/routes car/strong  03a6776e Worker exceeded CPU time limit.
+13:38:11 ok           cpu    6 ms wall     7 ms  200  /  03a6776e 

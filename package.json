@@ -22,7 +22,12 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
-    "deploy:pilot": "node scripts/deploy-pilot.mjs"
+    "deploy:pilot": "node scripts/deploy-pilot.mjs",
+    "test:e2e": "node tests/e2e/acceptance.mjs",
+    "dashboard:build": "node tools/road-dashboard/build.mjs",
+    "dashboard:serve": "node tools/road-dashboard/serve.mjs",
+    "dashboard:test": "node --test tools/road-dashboard/test/",
+    "dashboard:measure": "node tools/road-dashboard/measure.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

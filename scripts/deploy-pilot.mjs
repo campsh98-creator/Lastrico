@@ -1,11 +1,30 @@
 /** Builds and deploys the isolated pilot Worker. `--dry-run` stops before anything is uploaded. */
 import { execFileSync } from "node:child_process";
+import { rmSync, readdirSync, statSync, unlinkSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { applyPilotConfig, assertPilotConfig } from "./pilot-config.mjs";
 
 const root = new URL("../", import.meta.url);
+const rootPath = fileURLToPath(root);
+const distPath = join(rootPath, "dist");
 const generatedConfigPath = new URL("dist/server/wrangler.json", root);
 const dryRun = process.argv.includes("--dry-run");
+
+function cleanDuplicateSync(dir) {
+  try {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      const stat = statSync(full);
+      if (stat.isDirectory()) {
+        cleanDuplicateSync(full);
+      } else if (entry.includes(" 2")) {
+        unlinkSync(full);
+      }
+    }
+  } catch {}
+}
 
 function run(command, args, options = {}) {
   return execFileSync(command, args, { cwd: root, stdio: "inherit", ...options });
@@ -16,7 +35,9 @@ function wrangler(...args) {
 }
 
 const pilot = JSON.parse(await readFile(new URL("deploy/pilot.json", root), "utf8"));
+rmSync(distPath, { recursive: true, force: true });
 run("npm", ["run", "build"]);
+cleanDuplicateSync(distPath);
 
 const generated = JSON.parse(await readFile(generatedConfigPath, "utf8"));
 const config = applyPilotConfig(generated, pilot);

@@ -4,11 +4,21 @@
  * overlay blocking a control fails the journey the way it would fail a person.
  */
 import { spawn } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-export const CHROME_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+// macOS locally; the Google Chrome preinstalled on GitHub's Ubuntu runners in CI. CHROME_PATH overrides.
+const CHROME_CANDIDATES = [
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "/usr/bin/google-chrome",
+  "/usr/bin/google-chrome-stable",
+  "/usr/bin/chromium",
+  "/usr/bin/chromium-browser",
+];
+export const CHROME_PATH = process.env.CHROME_PATH
+  ?? CHROME_CANDIDATES.find((candidate) => existsSync(candidate))
+  ?? CHROME_CANDIDATES[0];
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function launchChrome({

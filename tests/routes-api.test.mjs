@@ -40,6 +40,17 @@ test("invalid route inputs return 400 before contacting providers", async (t) =>
   assert.equal(fetch.mock.callCount(), 0);
 });
 
+test("Phase 4.29: each route carries its merged rough sections for navigation warnings", async (t) => {
+  fixtures(t, [trip(points, 600)]);
+  const data = await (await GET(request())).json();
+  assert.equal(data.fast.roughSections.length, 1);
+  const [section] = data.fast.roughSections;
+  assert.ok(section.endMeters - section.startMeters > 300, JSON.stringify(section));
+  assert.ok(section.confirmedMeters > 300, "sett is confirmed stone");
+  assert.equal(section.probableMeters, 0);
+  assert.deepEqual(section.start, data.fast.coordinates[0]);
+});
+
 test("hard budget uses fastest duplicate even if provider lists the slower route first", async (t) => {
   fixtures(t, [trip(points, 660), trip(points, 600), trip(detour, 750)]);
   const response = await GET(request({ maxExtraMinutes: "2" }));
@@ -69,7 +80,10 @@ test("exact budget boundary admits the lower known exposure route and reports un
   assert.equal(data.safe.surfaceDataConfidence, null);
   assert.equal(data.fast.surfaceClassificationConfidence, data.fast.surfaceConfidence);
   assert.match(data.dataNotice, /sconosciuti/);
-  assert.equal(calls.filter((call) => call.url.includes("valhalla")).length, 1);
+  // Phase 4.31 release gate: a provider alternate that saves pavé only for +25% time no longer
+  // stops the anti-pavé search (Porta Romana: such an alternate hid the Filippetti route), so the
+  // penalised search runs as well; the chosen route is unchanged here.
+  assert.equal(calls.filter((call) => call.url.includes("valhalla")).length, 2);
 });
 
 test("zero known exposure skips pointless detour requests and remains unknown", async (t) => {
@@ -105,12 +119,15 @@ test("navigation and all modes preserve profiles, preferences and usable instruc
 
 test("known local surfaces remain scored when a candidate leaves the endpoint query rectangle", async (t) => {
   const way = bundledSurfaces.find((segment) => segment.surfaceCategory === "probable_rough"
-    && segment.isMotorAllowed && segment.lengthMeters > 20
-    && segment.coordinates.every(([lon]) => lon < points[0][0] - 0.02));
+    && segment.isMotorAllowed && segment.lengthMeters > 20);
   assert.ok(way);
-  assert.ok(way.coordinates.every(([lon]) => lon < points[0][0] - 0.02));
-  fixtures(t, [trip([points[0], ...way.coordinates, points[1]], 1800)], []);
-  const response = await GET(request());
+  const wayLon = way.coordinates[0][0];
+  const wayLat = way.coordinates[0][1];
+  const testStart = [wayLon + 0.005, wayLat - 0.001];
+  const testEnd = [wayLon + 0.005, wayLat + 0.001];
+  assert.ok(way.coordinates.every(([lon]) => lon < testStart[0] - 0.004));
+  fixtures(t, [trip([testStart, ...way.coordinates, testEnd], 1800)], []);
+  const response = await GET(request({ start: testStart.join(","), end: testEnd.join(",") }));
   assert.equal(response.status, 200);
   const data = await response.json();
   assert.ok(data.fast.paveMeters > 10);
@@ -152,6 +169,14 @@ test("handler honors bicycle counterflow without assigning restricted cycle trac
   }]);
   const bicycle = await (await GET(request({ mode: "bicycle", start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
   assert.ok(bicycle.fast.smoothSurfaceMeters > 300);
+  // Phase 4.24: a car route lying on the cycle track's own geometry reports the surface under it.
+  const carOnTrack = await (await GET(request({ start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
+  assert.ok(carOnTrack.fast.smoothSurfaceMeters > 300);
+  // A cycle track beside the car route never lends its surface to the car.
+  fixtures(t, [trip(reversed, 60)], [{
+    ...roughWay, tags: { highway: "cycleway", surface: "asphalt", oneway: "yes", "oneway:bicycle": "no" },
+    geometry: points.map(([lon, lat]) => ({ lon, lat: lat + 0.00005 })),
+  }]);
   const car = await (await GET(request({ start: reversed[0].join(","), end: reversed[1].join(",") }))).json();
   assert.equal(car.fast.smoothSurfaceMeters, 0);
   assert.ok(car.fast.unknownSurfaceMeters > 300);
@@ -238,6 +263,24 @@ test("private access beside the destination stays routable with an explicit warn
   assert.ok(data.fast.terminalPrivateAccessMeters > 0);
   assert.equal(data.candidateDiagnostics[0].blockingRestrictionMeters, 0);
   assert.match(data.dataNotice, /tratto privato/);
+});
+
+test("Milan: a bicycle trip ending on a pedestrian-only street is routable with a walking notice; a car is refused", async (t) => {
+  const longRoute = [[9.28, 45.53], [9.2942, 45.53], [9.295, 45.53]];
+  const pedestrianEnd = {
+    id: 900000005, tags: { highway: "residential", surface: "asphalt", access: "no", foot: "yes" },
+    geometry: longRoute.slice(1).map(([lon, lat]) => ({ lon, lat })),
+  };
+  fixtures(t, [trip(longRoute, 300)], [pedestrianEnd]);
+  const bicycle = await GET(request({ mode: "bicycle", start: longRoute[0].join(","), end: longRoute[2].join(",") }));
+  assert.equal(bicycle.status, 200);
+  const data = await bicycle.json();
+  assert.ok(data.fast.terminalWalkMeters > 0 && data.fast.terminalWalkMeters <= 150);
+  assert.equal(data.candidateDiagnostics[0].blockingRestrictionMeters, 0);
+  assert.match(data.dataNotice, /scendi e prosegui a piedi/);
+  fixtures(t, [trip(longRoute, 120)], [pedestrianEnd]);
+  const car = await GET(request({ start: longRoute[0].join(","), end: longRoute[2].join(",") }));
+  assert.equal(car.status, 422);
 });
 
 test("access restrictions that retrying cannot solve report 422, not a provider outage", async (t) => {

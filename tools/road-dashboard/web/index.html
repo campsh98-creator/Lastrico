@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'none'; object-src 'none'; media-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Lastrico — Road Intelligence Dashboard (sviluppo)</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>Road Intelligence Dashboard</h1>
+      <p class="sub">Lastrico · strumento locale per sviluppatori · non parte dell'app</p>
+    </div>
+    <div class="area-switch" role="group" aria-label="Area">
+      <button type="button" data-area="milan" aria-pressed="true">Milano</button>
+      <button type="button" data-area="roccella" aria-pressed="false">Roccella Ionica</button>
+    </div>
+  </header>
+
+  <div id="exp-banner" class="exp-banner" hidden>
+    <strong>Previsione sperimentale — non verificata</strong>
+    <span>Livello della Fase 4.17 (verdetto NO-GO). Non è evidenza, non entra mai nei totali verificati (tag OSM), nelle esportazioni né nel punteggio hotspot. Una probabilità bassa non significa fondo liscio.</span>
+  </div>
+
+  <main class="layout">
+    <section class="map-col" aria-label="Mappa">
+      <div class="map-wrap">
+        <canvas id="map" tabindex="0" role="img" aria-label="Mappa della rete stradale per categoria di superficie. I valori sono disponibili nelle tabelle."></canvas>
+        <div class="map-controls">
+          <button type="button" id="zoom-in" aria-label="Ingrandisci">+</button>
+          <button type="button" id="zoom-out" aria-label="Riduci">−</button>
+          <button type="button" id="zoom-reset" aria-label="Adatta all'area">⤢</button>
+        </div>
+        <div id="scale" class="scale" aria-hidden="true"></div>
+        <div id="tooltip" class="tooltip" role="status" hidden></div>
+        <div id="loading" class="loading">Caricamento dati locali…</div>
+      </div>
+      <div class="map-side">
+        <fieldset class="layers">
+          <legend>Livelli</legend>
+          <div id="layer-list"></div>
+          <label class="cell-metric">Colore celle
+            <select id="cell-metric">
+              <option value="unknownShare">Quota di lunghezza sconosciuta</option>
+              <option value="score">Punteggio di incertezza H</option>
+            </select>
+          </label>
+          <div id="cell-ramp" class="ramp" aria-hidden="true"></div>
+        </fieldset>
+        <section class="legend" aria-label="Legenda">
+          <h2>Legenda e definizioni</h2>
+          <div id="legend"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="panels" aria-label="Metriche">
+      <article class="panel">
+        <h2 id="area-title">Area</h2>
+        <p id="area-desc" class="muted"></p>
+        <div id="caveats" class="caveats"></div>
+        <div id="kpis" class="kpis"></div>
+        <div id="partition" class="partition"></div>
+        <p class="note confirmed-means"><strong>«Confermato» = tag OSM <code>surface</code> esplicito nei dati di produzione, non un rilievo sul campo.</strong> Nota = liscio confermato + pavé confermato + pavé probabile + sterrato/sciolto (come la copertura usata dal routing). Sconosciuto resta sconosciuto: mai assunto liscio.</p>
+        <p id="prov-summary" class="note"></p>
+      </article>
+
+      <article class="panel">
+        <h2>Per categoria</h2>
+        <div id="table-category"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Copertura geografica</h2>
+        <div id="coverage"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Dove servirebbero più rilievi</h2>
+        <p class="note">Hotspot di incertezza: celle da 250 m dove un rilievo sul campo ridurrebbe di più l'incertezza di instradamento. Non è una previsione di pavé. Formula: <span id="hotspot-formula"></span></p>
+        <details id="hotspot-method" class="method">
+          <summary>Metodo e pesi scelti a mano</summary>
+          <div id="hotspot-method-body"></div>
+        </details>
+        <div id="table-hotspots"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Sintesi ed esportazioni</h2>
+        <div id="summary"></div>
+        <h3>Esportazioni (generate offline durante la build)</h3>
+        <p class="note">Solo dati da tag OSM, entrambe le aree. Le previsioni sperimentali non sono mai incluse. Dati © OpenStreetMap contributors, ODbL-1.0.</p>
+        <ul id="exports" class="exports">
+          <li><a href="exports/area-summary.csv" download>area-summary.csv</a> · riepilogo per area, rete principale, fonte, modalità, classe e tile</li>
+          <li><a href="exports/area-summary.json" download>area-summary.json</a> · stesso riepilogo con copertura, avvertenze e sintesi</li>
+          <li><a href="exports/hotspots.csv" download>hotspots.csv</a> · aree prioritarie per i rilievi con componenti del punteggio</li>
+          <li><a href="exports/hotspots.json" download>hotspots.json</a> · stesse aree con il metodo e i pesi</li>
+          <li><a href="exports/LEGGIMI.txt">LEGGIMI.txt</a> · colonne, significato e licenza</li>
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h2>Per classe stradale</h2>
+        <div id="table-class"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Per fonte dati e modalità</h2>
+        <div id="table-source"></div>
+        <div id="table-mode"></div>
+        <p id="source-note" class="note"></p>
+      </article>
+
+      <article class="panel">
+        <details>
+          <summary><h2>Per tile di produzione (0,01°)</h2></summary>
+          <div id="table-tile"></div>
+        </details>
+      </article>
+
+      <article class="panel">
+        <h2>Provenienza e checksum</h2>
+        <div id="provenance"></div>
+      </article>
+
+      <article class="panel research">
+        <h2>Ricerca esterna: Fase 4.17 <span class="badge nogo">NO-GO</span></h2>
+        <div id="research"></div>
+      </article>
+
+      <article id="exp-panel" class="panel experimental" hidden>
+        <h2>Previsione sperimentale — non verificata</h2>
+        <div id="exp-stats"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Dati © OpenStreetMap contributors, ODbL-1.0. Elaborazione locale, nessuna risorsa esterna.</span>
+    <span id="fingerprint"></span>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

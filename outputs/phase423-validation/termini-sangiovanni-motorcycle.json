@@ -1,0 +1,1409 @@
+{
+  "request": {
+    "area": "rome",
+    "start": "12.5041007,41.898306",
+    "end": "12.5063018,41.8870216",
+    "mode": "motorcycle",
+    "avoid": "strong",
+    "maxExtraMinutes": "5"
+  },
+  "status": 200,
+  "elapsedMs": 919.5198749999981,
+  "payload": {
+    "area": "rome",
+    "fast": {
+      "coordinates": [
+        [
+          12.504101,
+          41.898306
+        ],
+        [
+          12.504024,
+          41.898352
+        ],
+        [
+          12.503948,
+          41.898279
+        ],
+        [
+          12.503733,
+          41.898066
+        ],
+        [
+          12.503555,
+          41.897885
+        ],
+        [
+          12.503489,
+          41.897822
+        ],
+        [
+          12.503424,
+          41.897762
+        ],
+        [
+          12.502989,
+          41.897318
+        ],
+        [
+          12.502935,
+          41.897266
+        ],
+        [
+          12.502869,
+          41.897201
+        ],
+        [
+          12.502357,
+          41.896685
+        ],
+        [
+          12.502322,
+          41.896649
+        ],
+        [
+          12.502305,
+          41.896631
+        ],
+        [
+          12.502291,
+          41.896616
+        ],
+        [
+          12.502283,
+          41.896608
+        ],
+        [
+          12.502264,
+          41.89659
+        ],
+        [
+          12.503244,
+          41.895987
+        ],
+        [
+          12.503265,
+          41.895972
+        ],
+        [
+          12.503284,
+          41.895957
+        ],
+        [
+          12.503294,
+          41.895947
+        ],
+        [
+          12.503303,
+          41.895935
+        ],
+        [
+          12.503317,
+          41.895918
+        ],
+        [
+          12.503325,
+          41.895903
+        ],
+        [
+          12.503331,
+          41.895889
+        ],
+        [
+          12.503335,
+          41.895872
+        ],
+        [
+          12.503335,
+          41.895858
+        ],
+        [
+          12.503333,
+          41.895841
+        ],
+        [
+          12.503329,
+          41.895827
+        ],
+        [
+          12.503321,
+          41.895811
+        ],
+        [
+          12.503308,
+          41.895793
+        ],
+        [
+          12.503294,
+          41.895776
+        ],
+        [
+          12.503057,
+          41.895524
+        ],
+        [
+          12.502962,
+          41.895427
+        ],
+        [
+          12.502915,
+          41.895379
+        ],
+        [
+          12.502859,
+          41.895324
+        ],
+        [
+          12.502599,
+          41.895065
+        ],
+        [
+          12.502407,
+          41.894882
+        ],
+        [
+          12.502348,
+          41.894826
+        ],
+        [
+          12.502376,
+          41.894813
+        ],
+        [
+          12.5024,
+          41.894801
+        ],
+        [
+          12.502431,
+          41.894785
+        ],
+        [
+          12.502674,
+          41.894646
+        ],
+        [
+          12.503092,
+          41.894417
+        ],
+        [
+          12.503232,
+          41.89434
+        ],
+        [
+          12.503131,
+          41.894237
+        ],
+        [
+          12.502481,
+          41.89359
+        ],
+        [
+          12.502447,
+          41.893556
+        ],
+        [
+          12.501915,
+          41.893023
+        ],
+        [
+          12.501661,
+          41.892773
+        ],
+        [
+          12.501624,
+          41.892732
+        ],
+        [
+          12.501556,
+          41.892654
+        ],
+        [
+          12.502079,
+          41.891732
+        ],
+        [
+          12.502174,
+          41.891564
+        ],
+        [
+          12.502222,
+          41.891482
+        ],
+        [
+          12.502391,
+          41.891193
+        ],
+        [
+          12.502869,
+          41.890319
+        ],
+        [
+          12.502931,
+          41.890207
+        ],
+        [
+          12.502986,
+          41.890113
+        ],
+        [
+          12.503131,
+          41.889862
+        ],
+        [
+          12.503326,
+          41.889521
+        ],
+        [
+          12.503355,
+          41.889469
+        ],
+        [
+          12.503386,
+          41.889415
+        ],
+        [
+          12.503393,
+          41.889403
+        ],
+        [
+          12.5034,
+          41.88939
+        ],
+        [
+          12.50342,
+          41.889356
+        ],
+        [
+          12.503436,
+          41.889326
+        ],
+        [
+          12.50345,
+          41.889303
+        ],
+        [
+          12.503567,
+          41.889095
+        ],
+        [
+          12.503772,
+          41.88873
+        ],
+        [
+          12.50415,
+          41.888047
+        ],
+        [
+          12.504203,
+          41.887952
+        ],
+        [
+          12.504558,
+          41.887286
+        ],
+        [
+          12.504564,
+          41.887267
+        ],
+        [
+          12.504601,
+          41.887182
+        ],
+        [
+          12.504612,
+          41.887153
+        ],
+        [
+          12.504617,
+          41.88713
+        ],
+        [
+          12.504622,
+          41.887104
+        ],
+        [
+          12.504626,
+          41.887081
+        ],
+        [
+          12.504951,
+          41.887019
+        ],
+        [
+          12.504997,
+          41.887027
+        ],
+        [
+          12.505189,
+          41.887058
+        ],
+        [
+          12.505419,
+          41.887098
+        ],
+        [
+          12.505517,
+          41.887112
+        ],
+        [
+          12.505618,
+          41.887122
+        ],
+        [
+          12.505739,
+          41.887126
+        ],
+        [
+          12.505845,
+          41.887122
+        ],
+        [
+          12.505928,
+          41.887113
+        ],
+        [
+          12.506011,
+          41.887101
+        ],
+        [
+          12.506064,
+          41.887091
+        ],
+        [
+          12.506109,
+          41.887079
+        ],
+        [
+          12.50627,
+          41.88703
+        ],
+        [
+          12.506302,
+          41.887022
+        ]
+      ],
+      "distance": 1.654,
+      "minutes": 5.691066666666667,
+      "paveMeters": 296,
+      "pavePercent": 18,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 0,
+      "surfaceCoveragePercent": 100,
+      "confirmedPaveMeters": 296,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 1351,
+      "surfaceTotalMeters": 1647,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "terminalPrivateAccessMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-12.504101,41.898306",
+          "text": "Guida verso nord-ovest su Via Giovanni Giolitti.",
+          "roadName": "Via Giovanni Giolitti",
+          "distance": 8,
+          "location": [
+            12.504101,
+            41.898306
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-12.504024,41.898352",
+          "text": "Svolta a sinistra su Via Urbano Rattazzi.",
+          "roadName": "Via Urbano Rattazzi",
+          "distance": 244,
+          "location": [
+            12.504024,
+            41.898352
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "2-turn-12.502264,41.89659",
+          "text": "Svolta a sinistra su Via Napoleone Terzo.",
+          "roadName": "Via Napoleone Terzo",
+          "distance": 113,
+          "location": [
+            12.502264,
+            41.89659
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "3-turn-12.503303,41.895935",
+          "text": "Svolta a destra su Piazza Vittorio Emanuele Secondo.",
+          "roadName": "Piazza Vittorio Emanuele Secondo",
+          "distance": 151,
+          "location": [
+            12.503303,
+            41.895935
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "4-turn-12.502348,41.894826",
+          "text": "Svolta a sinistra per rimanere su Piazza Vittorio Emanuele Secondo.",
+          "roadName": "Piazza Vittorio Emanuele Secondo",
+          "distance": 92,
+          "location": [
+            12.502348,
+            41.894826
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "5-turn-12.503232,41.89434",
+          "text": "Svolta a destra su Via Buonarroti.",
+          "roadName": "Via Buonarroti",
+          "distance": 233,
+          "location": [
+            12.503232,
+            41.89434
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "6-turn-12.501556,41.892654",
+          "text": "Svolta a sinistra su Via Merulana.",
+          "roadName": "Via Merulana",
+          "distance": 669,
+          "location": [
+            12.501556,
+            41.892654
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "7-turn-12.504626,41.887081",
+          "text": "Svolta a sinistra su Piazza di San Giovanni in Laterano.",
+          "roadName": "Piazza di San Giovanni in Laterano",
+          "distance": 143,
+          "location": [
+            12.504626,
+            41.887081
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "8-arrive-12.506302,41.887022",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            12.506302,
+            41.887022
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": [
+        [
+          [
+            12.503948,
+            41.898279
+          ],
+          [
+            12.503733,
+            41.898066
+          ],
+          [
+            12.503555,
+            41.897885
+          ],
+          [
+            12.503489,
+            41.897822
+          ]
+        ],
+        [
+          [
+            12.503232,
+            41.89434
+          ],
+          [
+            12.503131,
+            41.894237
+          ],
+          [
+            12.502481,
+            41.89359
+          ],
+          [
+            12.502447,
+            41.893556
+          ],
+          [
+            12.501915,
+            41.893023
+          ],
+          [
+            12.501661,
+            41.892773
+          ],
+          [
+            12.501624,
+            41.892732
+          ],
+          [
+            12.501556,
+            41.892654
+          ]
+        ]
+      ]
+    },
+    "safe": {
+      "coordinates": [
+        [
+          12.504101,
+          41.898306
+        ],
+        [
+          12.504024,
+          41.898352
+        ],
+        [
+          12.503948,
+          41.898279
+        ],
+        [
+          12.503733,
+          41.898066
+        ],
+        [
+          12.503555,
+          41.897885
+        ],
+        [
+          12.503489,
+          41.897822
+        ],
+        [
+          12.503424,
+          41.897762
+        ],
+        [
+          12.502989,
+          41.897318
+        ],
+        [
+          12.502935,
+          41.897266
+        ],
+        [
+          12.502869,
+          41.897201
+        ],
+        [
+          12.502357,
+          41.896685
+        ],
+        [
+          12.502322,
+          41.896649
+        ],
+        [
+          12.502305,
+          41.896631
+        ],
+        [
+          12.502291,
+          41.896616
+        ],
+        [
+          12.502283,
+          41.896608
+        ],
+        [
+          12.502264,
+          41.89659
+        ],
+        [
+          12.503244,
+          41.895987
+        ],
+        [
+          12.503265,
+          41.895972
+        ],
+        [
+          12.503284,
+          41.895957
+        ],
+        [
+          12.503294,
+          41.895947
+        ],
+        [
+          12.503303,
+          41.895935
+        ],
+        [
+          12.503317,
+          41.895918
+        ],
+        [
+          12.503325,
+          41.895903
+        ],
+        [
+          12.503331,
+          41.895889
+        ],
+        [
+          12.503335,
+          41.895872
+        ],
+        [
+          12.503335,
+          41.895858
+        ],
+        [
+          12.503333,
+          41.895841
+        ],
+        [
+          12.503329,
+          41.895827
+        ],
+        [
+          12.503321,
+          41.895811
+        ],
+        [
+          12.503308,
+          41.895793
+        ],
+        [
+          12.503294,
+          41.895776
+        ],
+        [
+          12.503057,
+          41.895524
+        ],
+        [
+          12.502962,
+          41.895427
+        ],
+        [
+          12.502915,
+          41.895379
+        ],
+        [
+          12.502859,
+          41.895324
+        ],
+        [
+          12.502599,
+          41.895065
+        ],
+        [
+          12.502407,
+          41.894882
+        ],
+        [
+          12.502348,
+          41.894826
+        ],
+        [
+          12.502376,
+          41.894813
+        ],
+        [
+          12.5024,
+          41.894801
+        ],
+        [
+          12.502431,
+          41.894785
+        ],
+        [
+          12.502674,
+          41.894646
+        ],
+        [
+          12.503092,
+          41.894417
+        ],
+        [
+          12.503232,
+          41.89434
+        ],
+        [
+          12.503573,
+          41.894156
+        ],
+        [
+          12.504331,
+          41.893737
+        ],
+        [
+          12.504431,
+          41.893683
+        ],
+        [
+          12.504908,
+          41.893432
+        ],
+        [
+          12.504947,
+          41.893413
+        ],
+        [
+          12.504987,
+          41.893393
+        ],
+        [
+          12.505022,
+          41.893378
+        ],
+        [
+          12.505062,
+          41.893362
+        ],
+        [
+          12.505097,
+          41.89335
+        ],
+        [
+          12.505132,
+          41.893339
+        ],
+        [
+          12.505173,
+          41.893326
+        ],
+        [
+          12.505213,
+          41.893314
+        ],
+        [
+          12.505243,
+          41.893305
+        ],
+        [
+          12.505235,
+          41.893286
+        ],
+        [
+          12.505232,
+          41.893279
+        ],
+        [
+          12.505231,
+          41.893272
+        ],
+        [
+          12.505231,
+          41.893263
+        ],
+        [
+          12.505232,
+          41.893257
+        ],
+        [
+          12.505234,
+          41.893252
+        ],
+        [
+          12.505244,
+          41.893231
+        ],
+        [
+          12.505301,
+          41.893127
+        ],
+        [
+          12.505711,
+          41.892342
+        ],
+        [
+          12.505753,
+          41.892258
+        ],
+        [
+          12.505783,
+          41.892197
+        ],
+        [
+          12.506236,
+          41.891315
+        ],
+        [
+          12.506277,
+          41.891233
+        ],
+        [
+          12.506606,
+          41.890589
+        ],
+        [
+          12.50662,
+          41.890562
+        ],
+        [
+          12.506624,
+          41.890554
+        ],
+        [
+          12.506653,
+          41.890495
+        ],
+        [
+          12.50669,
+          41.89042
+        ],
+        [
+          12.506717,
+          41.890368
+        ],
+        [
+          12.506709,
+          41.890344
+        ],
+        [
+          12.506705,
+          41.890303
+        ],
+        [
+          12.506706,
+          41.890265
+        ],
+        [
+          12.506708,
+          41.890243
+        ],
+        [
+          12.506715,
+          41.890217
+        ],
+        [
+          12.506802,
+          41.890052
+        ],
+        [
+          12.507041,
+          41.88957
+        ],
+        [
+          12.507323,
+          41.889025
+        ],
+        [
+          12.507345,
+          41.888982
+        ],
+        [
+          12.50738,
+          41.888914
+        ],
+        [
+          12.507815,
+          41.888056
+        ],
+        [
+          12.508229,
+          41.887254
+        ],
+        [
+          12.508249,
+          41.887217
+        ],
+        [
+          12.508365,
+          41.886999
+        ],
+        [
+          12.508412,
+          41.886913
+        ],
+        [
+          12.508531,
+          41.886688
+        ],
+        [
+          12.508559,
+          41.886637
+        ],
+        [
+          12.508587,
+          41.886598
+        ],
+        [
+          12.508607,
+          41.886573
+        ],
+        [
+          12.508635,
+          41.886544
+        ],
+        [
+          12.508737,
+          41.886475
+        ],
+        [
+          12.508676,
+          41.886461
+        ],
+        [
+          12.508618,
+          41.886451
+        ],
+        [
+          12.508581,
+          41.886445
+        ],
+        [
+          12.508544,
+          41.886441
+        ],
+        [
+          12.50849,
+          41.886437
+        ],
+        [
+          12.508433,
+          41.886436
+        ],
+        [
+          12.508387,
+          41.886436
+        ],
+        [
+          12.508336,
+          41.886438
+        ],
+        [
+          12.508268,
+          41.886442
+        ],
+        [
+          12.50819,
+          41.886451
+        ],
+        [
+          12.508119,
+          41.88646
+        ],
+        [
+          12.508073,
+          41.886467
+        ],
+        [
+          12.508038,
+          41.886472
+        ],
+        [
+          12.508004,
+          41.886478
+        ],
+        [
+          12.50797,
+          41.886486
+        ],
+        [
+          12.507941,
+          41.886492
+        ],
+        [
+          12.507907,
+          41.886501
+        ],
+        [
+          12.507863,
+          41.886511
+        ],
+        [
+          12.507789,
+          41.886531
+        ],
+        [
+          12.507514,
+          41.88662
+        ],
+        [
+          12.506835,
+          41.886839
+        ],
+        [
+          12.506383,
+          41.886994
+        ],
+        [
+          12.506333,
+          41.887011
+        ],
+        [
+          12.506321,
+          41.887015
+        ],
+        [
+          12.506302,
+          41.887022
+        ]
+      ],
+      "distance": 1.844,
+      "minutes": 5.91145,
+      "paveMeters": 63,
+      "pavePercent": 3.4,
+      "surfaceConfidence": 1,
+      "surfaceClassificationConfidence": 1,
+      "surfaceDataConfidence": null,
+      "unknownSurfaceMeters": 0,
+      "surfaceCoveragePercent": 100,
+      "confirmedPaveMeters": 63,
+      "probablePaveMeters": 0,
+      "smoothSurfaceMeters": 1772,
+      "surfaceTotalMeters": 1835,
+      "unpavedSurfaceMeters": 0,
+      "surfaceSource": "osm",
+      "cyclewayMeters": 0,
+      "terminalPrivateAccessMeters": 0,
+      "instructions": [
+        {
+          "id": "0-depart-12.504101,41.898306",
+          "text": "Guida verso nord-ovest su Via Giovanni Giolitti.",
+          "roadName": "Via Giovanni Giolitti",
+          "distance": 8,
+          "location": [
+            12.504101,
+            41.898306
+          ],
+          "type": "depart",
+          "modifier": "",
+          "direction": "depart"
+        },
+        {
+          "id": "1-turn-12.504024,41.898352",
+          "text": "Svolta a sinistra su Via Urbano Rattazzi.",
+          "roadName": "Via Urbano Rattazzi",
+          "distance": 244,
+          "location": [
+            12.504024,
+            41.898352
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "2-turn-12.502264,41.89659",
+          "text": "Svolta a sinistra su Via Napoleone Terzo.",
+          "roadName": "Via Napoleone Terzo",
+          "distance": 113,
+          "location": [
+            12.502264,
+            41.89659
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "3-turn-12.503303,41.895935",
+          "text": "Svolta a destra su Piazza Vittorio Emanuele Secondo.",
+          "roadName": "Piazza Vittorio Emanuele Secondo",
+          "distance": 151,
+          "location": [
+            12.503303,
+            41.895935
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "4-turn-12.502348,41.894826",
+          "text": "Svolta a sinistra per rimanere su Piazza Vittorio Emanuele Secondo.",
+          "roadName": "Piazza Vittorio Emanuele Secondo",
+          "distance": 295,
+          "location": [
+            12.502348,
+            41.894826
+          ],
+          "type": "turn",
+          "modifier": "left",
+          "direction": "left"
+        },
+        {
+          "id": "5-turn-12.505243,41.893305",
+          "text": "Svolta a destra su Via Emanuele Filiberto.",
+          "roadName": "Via Emanuele Filiberto",
+          "distance": 818,
+          "location": [
+            12.505243,
+            41.893305
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "6-turn-12.508737,41.886475",
+          "text": "Svolta a destra su Piazza di Porta San Giovanni.",
+          "roadName": "Piazza di Porta San Giovanni",
+          "distance": 215,
+          "location": [
+            12.508737,
+            41.886475
+          ],
+          "type": "turn",
+          "modifier": "right",
+          "direction": "right"
+        },
+        {
+          "id": "7-arrive-12.506302,41.887022",
+          "text": "Sei arrivato a destinazione.",
+          "roadName": "",
+          "distance": 0,
+          "location": [
+            12.506302,
+            41.887022
+          ],
+          "type": "arrive",
+          "modifier": "",
+          "direction": "arrive"
+        }
+      ],
+      "problemSegments": [
+        [
+          [
+            12.503948,
+            41.898279
+          ],
+          [
+            12.503733,
+            41.898066
+          ],
+          [
+            12.503555,
+            41.897885
+          ],
+          [
+            12.503489,
+            41.897822
+          ]
+        ]
+      ]
+    },
+    "problemSegments": [
+      [
+        [
+          12.503948,
+          41.898279
+        ],
+        [
+          12.503733,
+          41.898066
+        ],
+        [
+          12.503555,
+          41.897885
+        ],
+        [
+          12.503489,
+          41.897822
+        ]
+      ],
+      [
+        [
+          12.503232,
+          41.89434
+        ],
+        [
+          12.503131,
+          41.894237
+        ],
+        [
+          12.502481,
+          41.89359
+        ],
+        [
+          12.502447,
+          41.893556
+        ],
+        [
+          12.501915,
+          41.893023
+        ],
+        [
+          12.501661,
+          41.892773
+        ],
+        [
+          12.501624,
+          41.892732
+        ],
+        [
+          12.501556,
+          41.892654
+        ]
+      ],
+      [
+        [
+          12.503948,
+          41.898279
+        ],
+        [
+          12.503733,
+          41.898066
+        ],
+        [
+          12.503555,
+          41.897885
+        ],
+        [
+          12.503489,
+          41.897822
+        ]
+      ]
+    ],
+    "alternativesAnalyzed": 3,
+    "hasDistinctAlternative": true,
+    "surfaceDataAvailable": true,
+    "mode": "motorcycle",
+    "transportMode": "motorcycle",
+    "routingProfile": {
+      "provider": "valhalla-fossgis",
+      "profile": "motorcycle",
+      "beta": true,
+      "approximate": false,
+      "fallbackUsed": false,
+      "notice": "Profilo Valhalla Motorcycle beta: accessi e restrizioni dipendono dai dati OpenStreetMap."
+    },
+    "calculationMode": "planner",
+    "appliedPreferences": {
+      "avoidance": "strong",
+      "maximumExtraMinutes": 5
+    },
+    "performance": {
+      "routingAndSurfaceDataMs": 896,
+      "candidateGenerationAndScoringMs": 21,
+      "totalMs": 917
+    },
+    "optimization": {
+      "strategy": "pareto-conservative-unknown",
+      "frontierSize": 2,
+      "unknownMeterPenalty": 1,
+      "directCandidateGenerated": false
+    },
+    "candidateDiagnostics": [
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-2",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 1654,
+        "seconds": 341,
+        "paveMeters": 296,
+        "pavePercent": 18,
+        "weightedPaveMeters": 296,
+        "riskMeters": 296,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 0,
+        "surfaceCoveragePercent": 100,
+        "smoothSurfaceMeters": 1351,
+        "surfaceTotalMeters": 1647,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 25,
+        "detourPercent": 0,
+        "distinctFromFast": false
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": true,
+        "source": "base-1",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 1844,
+        "seconds": 355,
+        "paveMeters": 63,
+        "pavePercent": 3.4,
+        "weightedPaveMeters": 63,
+        "riskMeters": 63,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 0,
+        "surfaceCoveragePercent": 100,
+        "smoothSurfaceMeters": 1772,
+        "surfaceTotalMeters": 1835,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 27,
+        "detourPercent": 3.9,
+        "distinctFromFast": true
+      },
+      {
+        "eligibleModeAndAccess": true,
+        "confirmedRestrictionMeters": 0,
+        "blockingRestrictionMeters": 0,
+        "terminalPrivateAccessMeters": 0,
+        "paretoOptimal": false,
+        "source": "base-3",
+        "provider": "valhalla-fossgis",
+        "profile": "motorcycle",
+        "distance": 2274,
+        "seconds": 508,
+        "paveMeters": 247,
+        "pavePercent": 10.9,
+        "weightedPaveMeters": 247,
+        "riskMeters": 247,
+        "surfaceConfidence": 1,
+        "surfaceClassificationConfidence": 1,
+        "surfaceDataConfidence": null,
+        "unknownSurfaceMeters": 0,
+        "surfaceCoveragePercent": 100,
+        "smoothSurfaceMeters": 2024,
+        "surfaceTotalMeters": 2271,
+        "unpavedSurfaceMeters": 0,
+        "cyclewayMeters": 0,
+        "matchedSurfaceFeatures": 29,
+        "detourPercent": 48.7,
+        "distinctFromFast": true
+      }
+    ],
+    "dataNotice": "3 percorsi reali confrontati; 27 way OSM abbinate al percorso (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio. Roma: accesso ZTL, orari e permessi non verificati. Controlla Centro Storico, Trastevere e Tridente A1; le limitazioni del Tridente riguardano anche le moto"
+  },
+  "calls": [
+    {
+      "key": "294ea85e06c57450ea2af2c71796635a936b106fa2d9dcd65c9849d0b7ccf4fc",
+      "cached": true,
+      "status": 200,
+      "error": null,
+      "elapsedMs": 838.8107909999962
+    }
+  ]
+}

@@ -1,0 +1,364 @@
+{
+ "requests": [
+  {
+   "index": 1,
+   "file": "resp-01-castello-porta-venezia-car.json",
+   "odId": "castello-porta-venezia",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:40:46.919Z",
+   "elapsedMs": 510,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 2,
+   "file": "resp-02-castello-porta-venezia-motorcycle.json",
+   "odId": "castello-porta-venezia",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:40:57.438Z",
+   "elapsedMs": 303,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 3,
+   "file": "resp-03-castello-porta-venezia-bicycle.json",
+   "odId": "castello-porta-venezia",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:41:07.745Z",
+   "elapsedMs": 4414,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 4,
+   "file": "resp-04-duomo-porta-garibaldi-car.json",
+   "odId": "duomo-porta-garibaldi",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:41:22.163Z",
+   "elapsedMs": 4476,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 5,
+   "file": "resp-05-duomo-porta-garibaldi-motorcycle.json",
+   "odId": "duomo-porta-garibaldi",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:41:36.641Z",
+   "elapsedMs": 447,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 6,
+   "file": "resp-06-duomo-porta-garibaldi-bicycle.json",
+   "odId": "duomo-porta-garibaldi",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:41:47.092Z",
+   "elapsedMs": 1352,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 7,
+   "file": "resp-07-cordusio-porta-romana-car.json",
+   "odId": "cordusio-porta-romana",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:41:58.451Z",
+   "elapsedMs": 474,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 8,
+   "file": "resp-08-cordusio-porta-romana-motorcycle.json",
+   "odId": "cordusio-porta-romana",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:42:08.926Z",
+   "elapsedMs": 401,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 9,
+   "file": "resp-09-cordusio-porta-romana-bicycle.json",
+   "odId": "cordusio-porta-romana",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:42:19.330Z",
+   "elapsedMs": 4485,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 10,
+   "file": "resp-10-santambrogio-san-babila-car.json",
+   "odId": "santambrogio-san-babila",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:42:33.816Z",
+   "elapsedMs": 4412,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 11,
+   "file": "resp-11-santambrogio-san-babila-motorcycle.json",
+   "odId": "santambrogio-san-babila",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:42:48.231Z",
+   "elapsedMs": 4418,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 12,
+   "file": "resp-12-santambrogio-san-babila-bicycle.json",
+   "odId": "santambrogio-san-babila",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:43:02.652Z",
+   "elapsedMs": 343,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 13,
+   "file": "resp-13-colonne-repubblica-car.json",
+   "odId": "colonne-repubblica",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:43:13.000Z",
+   "elapsedMs": 1209,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 14,
+   "file": "resp-14-colonne-repubblica-motorcycle.json",
+   "odId": "colonne-repubblica",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:43:24.210Z",
+   "elapsedMs": 299,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 15,
+   "file": "resp-15-colonne-repubblica-bicycle.json",
+   "odId": "colonne-repubblica",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:43:34.511Z",
+   "elapsedMs": 429,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 16,
+   "file": "resp-16-arco-pace-duomo-car.json",
+   "odId": "arco-pace-duomo",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:43:44.952Z",
+   "elapsedMs": 4513,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 17,
+   "file": "resp-17-arco-pace-duomo-motorcycle.json",
+   "odId": "arco-pace-duomo",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:43:59.473Z",
+   "elapsedMs": 3410,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 18,
+   "file": "resp-18-arco-pace-duomo-bicycle.json",
+   "odId": "arco-pace-duomo",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:44:12.887Z",
+   "elapsedMs": 263,
+   "status": 422,
+   "error": null
+  },
+  {
+   "index": 19,
+   "file": "resp-19-cenacolo-missori-car.json",
+   "odId": "cenacolo-missori",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:44:23.152Z",
+   "elapsedMs": 4391,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 20,
+   "file": "resp-20-cenacolo-missori-motorcycle.json",
+   "odId": "cenacolo-missori",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:44:37.547Z",
+   "elapsedMs": 4384,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 21,
+   "file": "resp-21-cenacolo-missori-bicycle.json",
+   "odId": "cenacolo-missori",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:44:51.934Z",
+   "elapsedMs": 4442,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 22,
+   "file": "resp-22-brera-darsena-car.json",
+   "odId": "brera-darsena",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:45:06.380Z",
+   "elapsedMs": 326,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 23,
+   "file": "resp-23-brera-darsena-motorcycle.json",
+   "odId": "brera-darsena",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:45:16.711Z",
+   "elapsedMs": 4490,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 24,
+   "file": "resp-24-brera-darsena-bicycle.json",
+   "odId": "brera-darsena",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:45:31.204Z",
+   "elapsedMs": 373,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 25,
+   "file": "resp-25-porta-venezia-xxiv-maggio-car.json",
+   "odId": "porta-venezia-xxiv-maggio",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:45:41.580Z",
+   "elapsedMs": 4446,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 26,
+   "file": "resp-26-porta-venezia-xxiv-maggio-motorcycle.json",
+   "odId": "porta-venezia-xxiv-maggio",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:45:56.033Z",
+   "elapsedMs": 4469,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 27,
+   "file": "resp-27-porta-venezia-xxiv-maggio-bicycle.json",
+   "odId": "porta-venezia-xxiv-maggio",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:46:10.504Z",
+   "elapsedMs": 354,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 28,
+   "file": "resp-28-centrale-piazza-fontana-car.json",
+   "odId": "centrale-piazza-fontana",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:46:20.863Z",
+   "elapsedMs": 1272,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 29,
+   "file": "resp-29-centrale-piazza-fontana-motorcycle.json",
+   "odId": "centrale-piazza-fontana",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:46:32.139Z",
+   "elapsedMs": 1333,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 30,
+   "file": "resp-30-centrale-piazza-fontana-bicycle.json",
+   "odId": "centrale-piazza-fontana",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:46:43.479Z",
+   "elapsedMs": 424,
+   "status": 422,
+   "error": null
+  },
+  {
+   "index": 31,
+   "file": "resp-31-gae-aulenti-porta-romana-car.json",
+   "odId": "gae-aulenti-porta-romana",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:46:53.908Z",
+   "elapsedMs": 4496,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 32,
+   "file": "resp-32-gae-aulenti-porta-romana-motorcycle.json",
+   "odId": "gae-aulenti-porta-romana",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:47:08.406Z",
+   "elapsedMs": 4437,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 33,
+   "file": "resp-33-gae-aulenti-porta-romana-bicycle.json",
+   "odId": "gae-aulenti-porta-romana",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:47:22.845Z",
+   "elapsedMs": 4421,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 34,
+   "file": "resp-34-cadorna-cinque-giornate-car.json",
+   "odId": "cadorna-cinque-giornate",
+   "mode": "car",
+   "requestedAt": "2026-11-05T12:47:37.270Z",
+   "elapsedMs": 4378,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 35,
+   "file": "resp-35-cadorna-cinque-giornate-motorcycle.json",
+   "odId": "cadorna-cinque-giornate",
+   "mode": "motorcycle",
+   "requestedAt": "2026-11-05T12:47:51.651Z",
+   "elapsedMs": 3351,
+   "status": 200,
+   "error": null
+  },
+  {
+   "index": 36,
+   "file": "resp-36-cadorna-cinque-giornate-bicycle.json",
+   "odId": "cadorna-cinque-giornate",
+   "mode": "bicycle",
+   "requestedAt": "2026-11-05T12:48:05.005Z",
+   "elapsedMs": 4527,
+   "status": 200,
+   "error": null
+  }
+ ]
+}

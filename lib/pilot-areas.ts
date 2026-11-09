@@ -1,4 +1,4 @@
-export type PilotAreaId = "milan" | "roccella";
+export type PilotAreaId = "milan" | "roccella" | "rome";
 export type PilotArea = {
   id: PilotAreaId;
   name: string;
@@ -7,6 +7,7 @@ export type PilotArea = {
 };
 export const PILOT_AREAS: Record<PilotAreaId, PilotArea> = {
   milan: { id: "milan", name: "Milano", bounds: { west: 9.04, south: 45.38, east: 9.31, north: 45.55 }, center: [9.19, 45.464] },
+  rome: { id: "rome", name: "Roma", bounds: { west: 12.40, south: 41.80, east: 12.60, north: 41.97 }, center: [12.4964, 41.9028] },
   roccella: { id: "roccella", name: "Roccella Ionica", bounds: { west: 16.36, south: 38.29, east: 16.44, north: 38.35 }, center: [16.4008, 38.3224] },
 };
 export function isPilotAreaId(value: string): value is PilotAreaId {
@@ -61,6 +62,28 @@ export const PILOT_JOURNEYS: PilotJourneyPreset[] = [
     modes: ["car", "motorcycle", "bicycle"],
     start: { label: "Cadorna", coordinate: [9.1765, 45.4682] },
     end: { label: "Darsena / Navigli", coordinate: [9.1771, 45.4523] },
+  },
+  // Rome presets retain real street/POI coordinates; access is evaluated by routing.
+  {
+    id: "rome-termini-colosseo", areaId: "rome", name: "Termini → Colosseo",
+    description: "Esquilino e Monti: confronto delle superfici e dei percorsi disponibili",
+    modes: ["car", "motorcycle", "bicycle"],
+    start: { label: "Roma Termini / Piazza dei Cinquecento", coordinate: [12.5008, 41.9011] },
+    end: { label: "Colosseo / Via Labicana", coordinate: [12.4937, 41.8906] },
+  },
+  {
+    id: "rome-prati-trastevere", areaId: "rome", name: "Prati → Trastevere",
+    description: "Collegamento urbano attraverso il Tevere; verificare ZTL e permessi",
+    modes: ["car", "motorcycle", "bicycle"],
+    start: { label: "Piazza Cavour", coordinate: [12.4702, 41.9075] },
+    end: { label: "Piazza Sonnino", coordinate: [12.4767, 41.8894] },
+  },
+  {
+    id: "rome-ostiense-eur", areaId: "rome", name: "Ostiense → EUR",
+    description: "Corridoio meridionale tra Ostiense ed EUR",
+    modes: ["car", "motorcycle", "bicycle"],
+    start: { label: "Piazzale Ostiense", coordinate: [12.4811, 41.8758] },
+    end: { label: "EUR / Piazza Guglielmo Marconi", coordinate: [12.4734, 41.8320] },
   },
   // Roccella Ionica Pilot Journeys
   {

@@ -1,0 +1,1649 @@
+{
+ "note": "deployed = 03a6776e release copy; local = working tree. Origin assumed; approach points are on real OSM geometry.",
+ "rows": [
+  {
+   "start": "Corso di Porta Vittoria (origine ipotizzata)",
+   "at": [
+    9.2025,
+    45.4625
+   ],
+   "mode": "car",
+   "navigation": false,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 20.466666666666665,
+    "seconds": 1228,
+    "km": 6.21,
+    "confirmedPave": 567,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 20.8,
+    "seconds": 1248,
+    "km": 6.29,
+    "confirmedPave": 74,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1228,
+     "pave": 567,
+     "risk": 567
+    },
+    {
+     "source": "base-2",
+     "seconds": 1248,
+     "pave": 74,
+     "risk": 74
+    },
+    {
+     "source": "base-3",
+     "seconds": 1331,
+     "pave": 567,
+     "risk": 567
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Corso di Porta Vittoria (origine ipotizzata)",
+   "at": [
+    9.2025,
+    45.4625
+   ],
+   "mode": "car",
+   "navigation": false,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 20.466666666666665,
+    "seconds": 1228,
+    "km": 6.21,
+    "confirmedPave": 567,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 20.8,
+    "seconds": 1248,
+    "km": 6.29,
+    "confirmedPave": 74,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1228,
+     "pave": 567,
+     "risk": 567
+    },
+    {
+     "source": "base-2",
+     "seconds": 1248,
+     "pave": 74,
+     "risk": 74
+    },
+    {
+     "source": "base-3",
+     "seconds": 1331,
+     "pave": 567,
+     "risk": 567
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Corso di Porta Vittoria (origine ipotizzata)",
+   "at": [
+    9.2025,
+    45.4625
+   ],
+   "mode": "car",
+   "navigation": true,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 20.466666666666665,
+    "seconds": 1228,
+    "km": 6.21,
+    "confirmedPave": 567,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 20.8,
+    "seconds": 1248,
+    "km": 6.29,
+    "confirmedPave": 74,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1228,
+     "pave": 567,
+     "risk": 567
+    },
+    {
+     "source": "base-2",
+     "seconds": 1248,
+     "pave": 74,
+     "risk": 74
+    },
+    {
+     "source": "base-3",
+     "seconds": 1331,
+     "pave": 567,
+     "risk": 567
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Corso di Porta Vittoria (origine ipotizzata)",
+   "at": [
+    9.2025,
+    45.4625
+   ],
+   "mode": "car",
+   "navigation": true,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 20.466666666666665,
+    "seconds": 1228,
+    "km": 6.21,
+    "confirmedPave": 567,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 20.8,
+    "seconds": 1248,
+    "km": 6.29,
+    "confirmedPave": 74,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1228,
+     "pave": 567,
+     "risk": 567
+    },
+    {
+     "source": "base-2",
+     "seconds": 1248,
+     "pave": 74,
+     "risk": 74
+    },
+    {
+     "source": "base-3",
+     "seconds": 1331,
+     "pave": 567,
+     "risk": 567
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Corso di Porta Vittoria (origine ipotizzata)",
+   "at": [
+    9.2025,
+    45.4625
+   ],
+   "mode": "motorcycle",
+   "navigation": false,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 20.466666666666665,
+    "seconds": 1228,
+    "km": 6.21,
+    "confirmedPave": 567,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 20.8,
+    "seconds": 1248,
+    "km": 6.29,
+    "confirmedPave": 74,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1228,
+     "pave": 567,
+     "risk": 567
+    },
+    {
+     "source": "base-2",
+     "seconds": 1248,
+     "pave": 74,
+     "risk": 74
+    },
+    {
+     "source": "base-3",
+     "seconds": 1331,
+     "pave": 567,
+     "risk": 567
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Corso di Porta Vittoria (origine ipotizzata)",
+   "at": [
+    9.2025,
+    45.4625
+   ],
+   "mode": "motorcycle",
+   "navigation": false,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 20.466666666666665,
+    "seconds": 1228,
+    "km": 6.21,
+    "confirmedPave": 567,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 20.8,
+    "seconds": 1248,
+    "km": 6.29,
+    "confirmedPave": 74,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1228,
+     "pave": 567,
+     "risk": 567
+    },
+    {
+     "source": "base-2",
+     "seconds": 1248,
+     "pave": 74,
+     "risk": 74
+    },
+    {
+     "source": "base-3",
+     "seconds": 1331,
+     "pave": 567,
+     "risk": 567
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Corso di Porta Vittoria (origine ipotizzata)",
+   "at": [
+    9.2025,
+    45.4625
+   ],
+   "mode": "motorcycle",
+   "navigation": true,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 20.466666666666665,
+    "seconds": 1228,
+    "km": 6.21,
+    "confirmedPave": 567,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 20.8,
+    "seconds": 1248,
+    "km": 6.29,
+    "confirmedPave": 74,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1228,
+     "pave": 567,
+     "risk": 567
+    },
+    {
+     "source": "base-2",
+     "seconds": 1248,
+     "pave": 74,
+     "risk": 74
+    },
+    {
+     "source": "base-3",
+     "seconds": 1331,
+     "pave": 567,
+     "risk": 567
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Corso di Porta Vittoria (origine ipotizzata)",
+   "at": [
+    9.2025,
+    45.4625
+   ],
+   "mode": "motorcycle",
+   "navigation": true,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 20.466666666666665,
+    "seconds": 1228,
+    "km": 6.21,
+    "confirmedPave": 567,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 20.8,
+    "seconds": 1248,
+    "km": 6.29,
+    "confirmedPave": 74,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1228,
+     "pave": 567,
+     "risk": 567
+    },
+    {
+     "source": "base-2",
+     "seconds": 1248,
+     "pave": 74,
+     "risk": 74
+    },
+    {
+     "source": "base-3",
+     "seconds": 1331,
+     "pave": 567,
+     "risk": 567
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Viale Regina Margherita",
+   "at": [
+    9.205341,
+    45.458728
+   ],
+   "mode": "car",
+   "navigation": false,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 17.133333333333333,
+    "seconds": 1028,
+    "km": 5.19,
+    "confirmedPave": 524,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 23.516666666666666,
+    "seconds": 1411,
+    "km": 7.33,
+    "confirmedPave": 32,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1028,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "base-2",
+     "seconds": 1411,
+     "pave": 32,
+     "risk": 32
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Viale Regina Margherita",
+   "at": [
+    9.205341,
+    45.458728
+   ],
+   "mode": "car",
+   "navigation": false,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 16.983333333333334,
+    "seconds": 1019,
+    "km": 5.22,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1019,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1028,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1219,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-2",
+     "seconds": 1281,
+     "pave": 763,
+     "risk": 763
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1315,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "base-2",
+     "seconds": 1411,
+     "pave": 32,
+     "risk": 32
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Regina Margherita",
+   "at": [
+    9.205341,
+    45.458728
+   ],
+   "mode": "car",
+   "navigation": true,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 17.133333333333333,
+    "seconds": 1028,
+    "km": 5.19,
+    "confirmedPave": 524,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 23.516666666666666,
+    "seconds": 1411,
+    "km": 7.33,
+    "confirmedPave": 32,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1028,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "base-2",
+     "seconds": 1411,
+     "pave": 32,
+     "risk": 32
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Viale Regina Margherita",
+   "at": [
+    9.205341,
+    45.458728
+   ],
+   "mode": "car",
+   "navigation": true,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 16.983333333333334,
+    "seconds": 1019,
+    "km": 5.22,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1019,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1028,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1219,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "base-2",
+     "seconds": 1411,
+     "pave": 32,
+     "risk": 32
+    }
+   ],
+   "providerCalls": 3
+  },
+  {
+   "start": "Viale Regina Margherita",
+   "at": [
+    9.205341,
+    45.458728
+   ],
+   "mode": "motorcycle",
+   "navigation": false,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 16.983333333333334,
+    "seconds": 1019,
+    "km": 5.22,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1019,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1028,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1185,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1258,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-2",
+     "seconds": 1289,
+     "pave": 1643,
+     "risk": 1643
+    },
+    {
+     "source": "base-2",
+     "seconds": 1499,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Regina Margherita",
+   "at": [
+    9.205341,
+    45.458728
+   ],
+   "mode": "motorcycle",
+   "navigation": false,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 16.983333333333334,
+    "seconds": 1019,
+    "km": 5.22,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1019,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1028,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1185,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1258,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-2",
+     "seconds": 1289,
+     "pave": 1643,
+     "risk": 1643
+    },
+    {
+     "source": "base-2",
+     "seconds": 1499,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Regina Margherita",
+   "at": [
+    9.205341,
+    45.458728
+   ],
+   "mode": "motorcycle",
+   "navigation": true,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 17.133333333333333,
+    "seconds": 1028,
+    "km": 5.19,
+    "confirmedPave": 524,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1028,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1185,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "base-2",
+     "seconds": 1499,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 2
+  },
+  {
+   "start": "Viale Regina Margherita",
+   "at": [
+    9.205341,
+    45.458728
+   ],
+   "mode": "motorcycle",
+   "navigation": true,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 16.983333333333334,
+    "seconds": 1019,
+    "km": 5.22,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1019,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1028,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1185,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "base-2",
+     "seconds": 1499,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 3
+  },
+  {
+   "start": "Viale Emilio Caldara (inizio)",
+   "at": [
+    9.203196,
+    45.455049
+   ],
+   "mode": "car",
+   "navigation": false,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 18.1,
+    "seconds": 1086,
+    "km": 5.45,
+    "confirmedPave": 543,
+    "filippettiMeters": 0,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 24.066666666666666,
+    "seconds": 1444,
+    "km": 7.47,
+    "confirmedPave": 32,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1086,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "base-2",
+     "seconds": 1444,
+     "pave": 32,
+     "risk": 32
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Viale Emilio Caldara (inizio)",
+   "at": [
+    9.203196,
+    45.455049
+   ],
+   "mode": "car",
+   "navigation": false,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 17.533333333333335,
+    "seconds": 1052,
+    "km": 5.36,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1052,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1086,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1276,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-2",
+     "seconds": 1314,
+     "pave": 763,
+     "risk": 763
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1372,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "base-2",
+     "seconds": 1444,
+     "pave": 32,
+     "risk": 32
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Emilio Caldara (inizio)",
+   "at": [
+    9.203196,
+    45.455049
+   ],
+   "mode": "car",
+   "navigation": true,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 18.1,
+    "seconds": 1086,
+    "km": 5.45,
+    "confirmedPave": 543,
+    "filippettiMeters": 0,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 24.066666666666666,
+    "seconds": 1444,
+    "km": 7.47,
+    "confirmedPave": 32,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPaveSource": "base-2",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1086,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "base-2",
+     "seconds": 1444,
+     "pave": 32,
+     "risk": 32
+    }
+   ],
+   "providerCalls": 1
+  },
+  {
+   "start": "Viale Emilio Caldara (inizio)",
+   "at": [
+    9.203196,
+    45.455049
+   ],
+   "mode": "car",
+   "navigation": true,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 17.533333333333335,
+    "seconds": 1052,
+    "km": 5.36,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1052,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1086,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1276,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "base-2",
+     "seconds": 1444,
+     "pave": 32,
+     "risk": 32
+    }
+   ],
+   "providerCalls": 3
+  },
+  {
+   "start": "Viale Emilio Caldara (inizio)",
+   "at": [
+    9.203196,
+    45.455049
+   ],
+   "mode": "motorcycle",
+   "navigation": false,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 17.533333333333335,
+    "seconds": 1052,
+    "km": 5.36,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1052,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1086,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-2",
+     "seconds": 1240,
+     "pave": 1829,
+     "risk": 1829
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1242,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1315,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "base-2",
+     "seconds": 1532,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Emilio Caldara (inizio)",
+   "at": [
+    9.203196,
+    45.455049
+   ],
+   "mode": "motorcycle",
+   "navigation": false,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 17.533333333333335,
+    "seconds": 1052,
+    "km": 5.36,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1052,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1086,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-2",
+     "seconds": 1240,
+     "pave": 1829,
+     "risk": 1829
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1242,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1315,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "base-2",
+     "seconds": 1532,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Emilio Caldara (inizio)",
+   "at": [
+    9.203196,
+    45.455049
+   ],
+   "mode": "motorcycle",
+   "navigation": true,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 18.1,
+    "seconds": 1086,
+    "km": 5.45,
+    "confirmedPave": 543,
+    "filippettiMeters": 0,
+    "sabotinoMeters": 522
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 1086,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1242,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "base-2",
+     "seconds": 1532,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 2
+  },
+  {
+   "start": "Viale Emilio Caldara (inizio)",
+   "at": [
+    9.203196,
+    45.455049
+   ],
+   "mode": "motorcycle",
+   "navigation": true,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 17.533333333333335,
+    "seconds": 1052,
+    "km": 5.36,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 1052,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 1086,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1242,
+     "pave": 543,
+     "risk": 543
+    },
+    {
+     "source": "base-2",
+     "seconds": 1532,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 3
+  },
+  {
+   "start": "Viale Emilio Caldara (prima di Medaglie d'Oro)",
+   "at": [
+    9.202064,
+    45.45278
+   ],
+   "mode": "car",
+   "navigation": false,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 15.016666666666667,
+    "seconds": 901,
+    "km": 4.51,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": {
+    "minutes": 15.433333333333334,
+    "seconds": 926,
+    "km": 4.41,
+    "confirmedPave": 14,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 79
+   },
+   "antiPaveSource": "detour-1",
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 901,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 910,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 926,
+     "pave": 14,
+     "risk": 14
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1066,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "base-2",
+     "seconds": 1329,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Emilio Caldara (prima di Medaglie d'Oro)",
+   "at": [
+    9.202064,
+    45.45278
+   ],
+   "mode": "car",
+   "navigation": false,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 15.016666666666667,
+    "seconds": 901,
+    "km": 4.51,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": {
+    "minutes": 15.433333333333334,
+    "seconds": 926,
+    "km": 4.41,
+    "confirmedPave": 14,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 79
+   },
+   "antiPaveSource": "detour-1",
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 901,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 910,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 926,
+     "pave": 14,
+     "risk": 14
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1066,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "base-2",
+     "seconds": 1329,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Emilio Caldara (prima di Medaglie d'Oro)",
+   "at": [
+    9.202064,
+    45.45278
+   ],
+   "mode": "car",
+   "navigation": true,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 15.166666666666666,
+    "seconds": 910,
+    "km": 4.48,
+    "confirmedPave": 524,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": {
+    "minutes": 15.433333333333334,
+    "seconds": 926,
+    "km": 4.41,
+    "confirmedPave": 14,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 79
+   },
+   "antiPaveSource": "detour-1",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 910,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 926,
+     "pave": 14,
+     "risk": 14
+    },
+    {
+     "source": "base-2",
+     "seconds": 1329,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 2
+  },
+  {
+   "start": "Viale Emilio Caldara (prima di Medaglie d'Oro)",
+   "at": [
+    9.202064,
+    45.45278
+   ],
+   "mode": "car",
+   "navigation": true,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 15.016666666666667,
+    "seconds": 901,
+    "km": 4.51,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": {
+    "minutes": 15.433333333333334,
+    "seconds": 926,
+    "km": 4.41,
+    "confirmedPave": 14,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 79
+   },
+   "antiPaveSource": "detour-1",
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 901,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 910,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 926,
+     "pave": 14,
+     "risk": 14
+    },
+    {
+     "source": "base-2",
+     "seconds": 1329,
+     "pave": 722,
+     "risk": 722
+    }
+   ],
+   "providerCalls": 3
+  },
+  {
+   "start": "Viale Emilio Caldara (prima di Medaglie d'Oro)",
+   "at": [
+    9.202064,
+    45.45278
+   ],
+   "mode": "motorcycle",
+   "navigation": false,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 15.016666666666667,
+    "seconds": 901,
+    "km": 4.51,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 901,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 910,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1100,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1196,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-2",
+     "seconds": 1305,
+     "pave": 1405,
+     "risk": 1405
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Emilio Caldara (prima di Medaglie d'Oro)",
+   "at": [
+    9.202064,
+    45.45278
+   ],
+   "mode": "motorcycle",
+   "navigation": false,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 15.016666666666667,
+    "seconds": 901,
+    "km": 4.51,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 901,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 910,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1100,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-3",
+     "seconds": 1196,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-2",
+     "seconds": 1305,
+     "pave": 1405,
+     "risk": 1405
+    }
+   ],
+   "providerCalls": 5
+  },
+  {
+   "start": "Viale Emilio Caldara (prima di Medaglie d'Oro)",
+   "at": [
+    9.202064,
+    45.45278
+   ],
+   "mode": "motorcycle",
+   "navigation": true,
+   "version": "deployed",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 15.166666666666666,
+    "seconds": 910,
+    "km": 4.48,
+    "confirmedPave": 524,
+    "filippettiMeters": 26,
+    "sabotinoMeters": 522
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 910,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1100,
+     "pave": 524,
+     "risk": 524
+    }
+   ],
+   "providerCalls": 2
+  },
+  {
+   "start": "Viale Emilio Caldara (prima di Medaglie d'Oro)",
+   "at": [
+    9.202064,
+    45.45278
+   ],
+   "mode": "motorcycle",
+   "navigation": true,
+   "version": "local",
+   "status": 200,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 15.016666666666667,
+    "seconds": 901,
+    "km": 4.51,
+    "confirmedPave": 69,
+    "filippettiMeters": 435,
+    "sabotinoMeters": 0
+   },
+   "antiPave": null,
+   "antiPaveSource": null,
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 901,
+     "pave": 79,
+     "risk": 75
+    },
+    {
+     "source": "base-1",
+     "seconds": 910,
+     "pave": 524,
+     "risk": 524
+    },
+    {
+     "source": "detour-1",
+     "seconds": 1100,
+     "pave": 524,
+     "risk": 524
+    }
+   ],
+   "providerCalls": 3
+  }
+ ]
+}

@@ -1,188 +1,252 @@
 # Lastrico
 
-![Lastrico logo concept](public/brand/lastrico-logo-concept-v1.png)
+**Surface-aware navigation for smoother journeys.** Lastrico compares the fastest route with
+a real low-cobblestone alternative, tells you how much rough surface each one crosses, and
+keeps that choice in force while you drive or ride.
 
-Lastrico is an experimental, open-source, road-surface-aware navigation PWA. It compares
-routes for cars, motorcycles, and bicycles using known road-surface data so people can make
-more informed choices and reduce estimated exposure to rough or uneven streets.
+<p align="center">
+  <img src="docs/assets/readme/hero.jpg" alt="Three Lastrico screens: an anti-pavé versus fastest route comparison in Milan, turn-by-turn navigation warning of 380 m of setts on Viale Sabotino with traffic lights on the route, and the dark-theme route planner" width="100%">
+</p>
 
-**Created by [Domenico Campanella Scali](https://github.com/campsh98-creator).**
+<p align="center"><sub>Real screens of the current development build. Routes are a recorded answer of Lastrico's
+routing API to real Valhalla responses, and the GPS position is simulated. See
+<a href="docs/assets/readme/PROVENANCE.md">how these images were made</a>.</sub></p>
 
-**Current beta:** [lastrico-milano.cscda39.chatgpt.site](https://lastrico-milano.cscda39.chatgpt.site)
+> **Status: experimental beta.** The newest features in this branch run locally and have
+> passed automated and emulated-browser tests. They have not yet been validated on a physical
+> iPhone or released to the public pilot. See [availability](#supported-cities-and-availability)
+> and the [engineering status](docs/ENGINEERING_STATUS.md).
 
-> The current tested beta coverage is limited to Milan. Milan is the first coverage area, not
-> part of the product name or a limit of the long-term architecture.
+> **Safety notice.** Lastrico does not guarantee route safety, prevent accidents, or replace
+> road signs, traffic rules, rider judgement, or certified navigation. Surface data comes from
+> OpenStreetMap and may be incomplete or out of date. Zero known exposure does not mean a hazard-free route.
 
-> **Safety notice:** Lastrico does not guarantee route safety, prevent accidents, or replace
-> road signs, traffic rules, rider judgement, or certified navigation. Surface data may be
-> incomplete or outdated. Zero known exposure does not mean a hazard-free route.
+## What makes Lastrico different
 
-## Long-term vision
+Mainstream navigation optimises for arrival time. On streets paved with *pavé* (setts and
+cobblestones), that can mean a much rougher ride for a few seconds' gain, which matters most
+on a bicycle or a motorcycle.
 
-Lastrico aims to become an Italy-wide road-intelligence layer that compares more than
-estimated arrival time. Future route choices may consider verified hazards, surface quality,
-road class, closures, lighting evidence, weather, reliability, comfort, vehicle suitability,
-data confidence, and explicit user preferences.
+- **A genuine alternative, or an honest "no".** Lastrico searches for a route with less rough
+  surface within a time budget you control. When no legal route is meaningfully smoother, it
+  says so instead of relabelling the fastest route.
+- **Surface evidence you can read.**
+  - Each route shows *confirmed* pavé (OSM `sett`, `cobblestone` and `unhewn_cobblestone`)
+    separately from *probable* rough surface (`paving_stones`).
+  - Streets with no surface data are counted as *unknown*, never as smooth.
+- **The choice lasts the whole journey.** If you take a wrong turn, the reroute runs the same
+  surface-aware search, and the anti-pavé objective you chose at the start is kept.
+- **Warnings ahead, by street name.** For example: "In 210 m — pavé on Viale Sabotino for
+  380 m".
 
-A future conversational interface could extend the same model to requests such as “prefer
-major, well-lit roads and accept 30 extra minutes” while keeping the interpreted preferences
-visible and bounded. Legal constraints, candidate generation, and ranking would remain
-deterministic and testable.
+## Main capabilities
 
-Italy-wide hazard coverage, native applications, Apple CarPlay, Android Auto, live data, and
-general hazard, traffic, or weather prompting are **not implemented today**. See the
-[concise business plan](docs/BUSINESS_PLAN.md), [roadmap](ROADMAP.md), and
-[brand concept](docs/BRAND_CONCEPT.md).
+| Capability | What it does |
+| --- | --- |
+| **Surface-aware planning** | Real routing for cars, motorcycles, and bicycles (never a car route relabelled), scored against bundled OpenStreetMap surface tiles |
+| **Anti-pavé vs Fastest** | Side-by-side cards with time, distance, pavé and smooth metres, and a plain-language trade-off ("Avoids 493 m of confirmed pavé for 0.3 extra minutes") |
+| **Avoidance levels** | Balanced, Strong and Maximum set how much time an avoided metre of pavé is worth. At Strong, a car route must remove about 50 m of weighted rough surface per extra minute; Maximum ignores time up to a hard ceiling. For cars the ceiling is the fastest time × 1.22, 1.42 or 1.7, plus 3, 7 or 12 min. You can also set your own limit on extra minutes |
+| **Turn-by-turn navigation** | GPS navigation with smoothed position fusion, camera follow, a manoeuvre banner, optional voice, and arrival detection |
+| **Continuous rerouting** | Wrong-turn and parallel-street detection, then a surface-aware reroute that keeps the journey's objective |
+| **Upcoming-surface warnings** | Distance, OSM street name, surface type and length of the next rough section, also while you are on it |
+| **Traffic signals** | OSM traffic lights, stop and give-way signs drawn on the route (central Milan only) |
+| **ZTL awareness (Milan)** | Mapped limited-traffic zones are avoided by default when active. You declare per zone and per mode where you are authorised; hours come from OSM |
+| **Reverse A/B** | One tap swaps start and destination and recalculates once, keeping mode, objective, extra-time limit and ZTL settings |
+| **Preference prompt** | "Descrivi la tua preferenza" turns a bounded Italian or English request (such as "avoid cobblestones, at most 5 extra minutes") into the same visible settings. It is rule-based, not an AI model |
+| **Premium UI 2.0** | Mobile-first planner, route sheet and navigation HUD, with light and dark themes and phone, landscape and desktop layouts |
 
-## Supported travel modes
+## A closer look
 
-Lastrico exposes three real routing modes rather than relabelling one car route:
+| Plan | Compare | Navigate |
+| :---: | :---: | :---: |
+| <img src="docs/assets/readme/planner-light.jpg" alt="Planner with start, destination, the reverse A/B button and Car, Motorcycle and Bicycle modes" width="260"> | <img src="docs/assets/readme/routes-dark.jpg" alt="Dark-theme comparison of the anti-pavé route with 74 m of pavé and the fastest route with 567 m" width="260"> | <img src="docs/assets/readme/nav-pave-ahead-light.jpg" alt="Navigation with a warning of 380 m of setts on Viale Sabotino in 210 m, and traffic lights on the route" width="260"> |
+| Start, destination, reverse A/B and three real travel modes | 3 candidates compared; the selected route avoids 493 m of confirmed pavé for 18 seconds | The upcoming setts are named before you reach them; traffic lights come from OSM |
 
-- **Car:** Valhalla auto routing with a temporary public OSRM car fallback.
-- **Motorcycle:** Valhalla's experimental motorcycle profile; access rules depend on
-  OpenStreetMap data.
-- **Bicycle:** Valhalla bicycle routing; it never silently substitutes a car route.
+<p align="center">
+  <img src="docs/assets/readme/desktop-routes-dark.jpg" alt="Desktop layout in dark theme: route comparison panel over a Milan map with the anti-pavé route in green and the fastest route in grey" width="100%">
+</p>
 
-Provider availability, legal access data, surface coverage, and route quality vary by mode.
-Users remain responsible for weather, closures, vehicle suitability, traffic rules, and
-immediate road conditions.
+<details>
+<summary><b>More screens: ZTL settings, light and dark themes</b></summary>
+<br>
 
-## What works today
+| ZTL authorisations | Planner, dark | Navigation, dark |
+| :---: | :---: | :---: |
+| <img src="docs/assets/readme/planner-ztl-light.jpg" alt="ZTL authorisation list with Car and Motorcycle checkboxes and the hours of each zone from OSM" width="260"> | <img src="docs/assets/readme/planner-dark.jpg" alt="Dark-theme planner" width="260"> | <img src="docs/assets/readme/nav-pave-ahead-dark.jpg" alt="Dark-theme navigation with the pavé warning" width="260"> |
 
-- free-form start and destination within the current Milan beta area;
-- address search and direct point selection on the map;
-- GPS position as the starting point;
-- comparison between the fastest route and a lower rough-surface-exposure alternative;
-- three surface-avoidance preferences;
-- an experimental local prompt interpreter for bounded Italian and English requests about
-  cobblestone avoidance and maximum extra travel time;
-- manual recalculation and experimental GPS rerouting;
-- foreground GPS navigation, kept separate from automatic route simulation;
-- a complete turn list with the current manoeuvre highlighted;
-- optional persistent voice guidance, disabled by default;
-- estimated known rough-surface exposure, travel time, and distance;
-- highlighted surface segments;
-- persistent community reports reviewed before publication;
-- CSV export containing verified contributions only;
-- installation on iPhone as a web app.
+<img src="docs/assets/readme/desktop-routes-light.jpg" alt="Desktop layout in light theme" width="100%">
 
-The current beta interface is in Italian. Repository documentation and collaboration happen
-in English; interface localisation is tracked separately.
+</details>
 
-The prompt interpreter is a deterministic, rule-based beta feature, not an AI or language
-model. Applying an understood request changes the routing preferences used for recalculation.
-Prompt text stays in the browser and is not sent to a third party. The interpreter does not
-yet understand general road hazards, traffic, weather, lighting, or unrestricted natural
-language.
+## How surface-aware route selection works
 
-## Try the beta on iPhone
+```text
+start, destination, mode, avoidance level, optional extra-minute limit, ZTL authorisations
+        │
+        ▼
+1. Candidates   provider alternatives · surface-aware Valhalla search (rough ways cost more)
+                · detour waypoints around rough stretches · refinement (planning only)
+        │
+        ▼
+2. Legality     access tags, one-ways and pedestrian areas · ZTL and timed closures at the
+                departure time (Europe/Rome) · if a route is blocked, a variant that
+                excludes only that stretch is requested
+        │
+        ▼
+3. Scoring      every route is matched against bundled OSM surface tiles:
+                confirmed pavé, probable rough surface (weighted 0.65), unpaved, unknown
+        │
+        ▼
+4. Selection    Pareto frontier of time, rough surface and unknown surface; the level's
+                time ceiling and value of time; the minimum useful reduction; your
+                extra-minute limit
+        │
+        ▼
+   "Anti-pavé" + "Più rapido" cards, or one route with the reason there is no better one
+```
 
-1. Open the beta in Safari.
-2. Tap **Share**.
-3. Select **Add to Home Screen**.
-4. Enable **Open as Web App**.
-5. Grant location access only when starting a GPS test.
+- **Measured choices.** The selection reports the rule that decided each candidate, such as
+  "time cost exceeds saving" or "adds confirmed pavé". The rules are covered by tests, and their
+  effect is measured on a reproducible benchmark.
+- **The benchmark.** 88 Milan journeys in 3 modes (264 cases), replayed from archived provider
+  responses.
+  - At the default Strong level, 138 cases get a distinct anti-pavé route.
+  - Across all cases, the routes Lastrico shows carry 80.5 km of known pavé, against 146.9 km
+    on the standard routes.
 
-The PWA does not appear on the CarPlay display. A real CarPlay integration would require a
-native iPhone app, production-grade turn-by-turn navigation, and Apple's CarPlay Navigation
-entitlement.
+## Supported cities and availability
+
+The current tested beta coverage is limited to Milan and the small Roccella Ionica pilot area.
+Rome is a local experiment.
+
+| Area | Local development build | Public pilot | Notes |
+| --- | --- | --- | --- |
+| **Milan** | ✅ Citywide surface data, ZTL, central traffic signals | ✅ Phase 4.28 version | Main test area |
+| **Roccella Ionica** | ✅ | ✅ Phase 4.28 version | Small pilot area |
+| **Rome** | 🧪 Experimental (Phase 4.23) | ❌ Never deployed | Local only; not advertised as supported |
+
+**Public pilot:** [lastrico-pilot.campsh.workers.dev](https://lastrico-pilot.campsh.workers.dev).
+- It runs an earlier version (Phase 4.28, 7 November 2026). It does not include continuous
+  anti-pavé rerouting, surface warnings, traffic signals, ZTL handling or reverse A/B.
+- In a controlled test on 8 November, 10 of 10 route calculations there failed with HTTP 503.
+  Cloudflare's 10 ms CPU limit per request on the Workers Free plan is now strictly enforced.
+- The CPU work has been halved locally, but a reliable public release needs the Workers Paid
+  plan.
+- The full breakdown is in the [engineering status](docs/ENGINEERING_STATUS.md).
 
 ## Architecture
 
 | Area | Technology |
 | --- | --- |
-| Interface | React 19, Next.js/vinext, TypeScript |
-| Map | MapLibre GL JS with an OpenFreeMap vector style |
-| Map data | OpenStreetMap and OpenFreeMap |
-| Beta routing | Public Valhalla; OSRM fallback for cars only |
-| Road surfaces | Bundled OSM-derived dataset and `surface` tags |
-| Address search | Nominatim |
-| Community reports | Cloudflare D1 and Drizzle ORM |
-| Delivery | PWA and Cloudflare Worker through Sites |
+| Interface | React 19, TypeScript, [vinext](https://github.com/cloudflare/vinext) (Next.js App Router on Vite) |
+| Hosting | Cloudflare Workers, D1 (SQLite) through Drizzle ORM |
+| Map | MapLibre GL JS with the OpenFreeMap vector style |
+| Routing | Public FOSSGIS Valhalla (auto, motorcycle, bicycle); OSRM fallback for cars only |
+| Road surfaces | OSM extracts compiled into compact spatial tiles bundled with the Worker |
+| Geocoding | Nominatim, with Photon as a fallback |
+| Road features and ZTL | Extracted from the same OSM sources (`data/features/`) |
 
 ```text
-iPhone / browser
-       │
-       ▼
-Lastrico PWA ──► Nominatim geocoding
-       │
-       ├──────► Valhalla / OSRM alternatives
-       ├──────► bundled OSM surface data
-       └──────► moderated D1 reports
+iPhone / browser (PWA)
+        │
+        ▼
+Cloudflare Worker ──► /api/routes ──► Valhalla / OSRM candidates
+        │                 └─────────► surface tiles · access and ZTL rules · selection
+        ├───────────► /api/geocode ──► Nominatim / Photon
+        └───────────► /api/reports ──► D1 (moderated community reports)
 ```
 
-See [architecture](docs/architecture.md), [development](docs/development.md),
-[governance](GOVERNANCE.md), and the [roadmap](ROADMAP.md) for more detail.
+More detail: [architecture](docs/architecture.md), [surface data model](docs/COBBLESTONE_DATA_MODEL.md),
+[development guide](docs/development.md), [engineering status](docs/ENGINEERING_STATUS.md).
 
-## Local development
+## Local setup and development
 
-Requirements:
-
-- Node.js 24 or later;
-- npm.
+You need Node.js 24 or later and npm.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-The local app is available at `http://localhost:3000`.
+The app runs at `http://localhost:3000`. Routing and geocoding use the public providers above,
+so keep request volumes small.
 
-Run all required checks:
+To run the production Worker build locally:
 
 ```bash
+npm run build
+npx wrangler d1 execute site-creator-d1 --local --file drizzle/0000_stormy_quasar.sql --config dist/server/wrangler.json
+npx wrangler dev --config dist/server/wrangler.json --port 8799 --local
+```
+
+## Testing and validation
+
+```bash
+npx tsc --noEmit
 npm run lint
 npm test
 ```
 
-After changing the database schema, regenerate migrations with:
+`npm test` builds the app and runs the whole unit and integration suite: 440 tests on
+9 November 2026. They cover routing selection, access rules, GPS processing and
+reroute objectives, and they include Milan, Rome and Roccella data checks.
 
-```bash
-npm run db:generate
-```
+`npm run test:e2e` drives a real headless Chrome at phone sizes against the local Worker
+(81 scenarios in the latest full run). It uses simulated GPS. It does not replace the
+[physical iPhone checklist](docs/IPHONE_PHYSICAL_TEST_CHECKLIST.md).
 
-The local D1 database must use the migration in `drizzle/`. The application's logical binding
-is named `DB`.
+Benchmarks replay archived provider responses, so their results can be reproduced exactly. See
+[`outputs/phase425-benchmark/PROVIDER_ARCHIVE.md`](outputs/phase425-benchmark/PROVIDER_ARCHIVE.md).
 
-## Free beta limitations
+## Data sources, attribution and licensing
 
-The public Nominatim, Valhalla, OSRM, and OpenFreeMap services are suitable only for a small
-beta with moderate request volume. They are not free, unlimited commercial infrastructure.
-Travel times do not include live traffic.
+- **Code:** [MIT License](LICENSE). See [NOTICE.md](NOTICE.md) and [AUTHORS.md](AUTHORS.md).
+- **Map and road data:** © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors,
+  [ODbL 1.0](https://opendatacommons.org/licenses/odbl/).
+  - The OSM extracts in `data/sources/` are checksummed, and the compiled tiles record their
+    provenance in manifests.
+- **Base map:** [OpenFreeMap](https://openfreemap.org/) and © [OpenMapTiles](https://openmaptiles.org/).
+- **Routing:** [Valhalla](https://github.com/valhalla/valhalla) on the
+  [FOSSGIS](https://www.fossgis.de/) public instance, and [OSRM](https://project-osrm.org/).
+- **Geocoding:** [Nominatim](https://nominatim.org/) and [Photon](https://photon.komoot.io/).
+- **Licences of third parties:** these services and all dependencies keep their own licences
+  and terms of use.
 
-New community reports are stored as `pending`. They are not exposed through the public API or
-CSV and do not affect routing until they have been verified. Moderation notes are not
-published.
+## Current limitations and roadmap
 
-Lastrico does not store a continuous GPS location history. GPS navigation requires HTTPS,
-precise-location permission, a data connection, and the app open in the foreground. iOS may
-suspend a PWA when the screen is locked or another app is opened.
+**Limitations today**
+- **No physical iPhone validation yet** for the Phase 4.29–4.31 navigation fixes. GPS behaviour
+  on a real device is still uncertain.
+- **OSM data, not road surveys.** "Confirmed" means an OSM surface tag. It does not mean the
+  road was checked on site.
+  - A long cobblestone stretch reported near Porta Garibaldi during a road test is still
+    unidentified in the data.
+- **Partial Milan coverage for ZTL and signals.**
+  - ZTL rules cover only zones with OSM evidence. Area C, holidays and exemptions are not
+    handled.
+  - Traffic signals are mapped only in central Milan.
+- **Free public providers.** Travel times have no live traffic, and calculations depend on the
+  public Valhalla, Nominatim and OpenFreeMap services.
+- **The public pilot is outdated and often unavailable** (see above).
+- **Italian only.** The current beta interface is in Italian; the documentation is in English.
+
+**Next steps**
+- Release the current Milan build on a paid Workers plan, then run a physical iPhone field test.
+- Record consented field traces to settle the remaining surface questions.
+- Extend traffic-signal and ZTL coverage.
+- Then: verified community surface reports, more regions through the area adapter, and
+  localisation.
+- See the [roadmap](ROADMAP.md).
 
 ## Contributing
 
-Contributions are welcome in code, routing, road-surface data, accessibility, documentation,
-testing, and localisation. Start with [CONTRIBUTING.md](CONTRIBUTING.md), check existing
-[issues](https://github.com/campsh98-creator/Lastrico/issues), use the
-[guided issue templates](https://github.com/campsh98-creator/Lastrico/issues/new/choose),
-and look for `good first issue` or `help wanted`.
+Contributions are welcome in routing, road-surface data, accessibility, testing,
+documentation and localisation. Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[issue templates](https://github.com/campsh98-creator/Lastrico/issues/new/choose).
+- Before opening a pull request, run the checks above.
+- Describe both the evidence and the remaining limitations.
+- Never publish home addresses, identifiable location histories, licence plates or
+  credentials.
+- Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
-Useful contribution areas include:
-
-- correcting missing or inaccurate road-surface data;
-- improving mode-specific routing without hiding provider limitations;
-- testing mobile navigation and accessibility;
-- documenting reproducible bugs without personal travel data;
-- extending verified geographic coverage without coupling the product identity to one city.
-
-Before opening a pull request, run `npm run lint` and `npm test`, test relevant mobile
-viewports, and describe both the evidence and remaining limitations. OpenStreetMap-derived
-data contributions must retain the required attribution and comply with the ODbL.
-
-Never publish home addresses, live or identifiable location histories, licence plates,
-credentials, or production data in an issue or pull request. Report vulnerabilities through
-the private process described in [SECURITY.md](SECURITY.md).
-
-## Licence
-
-The code is released under the [MIT License](LICENSE). OpenStreetMap-derived data remains
-subject to its applicable licence and attribution requirements.
+**Created by [Domenico Campanella Scali](https://github.com/campsh98-creator).**

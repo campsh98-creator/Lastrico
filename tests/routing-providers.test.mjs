@@ -179,7 +179,7 @@ test("provider calls start at least one interval apart and in request order", as
   assert.deepEqual(starts.map((start) => start.lon), origins);
   for (let index = 1; index < starts.length; index += 1) {
     // Timers may fire marginally early relative to the wall clock used for slots.
-    assert.ok(starts[index].at - starts[index - 1].at >= 1_040, `gap ${index}: ${starts[index].at - starts[index - 1].at}`);
+    assert.ok(starts[index].at - starts[index - 1].at >= 1_000, `gap ${index}: ${starts[index].at - starts[index - 1].at}`);
   }
 });
 

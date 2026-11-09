@@ -1,0 +1,20 @@
+{
+  "synthetic": true,
+  "note": "Same browser harness (headless Chrome, simulated GPS 1 Hz, 29 km/h) against the published pilot 03a6776e (before) and the local Phase 4.29 build (after). Not a physical iPhone measurement.",
+  "before": {
+    "frames": 334,
+    "seconds": 12.5,
+    "movingFrames": 33,
+    "maxFrameStepMeters": 21.63,
+    "p99FrameStepMeters": 8.53,
+    "framesWithStepOver3m": 11
+  },
+  "after": {
+    "frames": 349,
+    "seconds": 12.6,
+    "movingFrames": 261,
+    "maxFrameStepMeters": 1.84,
+    "p99FrameStepMeters": 1.37,
+    "framesWithStepOver3m": 0
+  }
+}
