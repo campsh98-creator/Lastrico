@@ -1,0 +1,477 @@
+{
+ "note": "Client side of the controlled verification: 20 route requests (benchmark journeys, departure Monday 12:00) and 2 page loads against https://lastrico-free-test.campsh.workers.dev.",
+ "results": [
+  {
+   "group": "page",
+   "label": "first",
+   "status": 200,
+   "ms": 249
+  },
+  {
+   "group": "A",
+   "label": "Porta Vittoria → Promessi Sposi (Filippetti)",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:12:22.246Z",
+   "ms": 1106,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    20.5,
+    567,
+    0
+   ],
+   "safe": [
+    20.8,
+    74,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Moscova → Crocetta",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:12:27.353Z",
+   "ms": 2961,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    15.6,
+    940,
+    388
+   ],
+   "safe": [
+    17.2,
+    964,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Castello → Porta Venezia",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:12:34.315Z",
+   "ms": 1776,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    13.3,
+    1022,
+    268
+   ],
+   "safe": [
+    15.6,
+    383,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Sant'Ambrogio → San Babila",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:12:40.099Z",
+   "ms": 5991,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "access-restricted",
+   "fast": [
+    14.9,
+    415,
+    378
+   ],
+   "safe": [
+    14.9,
+    415,
+    378
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Duomo → Porta Garibaldi (bici)",
+   "mode": "bicycle",
+   "navigation": false,
+   "at": "2026-11-09T16:12:50.090Z",
+   "ms": 6284,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    10,
+    532,
+    790
+   ],
+   "safe": [
+    10,
+    532,
+    790
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Gae Aulenti → Porta Romana",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:13:00.376Z",
+   "ms": 6039,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    15.5,
+    956,
+    0
+   ],
+   "safe": [
+    15.8,
+    434,
+    85
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Arco della Pace → Duomo",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:13:10.418Z",
+   "ms": 5551,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    19.1,
+    718,
+    62
+   ],
+   "safe": [
+    21.4,
+    448,
+    122
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Cordusio → Porta Romana (bici)",
+   "mode": "bicycle",
+   "navigation": false,
+   "at": "2026-11-09T16:13:19.970Z",
+   "ms": 5485,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    9.4,
+    1675,
+    184
+   ],
+   "safe": [
+    11.8,
+    422,
+    1076
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Bande Nere → Duomo",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:13:29.475Z",
+   "ms": 6090,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    16.4,
+    397,
+    392
+   ],
+   "safe": [
+    16.4,
+    397,
+    392
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Città Studi → Duomo",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:13:37.570Z",
+   "ms": 5508,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "access-restricted",
+   "fast": [
+    17.4,
+    884,
+    302
+   ],
+   "safe": [
+    17.4,
+    884,
+    302
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Porta Venezia → XXIV Maggio",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:13:45.080Z",
+   "ms": 4484,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "fastest-avoids-pave",
+   "fast": [
+    13.9,
+    32,
+    0
+   ],
+   "safe": [
+    13.9,
+    32,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Cenacolo → Missori (moto)",
+   "mode": "motorcycle",
+   "navigation": false,
+   "at": "2026-11-09T16:13:51.566Z",
+   "ms": 5991,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    10.9,
+    582,
+    320
+   ],
+   "safe": [
+    10.9,
+    582,
+    320
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Via Manzoni → Porta Venezia",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:13:59.558Z",
+   "ms": 5567,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "access-restricted",
+   "fast": [
+    6.8,
+    417,
+    0
+   ],
+   "safe": [
+    6.8,
+    417,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Colonne → Porta Genova",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T16:14:07.126Z",
+   "ms": 5436,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    6.8,
+    205,
+    37
+   ],
+   "safe": [
+    6.8,
+    205,
+    37
+   ],
+   "error": null
+  },
+  {
+   "group": "C",
+   "label": "reroute at 10% of the approach",
+   "mode": "car",
+   "navigation": true,
+   "at": "2026-11-09T16:14:14.565Z",
+   "ms": 2443,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "fastest-avoids-pave",
+   "fast": [
+    18,
+    69,
+    10
+   ],
+   "safe": [
+    18,
+    69,
+    10
+   ],
+   "error": null
+  },
+  {
+   "group": "C",
+   "label": "reroute at 25% of the approach",
+   "mode": "car",
+   "navigation": true,
+   "at": "2026-11-09T16:14:20.010Z",
+   "ms": 1238,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    14.9,
+    524,
+    0
+   ],
+   "safe": [
+    15.2,
+    14,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "C",
+   "label": "reroute at 40% of the approach",
+   "mode": "car",
+   "navigation": true,
+   "at": "2026-11-09T16:14:24.249Z",
+   "ms": 2463,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    13.3,
+    126,
+    0
+   ],
+   "safe": [
+    13.3,
+    126,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "C",
+   "label": "reroute at 55% of the approach",
+   "mode": "car",
+   "navigation": true,
+   "at": "2026-11-09T16:14:29.715Z",
+   "ms": 136,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-pave",
+   "fast": [
+    8.7,
+    0,
+    0
+   ],
+   "safe": [
+    8.7,
+    0,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "D",
+   "label": "concurrent Moscova → Crocetta (moto)",
+   "mode": "motorcycle",
+   "navigation": false,
+   "at": "2026-11-09T16:14:32.853Z",
+   "ms": 2323,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    15.6,
+    940,
+    388
+   ],
+   "safe": [
+    19.1,
+    633,
+    86
+   ],
+   "error": null
+  },
+  {
+   "group": "D",
+   "label": "concurrent Castello → Porta Venezia (bici)",
+   "mode": "bicycle",
+   "navigation": false,
+   "at": "2026-11-09T16:14:32.855Z",
+   "ms": 5726,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    12.1,
+    281,
+    260
+   ],
+   "safe": [
+    14.5,
+    271,
+    93
+   ],
+   "error": null
+  },
+  {
+   "group": "page",
+   "label": "last",
+   "status": 200,
+   "ms": 68
+  }
+ ]
+}

@@ -7,7 +7,7 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 ## 1. Where each feature stands
 
 **Legend**
-- **Local:** implemented on this branch and covered by the 440 unit and integration tests.
+- **Local:** implemented on this branch and covered by the 447 unit and integration tests.
 - **Pilot:** included in the public pilot, version `03a6776e` (Phase 4.28 code, deployed on 7 November 2026).
 - **Emulated:** passed the end-to-end suite in headless Chrome with simulated GPS.
 - **iPhone:** checked on a physical iPhone.
@@ -29,6 +29,8 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Reverse A/B button (Phase 4.31) | ✅ | ❌ | ✅ | ❌ |
 | Proportional confirmed-pavé tolerance in selection (Phase 4.31 review) | ✅ | ❌ | ✅ | ❌ |
 | Worker CPU and memory reductions (Phase 4.30) | ✅ | ❌ | ✅ | — |
+| Shared-edge scoring and other CPU cuts, routes identical (Phase 4.33) | ✅ | ❌ | ✅ | — |
+| Route computation in a Durable Object (Phase 4.33) | ✅ | ❌ (verified on a separate Free test Worker) | ✅ local Worker runtime | — |
 | "Descrivi la tua preferenza" rule-based preference prompt | ✅ | ✅ | ✅ | — |
 | Moderated community surface reports (D1) | ✅ | ✅ | ✅ | — |
 | Milan coverage | ✅ citywide | ✅ | ✅ | ✅ |
@@ -55,14 +57,27 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
 ## 3. Open problems
 
-1. **The public pilot is unusable for routing.**
-   - Cloudflare Workers Free allows 10 ms of CPU per request, and the limit is now strictly
-     enforced.
-   - In a controlled test on 8 November, 10 of 10 route requests ended `exceededCpu` (HTTP 503).
-     The visitor sees this as Worker error 1102 or 503.
-   - After the Phase 4.30 work, 114 of 263 benchmark requests fit in 10 ms; most do not.
-   - **This blocks release:** the current build needs Workers Paid (30 s default CPU limit). That
-     is an account decision and has not been made.
+1. **The public pilot fails route calculations intermittently.** Measured with Cloudflare analytics
+   for version `03a6776e` (`outputs/phase433/`).
+   - **The limit:** Workers Free allows 10 ms of CPU per request. Each isolate tolerates
+     occasional overruns, and requests of up to 985 ms succeeded.
+   - **The failures:** when overruns are consistent, requests are stopped at 10 ms, which the
+     visitor sees as error 1102 or 503.
+     - In real use there were 1 failure in 297 requests on 7 November and 7 in 128 on 8 November.
+     - In a controlled burst of 14 route requests within one minute, 12 failed.
+   - **Cause:** every failure was a CPU stop; none was memory or the provider.
+   - **Phase 4.33 response, local only:**
+     - Routing CPU fell by 39 %, with identical routes. Warm planner requests now take a median
+       of 9 ms and a p90 of 26 ms.
+     - A heavy route that is the first request on a fresh isolate still takes 60–280 ms.
+     - Route computation now runs in a SQLite-backed Durable Object, which allows 30 s of CPU per
+       request on Workers Free.
+   - **Verified on Cloudflare:** on 9 November, a separate Milan-only test Worker on Workers
+     Free (`lastrico-free-test`) served 20 of 20 route requests, including a burst. They took
+     median 156 ms and up to 314 ms of CPU in the Durable Object, with no stops.
+     Evidence: `outputs/phase433/free-test-*`.
+   - **Still blocking release:** deploying that build to the pilot, which needs authorisation,
+     and a physical iPhone test. Workers Paid remains only a fallback.
 2. **No physical iPhone validation of Phases 4.29–4.31.**
    - GPS fusion, the reroute timing and the surface warnings are verified only in emulation.
    - iOS may also suspend a PWA in the background or with the screen locked.
@@ -96,7 +111,39 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
    - That URL now answers HTTP 401.
    - Update it at the next release.
 
-## 4. Data and backup inventory
+## 4. Workers Free: verified behaviour (Phase 4.33)
+
+Measured with `wrangler tail` on the separate test Worker `lastrico-free-test` on 9 November 2026:
+20 route requests and 5 page loads, Milan and Roccella only. Evidence: `outputs/phase433/free-test-*`.
+
+- **Durable Object CPU**
+  - Route computation in the `RouteEngine` Durable Object took a median of 156 ms of CPU, and up
+    to 314 ms.
+  - All 20 calls ended `ok`, including a burst of six requests two seconds apart and a fresh object.
+  - The Worker in front of it used 0–2 ms per request.
+  - This matches Cloudflare's documented 30 s of CPU per Durable Object request on the Free plan.
+  - It is measured behaviour, not a guarantee.
+- **Remaining homepage CPU risk**
+  - The page is rendered by the ordinary Worker and measured 6–37 ms of CPU, above the 10 ms limit.
+    It passed through the per-isolate tolerance.
+  - On the pilot, page requests failed only right after bursts of heavy route requests on
+    8 November.
+  - With routes moved out, that pressure is lower, but the page remains the most exposed request.
+  - Possible follow-ups, not done: render the page in the Durable Object too, or serve a cached or
+    prerendered page.
+- **Pending timers and Free-tier consumption**
+  - Provider calls use `AbortSignal.timeout`, whose timers stay pending after the response.
+  - Each Durable Object invocation therefore stayed active for 4–12 s, while the person received
+    the route in 1–6 s.
+  - Durable Object duration is billed against the Free quota of 13,000 GB-s per day, at 128 MB per
+    object: 0.5–1.5 GB-s per route at the measured durations.
+  - Clearing the timers once a call completes would shorten this. Not done yet.
+- **Daily capacity:** none is guaranteed. Consumption depends on provider wait times, reroutes and
+  traffic, and 20 requests are not enough to estimate it.
+  - If a Durable Object quota is exhausted, the Worker computes the route itself, as before Phase
+    4.33. That keeps the CPU risk, and the fallback is logged (`route_engine_unavailable`).
+
+## 5. Data and backup inventory
 
 | Data | In Git | Reproducible | Notes |
 | --- | :---: | :---: | --- |
@@ -111,10 +158,10 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Local D1 database (`.wrangler/`) | ignored | ✅ | Development data only |
 | Production D1 (community reports) | ❌ | ❌ | Lives in Cloudflare; no export procedure yet |
 
-## 5. How the current numbers were produced
+## 6. How the current numbers were produced
 
 **Unit and integration tests**
-- `npm test`: 440 of 440 on 9 November 2026, together with TypeScript, ESLint and the production
+- `npm test`: 447 of 447 on 9 November 2026, together with TypeScript, ESLint and the production
   build.
 
 **End-to-end, emulated**

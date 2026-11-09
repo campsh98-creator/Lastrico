@@ -1,0 +1,695 @@
+{
+ "source": "Cloudflare GraphQL Analytics API, workersInvocationsAdaptive, script lastrico-pilot, read-only query on 2026-11-09",
+ "note": "Aggregates only: no request URLs, IPs or locations. CPU and wall time in milliseconds.",
+ "version": "03a6776e-cc36-4f87-a963-e0bd0592c906",
+ "byMinute": [
+  {
+   "minute": "2026-11-07T19:47:00Z",
+   "status": "success",
+   "requests": 17,
+   "subrequests": 13,
+   "cpuP50": 2.299,
+   "cpuP99": 178.823
+  },
+  {
+   "minute": "2026-11-07T19:48:00Z",
+   "status": "success",
+   "requests": 40,
+   "subrequests": 15,
+   "cpuP50": 9.554,
+   "cpuP99": 203.679
+  },
+  {
+   "minute": "2026-11-07T19:49:00Z",
+   "status": "success",
+   "requests": 54,
+   "subrequests": 0,
+   "cpuP50": 7.88,
+   "cpuP99": 26.755
+  },
+  {
+   "minute": "2026-11-07T19:50:00Z",
+   "status": "success",
+   "requests": 35,
+   "subrequests": 0,
+   "cpuP50": 6.757,
+   "cpuP99": 31.018
+  },
+  {
+   "minute": "2026-11-07T19:51:00Z",
+   "status": "success",
+   "requests": 18,
+   "subrequests": 0,
+   "cpuP50": 6.218,
+   "cpuP99": 14.523
+  },
+  {
+   "minute": "2026-11-07T19:52:00Z",
+   "status": "success",
+   "requests": 30,
+   "subrequests": 0,
+   "cpuP50": 5.508,
+   "cpuP99": 13.751
+  },
+  {
+   "minute": "2026-11-07T19:53:00Z",
+   "status": "success",
+   "requests": 40,
+   "subrequests": 10,
+   "cpuP50": 7.635,
+   "cpuP99": 248.566
+  },
+  {
+   "minute": "2026-11-07T19:54:00Z",
+   "status": "success",
+   "requests": 19,
+   "subrequests": 23,
+   "cpuP50": 4.404,
+   "cpuP99": 110.028
+  },
+  {
+   "minute": "2026-11-07T19:55:00Z",
+   "status": "success",
+   "requests": 16,
+   "subrequests": 26,
+   "cpuP50": 9.636,
+   "cpuP99": 508.353
+  },
+  {
+   "minute": "2026-11-07T19:56:00Z",
+   "status": "exceededResources",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 96.71,
+   "cpuP99": 96.71
+  },
+  {
+   "minute": "2026-11-07T19:56:00Z",
+   "status": "success",
+   "requests": 4,
+   "subrequests": 9,
+   "cpuP50": 174.632,
+   "cpuP99": 303.098
+  },
+  {
+   "minute": "2026-11-07T20:37:00Z",
+   "status": "success",
+   "requests": 10,
+   "subrequests": 0,
+   "cpuP50": 1.107,
+   "cpuP99": 33.415
+  },
+  {
+   "minute": "2026-11-07T20:38:00Z",
+   "status": "success",
+   "requests": 7,
+   "subrequests": 9,
+   "cpuP50": 3.976,
+   "cpuP99": 441.535
+  },
+  {
+   "minute": "2026-11-07T20:38:00Z",
+   "status": "clientDisconnected",
+   "requests": 5,
+   "subrequests": 1,
+   "cpuP50": 0.971,
+   "cpuP99": 4.833
+  },
+  {
+   "minute": "2026-11-07T22:26:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 0,
+   "cpuP50": 5.323,
+   "cpuP99": 5.323
+  },
+  {
+   "minute": "2026-11-08T00:04:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 12.715,
+   "cpuP99": 47.977
+  },
+  {
+   "minute": "2026-11-08T00:28:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 8.436,
+   "cpuP99": 26.602
+  },
+  {
+   "minute": "2026-11-08T01:08:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 3.814,
+   "cpuP99": 6.821
+  },
+  {
+   "minute": "2026-11-08T01:18:00Z",
+   "status": "success",
+   "requests": 4,
+   "subrequests": 7,
+   "cpuP50": 7.267,
+   "cpuP99": 985.891
+  },
+  {
+   "minute": "2026-11-08T01:19:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 4,
+   "cpuP50": 313.855,
+   "cpuP99": 349.974
+  },
+  {
+   "minute": "2026-11-08T01:21:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 232.885,
+   "cpuP99": 232.885
+  },
+  {
+   "minute": "2026-11-08T12:31:00Z",
+   "status": "success",
+   "requests": 3,
+   "subrequests": 13,
+   "cpuP50": 411.846,
+   "cpuP99": 606.54
+  },
+  {
+   "minute": "2026-11-08T12:33:00Z",
+   "status": "success",
+   "requests": 5,
+   "subrequests": 12,
+   "cpuP50": 99.32,
+   "cpuP99": 468.201
+  },
+  {
+   "minute": "2026-11-08T12:33:00Z",
+   "status": "exceededResources",
+   "requests": 3,
+   "subrequests": 7,
+   "cpuP50": 10,
+   "cpuP99": 170.999
+  },
+  {
+   "minute": "2026-11-08T13:01:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 0,
+   "cpuP50": 1.671,
+   "cpuP99": 1.671
+  },
+  {
+   "minute": "2026-11-08T13:01:00Z",
+   "status": "exceededResources",
+   "requests": 1,
+   "subrequests": 0,
+   "cpuP50": 10,
+   "cpuP99": 10
+  },
+  {
+   "minute": "2026-11-08T13:02:00Z",
+   "status": "exceededResources",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 10,
+   "cpuP99": 18.328
+  },
+  {
+   "minute": "2026-11-08T13:03:00Z",
+   "status": "success",
+   "requests": 3,
+   "subrequests": 0,
+   "cpuP50": 11.439,
+   "cpuP99": 17.549
+  },
+  {
+   "minute": "2026-11-08T13:04:00Z",
+   "status": "exceededResources",
+   "requests": 1,
+   "subrequests": 0,
+   "cpuP50": 12.008,
+   "cpuP99": 12.008
+  },
+  {
+   "minute": "2026-11-08T13:04:00Z",
+   "status": "success",
+   "requests": 5,
+   "subrequests": 0,
+   "cpuP50": 7.668,
+   "cpuP99": 11.544
+  },
+  {
+   "minute": "2026-11-08T13:37:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 3.512,
+   "cpuP99": 3.512
+  },
+  {
+   "minute": "2026-11-08T13:37:00Z",
+   "status": "exceededResources",
+   "requests": 10,
+   "subrequests": 8,
+   "cpuP50": 10,
+   "cpuP99": 16.487
+  },
+  {
+   "minute": "2026-11-08T13:38:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 0,
+   "cpuP50": 6.733,
+   "cpuP99": 6.733
+  },
+  {
+   "minute": "2026-11-08T13:38:00Z",
+   "status": "exceededResources",
+   "requests": 2,
+   "subrequests": 2,
+   "cpuP50": 10,
+   "cpuP99": 10
+  },
+  {
+   "minute": "2026-11-08T14:03:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 10.556,
+   "cpuP99": 12.281
+  },
+  {
+   "minute": "2026-11-08T14:24:00Z",
+   "status": "success",
+   "requests": 4,
+   "subrequests": 2,
+   "cpuP50": 10.456,
+   "cpuP99": 64.46
+  },
+  {
+   "minute": "2026-11-08T14:24:00Z",
+   "status": "clientDisconnected",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 4.147,
+   "cpuP99": 4.147
+  },
+  {
+   "minute": "2026-11-08T14:25:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 277.562,
+   "cpuP99": 277.562
+  },
+  {
+   "minute": "2026-11-08T14:26:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 279.844,
+   "cpuP99": 279.844
+  },
+  {
+   "minute": "2026-11-08T14:27:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 0,
+   "cpuP50": 9.605,
+   "cpuP99": 9.605
+  },
+  {
+   "minute": "2026-11-08T14:33:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 58.024,
+   "cpuP99": 58.024
+  },
+  {
+   "minute": "2026-11-08T14:36:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 25.287,
+   "cpuP99": 25.287
+  },
+  {
+   "minute": "2026-11-08T14:38:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 13.075,
+   "cpuP99": 13.075
+  },
+  {
+   "minute": "2026-11-08T14:41:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 1,
+   "cpuP50": 1.055,
+   "cpuP99": 4.555
+  },
+  {
+   "minute": "2026-11-08T14:41:00Z",
+   "status": "clientDisconnected",
+   "requests": 2,
+   "subrequests": 1,
+   "cpuP50": 1.564,
+   "cpuP99": 1.564
+  },
+  {
+   "minute": "2026-11-08T14:42:00Z",
+   "status": "success",
+   "requests": 3,
+   "subrequests": 4,
+   "cpuP50": 20.22,
+   "cpuP99": 48.485
+  },
+  {
+   "minute": "2026-11-08T14:42:00Z",
+   "status": "clientDisconnected",
+   "requests": 2,
+   "subrequests": 1,
+   "cpuP50": 1.313,
+   "cpuP99": 1.531
+  },
+  {
+   "minute": "2026-11-08T14:43:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 61.404,
+   "cpuP99": 61.404
+  },
+  {
+   "minute": "2026-11-08T14:49:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 19.683,
+   "cpuP99": 41.051
+  },
+  {
+   "minute": "2026-11-08T14:52:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 14.795,
+   "cpuP99": 57.896
+  },
+  {
+   "minute": "2026-11-08T14:57:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 5.064,
+   "cpuP99": 14.038
+  },
+  {
+   "minute": "2026-11-08T14:59:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 8.965,
+   "cpuP99": 31.499
+  },
+  {
+   "minute": "2026-11-08T15:03:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 4.461,
+   "cpuP99": 14.115
+  },
+  {
+   "minute": "2026-11-08T15:07:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 3.256,
+   "cpuP99": 10.252
+  },
+  {
+   "minute": "2026-11-08T15:16:00Z",
+   "status": "clientDisconnected",
+   "requests": 5,
+   "subrequests": 4,
+   "cpuP50": 2.553,
+   "cpuP99": 6.291
+  },
+  {
+   "minute": "2026-11-08T15:16:00Z",
+   "status": "success",
+   "requests": 4,
+   "subrequests": 7,
+   "cpuP50": 5.09,
+   "cpuP99": 397.143
+  },
+  {
+   "minute": "2026-11-08T15:17:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 4,
+   "cpuP50": 60.311,
+   "cpuP99": 63.962
+  },
+  {
+   "minute": "2026-11-08T15:18:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 71.74,
+   "cpuP99": 71.74
+  },
+  {
+   "minute": "2026-11-08T16:10:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 12.725,
+   "cpuP99": 44.161
+  },
+  {
+   "minute": "2026-11-08T16:16:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 4.428,
+   "cpuP99": 10.231
+  },
+  {
+   "minute": "2026-11-08T16:23:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 8.527,
+   "cpuP99": 48.103
+  },
+  {
+   "minute": "2026-11-08T16:28:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 4.6,
+   "cpuP99": 8.841
+  },
+  {
+   "minute": "2026-11-08T16:34:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 4.347,
+   "cpuP99": 18.065
+  },
+  {
+   "minute": "2026-11-08T16:37:00Z",
+   "status": "success",
+   "requests": 7,
+   "subrequests": 14,
+   "cpuP50": 3.685,
+   "cpuP99": 235.084
+  },
+  {
+   "minute": "2026-11-08T16:48:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 24.907,
+   "cpuP99": 24.907
+  },
+  {
+   "minute": "2026-11-08T16:49:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 27.337,
+   "cpuP99": 27.337
+  },
+  {
+   "minute": "2026-11-08T16:53:00Z",
+   "status": "clientDisconnected",
+   "requests": 3,
+   "subrequests": 2,
+   "cpuP50": 1.712,
+   "cpuP99": 1.912
+  },
+  {
+   "minute": "2026-11-08T16:53:00Z",
+   "status": "success",
+   "requests": 4,
+   "subrequests": 6,
+   "cpuP50": 3.754,
+   "cpuP99": 43.73
+  },
+  {
+   "minute": "2026-11-08T16:55:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 69.031,
+   "cpuP99": 69.031
+  },
+  {
+   "minute": "2026-11-08T16:57:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 180.758,
+   "cpuP99": 180.758
+  },
+  {
+   "minute": "2026-11-08T17:07:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 69.635,
+   "cpuP99": 69.635
+  },
+  {
+   "minute": "2026-11-08T17:09:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 1,
+   "cpuP50": 30.649,
+   "cpuP99": 30.649
+  },
+  {
+   "minute": "2026-11-08T17:15:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 16.78,
+   "cpuP99": 56.204
+  },
+  {
+   "minute": "2026-11-08T17:20:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 12.355,
+   "cpuP99": 55.508
+  },
+  {
+   "minute": "2026-11-08T17:40:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 10.418,
+   "cpuP99": 34.852
+  },
+  {
+   "minute": "2026-11-08T17:53:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 6.773,
+   "cpuP99": 30.912
+  },
+  {
+   "minute": "2026-11-08T20:17:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 10.52,
+   "cpuP99": 41.8
+  },
+  {
+   "minute": "2026-11-08T20:24:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 4.653,
+   "cpuP99": 12.017
+  },
+  {
+   "minute": "2026-11-08T20:46:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 9.889,
+   "cpuP99": 35.644
+  },
+  {
+   "minute": "2026-11-09T06:27:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 0,
+   "cpuP50": 4.304,
+   "cpuP99": 4.304
+  },
+  {
+   "minute": "2026-11-09T09:07:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 9.454,
+   "cpuP99": 36.552
+  },
+  {
+   "minute": "2026-11-09T13:21:00Z",
+   "status": "success",
+   "requests": 2,
+   "subrequests": 0,
+   "cpuP50": 12.204,
+   "cpuP99": 44.413
+  },
+  {
+   "minute": "2026-11-09T14:24:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 0,
+   "cpuP50": 35.431,
+   "cpuP99": 35.431
+  },
+  {
+   "minute": "2026-11-09T14:34:00Z",
+   "status": "success",
+   "requests": 1,
+   "subrequests": 2,
+   "cpuP50": 10.803,
+   "cpuP99": 10.803
+  },
+  {
+   "minute": "2026-11-09T14:35:00Z",
+   "status": "success",
+   "requests": 5,
+   "subrequests": 0,
+   "cpuP50": 59.564,
+   "cpuP99": 90.369
+  },
+  {
+   "minute": "2026-11-09T14:48:00Z",
+   "status": "success",
+   "requests": 32,
+   "subrequests": 0,
+   "cpuP50": 15.356,
+   "cpuP99": 74.649
+  }
+ ]
+}
