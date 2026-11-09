@@ -19,8 +19,7 @@ routing API to real Valhalla responses, and the GPS position is simulated. See
 
 > **Safety notice.** Lastrico does not guarantee route safety, prevent accidents, or replace
 > road signs, traffic rules, rider judgement, or certified navigation. Surface data comes from
-> OpenStreetMap and may be incomplete or out of date. A route with no *known* cobblestones is
-> not a hazard-free route.
+> OpenStreetMap and may be incomplete or out of date. Zero known exposure does not mean a hazard-free route.
 
 ## What makes Lastrico different
 
@@ -44,7 +43,7 @@ on a bicycle or a motorcycle.
 
 | Capability | What it does |
 | --- | --- |
-| **Surface-aware planning** | Car, motorcycle and bicycle routing, scored against bundled OpenStreetMap surface tiles |
+| **Surface-aware planning** | Real routing for cars, motorcycles, and bicycles (never a car route relabelled), scored against bundled OpenStreetMap surface tiles |
 | **Anti-pavé vs Fastest** | Side-by-side cards with time, distance, pavé and smooth metres, and a plain-language trade-off ("Avoids 493 m of confirmed pavé for 0.3 extra minutes") |
 | **Avoidance levels** | Balanced, Strong and Maximum set how much time an avoided metre of pavé is worth. At Strong, a car route must remove about 50 m of weighted rough surface per extra minute; Maximum ignores time up to a hard ceiling. For cars the ceiling is the fastest time × 1.22, 1.42 or 1.7, plus 3, 7 or 12 min. You can also set your own limit on extra minutes |
 | **Turn-by-turn navigation** | GPS navigation with smoothed position fusion, camera follow, a manoeuvre banner, optional voice, and arrival detection |
@@ -116,6 +115,9 @@ start, destination, mode, avoidance level, optional extra-minute limit, ZTL auth
     on the standard routes.
 
 ## Supported cities and availability
+
+The current tested beta coverage is limited to Milan and the small Roccella Ionica pilot area.
+Rome is a local experiment.
 
 | Area | Local development build | Public pilot | Notes |
 | --- | --- | --- | --- |
@@ -226,7 +228,7 @@ Benchmarks replay archived provider responses, so their results can be reproduce
 - **Free public providers.** Travel times have no live traffic, and calculations depend on the
   public Valhalla, Nominatim and OpenFreeMap services.
 - **The public pilot is outdated and often unavailable** (see above).
-- **Italian only.** The interface is in Italian; the documentation is in English.
+- **Italian only.** The current beta interface is in Italian; the documentation is in English.
 
 **Next steps**
 - Release the current Milan build on a paid Workers plan, then run a physical iPhone field test.

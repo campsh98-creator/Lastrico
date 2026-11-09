@@ -69,6 +69,11 @@ Coverage today:
 - **Rome:** experimental and local only. It has never been deployed, and it is not advertised as
   supported until its mobile and production evidence exists.
 
+These entries are a first step towards a future region adapter. That adapter would also own
+provider settings, attribution, mode-specific validation scenarios and the release evidence
+for routing, GPS, mobile behaviour and production smoke tests. It is a documented direction,
+not yet implemented.
+
 See [engineering status](ENGINEERING_STATUS.md).
 
 ## Privacy

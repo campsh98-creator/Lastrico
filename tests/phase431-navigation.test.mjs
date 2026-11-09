@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
-import { gunzipSync } from "node:zlib";
 import { journeyObjective, rerouteDisplayKind, rerouteOutcomeNotice } from "../lib/reroute-objective.ts";
 import { buildRoughSections } from "../lib/rough-sections.ts";
 import { evaluatePaveWarning, surfaceWords } from "../lib/pave-warnings.ts";
@@ -107,9 +106,12 @@ test("an unanchored start prefers the pass of a looping route nearest the start"
 
 // --- P0: wrong-turn evidence, replayed on real Milan routes --------------------------------------
 
+// The selected routes of three benchmark journeys, kept in the repository: the per-run case outputs
+// under outputs/phase425-benchmark/ are ignored by Git, so CI does not have them.
+const deviationRoutes = JSON.parse(await readFile(new URL("tests/fixtures/phase431-deviation-routes.json", root), "utf8")).routes;
+
 async function benchmarkRoute(id, mode) {
-  const payload = JSON.parse(gunzipSync(await readFile(new URL(`outputs/phase425-benchmark/p430-final/cases/${id}-${mode}.json.gz`, root)))).payload;
-  const selected = payload.hasDistinctAlternative ? payload.safe : payload.fast;
+  const selected = deviationRoutes[`${id}-${mode}`];
   const model = buildRouteProgressModel(selected.coordinates, selected.instructions ?? [], distanceMeters);
   return { selected, turns: routeTurns(selected.coordinates, model.instructions.map((e) => e.progressMeters)) };
 }
