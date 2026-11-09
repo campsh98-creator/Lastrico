@@ -34,3 +34,21 @@ declare module "cloudflare:workers" {
     DB?: D1Database;
   };
 }
+
+/** Phase 4.33: the subset of the Durable Objects API used by worker/index.ts. */
+interface DurableObjectId {
+  toString(): string;
+}
+
+interface DurableObjectStub {
+  fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
+}
+
+interface DurableObjectNamespace {
+  idFromName(name: string): DurableObjectId;
+  get(id: DurableObjectId): DurableObjectStub;
+}
+
+interface DurableObjectState {
+  waitUntil(promise: Promise<unknown>): void;
+}
