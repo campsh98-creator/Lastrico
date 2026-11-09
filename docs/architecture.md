@@ -4,26 +4,39 @@
 
 | Area | Responsibility | Main files |
 | --- | --- | --- |
-| UI | planning, routes, navigation, community | `app/page.tsx`, `components/` |
-| GPS state | reading filters, heading, off-route state, simulation | `lib/navigation-state.ts` |
-| Instructions | manoeuvre types and pure helpers | `lib/navigation-instructions.ts` |
-| Routing | orchestration and mode policies; provider validation; candidate equivalence | `app/api/routes/route.ts`, `lib/routing-providers.ts`, `lib/route-candidates.ts` |
-| Surfaces | bundled OSM dataset, spatial matching and unknown coverage | `data/milan-pave-central.json`, `lib/cobblestone-scoring.ts` |
+| UI | planning, route comparison, navigation HUD, community reports | `app/page.tsx`, `components/phase43/`, `app/globals.css` |
+| GPS and progress | fix fusion, deviation evidence, route progress, marker motion | `lib/navigation-fix-processor.ts`, `lib/route-progress.ts`, `lib/marker-motion.ts`, `lib/navigation-state.ts` |
+| Guidance | manoeuvres, voice, upcoming-surface warnings | `lib/navigation-instructions.ts`, `lib/voice-guidance.ts`, `lib/pave-warnings.ts`, `lib/rough-sections.ts` |
+| Routing | candidate generation, provider adapters, equivalence, selection, reroute objective | `app/api/routes/route.ts`, `lib/routing-providers.ts`, `lib/route-candidates.ts`, `lib/route-optimization.ts`, `lib/reroute-objective.ts` |
+| Surfaces | compiled OSM surface tiles, spatial matching, unknown coverage | `data/surfaces/`, `lib/spatial-road-store.ts`, `lib/road-intelligence-scoring.ts` |
+| Access | OSM access and conditional rules, Milan ZTL areas | `lib/access-conditions.ts`, `lib/ztl-access.ts`, `data/features/milan-ztl-areas.json` |
+| Road features | traffic signals, stop and give-way signs | `lib/road-features.ts`, `data/features/milan-road-features.json` |
+| Areas | Milan, Roccella Ionica, experimental Rome: bounds, geocoding, datasets | `lib/pilot-areas.ts`, `lib/*-tile-index.ts`, `lib/rome-*.ts` |
 | Reports | validation, privacy, persistence, export | `app/api/reports/`, `lib/reporting.ts`, `db/` |
-| Map | MapLibre rendering and GeoJSON sources | `app/page.tsx` |
-| Hosting | Worker, D1, and Sites configuration | `.openai/hosting.json`, `db/`, `drizzle/` |
+| Map | MapLibre rendering and GeoJSON sources | `app/page.tsx`, `lib/map-route-style.ts`, `lib/map-appearance.ts` |
+| Hosting | Cloudflare Worker, D1, pilot deployment | `worker/index.ts`, `deploy/pilot.json`, `scripts/deploy-pilot.mjs`, `drizzle/` |
 
 `app/page.tsx` remains the main coordinator. The directions sheet and community panel receive
 explicit data and callbacks and do not depend directly on MapLibre.
 
 ## Route flow
 
-1. The client sends an origin, destination, travel mode, and avoidance level.
-2. The API requests alternatives from compatible routing engines.
-3. Route geometries are compared with known rough-surface coverage.
-4. The API returns the fastest route, a lower-exposure alternative when genuinely distinct,
-   diagnostics, and manoeuvres.
-5. The selected Lastrico route remains the primary experience. External map applications
+1. The client sends an origin, destination, travel mode and avoidance level. It may also send
+   an extra-minute limit, the ZTL areas the person is authorised for, and, during navigation,
+   the journey's objective.
+2. The API collects candidates: provider alternatives, a surface-aware Valhalla search where
+   rough ways cost more, detour waypoints around rough stretches, and refinement (planning
+   only).
+3. Each candidate is matched against the compiled surface tiles: confirmed, probable, unpaved
+   and unknown metres. Access and ZTL rules are checked at the departure time (Europe/Rome).
+   A blocked route gets one regenerated variant that excludes only the blocked stretch.
+4. Selection keeps the Pareto frontier of time, rough surface and unknown surface. It then
+   applies the level's time ceiling and value of time, the minimum useful reduction and the
+   person's extra-minute limit. It records the rule that decided each candidate.
+5. The API returns the fastest route and, when one is genuinely distinct and better, the
+   anti-pavé alternative. Otherwise it returns a status that says why there is none. The
+   response also carries rough sections, road features, access notes and diagnostics.
+6. The selected Lastrico route remains the primary experience. External map applications
    are fallbacks and calculate their own route.
 
 Cars, motorcycles, and bicycles use mode-specific provider behaviour. A car route must not
@@ -43,20 +56,20 @@ or current condition of a route.
 
 ## Geographic coverage
 
-Lastrico is city-independent in product identity, but the current implementation contains
-Milan-specific geocoding bounds, GPS bounds, report validation, and a bundled Milan
-road-surface dataset. These are current beta constraints, not evidence of support elsewhere.
+The product identity does not depend on any city. Each area is a pilot-area entry
+(`lib/pilot-areas.ts`) with:
+- its own bounds;
+- geocoding limits;
+- surface tiles with source checksums;
+- validation evidence.
 
-A future region adapter should own:
+Coverage today:
+- **Milan:** citywide surfaces; ZTL and central traffic signals.
+- **Roccella Ionica:** a small pilot.
+- **Rome:** experimental and local only. It has never been deployed, and it is not advertised as
+  supported until its mobile and production evidence exists.
 
-- a stable region identifier and human-readable coverage statement;
-- geocoding, GPS, routing, and report-validation boundaries;
-- one or more surface datasets with source, licence, generation date, and confidence;
-- provider settings, attribution, and mode-specific validation scenarios;
-- release evidence for routing, GPS, mobile behaviour, and production smoke tests.
-
-This adapter is a documented direction and is not yet implemented. A region such as Rome
-must not be advertised as supported until its adapter and release evidence exist.
+See [engineering status](ENGINEERING_STATUS.md).
 
 ## Privacy
 
