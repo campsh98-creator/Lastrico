@@ -303,8 +303,28 @@ function valhallaCostingOptions(mode: TransportMode) {
   return { auto: { use_highways: 0.7, use_tolls: 0.2 } };
 }
 
-export function combinedTimeoutSignal(signal: AbortSignal, timeoutMs: number) {
-  return AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]);
+/**
+ * Runs a provider call with a deadline: its signal aborts when the caller's does or after
+ * `timeoutMs`, with the TimeoutError `AbortSignal.timeout` gives.
+ * - Phase 4.33: the timer is cleared as soon as the call ends. `AbortSignal.timeout` cannot be
+ *   cleared, and its pending timers kept each Durable Object invocation running until they fired:
+ *   4–12 s instead of the 1–6 s of the response, billed as Durable Object duration.
+ * - `call` must read the body too, so the deadline still covers a body that stalls.
+ */
+export async function withProviderTimeout<T>(
+  signal: AbortSignal,
+  timeoutMs: number,
+  call: (signal: AbortSignal) => Promise<T>,
+): Promise<T> {
+  const timeout = new AbortController();
+  const timer = setTimeout(() => timeout.abort(new DOMException("The operation timed out.", "TimeoutError")), timeoutMs);
+  // Node only (tests): a pending timer must not keep the process alive. Workers have no unref.
+  (timer as { unref?: () => void }).unref?.();
+  try {
+    return await call(AbortSignal.any([signal, timeout.signal]));
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function waitWithSignal<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
@@ -366,43 +386,45 @@ async function fetchValhallaRoutes(
       deadline,
       signal,
       mode === "car" ? 1_500 : 0,
-      (timeoutMs) =>
-      fetch(VALHALLA_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "X-Client-Id": "lastrico-milano",
-          "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
-        },
-        body: JSON.stringify({
-          locations: points.map(([lon, lat], index) => ({
-            lon,
-            lat,
-            type: index === 0 || index === points.length - 1 ? "break" : "through",
-          })),
-          costing: profile,
-          costing_options: valhallaCostingOptions(mode),
-          ...(linearCostFactors && linearCostFactors.length > 0
-            ? { linear_cost_factors: linearCostFactors }
-            : {}),
-          // Phase 4.31: stretches that are illegal at the departure time (ZTL, timed closure).
-          ...(excludePolygons && excludePolygons.length > 0
-            ? { exclude_polygons: excludePolygons }
-            : {}),
-          units: "kilometers",
-          directions_options: { units: "kilometers", language: "it-IT" },
-          alternates: alternatives ? 2 : 0,
-        }),
-        cache: "no-store",
-        signal: combinedTimeoutSignal(signal, timeoutMs),
+      (timeoutMs) => withProviderTimeout(signal, timeoutMs, async (callSignal) => {
+        const response = await fetch(VALHALLA_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-Client-Id": "lastrico-milano",
+            "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
+          },
+          body: JSON.stringify({
+            locations: points.map(([lon, lat], index) => ({
+              lon,
+              lat,
+              type: index === 0 || index === points.length - 1 ? "break" : "through",
+            })),
+            costing: profile,
+            costing_options: valhallaCostingOptions(mode),
+            ...(linearCostFactors && linearCostFactors.length > 0
+              ? { linear_cost_factors: linearCostFactors }
+              : {}),
+            // Phase 4.31: stretches that are illegal at the departure time (ZTL, timed closure).
+            ...(excludePolygons && excludePolygons.length > 0
+              ? { exclude_polygons: excludePolygons }
+              : {}),
+            units: "kilometers",
+            directions_options: { units: "kilometers", language: "it-IT" },
+            alternates: alternatives ? 2 : 0,
+          }),
+          cache: "no-store",
+          signal: callSignal,
+        });
+        return response.ok ? { status: response.status, body: await response.json() as unknown } : { status: response.status };
       }),
     );
-    if (!response.ok) {
+    if (!("body" in response)) {
       logProviderFailure("valhalla", mode, { status: response.status });
       return [];
     }
-    return normalizeValhallaResponse(await response.json(), mode);
+    return normalizeValhallaResponse(response.body, mode);
   } catch (error) {
     logProviderFailure("valhalla", mode, { error });
     return [];
@@ -535,18 +557,21 @@ async function fetchOsrmCarRoutes(
   try {
     const timeoutMs = Math.min(OSRM_TIMEOUT_MS, deadline - Date.now());
     if (timeoutMs < 500) return [];
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
-      },
-      cache: "no-store",
-      signal: combinedTimeoutSignal(signal, timeoutMs),
+    const response = await withProviderTimeout(signal, timeoutMs, async (callSignal) => {
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
+        },
+        cache: "no-store",
+        signal: callSignal,
+      });
+      return response.ok ? { status: response.status, body: await response.json() as unknown } : { status: response.status };
     });
-    if (!response.ok) {
+    if (!("body" in response)) {
       logProviderFailure("osrm", "car", { status: response.status });
       return [];
     }
-    return normalizeOsrmResponse(await response.json());
+    return normalizeOsrmResponse(response.body);
   } catch (error) {
     logProviderFailure("osrm", "car", { error });
     return [];

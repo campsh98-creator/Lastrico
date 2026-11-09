@@ -7,6 +7,7 @@ import {
   type TransportMode,
 } from "@/lib/routing-types";
 import {
+  EdgeMemo,
   scoreRoadIntelligence,
   type RoadIntelligenceScore,
 } from "@/lib/road-intelligence-scoring";
@@ -220,6 +221,25 @@ function polylineLength(points: Coordinate[]) {
   return total;
 }
 
+// Phase 4.33: bounding boxes of the penalised slices. A point farther than 8 m from a slice's box
+// is farther than 8 m from every one of its segments, so those slices are skipped without
+// changing the answer.
+const sliceBoxes = new WeakMap<Coordinate[], { minLon: number; maxLon: number; minLat: number; maxLat: number }>();
+function sliceBox(slice: Coordinate[]) {
+  let box = sliceBoxes.get(slice);
+  if (!box) {
+    box = { minLon: Infinity, maxLon: -Infinity, minLat: Infinity, maxLat: -Infinity };
+    for (const [lon, lat] of slice) {
+      if (lon < box.minLon) box.minLon = lon;
+      if (lon > box.maxLon) box.maxLon = lon;
+      if (lat < box.minLat) box.minLat = lat;
+      if (lat > box.maxLat) box.maxLat = lat;
+    }
+    sliceBoxes.set(slice, box);
+  }
+  return box;
+}
+
 /** A rough stretch already penalised from another route (≥80% of it within 8 m). */
 function sliceAlreadyPenalised(slice: Coordinate[], penalised: Coordinate[][]) {
   if (!penalised.length) return false;
@@ -235,8 +255,15 @@ function sliceAlreadyPenalised(slice: Coordinate[], penalised: Coordinate[][]) {
         slice[index - 1][1] + (slice[index][1] - slice[index - 1][1]) * ratio,
       ];
       total += length / samples;
-      if (penalised.some((other) => other.some((_, k) => k > 0
-        && pointToSegmentDistance(point, other[k - 1], other[k]) <= 8))) near += length / samples;
+      // 8 m in degrees at this point's latitude (the projection pointToSegmentDistance uses), with 1 % to spare.
+      const padLat = (8 / 110_540) * 1.01;
+      const padLon = (8 / (111_320 * Math.cos(point[1] * Math.PI / 180))) * 1.01;
+      if (penalised.some((other) => {
+        const box = sliceBox(other);
+        if (point[0] < box.minLon - padLon || point[0] > box.maxLon + padLon
+          || point[1] < box.minLat - padLat || point[1] > box.maxLat + padLat) return false;
+        return other.some((_, k) => k > 0 && pointToSegmentDistance(point, other[k - 1], other[k]) <= 8);
+      })) near += length / samples;
     }
   }
   return total > 0 && near / total >= 0.8;
@@ -539,6 +566,10 @@ export async function GET(request: NextRequest) {
     };
 
     const scoreCache = new Map<EngineRoute, SurfaceScore>();
+    // Phase 4.33: candidates share most of their edges (46 % of sampled work on the Milan
+    // benchmark); each shared edge is matched once per request, with identical results.
+    const edgeMemo = new EdgeMemo();
+    const scoreOptions = { terminalWalkingForBicycle: area.id === "milan", departure, authorisedZtl, edgeMemo };
     const scoreCandidate = (route: EngineRoute) => {
       const cached = scoreCache.get(route);
       if (cached) return cached;
@@ -549,7 +580,7 @@ export async function GET(request: NextRequest) {
         mode,
         false,
         // Validated on the Milan benchmark only; Rome and Roccella keep their 4.23 behaviour.
-        { terminalWalkingForBicycle: area.id === "milan", departure, authorisedZtl },
+        scoreOptions,
       );
       const score: SurfaceScore = { ...intelligence, confidence: intelligence.classificationConfidence };
       scoreCache.set(route, score);

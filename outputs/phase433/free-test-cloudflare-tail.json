@@ -1,0 +1,488 @@
+{
+ "source": "wrangler tail lastrico-free-test --format json, 2026-11-09 16:12–16:15 UTC. Only outcome, timing, status and path are kept: no IPs, headers or coordinates.",
+ "worker": "lastrico-free-test (Workers Free, version 44a8466a-19db-42d4-ad3c-6fa9bf5d3b79, Milan and Roccella only, no D1 binding)",
+ "summary": {
+  "workerRoutes": {
+   "count": 20,
+   "outcomes": [
+    "ok"
+   ],
+   "cpuMedian": 0,
+   "cpuMax": 2,
+   "wallMedian": 5342,
+   "wallMax": 5933
+  },
+  "durableObjectRoutes": {
+   "count": 20,
+   "outcomes": [
+    "ok"
+   ],
+   "cpuMedian": 156,
+   "cpuMax": 314,
+   "wallMedian": 12200,
+   "wallMax": 12237
+  },
+  "workerPage": {
+   "count": 5,
+   "outcomes": [
+    "ok"
+   ],
+   "cpuMedian": 8,
+   "cpuMax": 37,
+   "wallMedian": 8,
+   "wallMax": 41
+  }
+ },
+ "invocations": [
+  {
+   "time": "2026-11-09T16:12:15.153Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 28,
+   "wallMs": 31,
+   "status": 200,
+   "path": "/",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:15.550Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 7,
+   "wallMs": 8,
+   "status": 200,
+   "path": "/",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:15.742Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 37,
+   "wallMs": 41,
+   "status": 200,
+   "path": "/",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:22.323Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 8,
+   "wallMs": 8,
+   "status": 200,
+   "path": "/",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:22.412Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 938,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:27.596Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 2809,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:22.899Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 113,
+   "wallMs": 8001,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:34.541Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 1642,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:28.151Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 297,
+   "wallMs": 8002,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:34.951Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 171,
+   "wallMs": 8002,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:40.352Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5818,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:40.811Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 291,
+   "wallMs": 12201,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:50.371Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 2,
+   "wallMs": 5833,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:12:51.077Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 218,
+   "wallMs": 12201,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:00.612Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5895,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:01.151Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 314,
+   "wallMs": 12202,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:10.678Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5373,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:10.689Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 186,
+   "wallMs": 12200,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:20.205Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5341,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:20.221Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 156,
+   "wallMs": 12200,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:29.734Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5836,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:30.228Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 195,
+   "wallMs": 12200,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:37.738Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5431,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:45.256Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 4322,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:37.770Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 151,
+   "wallMs": 12201,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:45.264Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 141,
+   "wallMs": 12201,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:51.716Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5933,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:52.265Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 236,
+   "wallMs": 12201,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:59.783Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5342,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:13:59.809Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 78,
+   "wallMs": 12200,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:07.295Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5359,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:14.731Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 2288,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:14.755Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 126,
+   "wallMs": 4066,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:07.306Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 92,
+   "wallMs": 12237,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:20.220Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 1123,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:20.231Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 21,
+   "wallMs": 4000,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:24.400Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 2408,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:24.614Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 71,
+   "wallMs": 4005,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:29.859Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 90,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:29.874Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 25,
+   "wallMs": 4002,
+   "status": 200,
+   "path": "/api/routes (navigation reroute)",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:33.033Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 2238,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:33.148Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 0,
+   "wallMs": 5539,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:38.738Z",
+   "invocation": "worker",
+   "outcome": "ok",
+   "cpuMs": 6,
+   "wallMs": 6,
+   "status": 200,
+   "path": "/",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:33.045Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 170,
+   "wallMs": 8001,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  },
+  {
+   "time": "2026-11-09T16:14:33.356Z",
+   "invocation": "durable-object",
+   "outcome": "ok",
+   "cpuMs": 113,
+   "wallMs": 12200,
+   "status": 200,
+   "path": "/api/routes",
+   "exceptions": 0
+  }
+ ]
+}

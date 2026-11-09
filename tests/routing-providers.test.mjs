@@ -246,3 +246,78 @@ test("permits genuinely stationary zero-metric geometry", () => {
   fallback.legs[0].steps.forEach((step) => { step.distance = 0; step.duration = 0; step.maneuver.location = coordinates[0]; });
   assert.equal(normalizeOsrmResponse({ code: "Ok", routes: [fallback] }).length, 1);
 });
+
+// Phase 4.33: an uncancellable AbortSignal.timeout kept each Durable Object invocation running
+// until it fired (4–12 s); the deadline timer is now cleared once the call ends.
+function trackTimers(t) {
+  const timers = { created: [], live: new Set() };
+  const realSetTimeout = globalThis.setTimeout;
+  const realClearTimeout = globalThis.clearTimeout;
+  t.mock.method(globalThis, "setTimeout", (callback, delay, ...args) => {
+    const handle = realSetTimeout(() => { timers.live.delete(handle); callback(...args); }, delay);
+    timers.created.push(delay);
+    timers.live.add(handle);
+    return handle;
+  });
+  t.mock.method(globalThis, "clearTimeout", (handle) => { timers.live.delete(handle); realClearTimeout(handle); });
+  return timers;
+}
+
+test("a finished provider call clears its deadline timer instead of leaving it pending", async (t) => {
+  skipInterval(t);
+  const timers = trackTimers(t);
+  t.mock.method(globalThis, "fetch", async () => json({ trip: trip() }));
+  assert.equal((await fetchEngineRoutes(coordinates, "bicycle")).length, 1);
+  assert.deepEqual(timers.created, [8_000], "one 8 s deadline for the Valhalla call");
+  assert.equal(timers.live.size, 0, "cleared when the call ended, not left to fire");
+
+  fakeNow += 100_000;
+  timers.created.length = 0;
+  let calls = 0;
+  t.mock.method(globalThis, "fetch", async () => ++calls === 1 ? new Response("unavailable", { status: 503 }) : json({ code: "Ok", routes: [osrmRoute()] }));
+  assert.equal((await fetchEngineRoutes(coordinates, "car"))[0].provider, "osrm-public-fallback");
+  assert.deepEqual(timers.created, [8_000, 7_000], "Valhalla, then the OSRM car fallback");
+  assert.equal(timers.live.size, 0);
+});
+
+test("the deadline still aborts a provider call that stalls, before or while its body is read", { timeout: 6000 }, async (t) => {
+  skipInterval(t);
+  const timers = trackTimers(t);
+  for (const stall of ["response", "body"]) {
+    fakeNow += 100_000;
+    let reason;
+    const stalled = t.mock.method(globalThis, "fetch", async (_url, init) => {
+      const aborted = new Promise((_resolve, reject) => init.signal.addEventListener("abort", () => {
+        reason = init.signal.reason;
+        reject(init.signal.reason);
+      }, { once: true }));
+      if (stall === "response") return aborted;
+      return { ok: true, status: 200, json: () => aborted };
+    });
+    const started = performance.now();
+    // A 700 ms budget gives a 700 ms provider timeout (bicycle has no fallback reserve).
+    assert.deepEqual(await fetchEngineRoutes(coordinates, "bicycle", false, fakeNow + 700), [], stall);
+    const elapsed = performance.now() - started;
+    assert.equal(reason?.name, "TimeoutError", stall);
+    assert.ok(elapsed >= 600 && elapsed < 2500, `${stall}: aborted after ${Math.round(elapsed)} ms`);
+    assert.equal(timers.live.size, 0, stall);
+    stalled.mock.restore();
+  }
+});
+
+test("a caller's cancellation still reaches an in-flight provider call and clears its timer", { timeout: 3000 }, async (t) => {
+  skipInterval(t);
+  const timers = trackTimers(t);
+  let reason;
+  t.mock.method(globalThis, "fetch", async (_url, init) => new Promise((_resolve, reject) => {
+    init.signal.addEventListener("abort", () => { reason = init.signal.reason; reject(init.signal.reason); }, { once: true });
+  }));
+  const cancellation = new AbortController();
+  const pending = fetchEngineRoutes(coordinates, "bicycle", false, fakeNow + 18_000, cancellation.signal);
+  await nextTurn();
+  cancellation.abort(new DOMException("The person left", "AbortError"));
+  assert.deepEqual(await pending, []);
+  assert.equal(reason?.name, "AbortError");
+  assert.deepEqual(timers.created, [8_000]);
+  assert.equal(timers.live.size, 0, "cleared on cancellation too");
+});

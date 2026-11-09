@@ -104,6 +104,23 @@ and never commit them.
 
 ## Pilot deployment
 
+`main` contains the frozen Rome work (Phases 4.23 and 4.27), which must never be deployed.
+- Releases are built from a Milan and Roccella copy of the committed `HEAD` (`git archive`, so
+  untracked files never enter a release; tracked files must have no local changes):
+
+  ```bash
+  node scripts/prepare-milan-release.mjs <empty-directory-outside-the-repo>
+  ```
+
+- Then run every command below inside that directory, starting with `npm test`.
+- The method, and the two Rome blocks it removes by hand, are in `scripts/milan-release.mjs`.
+- `npm run deploy:pilot` refuses any build that still contains Rome (`.bin` tile modules or a
+  `"rome"` area id in the server bundle, the browser bundle or the homepage), dry runs included.
+- After the build it renders `/` once with the built Worker (`wrangler dev --local`) and writes it
+  to `dist/client/index.html` (`scripts/homepage-snapshot.mjs`). Cloudflare then serves `/` as a
+  static file, so the Worker's 10 ms CPU limit on Workers Free does not apply to the homepage. The
+  snapshot is refused if two renders differ or an asset it names is missing.
+
 The isolated pilot runs on the `lastrico-pilot` Worker. `npm run build` and `npm test` always
 regenerate `dist/server/wrangler.json` with a placeholder database id, so never deploy that
 file directly. Use the single command, which applies `deploy/pilot.json` and refuses a
@@ -123,7 +140,22 @@ It prints the current version before uploading. To roll back, pass that version 
 npx wrangler rollback <version-id> --name lastrico-pilot
 ```
 
-This path does not touch the ChatGPT Sites deployment or run database migrations.
+**Rolling back past the Durable Object (Phase 4.33).** Cloudflare refuses a rollback to a version
+older than a Durable Object lifecycle change, and the Phase 4.33 release creates the `RouteEngine`
+class. So `wrangler rollback` works between versions that have the class, but not back to
+`03a6776e` (Phase 4.28). To restore that behaviour, deploy the rollback build: the `03a6776e` code
+with the same class, unused.
+
+```bash
+node scripts/prepare-pilot-rollback.mjs <empty-directory-outside-the-repo>
+```
+
+Then, inside that directory, `npm test` and `npm run deploy:pilot`. Rebuilt, it matches the
+deployed `03a6776e` module for module, apart from per-build ids and the added class.
+
+This path does not touch the ChatGPT Sites deployment or run database migrations. The
+`RouteEngine` Durable Object migration (`v1-route-engine`) is applied by `wrangler deploy` the first
+time and adds no data; the D1 database is only bound, never changed.
 
 ## Pull request evidence
 

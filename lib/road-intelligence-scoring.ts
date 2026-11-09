@@ -180,6 +180,19 @@ export function createRoadIntelligenceIndex(
   return { cellSize, cells, allSegments: segments };
 }
 
+/**
+ * Phase 4.33: a scoped (lazy) index answers only for the tiles loaded so far; a cell of a tile
+ * loaded later would then answer differently. `coverage.incomplete` records that a box touched
+ * such a cell, so its result is not reused once more tiles may be present. A plain Map index
+ * (tests, full datasets) is complete by construction.
+ */
+type CellCoverage = { incomplete: boolean; incompleteBoxes: Set<string> };
+/** Consecutive samples of a route nearly always fall in the same box of cells. */
+type LastBox = { minX: number; maxX: number; minY: number; maxY: number; result: RoadSegmentRecord[] | null; incomplete: boolean };
+function cellAvailable(cells: Map<string, RoadSegmentRecord[]>, key: string): boolean {
+  return typeof (cells as { hasTileKey?: unknown }).hasTileKey !== "function" || cells.has(key);
+}
+
 function nearbySegments(
   index: RoadIntelligenceIndex,
   point: GeoCoordinate,
@@ -187,6 +200,8 @@ function nearbySegments(
   boxCache?: Map<string, RoadSegmentRecord[]>,
   lonPadding?: number,
   latPadding?: number,
+  coverage?: CellCoverage,
+  last?: LastBox,
 ): RoadSegmentRecord[] {
   const padLon = lonPadding ?? (matchMeters / Math.max(1, metersPerLongitude(point[1])));
   const padLat = latPadding ?? (matchMeters / 110_540);
@@ -194,14 +209,35 @@ function nearbySegments(
   const maxX = Math.floor((point[0] + padLon) / index.cellSize);
   const minY = Math.floor((point[1] - padLat) / index.cellSize);
   const maxY = Math.floor((point[1] + padLat) / index.cellSize);
+  if (last) {
+    if (last.result && last.minX === minX && last.maxX === maxX && last.minY === minY && last.maxY === maxY) {
+      if (coverage && last.incomplete) coverage.incomplete = true;
+      return last.result;
+    }
+    const before = coverage?.incomplete ?? false;
+    if (coverage) coverage.incomplete = false;
+    const result = nearbySegments(index, point, matchMeters, boxCache, padLon, padLat, coverage);
+    last.minX = minX; last.maxX = maxX; last.minY = minY; last.maxY = maxY;
+    last.result = result;
+    last.incomplete = coverage?.incomplete ?? false;
+    if (coverage) coverage.incomplete = before || last.incomplete;
+    return result;
+  }
 
   if (minX === maxX && minY === maxY) {
     const key = cellKey(minX, minY);
     if (boxCache) {
       const cached = boxCache.get(key);
-      if (cached) return cached;
+      if (cached) {
+        if (coverage?.incompleteBoxes.has(key)) coverage.incomplete = true;
+        return cached;
+      }
     }
     const list = index.cells.get(key) ?? [];
+    if (coverage && !cellAvailable(index.cells, key)) {
+      coverage.incomplete = true;
+      coverage.incompleteBoxes.add(key);
+    }
     if (boxCache) boxCache.set(key, list);
     return list;
   }
@@ -209,17 +245,27 @@ function nearbySegments(
   const boxKey = `${minX}:${maxX}:${minY}:${maxY}`;
   if (boxCache) {
     const cached = boxCache.get(boxKey);
-    if (cached) return cached;
+    if (cached) {
+      if (coverage?.incompleteBoxes.has(boxKey)) coverage.incomplete = true;
+      return cached;
+    }
   }
 
   const found = new Set<RoadSegmentRecord>();
+  let boxIncomplete = false;
   for (let x = minX; x <= maxX; x += 1) {
     for (let y = minY; y <= maxY; y += 1) {
-      const segs = index.cells.get(cellKey(x, y));
+      const key = cellKey(x, y);
+      const segs = index.cells.get(key);
+      if (coverage && !cellAvailable(index.cells, key)) boxIncomplete = true;
       if (segs) {
         for (let i = 0; i < segs.length; i += 1) found.add(segs[i]);
       }
     }
+  }
+  if (coverage && boxIncomplete) {
+    coverage.incomplete = true;
+    coverage.incompleteBoxes.add(boxKey);
   }
   const result = Array.from(found);
   if (boxCache) boxCache.set(boxKey, result);
@@ -249,7 +295,61 @@ export type RoadIntelligenceOptions = {
   departure?: DepartureTime;
   /** Phase 4.31: ZTL area ids the person is authorised for, in this mode. */
   authorisedZtl?: ReadonlySet<string>;
+  /**
+   * Phase 4.33: reuse the matching of route edges shared by several candidates of one request.
+   * Results are identical to scoring without it (tests/phase433-edge-memo.test.mjs).
+   */
+  edgeMemo?: EdgeMemo;
 };
+
+/** What one 12 m sample of a route edge lies on. It does not depend on where the edge is in the route. */
+export type EdgeSampleMatch = {
+  restriction: RestrictionKind | null;
+  ambiguous: boolean;
+  best: RoadSegmentRecord | null;
+  /** The keys of `best` counted in matchedSegments and matchedFeatures, built once per match. */
+  sourceKey: string;
+  matchKey: string;
+};
+
+/**
+ * Phase 4.33: the samples of an edge give the same matches in every route that contains it, for
+ * one surface index, match distance, mode and access context. A memo serves one such context: the
+ * first scoring binds it, and a scoring with any other context does not use it.
+ */
+export class EdgeMemo {
+  /** Keyed by the start, then the end of the edge in microdegrees; the exact coordinates are checked on use. */
+  private readonly edges = new Map<number, Map<number, { a: GeoCoordinate; b: GeoCoordinate; matches: EdgeSampleMatch[] }>>();
+  private context: readonly unknown[] | null = null;
+
+  private static key(point: GeoCoordinate): number {
+    return Math.round(point[0] * 1e6) * 1e8 + Math.round(point[1] * 1e6);
+  }
+
+  get(a: GeoCoordinate, b: GeoCoordinate): EdgeSampleMatch[] | undefined {
+    const entry = this.edges.get(EdgeMemo.key(a))?.get(EdgeMemo.key(b));
+    return entry && entry.a[0] === a[0] && entry.a[1] === a[1] && entry.b[0] === b[0] && entry.b[1] === b[1]
+      ? entry.matches : undefined;
+  }
+
+  set(a: GeoCoordinate, b: GeoCoordinate, matches: EdgeSampleMatch[]): void {
+    const start = EdgeMemo.key(a);
+    let byEnd = this.edges.get(start);
+    if (!byEnd) {
+      byEnd = new Map();
+      this.edges.set(start, byEnd);
+    }
+    byEnd.set(EdgeMemo.key(b), { a, b, matches });
+  }
+
+  bind(...context: unknown[]): this | null {
+    if (!this.context) {
+      this.context = context;
+      return this;
+    }
+    return context.length === this.context.length && context.every((value, i) => value === this.context![i]) ? this : null;
+  }
+}
 
 type AccessContext = { departure?: DepartureTime; authorisedZtl: ReadonlySet<string> };
 const NO_AUTHORISATION: ReadonlySet<string> = new Set();
@@ -351,28 +451,31 @@ function verticalGradeDiffers(a: RoadSegmentRecord, b: RoadSegmentRecord): boole
     || (at?.tunnel ?? "no") !== (bt?.tunnel ?? "no");
 }
 
+// Phase 4.33: candidates arrive as parallel arrays (segments, distances, count) reused across
+// samples, instead of one small object per candidate per sample.
 function restrictionSample(
-  candidates: { segment: RoadSegmentRecord; distance: number }[],
+  segments: RoadSegmentRecord[],
+  distances: number[],
+  count: number,
   a: GeoCoordinate,
   b: GeoCoordinate,
   mode: TransportMode,
   walkingAllowed = false,
   access: AccessContext = { authorisedZtl: NO_AUTHORISATION },
 ): RestrictionKind | null {
-  if (candidates.length === 0) return null;
-  let nearest: { segment: RoadSegmentRecord; distance: number } | null = null;
-  for (let i = 0; i < candidates.length; i += 1) {
-    const cand = candidates[i];
-    if (cand.distance <= 3 && (!nearest || cand.distance < nearest.distance)) {
-      nearest = cand;
+  if (count === 0) return null;
+  let nearestIndex = -1;
+  for (let i = 0; i < count; i += 1) {
+    if (distances[i] <= 3 && (nearestIndex < 0 || distances[i] < distances[nearestIndex])) {
+      nearestIndex = i;
     }
   }
-  if (!nearest || nearest.segment.osmWayId === null) return null;
-  const segment = nearest.segment;
-  for (let i = 0; i < candidates.length; i += 1) {
-    const other = candidates[i];
-    if (other.distance <= nearest.distance + 2
-      && (other.segment.osmWayId !== segment.osmWayId || verticalGradeDiffers(other.segment, segment))) {
+  if (nearestIndex < 0 || segments[nearestIndex].osmWayId === null) return null;
+  const segment = segments[nearestIndex];
+  const nearestDistance = distances[nearestIndex];
+  for (let i = 0; i < count; i += 1) {
+    if (distances[i] <= nearestDistance + 2
+      && (segments[i].osmWayId !== segment.osmWayId || verticalGradeDiffers(segments[i], segment))) {
       return null;
     }
   }
@@ -422,109 +525,184 @@ export function scoreRoadIntelligence(
   let terminalPrivateAccessMeters = 0;
   let terminalWalkMeters = 0;
   let traversedMeters = 0;
-  const routeMeters = coordinates.reduce((sum, point, index) =>
-    index === 0 ? 0 : sum + geographicDistance(coordinates[index - 1], point), 0);
+  // Phase 4.33: each edge length is computed once (the same values, summed in the same order).
+  const edgeLengths = new Float64Array(coordinates.length);
+  let routeMeters = 0;
+  for (let i = 1; i < coordinates.length; i += 1) {
+    edgeLengths[i] = geographicDistance(coordinates[i - 1], coordinates[i]);
+    routeMeters += edgeLengths[i];
+  }
   const matched = new Set<string>();
   const matchedFeatures = new Set<string>();
   const roughSegmentIndices = new Set<number>();
   const confirmedRoughSegmentIndices = new Set<number>();
   const roughSegmentFeatures = new Map<number, { name: string | null; material: string | null }>();
   const boxCache = new Map<string, RoadSegmentRecord[]>();
+  const coverage: CellCoverage = { incomplete: false, incompleteBoxes: new Set() };
+  const lastBox: LastBox = { minX: 0, maxX: 0, minY: 0, maxY: 0, result: null, incomplete: false };
+  // Phase 4.33: the geometric matching of an edge is the same in every candidate route of a request.
+  const memo = options.edgeMemo?.bind(index, matchMeters, mode, walkingAllowed, skipRestrictions, options.departure, access.authorisedZtl) ?? null;
+
+  /** Matching of one sample: what lies under it (position-independent). */
+  // Candidate buffers reused by every sample of this scoring (only the first `count` entries are live).
+  const geometricSegments: RoadSegmentRecord[] = [];
+  const geometricDistances: number[] = [];
+  const alignedSegments: RoadSegmentRecord[] = [];
+  const alignedDistances: number[] = [];
+  const matchSample = (sampleA: GeoCoordinate, sampleB: GeoCoordinate, midpoint: GeoCoordinate): EdgeSampleMatch => {
+    let best: RoadSegmentRecord | null = null;
+    let bestDistance = Infinity;
+    let bestWeight = 0;
+    let nearestRejected = Infinity;
+    let nearestRejectedSegment: RoadSegmentRecord | null = null;
+    let geometricCount = 0;
+    let alignedCount = 0;
+
+    const scaleLon = metersPerLongitude(midpoint[1]);
+    const padLat = matchMeters / 110_540;
+    const padLon = matchMeters / Math.max(1, scaleLon);
+
+    for (const candidate of nearbySegments(index, midpoint, matchMeters, boxCache, padLon, padLat, coverage, lastBox)) {
+      const c0 = candidate.coordinates[0];
+      const c1 = candidate.coordinates[1];
+      if (
+        midpoint[1] < Math.min(c0[1], c1[1]) - padLat ||
+        midpoint[1] > Math.max(c0[1], c1[1]) + padLat ||
+        midpoint[0] < Math.min(c0[0], c1[0]) - padLon ||
+        midpoint[0] > Math.max(c0[0], c1[0]) + padLon
+      ) {
+        continue;
+      }
+
+      const distance = pointToSegmentDistance(
+        midpoint,
+        c0,
+        c1,
+        scaleLon,
+      );
+
+      if (distance > matchMeters) continue;
+
+      const geometricallyAligned = headingsAlign(
+        sampleA,
+        sampleB,
+        candidate.coordinates[0],
+        candidate.coordinates[1],
+        false,
+        scaleLon,
+      );
+      if (!geometricallyAligned) continue;
+      geometricSegments[geometricCount] = candidate;
+      geometricDistances[geometricCount] = distance;
+      geometricCount += 1;
+      const allowed = candidate.modeAccess?.[mode] ?? (mode === "bicycle" ? candidate.isBicycleAllowed : candidate.isMotorAllowed);
+      const direction = candidate.modeDirections?.[mode] ?? (candidate.isOneway ? "forward" : "both");
+      const start = direction === "backward" ? candidate.coordinates[1] : candidate.coordinates[0];
+      const end = direction === "backward" ? candidate.coordinates[0] : candidate.coordinates[1];
+      if (!allowed || direction === "unknown" || !headingsAlign(sampleA, sampleB, start, end, direction !== "both", scaleLon)) {
+        if (distance < nearestRejected) {
+          nearestRejected = distance;
+          nearestRejectedSegment = candidate;
+        }
+        continue;
+      }
+
+      alignedSegments[alignedCount] = candidate;
+      alignedDistances[alignedCount] = distance;
+      alignedCount += 1;
+
+      const weight = candidate.roughnessWeight;
+      if (
+        distance < bestDistance ||
+        (distance === bestDistance && weight > bestWeight)
+      ) {
+        best = candidate;
+        bestDistance = distance;
+        bestWeight = weight;
+      }
+    }
+
+    const restriction = skipRestrictions ? null
+      : restrictionSample(geometricSegments, geometricDistances, geometricCount, sampleA, sampleB, mode, walkingAllowed, access);
+
+    // Reject a closer prohibited road rather than transferring its route samples
+    // to an accessible parallel road with unrelated surface evidence.
+    let competingSegments = alignedSegments;
+    let competingDistances = alignedDistances;
+    let competingCount = alignedCount;
+    if (!best || nearestRejected <= bestDistance + 0.000001) {
+      // The route lies on that road itself (e.g. a conditional one-way or a pedestrian
+      // street the profile still uses): its surface is the surface under the route.
+      // Legality is judged above, from the same geometry, and is not changed here.
+      if (!nearestRejectedSegment || nearestRejected > ON_ROUTE_SURFACE_METERS) return { restriction, ambiguous: false, best: null, sourceKey: "", matchKey: "" };
+      const rejectedSurface = nearestRejectedSegment;
+      if (best && bestDistance <= ON_ROUTE_SURFACE_METERS
+        && best.surfaceCategory !== rejectedSurface.surfaceCategory) return { restriction, ambiguous: false, best: null, sourceKey: "", matchKey: "" };
+      best = rejectedSurface;
+      bestDistance = nearestRejected;
+      bestWeight = rejectedSurface.roughnessWeight;
+      competingSegments = geometricSegments;
+      competingDistances = geometricDistances;
+      competingCount = geometricCount;
+    }
+
+    // Compare against the final nearest road, not a temporary leader in index order.
+    const selected = best;
+    let ambiguous = false;
+    for (let i = 0; i < competingCount; i += 1) {
+      const segment = competingSegments[i];
+      if (Math.abs(competingDistances[i] - bestDistance) <= 2 &&
+        ((segment.osmWayId !== null && selected.osmWayId !== null && segment.osmWayId !== selected.osmWayId) ||
+         (segment.name !== null && selected.name !== null && segment.name !== selected.name))) {
+        ambiguous = true;
+        break;
+      }
+    }
+
+    for (let i = 0; i < competingCount; i += 1) {
+      if (Math.abs(competingDistances[i] - bestDistance) <= 2 && verticalGradeDiffers(competingSegments[i], selected)) {
+        return { restriction, ambiguous, best: null, sourceKey: "", matchKey: "" }; // Route geometry alone cannot resolve vertically separated roads.
+      }
+    }
+    const sourceKey = selected.osmWayId === null ? selected.segmentHash : `osm:${selected.osmWayId}`;
+    return { restriction, ambiguous, best: selected, sourceKey, matchKey: `${sourceKey}:${selected.segmentHash}` };
+  };
 
   for (let rIndex = 1; rIndex < coordinates.length; rIndex += 1) {
     const a = coordinates[rIndex - 1];
     const b = coordinates[rIndex];
-    const length = geographicDistance(a, b);
+    const length = edgeLengths[rIndex];
     totalMeters += length;
 
     const samples = Math.max(1, Math.ceil(length / 12));
     const sampleLength = length / samples;
+    let matches = memo ? memo.get(a, b) : undefined;
+    if (!matches) {
+      coverage.incomplete = false;
+      matches = new Array<EdgeSampleMatch>(samples);
+      for (let sample = 0; sample < samples; sample += 1) {
+        const startRatio = sample / samples;
+        const endRatio = (sample + 1) / samples;
+        const sampleA: GeoCoordinate = [
+          a[0] + (b[0] - a[0]) * startRatio,
+          a[1] + (b[1] - a[1]) * startRatio,
+        ];
+        const sampleB: GeoCoordinate = [
+          a[0] + (b[0] - a[0]) * endRatio,
+          a[1] + (b[1] - a[1]) * endRatio,
+        ];
+        const midpoint: GeoCoordinate = [
+          (sampleA[0] + sampleB[0]) / 2,
+          (sampleA[1] + sampleB[1]) / 2,
+        ];
+        matches[sample] = matchSample(sampleA, sampleB, midpoint);
+      }
+      // Reused only when every cell it read was loaded: a tile loaded later cannot change it.
+      if (memo && !coverage.incomplete) memo.set(a, b, matches);
+    }
 
     for (let sample = 0; sample < samples; sample += 1) {
-      const startRatio = sample / samples;
-      const endRatio = (sample + 1) / samples;
-      const sampleA: GeoCoordinate = [
-        a[0] + (b[0] - a[0]) * startRatio,
-        a[1] + (b[1] - a[1]) * startRatio,
-      ];
-      const sampleB: GeoCoordinate = [
-        a[0] + (b[0] - a[0]) * endRatio,
-        a[1] + (b[1] - a[1]) * endRatio,
-      ];
-      const midpoint: GeoCoordinate = [
-        (sampleA[0] + sampleB[0]) / 2,
-        (sampleA[1] + sampleB[1]) / 2,
-      ];
-
-      let best: RoadSegmentRecord | null = null;
-      let bestDistance = Infinity;
-      let bestWeight = 0;
-      let nearestRejected = Infinity;
-      let nearestRejectedSegment: RoadSegmentRecord | null = null;
-      const alignedCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
-      const geometricCandidates: { segment: RoadSegmentRecord; distance: number }[] = [];
-
-      const scaleLon = metersPerLongitude(midpoint[1]);
-      const padLat = matchMeters / 110_540;
-      const padLon = matchMeters / Math.max(1, scaleLon);
-
-      for (const candidate of nearbySegments(index, midpoint, matchMeters, boxCache, padLon, padLat)) {
-        const c0 = candidate.coordinates[0];
-        const c1 = candidate.coordinates[1];
-        if (
-          midpoint[1] < Math.min(c0[1], c1[1]) - padLat ||
-          midpoint[1] > Math.max(c0[1], c1[1]) + padLat ||
-          midpoint[0] < Math.min(c0[0], c1[0]) - padLon ||
-          midpoint[0] > Math.max(c0[0], c1[0]) + padLon
-        ) {
-          continue;
-        }
-
-        const distance = pointToSegmentDistance(
-          midpoint,
-          c0,
-          c1,
-          scaleLon,
-        );
-
-        if (distance > matchMeters) continue;
-
-        const geometricallyAligned = headingsAlign(
-          sampleA,
-          sampleB,
-          candidate.coordinates[0],
-          candidate.coordinates[1],
-          false,
-          scaleLon,
-        );
-        if (!geometricallyAligned) continue;
-        geometricCandidates.push({ segment: candidate, distance });
-        const allowed = candidate.modeAccess?.[mode] ?? (mode === "bicycle" ? candidate.isBicycleAllowed : candidate.isMotorAllowed);
-        const direction = candidate.modeDirections?.[mode] ?? (candidate.isOneway ? "forward" : "both");
-        const start = direction === "backward" ? candidate.coordinates[1] : candidate.coordinates[0];
-        const end = direction === "backward" ? candidate.coordinates[0] : candidate.coordinates[1];
-        if (!allowed || direction === "unknown" || !headingsAlign(sampleA, sampleB, start, end, direction !== "both", scaleLon)) {
-          if (distance < nearestRejected) {
-            nearestRejected = distance;
-            nearestRejectedSegment = candidate;
-          }
-          continue;
-        }
-
-        alignedCandidates.push({ segment: candidate, distance });
-
-        const weight = candidate.roughnessWeight;
-        if (
-          distance < bestDistance ||
-          (distance === bestDistance && weight > bestWeight)
-        ) {
-          best = candidate;
-          bestDistance = distance;
-          bestWeight = weight;
-        }
-      }
-
-      const restriction = skipRestrictions ? null : restrictionSample(geometricCandidates, sampleA, sampleB, mode, walkingAllowed, access);
+      const { restriction, ambiguous, best, sourceKey, matchKey } = matches[sample];
       if (restriction?.startsWith("authorised:")) {
         const area = restriction.slice("authorised:".length);
         authorisedZtlMetersByArea[area] = (authorisedZtlMetersByArea[area] ?? 0) + sampleLength;
@@ -551,39 +729,11 @@ export function scoreRoadIntelligence(
         }
       }
 
-      // Reject a closer prohibited road rather than transferring its route samples
-      // to an accessible parallel road with unrelated surface evidence.
-      let competing = alignedCandidates;
-      if (!best || nearestRejected <= bestDistance + 0.000001) {
-        // The route lies on that road itself (e.g. a conditional one-way or a pedestrian
-        // street the profile still uses): its surface is the surface under the route.
-        // Legality is judged above, from the same geometry, and is not changed here.
-        if (!nearestRejectedSegment || nearestRejected > ON_ROUTE_SURFACE_METERS) continue;
-        const rejectedSurface = nearestRejectedSegment;
-        if (best && bestDistance <= ON_ROUTE_SURFACE_METERS
-          && best.surfaceCategory !== rejectedSurface.surfaceCategory) continue;
-        best = rejectedSurface;
-        bestDistance = nearestRejected;
-        bestWeight = rejectedSurface.roughnessWeight;
-        competing = geometricCandidates;
-      }
+      if (ambiguous) ambiguousMatchesCount += 1;
+      if (!best) continue;
+      const bestWeight = best.roughnessWeight;
 
-      // Compare against the final nearest road, not a temporary leader in index order.
-      const selected = best;
-      if (competing.some(({ segment, distance }) =>
-        Math.abs(distance - bestDistance) <= 2 &&
-        ((segment.osmWayId !== null && selected.osmWayId !== null && segment.osmWayId !== selected.osmWayId) ||
-         (segment.name !== null && selected.name !== null && segment.name !== selected.name)),
-      )) {
-        ambiguousMatchesCount += 1;
-      }
-
-      if (competing.some(({ segment, distance }) =>
-        Math.abs(distance - bestDistance) <= 2 && verticalGradeDiffers(segment, selected),
-      )) continue; // Route geometry alone cannot resolve vertically separated roads.
-
-      const sourceKey = best.osmWayId === null ? best.segmentHash : `osm:${best.osmWayId}`;
-      matched.add(`${sourceKey}:${best.segmentHash}`);
+      matched.add(matchKey);
       if (best.surfaceCategory !== "unknown") matchedFeatures.add(sourceKey);
 
       if ((best.surfaceCategory === "confirmed_rough" || best.surfaceCategory === "probable_rough") && !roughSegmentFeatures.has(rIndex)) {

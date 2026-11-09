@@ -1,0 +1,24 @@
+{
+ "source": "scripts/prepare-pilot-rollback.mjs, built 2026-11-09; deployed bundle of lastrico-pilot 03a6776e-cc36-4f87-a963-e0bd0592c906 downloaded read-only from the Cloudflare API",
+ "serverModules": {
+  "deployed": 165,
+  "identical": 164,
+  "differ": [
+   "index.js: per-build ids, the added RouteEngine class and its export"
+  ]
+ },
+ "clientAssetsOnLiveHomepage": {
+  "referenced": 7,
+  "reproduced": 7
+ },
+ "tests": {
+  "total": 367,
+  "pass": 367
+ },
+ "cloudflare": {
+  "worker": "lastrico-free-test",
+  "version": "45fc8332-8d92-4147-9569-aefe779632b9",
+  "deployedOver": "an existing RouteEngine namespace (v1-route-engine)",
+  "result": "accepted; homepage 200 with the same 7 assets as 03a6776e; route 200 computed in the Worker (no x-lastrico-route-engine header)"
+ }
+}

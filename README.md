@@ -128,10 +128,20 @@ Rome is a local experiment.
 **Public pilot:** [lastrico-pilot.campsh.workers.dev](https://lastrico-pilot.campsh.workers.dev).
 - It runs an earlier version (Phase 4.28, 7 November 2026). It does not include continuous
   anti-pavé rerouting, surface warnings, traffic signals, ZTL handling or reverse A/B.
-- In a controlled test on 8 November, 10 of 10 route calculations there failed with HTTP 503.
-  Cloudflare's 10 ms CPU limit per request on the Workers Free plan is now strictly enforced.
-- The CPU work has been halved locally, but a reliable public release needs the Workers Paid
-  plan.
+- Its route calculations fail intermittently on Cloudflare's Workers Free plan, which allows
+  10 ms of CPU per request with some tolerance for occasional overruns.
+  - In real use on 7–8 November, about 1 request in 300 failed one day and about 1 in 18 the next.
+  - In a burst of 14 requests within one minute, 12 failed.
+  - Every failure was a CPU-limit stop.
+- Phase 4.33 cut routing CPU by about 39 % locally, with identical routes. Measured
+  locally, a heavy route that is the first request on a fresh Worker still needs 60–280 ms.
+- It also moves route computation into a Durable Object: these are available on Workers Free and
+  allow 30 s of CPU per request.
+- On a separate test Worker on the Free plan, it served 40 of 40 route requests in two runs,
+  including bursts, with up to 319 ms of CPU and no stops. The homepage is served as a static
+  file, and provider timers no longer keep the Durable Object running: 3.6 s of billed time per
+  route instead of 9.7 s.
+- Updating the pilot is a separate, authorised step after this merge.
 - The full breakdown is in the [engineering status](docs/ENGINEERING_STATUS.md).
 
 ## Architecture
@@ -187,7 +197,7 @@ npm run lint
 npm test
 ```
 
-`npm test` builds the app and runs the whole unit and integration suite: 440 tests on
+`npm test` builds the app and runs the whole unit and integration suite: 461 tests on
 9 November 2026. They cover routing selection, access rules, GPS processing and
 reroute objectives, and they include Milan, Rome and Roccella data checks.
 

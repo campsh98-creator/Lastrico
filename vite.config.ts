@@ -14,6 +14,11 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const localBindingConfig = {
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
+  // Phase 4.33: route computation in a SQLite-backed Durable Object (available on Workers Free).
+  durable_objects: {
+    bindings: [{ name: "ROUTE_ENGINE", class_name: "RouteEngine" }],
+  },
+  migrations: [{ tag: "v1-route-engine", new_sqlite_classes: ["RouteEngine"] }],
   d1_databases: d1
     ? [
         {
