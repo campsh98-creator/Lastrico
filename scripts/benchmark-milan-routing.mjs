@@ -17,6 +17,8 @@ const label = arg("label") ?? "run";
 const only = arg("only");
 const live = process.argv.includes("--live");
 const withStability = !process.argv.includes("--no-stability");
+// Phase 4.31: a fixed Milan departure time ("YYYY-MM-DDTHH:MM"), so time windows and ZTL rules are reproducible.
+const departure = arg("departure");
 const base = new URL("outputs/phase425-benchmark/", root);
 const archive = new URL("responses/", base);
 const out = new URL(`${label}/`, base);
@@ -84,6 +86,7 @@ const rows = [];
 async function runCase(journey, mode, kind) {
   currentCalls = [];
   const params = new URLSearchParams({ area: "milan", start: journey.start.join(","), end: journey.end.join(","), mode, avoid: fixture.request.avoid });
+  if (departure) params.set("departure", departure);
   installFetch();
   const started = performance.now();
   const cpu = process.cpuUsage();
