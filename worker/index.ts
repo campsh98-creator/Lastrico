@@ -6,7 +6,10 @@ import { tagRouteEngineResponse, viaRouteEngine } from "./route-engine";
 interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
-  /** Phase 4.33: optional; without the binding, routes are computed in this Worker as before. */
+  /**
+   * Phase 4.33: always present in the build (vite.config.ts). Only local tools that run without
+   * Durable Objects lack it; then routes are computed in this Worker.
+   */
   ROUTE_ENGINE?: DurableObjectNamespace;
   IMAGES: {
     input(stream: ReadableStream): {
@@ -54,7 +57,8 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
-    // Phase 4.33: route planning and reroutes are computed in a Durable Object (see route-engine.ts).
+    // Phase 4.33: route planning and reroutes are computed in a Durable Object, never here when the
+    // binding exists; a failure is an explicit 503 (see route-engine.ts).
     const routed = await viaRouteEngine(request, env.ROUTE_ENGINE);
     if (routed) return routed;
 
