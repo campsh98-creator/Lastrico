@@ -11,7 +11,9 @@ import { gunzipSync } from "node:zlib";
 const [a, b] = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
 // Phase 4.31: fields added on purpose (e.g. --ignore=name,surface,roadFeatures) can be set aside.
 const ignored = new Set((process.argv.find((arg) => arg.startsWith("--ignore="))?.slice(9) ?? "").split(",").filter(Boolean));
-const base = new URL("../outputs/phase425-benchmark/", import.meta.url);
+// Phase 4.33: --base=outputs/phase431/reroute-bench compares the reroute benchmark the same way.
+const baseArg = process.argv.find((arg) => arg.startsWith("--base="))?.slice(7);
+const base = baseArg ? new URL(`../${baseArg.replace(/\/?$/, "/")}`, import.meta.url) : new URL("../outputs/phase425-benchmark/", import.meta.url);
 const TIMING = new Set(["performance", "calculatedAt", "generatedAt", "elapsedMs", "totalMs", ...ignored]);
 const strip = (value) => {
   if (Array.isArray(value)) return value.map(strip);
