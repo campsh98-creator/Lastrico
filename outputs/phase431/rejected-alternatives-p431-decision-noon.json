@@ -1,0 +1,1134 @@
+{
+ "label": "p431-decision-noon",
+ "cases": [
+  {
+   "case": "cadorna-cinque-giornate-car",
+   "mode": "car",
+   "origin": [
+    9.1765,
+    45.4682
+   ],
+   "destination": [
+    9.2075,
+    45.4625
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 4.35,
+    "minutes": 14,
+    "knownPave": 322,
+    "confirmed": 2,
+    "probable": 320,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 210,
+    "burden": 210,
+    "utility": 210,
+    "legal": true
+   },
+   "rejected": {
+    "source": "detour-2",
+    "km": 5.91,
+    "minutes": 18.4,
+    "knownPave": 62,
+    "confirmed": 0,
+    "probable": 62,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 40,
+    "burden": 40,
+    "utility": 261,
+    "legal": true
+   },
+   "savedKnownPave": 260,
+   "savedConfirmed": 2,
+   "savedProbable": 258,
+   "discomfortChange": -170,
+   "unknownChange": 0,
+   "extraSeconds": 265,
+   "verdict": "time-cost-exceeds-saving",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "cenacolo-missori-car",
+   "mode": "car",
+   "origin": [
+    9.1708,
+    45.4659
+   ],
+   "destination": [
+    9.1887,
+    45.4607
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 3.12,
+    "minutes": 10.9,
+    "knownPave": 902,
+    "confirmed": 582,
+    "probable": 320,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 790,
+    "burden": 790,
+    "utility": 790,
+    "legal": true
+   },
+   "rejected": {
+    "source": "base-2",
+    "km": 4.25,
+    "minutes": 15.1,
+    "knownPave": 701,
+    "confirmed": 475,
+    "probable": 226,
+    "unpaved": 0,
+    "unknown": 88,
+    "weightedDiscomfort": 622,
+    "burden": 653,
+    "utility": 864,
+    "legal": true
+   },
+   "savedKnownPave": 201,
+   "savedConfirmed": 107,
+   "savedProbable": 94,
+   "discomfortChange": -168,
+   "unknownChange": 88,
+   "extraSeconds": 253,
+   "verdict": "time-cost-exceeds-saving",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "colonne-porta-genova-car",
+   "mode": "car",
+   "origin": [
+    9.180947,
+    45.4573964
+   ],
+   "destination": [
+    9.1701298,
+    45.4529505
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 2,
+    "minutes": 6.8,
+    "knownPave": 242,
+    "confirmed": 205,
+    "probable": 37,
+    "unpaved": 0,
+    "unknown": 17,
+    "weightedDiscomfort": 229,
+    "burden": 229,
+    "utility": 229,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla-2",
+    "km": 2.6,
+    "minutes": 9.1,
+    "knownPave": 92,
+    "confirmed": 85,
+    "probable": 7,
+    "unpaved": 0,
+    "unknown": 151,
+    "weightedDiscomfort": 89,
+    "burden": 136,
+    "utility": 247,
+    "legal": true
+   },
+   "savedKnownPave": 150,
+   "savedConfirmed": 120,
+   "savedProbable": 30,
+   "discomfortChange": -140,
+   "unknownChange": 134,
+   "extraSeconds": 134,
+   "verdict": "time-cost-exceeds-saving",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "duomo-porta-garibaldi-bicycle",
+   "mode": "bicycle",
+   "origin": [
+    9.19,
+    45.4642
+   ],
+   "destination": [
+    9.1872,
+    45.4848
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 2.74,
+    "minutes": 10,
+    "knownPave": 1322,
+    "confirmed": 532,
+    "probable": 790,
+    "unpaved": 0,
+    "unknown": 339,
+    "weightedDiscomfort": 1045,
+    "burden": 1045,
+    "utility": 1045,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla",
+    "km": 3.32,
+    "minutes": 13.6,
+    "knownPave": 1057,
+    "confirmed": 797,
+    "probable": 260,
+    "unpaved": 0,
+    "unknown": 105,
+    "weightedDiscomfort": 966,
+    "burden": 966,
+    "utility": 1060,
+    "legal": true
+   },
+   "savedKnownPave": 265,
+   "savedConfirmed": -265,
+   "savedProbable": 530,
+   "discomfortChange": -79,
+   "unknownChange": -234,
+   "extraSeconds": 218,
+   "verdict": "adds-confirmed-pave",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "gae-aulenti-porta-romana-bicycle",
+   "mode": "bicycle",
+   "origin": [
+    9.1895,
+    45.4836
+   ],
+   "destination": [
+    9.1975,
+    45.456
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 4.37,
+    "minutes": 15.5,
+    "knownPave": 668,
+    "confirmed": 668,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 32,
+    "weightedDiscomfort": 668,
+    "burden": 668,
+    "utility": 668,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla-2",
+    "km": 5.03,
+    "minutes": 18.2,
+    "knownPave": 368,
+    "confirmed": 368,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 713,
+    "weightedDiscomfort": 368,
+    "burden": 805,
+    "utility": 876,
+    "legal": true
+   },
+   "savedKnownPave": 300,
+   "savedConfirmed": 300,
+   "savedProbable": 0,
+   "discomfortChange": -300,
+   "unknownChange": 681,
+   "extraSeconds": 164,
+   "verdict": "unknown-surface-burden",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "lambrate-cadorna-bicycle",
+   "mode": "bicycle",
+   "origin": [
+    9.2371839,
+    45.4840514
+   ],
+   "destination": [
+    9.1767854,
+    45.468161
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "detour-1",
+    "km": 6.48,
+    "minutes": 22.8,
+    "knownPave": 843,
+    "confirmed": 334,
+    "probable": 509,
+    "unpaved": 0,
+    "unknown": 48,
+    "weightedDiscomfort": 665,
+    "burden": 665,
+    "utility": 665,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla-2",
+    "km": 7.3,
+    "minutes": 26.2,
+    "knownPave": 545,
+    "confirmed": 447,
+    "probable": 98,
+    "unpaved": 326,
+    "unknown": 0,
+    "weightedDiscomfort": 625,
+    "burden": 625,
+    "utility": 712,
+    "legal": true
+   },
+   "savedKnownPave": 298,
+   "savedConfirmed": -113,
+   "savedProbable": 411,
+   "discomfortChange": -40,
+   "unknownChange": -48,
+   "extraSeconds": 201,
+   "verdict": "adds-confirmed-pave",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "lorenteggio-lambrate-car",
+   "mode": "car",
+   "origin": [
+    9.1358343,
+    45.4531536
+   ],
+   "destination": [
+    9.2371839,
+    45.4840514
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "detour-2",
+    "km": 21.53,
+    "minutes": 37.4,
+    "knownPave": 318,
+    "confirmed": 248,
+    "probable": 70,
+    "unpaved": 0,
+    "unknown": 10377,
+    "weightedDiscomfort": 293,
+    "burden": 293,
+    "utility": 293,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla",
+    "km": 39.22,
+    "minutes": 42.3,
+    "knownPave": 16,
+    "confirmed": 16,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 36760,
+    "weightedDiscomfort": 16,
+    "burden": 26154,
+    "utility": 26400,
+    "legal": true
+   },
+   "savedKnownPave": 302,
+   "savedConfirmed": 232,
+   "savedProbable": 70,
+   "discomfortChange": -277,
+   "unknownChange": 26383,
+   "extraSeconds": 295,
+   "verdict": "unknown-surface-burden",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "moscova-crocetta-car",
+   "mode": "car",
+   "origin": [
+    9.1867958,
+    45.4773049
+   ],
+   "destination": [
+    9.1950386,
+    45.4565486
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 4.7,
+    "minutes": 15.6,
+    "knownPave": 1328,
+    "confirmed": 940,
+    "probable": 388,
+    "unpaved": 0,
+    "unknown": 2,
+    "weightedDiscomfort": 1192,
+    "burden": 1192,
+    "utility": 1192,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla",
+    "km": 5.88,
+    "minutes": 17.3,
+    "knownPave": 964,
+    "confirmed": 964,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 964,
+    "burden": 964,
+    "utility": 1047,
+    "legal": true
+   },
+   "savedKnownPave": 364,
+   "savedConfirmed": -24,
+   "savedProbable": 388,
+   "discomfortChange": -228,
+   "unknownChange": -2,
+   "extraSeconds": 99,
+   "verdict": "adds-confirmed-pave",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "porta-genova-san-babila-motorcycle",
+   "mode": "motorcycle",
+   "origin": [
+    9.1701298,
+    45.4529505
+   ],
+   "destination": [
+    9.1981131,
+    45.4667997
+   ],
+   "shownKind": "anti-pavé",
+   "selected": {
+    "source": "surface-aware-valhalla",
+    "km": 3.75,
+    "minutes": 12.5,
+    "knownPave": 683,
+    "confirmed": 319,
+    "probable": 364,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 556,
+    "burden": 556,
+    "utility": 575,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla-2",
+    "km": 4.73,
+    "minutes": 16.1,
+    "knownPave": 454,
+    "confirmed": 424,
+    "probable": 30,
+    "unpaved": 0,
+    "unknown": 102,
+    "weightedDiscomfort": 443,
+    "burden": 479,
+    "utility": 618,
+    "legal": true
+   },
+   "savedKnownPave": 229,
+   "savedConfirmed": -105,
+   "savedProbable": 334,
+   "discomfortChange": -113,
+   "unknownChange": 102,
+   "extraSeconds": 218,
+   "verdict": "a-better-alternative-was-chosen",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "sant-agostino-colonne-car",
+   "mode": "car",
+   "origin": [
+    9.169,
+    45.4587398
+   ],
+   "destination": [
+    9.180947,
+    45.4573964
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-2",
+    "km": 1.28,
+    "minutes": 4.8,
+    "knownPave": 265,
+    "confirmed": 223,
+    "probable": 42,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 250,
+    "burden": 250,
+    "utility": 250,
+    "legal": true
+   },
+   "rejected": {
+    "source": "base-3",
+    "km": 1.76,
+    "minutes": 6.4,
+    "knownPave": 158,
+    "confirmed": 143,
+    "probable": 15,
+    "unpaved": 0,
+    "unknown": 110,
+    "weightedDiscomfort": 152,
+    "burden": 191,
+    "utility": 274,
+    "legal": true
+   },
+   "savedKnownPave": 107,
+   "savedConfirmed": 80,
+   "savedProbable": 27,
+   "discomfortChange": -98,
+   "unknownChange": 110,
+   "extraSeconds": 100,
+   "verdict": "time-cost-exceeds-saving",
+   "extraMinutesAllowance": null
+  }
+ ],
+ "allRows": [
+  {
+   "case": "cadorna-cinque-giornate-car",
+   "mode": "car",
+   "origin": [
+    9.1765,
+    45.4682
+   ],
+   "destination": [
+    9.2075,
+    45.4625
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 4.35,
+    "minutes": 14,
+    "knownPave": 322,
+    "confirmed": 2,
+    "probable": 320,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 210,
+    "burden": 210,
+    "utility": 210,
+    "legal": true
+   },
+   "rejected": {
+    "source": "detour-2",
+    "km": 5.91,
+    "minutes": 18.4,
+    "knownPave": 62,
+    "confirmed": 0,
+    "probable": 62,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 40,
+    "burden": 40,
+    "utility": 261,
+    "legal": true
+   },
+   "savedKnownPave": 260,
+   "savedConfirmed": 2,
+   "savedProbable": 258,
+   "discomfortChange": -170,
+   "unknownChange": 0,
+   "extraSeconds": 265,
+   "verdict": "time-cost-exceeds-saving",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "cenacolo-missori-car",
+   "mode": "car",
+   "origin": [
+    9.1708,
+    45.4659
+   ],
+   "destination": [
+    9.1887,
+    45.4607
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 3.12,
+    "minutes": 10.9,
+    "knownPave": 902,
+    "confirmed": 582,
+    "probable": 320,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 790,
+    "burden": 790,
+    "utility": 790,
+    "legal": true
+   },
+   "rejected": {
+    "source": "base-2",
+    "km": 4.25,
+    "minutes": 15.1,
+    "knownPave": 701,
+    "confirmed": 475,
+    "probable": 226,
+    "unpaved": 0,
+    "unknown": 88,
+    "weightedDiscomfort": 622,
+    "burden": 653,
+    "utility": 864,
+    "legal": true
+   },
+   "savedKnownPave": 201,
+   "savedConfirmed": 107,
+   "savedProbable": 94,
+   "discomfortChange": -168,
+   "unknownChange": 88,
+   "extraSeconds": 253,
+   "verdict": "time-cost-exceeds-saving",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "colonne-porta-genova-car",
+   "mode": "car",
+   "origin": [
+    9.180947,
+    45.4573964
+   ],
+   "destination": [
+    9.1701298,
+    45.4529505
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 2,
+    "minutes": 6.8,
+    "knownPave": 242,
+    "confirmed": 205,
+    "probable": 37,
+    "unpaved": 0,
+    "unknown": 17,
+    "weightedDiscomfort": 229,
+    "burden": 229,
+    "utility": 229,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla-2",
+    "km": 2.6,
+    "minutes": 9.1,
+    "knownPave": 92,
+    "confirmed": 85,
+    "probable": 7,
+    "unpaved": 0,
+    "unknown": 151,
+    "weightedDiscomfort": 89,
+    "burden": 136,
+    "utility": 247,
+    "legal": true
+   },
+   "savedKnownPave": 150,
+   "savedConfirmed": 120,
+   "savedProbable": 30,
+   "discomfortChange": -140,
+   "unknownChange": 134,
+   "extraSeconds": 134,
+   "verdict": "time-cost-exceeds-saving",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "duomo-porta-garibaldi-bicycle",
+   "mode": "bicycle",
+   "origin": [
+    9.19,
+    45.4642
+   ],
+   "destination": [
+    9.1872,
+    45.4848
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 2.74,
+    "minutes": 10,
+    "knownPave": 1322,
+    "confirmed": 532,
+    "probable": 790,
+    "unpaved": 0,
+    "unknown": 339,
+    "weightedDiscomfort": 1045,
+    "burden": 1045,
+    "utility": 1045,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla",
+    "km": 3.32,
+    "minutes": 13.6,
+    "knownPave": 1057,
+    "confirmed": 797,
+    "probable": 260,
+    "unpaved": 0,
+    "unknown": 105,
+    "weightedDiscomfort": 966,
+    "burden": 966,
+    "utility": 1060,
+    "legal": true
+   },
+   "savedKnownPave": 265,
+   "savedConfirmed": -265,
+   "savedProbable": 530,
+   "discomfortChange": -79,
+   "unknownChange": -234,
+   "extraSeconds": 218,
+   "verdict": "adds-confirmed-pave",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "gae-aulenti-porta-romana-bicycle",
+   "mode": "bicycle",
+   "origin": [
+    9.1895,
+    45.4836
+   ],
+   "destination": [
+    9.1975,
+    45.456
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 4.37,
+    "minutes": 15.5,
+    "knownPave": 668,
+    "confirmed": 668,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 32,
+    "weightedDiscomfort": 668,
+    "burden": 668,
+    "utility": 668,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla-2",
+    "km": 5.03,
+    "minutes": 18.2,
+    "knownPave": 368,
+    "confirmed": 368,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 713,
+    "weightedDiscomfort": 368,
+    "burden": 805,
+    "utility": 876,
+    "legal": true
+   },
+   "savedKnownPave": 300,
+   "savedConfirmed": 300,
+   "savedProbable": 0,
+   "discomfortChange": -300,
+   "unknownChange": 681,
+   "extraSeconds": 164,
+   "verdict": "unknown-surface-burden",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "lambrate-cadorna-bicycle",
+   "mode": "bicycle",
+   "origin": [
+    9.2371839,
+    45.4840514
+   ],
+   "destination": [
+    9.1767854,
+    45.468161
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "detour-1",
+    "km": 6.48,
+    "minutes": 22.8,
+    "knownPave": 843,
+    "confirmed": 334,
+    "probable": 509,
+    "unpaved": 0,
+    "unknown": 48,
+    "weightedDiscomfort": 665,
+    "burden": 665,
+    "utility": 665,
+    "legal": true
+   },
+   "rejected": {
+    "source": "base-1",
+    "km": 6.68,
+    "minutes": 22.8,
+    "knownPave": 660,
+    "confirmed": 660,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 2,
+    "weightedDiscomfort": 660,
+    "burden": 660,
+    "utility": 660,
+    "legal": true
+   },
+   "savedKnownPave": 183,
+   "savedConfirmed": -326,
+   "savedProbable": 509,
+   "discomfortChange": -5,
+   "unknownChange": -46,
+   "extraSeconds": 0,
+   "verdict": "adds-confirmed-pave",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "lambrate-cadorna-bicycle",
+   "mode": "bicycle",
+   "origin": [
+    9.2371839,
+    45.4840514
+   ],
+   "destination": [
+    9.1767854,
+    45.468161
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "detour-1",
+    "km": 6.48,
+    "minutes": 22.8,
+    "knownPave": 843,
+    "confirmed": 334,
+    "probable": 509,
+    "unpaved": 0,
+    "unknown": 48,
+    "weightedDiscomfort": 665,
+    "burden": 665,
+    "utility": 665,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla-2",
+    "km": 7.3,
+    "minutes": 26.2,
+    "knownPave": 545,
+    "confirmed": 447,
+    "probable": 98,
+    "unpaved": 326,
+    "unknown": 0,
+    "weightedDiscomfort": 625,
+    "burden": 625,
+    "utility": 712,
+    "legal": true
+   },
+   "savedKnownPave": 298,
+   "savedConfirmed": -113,
+   "savedProbable": 411,
+   "discomfortChange": -40,
+   "unknownChange": -48,
+   "extraSeconds": 201,
+   "verdict": "adds-confirmed-pave",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "lorenteggio-lambrate-car",
+   "mode": "car",
+   "origin": [
+    9.1358343,
+    45.4531536
+   ],
+   "destination": [
+    9.2371839,
+    45.4840514
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "detour-2",
+    "km": 21.53,
+    "minutes": 37.4,
+    "knownPave": 318,
+    "confirmed": 248,
+    "probable": 70,
+    "unpaved": 0,
+    "unknown": 10377,
+    "weightedDiscomfort": 293,
+    "burden": 293,
+    "utility": 293,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla",
+    "km": 39.22,
+    "minutes": 42.3,
+    "knownPave": 16,
+    "confirmed": 16,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 36760,
+    "weightedDiscomfort": 16,
+    "burden": 26154,
+    "utility": 26400,
+    "legal": true
+   },
+   "savedKnownPave": 302,
+   "savedConfirmed": 232,
+   "savedProbable": 70,
+   "discomfortChange": -277,
+   "unknownChange": 26383,
+   "extraSeconds": 295,
+   "verdict": "unknown-surface-burden",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "moscova-crocetta-car",
+   "mode": "car",
+   "origin": [
+    9.1867958,
+    45.4773049
+   ],
+   "destination": [
+    9.1950386,
+    45.4565486
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 4.7,
+    "minutes": 15.6,
+    "knownPave": 1328,
+    "confirmed": 940,
+    "probable": 388,
+    "unpaved": 0,
+    "unknown": 2,
+    "weightedDiscomfort": 1192,
+    "burden": 1192,
+    "utility": 1192,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla",
+    "km": 5.88,
+    "minutes": 17.3,
+    "knownPave": 964,
+    "confirmed": 964,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 964,
+    "burden": 964,
+    "utility": 1047,
+    "legal": true
+   },
+   "savedKnownPave": 364,
+   "savedConfirmed": -24,
+   "savedProbable": 388,
+   "discomfortChange": -228,
+   "unknownChange": -2,
+   "extraSeconds": 99,
+   "verdict": "adds-confirmed-pave",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "moscova-crocetta-car",
+   "mode": "car",
+   "origin": [
+    9.1867958,
+    45.4773049
+   ],
+   "destination": [
+    9.1950386,
+    45.4565486
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-1",
+    "km": 4.7,
+    "minutes": 15.6,
+    "knownPave": 1328,
+    "confirmed": 940,
+    "probable": 388,
+    "unpaved": 0,
+    "unknown": 2,
+    "weightedDiscomfort": 1192,
+    "burden": 1192,
+    "utility": 1192,
+    "legal": true
+   },
+   "rejected": {
+    "source": "base-3",
+    "km": 5.12,
+    "minutes": 17.5,
+    "knownPave": 1031,
+    "confirmed": 997,
+    "probable": 34,
+    "unpaved": 0,
+    "unknown": 89,
+    "weightedDiscomfort": 1019,
+    "burden": 1049,
+    "utility": 1146,
+    "legal": true
+   },
+   "savedKnownPave": 297,
+   "savedConfirmed": -57,
+   "savedProbable": 354,
+   "discomfortChange": -173,
+   "unknownChange": 87,
+   "extraSeconds": 115,
+   "verdict": "dominated",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "porta-genova-san-babila-motorcycle",
+   "mode": "motorcycle",
+   "origin": [
+    9.1701298,
+    45.4529505
+   ],
+   "destination": [
+    9.1981131,
+    45.4667997
+   ],
+   "shownKind": "anti-pavé",
+   "selected": {
+    "source": "surface-aware-valhalla",
+    "km": 3.75,
+    "minutes": 12.5,
+    "knownPave": 683,
+    "confirmed": 319,
+    "probable": 364,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 556,
+    "burden": 556,
+    "utility": 575,
+    "legal": true
+   },
+   "rejected": {
+    "source": "base-2",
+    "km": 5.13,
+    "minutes": 15.9,
+    "knownPave": 456,
+    "confirmed": 456,
+    "probable": 0,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 456,
+    "burden": 456,
+    "utility": 589,
+    "legal": true
+   },
+   "savedKnownPave": 227,
+   "savedConfirmed": -137,
+   "savedProbable": 364,
+   "discomfortChange": -100,
+   "unknownChange": 0,
+   "extraSeconds": 208,
+   "verdict": "a-better-alternative-was-chosen",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "porta-genova-san-babila-motorcycle",
+   "mode": "motorcycle",
+   "origin": [
+    9.1701298,
+    45.4529505
+   ],
+   "destination": [
+    9.1981131,
+    45.4667997
+   ],
+   "shownKind": "anti-pavé",
+   "selected": {
+    "source": "surface-aware-valhalla",
+    "km": 3.75,
+    "minutes": 12.5,
+    "knownPave": 683,
+    "confirmed": 319,
+    "probable": 364,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 556,
+    "burden": 556,
+    "utility": 575,
+    "legal": true
+   },
+   "rejected": {
+    "source": "surface-aware-valhalla-2",
+    "km": 4.73,
+    "minutes": 16.1,
+    "knownPave": 454,
+    "confirmed": 424,
+    "probable": 30,
+    "unpaved": 0,
+    "unknown": 102,
+    "weightedDiscomfort": 443,
+    "burden": 479,
+    "utility": 618,
+    "legal": true
+   },
+   "savedKnownPave": 229,
+   "savedConfirmed": -105,
+   "savedProbable": 334,
+   "discomfortChange": -113,
+   "unknownChange": 102,
+   "extraSeconds": 218,
+   "verdict": "a-better-alternative-was-chosen",
+   "extraMinutesAllowance": null
+  },
+  {
+   "case": "sant-agostino-colonne-car",
+   "mode": "car",
+   "origin": [
+    9.169,
+    45.4587398
+   ],
+   "destination": [
+    9.180947,
+    45.4573964
+   ],
+   "shownKind": "più rapido",
+   "selected": {
+    "source": "base-2",
+    "km": 1.28,
+    "minutes": 4.8,
+    "knownPave": 265,
+    "confirmed": 223,
+    "probable": 42,
+    "unpaved": 0,
+    "unknown": 0,
+    "weightedDiscomfort": 250,
+    "burden": 250,
+    "utility": 250,
+    "legal": true
+   },
+   "rejected": {
+    "source": "base-3",
+    "km": 1.76,
+    "minutes": 6.4,
+    "knownPave": 158,
+    "confirmed": 143,
+    "probable": 15,
+    "unpaved": 0,
+    "unknown": 110,
+    "weightedDiscomfort": 152,
+    "burden": 191,
+    "utility": 274,
+    "legal": true
+   },
+   "savedKnownPave": 107,
+   "savedConfirmed": 80,
+   "savedProbable": 27,
+   "discomfortChange": -98,
+   "unknownChange": 110,
+   "extraSeconds": 100,
+   "verdict": "time-cost-exceeds-saving",
+   "extraMinutesAllowance": null
+  }
+ ]
+}

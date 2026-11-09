@@ -1,0 +1,271 @@
+{
+ "synthetic": "wrong turns are synthetic; provider routes and surface scores are real (archived)",
+ "before": "before",
+ "after": "after",
+ "all": {
+  "reroutes": 203,
+  "confirmedPave": {
+   "before": 46316,
+   "clientFixOnly": 44654,
+   "after": 41370
+  },
+  "probablePave": {
+   "before": 28622,
+   "after": 24519
+  },
+  "unknownSurface": {
+   "before": 21035,
+   "after": 11594
+  },
+  "seconds": {
+   "before": 124276,
+   "after": 126646
+  },
+  "meters": {
+   "before": 625936,
+   "after": 628164
+  },
+  "extraSecondsOverFastest": {
+   "before": 4633,
+   "after": 7013
+  },
+  "extraMetersOverFastest": {
+   "before": 13447,
+   "after": 16001
+  },
+  "withDistinctAlternative": {
+   "before": 56,
+   "after": 71
+  },
+  "showsAntiPaveAlternative": {
+   "before": 51,
+   "after": 71
+  },
+  "objectiveLostAtFirstReroute": 5,
+  "moreConfirmedAfter": 2,
+  "lessConfirmedAfter": 20,
+  "providerCalls": {
+   "before": 307,
+   "after": 387
+  },
+  "cpuMs": {
+   "beforeP50": 32,
+   "beforeP95": 221,
+   "afterP50": 21,
+   "afterP95": 122
+  },
+  "estimatedLatencyMs": {
+   "beforeP50": 1185,
+   "beforeP95": 1445,
+   "afterP50": 1221,
+   "afterP95": 2518
+  }
+ },
+ "byMode": {
+  "car": {
+   "reroutes": 66,
+   "confirmedPave": {
+    "before": 15674,
+    "clientFixOnly": 14667,
+    "after": 14294
+   },
+   "probablePave": {
+    "before": 7054,
+    "after": 6400
+   },
+   "unknownSurface": {
+    "before": 12551,
+    "after": 2498
+   },
+   "seconds": {
+    "before": 38882,
+    "after": 39675
+   },
+   "meters": {
+    "before": 206665,
+    "after": 202506
+   },
+   "extraSecondsOverFastest": {
+    "before": 1180,
+    "after": 1973
+   },
+   "extraMetersOverFastest": {
+    "before": 5437,
+    "after": 1278
+   },
+   "withDistinctAlternative": {
+    "before": 15,
+    "after": 19
+   },
+   "showsAntiPaveAlternative": {
+    "before": 13,
+    "after": 19
+   },
+   "objectiveLostAtFirstReroute": 2,
+   "moreConfirmedAfter": 0,
+   "lessConfirmedAfter": 4,
+   "providerCalls": {
+    "before": 100,
+    "after": 130
+   },
+   "cpuMs": {
+    "beforeP50": 36,
+    "beforeP95": 230,
+    "afterP50": 20,
+    "afterP95": 126
+   },
+   "estimatedLatencyMs": {
+    "beforeP50": 1186,
+    "beforeP95": 1485,
+    "afterP50": 1263,
+    "afterP95": 2501
+   }
+  },
+  "motorcycle": {
+   "reroutes": 65,
+   "confirmedPave": {
+    "before": 14983,
+    "clientFixOnly": 14659,
+    "after": 13461
+   },
+   "probablePave": {
+    "before": 8059,
+    "after": 6064
+   },
+   "unknownSurface": {
+    "before": 2684,
+    "after": 3242
+   },
+   "seconds": {
+    "before": 40098,
+    "after": 41045
+   },
+   "meters": {
+    "before": 206784,
+    "after": 210552
+   },
+   "extraSecondsOverFastest": {
+    "before": 1431,
+    "after": 2386
+   },
+   "extraMetersOverFastest": {
+    "before": -1663,
+    "after": 2416
+   },
+   "withDistinctAlternative": {
+    "before": 16,
+    "after": 22
+   },
+   "showsAntiPaveAlternative": {
+    "before": 15,
+    "after": 22
+   },
+   "objectiveLostAtFirstReroute": 1,
+   "moreConfirmedAfter": 1,
+   "lessConfirmedAfter": 7,
+   "providerCalls": {
+    "before": 102,
+    "after": 130
+   },
+   "cpuMs": {
+    "beforeP50": 29,
+    "beforeP95": 217,
+    "afterP50": 23,
+    "afterP95": 108
+   },
+   "estimatedLatencyMs": {
+    "beforeP50": 1198,
+    "beforeP95": 1445,
+    "afterP50": 1240,
+    "afterP95": 2530
+   }
+  },
+  "bicycle": {
+   "reroutes": 72,
+   "confirmedPave": {
+    "before": 15659,
+    "clientFixOnly": 15328,
+    "after": 13615
+   },
+   "probablePave": {
+    "before": 13509,
+    "after": 12055
+   },
+   "unknownSurface": {
+    "before": 5800,
+    "after": 5854
+   },
+   "seconds": {
+    "before": 45296,
+    "after": 45926
+   },
+   "meters": {
+    "before": 212487,
+    "after": 215106
+   },
+   "extraSecondsOverFastest": {
+    "before": 2022,
+    "after": 2654
+   },
+   "extraMetersOverFastest": {
+    "before": 9673,
+    "after": 12307
+   },
+   "withDistinctAlternative": {
+    "before": 25,
+    "after": 30
+   },
+   "showsAntiPaveAlternative": {
+    "before": 23,
+    "after": 30
+   },
+   "objectiveLostAtFirstReroute": 2,
+   "moreConfirmedAfter": 1,
+   "lessConfirmedAfter": 9,
+   "providerCalls": {
+    "before": 105,
+    "after": 127
+   },
+   "cpuMs": {
+    "beforeP50": 31,
+    "beforeP95": 128,
+    "afterP50": 21,
+    "afterP95": 56
+   },
+   "estimatedLatencyMs": {
+    "beforeP50": 216,
+    "beforeP95": 1357,
+    "afterP50": 177,
+    "afterP95": 2484
+   }
+  }
+ },
+ "secondReroute": {
+  "reroutes": 79,
+  "objectiveLostBefore": 7,
+  "confirmedPave": {
+   "before": 15495,
+   "objectiveKept": 13566
+  },
+  "seconds": {
+   "before": 39171,
+   "objectiveKept": 40200
+  }
+ },
+ "regressions": [
+  {
+   "key": "duomo-porta-garibaldi|bicycle",
+   "before": 552,
+   "after": 710,
+   "beforeKind": "fast",
+   "afterKind": "fast"
+  },
+  {
+   "key": "abbiategrasso-colonne|motorcycle",
+   "before": 133,
+   "after": 143,
+   "beforeKind": "safe",
+   "afterKind": "fast"
+  }
+ ]
+}

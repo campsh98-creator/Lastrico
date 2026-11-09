@@ -1,0 +1,199 @@
+{
+  "label": "before",
+  "synthetic": true,
+  "route": "Lastrico pilot 03a6776e /api/routes, 2026-11-08, car, avoid=strong, fastest route Piazza Gae Aulenti → Largo Promessi Sposi (OSM-derived geometry, ODbL). Used for synthetic GPS replays only.",
+  "results": {
+    "cold-start-urban-canyon": {
+      "fixes": 60,
+      "rejected": 2,
+      "reroutes": 0,
+      "secondsToFirstAccepted": 3,
+      "secondsToErrorUnder15m": 21,
+      "displayErrorMeters": {
+        "mean": 16.9,
+        "p95": 52.6,
+        "max": 73.1
+      },
+      "markerStepMeters": {
+        "p95": 38.8,
+        "max": 45.2
+      },
+      "heldWhileMoving": 6,
+      "headingErrorDegrees": {
+        "mean": 9.6,
+        "p95": 41.9
+      },
+      "qualityStates": {
+        "n/a": 58
+      }
+    },
+    "cold-start-reflected-street": {
+      "fixes": 52,
+      "rejected": 0,
+      "reroutes": 3,
+      "secondsToFirstAccepted": 1,
+      "secondsToErrorUnder15m": 14,
+      "displayErrorMeters": {
+        "mean": 26.3,
+        "p95": 105.9,
+        "max": 159.8
+      },
+      "markerStepMeters": {
+        "p95": 25.5,
+        "max": 63.9
+      },
+      "heldWhileMoving": 6,
+      "headingErrorDegrees": {
+        "mean": 6.2,
+        "p95": 24.1
+      },
+      "qualityStates": {
+        "n/a": 52
+      }
+    },
+    "parallel-street-bias": {
+      "fixes": 49,
+      "rejected": 0,
+      "reroutes": 0,
+      "secondsToFirstAccepted": 1,
+      "secondsToErrorUnder15m": 1,
+      "displayErrorMeters": {
+        "mean": 13,
+        "p95": 43.7,
+        "max": 43.8
+      },
+      "markerStepMeters": {
+        "p95": 18.3,
+        "max": 23.6
+      },
+      "heldWhileMoving": 3,
+      "headingErrorDegrees": {
+        "mean": 5.5,
+        "p95": 10.2
+      },
+      "qualityStates": {
+        "n/a": 49
+      }
+    },
+    "outage-and-recovery": {
+      "fixes": 38,
+      "rejected": 0,
+      "reroutes": 0,
+      "secondsToFirstAccepted": 1,
+      "secondsToErrorUnder15m": 1,
+      "displayErrorMeters": {
+        "mean": 7.6,
+        "p95": 38,
+        "max": 41.7
+      },
+      "markerStepMeters": {
+        "p95": 28.1,
+        "max": 150
+      },
+      "heldWhileMoving": 5,
+      "headingErrorDegrees": {
+        "mean": 7.2,
+        "p95": 46.1
+      },
+      "qualityStates": {
+        "n/a": 38
+      }
+    },
+    "out-of-order-and-duplicates": {
+      "fixes": 54,
+      "rejected": 14,
+      "reroutes": 0,
+      "secondsToFirstAccepted": 1,
+      "secondsToErrorUnder15m": 1,
+      "displayErrorMeters": {
+        "mean": 5.3,
+        "p95": 10.2,
+        "max": 10.6
+      },
+      "markerStepMeters": {
+        "p95": 17.4,
+        "max": 22.4
+      },
+      "heldWhileMoving": 3,
+      "headingErrorDegrees": {
+        "mean": 9.6,
+        "p95": 55.5
+      },
+      "qualityStates": {
+        "n/a": 40
+      }
+    },
+    "traffic-light-stop": {
+      "fixes": 55,
+      "rejected": 0,
+      "reroutes": 0,
+      "secondsToFirstAccepted": 1,
+      "secondsToErrorUnder15m": 1,
+      "displayErrorMeters": {
+        "mean": 5.1,
+        "p95": 10.4,
+        "max": 11.5
+      },
+      "markerStepMeters": {
+        "p95": 13.3,
+        "max": 13.7
+      },
+      "heldWhileMoving": 2,
+      "headingErrorDegrees": {
+        "mean": 16.2,
+        "p95": 53.2
+      },
+      "qualityStates": {
+        "n/a": 55
+      }
+    },
+    "slow-updates-3s": {
+      "fixes": 20,
+      "rejected": 0,
+      "reroutes": 0,
+      "secondsToFirstAccepted": 1,
+      "secondsToErrorUnder15m": 1,
+      "displayErrorMeters": {
+        "mean": 7.8,
+        "p95": 12.4,
+        "max": 12.4
+      },
+      "markerStepMeters": {
+        "p95": 29.6,
+        "max": 29.6
+      },
+      "heldWhileMoving": 0,
+      "headingErrorDegrees": {
+        "mean": 11.9,
+        "p95": 40
+      },
+      "qualityStates": {
+        "n/a": 20
+      }
+    },
+    "fast-updates-0.5s": {
+      "fixes": 60,
+      "rejected": 0,
+      "reroutes": 0,
+      "secondsToFirstAccepted": 1,
+      "secondsToErrorUnder15m": 1,
+      "displayErrorMeters": {
+        "mean": 3.5,
+        "p95": 7.6,
+        "max": 7.8
+      },
+      "markerStepMeters": {
+        "p95": 10.1,
+        "max": 11.1
+      },
+      "heldWhileMoving": 16,
+      "headingErrorDegrees": {
+        "mean": 5.4,
+        "p95": 26.8
+      },
+      "qualityStates": {
+        "n/a": 60
+      }
+    }
+  }
+}

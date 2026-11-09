@@ -1,0 +1,1056 @@
+{
+ "note": "Provider routes through the Phase 4.31 handler at explicit departure times; ZTL areas from OSM tags in the repository.",
+ "generatedAt": "2026-11-08T18:17:23.811Z",
+ "results": [
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "car",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14.3,
+    "km": 4.02,
+    "confirmedPave": 143,
+    "probablePave": 22,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "base-1",
+    "surface-aware-valhalla",
+    "base-2",
+    "surface-aware-valhalla-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 6,
+   "accessContext": {
+    "departure": "lun 12:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "car",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14.3,
+    "km": 4.02,
+    "confirmedPave": 143,
+    "probablePave": 22,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "base-1",
+    "surface-aware-valhalla",
+    "base-2",
+    "surface-aware-valhalla-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 6,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "car",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "ztl-via-mario-pichi",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14.3,
+    "km": 4.02,
+    "confirmedPave": 143,
+    "probablePave": 22,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "base-1",
+    "surface-aware-valhalla",
+    "base-2",
+    "surface-aware-valhalla-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 6,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": [
+     "ztl-via-mario-pichi"
+    ]
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "car",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14,
+    "km": 3.67,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 12:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "car",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14,
+    "km": 3.67,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "car",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "ztl-via-mario-pichi",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14,
+    "km": 3.67,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": [
+     "ztl-via-mario-pichi"
+    ]
+   },
+   "notice": []
+  },
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "motorcycle",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14.3,
+    "km": 4.02,
+    "confirmedPave": 143,
+    "probablePave": 22,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "base-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 12:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "motorcycle",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14.3,
+    "km": 4.02,
+    "confirmedPave": 143,
+    "probablePave": 22,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "base-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "motorcycle",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "ztl-via-mario-pichi",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14.3,
+    "km": 4.02,
+    "confirmedPave": 143,
+    "probablePave": 22,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "base-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": [
+     "ztl-via-mario-pichi"
+    ]
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "motorcycle",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14,
+    "km": 3.67,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 12:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "motorcycle",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14,
+    "km": 3.67,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "motorcycle",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "ztl-via-mario-pichi",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 14,
+    "km": 3.67,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "surface-aware-valhalla",
+    "base-1",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 5,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": [
+     "ztl-via-mario-pichi"
+    ]
+   },
+   "notice": []
+  },
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "bicycle",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 10.6,
+    "km": 2.91,
+    "confirmedPave": 447,
+    "probablePave": 8,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": {
+    "minutes": 12.2,
+    "km": 3.33,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "sources": [
+    "base-1",
+    "base-2",
+    "base-3"
+   ],
+   "providerCalls": 1,
+   "accessContext": {
+    "departure": "lun 12:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "bicycle",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 10.6,
+    "km": 2.91,
+    "confirmedPave": 447,
+    "probablePave": 8,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": {
+    "minutes": 12.2,
+    "km": 3.33,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "sources": [
+    "base-1",
+    "base-2",
+    "base-3"
+   ],
+   "providerCalls": 1,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "B Promessi Sposi → Vetra",
+   "mode": "bicycle",
+   "start": [
+    9.1734728,
+    45.4349746
+   ],
+   "end": [
+    9.1825442,
+    45.4572551
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "ztl-via-mario-pichi",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 10.6,
+    "km": 2.91,
+    "confirmedPave": 447,
+    "probablePave": 8,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": {
+    "minutes": 12.2,
+    "km": 3.33,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "sources": [
+    "base-1",
+    "base-2",
+    "base-3"
+   ],
+   "providerCalls": 1,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": [
+     "ztl-via-mario-pichi"
+    ]
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "bicycle",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 11.5,
+    "km": 3.24,
+    "confirmedPave": 188,
+    "probablePave": 295,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "base-1",
+    "surface-aware-valhalla",
+    "detour-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 6,
+   "accessContext": {
+    "departure": "lun 12:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "bicycle",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 11.5,
+    "km": 3.24,
+    "confirmedPave": 188,
+    "probablePave": 295,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "base-1",
+    "surface-aware-valhalla",
+    "detour-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 6,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  },
+  {
+   "label": "C Vetra → Promessi Sposi",
+   "mode": "bicycle",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.1734728,
+    45.4349746
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "ztl-via-mario-pichi",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 11.5,
+    "km": 3.24,
+    "confirmedPave": 188,
+    "probablePave": 295,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "base-1",
+    "surface-aware-valhalla",
+    "detour-2",
+    "detour-1",
+    "detour-3"
+   ],
+   "providerCalls": 6,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": [
+     "ztl-via-mario-pichi"
+    ]
+   },
+   "notice": []
+  },
+  {
+   "label": "Vetra → Via Magolfa (in ZTL Navigli)",
+   "mode": "car",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.17567,
+    45.44961
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "",
+   "status": 422,
+   "error": "Ogni percorso trovato entra in ZTL Via Mario Pichi, Via Giosuè Borsi, Via Magolfa e vie vicine, attiva in questo orario. Se hai l'autorizzazione, attivala in Preferenze › Accessi ZTL; altrimenti scegli un punto fuori dalla zona.",
+   "hasDistinctAlternative": null,
+   "antiPave": null,
+   "sources": [],
+   "providerCalls": 2,
+   "accessContext": null,
+   "notice": []
+  },
+  {
+   "label": "Vetra → Via Magolfa (in ZTL Navigli)",
+   "mode": "car",
+   "start": [
+    9.1825442,
+    45.4572551
+   ],
+   "end": [
+    9.17567,
+    45.44961
+   ],
+   "departure": "2026-11-09T21:00",
+   "ztl": "ztl-via-mario-pichi",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": false,
+   "fast": {
+    "minutes": 11.1,
+    "km": 2.76,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [
+      {
+       "id": "ztl-via-mario-pichi",
+       "name": "ZTL Via Mario Pichi, Via Giosuè Borsi, Via Magolfa e vie vicine",
+       "meters": 136
+      }
+     ],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": null,
+   "sources": [
+    "base-1",
+    "base-2",
+    "base-3"
+   ],
+   "providerCalls": 1,
+   "accessContext": {
+    "departure": "lun 21:00",
+    "authorisedZtl": [
+     "ztl-via-mario-pichi"
+    ]
+   },
+   "notice": [
+    ". Attraversa ZTL Via Mario Pichi, Via Giosuè Borsi, Via Magolfa e vie vicine con la tua autorizzazione"
+   ]
+  },
+  {
+   "label": "Piazza Cavour → Via Monte Napoleone (Quadrilatero)",
+   "mode": "car",
+   "start": [
+    9.1958,
+    45.4731
+   ],
+   "end": [
+    9.1953,
+    45.4683
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "",
+   "status": 422,
+   "error": "Ogni percorso trovato entra in ZTL Quadrilatero della Moda, attiva in questo orario. Se hai l'autorizzazione, attivala in Preferenze › Accessi ZTL; altrimenti scegli un punto fuori dalla zona.",
+   "hasDistinctAlternative": null,
+   "antiPave": null,
+   "sources": [],
+   "providerCalls": 2,
+   "accessContext": null,
+   "notice": []
+  },
+  {
+   "label": "Piazza Cavour → Via Monte Napoleone (Quadrilatero)",
+   "mode": "car",
+   "start": [
+    9.1958,
+    45.4731
+   ],
+   "end": [
+    9.1953,
+    45.4683
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "ztl-quadrilatero-della-moda",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 7.2,
+    "km": 1.62,
+    "confirmedPave": 404,
+    "probablePave": 58,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [
+      {
+       "id": "ztl-quadrilatero-della-moda",
+       "name": "ZTL Quadrilatero della Moda",
+       "meters": 210
+      }
+     ],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": {
+    "minutes": 8.7,
+    "km": 2.45,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [
+      {
+       "id": "ztl-quadrilatero-della-moda",
+       "name": "ZTL Quadrilatero della Moda",
+       "meters": 336
+      }
+     ],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "sources": [
+    "base-1",
+    "base-2",
+    "base-3"
+   ],
+   "providerCalls": 1,
+   "accessContext": {
+    "departure": "lun 12:00",
+    "authorisedZtl": [
+     "ztl-quadrilatero-della-moda"
+    ]
+   },
+   "notice": [
+    ". Attraversa ZTL Quadrilatero della Moda con la tua autorizzazione"
+   ]
+  },
+  {
+   "label": "Piazza Cavour → Via Monte Napoleone (Quadrilatero)",
+   "mode": "bicycle",
+   "start": [
+    9.1958,
+    45.4731
+   ],
+   "end": [
+    9.1953,
+    45.4683
+   ],
+   "departure": "2026-11-09T12:00",
+   "ztl": "",
+   "status": 200,
+   "error": null,
+   "hasDistinctAlternative": true,
+   "fast": {
+    "minutes": 6,
+    "km": 1.62,
+    "confirmedPave": 404,
+    "probablePave": 58,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "antiPave": {
+    "minutes": 8.8,
+    "km": 2.44,
+    "confirmedPave": 0,
+    "probablePave": 0,
+    "access": {
+     "ztl": [],
+     "authorisedZtl": [],
+     "terminalZtlMeters": 0,
+     "timedClosureMeters": 0,
+     "unknownConditionMeters": 0
+    }
+   },
+   "sources": [
+    "base-1",
+    "base-2"
+   ],
+   "providerCalls": 1,
+   "accessContext": {
+    "departure": "lun 12:00",
+    "authorisedZtl": []
+   },
+   "notice": []
+  }
+ ]
+}

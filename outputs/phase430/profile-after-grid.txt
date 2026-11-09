@@ -1,0 +1,50 @@
+total sampled 7047 ms
+TOP SELF:
+    1900 ms  27.0%  scoreRoadIntelligence  lib/road-intelligence-scoring.ts:329
+     598 ms   8.5%  (idle)  :0
+     590 ms   8.4%  nearbySegments  lib/road-intelligence-scoring.ts:164
+     248 ms   3.5%  (garbage collector)  :0
+     194 ms   2.8%  explicitRestriction  lib/road-intelligence-scoring.ts:237
+     184 ms   2.6%  restrictionSample  lib/road-intelligence-scoring.ts:290
+     178 ms   2.5%  headingsAlign  lib/road-intelligence-scoring.ts:108
+     174 ms   2.5%  getCellSegments  lib/spatial-road-store.ts:533
+     167 ms   2.4%  processChunkSync  node:zlib:400
+     157 ms   2.2%  scoreCandidate  route.ts(data-url):362
+     149 ms   2.1%  (program)  :0
+      89 ms   1.3%  detectModuleFormat  node:internal/modules/esm/get_format:87
+      88 ms   1.2%  distanceToSegment  lib/route-candidates.ts:10
+      88 ms   1.2%  hydrateTuple  lib/spatial-road-store.ts:230
+      85 ms   1.2%  getHydratedSegment  lib/spatial-road-store.ts:515
+      81 ms   1.2%  compare  lib/route-optimization.ts:50
+      67 ms   1.0%  metersPerLongitude  lib/road-intelligence-scoring.ts:69
+      62 ms   0.9%  get  lib/spatial-road-store.ts:352
+      60 ms   0.9%  (anonymous)  node:internal/deps/undici/undici:7039
+      58 ms   0.8%  pointToSegmentDistance  lib/road-intelligence-scoring.ts:81
+      55 ms   0.8%  compileForInternalLoader  node:internal/bootstrap/realm:383
+      54 ms   0.8%  addPointTiles  lib/spatial-road-store.ts:434
+TOP INCLUSIVE (lib/app only):
+    4722 ms  67.0%  GET  route.ts(data-url):293
+    3795 ms  53.9%  scoredCandidate  route.ts(data-url):373
+    3794 ms  53.8%  scoreCandidate  route.ts(data-url):362
+    3632 ms  51.5%  scoreRoadIntelligence  lib/road-intelligence-scoring.ts:329
+    2247 ms  31.9%  (anonymous)  route.ts(data-url):383
+    1008 ms  14.3%  nearbySegments  lib/road-intelligence-scoring.ts:164
+     998 ms  14.2%  (anonymous)  route.ts(data-url):493
+     435 ms   6.2%  restrictionSample  lib/road-intelligence-scoring.ts:290
+     419 ms   5.9%  get  lib/spatial-road-store.ts:352
+     358 ms   5.1%  getCellSegments  lib/spatial-road-store.ts:533
+     228 ms   3.2%  fetchValhallaRoutes  lib/routing-providers.ts:354
+     218 ms   3.1%  (anonymous)  route.ts(data-url):517
+     211 ms   3.0%  explicitRestriction  lib/road-intelligence-scoring.ts:237
+     187 ms   2.7%  headingsAlign  lib/road-intelligence-scoring.ts:108
+     181 ms   2.6%  getHydratedSegment  lib/spatial-road-store.ts:515
+     180 ms   2.6%  routesShareCorridor  lib/route-candidates.ts:177
+     160 ms   2.3%  selectOptimizedRoute  lib/route-optimization.ts:72
+     158 ms   2.2%  selectSafeRoute  route.ts(data-url):219
+     147 ms   2.1%  divergentMeters  lib/route-candidates.ts:114
+     130 ms   1.8%  (anonymous)  route.ts(data-url):220
+     127 ms   1.8%  sliceAlreadyPenalised  route.ts(data-url):149
+     122 ms   1.7%  normalizeValhallaResponse  lib/routing-providers.ts:195
+     120 ms   1.7%  (anonymous)  lib/route-optimization.ts:78
+     110 ms   1.6%  (anonymous)  lib/spatial-road-store.ts:488
+     105 ms   1.5%  (anonymous)  route.ts(data-url):164

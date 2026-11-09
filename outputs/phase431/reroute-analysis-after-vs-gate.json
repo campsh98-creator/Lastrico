@@ -1,0 +1,292 @@
+{
+ "synthetic": "wrong turns are synthetic; provider routes and surface scores are real (archived)",
+ "before": "after",
+ "after": "gate",
+ "all": {
+  "reroutes": 201,
+  "confirmedPave": {
+   "before": 43034,
+   "clientFixOnly": 41370,
+   "after": 41029
+  },
+  "probablePave": {
+   "before": 24602,
+   "after": 24886
+  },
+  "unknownSurface": {
+   "before": 21229,
+   "after": 11582
+  },
+  "seconds": {
+   "before": 125101,
+   "after": 126365
+  },
+  "meters": {
+   "before": 628453,
+   "after": 628913
+  },
+  "extraSecondsOverFastest": {
+   "before": 6156,
+   "after": 7304
+  },
+  "extraMetersOverFastest": {
+   "before": 19275,
+   "after": 19193
+  },
+  "withDistinctAlternative": {
+   "before": 71,
+   "after": 71
+  },
+  "showsAntiPaveAlternative": {
+   "before": 65,
+   "after": 71
+  },
+  "objectiveLostAtFirstReroute": 6,
+  "moreConfirmedAfter": 5,
+  "lessConfirmedAfter": 9,
+  "providerCalls": {
+   "before": 385,
+   "after": 442
+  },
+  "cpuMs": {
+   "beforeP50": 21,
+   "beforeP95": 122,
+   "afterP50": 12,
+   "afterP95": 97
+  },
+  "estimatedLatencyMs": {
+   "beforeP50": 1231,
+   "beforeP95": 2518,
+   "afterP50": 2304,
+   "afterP95": 2550
+  }
+ },
+ "byMode": {
+  "car": {
+   "reroutes": 65,
+   "confirmedPave": {
+    "before": 15303,
+    "clientFixOnly": 14294,
+    "after": 13540
+   },
+   "probablePave": {
+    "before": 6713,
+    "after": 6014
+   },
+   "unknownSurface": {
+    "before": 12571,
+    "after": 2602
+   },
+   "seconds": {
+    "before": 38941,
+    "after": 39687
+   },
+   "meters": {
+    "before": 206693,
+    "after": 203760
+   },
+   "extraSecondsOverFastest": {
+    "before": 1586,
+    "after": 2332
+   },
+   "extraMetersOverFastest": {
+    "before": 6949,
+    "after": 4016
+   },
+   "withDistinctAlternative": {
+    "before": 19,
+    "after": 19
+   },
+   "showsAntiPaveAlternative": {
+    "before": 16,
+    "after": 19
+   },
+   "objectiveLostAtFirstReroute": 3,
+   "moreConfirmedAfter": 0,
+   "lessConfirmedAfter": 4,
+   "providerCalls": {
+    "before": 129,
+    "after": 147
+   },
+   "cpuMs": {
+    "beforeP50": 20,
+    "beforeP95": 126,
+    "afterP50": 12,
+    "afterP95": 87
+   },
+   "estimatedLatencyMs": {
+    "beforeP50": 1263,
+    "beforeP95": 2501,
+    "afterP50": 2311,
+    "afterP95": 2522
+   }
+  },
+  "motorcycle": {
+   "reroutes": 64,
+   "confirmedPave": {
+    "before": 13785,
+    "clientFixOnly": 13461,
+    "after": 13561
+   },
+   "probablePave": {
+    "before": 5803,
+    "after": 7459
+   },
+   "unknownSurface": {
+    "before": 3154,
+    "after": 3105
+   },
+   "seconds": {
+    "before": 40459,
+    "after": 40759
+   },
+   "meters": {
+    "before": 207838,
+    "after": 210245
+   },
+   "extraSecondsOverFastest": {
+    "before": 2141,
+    "after": 2325
+   },
+   "extraMetersOverFastest": {
+    "before": 1203,
+    "after": 3068
+   },
+   "withDistinctAlternative": {
+    "before": 22,
+    "after": 22
+   },
+   "showsAntiPaveAlternative": {
+    "before": 21,
+    "after": 22
+   },
+   "objectiveLostAtFirstReroute": 1,
+   "moreConfirmedAfter": 2,
+   "lessConfirmedAfter": 3,
+   "providerCalls": {
+    "before": 129,
+    "after": 143
+   },
+   "cpuMs": {
+    "beforeP50": 23,
+    "beforeP95": 108,
+    "afterP50": 11,
+    "afterP95": 83
+   },
+   "estimatedLatencyMs": {
+    "beforeP50": 1264,
+    "beforeP95": 2530,
+    "afterP50": 2299,
+    "afterP95": 2523
+   }
+  },
+  "bicycle": {
+   "reroutes": 72,
+   "confirmedPave": {
+    "before": 13946,
+    "clientFixOnly": 13615,
+    "after": 13928
+   },
+   "probablePave": {
+    "before": 12086,
+    "after": 11413
+   },
+   "unknownSurface": {
+    "before": 5504,
+    "after": 5875
+   },
+   "seconds": {
+    "before": 45701,
+    "after": 45919
+   },
+   "meters": {
+    "before": 213922,
+    "after": 214908
+   },
+   "extraSecondsOverFastest": {
+    "before": 2429,
+    "after": 2647
+   },
+   "extraMetersOverFastest": {
+    "before": 11123,
+    "after": 12109
+   },
+   "withDistinctAlternative": {
+    "before": 30,
+    "after": 30
+   },
+   "showsAntiPaveAlternative": {
+    "before": 28,
+    "after": 30
+   },
+   "objectiveLostAtFirstReroute": 2,
+   "moreConfirmedAfter": 3,
+   "lessConfirmedAfter": 2,
+   "providerCalls": {
+    "before": 127,
+    "after": 152
+   },
+   "cpuMs": {
+    "beforeP50": 21,
+    "beforeP95": 56,
+    "afterP50": 13,
+    "afterP95": 97
+   },
+   "estimatedLatencyMs": {
+    "beforeP50": 177,
+    "beforeP95": 2484,
+    "afterP50": 2303,
+    "afterP95": 2588
+   }
+  }
+ },
+ "secondReroute": {
+  "reroutes": 71,
+  "objectiveLostBefore": 6,
+  "confirmedPave": {
+   "before": 14433,
+   "objectiveKept": 12625
+  },
+  "seconds": {
+   "before": 36122,
+   "objectiveKept": 36518
+  }
+ },
+ "regressions": [
+  {
+   "key": "colonne-repubblica|bicycle",
+   "before": 1139,
+   "after": 1416,
+   "beforeKind": "safe",
+   "afterKind": "safe"
+  },
+  {
+   "key": "citta-studi-duomo|motorcycle",
+   "before": 52,
+   "after": 687,
+   "beforeKind": "fast",
+   "afterKind": "safe"
+  },
+  {
+   "key": "corvetto-duomo|motorcycle",
+   "before": 53,
+   "after": 653,
+   "beforeKind": "safe",
+   "afterKind": "fast"
+  },
+  {
+   "key": "corvetto-duomo|bicycle",
+   "before": 702,
+   "after": 715,
+   "beforeKind": "safe",
+   "afterKind": "safe"
+  },
+  {
+   "key": "famagosta-castello|bicycle",
+   "before": 38,
+   "after": 61,
+   "beforeKind": "safe",
+   "afterKind": "safe"
+  }
+ ]
+}
