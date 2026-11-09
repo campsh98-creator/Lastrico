@@ -4,13 +4,16 @@ import assert from "node:assert/strict";
  * Rebuilt surface datasets are byte-identical on the machine architecture that produced them.
  * On another architecture V8's Math.sin, Math.cos and Math.atan2 may differ in the last bits:
  * CI on x86-64 Linux gives a bearing of 118.7196148823358 where Apple Silicon gives
- * 118.71961488361677. This compares two JSON texts structurally instead.
+ * 118.71961488361677, and near-degenerate segments amplify that to about 2e-9 relative.
+ * This compares two JSON texts structurally instead.
  * - Keys, order, strings and booleans must match exactly.
- * - Numbers must agree to `relative` (default 1e-9).
- * - Keys matching `ignoreKeys` are skipped; checksums necessarily differ once a digit does.
+ * - Numbers must agree to `relative` (default 1e-6: 0.03 mm on a 30 m segment, 0.0001° of
+ *   bearing). Any real data change is far larger.
+ * - Keys matching `ignoreKeys` are skipped: checksums and byte counts necessarily differ once a
+ *   digit does.
  * It returns how many numbers differed, so a caller can report it.
  */
-export function assertJsonNearlyEqual(actualText, expectedText, { relative = 1e-9, ignoreKeys = null, label = "json" } = {}) {
+export function assertJsonNearlyEqual(actualText, expectedText, { relative = 1e-6, ignoreKeys = null, label = "json" } = {}) {
   let differingNumbers = 0;
   const walk = (actual, expected, path) => {
     if (typeof expected === "number" && typeof actual === "number") {

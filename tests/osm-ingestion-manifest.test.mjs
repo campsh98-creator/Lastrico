@@ -53,8 +53,8 @@ test("re-running ingestion produces strictly reproducible output and checksum", 
     assert.equal(await readFile(result.manifestPath, "utf8"), await readFile(manifestUrl, "utf8"));
     return;
   }
-  // Another architecture (CI): the same segments, order and values, up to last-bit trigonometry.
+  // Another architecture (CI): the same segments, order and values, up to last-bit trigonometry (checksums and byte counts follow the digits).
   const changed = assertJsonNearlyEqual(await readFile(result.datasetPath, "utf8"), await readFile(datasetUrl, "utf8"), { label: "dataset" });
-  assertJsonNearlyEqual(await readFile(result.manifestPath, "utf8"), await readFile(manifestUrl, "utf8"), { label: "manifest", ignoreKeys: /sha256/i });
-  t.diagnostic(`checksum differs on this architecture; ${changed} numbers differ by less than 1e-9 relative`);
+  assertJsonNearlyEqual(await readFile(result.manifestPath, "utf8"), await readFile(manifestUrl, "utf8"), { label: "manifest", ignoreKeys: /sha256|bytes$/i });
+  t.diagnostic(`checksum differs on this architecture; ${changed} numbers differ by less than 1e-6 relative`);
 });
