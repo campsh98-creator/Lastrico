@@ -35,6 +35,11 @@ export type RouteProgressOptions = {
   /** Reported course of travel. Omit when stationary or unknown. */
   headingDegrees?: number | null;
   pendingJump?: PendingForwardJump | null;
+  /**
+   * Phase 4.31, unanchored location only: when the route passes the same place more than once,
+   * prefer the pass nearest this progress among passes about as close as the nearest one.
+   */
+  preferProgressMeters?: number | null;
 };
 
 const MIN_FORWARD_WINDOW_METERS = 60;
@@ -112,6 +117,56 @@ function projectOnSegment(
     };
   }
   return best;
+}
+
+/**
+ * Phase 4.31: the nearest point of the pass of the route that is nearest `preferredMeters`, among
+ * passes almost as close as the nearest one. A route that loops round a square passes the same
+ * corner twice; with no anchor yet, GPS noise alone used to pick the later pass and the next
+ * fixes then looked like driving backwards (a false reroute at departure).
+ */
+function projectPreferringPass(
+  coordinates: ProgressCoordinate[],
+  position: ProgressCoordinate,
+  cumulativeMeters: number[],
+  preferredMeters: number,
+  toleranceMeters: number,
+): LocatedProgress {
+  const nearest = projectOnSegment(coordinates, position, cumulativeMeters);
+  if (coordinates.length <= 2 || !Number.isFinite(nearest.offRouteMeters)) return nearest;
+  const limit = nearest.offRouteMeters + toleranceMeters;
+  const latitude = position[1] * Math.PI / 180;
+  const scaleX = 111_320 * Math.cos(latitude);
+  const scaleY = 110_540;
+  const px = position[0] * scaleX;
+  const py = position[1] * scaleY;
+  // A pass is a run of consecutive segments within the limit; each pass offers its closest point.
+  let chosen = nearest;
+  let passBest: LocatedProgress | null = null;
+  const closePass = () => {
+    if (passBest && Math.abs(passBest.progressMeters - preferredMeters) < Math.abs(chosen.progressMeters - preferredMeters)) chosen = passBest;
+    passBest = null;
+  };
+  for (let index = 1; index < coordinates.length; index += 1) {
+    const a = coordinates[index - 1];
+    const b = coordinates[index];
+    const ax = a[0] * scaleX;
+    const ay = a[1] * scaleY;
+    const dx = b[0] * scaleX - ax;
+    const dy = b[1] * scaleY - ay;
+    const denominator = dx * dx + dy * dy;
+    const ratio = denominator ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / denominator)) : 0;
+    const distance = Math.hypot(px - (ax + ratio * dx), py - (ay + ratio * dy));
+    if (distance > limit) {
+      closePass();
+      continue;
+    }
+    const startMeters = cumulativeMeters[index - 1];
+    const candidate = { segmentIndex: index - 1, ratio, offRouteMeters: distance, progressMeters: startMeters + (cumulativeMeters[index] - startMeters) * ratio };
+    if (!passBest || distance < passBest.offRouteMeters) passBest = candidate;
+  }
+  closePass();
+  return chosen;
 }
 
 /**
@@ -232,7 +287,11 @@ function projectFromAnchor(
     }
   }
 
-  if (best && best.progressMeters < windowStart && windowDistance - best.offRouteMeters >= clearlyCloserBy) {
+  // Phase 4.31: driving back along the route moves the fix back a few metres per second; a
+  // multipath fix that lands closer to a far earlier pass of a looping route is not reachable.
+  const backReach = Math.min(elapsedSinceAnchor, MAX_REACH_ELAPSED_SECONDS) * maxSpeed + accuracy * 2;
+  if (best && best.progressMeters < windowStart && windowDistance - best.offRouteMeters >= clearlyCloserBy
+    && anchorProgressMeters - best.progressMeters <= backReach) {
     return best;
   }
   const located = bestWindow ?? best!;
@@ -288,7 +347,15 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
   const projected: LocatedProgress = !position
     ? { segmentIndex: 0, ratio: 0, offRouteMeters: 0, progressMeters: 0 }
     : previousProgressMeters === null
-      ? projectOnSegment(model.coordinates, position, model.cumulativeMeters)
+      ? (Number.isFinite(options?.preferProgressMeters)
+        ? projectPreferringPass(
+          model.coordinates,
+          position,
+          model.cumulativeMeters,
+          options!.preferProgressMeters!,
+          Math.max(12, Math.min(40, (options?.accuracy ?? 15) * 0.75)),
+        )
+        : projectOnSegment(model.coordinates, position, model.cumulativeMeters))
       : projectFromAnchor(model.coordinates, position, model.cumulativeMeters, previousProgressMeters, options);
   const backwardMeters = previousProgressMeters !== null
     ? Math.max(0, previousProgressMeters - projected.progressMeters)
@@ -308,6 +375,8 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
     closestIndex: located.segmentIndex,
     routeProgressMeters: located.progressMeters,
     offRouteMeters: located.offRouteMeters,
+    /** Phase 4.31: distance beside the route only, without the backward-travel component. */
+    lateralOffRouteMeters: projected.offRouteMeters,
     remainingMeters,
     remainingMinutes: Math.max(
       0,
@@ -319,4 +388,43 @@ export function calculateRouteProgress<T extends ProgressInstruction>(
     instruction: next?.instruction ?? null,
     pendingJump: projected.pendingJump ?? null,
   };
+}
+
+/**
+ * Phase 4.29: the point `meters` along the route and the route's course there, looking a few
+ * metres ahead so a vertex does not flip the arrow. Used to draw a confidently matched position
+ * on the road instead of the raw GPS fix beside it.
+ */
+export function pointAtProgress<T extends ProgressInstruction>(
+  model: RouteProgressModel<T>,
+  meters: number,
+  lookAheadMeters = 12,
+): { coordinate: ProgressCoordinate; bearing: number } | null {
+  const { coordinates, cumulativeMeters } = model;
+  if (coordinates.length < 2) return null;
+  const locate = (target: number): ProgressCoordinate => {
+    const m = Math.max(0, Math.min(model.totalMeters, target));
+    let low = 1;
+    let high = cumulativeMeters.length - 1;
+    while (low < high) {
+      const mid = (low + high) >> 1;
+      if (cumulativeMeters[mid] < m) low = mid + 1;
+      else high = mid;
+    }
+    const a = coordinates[low - 1];
+    const b = coordinates[low];
+    const span = cumulativeMeters[low] - cumulativeMeters[low - 1];
+    const t = span > 0 ? (m - cumulativeMeters[low - 1]) / span : 0;
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  };
+  const coordinate = locate(meters);
+  const ahead = locate(Math.min(model.totalMeters, meters + lookAheadMeters));
+  const behind = ahead[0] === coordinate[0] && ahead[1] === coordinate[1] ? locate(meters - lookAheadMeters) : coordinate;
+  const from = behind === coordinate ? coordinate : behind;
+  const to = behind === coordinate ? ahead : coordinate;
+  const toRadians = (value: number) => value * Math.PI / 180;
+  const y = Math.sin(toRadians(to[0] - from[0])) * Math.cos(toRadians(to[1]));
+  const x = Math.cos(toRadians(from[1])) * Math.sin(toRadians(to[1]))
+    - Math.sin(toRadians(from[1])) * Math.cos(toRadians(to[1])) * Math.cos(toRadians(to[0] - from[0]));
+  return { coordinate, bearing: (Math.atan2(y, x) * 180 / Math.PI + 360) % 360 };
 }

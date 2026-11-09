@@ -23,10 +23,14 @@ import {
   encodePolyline6,
   pointDistanceMeters,
 } from "@/lib/surface-aware-routing";
-import { fetchValhallaCustomizedRoute } from "@/lib/routing-providers";
+import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding } from "@/lib/routing-providers";
+import { buildRoughSections } from "@/lib/rough-sections";
 import { logRouteFailure } from "@/lib/server-log";
 
 import { routesShareCorridor, deduplicateRoutes as uniqueRoutes } from "@/lib/route-candidates";
+import { roadFeaturesAlongRoute } from "@/lib/road-features";
+import { formatDeparture, parseLocalDeparture, romeDeparture, type DepartureTime } from "@/lib/access-conditions";
+import { MILAN_ZTL_AREAS } from "@/lib/ztl-access";
 import { fastestLegalCandidate, isLegalCandidate, selectOptimizedRoute } from "@/lib/route-optimization";
 
 type Coordinate = [number, number];
@@ -50,6 +54,14 @@ const MINIMUM_ROUTE_METERS = 15;
 /** Retrying cannot help: every provider route contradicts explicit local access evidence. */
 class NoLegalRouteError extends Error {
   override name = "NoLegalRouteError";
+  /** Phase 4.31: the ZTL areas (active now, not authorised) that every route had to cross. */
+  ztlAreas: string[] = [];
+}
+
+function noLegalRoute(candidates: { surfaceScore: SurfaceScore }[]) {
+  const error = new NoLegalRouteError("Nessun percorso compatibile con le restrizioni note");
+  error.ztlAreas = [...new Set(candidates.flatMap((candidate) => Object.keys(candidate.surfaceScore.ztlMetersByArea ?? {})))];
+  return error;
 }
 
 type ModePolicy = {
@@ -296,6 +308,7 @@ function routePayload(
   route: EngineRoute,
   surfaceScore: SurfaceScore,
   problemSegments: Coordinate[][] = [],
+  areaId = "",
 ) {
   return {
     coordinates: route.coordinates,
@@ -320,7 +333,74 @@ function routePayload(
     terminalWalkMeters: surfaceScore.terminalWalkMeters,
     instructions: route.instructions,
     problemSegments,
+    // Phase 4.29: merged rough sections positioned along this geometry, for navigation warnings.
+    roughSections: buildRoughSections(route.coordinates, surfaceScore.roughSegmentIndices, surfaceScore.confirmedRoughSegmentIndices,
+      undefined, undefined, surfaceScore.roughSegmentFeatures),
+    // Phase 4.31: OSM-mapped traffic signals and signs on this geometry, with their coverage.
+    roadFeatures: roadFeaturesAlongRoute(areaId, route.coordinates),
+    // Phase 4.31: ZTL and time-window access met on this route, at the request's departure time.
+    ...(surfaceScore.ztlMetersByArea ? { access: {
+      ztl: Object.entries(surfaceScore.ztlMetersByArea).map(([id, meters]) => ({ id, name: ztlName(id), meters })),
+      authorisedZtl: Object.entries(surfaceScore.authorisedZtlMetersByArea ?? {}).map(([id, meters]) => ({ id, name: ztlName(id), meters })),
+      terminalZtlMeters: surfaceScore.terminalZtlMeters ?? 0,
+      timedClosureMeters: surfaceScore.timedClosureMeters ?? 0,
+      unknownConditionMeters: surfaceScore.unknownConditionMeters ?? 0,
+    } } : {}),
   };
+}
+
+/** Phase 4.31: what the person must know about ZTLs on the shown route. */
+function ztlNotice(score: SurfaceScore, departure: DepartureTime | undefined) {
+  if (!departure) return "";
+  const at = formatDeparture(departure);
+  const terminal = Object.keys(score.ztlMetersByArea ?? {});
+  const authorised = Object.keys(score.authorisedZtlMetersByArea ?? {});
+  const parts: string[] = [];
+  if ((score.terminalZtlMeters ?? 0) > 0 && terminal.length) {
+    parts.push(`. Partenza o destinazione in ${terminal.map(ztlName).join(", ")}, attiva ${at}: serve un'autorizzazione`);
+  }
+  if (authorised.length) parts.push(`. Attraversa ${authorised.map(ztlName).join(", ")} con la tua autorizzazione`);
+  return parts.join("");
+}
+
+/**
+ * A closed ring of half-width `halfWidth` metres around `slice`, shortened by `trim` metres at
+ * each end; null when the stretch is too short to keep anything after trimming.
+ */
+function corridorRing(slice: Coordinate[], halfWidth: number, trim: number): Coordinate[] | null {
+  const kx = 111_320 * Math.cos((slice[0][1] * Math.PI) / 180);
+  const ky = 110_540;
+  const xy = slice.map(([lon, lat]) => [lon * kx, lat * ky]);
+  const lengths = [0];
+  for (let i = 1; i < xy.length; i += 1) lengths.push(lengths[i - 1] + Math.hypot(xy[i][0] - xy[i - 1][0], xy[i][1] - xy[i - 1][1]));
+  const total = lengths[lengths.length - 1];
+  if (total <= 2 * trim + 2) return null;
+  const at = (m: number) => {
+    let i = 1;
+    while (i < lengths.length - 1 && lengths[i] < m) i += 1;
+    const span = lengths[i] - lengths[i - 1] || 1;
+    const t = (m - lengths[i - 1]) / span;
+    return [xy[i - 1][0] + (xy[i][0] - xy[i - 1][0]) * t, xy[i - 1][1] + (xy[i][1] - xy[i - 1][1]) * t];
+  };
+  const centre: number[][] = [at(trim), ...xy.filter((_, i) => lengths[i] > trim && lengths[i] < total - trim), at(total - trim)];
+  const left: number[][] = [];
+  const right: number[][] = [];
+  for (let i = 0; i < centre.length; i += 1) {
+    const a = centre[Math.max(0, i - 1)];
+    const b = centre[Math.min(centre.length - 1, i + 1)];
+    const dx = b[0] - a[0], dy = b[1] - a[1];
+    const norm = Math.hypot(dx, dy) || 1;
+    const nx = (-dy / norm) * halfWidth, ny = (dx / norm) * halfWidth;
+    left.push([centre[i][0] + nx, centre[i][1] + ny]);
+    right.push([centre[i][0] - nx, centre[i][1] - ny]);
+  }
+  const ring = [...left, ...right.reverse()];
+  ring.push(ring[0]);
+  return ring.map(([x, y]) => [Number((x / kx).toFixed(7)), Number((y / ky).toFixed(7))] as Coordinate);
+}
+
+function ztlName(id: string) {
+  return MILAN_ZTL_AREAS.find((area) => area.id === id)?.name ?? "Accesso con permesso (zona non registrata)";
 }
 
 function profileMetadata(
@@ -383,6 +463,12 @@ export async function GET(request: NextRequest) {
   const requestedArea = request.nextUrl.searchParams.get("area");
   const avoidance = (request.nextUrl.searchParams.get("avoid") ?? "strong") as Avoidance;
   const maximumExtraMinutes = parseExtraMinutes(request.nextUrl.searchParams.get("maxExtraMinutes"));
+  // Phase 4.31: departure time (Milan local, "YYYY-MM-DDTHH:MM"; now when absent) and the ZTL
+  // areas the person is authorised for in this mode. Unknown area ids are ignored.
+  const departureParam = request.nextUrl.searchParams.get("departure");
+  const parsedDeparture = parseLocalDeparture(departureParam);
+  const authorisedZtl = new Set((request.nextUrl.searchParams.get("ztl") ?? "").split(",")
+    .map((id) => id.trim()).filter((id) => MILAN_ZTL_AREAS.some((area) => area.id === id)));
   const requestedMode = request.nextUrl.searchParams.get("mode") ?? "car";
   if (
     !start
@@ -392,6 +478,7 @@ export async function GET(request: NextRequest) {
     || !["balanced", "strong", "maximum"].includes(avoidance)
     || maximumExtraMinutes === undefined
     || !isTransportMode(requestedMode)
+    || (departureParam !== null && parsedDeparture === null)
   ) {
     return NextResponse.json(
       { error: "Coordinate, modalità di trasporto o livello di evitamento non validi." },
@@ -400,6 +487,8 @@ export async function GET(request: NextRequest) {
   }
   const mode = requestedMode;
   const policy = MODE_POLICY[mode];
+  // ZTL areas and time windows are Milan data; Rome and Roccella keep their established checks.
+  const departure: DepartureTime | undefined = area.id === "milan" ? parsedDeparture ?? romeDeparture(new Date()) : undefined;
   if (segmentLength(start, end) < MINIMUM_ROUTE_METERS) {
     return NextResponse.json(
       { error: "Partenza e destinazione coincidono. Scegli due punti diversi.", mode, transportMode: mode },
@@ -460,7 +549,7 @@ export async function GET(request: NextRequest) {
         mode,
         false,
         // Validated on the Milan benchmark only; Rome and Roccella keep their 4.23 behaviour.
-        { terminalWalkingForBicycle: area.id === "milan" },
+        { terminalWalkingForBicycle: area.id === "milan", departure, authorisedZtl },
       );
       const score: SurfaceScore = { ...intelligence, confidence: intelligence.classificationConfidence };
       scoreCache.set(route, score);
@@ -479,8 +568,28 @@ export async function GET(request: NextRequest) {
 
     const baseScored: ScoredRoute[] = baseRoutes.map((route, index) =>
       scoredCandidate(route, `base-${index + 1}`));
+    // Phase 4.31: the provider does not know the departure time or the person's ZTL permits. When
+    // its fastest route crosses an unauthorised ZTL or a stretch closed at this hour, ask once for
+    // a route that avoids exactly those stretches (the linear cost factors of the pavé search).
+    const accessBlocked = baseScored[0]?.surfaceScore.accessBlockedSegmentIndices;
+    if (departure && accessBlocked && accessBlocked.size > 0 && primary.provider === "valhalla-fossgis"
+      && !request.signal.aborted && deadline - Date.now() >= 2_500) {
+      const blockedSlices = extractRoughSlices(primary.coordinates, (_prev, _curr, idx) => accessBlocked.has(idx), 5);
+      // Excluded outright, as a thin ring along the inner part of each stretch, so the streets that
+      // cross its ends stay usable (a cost penalty alone let the provider keep the closed street).
+      const rings = blockedSlices.map((slice) => corridorRing(slice, 4, 6)).filter((ring): ring is Coordinate[] => ring !== null).slice(0, 8);
+      if (rings.length > 0) {
+        const avoiding = await fetchValhallaRouteExcluding([start, end], mode, rings,
+          Math.min(deadline - 1_000, Date.now() + 3_500), request.signal);
+        if (avoiding) {
+          await ensureRouteCovered(avoiding.coordinates);
+          baseRoutes.push(avoiding);
+          baseScored.push(scoredCandidate(avoiding, "access-aware-valhalla"));
+        }
+      }
+    }
     const preliminaryFast = fastestLegalCandidate(baseScored, mode);
-    if (!preliminaryFast) throw new NoLegalRouteError("Nessun percorso compatibile con le restrizioni note");
+    if (!preliminaryFast) throw noLegalRoute(baseScored);
     const fastestBase = preliminaryFast.route;
     if (fastestBase.distance < MINIMUM_ROUTE_METERS) {
       return NextResponse.json(
@@ -504,16 +613,31 @@ export async function GET(request: NextRequest) {
         SUFFICIENT_PAVE_REDUCTION_METERS,
         fastest.paveMeters * SUFFICIENT_PAVE_REDUCTION_RATIO,
       ));
-    const baseAlreadyImproves = improvesEnough(preliminarySafe, preliminaryFast);
+    // Phase 4.31 release gate: an improvement found among the provider's alternates stops the
+    // search only when it is cheap. Porta Romana (field case E): the alternate saved the stones of
+    // Viale Sabotino for +383 s, so the penalised search never ran, and the route along Viale
+    // Filippetti (same stones avoided, about the same time) was never generated.
+    const improvesCheaply = (candidate: ScoredRoute, fastest: ScoredRoute) => improvesEnough(candidate, fastest)
+      && candidate.route.duration - fastest.route.duration <= Math.max(90, fastest.route.duration * 0.08);
+    const baseAlreadyImproves = improvesCheaply(preliminarySafe, preliminaryFast);
     const detourResponses: EngineRoute[][] = [];
     const surfaceAwareRoutes: EngineRoute[] = [];
     let pendingRefinement: { shape: string; factor: number }[] | null = null;
     let surfaceAwareDirectMetrics: { roughSlicesCount: number; penalizedMeters: number } | null = null;
+    // Phase 4.31: whether the anti-pavé search really ran, so "no alternative" is never confused
+    // with a search that failed or did not run.
+    let surfaceAwareAttempted = false;
+    let surfaceAwareFailed = false;
+    // The stones were only in stretches too short to target (under 25 m): nothing to search for.
+    let surfaceAwareNothingToTarget = false;
 
     const canGenerate = !baseAlreadyImproves && maximumExtraMinutes !== 0
       && preliminaryFast.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction;
-    // One bounded provider-cost attempt in planner; navigation keeps its existing latency budget.
-    if (canGenerate && (!navigationRequest || surfaceAwarePoc)
+    // One bounded provider-cost attempt. Phase 4.31: navigation runs it too, so a reroute keeps
+    // optimising the rest of the journey for comfort with the planner's own generator (one extra
+    // paced provider call, ~1.2 s, inside the navigation budget); before, a reroute fell back to
+    // the provider's alternates and at most one detour waypoint.
+    if (canGenerate
       && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
       && deadline - Date.now() >= 4_000 && preliminaryFast.surfaceScore.paveMeters > 0) {
       const fastRough = preliminaryFast.surfaceScore.roughSegmentIndices;
@@ -532,12 +656,14 @@ export async function GET(request: NextRequest) {
       };
       const roughSlices = extractRoughSlices(fastestBase.coordinates, isSegmentRough, 25);
       const { factors, totalPenalizedMeters } = buildLinearCostFactors(roughSlices, 15.0, 4);
+      if (factors.length === 0) surfaceAwareNothingToTarget = true;
       if (factors.length > 0) {
         surfaceAwareDirectMetrics = {
           roughSlicesCount: factors.length,
           penalizedMeters: totalPenalizedMeters,
         };
         // The established penalised search, unchanged: its candidate always stays in the pool.
+        surfaceAwareAttempted = true;
         const first = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
@@ -545,6 +671,7 @@ export async function GET(request: NextRequest) {
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
         );
+        if (!first) surfaceAwareFailed = true;
         if (first) {
           await ensureRouteCovered(first.coordinates);
           surfaceAwareRoutes.push(first);
@@ -631,7 +758,8 @@ export async function GET(request: NextRequest) {
         if (improvesEnough(provisionalSafe, provisionalFast)) break;
       }
     }
-    if (pendingRefinement && deadline - Date.now() >= 4_000 && !request.signal.aborted) {
+    // The refinement stays planner-only: a reroute has to answer within its latency budget.
+    if (pendingRefinement && (!navigationRequest || surfaceAwarePoc) && deadline - Date.now() >= 4_000 && !request.signal.aborted) {
       const pool = [...baseRoutes, ...surfaceAwareRoutes, ...detourResponses.flat()]
         .map((route, index) => scoredCandidate(route, `refinement-check-${index + 1}`));
       const poolFast = fastestLegalCandidate(pool, mode)!;
@@ -651,17 +779,18 @@ export async function GET(request: NextRequest) {
         }
       }
     }
-    const candidates = deduplicateRoutes([
+    const generated = [
       ...baseRoutes.map((route, index) => ({ route, source: `base-${index + 1}` })),
       ...surfaceAwareSourcesOf(),
       ...detourResponses.flatMap((routes, index) =>
         routes.map((route) => ({ route, source: `detour-${index + 1}` })),
       ),
-    ].filter((candidate) => isLegalCandidate(scoredCandidate(candidate.route, candidate.source), mode)), mode);
+    ];
+    const candidates = deduplicateRoutes(generated.filter((candidate) => isLegalCandidate(scoredCandidate(candidate.route, candidate.source), mode)), mode);
     const scored: ScoredRoute[] = candidates.map((candidate) =>
       scoredCandidate(candidate.route, candidate.source));
     const fast = fastestLegalCandidate(scored, mode);
-    if (!fast) throw new NoLegalRouteError("Nessun percorso compatibile con le restrizioni note");
+    if (!fast) throw noLegalRoute(scored);
     // Rome's anti-sampietrini option must save confirmed stone exposure, not only
     // probable paving_stones or unpaved risk. Keep established cities unchanged.
     const selectable = area.id === "rome" ? scored.filter((candidate) => candidate === fast
@@ -672,6 +801,13 @@ export async function GET(request: NextRequest) {
       && selection.safe.paveMeters < fast.paveMeters
       && selection.safe.riskMeters + policy.minimumPaveReduction <= fast.riskMeters;
     const safe = hasDistinctAlternative ? selection.safe : fast;
+    // Phase 4.31 release gate: why the shown route is what it is, in terms the person can act on.
+    const standard = baseScored[0];
+    const standardLegal = Boolean(standard) && isLegalCandidate(standard, mode);
+    const illegalLowerPave = generated.some((candidate) => {
+      const candidateScore = scoredCandidate(candidate.route, candidate.source);
+      return !isLegalCandidate(candidateScore, mode) && candidateScore.riskMeters + policy.minimumPaveReduction <= fast.riskMeters;
+    });
     const budgetExcludedLowerExposureRoute = maximumExtraMinutes !== null
       && !hasDistinctAlternative
       && scored.some((candidate) =>
@@ -683,6 +819,19 @@ export async function GET(request: NextRequest) {
           fast.route.duration,
           maximumExtraMinutes,
         ));
+    // The fastest legal route can itself be the anti-pavé result (the penalised search found a
+    // route that avoids the provider's stones and is not slower): it is then said, not hidden
+    // behind a "Più rapido" label.
+    const fastAvoidsStandard = standardLegal && fast.route !== standard.route
+      && standard.riskMeters - fast.riskMeters >= policy.minimumPaveReduction;
+    const antiPaveStatus = hasDistinctAlternative ? "alternative"
+      : fastAvoidsStandard ? "fastest-avoids-pave"
+        : fast.surfaceScore.weightedPaveMeters < policy.minimumPaveReduction ? "no-pave"
+          : budgetExcludedLowerExposureRoute || (maximumExtraMinutes === 0 && fast.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction) ? "over-extra-time"
+            : illegalLowerPave ? "access-restricted"
+              : surfaceAwareFailed ? "generation-failed"
+                : canGenerate && !surfaceAwareAttempted && !surfaceAwareNothingToTarget ? "generation-skipped"
+                  : "no-better-route";
     const routeCountLabel = `${scored.length} ${scored.length === 1 ? "percorso reale" : "percorsi reali"}`;
     const comparedLabel = scored.length === 1 ? "confrontato" : "confrontati";
     const checkedLabel = scored.length === 1 ? "controllato" : "controllati";
@@ -722,8 +871,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       area: area.id,
-      fast: routePayload(fast.route, fast.surfaceScore, fastProblemSegments),
-      safe: routePayload(safe.route, safe.surfaceScore, safeProblemSegments),
+      fast: routePayload(fast.route, fast.surfaceScore, fastProblemSegments, area.id),
+      safe: routePayload(safe.route, safe.surfaceScore, safeProblemSegments, area.id),
       problemSegments: safe.route === fast.route
         ? fastProblemSegments
         : [...fastProblemSegments, ...safeProblemSegments],
@@ -744,6 +893,21 @@ export async function GET(request: NextRequest) {
         routingAndSurfaceDataMs: Math.round(baseRoutingReadyAt - calculationStartedAt),
         candidateGenerationAndScoringMs: Math.round(calculationCompletedAt - baseRoutingReadyAt),
         totalMs: Math.round(calculationCompletedAt - calculationStartedAt),
+      },
+      // Phase 4.31 release gate: the anti-pavé outcome, and the provider's own (standard) route it
+      // is measured against.
+      antiPave: {
+        status: antiPaveStatus,
+        standard: standard ? {
+          source: standard.source,
+          legal: standardLegal,
+          seconds: Math.round(standard.route.duration),
+          meters: Math.round(standard.route.distance),
+          paveMeters: standard.surfaceScore.paveMeters,
+          confirmedPaveMeters: standard.surfaceScore.confirmedMeters,
+        } : null,
+        avoidedVsStandardMeters: standard && standardLegal ? Math.max(0, standard.surfaceScore.paveMeters - safe.surfaceScore.paveMeters) : null,
+        search: { attempted: surfaceAwareAttempted, failed: surfaceAwareFailed, generated: surfaceAwareRoutes.length },
       },
       optimization: {
         strategy: "pareto-conservative-unknown",
@@ -772,6 +936,12 @@ export async function GET(request: NextRequest) {
         surfaceClassificationConfidence: candidate.surfaceScore.classificationConfidence,
         surfaceDataConfidence: candidate.surfaceScore.dataConfidence,
         unknownSurfaceMeters: candidate.surfaceScore.unknownMeters,
+        // Phase 4.31: the surface split and the selection rule that decided this candidate.
+        confirmedPaveMeters: candidate.surfaceScore.confirmedMeters,
+        probablePaveMeters: candidate.surfaceScore.probableMeters,
+        selectionVerdict: selection.verdicts.get(candidate) ?? null,
+        selectionBurden: Math.round(selection.scores.get(candidate)?.burden ?? 0),
+        selectionUtility: Math.round(selection.scores.get(candidate)?.utility ?? 0),
         surfaceCoveragePercent: candidate.surfaceScore.matchedCoveragePercent,
         smoothSurfaceMeters: candidate.surfaceScore.smoothMeters ?? 0,
         surfaceTotalMeters: candidate.surfaceScore.totalMeters,
@@ -792,6 +962,7 @@ export async function GET(request: NextRequest) {
           roughSlicesCount: surfaceAwareDirectMetrics?.roughSlicesCount ?? 0,
         },
       } : {}),
+      ...(departure ? { accessContext: { departure: formatDeparture(departure), authorisedZtl: [...authorisedZtl].sort() } } : {}),
       dataNotice: (
         fast.surfaceScore.matchedFeatures + safe.surfaceScore.matchedFeatures === 0
           ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"
@@ -803,7 +974,8 @@ export async function GET(request: NextRequest) {
                 safe.surfaceScore.matchedFeatures,
               )} way OSM abbinate al percorso (archivio OSM locale)`
             : `${routeCountLabel} ${checkedLabel}: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale)`
-      ) + bicycleCoverageNotice + terminalAccessNotice + terminalWalkNotice + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
+      ) + bicycleCoverageNotice + terminalAccessNotice + terminalWalkNotice + ztlNotice(safe.surfaceScore, departure)
+        + ". I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio"
         + (area.id === "rome"
           ? mode === "bicycle"
             ? ". Roma: verifica segnaletica e accessi locali; il percorso non certifica tutte le restrizioni aggiornate"
@@ -823,7 +995,9 @@ export async function GET(request: NextRequest) {
     if (error instanceof NoLegalRouteError) {
       return NextResponse.json(
         {
-          error: "Tutti i percorsi trovati attraversano tratti vietati secondo OpenStreetMap. Prova una partenza o una destinazione vicina.",
+          error: error.ztlAreas.length
+            ? `Ogni percorso trovato entra in ${error.ztlAreas.map(ztlName).join(", ")}, attiva in questo orario. Se hai l'autorizzazione, attivala in Preferenze › Accessi ZTL; altrimenti scegli un punto fuori dalla zona.`
+            : "Tutti i percorsi trovati attraversano tratti vietati secondo OpenStreetMap. Prova una partenza o una destinazione vicina.",
           mode,
           transportMode: mode,
         },

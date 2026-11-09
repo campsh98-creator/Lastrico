@@ -358,6 +358,7 @@ async function fetchValhallaRoutes(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   linearCostFactors?: { shape: string; factor: number }[],
+  excludePolygons?: Coordinate[][],
 ): Promise<EngineRoute[]> {
   const profile = ROUTING_PROFILES[mode];
   try {
@@ -384,6 +385,10 @@ async function fetchValhallaRoutes(
           costing_options: valhallaCostingOptions(mode),
           ...(linearCostFactors && linearCostFactors.length > 0
             ? { linear_cost_factors: linearCostFactors }
+            : {}),
+          // Phase 4.31: stretches that are illegal at the departure time (ZTL, timed closure).
+          ...(excludePolygons && excludePolygons.length > 0
+            ? { exclude_polygons: excludePolygons }
             : {}),
           units: "kilometers",
           directions_options: { units: "kilometers", language: "it-IT" },
@@ -413,6 +418,22 @@ export async function fetchValhallaCustomizedRoutes(
   signal: AbortSignal = new AbortController().signal,
 ): Promise<EngineRoute[]> {
   return fetchValhallaRoutes(points, mode, alternatives, deadline, signal, linearCostFactors);
+}
+
+/**
+ * Phase 4.31: one route that leaves out the given rings entirely (Valhalla `exclude_polygons`),
+ * for stretches the provider cannot know are closed: a ZTL without the person's permit, or a
+ * time-window closure at the departure time.
+ */
+export async function fetchValhallaRouteExcluding(
+  points: Coordinate[],
+  mode: TransportMode,
+  excludePolygons: Coordinate[][],
+  deadline = Date.now() + ROUTE_BUDGET_MS,
+  signal: AbortSignal = new AbortController().signal,
+): Promise<EngineRoute | null> {
+  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, undefined, excludePolygons);
+  return routes[0] ?? null;
 }
 
 export async function fetchValhallaCustomizedRoute(

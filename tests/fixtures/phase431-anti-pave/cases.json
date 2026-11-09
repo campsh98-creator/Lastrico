@@ -1,0 +1,57 @@
+{
+ "note": "Phase 4.31 release gate. Provider responses are real (FOSSGIS Valhalla, archived); departure Monday 9 November 2026 12:00.",
+ "cases": [
+  {
+   "id": "porta-vittoria-car",
+   "label": "Porta Romana / Filippetti: a useful anti-pavé alternative",
+   "start": "9.2025,45.4625",
+   "end": "9.1734728,45.4349746",
+   "mode": "car",
+   "expect": "alternative"
+  },
+  {
+   "id": "porta-vittoria-car-no-extra",
+   "label": "Same journey with 0 extra minutes allowed",
+   "start": "9.2025,45.4625",
+   "end": "9.1734728,45.4349746",
+   "mode": "car",
+   "maxExtraMinutes": "0",
+   "expect": "over-extra-time"
+  },
+  {
+   "id": "regina-margherita-car",
+   "label": "Approach to Porta Romana by car: the anti-pavé search must run",
+   "start": "9.205341,45.458728",
+   "end": "9.1734728,45.4349746",
+   "mode": "car",
+   "expect": "fastest-avoids-pave"
+  },
+  {
+   "id": "regina-margherita-motorcycle-reroute",
+   "label": "Reroute on the approach by motorcycle (the field case)",
+   "start": "9.205341,45.458728",
+   "end": "9.1734728,45.4349746",
+   "mode": "motorcycle",
+   "navigation": true,
+   "expect": "fastest-avoids-pave"
+  },
+  {
+   "id": "regina-margherita-motorcycle-reroute-search-down",
+   "label": "Same reroute with the anti-pavé search failing at the provider",
+   "start": "9.205341,45.458728",
+   "end": "9.1734728,45.4349746",
+   "mode": "motorcycle",
+   "navigation": true,
+   "failSearch": true,
+   "expect": "generation-failed"
+  },
+  {
+   "id": "promessi-sposi-vetra-car",
+   "label": "Promessi Sposi → Vetra: no meaningful improvement exists",
+   "start": "9.1734728,45.4349746",
+   "end": "9.1825442,45.4572551",
+   "mode": "car",
+   "expect": "no-better-route"
+  }
+ ]
+}

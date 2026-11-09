@@ -159,7 +159,8 @@ test("provides real, persistent Auto Moto and Bici product modes", async () => {
   assert.match(page, /mode: requestedMode/);
   assert.match(page, /data\.transportMode !== requestedMode/);
   assert.match(page, /routeRequestRef\.current\?\.controller\.abort\(\)/);
-  assert.match(page, /preserveRoute: activeRouteRef\.current/);
+  // Phase 4.31: reroutes keep the journey objective, not the kind of route shown.
+  assert.match(page, /preserveRoute: journeyObjectiveRef\.current/);
   assert.match(page, /disabled=\{value === "routes" && !isLiveResult\}/);
   assert.match(await readFile(fixProcessorUrl, "utf8"), /NAVIGATION_POLICY\[context\.mode\]/);
   assert.match(page, /data-testid="navigation-hud"/);
@@ -177,7 +178,8 @@ test("separates real GPS navigation from the automatic route simulation", async 
   const fixProcessor = await readFile(fixProcessorUrl, "utf8");
   assert.match(page, /navigator\.geolocation\.watchPosition/);
   assert.match(page, /calculateRouteProgress/);
-  assert.match(fixProcessor, /smoothGpsCoordinate/);
+  // Phase 4.29: accuracy-weighted fusion replaced the fixed-weight smoothing.
+  assert.match(fixProcessor, /fuseGpsPosition/);
   assert.match(fixProcessor, /smoothHeading/);
   assert.match(page, /formatArrivalTime/);
   assert.match(page, /arrivo stimato/);

@@ -16,6 +16,8 @@ export type OptimizationCandidate = {
     blockingRestrictionMeters?: number;
     /** Confirmed stone (sett, cobblestone) only; probable paving_stones excluded. */
     confirmedMeters?: number;
+    /** Probable stone (paving_stones) only. */
+    probableMeters?: number;
   };
 };
 
@@ -26,6 +28,15 @@ export type OptimizationCandidate = {
  * sampling differences between two routes on the same street.
  */
 export const CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS = 10;
+/**
+ * Phase 4.31 decision review: a small increase of confirmed stone is accepted when it removes far
+ * more probable stone, so overall discomfort drops (Milan benchmark: Moscova → Crocetta by car,
+ * +24 m confirmed for −388 m probable, −19% weighted discomfort, was excluded at every avoidance
+ * level). At most 10% of the probable stone removed and never more than 50 m, so the large swaps
+ * the rule was written against (up to +326 m) stay excluded.
+ */
+export const CONFIRMED_PAVE_SWAP_SHARE = 0.1;
+export const CONFIRMED_PAVE_SWAP_MAX_METERS = 50;
 export type OptimizationPolicy = {
   minimumPaveReduction: number;
   balancedPaveDivisor: number;
@@ -73,7 +84,7 @@ export function selectOptimizedRoute<T extends OptimizationCandidate>(
   candidates: T[], fast: T, mode: TransportMode, avoidance: "balanced" | "strong" | "maximum",
   maximumExtraMinutes: number | null, policy: OptimizationPolicy,
   equivalent: (a: EngineRoute, b: EngineRoute) => boolean,
-): { safe: T; frontier: T[] } {
+): { safe: T; frontier: T[]; verdicts: Map<T, SelectionVerdict>; scores: Map<T, { burden: number; utility: number }> } {
   const limit = policy.limits[avoidance];
   const eligible = candidates.filter((candidate) => isLegalCandidate(candidate, mode)
     && (candidate === fast || !equivalent(candidate.route, fast.route))
@@ -108,8 +119,11 @@ export function selectOptimizedRoute<T extends OptimizationCandidate>(
   const secondsWeight = avoidance === "maximum" ? 0 : policy.balancedPaveDivisor / (avoidance === "balanced" ? 60 : 600);
   const utility = (candidate: T) => burden(candidate) + (candidate.route.duration - fast.route.duration) * secondsWeight;
   const confirmed = (candidate: T) => candidate.surfaceScore.confirmedMeters;
+  const probableRemoved = (candidate: T) => Math.max(0, (fast.surfaceScore.probableMeters ?? 0) - (candidate.surfaceScore.probableMeters ?? 0));
+  const confirmedTolerance = (candidate: T) => Math.max(CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS,
+    Math.min(CONFIRMED_PAVE_SWAP_MAX_METERS, probableRemoved(candidate) * CONFIRMED_PAVE_SWAP_SHARE));
   const addsConfirmed = (candidate: T) => confirmed(candidate) !== undefined && confirmed(fast) !== undefined
-    && confirmed(candidate)! > confirmed(fast)! + CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS;
+    && confirmed(candidate)! > confirmed(fast)! + confirmedTolerance(candidate);
   const reducing = frontier.filter((candidate) => !equivalent(candidate.route, fast.route)
     && !addsConfirmed(candidate)
     && rawPave(candidate) <= rawPave(fast)
@@ -117,5 +131,29 @@ export function selectOptimizedRoute<T extends OptimizationCandidate>(
     && burden(candidate) + policy.minimumPaveReduction <= burden(fast)
     && utility(candidate) < utility(fast));
   reducing.sort((a, b) => utility(a) - utility(b) || compare(a, b));
-  return { safe: reducing[0] ?? fast, frontier };
+  const safe = reducing[0] ?? fast;
+  // Phase 4.31: the first rule that keeps each candidate from being offered, in the order the
+  // selection applies them, so a missing alternative can be explained rather than guessed.
+  const verdicts = new Map<T, SelectionVerdict>();
+  for (const candidate of candidates) {
+    verdicts.set(candidate, candidate === safe && safe !== fast ? "selected"
+      : candidate === fast ? "fastest"
+        : !isLegalCandidate(candidate, mode) ? "illegal"
+          : equivalent(candidate.route, fast.route) ? "equivalent-to-fastest"
+            : candidate.route.duration > fast.route.duration * limit.factor + limit.seconds ? "over-avoidance-time-limit"
+              : !routeFitsExtraMinutes(candidate.route.duration, fast.route.duration, maximumExtraMinutes) ? "over-extra-minutes"
+                : !frontier.includes(candidate) ? "dominated"
+                  : addsConfirmed(candidate) ? "adds-confirmed-pave"
+                    : rawPave(candidate) > rawPave(fast) ? "more-known-pave"
+                      : candidate.riskMeters + policy.minimumPaveReduction > fast.riskMeters ? "risk-reduction-too-small"
+                        : burden(candidate) + policy.minimumPaveReduction > burden(fast) ? "unknown-surface-burden"
+                          : utility(candidate) >= utility(fast) ? "time-cost-exceeds-saving"
+                            : "a-better-alternative-was-chosen");
+  }
+  const scores = new Map<T, { burden: number; utility: number }>(candidates.map((candidate) => [candidate, { burden: burden(candidate), utility: utility(candidate) }]));
+  return { safe, frontier, verdicts, scores };
 }
+
+export type SelectionVerdict = "selected" | "fastest" | "illegal" | "equivalent-to-fastest" | "over-avoidance-time-limit"
+  | "over-extra-minutes" | "dominated" | "adds-confirmed-pave" | "more-known-pave" | "risk-reduction-too-small"
+  | "unknown-surface-burden" | "time-cost-exceeds-saving" | "a-better-alternative-was-chosen";

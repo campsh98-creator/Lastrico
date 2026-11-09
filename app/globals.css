@@ -453,7 +453,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .route-field > button:active { transform: scale(.92); }
 .swap-button {
   position: absolute;
-  z-index: 2;
+  /* Phase 4.31: above both field wrappers (z-index 15 and 10), which hid it on iPhone; below an
+     open suggestion list (25). */
+  z-index: 20;
   top: 50%;
   right: 46px;
   width: var(--tap);
@@ -480,6 +482,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
   box-shadow: var(--shadow-float);
 }
 .swap-button .icon { position: relative; }
+.swap-button:disabled { opacity: .45; }
 
 /* Choices */
 .transport-selector, .segmented {
@@ -1238,3 +1241,23 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 
 .mobile-nav { display: none; }
 .journey-active .mobile-nav { display: none; }
+
+/* Phase 4.31: the upcoming rough-surface popup stands out from status lines. */
+.hud-notice.pave-popup {
+  font-size: var(--t-md, 1rem);
+  padding: var(--space-3);
+  border-left: 4px solid currentColor;
+}
+.hud-notice.pave-popup strong { font-weight: 700; }
+.road-features-note { color: var(--muted); font-size: var(--t-xs); }
+
+/* Phase 4.31: ZTL authorisations. */
+
+.ztl-list { display: grid; gap: var(--space-2); margin: var(--space-2) 0; padding: 0; list-style: none; }
+.ztl-list li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+.ztl-name { display: grid; min-width: 0; flex: 1 1 180px; }
+.ztl-name b { font-size: var(--t-sm); }
+.ztl-name small { color: var(--muted); font-size: var(--t-xs); }
+.ztl-modes { display: flex; gap: var(--space-3); }
+.ztl-modes label { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); font-size: var(--t-sm); }
+.ztl-modes input { width: 20px; height: 20px; }

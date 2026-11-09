@@ -3,6 +3,7 @@ import {
   computeRouteTradeoff,
   computeUnknownMeters,
   describeRouteTradeoff,
+  describeSingleRouteOutcome,
   formatKilometersIt as formatKilometers,
   formatMetersIt as formatMeters,
   formatMinutesIt as formatMinutes,
@@ -17,6 +18,7 @@ export function RouteComparisonPanel({
   onSelectRoute,
   transportMode,
   extraTimeBudgetMinutes,
+  antiPave = null,
   className = "",
 }: RouteComparisonProps) {
   const modeLabels = { car: "Auto", motorcycle: "Moto", bicycle: "Bici" };
@@ -26,7 +28,10 @@ export function RouteComparisonPanel({
   const tradeoff = computeRouteTradeoff(fastRoute, safeRoute, hasDistinctAlternative);
   const offersAlternative = tradeoff.kind === "alternative";
   const extraMinutes = tradeoff.kind === "alternative" ? Math.max(0, tradeoff.extraMinutes) : 0;
-  const selectionRationale = describeRouteTradeoff(tradeoff, activeRoute);
+  // Phase 4.31: a single route says why it is single (or that it is itself the anti-pavé result).
+  const selectionRationale = (!offersAlternative && describeSingleRouteOutcome(antiPave, extraTimeBudgetMinutes ?? null))
+    || describeRouteTradeoff(tradeoff, activeRoute);
+  const fastIsAntiPave = !offersAlternative && antiPave?.status === "fastest-avoids-pave";
 
   const fastTotalMeters = fastRoute.surfaceTotalMeters ?? (fastRoute.distance * 1000);
   const safeTotalMeters = safeRoute.surfaceTotalMeters ?? (safeRoute.distance * 1000);
@@ -161,7 +166,7 @@ export function RouteComparisonPanel({
           <div className="p43-card-head">
             <span className="p43-card-indicator p43-indicator-fast" />
             <div className="p43-card-names">
-              <strong>Più rapido · {modeLabel}</strong>
+              <strong>{fastIsAntiPave ? "Più rapido e anti-pavé" : "Più rapido"} · {modeLabel}</strong>
               <small>
                 {formatKilometers(fastRoute.distance)}
                 {fastUnknownPercent >= 25 ? ` · ${fastUnknownPercent}% del fondo non verificato` : ""}

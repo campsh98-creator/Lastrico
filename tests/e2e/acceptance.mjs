@@ -17,6 +17,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   BASE,
+  MAP_LOOKUP,
   appState,
   auditLayout,
   calculate,
@@ -1309,6 +1310,412 @@ scenario("E7", "The voice switch really controls speech", async (session, note) 
         window.speechSynthesis.cancel = () => {};
       });`,
   }),
+});
+
+/* ---------- F. Phase 4.29: real-navigation reliability (synthetic GPS, not a physical iPhone) ---------- */
+
+const MARKER_SAMPLER = `(() => {
+  const element = document.querySelector(".map-stage");
+  const key = Object.keys(element).find((name) => name.startsWith("__reactFiber$"));
+  let fiber = element[key], map = null;
+  while (fiber && !map) {
+    let hook = fiber.memoizedState;
+    while (hook && !map) { if (hook.memoizedState?.current?.getSource) map = hook.memoizedState.current; hook = hook.next; }
+    fiber = fiber.return;
+  }
+  const marker = document.querySelector("[data-testid=vehicle-marker]");
+  window.__frames = [];
+  const tick = () => {
+    const r = marker.getBoundingClientRect(), c = map.getContainer().getBoundingClientRect();
+    if (r.width) { const p = map.unproject([r.left + r.width / 2 - c.left, r.top + r.height / 2 - c.top]); window.__frames.push([p.lng, p.lat, performance.now()]); }
+    if (!window.__stopFrames) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})()`;
+
+scenario("F1", "The arrow glides between GPS fixes instead of jumping a fix at a time", async (session, note) => {
+  await mockBackend(session);
+  const data = fixture("milan-car");
+  await planCadornaDarsena(session);
+  await startGpsNavigation(session, data.safe.coordinates);
+  await sleep(1_200);
+  await session.evaluate(MARKER_SAMPLER);
+  // 29 km/h with one fix per second, as an iPhone reports while driving.
+  const fixTimes = [];
+  await drive(session, data.safe.coordinates, { from: 40, to: 120, step: 8, intervalMs: 1_000,
+    onFix: async () => { fixTimes.push(await session.evaluate("performance.now()")); } });
+  await sleep(2_600);
+  const frames = await session.evaluate(`(() => { window.__stopFrames = true; return window.__frames; })()`);
+  // Phase 4.31: lag behind the vehicle's true position (fixes here carry no GPS delay, so a real
+  // phone adds its own), and time from a fix to the first frame that moves towards it.
+  const lags = [];
+  const reactions = [];
+  for (const frame of frames) {
+    const k = fixTimes.findLastIndex((time) => time <= frame[2]);
+    if (k < 1 || frame[2] > fixTimes.at(-1)) continue;
+    const truth = pointAt(data.safe.coordinates, 40 + 8 * k + 8 * Math.min(1, (frame[2] - fixTimes[k]) / 1_000)).coordinate;
+    lags.push(distanceBetween(frame, truth));
+  }
+  for (const time of fixTimes.slice(1)) {
+    const index = frames.findIndex((frame) => frame[2] >= time);
+    const moved = frames.slice(index).findIndex((frame, i, rest) => i > 0 && distanceBetween(rest[i - 1], frame) > 0.05);
+    if (index >= 0 && moved > 0) reactions.push(frames[index + moved][2] - time);
+  }
+  const quantile = (values, q) => [...values].sort((a, b) => a - b)[Math.floor((values.length - 1) * q)];
+  const lag = { mean: lags.reduce((a, b) => a + b, 0) / Math.max(1, lags.length), p50: quantile(lags, 0.5), p90: quantile(lags, 0.9), reactionMs: quantile(reactions, 0.5) };
+  assert.ok(frames.length > 40, `${frames.length} frames sampled`);
+  const steps = frames.slice(1).map((frame, index) => distanceBetween(frames[index], frame));
+  // A headless browser can skip rendering for a moment; a time-based animation then covers that
+  // whole interval in one frame. Judge each step against the time since the previous frame.
+  const perFrame = frames.slice(1).map((frame, index) => steps[index] / Math.max(1, (frame[2] - frames[index][2]) / (1000 / 60)));
+  const stalls = frames.slice(1).filter((frame, index) => frame[2] - frames[index][2] > 250).length;
+  writeFileSync(join(process.env.LASTRICO_E2E_FAILURES ?? tmpdir(), "F1-frames.json"), JSON.stringify({ frames, steps, fixTimes, lag }));
+  const largest = Math.max(...perFrame);
+  const moving = steps.filter((step) => step > 0.05).length;
+  const sorted = [...steps].sort((a, b) => a - b);
+  const p99 = sorted[Math.floor(sorted.length * 0.99)];
+  const seconds = (frames.at(-1)[2] - frames[0][2]) / 1000;
+  // LASTRICO_F1_MEASURE_ONLY=1 records the same numbers for an older build (before/after).
+  if (process.env.LASTRICO_F1_MEASURE_ONLY !== "1") {
+    assert.ok(largest < 3, `largest step per 60 fps frame ${largest.toFixed(2)} m (one jump per fix would be 8 m); ${stalls} rendering stalls`);
+    assert.ok(moving > frames.length / 3, "the marker moves during most frames, not once per fix");
+    // Phase 4.31: it may aim up to 0.8 s / 10 m ahead of the last fix along the route, then it
+    // stops: nothing moves through the following silence.
+    const settled = frames.at(-1);
+    const lastFix = pointAt(data.safe.coordinates, 120).coordinate;
+    assert.ok(distanceBetween(settled, lastFix) < 12, `it stops near the last fix (${distanceBetween(settled, lastFix).toFixed(1)} m)`);
+    // The last glide lasts at most 1.2 s (MOTION_LIMITS.maxDurationMs); after that nothing moves.
+    const silent = frames.filter((frame) => frame[2] > fixTimes.at(-1) + 1_600);
+    assert.ok(silent.length > 5 && distanceBetween(silent[0], silent.at(-1)) < 0.5, "no motion after the last fix's glide");
+    assert.ok(lag.mean < 5, `lag behind the vehicle ${lag.mean.toFixed(1)} m (Phase 4.29: 9.0 m)`);
+  }
+  note(`${frames.length} frames in ${seconds.toFixed(1)} s, largest step per 60 fps frame ${largest.toFixed(2)} m (raw ${Math.max(...steps).toFixed(2)} m, p99 ${p99.toFixed(2)} m), ${moving} moving frames, ${stalls} rendering stalls; lag behind true position mean ${lag.mean.toFixed(1)} m, p50 ${lag.p50.toFixed(1)} m, p90 ${lag.p90.toFixed(1)} m; fix→first moving frame ${Math.round(lag.reactionMs)} ms`);
+});
+
+scenario("F2", "An approximate start is labelled honestly and never triggers a reroute", async (session, note) => {
+  const backend = await mockBackend(session);
+  const data = fixture("milan-car");
+  await planCadornaDarsena(session);
+  const planned = backend.routeCalls.length;
+  await session.tap("[data-testid=start-navigation]");
+  await waitForPhase(session, "starting", 5_000);
+  // Urban-canyon start: ±90 m fixes 110 m beside the route.
+  const start = pointAt(data.safe.coordinates, 20);
+  for (let index = 0; index < 4; index += 1) {
+    await session.feedFix(offset(start.coordinate, 110, start.bearing + 90), { accuracy: 90 });
+    await sleep(700);
+  }
+  const approximate = await appState(session);
+  assert.equal(approximate.navMode, "GPS APPROSSIMATIVO");
+  assert.match(approximate.navState ?? "", /Posizione approssimativa · ±90 m/);
+  await drive(session, data.safe.coordinates, { from: 20, to: 140, step: 10, intervalMs: 600 });
+  const accurate = await appState(session);
+  assert.equal(accurate.navMode, "GPS LIVE");
+  assert.equal(backend.routeCalls.length, planned, "no reroute was requested");
+  note(`approximate → ${accurate.navMode}, ${backend.routeCalls.length - planned} reroutes`);
+});
+
+scenario("F3", "A long pavé section is shown ahead, then while on it, and announced once", async (session, note) => {
+  const backend = await mockBackend(session);
+  const data = fixture("milan-car");
+  const section = (route) => ({
+    startMeters: 500, endMeters: 1100, confirmedMeters: 600, probableMeters: 0,
+    start: pointAt(route.coordinates, 500).coordinate, end: pointAt(route.coordinates, 1100).coordinate,
+  });
+  backend.routes = () => {
+    const body = fixture("milan-car");
+    body.safe.roughSections = [section(body.safe)];
+    body.fast.roughSections = [section(body.fast)];
+    return { body };
+  };
+  await planCadornaDarsena(session);
+  await session.tap("[data-testid=voice-toggle]");
+  await startGpsNavigation(session, data.safe.coordinates);
+  const seen = [];
+  await drive(session, data.safe.coordinates, {
+    from: 30, to: 760, step: 30, intervalMs: 350,
+    onFix: async () => { const text = await session.evaluate(`document.querySelector("[data-testid=pave-warning]")?.innerText ?? ""`); if (text) seen.push(text); },
+  });
+  assert.ok(seen.some((text) => /^Tra \d+ m — Pavé per 600 m$/.test(text)), `ahead: ${seen.slice(0, 3).join(" | ")}`);
+  assert.ok(seen.some((text) => /^Su pavé — ancora \d+ m$/.test(text)), `inside: ${seen.slice(-2).join(" | ")}`);
+  const spoken = await session.evaluate(`window.__spoken.filter((text) => /pavé/i.test(text))`);
+  assert.equal(spoken.length, 1, JSON.stringify(spoken));
+  assert.match(spoken[0], /^Tra \d+ metri, pavé per circa 600 metri\.$/);
+  note(`${spoken[0]} · HUD: ${seen[0]} → ${seen.at(-1)}`);
+}, {
+  setup: (session) => session.cdp("Page.addScriptToEvaluateOnNewDocument", {
+    source: `window.__spoken = [];
+      window.addEventListener("load", () => {
+        window.speechSynthesis.speak = (utterance) => window.__spoken.push(utterance.text);
+        window.speechSynthesis.cancel = () => {};
+      });`,
+  }),
+});
+
+scenario("G1", "A reroute with no anti-pavé alternative keeps the objective for the next reroute", async (session, note) => {
+  const backend = await mockBackend(session);
+  let reroutes = 0;
+  backend.routes = (url) => {
+    if (!url.searchParams.get("navigation")) return { body: fixture("milan-car") };
+    reroutes += 1;
+    const body = reroutedFixture("milan-car", url);
+    // First reroute: nothing with less pavé from here, so both cards are the fastest route.
+    if (reroutes === 1) { body.safe = body.fast; body.hasDistinctAlternative = false; }
+    return { body };
+  };
+  const data = fixture("milan-car");
+  await planCadornaDarsena(session);
+  assert.ok((await appState(session)).safeSelected, "anti-pavé is the default choice");
+  await startGpsNavigation(session, data.safe.coordinates);
+  const leave = async (coordinates, from) => {
+    const planned = backend.routeCalls.length;
+    const base = pointAt(coordinates, from);
+    for (let meters = 30; meters <= 240 && backend.routeCalls.length === planned; meters += 30) {
+      await session.feedFix(offset(base.coordinate, meters, base.bearing + 90), { accuracy: 8, heading: (base.bearing + 90) % 360, speed: 8 });
+      await sleep(900);
+    }
+    assert.ok(backend.routeCalls.length > planned, "leaving the route asked for a new one");
+    await waitForPhase(session, "navigating", 8_000);
+    return appState(session);
+  };
+  const first = await leave(data.safe.coordinates, 40);
+  assert.equal(first.hudRoute, "Più rapido", "no alternative: the fastest route is shown");
+  assert.match(first.navState ?? "", /nessuna alternativa con meno pavé/);
+  assert.equal(backend.routeCalls.at(-1).avoid, "strong");
+  // The cooldown after a reroute is 15 s; drive along the new route meanwhile.
+  await drive(session, data.fast.coordinates, { from: 60, to: 180, step: 10, intervalMs: 900 });
+  await sleep(4_000);
+  const second = await leave(data.fast.coordinates, 180);
+  assert.equal(second.hudRoute, "Anti-pavé", "the second reroute shows the anti-pavé alternative");
+  assert.match(second.navState ?? "", /anti-pavé mantenuto/);
+  await session.screenshot(new URL("nav-reroute-objective-kept-light-390x844.png", AFTER).pathname);
+  note(`reroute 1: ${first.hudRoute} · "${first.navState}"; reroute 2: ${second.hudRoute} · "${second.navState}"`);
+});
+
+scenario("G2", "The pavé popup gives distance, the OSM street name, surface and length (light and dark)", async (session, note) => {
+  const backend = await mockBackend(session);
+  const section = (route) => ({
+    startMeters: 500, endMeters: 1100, confirmedMeters: 600, probableMeters: 0, name: "Via Legnano", surface: "sett",
+    start: pointAt(route.coordinates, 500).coordinate, end: pointAt(route.coordinates, 1100).coordinate,
+  });
+  backend.routes = () => {
+    const body = fixture("milan-car");
+    body.safe.roughSections = [section(body.safe)];
+    body.fast.roughSections = [section(body.fast)];
+    return { body };
+  };
+  const data = fixture("milan-car");
+  await planCadornaDarsena(session);
+  await startGpsNavigation(session, data.safe.coordinates);
+  await drive(session, data.safe.coordinates, { from: 30, to: 270, step: 30, intervalMs: 350 });
+  const ahead = await session.evaluate(`document.querySelector("[data-testid=pave-warning]")?.innerText ?? ""`);
+  assert.match(ahead, /^Tra \d+ m — Pavé su Via Legnano per 600 m$/);
+  await session.screenshot(new URL("nav-pave-popup-ahead-light-390x844.png", AFTER).pathname);
+  await session.evaluate(`document.documentElement.dataset.theme = "dark"`);
+  await sleep(300);
+  await session.screenshot(new URL("nav-pave-popup-ahead-dark-390x844.png", AFTER).pathname);
+  await drive(session, data.safe.coordinates, { from: 300, to: 620, step: 30, intervalMs: 350 });
+  const inside = await session.evaluate(`document.querySelector("[data-testid=pave-warning]")?.innerText ?? ""`);
+  assert.match(inside, /^Su pavé — ancora \d+ m · Via Legnano$/);
+  await session.screenshot(new URL("nav-pave-popup-inside-dark-390x844.png", AFTER).pathname);
+  // The popup and the manoeuvre banner are both fully on screen.
+  const layout = await session.evaluate(`(() => {
+    const box = (s) => { const r = document.querySelector(s)?.getBoundingClientRect(); return r ? { top: r.top, bottom: r.bottom, left: r.left, right: r.right } : null; };
+    return { popup: box("[data-testid=pave-warning]"), width: innerWidth, height: innerHeight };
+  })()`);
+  assert.ok(layout.popup && layout.popup.top >= 0 && layout.popup.bottom <= layout.height && layout.popup.right <= layout.width, JSON.stringify(layout));
+  note(`${ahead} → ${inside}`);
+});
+
+scenario("G3", "OSM traffic signals appear on the selected route, with their data coverage stated", async (session, note) => {
+  const backend = await mockBackend(session);
+  backend.routes = () => {
+    const body = fixture("milan-car");
+    for (const key of ["fast", "safe"]) {
+      const route = body[key];
+      body[key].roadFeatures = { coverage: "partial", items: [
+        { type: "traffic_signals", coordinate: pointAt(route.coordinates, 300).coordinate, progressMeters: 300 },
+        { type: "give_way", coordinate: pointAt(route.coordinates, 700).coordinate, progressMeters: 700 },
+      ] };
+    }
+    return { body };
+  };
+  await planCadornaDarsena(session);
+  const state = await session.evaluate(`(() => {
+    const map = ${MAP_LOOKUP};
+    const data = map.getSource("road-features").serialize().data;
+    return { features: data.features.map((f) => f.properties.icon), note: document.querySelector("[data-testid=road-features-note]")?.innerText ?? null, layer: Boolean(map.getLayer("road-features")) };
+  })()`);
+  assert.deepEqual(state.features, ["lastrico-signal", "lastrico-give-way"]);
+  assert.equal(state.layer, true);
+  assert.equal(state.note, "1 semaforo sul percorso (OSM) · dati solo per il centro");
+  note(`${state.features.join(", ")} · "${state.note}"`);
+});
+
+scenario("G4", "Swapping A and B recalculates once and keeps mode, route type, extra minutes and ZTL settings", async (session, note) => {
+  const backend = await mockBackend(session);
+  // Echo the requested extra minutes, as the real server does, so the answer matches the request.
+  backend.routes = (url) => {
+    const body = fixture(`milan-${url.searchParams.get("mode")}`);
+    const extra = url.searchParams.get("maxExtraMinutes");
+    body.appliedPreferences = { avoidance: url.searchParams.get("avoid"), maximumExtraMinutes: extra === null ? null : Number(extra) };
+    return { body };
+  };
+  await selectTransport(session, "motorcycle");
+  await planCadornaDarsena(session);
+  const toPlan = async () => { await session.tap("[data-testid=edit-route]"); await sleep(250); };
+  // Extra-time allowance through the existing preference interpreter (reached by its shortcut).
+  await toPlan();
+  // The collapsed section now names the preference field, so it is found without opening it.
+  assert.match(await session.evaluate(`document.querySelector("[data-testid=preferences-toggle]").innerText`), /Descrivi la tua preferenza/);
+  await session.tap("[data-testid=preferences-toggle]");
+  await session.tap("#route-preference-prompt");
+  await session.cdp("Input.insertText", { text: "Evita il pavé con massimo 8 minuti in più" });
+  await session.evaluate(`[...document.querySelectorAll("[data-testid=route-prompt-demo] button")].find((b) => b.textContent.includes("Interpreta")).click()`);
+  await sleep(200);
+  await session.evaluate(`[...document.querySelectorAll("[data-testid=route-prompt-demo] button")].find((b) => b.textContent.includes("Applica")).click()`);
+  await waitForPhase(session, "route-ready", 8_000);
+  await sleep(300);
+  // One ZTL authorisation for the motorcycle (second checkbox of the area): a shown route is redone.
+  await toPlan();
+  const beforeZtl = backend.routeCalls.length;
+  await session.evaluate(`document.querySelectorAll("[data-testid=ztl-ztl-via-mario-pichi] input")[1].click()`);
+  await waitForPhase(session, "route-ready", 8_000);
+  await sleep(300);
+  assert.equal(backend.routeCalls.length, beforeZtl + 1, "changing an authorisation recalculates");
+  assert.equal(backend.routeCalls.at(-1).ztl, "ztl-via-mario-pichi");
+  // The person picks the fastest route over the alternative, then swaps.
+  await session.tap("[data-testid=p43-card-fast]");
+  await sleep(200);
+  const before = await appState(session);
+  assert.equal(before.fastSelected, true);
+  await toPlan();
+  const fieldsBefore = await appState(session);
+  const calls = backend.routeCalls.length;
+  const last = backend.routeCalls.at(-1);
+  await session.tap("[data-testid=swap-locations]");
+  await waitForPhase(session, "route-ready", 8_000);
+  await sleep(400);
+  const after = await appState(session);
+  assert.equal(backend.routeCalls.length, calls + 1, "exactly one new calculation");
+  const swapped = backend.routeCalls.at(-1);
+  assert.equal(swapped.start, last.end);
+  assert.equal(swapped.end, last.start);
+  assert.equal(swapped.mode, "motorcycle");
+  assert.equal(swapped.maxExtraMinutes, "8");
+  assert.equal(swapped.ztl, "ztl-via-mario-pichi");
+  assert.equal(after.fastSelected, true, "the chosen route type survives the swap");
+  await toPlan();
+  const fieldsAfter = await appState(session);
+  assert.ok(fieldsBefore.startValue && fieldsBefore.endValue);
+  assert.equal(fieldsAfter.startValue, fieldsBefore.endValue);
+  assert.equal(fieldsAfter.endValue, fieldsBefore.startValue);
+  assert.equal(fieldsAfter.modeChecked, "motorcycle");
+  assert.equal(await session.evaluate(`document.querySelectorAll(".address-suggestion-option").length`), 0, "no stale suggestions");
+  await session.screenshot(new URL("planner-swap-light-390x844.png", AFTER).pathname);
+  await session.tap("[data-testid=swap-locations]");
+  await waitForPhase(session, "route-ready", 8_000);
+  await sleep(300);
+  assert.equal(backend.routeCalls.length, calls + 2);
+  assert.equal(backend.routeCalls.at(-1).start, last.start, "swapping back restores the original direction");
+  const stored = await session.evaluate(`localStorage.getItem("lastrico-ztl-authorisations-v1")`);
+  assert.match(stored, /"ztl-via-mario-pichi":\{"motorcycle":true\}/);
+  note(`${fieldsBefore.startValue} → ${fieldsBefore.endValue} ⇄ ${fieldsAfter.startValue} → ${fieldsAfter.endValue}; ${backend.routeCalls.length - calls} requests for two swaps; ztl=${swapped.ztl}; +${swapped.maxExtraMinutes} min; route type kept: Più rapido`);
+});
+
+// Phase 4.31 release gate: the route selector with real handler payloads (tests/e2e/fixtures/phase431-*,
+// recorded by scripts/record-phase431-anti-pave-fixtures.mjs from real provider responses).
+function gatePayload(name, url) {
+  const body = fixture(`phase431-${name}`);
+  const extra = url.searchParams.get("maxExtraMinutes");
+  // The planner checks that the answer matches its request, as with the real server.
+  body.appliedPreferences = { avoidance: url.searchParams.get("avoid"), maximumExtraMinutes: extra === null ? null : Number(extra) };
+  // A recorded motorcycle answer reused for the planner's car request (wording checks only).
+  body.transportMode = url.searchParams.get("mode");
+  body.mode = body.transportMode;
+  return body;
+}
+const rationale = (session) => session.evaluate(`document.querySelector("[data-testid=p43-selection-rationale]")?.innerText ?? ""`);
+const cardTitle = (session, kind) => session.evaluate(`document.querySelector("[data-testid=p43-card-${kind}] strong")?.innerText ?? null`);
+
+scenario("H1", "Porta Romana: the Filippetti anti-pavé route is offered, selectable and followed by navigation", async (session, note) => {
+  const backend = await mockBackend(session);
+  backend.routes = (url) => ({ body: gatePayload("porta-vittoria-car", url) });
+  await planCadornaDarsena(session);
+  const state = await appState(session);
+  assert.equal(state.hasAlternative, true, "two route cards");
+  assert.equal(state.safeSelected, true, "anti-pavé is the default choice");
+  const offered = await rationale(session);
+  assert.match(offered, /^Evita 493 m di pavé confermato/);
+  assert.match(await cardTitle(session, "safe") ?? "", /Anti-pavé|meno pavé|Meno pavé/i);
+  await session.screenshot(new URL("routes-filippetti-light-390x844.png", AFTER).pathname);
+  // Choosing changes what is followed, both ways.
+  await session.tap("[data-testid=p43-card-fast]");
+  assert.equal((await appState(session)).fastSelected, true);
+  await session.tap("[data-testid=p43-card-safe]");
+  assert.equal((await appState(session)).safeSelected, true);
+  const data = fixture("phase431-porta-vittoria-car");
+  await startGpsNavigation(session, data.safe.coordinates);
+  const navigating = await appState(session);
+  assert.equal(navigating.hudRoute, "Anti-pavé");
+  assert.ok(navigating.safeLine > 0, "the anti-pavé line is drawn");
+  note(`"${offered}" → navigating as ${navigating.hudRoute}`);
+});
+
+scenario("H2", "When the fastest route is itself the anti-pavé result, it is said and labelled", async (session, note) => {
+  const backend = await mockBackend(session);
+  backend.routes = (url) => ({ body: gatePayload("regina-margherita-car", url) });
+  await planCadornaDarsena(session);
+  const state = await appState(session);
+  assert.equal(state.hasAlternative, false, "one real route, not shown twice");
+  assert.equal(await cardTitle(session, "fast"), "Più rapido e anti-pavé · Auto");
+  const said = await rationale(session);
+  assert.match(said, /già quello anti-pavé: evita 445 m di pavé del percorso standard/);
+  await session.screenshot(new URL("routes-fastest-is-anti-pave-light-390x844.png", AFTER).pathname);
+  const data = fixture("phase431-regina-margherita-car");
+  await startGpsNavigation(session, data.fast.coordinates);
+  assert.equal((await appState(session)).hudRoute, "Più rapido e anti-pavé");
+  note(`"${said}" → navigating as Più rapido e anti-pavé`);
+});
+
+scenario("H3", "No meaningful improvement, a failed search, a time limit and blocked access are told apart", async (session, note) => {
+  const backend = await mockBackend(session);
+  let current = "promessi-sposi-vetra-car";
+  backend.routes = (url) => {
+    const body = gatePayload(current === "access-restricted" ? "promessi-sposi-vetra-car" : current, url);
+    // No recorded Milan case has an illegal lower-pavé candidate at noon; the server status is set
+    // here to check the wording only (the legality itself is covered by the ZTL tests).
+    if (current === "access-restricted") body.antiPave = { ...body.antiPave, status: "access-restricted" };
+    return { body };
+  };
+  const seen = {};
+  for (const [name, expected] of [
+    ["promessi-sposi-vetra-car", /^Nessuna alternativa migliora il compromesso/],
+    ["regina-margherita-motorcycle-reroute-search-down", /^La ricerca di un percorso con meno pavé non ha risposto/],
+    ["access-restricted", /tratti vietati o ZTL non autorizzate/],
+  ]) {
+    current = name;
+    if (seen.planned) { await session.tap("[data-testid=recalculate-routes]"); await waitForPhase(session, "route-ready", 8_000); await sleep(300); }
+    else { await planCadornaDarsena(session); seen.planned = true; }
+    const text = await rationale(session);
+    assert.match(text, expected, `${name}: ${text}`);
+    seen[name] = text;
+  }
+  // The extra-time limit: the person asks for at most 2 minutes, the server reports the limit.
+  current = "porta-vittoria-car-no-extra";
+  await session.tap("[data-testid=edit-route]");
+  await sleep(250);
+  await session.tap("[data-testid=preferences-toggle]");
+  await session.tap("#route-preference-prompt");
+  await session.cdp("Input.insertText", { text: "Evita il pavé con massimo 2 minuti in più" });
+  await session.evaluate(`[...document.querySelectorAll("[data-testid=route-prompt-demo] button")].find((b) => b.textContent.includes("Interpreta")).click()`);
+  await sleep(200);
+  await session.evaluate(`[...document.querySelectorAll("[data-testid=route-prompt-demo] button")].find((b) => b.textContent.includes("Applica")).click()`);
+  await waitForPhase(session, "route-ready", 8_000);
+  await sleep(300);
+  assert.equal(backend.routeCalls.at(-1).maxExtraMinutes, "2");
+  assert.match(await rationale(session), /supera i \+2 minuti che hai scelto/);
+  note(Object.entries(seen).filter(([key]) => key !== "planned").map(([key, text]) => `${key}: ${text}`).join(" | "));
 });
 
 scenario("E8", "External maps stay a fallback that opens the selected endpoints", async (session, note) => {

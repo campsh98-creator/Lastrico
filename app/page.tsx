@@ -11,7 +11,6 @@ import {
   shouldApplyRouteResponse,
   shouldBeginNavigation,
   shouldRunSimulationTimer,
-  shouldUpdateNavigationCamera,
   type NavigationDiagnosticEvent,
   type NavigationDiagnostics,
   type NavigationJourneyMode,
@@ -57,8 +56,16 @@ import {
 import {
   buildRouteProgressModel,
   calculateRouteProgress,
+  pointAtProgress,
   type RouteProgressModel,
 } from "@/lib/route-progress";
+import { motionAt, planMarkerMotion, routeSliceBetween, type MarkerMotionPlan } from "@/lib/marker-motion";
+import { evaluatePaveWarning, type AnnouncedSection } from "@/lib/pave-warnings";
+import { journeyObjective, rerouteDisplayKind, rerouteOutcomeNotice, type RouteKind } from "@/lib/reroute-objective";
+import type { RouteRoadFeatures } from "@/lib/road-features";
+import type { AntiPaveOutcome } from "@/lib/route-tradeoff";
+import { ztlAreaSummaries } from "@/lib/ztl-access";
+import type { RoughSection } from "@/lib/rough-sections";
 import { evaluateVoiceGuidance } from "@/lib/voice-guidance";
 import {
   createGpsTraceRecorder,
@@ -143,6 +150,16 @@ type RouteResult = {
   probablePaveMeters?: number;
   /** Bicycle: metres at the start or end on a pedestrian-only street, to be walked. */
   terminalWalkMeters?: number;
+  /** Phase 4.29: merged rough sections along this route, for warnings during navigation. */
+  roughSections?: RoughSection[];
+  /** Phase 4.31: OSM-mapped traffic signals and signs on this route, with data coverage. */
+  roadFeatures?: RouteRoadFeatures | null;
+  /** Phase 4.31: ZTL areas on this route at the departure time (unauthorised ones only at its ends). */
+  access?: {
+    ztl: { id: string; name: string; meters: number }[];
+    authorisedZtl: { id: string; name: string; meters: number }[];
+    terminalZtlMeters: number;
+  };
   surfaceConfidence?: number;
   problemSegments?: Coordinate[][];
   instructions?: NavigationInstruction[];
@@ -162,6 +179,8 @@ type GeocodeResult = LocationChoice & {
 
 type RouteApiResponse = {
   area?: PilotAreaId;
+  /** Phase 4.31: why the response has (or has no) anti-pavé alternative. */
+  antiPave?: AntiPaveOutcome;
   fast: RouteResult;
   safe: RouteResult;
   problemSegments: Coordinate[][];
@@ -227,6 +246,106 @@ function problemGeoJSON(results: RouteResult[]) {
       })),
     ),
   };
+}
+
+/** Phase 4.31: the verified Milan ZTL areas (OSM evidence) a person can say they may enter. */
+const ZTL_AREAS = ztlAreaSummaries();
+const ZTL_STORAGE_KEY = "lastrico-ztl-authorisations-v1";
+type ZtlAuthorisations = Record<string, { car?: boolean; motorcycle?: boolean }>;
+/** The zone's rule in plain words, from its OSM tags (never an invented timetable). */
+function ztlRuleSummary(zone: (typeof ZTL_AREAS)[number]) {
+  if (zone.kind === "gated") return "Varco ZTL: orari non presenti nei dati, considerata sempre attiva";
+  if (zone.hours) return zone.hours === "00:00-24:00" ? "Attiva tutto il giorno" : `Attiva ${zone.hours.replace("-", "–")}`;
+  const windows = [...new Set(zone.rules.flatMap((rule) => [...rule.matchAll(/(no|permit) @ \(([^)]+)\)/g)].map((match) => match[2].replace(/\s*-\s*/g, "–").replace("31:00", "07:00"))))];
+  const permit = zone.rules.some((rule) => /=(permit|residents)$/.test(rule));
+  if (windows.length) return `Attiva ${windows.join(", ")}${permit ? " · alcune vie sempre con permesso" : ""} (dalle regole OSM delle vie)`;
+  return permit ? "Solo con permesso, a ogni ora (dalle regole OSM delle vie)" : "Regole OSM sulle singole vie";
+}
+
+function authorisedZtlFor(authorisations: ZtlAuthorisations, mode: TransportMode) {
+  if (mode === "bicycle") return [];
+  return ZTL_AREAS.filter((area) => authorisations[area.id]?.[mode]).map((area) => area.id);
+}
+
+/** Phase 4.31: map icon per OSM feature type; both kinds of signals share the traffic light. */
+const ROAD_FEATURE_ICON: Record<string, string> = {
+  traffic_signals: "lastrico-signal",
+  crossing_signals: "lastrico-signal",
+  stop: "lastrico-stop",
+  give_way: "lastrico-give-way",
+};
+
+function roadFeaturesGeoJSON(features: RouteRoadFeatures | null | undefined) {
+  return {
+    type: "FeatureCollection" as const,
+    features: (features?.items ?? []).map((item) => ({
+      type: "Feature" as const,
+      properties: { icon: ROAD_FEATURE_ICON[item.type], kind: item.type },
+      geometry: { type: "Point" as const, coordinates: item.coordinate },
+    })),
+  };
+}
+
+/** What the markers cover, said plainly: OSM data for central Milan only. */
+function roadFeaturesNote(features: RouteRoadFeatures) {
+  const signals = features.items.filter((item) => item.type === "traffic_signals" || item.type === "crossing_signals").length;
+  if (features.coverage === "none") return "Semafori: nessun dato OSM per questa zona.";
+  const counted = `${signals} ${signals === 1 ? "semaforo" : "semafori"} sul percorso (OSM)`;
+  return features.coverage === "full" ? counted : `${counted} · dati solo per il centro`;
+}
+
+/** Small 2× icons drawn on a canvas, so no image request and no emoji font is needed. */
+const roadFeatureIcons: Record<string, () => ImageData> = {
+  "lastrico-signal": () => drawIcon(28, 48, (context) => {
+    context.fillStyle = "#1d2629";
+    context.strokeStyle = "#ffffff";
+    context.lineWidth = 3;
+    context.beginPath();
+    context.roundRect(3, 3, 22, 42, 7);
+    context.fill();
+    context.stroke();
+    ["#e5483b", "#f2b233", "#2fa363"].forEach((color, index) => {
+      context.fillStyle = color;
+      context.beginPath();
+      context.arc(14, 12 + index * 12, 4.5, 0, Math.PI * 2);
+      context.fill();
+    });
+  }),
+  "lastrico-stop": () => drawIcon(36, 36, (context) => {
+    context.fillStyle = "#c8261c";
+    context.strokeStyle = "#ffffff";
+    context.lineWidth = 3;
+    context.beginPath();
+    for (let index = 0; index < 8; index += 1) {
+      const angle = Math.PI / 8 + (index * Math.PI) / 4;
+      context.lineTo(18 + 15 * Math.cos(angle), 18 + 15 * Math.sin(angle));
+    }
+    context.closePath();
+    context.fill();
+    context.stroke();
+  }),
+  "lastrico-give-way": () => drawIcon(36, 34, (context) => {
+    context.fillStyle = "#ffffff";
+    context.strokeStyle = "#c8261c";
+    context.lineWidth = 5;
+    context.lineJoin = "round";
+    context.beginPath();
+    context.moveTo(4, 5);
+    context.lineTo(32, 5);
+    context.lineTo(18, 30);
+    context.closePath();
+    context.fill();
+    context.stroke();
+  }),
+};
+
+function drawIcon(width: number, height: number, paint: (context: CanvasRenderingContext2D) => void) {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d")!;
+  paint(context);
+  return context.getImageData(0, 0, width, height);
 }
 
 function reportsGeoJSON(reports: RoadReport[]) {
@@ -298,6 +417,15 @@ export default function Home() {
   const mapRef = useRef<MapLibreMap | null>(null);
   const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker; vehicle?: MapLibreMarker }>({});
   const vehicleArrowRef = useRef<HTMLSpanElement | null>(null);
+  // Phase 4.29: the marker is animated between GPS updates instead of teleporting on each one.
+  const markerMotionRef = useRef<{ plan: MarkerMotionPlan; fromProgress: number | null; toProgress: number | null } | null>(null);
+  const markerDrawnRef = useRef<{ position: Coordinate; heading: number } | null>(null);
+  const markerFrameRef = useRef<number | null>(null);
+  const markerTargetAtRef = useRef<number | null>(null);
+  const journeyDisplayProgressRef = useRef<number | null>(null);
+  const gpsResumedUntilRef = useRef(0);
+  // Phase 4.29: sections already announced on the ground, kept across reroutes of one journey.
+  const announcedPaveRef = useRef<AnnouncedSection[]>([]);
   const pickingRef = useRef<PickingMode | null>(null);
   const directionsTriggerRef = useRef<HTMLButtonElement>(null);
   const journeyWatchRef = useRef<number | null>(null);
@@ -345,6 +473,9 @@ export default function Home() {
   const focusedAddressFieldRef = useRef<"start" | "end" | null>(null);
   const geocodeCacheRef = useRef<Map<string, { timestamp: number; results: GeocodeResult[] }>>(new Map());
   const rerouteFailuresRef = useRef(0);
+  // Phase 4.31: the routing objective of the journey, fixed at start; reroutes never change it.
+  const journeyObjectiveRef = useRef<RouteKind>("safe");
+  const rerouteNoticeTimerRef = useRef<number | null>(null);
   const lastWatchArmedAtRef = useRef(0);
   const discardPlannedRouteRef = useRef<() => void>(() => undefined);
   const [startLocation, setStartLocation] = useState<LocationChoice>({ label: "", coordinate: PILOT_AREAS.milan.center });
@@ -387,15 +518,22 @@ export default function Home() {
   const [arrived, setArrived] = useState(false);
   const [lastRecalculatedAt, setLastRecalculatedAt] = useState<string | null>(null);
   const [dataNotice, setDataNotice] = useState("");
+  /** Phase 4.29: how trustworthy the latest accepted fix is (null before the first one). */
+  const [gpsQuality, setGpsQuality] = useState<"approximate" | "accurate" | "resumed" | null>(null);
   const [rerouteIssue, setRerouteIssue] = useState(false);
+  const [rerouteNotice, setRerouteNotice] = useState<string | null>(null);
   const [hasGpsFix, setHasGpsFix] = useState(false);
   const [gpsAcquireIssue, setGpsAcquireIssue] = useState<"timeout" | "imprecise" | null>(null);
   const [resumeOffer, setResumeOffer] = useState<JourneyMode | null>(null);
   const [startupNoticeVisible, setStartupNoticeVisible] = useState(false);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
+  // Phase 4.31: ZTL areas the person is authorised for, per mode; kept on this device only.
+  const [ztlAuthorisations, setZtlAuthorisations] = useState<ZtlAuthorisations>({});
+  const ztlAuthorisationsRef = useRef<ZtlAuthorisations>({});
   const [routeDetailsOpen, setRouteDetailsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [viewportRevision, setViewportRevision] = useState(0);
+  const [antiPaveOutcome, setAntiPaveOutcome] = useState<AntiPaveOutcome | null>(null);
   const [routingProfile, setRoutingProfile] = useState<RouteApiResponse["routingProfile"]>({
     provider: "pending",
     profile: "car",
@@ -493,6 +631,7 @@ export default function Home() {
     if (gpsState === "outside") return "FUORI AREA";
     if (gpsState === "temporarily-unavailable") return "GPS IN ATTESA";
     if (gpsState === "offroute") return "FUORI PERCORSO";
+    if (gpsQuality === "approximate") return "GPS APPROSSIMATIVO";
     if (journeyAccuracy !== null && journeyAccuracy > 65) return "GPS IMPRECISO";
     return "GPS LIVE";
   })();
@@ -501,12 +640,17 @@ export default function Home() {
     if (!isOnline) return "Connessione assente · continuo sul percorso salvato";
     if (gpsState === "recalculating" || isRecalculating) return "Fuori percorso · sto calcolando una nuova strada";
     if (rerouteIssue) return "Ricalcolo non riuscito · continuo sull’ultimo percorso e riprovo a breve";
+    if (rerouteNotice) return rerouteNotice;
     if (gpsState === "weak") {
       return `Segnale debole${journeyAccuracy ? ` · ±${Math.round(journeyAccuracy)} m` : ""} · ultimo punto valido`;
     }
     if (gpsState === "outside") return `Posizione fuori dall’area pilota di ${area.name}`;
     if (gpsState === "temporarily-unavailable") return "Segnale GPS assente · ultimo punto valido";
     if (gpsState === "offroute") return "Fuori percorso · attendo una posizione affidabile";
+    if (gpsQuality === "approximate") {
+      return `Posizione approssimativa${journeyAccuracy ? ` · ±${Math.round(journeyAccuracy)} m` : ""} · attendo un segnale più preciso`;
+    }
+    if (gpsQuality === "resumed") return "GPS ripreso · posizione aggiornata";
     if (journeyAccuracy !== null && journeyAccuracy > 65) return `Posizione imprecisa · ±${Math.round(journeyAccuracy)} m`;
     return null;
   })();
@@ -525,6 +669,18 @@ export default function Home() {
       // Visual guidance remains available when speech synthesis fails.
     }
   }, []);
+  // Phase 4.29: pavé warnings queue behind a manoeuvre being spoken instead of cutting it off.
+  const speakAnnouncement = useCallback((text: string) => {
+    if (!voiceEnabledRef.current || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
+    try {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "it-IT";
+      utterance.rate = 1;
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      // The on-screen warning remains when speech synthesis fails.
+    }
+  }, []);
   const toggleVoiceGuidance = useCallback(() => {
     if (!voiceAvailable) {
       setStatus("La guida vocale non è disponibile su questo dispositivo.");
@@ -541,6 +697,7 @@ export default function Home() {
 
   function selectActiveRoute(routeKind: "safe" | "fast") {
     promptPreferredRouteRef.current = null;
+    if (journeyActiveRef.current) journeyObjectiveRef.current = routeKind;
     updateStoredPlanSelection(routeKind);
     activeRouteRef.current = routeKind;
     const nextSelectedRoute = routeKind === "safe" ? safeRoute : fastRoute;
@@ -718,6 +875,7 @@ export default function Home() {
         map.addSource("safe-route", { type: "geojson", data: emptyFeatureCollection });
         map.addSource("problem-segments", { type: "geojson", data: emptyFeatureCollection });
         map.addSource("community-reports", { type: "geojson", data: emptyFeatureCollection });
+        map.addSource("road-features", { type: "geojson", data: emptyFeatureCollection });
         map.addSource("report-draft", { type: "geojson", data: emptyFeatureCollection });
         map.addSource("theme-overlay", {
           type: "geojson",
@@ -803,6 +961,23 @@ export default function Home() {
             "circle-color": "#122023",
             "circle-stroke-color": "#ffffff",
             "circle-stroke-width": 4,
+          },
+        });
+        // Phase 4.31: OSM-mapped signals and signs on the selected route, drawn small and only
+        // when zoomed in, so they do not clutter the overview or hide the route.
+        for (const [name, draw] of Object.entries(roadFeatureIcons)) {
+          if (!map.hasImage(name)) map.addImage(name, draw(), { pixelRatio: 2 });
+        }
+        map.addLayer({
+          id: "road-features",
+          type: "symbol",
+          source: "road-features",
+          minzoom: 14,
+          layout: {
+            "icon-image": ["get", "icon"],
+            "icon-size": ["interpolate", ["linear"], ["zoom"], 14, 0.7, 17, 1],
+            "icon-allow-overlap": false,
+            "icon-padding": 2,
           },
         });
         setMapReady(true);
@@ -903,34 +1078,74 @@ export default function Home() {
       return;
     }
     element.style.display = "grid";
-    marker.setLngLat(journeyPosition);
-    if (vehicleArrowRef.current) vehicleArrowRef.current.style.transform = `rotate(${journeyHeading}deg)`;
     element.style.setProperty("--accuracy", `${Math.min(90, Math.max(24, journeyAccuracy ?? 24))}px`);
     const now = performance.now();
-    if (followVehicle && shouldUpdateNavigationCamera({
-      mode: "navigation-following",
-      now,
-      lastUpdatedAt: cameraLastUpdateRef.current,
-      previousCenter: cameraLastCenterRef.current,
-      center: journeyPosition,
-      previousHeading: cameraLastHeadingRef.current,
-      heading: journeyHeading,
-      distanceMeters,
-    })) {
-      const map = mapRef.current;
-      map?.easeTo({
-        center: journeyPosition,
-        zoom: 16.6,
-        pitch: 42,
-        bearing: journeyHeading,
-        duration: 650,
-        essential: false,
-        padding: map ? vehicleCameraPadding(map.getContainer()) : undefined,
+    // Phase 4.29: move from where the marker is drawn now to the new point over the interval the
+    // fixes really arrive at, along the road when both ends are on it; never beyond the point.
+    const drawn = markerDrawnRef.current;
+    const previousTarget = markerTargetAtRef.current;
+    const sameTarget = markerMotionRef.current
+      && markerMotionRef.current.plan.path[markerMotionRef.current.plan.path.length - 1] === journeyPosition;
+    if (!sameTarget) {
+      markerTargetAtRef.current = now;
+      const model = selectedRouteModelRef.current;
+      const motion = markerMotionRef.current;
+      const toProgress = journeyDisplayProgressRef.current;
+      let fromProgress: number | null = null;
+      if (motion && motion.fromProgress !== null && motion.toProgress !== null) {
+        const t = motion.plan.durationMs > 0 ? Math.min(1, (now - motion.plan.startedAt) / motion.plan.durationMs) : 1;
+        fromProgress = motion.fromProgress + (motion.toProgress - motion.fromProgress) * t;
+      } else if (motion && motion.toProgress !== null && motion.plan.durationMs === 0) {
+        fromProgress = motion.toProgress;
+      }
+      const routeSlice = model && fromProgress !== null && toProgress !== null
+        ? routeSliceBetween(model.coordinates, model.cumulativeMeters, fromProgress, toProgress,
+          (meters) => pointAtProgress(model, meters, 0)?.coordinate ?? journeyPosition)
+        : null;
+      const reducedMotion = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const plan = planMarkerMotion({
+        from: drawn?.position ?? null,
+        fromHeading: drawn?.heading ?? journeyHeading,
+        to: journeyPosition,
+        toHeading: journeyHeading,
+        now,
+        intervalMs: previousTarget === null ? null : now - previousTarget,
+        routeSlice,
+        reducedMotion,
       });
-      cameraLastUpdateRef.current = now;
-      cameraLastCenterRef.current = journeyPosition;
-      cameraLastHeadingRef.current = journeyHeading;
+      markerMotionRef.current = { plan, fromProgress: routeSlice ? fromProgress : null, toProgress };
+      if (followVehicle) {
+        const map = mapRef.current;
+        const camera = {
+          center: journeyPosition,
+          zoom: 16.6,
+          pitch: 42,
+          bearing: journeyHeading,
+          padding: map ? vehicleCameraPadding(map.getContainer()) : undefined,
+        };
+        // A linear camera over the same interval keeps the marker still on screen while it moves.
+        if (plan.durationMs > 0) map?.easeTo({ ...camera, duration: plan.durationMs, easing: (t) => t, essential: false });
+        else map?.jumpTo(camera);
+        cameraLastUpdateRef.current = now;
+        cameraLastCenterRef.current = journeyPosition;
+        cameraLastHeadingRef.current = journeyHeading;
+      }
     }
+    const step = () => {
+      const motion = markerMotionRef.current;
+      if (!motion) return;
+      const frame = motionAt(motion.plan, performance.now());
+      marker.setLngLat(frame.position);
+      if (vehicleArrowRef.current) vehicleArrowRef.current.style.transform = `rotate(${frame.heading}deg)`;
+      markerDrawnRef.current = { position: frame.position, heading: frame.heading };
+      markerFrameRef.current = frame.done ? null : window.requestAnimationFrame(step);
+    };
+    if (markerFrameRef.current !== null) window.cancelAnimationFrame(markerFrameRef.current);
+    step();
+    return () => {
+      if (markerFrameRef.current !== null) window.cancelAnimationFrame(markerFrameRef.current);
+      markerFrameRef.current = null;
+    };
   }, [journeyPosition, journeyHeading, journeyAccuracy, followVehicle, isJourneyActive]);
 
   useEffect(() => {
@@ -942,8 +1157,10 @@ export default function Home() {
       (map.getSource("fast-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
       (map.getSource("safe-route") as GeoJSONSource)?.setData(emptyFeatureCollection);
       (map.getSource("problem-segments") as GeoJSONSource)?.setData(emptyFeatureCollection);
+      (map.getSource("road-features") as GeoJSONSource)?.setData(emptyFeatureCollection);
       return;
     }
+    (map.getSource("road-features") as GeoJSONSource)?.setData(roadFeaturesGeoJSON(selectedRoute.roadFeatures));
     (map.getSource("fast-route") as GeoJSONSource)?.setData(routeGeoJSON(fastRoute));
     (map.getSource("safe-route") as GeoJSONSource)?.setData(
       hasDistinctAlternative ? routeGeoJSON(safeRoute) : emptyFeatureCollection,
@@ -1039,6 +1256,35 @@ export default function Home() {
     speakInstruction,
   ]);
 
+  // Phase 4.29: rough sections ahead are shown on the HUD and announced once each.
+  const paveWarningProgress = isJourneyActive ? navigationProgress.routeProgressMeters : null;
+  const paveHud = useMemo(
+    () => evaluatePaveWarning({
+      sections: selectedRoute.roughSections,
+      progressMeters: paveWarningProgress,
+      mode: transportMode,
+      announced: [],
+      canSpeak: false,
+    }).hud,
+    [selectedRoute.roughSections, paveWarningProgress, transportMode],
+  );
+  useEffect(() => {
+    if (!isJourneyActive || !voiceEnabled) return;
+    const canSpeak = journeyMode === "simulation"
+      || (gpsState === "live" && journeyAccuracy !== null && journeyAccuracy <= 45);
+    const result = evaluatePaveWarning({
+      sections: selectedRoute.roughSections,
+      progressMeters: paveWarningProgress,
+      mode: transportMode,
+      announced: announcedPaveRef.current,
+      canSpeak,
+    });
+    if (!result.speak) return;
+    announcedPaveRef.current = [...announcedPaveRef.current, result.speak.section];
+    speakAnnouncement(result.speak.text);
+    traceRecorderRef.current?.recordEvent("pave-warning-spoken", result.speak.text);
+  }, [isJourneyActive, voiceEnabled, journeyMode, gpsState, journeyAccuracy, transportMode, selectedRoute.roughSections, paveWarningProgress, speakAnnouncement]);
+
   useEffect(() => {
     const simulationRoute = selectedRouteRef.current;
     if (!shouldRunSimulationTimer(journeyMode) || !simulationRoute?.coordinates.length) return;
@@ -1104,6 +1350,17 @@ export default function Home() {
       window.removeEventListener("online", updateNetworkState);
       window.removeEventListener("offline", updateNetworkState);
     };
+  }, []);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(ZTL_STORAGE_KEY) ?? "{}") as ZtlAuthorisations;
+      const known = Object.fromEntries(Object.entries(saved).filter(([id]) => ZTL_AREAS.some((area) => area.id === id)));
+      ztlAuthorisationsRef.current = known;
+      window.queueMicrotask(() => setZtlAuthorisations(known));
+    } catch {
+      // Unreadable storage: no authorisation, which is the safe default.
+    }
   }, []);
 
   useEffect(() => {
@@ -1393,12 +1650,17 @@ export default function Home() {
   }
 
   function swapLocations() {
+    if (journeyActiveRef.current) return;
+    // Phase 4.31: the route type the person had chosen over a real alternative survives the swap;
+    // mode, pavé level, extra minutes and ZTL authorisations are untouched state.
+    const keptRoute = isLiveResult && hasDistinctAlternative ? activeRouteRef.current : undefined;
     const oldStart = startLocationRef.current;
     const oldStartText = startTextRef.current;
     const currentEnd = endLocationRef.current ?? endLocation;
     const currentEndText = endTextRef.current;
     discardPlannedRoute();
     cancelAddressSearch();
+    cancelAutocomplete();
     startLocationRef.current = currentEnd;
     resolvedStartRef.current = currentEnd.label ? currentEnd : null;
     endLocationRef.current = oldStart;
@@ -1408,8 +1670,32 @@ export default function Home() {
     setEndLocation(oldStart);
     setStartText(currentEndText);
     setEndText(oldStartText);
-    setStatus("Partenza e destinazione invertite.");
+    if (currentEndText.trim() && oldStartText.trim()) {
+      setStatus("Partenza e destinazione invertite: ricalcolo il percorso…");
+      // One calculation for the swapped pair; it replaces any request still running.
+      void calculateRoutes(undefined, { force: true, preserveRoute: keptRoute });
+    } else {
+      setStatus("Partenza e destinazione invertite.");
+    }
   }
+
+  /** Phase 4.31: a changed ZTL authorisation changes what is legal, so a shown route is redone. */
+  function setZtlAuthorisation(areaId: string, mode: "car" | "motorcycle", allowed: boolean) {
+    const next: ZtlAuthorisations = { ...ztlAuthorisationsRef.current, [areaId]: { ...ztlAuthorisationsRef.current[areaId], [mode]: allowed } };
+    ztlAuthorisationsRef.current = next;
+    setZtlAuthorisations(next);
+    try {
+      window.localStorage.setItem(ZTL_STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      // Storage unavailable: the choice holds for this session only.
+    }
+    if (isLiveResult && !isJourneyActive && transportModeRef.current === mode) {
+      setStatus("Accessi ZTL aggiornati: ricalcolo il percorso…");
+      void calculateRoutes(undefined, { force: true });
+    }
+  }
+
+
 
   function cancelAutocomplete() {
     if (autocompleteTimerRef.current !== null) {
@@ -1695,6 +1981,7 @@ export default function Home() {
     const requestedMode = options.mode ?? transportModeRef.current;
     const requestedArea = areaIdRef.current;
     let routeSucceeded = false;
+    let responseStatus: number | null = null;
     loadingRef.current = true;
     setIsLoading(true);
     setPlanError(null);
@@ -1762,10 +2049,14 @@ export default function Home() {
       if (requestedPreferences.maxExtraMinutes !== null) {
         params.set("maxExtraMinutes", String(requestedPreferences.maxExtraMinutes));
       }
+      // Phase 4.31: the person's ZTL authorisations for this mode, on every route and reroute.
+      const authorisedZtl = authorisedZtlFor(ztlAuthorisationsRef.current, requestedMode);
+      if (authorisedZtl.length) params.set("ztl", authorisedZtl.join(","));
       if (options.journeySession !== undefined) params.set("navigation", "1");
       window.clearTimeout(requestTimeout);
       requestTimeout = window.setTimeout(abortWithTimeout, isReroute ? REROUTE_TIMEOUT_MS : ROUTE_TIMEOUT_MS);
       const response = await fetch(`/api/routes?${params}`, { signal: controller.signal });
+      responseStatus = response.status;
       const data = await readApiJson<RouteApiResponse & { error?: string }>(response);
       if (!response.ok || !data.fast || !data.safe) {
         throw new PlannerMessage(data.error ?? "Non riesco a calcolare il percorso. Riprova.");
@@ -1781,7 +2072,9 @@ export default function Home() {
         !isNavigableRouteGeometry(data.fast.coordinates)
         || !isNavigableRouteGeometry(data.safe.coordinates)
       ) throw new PlannerMessage("Il percorso ricevuto non è navigabile. Riprova.");
-      const nextRoute = selectRouteKind(options.preserveRoute, data.hasDistinctAlternative);
+      const nextRoute = isReroute
+        ? rerouteDisplayKind(options.preserveRoute ?? "safe", data.hasDistinctAlternative)
+        : selectRouteKind(options.preserveRoute, data.hasDistinctAlternative);
       applyRouteData(data, nextRoute, requestedMode);
       const nextSelectedRoute = nextRoute === "safe" ? data.safe : data.fast;
       navigationFixStateRef.current = withReplacementRoute(navigationFixStateRef.current, 0);
@@ -1821,17 +2114,20 @@ export default function Home() {
           data,
         });
       }
-      const lostAlternative = isReroute && options.preserveRoute === "safe" && !data.hasDistinctAlternative;
-      setStatus(lostAlternative
-        ? "Da qui non c’è un’alternativa con meno pavé: seguo il percorso più rapido."
-        : data.dataNotice);
       routeSucceeded = true;
       if (isReroute) {
+        const objective = options.preserveRoute ?? "safe";
+        const notice = rerouteOutcomeNotice(objective, data.hasDistinctAlternative, data.antiPave?.status);
+        setStatus(notice);
+        showRerouteNotice(notice);
+        traceRecorderRef.current?.recordEvent("reroute-success", `${objective}:${data.hasDistinctAlternative ? "alternative" : "no-alternative"}`);
         recalculatingRef.current = false;
         rerouteFailuresRef.current = 0;
         setRerouteIssue(false);
         recordDiagnostic({ type: "reroute-success" });
         setGpsState("live");
+      } else {
+        setStatus(data.dataNotice);
       }
     } catch (error) {
       if (error instanceof AddressChoiceNeeded) {
@@ -1867,11 +2163,27 @@ export default function Home() {
         setIsRecalculating(false);
         if (isReroute && options.journeySession === navigationSessionRef.current && !routeSucceeded) {
           rerouteFailuresRef.current += 1;
+          // Phase 4.31: why it failed, so a field trace tells a Worker error from a timeout.
+          const timedOut = controller.signal.reason instanceof DOMException && controller.signal.reason.name === "TimeoutError";
+          traceRecorderRef.current?.recordEvent("reroute-failure", timedOut ? "timeout" : responseStatus !== null ? `http-${responseStatus}` : "network");
           recordDiagnostic({ type: "reroute-failure" });
           setRerouteIssue(true);
           setGpsState("offroute");
         }
       }
+    }
+  }
+
+  /** Phase 4.31: the reroute outcome stays on the HUD for a few seconds. */
+  function showRerouteNotice(notice: string | null) {
+    if (rerouteNoticeTimerRef.current !== null) window.clearTimeout(rerouteNoticeTimerRef.current);
+    rerouteNoticeTimerRef.current = null;
+    setRerouteNotice(notice);
+    if (notice) {
+      rerouteNoticeTimerRef.current = window.setTimeout(() => {
+        rerouteNoticeTimerRef.current = null;
+        setRerouteNotice(null);
+      }, 6_000);
     }
   }
 
@@ -1888,6 +2200,7 @@ export default function Home() {
     setAlternativesAnalyzed(data.alternativesAnalyzed);
     setHasDistinctAlternative(data.hasDistinctAlternative);
     setRoutingProfile(data.routingProfile);
+    setAntiPaveOutcome(data.antiPave ?? null);
     setDataNotice(data.dataNotice);
     setTransportMode(mode);
     transportModeRef.current = mode;
@@ -2083,6 +2396,7 @@ export default function Home() {
     setGpsState("idle");
     setIsRecalculating(false);
     setRerouteIssue(false);
+    showRerouteNotice(null);
     setHasGpsFix(false);
     setGpsAcquireIssue(null);
     setStartupNoticeVisible(false);
@@ -2182,9 +2496,15 @@ export default function Home() {
     setHasGpsFix(true);
     setGpsAcquireIssue(null);
     recordDiagnostic({ type: "fix-accepted" });
-    if (decision.markerMoved) setJourneyPosition(decision.position);
+    // Phase 4.29: draw the confidently matched point on the road (or the fused fix when the match
+    // is not confident); the marker effect animates towards it.
+    journeyDisplayProgressRef.current = decision.display.snapped ? decision.display.progressMeters ?? null : null;
+    setJourneyPosition(decision.display.position);
     setJourneyAccuracy(fix.accuracy);
-    setJourneyHeading(decision.heading);
+    setJourneyHeading(decision.display.heading);
+    // "Resumed" stays on screen for a few seconds so it can be read.
+    if (decision.quality === "resumed") gpsResumedUntilRef.current = now + 4_000;
+    setGpsQuality(decision.quality === "accurate" && now < gpsResumedUntilRef.current ? "resumed" : decision.quality);
     if (!recalculatingRef.current) setGpsState("live");
     if (!decision.progress) return;
     setGpsProgress(decision.progress);
@@ -2217,13 +2537,16 @@ export default function Home() {
       setIsRecalculating(true);
       setGpsState("recalculating");
       recordDiagnostic({ type: "reroute-start" });
+      traceRecorderRef.current?.recordEvent("reroute-start", decision.deviationReason);
       setRerouteIssue(false);
+      showRerouteNotice(null);
       setStatus(`Fuori percorso · ricalcolo per ${transportMeta[mode].article}…`);
       void calculateRoutes(
         { label: "Posizione GPS live", coordinate: decision.position },
         {
           mode,
-          preserveRoute: activeRouteRef.current,
+          // The journey's objective, not the kind shown now (Phase 4.31).
+          preserveRoute: journeyObjectiveRef.current,
           force: true,
           journeySession: session,
           preferences: navigationPreferencesRef.current,
@@ -2251,6 +2574,8 @@ export default function Home() {
     setHasGpsFix(false);
     setGpsAcquireIssue(null);
     rerouteFailuresRef.current = 0;
+    journeyObjectiveRef.current = journeyObjective(activeRouteRef.current, hasDistinctAlternative);
+    showRerouteNotice(null);
     setStoredPlanJourney(mode);
     setStartupNoticeVisible(true);
     window.setTimeout(() => setStartupNoticeVisible(false), 6_000);
@@ -2279,6 +2604,12 @@ export default function Home() {
     setJourneyPosition(null);
     setJourneyAccuracy(null);
     setJourneyHeading(0);
+    setGpsQuality(null);
+    announcedPaveRef.current = [];
+    journeyDisplayProgressRef.current = null;
+    markerDrawnRef.current = null;
+    markerMotionRef.current = null;
+    markerTargetAtRef.current = null;
     navigationFixStateRef.current = createNavigationFixState();
     setGpsProgress(null);
     selectedRouteRef.current = routeForJourney;
@@ -2364,6 +2695,8 @@ export default function Home() {
   function rearmGpsWatch(force = false) {
     if (!journeyActiveRef.current || journeyModeRef.current !== "gps" || !navigator.geolocation) return;
     if (!force && Date.now() - lastWatchArmedAtRef.current < GPS_REARM_INTERVAL_MS) return;
+    // Phase 4.31: a field trace shows when updates stalled and the watch was renewed.
+    if (!force) traceRecorderRef.current?.recordEvent("gps-rearm", "stall");
     armGpsWatch(navigationSessionRef.current);
   }
 
@@ -2405,6 +2738,14 @@ export default function Home() {
 
   function recenterNavigation() {
     setFollowVehicle(true);
+    // Phase 4.31 (field case C): the recentre control never had a reroute of its own. iOS can stop
+    // delivering fixes without an error, and a reroute then waits for the next fix. When the last
+    // fix is stale, this tap also asks for a fresh GPS watch, and the trace records it.
+    const lastFixAt = lastValidGpsFixAtRef.current;
+    if (journeyModeRef.current === "gps" && (lastFixAt === null || Date.now() - lastFixAt > 5_000)) {
+      traceRecorderRef.current?.recordEvent("gps-rearm", "recenter");
+      rearmGpsWatch(true);
+    }
     if (journeyPosition) {
       const map = mapRef.current;
       map?.easeTo({
@@ -2691,7 +3032,7 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-                    <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione">
+                    <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione" title="Inverti partenza e destinazione" data-testid="swap-locations" disabled={isJourneyActive}>
                       <Icon name="swap" size={18} />
                     </button>
                     <div className="route-field-wrapper" style={{ zIndex: inlineSuggestionTarget === "end" ? 25 : 10 }}>
@@ -2791,7 +3132,7 @@ export default function Home() {
                   aria-expanded={preferencesOpen}
                   data-testid="preferences-toggle"
                 >
-                  <span>Preferenze e percorsi suggeriti</span>
+                  <span>Preferenze, ZTL e «Descrivi la tua preferenza»</span>
                   <Icon name={preferencesOpen ? "chevronUp" : "chevronDown"} size={18} />
                 </button>
 
@@ -2817,6 +3158,35 @@ export default function Home() {
                         ))}
                       </div>
                       <small>Più forte può significare qualche minuto in più.</small>
+                    </div>
+
+                    <div className="preference-group ztl-settings" data-testid="ztl-settings">
+                      <span className="preference-label">Accessi ZTL autorizzati</span>
+                      <small>Senza autorizzazione Lastrico evita queste ZTL quando sono attive. Spunta solo quelle in cui puoi entrare davvero.</small>
+                      <ul className="ztl-list">
+                        {ZTL_AREAS.map((zone) => (
+                          <li key={zone.id} data-testid={`ztl-${zone.id}`}>
+                            <div className="ztl-name">
+                              <b>{zone.name}</b>
+                              <small>{ztlRuleSummary(zone)}</small>
+                            </div>
+                            <div className="ztl-modes">
+                              {(["car", "motorcycle"] as const).map((zoneMode) => (
+                                <label key={zoneMode}>
+                                  <input
+                                    type="checkbox"
+                                    checked={Boolean(ztlAuthorisations[zone.id]?.[zoneMode])}
+                                    onChange={(event) => setZtlAuthorisation(zone.id, zoneMode, event.target.checked)}
+                                    disabled={isJourneyActive}
+                                  />
+                                  {transportMeta[zoneMode].label}
+                                </label>
+                              ))}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                      <small>Non gestiti: Area C (a pagamento), ZTL senza regole in OpenStreetMap, giorni festivi ed eccezioni (residenti, disabili, carico e scarico). In bici queste ZTL non limitano l’accesso secondo OSM. Vale sempre la segnaletica.</small>
                     </div>
 
                     <div className="preference-group">
@@ -2915,6 +3285,16 @@ export default function Home() {
                   <div>
                     <h2>Percorsi in {transportMeta[transportMode].label.toLowerCase()}</h2>
                     <p>{pluralize(alternativesAnalyzed, "percorso confrontato", "percorsi confrontati")}{lastRecalculatedAt ? ` · ${lastRecalculatedAt}` : ""}</p>
+                    {selectedRoute.roadFeatures && (
+                      <p className="road-features-note" data-testid="road-features-note">{roadFeaturesNote(selectedRoute.roadFeatures)}</p>
+                    )}
+                    {selectedRoute.access && (selectedRoute.access.authorisedZtl.length > 0 || selectedRoute.access.terminalZtlMeters > 0) && (
+                      <p className="road-features-note" data-testid="route-ztl-note">
+                        {selectedRoute.access.authorisedZtl.length > 0
+                          ? `Usa la tua autorizzazione: ${selectedRoute.access.authorisedZtl.map((zone) => zone.name).join(", ")}`
+                          : `Partenza o arrivo in ${selectedRoute.access.ztl.map((zone) => zone.name).join(", ")}: serve un’autorizzazione`}
+                      </p>
+                    )}
                   </div>
                   <button
                     type="button"
@@ -2951,6 +3331,7 @@ export default function Home() {
                   onSelectRoute={selectActiveRoute}
                   transportMode={transportMode}
                   extraTimeBudgetMinutes={maxExtraMinutes}
+                  antiPave={antiPaveOutcome}
                 />
 
                 {transportMode === "bicycle" && (selectedRoute?.terminalWalkMeters ?? 0) > 0 && (
@@ -3124,7 +3505,7 @@ export default function Home() {
 
             <div className="hud-badges">
               <span className="hud-badge" data-testid="navigation-mode">{navigationModeLabel}</span>
-              <span className="hud-badge subtle">{activeRoute === "safe" ? "Anti-pavé" : "Più rapido"}</span>
+              <span className="hud-badge subtle">{activeRoute === "safe" ? "Anti-pavé" : antiPaveOutcome?.status === "fastest-avoids-pave" ? "Più rapido e anti-pavé" : "Più rapido"}</span>
               {traceStatus === "recording" && <span className="hud-badge subtle" data-testid="gps-trace-indicator">REC</span>}
               {traceStatus === "suspended" && <span className="hud-badge warning" data-testid="gps-trace-indicator">REC sospesa</span>}
             </div>
@@ -3142,6 +3523,19 @@ export default function Home() {
             {navigationPhase !== "starting" && navigationStateDescription && (
               <div className={`hud-notice ${rerouteIssue || gpsState === "offroute" || gpsState === "weak" ? "warning" : ""}`} role="status" data-testid="navigation-state">
                 <p>{navigationStateDescription}</p>
+              </div>
+            )}
+            {paveHud && navigationPhase !== "starting" && (
+              <div className={`hud-notice pave-popup ${paveHud.confirmed ? "warning" : ""}`} role="status" data-testid="pave-warning">
+                {/* Phase 4.31: distance, verified OSM name, surface and length, e.g.
+                    "Tra 250 m — Pavé su Via Legnano per 420 m" / "Su pavé — ancora 180 m". */}
+                <p>
+                  {paveHud.kind === "inside" ? (
+                    <><strong>{paveHud.words.on}</strong>{` — ancora ${formatDistance(paveHud.remainingMeters)}${paveHud.name ? ` · ${paveHud.name}` : ""}`}</>
+                  ) : (
+                    <><strong>{`Tra ${formatDistance(paveHud.distanceMeters)}`}</strong>{` — ${paveHud.words.title}${paveHud.name ? ` su ${paveHud.name}` : ""} per ${formatDistance(paveHud.lengthMeters)}`}</>
+                  )}
+                </p>
               </div>
             )}
             {startupNoticeVisible && !navigationStateDescription && navigationPhase !== "starting" && (

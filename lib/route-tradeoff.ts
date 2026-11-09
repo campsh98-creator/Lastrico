@@ -78,6 +78,37 @@ export type RouteTradeoff =
       fastSurface: FastSurfaceState;
     };
 
+/**
+ * Phase 4.31 release gate: the server's anti-pavé outcome (app/api/routes/route.ts), so a single
+ * route is explained (already the anti-pavé result, nothing to avoid, over the extra-time limit,
+ * blocked by access rules, search failed) instead of a generic "no alternative".
+ */
+export type AntiPaveOutcome = {
+  status: "alternative" | "fastest-avoids-pave" | "no-pave" | "over-extra-time" | "access-restricted" | "generation-failed" | "generation-skipped" | "no-better-route";
+  standard: { source: string; legal: boolean; seconds: number; meters: number; paveMeters: number; confirmedPaveMeters: number } | null;
+  avoidedVsStandardMeters: number | null;
+};
+
+/** The sentence for a response without a distinct alternative, from the server's outcome. */
+export function describeSingleRouteOutcome(outcome: AntiPaveOutcome | null | undefined, extraMinutesLimit: number | null): string | null {
+  switch (outcome?.status) {
+    case "fastest-avoids-pave":
+      return `Il percorso più rapido è già quello anti-pavé: evita ${formatMetersIt(outcome.avoidedVsStandardMeters ?? 0)} di pavé del percorso standard, senza tempo in più.`;
+    case "over-extra-time":
+      return extraMinutesLimit === 0
+        ? "Hai chiesto nessun minuto in più: mostro il percorso più rapido."
+        : `Un percorso con meno pavé c’è, ma supera i +${extraMinutesLimit ?? "?"} minuti che hai scelto.`;
+    case "access-restricted":
+      return "Il percorso con meno pavé passa da tratti vietati o ZTL non autorizzate in questo orario: non lo propongo.";
+    case "generation-failed":
+      return "La ricerca di un percorso con meno pavé non ha risposto: questo è il più rapido. Ricalcola per riprovare.";
+    case "generation-skipped":
+      return "Non c’è stato tempo per cercare un percorso con meno pavé: questo è il più rapido. Ricalcola per riprovare.";
+    default:
+      return null;
+  }
+}
+
 function finite(value: number | undefined): value is number {
   return typeof value === "number" && Number.isFinite(value);
 }

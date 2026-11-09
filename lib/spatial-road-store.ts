@@ -390,6 +390,13 @@ export class SpatialRoadIntelligenceStore {
   private tilePaveCache = new Map<string, PaveDetail[]>();
   private tileHydratedCache = new Map<string, (RoadSegmentRecord | undefined)[]>();
   private indexCache = new Map<string, ScopedIntelligenceResult>();
+  /**
+   * Phase 4.30: hydrated segments cost about 0.7 MB per Milan tile; all 117 tiles reach ~107 MB,
+   * close to the 128 MB a Worker isolate may use. At most this many tiles stay hydrated; the
+   * oldest is dropped first and re-hydrated identically from its raw tuples if needed again.
+   */
+  static readonly MAX_HYDRATED_TILES = 64;
+  private hydratedTiles = new Set<string>();
   private allRoadsCache: RoadSegmentRecord[] | null = null;
   private allPaveCache: PaveDetail[] | null = null;
 
@@ -512,11 +519,31 @@ export class SpatialRoadIntelligenceStore {
     return Array.isArray(payload) ? payload : payload.tuples;
   }
 
+  /** Records that a tile holds hydrated data, evicting the oldest beyond the bound. */
+  private noteHydrated(tileKey: string) {
+    if (this.hydratedTiles.has(tileKey)) return;
+    this.hydratedTiles.add(tileKey);
+    while (this.hydratedTiles.size > SpatialRoadIntelligenceStore.MAX_HYDRATED_TILES) {
+      const oldest = this.hydratedTiles.values().next().value as string;
+      this.hydratedTiles.delete(oldest);
+      this.tileHydratedCache.delete(oldest);
+      this.tileSegmentCache.delete(oldest);
+      this.tileIndexCache.delete(oldest);
+      this.tilePaveCache.delete(oldest);
+    }
+  }
+
+  /** Number of tiles currently holding hydrated segments (for memory tests). */
+  public get hydratedTileCount() {
+    return this.hydratedTiles.size;
+  }
+
   public getHydratedSegment(tileKey: string, idx: number): RoadSegmentRecord {
     let list = this.tileHydratedCache.get(tileKey);
     if (!list) {
       list = [];
       this.tileHydratedCache.set(tileKey, list);
+      this.noteHydrated(tileKey);
     }
     let seg = list[idx];
     if (!seg) {

@@ -27,6 +27,8 @@ export type RouteComparisonProps = {
   onSelectRoute?: (route: "fast" | "safe") => void;
   transportMode: TransportMode;
   extraTimeBudgetMinutes?: number | null;
+  /** Phase 4.31: the server's anti-pavé outcome for this response. */
+  antiPave?: import("@/lib/route-tradeoff").AntiPaveOutcome | null;
   className?: string;
 };
 

@@ -40,6 +40,17 @@ test("invalid route inputs return 400 before contacting providers", async (t) =>
   assert.equal(fetch.mock.callCount(), 0);
 });
 
+test("Phase 4.29: each route carries its merged rough sections for navigation warnings", async (t) => {
+  fixtures(t, [trip(points, 600)]);
+  const data = await (await GET(request())).json();
+  assert.equal(data.fast.roughSections.length, 1);
+  const [section] = data.fast.roughSections;
+  assert.ok(section.endMeters - section.startMeters > 300, JSON.stringify(section));
+  assert.ok(section.confirmedMeters > 300, "sett is confirmed stone");
+  assert.equal(section.probableMeters, 0);
+  assert.deepEqual(section.start, data.fast.coordinates[0]);
+});
+
 test("hard budget uses fastest duplicate even if provider lists the slower route first", async (t) => {
   fixtures(t, [trip(points, 660), trip(points, 600), trip(detour, 750)]);
   const response = await GET(request({ maxExtraMinutes: "2" }));
@@ -69,7 +80,10 @@ test("exact budget boundary admits the lower known exposure route and reports un
   assert.equal(data.safe.surfaceDataConfidence, null);
   assert.equal(data.fast.surfaceClassificationConfidence, data.fast.surfaceConfidence);
   assert.match(data.dataNotice, /sconosciuti/);
-  assert.equal(calls.filter((call) => call.url.includes("valhalla")).length, 1);
+  // Phase 4.31 release gate: a provider alternate that saves pavé only for +25% time no longer
+  // stops the anti-pavé search (Porta Romana: such an alternate hid the Filippetti route), so the
+  // penalised search runs as well; the chosen route is unchanged here.
+  assert.equal(calls.filter((call) => call.url.includes("valhalla")).length, 2);
 });
 
 test("zero known exposure skips pointless detour requests and remains unknown", async (t) => {

@@ -8,7 +8,7 @@ export { sleep };
 export const BASE = process.env.LASTRICO_E2E_BASE ?? "http://127.0.0.1:8799";
 
 /** Finds the MapLibre instance in the app's React state without adding a hook to production code. */
-const MAP_LOOKUP = `(() => {
+export const MAP_LOOKUP = `(() => {
   const element = document.querySelector(".map-stage");
   if (!element) return null;
   const key = Object.keys(element).find((name) => name.startsWith("__reactFiber$"));

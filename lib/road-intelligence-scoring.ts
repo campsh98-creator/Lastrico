@@ -7,6 +7,8 @@ import type {
   GeoCoordinate,
   RoadSegmentRecord,
 } from "./road-intelligence-types";
+import type { DepartureTime } from "./access-conditions.ts";
+import { ztlVerdict } from "./ztl-access.ts";
 
 export type RoadIntelligenceScore = {
   totalMeters: number;
@@ -54,8 +56,27 @@ export type RoadIntelligenceScore = {
   /** Bicycle only, when enabled: a pedestrian-only stretch (generic access/vehicle=no with foot allowed)
    * next to the start or destination, where the cyclist must walk the bike. Not blocking. */
   terminalWalkMeters: number;
+  /**
+   * Phase 4.31, only with a departure time: unauthorised ZTL metres next to the start or
+   * destination (reported, not blocking: the address itself is inside the zone).
+   */
+  terminalZtlMeters?: number;
+  /** Phase 4.31: metres per ZTL area id ("unregistered" for a permit-only way), unauthorised. */
+  ztlMetersByArea?: Record<string, number>;
+  /** Phase 4.31: metres per ZTL area id travelled with the person's authorisation. */
+  authorisedZtlMetersByArea?: Record<string, number>;
+  /** Phase 4.31: metres closed now by a time window of the way's own tags (not a ZTL). */
+  timedClosureMeters?: number;
+  /** Phase 4.31: metres whose conditional access this parser could not evaluate (not enforced). */
+  unknownConditionMeters?: number;
+  /** Phase 4.31: segment indices with a blocking ZTL or timed closure, to ask the provider to avoid them. */
+  accessBlockedSegmentIndices?: Set<number>;
   /** Set of coordinate indices [1..n] along the route that traverse rough surfaces */
   roughSegmentIndices?: Set<number>;
+  /** The subset of `roughSegmentIndices` with confirmed stone (not only probable paving_stones). */
+  confirmedRoughSegmentIndices?: Set<number>;
+  /** Phase 4.31: the OSM name and surface of the way matched on each rough segment, for warnings. */
+  roughSegmentFeatures?: Map<number, { name: string | null; material: string | null }>;
 };
 
 export type RoadIntelligenceIndex = {
@@ -212,12 +233,26 @@ const ACCESS_KEYS: Record<TransportMode, string[]> = {
   bicycle: ["bicycle", "vehicle", "access"],
 };
 
-type RestrictionKind = "private" | "prohibited" | "walkable";
+type RestrictionKind = "private" | "prohibited" | "walkable"
+  /** Phase 4.31: an unauthorised ZTL ("ztl:<area id>" or "ztl:unregistered") or a timed closure. */
+  | `ztl:${string}` | "timed-closed"
+  /** Not restrictions: an authorised ZTL stretch, and a conditional the parser cannot read. */
+  | `authorised:${string}` | "unknown-condition";
 
 export type RoadIntelligenceOptions = {
   /** Phase 4.25 (Milan): a cyclist may walk the bike on a pedestrian-only stretch at the route ends. */
   terminalWalkingForBicycle?: boolean;
+  /**
+   * Phase 4.31 (Milan): evaluate time-window access and ZTL rules at this departure time.
+   * Without it the established behaviour holds (a conditional tag is never treated as a restriction).
+   */
+  departure?: DepartureTime;
+  /** Phase 4.31: ZTL area ids the person is authorised for, in this mode. */
+  authorisedZtl?: ReadonlySet<string>;
 };
+
+type AccessContext = { departure?: DepartureTime; authorisedZtl: ReadonlySet<string> };
+const NO_AUTHORISATION: ReadonlySet<string> = new Set();
 
 const PEDESTRIAN_ALLOWED = new Set(["yes", "designated", "permissive"]);
 
@@ -238,11 +273,39 @@ function explicitRestriction(
   b: GeoCoordinate,
   mode: TransportMode,
   walkingAllowed = false,
+  access: AccessContext = { authorisedZtl: NO_AUTHORISATION },
 ): RestrictionKind | null {
   const tags = segment.rawTags;
+  // Phase 4.31: time windows and ZTL rules, evaluated at the departure time. An authorised ZTL
+  // stretch still goes through every other check below (one-way, plain "no", private).
+  let authorisedArea: string | null = null;
+  if (access.departure) {
+    const verdict = ztlVerdict(segment.osmWayId, tags, ACCESS_KEYS[mode], mode, access.departure, access.authorisedZtl);
+    if (verdict.kind === "ztl") return `ztl:${verdict.area?.id ?? "unregistered"}`;
+    if (verdict.kind === "timed-closed") return "timed-closed";
+    if (verdict.kind === "authorised") authorisedArea = verdict.area.id;
+  }
+  const plainRestriction = plainAccessRestriction(segment, a, b, mode, walkingAllowed, tags, access.departure !== undefined);
+  if (plainRestriction) return plainRestriction;
+  if (authorisedArea) return `authorised:${authorisedArea}`;
+  if (access.departure && tags && ACCESS_KEYS[mode].some((key) => tags[`${key}:conditional`])
+    && ztlVerdict(segment.osmWayId, tags, ACCESS_KEYS[mode], mode, access.departure, access.authorisedZtl).kind === "unknown") return "unknown-condition";
+  return null;
+}
+
+function plainAccessRestriction(
+  segment: RoadSegmentRecord,
+  a: GeoCoordinate,
+  b: GeoCoordinate,
+  mode: TransportMode,
+  walkingAllowed: boolean,
+  tags: Record<string, string> | undefined,
+  conditionsEvaluated: boolean,
+): RestrictionKind | null {
   if (tags) {
     for (const key of ACCESS_KEYS[mode]) {
-      if (tags[`${key}:conditional`] || tags[`${key}:forward`] || tags[`${key}:backward`]) return null;
+      // With a departure time the conditional was evaluated above; the plain value still counts.
+      if ((!conditionsEvaluated && tags[`${key}:conditional`]) || tags[`${key}:forward`] || tags[`${key}:backward`]) return null;
       const value = tags[key]?.trim().toLowerCase();
       if (value) {
         if (value === "no") {
@@ -257,7 +320,10 @@ function explicitRestriction(
     }
   }
 
-  if (!segment.modeAccess?.[mode]) return null;
+  // A way whose access hangs on a time window was compiled as "no evidence"; once the window has
+  // been evaluated (Phase 4.31) its one-way direction is checked like any other way's.
+  const evaluatedConditional = conditionsEvaluated && ACCESS_KEYS[mode].some((key) => tags?.[`${key}:conditional`]);
+  if (!segment.modeAccess?.[mode] && !evaluatedConditional) return null;
   // Side-specific cycling direction exceptions need graph semantics that this
   // geometric check does not have. Do not infer a confirmed violation from them.
   if (mode === "bicycle" && tags) {
@@ -291,6 +357,7 @@ function restrictionSample(
   b: GeoCoordinate,
   mode: TransportMode,
   walkingAllowed = false,
+  access: AccessContext = { authorisedZtl: NO_AUTHORISATION },
 ): RestrictionKind | null {
   if (candidates.length === 0) return null;
   let nearest: { segment: RoadSegmentRecord; distance: number } | null = null;
@@ -316,7 +383,7 @@ function restrictionSample(
   const sx = (d[0] - c[0]) * scaleX, sy = (d[1] - c[1]) * 110_540;
   const denominator = Math.hypot(rx, ry) * Math.hypot(sx, sy);
   if (!denominator || Math.abs((rx * sx + ry * sy) / denominator) < 0.98) return null;
-  return explicitRestriction(segment, a, b, mode, walkingAllowed);
+  return explicitRestriction(segment, a, b, mode, walkingAllowed, access);
 }
 
 // Any confirmed restriction must stay visible even when it is shorter than one rounded metre.
@@ -333,6 +400,13 @@ export function scoreRoadIntelligence(
   options: RoadIntelligenceOptions = {},
 ): RoadIntelligenceScore {
   const walkingAllowed = options.terminalWalkingForBicycle === true && mode === "bicycle";
+  const access: AccessContext = { departure: options.departure, authorisedZtl: options.authorisedZtl ?? NO_AUTHORISATION };
+  let terminalZtlMeters = 0;
+  let timedClosureMeters = 0;
+  let unknownConditionMeters = 0;
+  const ztlMetersByArea: Record<string, number> = {};
+  const authorisedZtlMetersByArea: Record<string, number> = {};
+  const accessBlockedSegmentIndices = new Set<number>();
   let paveMeters = 0;
   let weightedPaveMeters = 0;
   let confirmedMeters = 0;
@@ -353,6 +427,8 @@ export function scoreRoadIntelligence(
   const matched = new Set<string>();
   const matchedFeatures = new Set<string>();
   const roughSegmentIndices = new Set<number>();
+  const confirmedRoughSegmentIndices = new Set<number>();
+  const roughSegmentFeatures = new Map<number, { name: string | null; material: string | null }>();
   const boxCache = new Map<string, RoadSegmentRecord[]>();
 
   for (let rIndex = 1; rIndex < coordinates.length; rIndex += 1) {
@@ -448,8 +524,13 @@ export function scoreRoadIntelligence(
         }
       }
 
-      const restriction = skipRestrictions ? null : restrictionSample(geometricCandidates, sampleA, sampleB, mode, walkingAllowed);
-      if (restriction) {
+      const restriction = skipRestrictions ? null : restrictionSample(geometricCandidates, sampleA, sampleB, mode, walkingAllowed, access);
+      if (restriction?.startsWith("authorised:")) {
+        const area = restriction.slice("authorised:".length);
+        authorisedZtlMetersByArea[area] = (authorisedZtlMetersByArea[area] ?? 0) + sampleLength;
+      } else if (restriction === "unknown-condition") {
+        unknownConditionMeters += sampleLength;
+      } else if (restriction) {
         confirmedRestrictionMeters += sampleLength;
         const sampleStart = traversedMeters + sample * sampleLength;
         const terminal = sampleStart <= TERMINAL_ACCESS_METERS
@@ -457,6 +538,17 @@ export function scoreRoadIntelligence(
         if (restriction === "private" && terminal) terminalPrivateAccessMeters += sampleLength;
         // Walking the bike is accepted only next to an end; mid-route it stays a blocking restriction.
         else if (restriction === "walkable" && terminal) terminalWalkMeters += sampleLength;
+        if (restriction.startsWith("ztl:")) {
+          const area = restriction.slice("ztl:".length);
+          ztlMetersByArea[area] = (ztlMetersByArea[area] ?? 0) + sampleLength;
+          // An address inside the zone: reported to the person, not hidden by disqualifying every route.
+          if (terminal) terminalZtlMeters += sampleLength;
+          else accessBlockedSegmentIndices.add(rIndex);
+        }
+        if (restriction === "timed-closed") {
+          timedClosureMeters += sampleLength;
+          if (!terminal) accessBlockedSegmentIndices.add(rIndex);
+        }
       }
 
       // Reject a closer prohibited road rather than transferring its route samples
@@ -494,8 +586,12 @@ export function scoreRoadIntelligence(
       matched.add(`${sourceKey}:${best.segmentHash}`);
       if (best.surfaceCategory !== "unknown") matchedFeatures.add(sourceKey);
 
+      if ((best.surfaceCategory === "confirmed_rough" || best.surfaceCategory === "probable_rough") && !roughSegmentFeatures.has(rIndex)) {
+        roughSegmentFeatures.set(rIndex, { name: best.name, material: best.surface.value });
+      }
       if (best.surfaceCategory === "confirmed_rough") {
         roughSegmentIndices.add(rIndex);
+        confirmedRoughSegmentIndices.add(rIndex);
         paveMeters += sampleLength;
         weightedPaveMeters += sampleLength * bestWeight;
         confirmedMeters += sampleLength;
@@ -561,9 +657,19 @@ export function scoreRoadIntelligence(
     matchedFeatures: matchedFeatures.size,
     ambiguousMatchesCount,
     confirmedRestrictionMeters: restrictedMeters(confirmedRestrictionMeters),
-    blockingRestrictionMeters: restrictedMeters(confirmedRestrictionMeters - terminalPrivateAccessMeters - terminalWalkMeters),
+    blockingRestrictionMeters: restrictedMeters(confirmedRestrictionMeters - terminalPrivateAccessMeters - terminalWalkMeters - terminalZtlMeters),
     terminalPrivateAccessMeters: restrictedMeters(terminalPrivateAccessMeters),
     terminalWalkMeters: restrictedMeters(terminalWalkMeters),
     roughSegmentIndices,
+    confirmedRoughSegmentIndices,
+    roughSegmentFeatures,
+    ...(options.departure ? {
+      terminalZtlMeters: restrictedMeters(terminalZtlMeters),
+      ztlMetersByArea: Object.fromEntries(Object.entries(ztlMetersByArea).map(([area, meters]) => [area, restrictedMeters(meters)])),
+      authorisedZtlMetersByArea: Object.fromEntries(Object.entries(authorisedZtlMetersByArea).map(([area, meters]) => [area, restrictedMeters(meters)])),
+      timedClosureMeters: restrictedMeters(timedClosureMeters),
+      unknownConditionMeters: restrictedMeters(unknownConditionMeters),
+      accessBlockedSegmentIndices,
+    } : {}),
   };
 }
