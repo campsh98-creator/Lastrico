@@ -1,0 +1,25 @@
+{
+ "source": "Cloudflare GraphQL workersInvocationsAdaptive (read-only), lastrico-pilot, from 2026-11-09 19:51 UTC",
+ "rows": [
+  {
+   "date": "2026-11-09",
+   "version": "170ac277-2094-4925-9378-1f3ff46aab1c",
+   "status": "success",
+   "requests": 141,
+   "errors": 0,
+   "cpuP50Ms": 2.7,
+   "cpuP99Ms": 11.5,
+   "cpuP999Ms": 26.3
+  },
+  {
+   "date": "2026-11-09",
+   "version": "170ac277-2094-4925-9378-1f3ff46aab1c",
+   "status": "clientDisconnected",
+   "requests": 1,
+   "errors": 0,
+   "cpuP50Ms": 5.8,
+   "cpuP99Ms": 5.8,
+   "cpuP999Ms": 5.8
+  }
+ ]
+}

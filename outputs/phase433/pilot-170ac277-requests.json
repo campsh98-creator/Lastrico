@@ -1,0 +1,529 @@
+{
+ "source": "requests against https://lastrico-pilot.campsh.workers.dev on 2026-11-09 19:52–19:55 UTC, departure 2026-11-09T12:00",
+ "controlledRun": [
+  {
+   "group": "page",
+   "label": "first",
+   "status": 200,
+   "ms": 227
+  },
+  {
+   "group": "A",
+   "label": "Porta Vittoria → Promessi Sposi (Filippetti)",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:52:41.974Z",
+   "ms": 639,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    20.5,
+    567,
+    0
+   ],
+   "safe": [
+    20.8,
+    74,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Moscova → Crocetta",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:52:46.619Z",
+   "ms": 2867,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    15.6,
+    940,
+    388
+   ],
+   "safe": [
+    17.2,
+    964,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Castello → Porta Venezia",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:52:53.487Z",
+   "ms": 1333,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    13.3,
+    1022,
+    268
+   ],
+   "safe": [
+    15.6,
+    383,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Sant'Ambrogio → San Babila",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:52:58.821Z",
+   "ms": 5639,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "access-restricted",
+   "fast": [
+    14.9,
+    415,
+    378
+   ],
+   "safe": [
+    14.9,
+    415,
+    378
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Duomo → Porta Garibaldi (bici)",
+   "mode": "bicycle",
+   "navigation": false,
+   "at": "2026-11-09T19:53:08.461Z",
+   "ms": 5542,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    10,
+    532,
+    790
+   ],
+   "safe": [
+    10,
+    532,
+    790
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Gae Aulenti → Porta Romana",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:53:18.005Z",
+   "ms": 5526,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    15.5,
+    956,
+    0
+   ],
+   "safe": [
+    15.8,
+    434,
+    85
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Arco della Pace → Duomo",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:53:27.533Z",
+   "ms": 6056,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    19.1,
+    718,
+    62
+   ],
+   "safe": [
+    21.4,
+    448,
+    122
+   ],
+   "error": null
+  },
+  {
+   "group": "A",
+   "label": "Cordusio → Porta Romana (bici)",
+   "mode": "bicycle",
+   "navigation": false,
+   "at": "2026-11-09T19:53:37.590Z",
+   "ms": 5470,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    9.4,
+    1675,
+    184
+   ],
+   "safe": [
+    11.8,
+    422,
+    1076
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Bande Nere → Duomo",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:53:47.061Z",
+   "ms": 6001,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    16.4,
+    397,
+    392
+   ],
+   "safe": [
+    16.4,
+    397,
+    392
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Città Studi → Duomo",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:53:55.064Z",
+   "ms": 5408,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "access-restricted",
+   "fast": [
+    17.4,
+    884,
+    302
+   ],
+   "safe": [
+    17.4,
+    884,
+    302
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Porta Venezia → XXIV Maggio",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:54:02.477Z",
+   "ms": 4548,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "fastest-avoids-pave",
+   "fast": [
+    13.9,
+    32,
+    0
+   ],
+   "safe": [
+    13.9,
+    32,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Cenacolo → Missori (moto)",
+   "mode": "motorcycle",
+   "navigation": false,
+   "at": "2026-11-09T19:54:09.029Z",
+   "ms": 5657,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    10.9,
+    582,
+    320
+   ],
+   "safe": [
+    10.9,
+    582,
+    320
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Via Manzoni → Porta Venezia",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:54:16.690Z",
+   "ms": 5401,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "access-restricted",
+   "fast": [
+    6.8,
+    417,
+    0
+   ],
+   "safe": [
+    6.8,
+    417,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "B",
+   "label": "Colonne → Porta Genova",
+   "mode": "car",
+   "navigation": false,
+   "at": "2026-11-09T19:54:24.095Z",
+   "ms": 5406,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    6.8,
+    205,
+    37
+   ],
+   "safe": [
+    6.8,
+    205,
+    37
+   ],
+   "error": null
+  },
+  {
+   "group": "C",
+   "label": "reroute at 10% of the approach",
+   "mode": "car",
+   "navigation": true,
+   "at": "2026-11-09T19:54:31.504Z",
+   "ms": 2237,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "fastest-avoids-pave",
+   "fast": [
+    18,
+    69,
+    10
+   ],
+   "safe": [
+    18,
+    69,
+    10
+   ],
+   "error": null
+  },
+  {
+   "group": "C",
+   "label": "reroute at 25% of the approach",
+   "mode": "car",
+   "navigation": true,
+   "at": "2026-11-09T19:54:36.742Z",
+   "ms": 1188,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    14.9,
+    524,
+    0
+   ],
+   "safe": [
+    15.2,
+    14,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "C",
+   "label": "reroute at 40% of the approach",
+   "mode": "car",
+   "navigation": true,
+   "at": "2026-11-09T19:54:40.933Z",
+   "ms": 2332,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-better-route",
+   "fast": [
+    13.3,
+    126,
+    0
+   ],
+   "safe": [
+    13.3,
+    126,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "C",
+   "label": "reroute at 55% of the approach",
+   "mode": "car",
+   "navigation": true,
+   "at": "2026-11-09T19:54:46.267Z",
+   "ms": 275,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": false,
+   "antiPave": "no-pave",
+   "fast": [
+    8.7,
+    0,
+    0
+   ],
+   "safe": [
+    8.7,
+    0,
+    0
+   ],
+   "error": null
+  },
+  {
+   "group": "D",
+   "label": "concurrent Moscova → Crocetta (moto)",
+   "mode": "motorcycle",
+   "navigation": false,
+   "at": "2026-11-09T19:54:49.545Z",
+   "ms": 2252,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    15.6,
+    940,
+    388
+   ],
+   "safe": [
+    19.1,
+    633,
+    86
+   ],
+   "error": null
+  },
+  {
+   "group": "D",
+   "label": "concurrent Castello → Porta Venezia (bici)",
+   "mode": "bicycle",
+   "navigation": false,
+   "at": "2026-11-09T19:54:49.546Z",
+   "ms": 5452,
+   "status": 200,
+   "engine": "durable-object",
+   "hasAlternative": true,
+   "antiPave": "alternative",
+   "fast": [
+    12.1,
+    281,
+    260
+   ],
+   "safe": [
+    14.5,
+    271,
+    93
+   ],
+   "error": null
+  },
+  {
+   "group": "page",
+   "label": "last",
+   "status": 200,
+   "ms": 51
+  }
+ ],
+ "featureChecks": [
+  {
+   "name": "homepage",
+   "ok": true,
+   "detail": "200, 12434 bytes, etag no, cities milan/roccella"
+  },
+  {
+   "name": "static assets",
+   "ok": true,
+   "detail": "10 files: 200"
+  },
+  {
+   "name": "address search",
+   "ok": true,
+   "detail": "200 117 ms, 3 results, first: Piazza del Duomo, Municipio 1 · Milano"
+  },
+  {
+   "name": "address search Roccella",
+   "ok": true,
+   "detail": "200, 1 results"
+  },
+  {
+   "name": "route features (Porta Vittoria → Filippetti)",
+   "ok": true,
+   "detail": "200 406 ms engine=durable-object; fast: 7 traffic signals, 4 pavé warnings; safe: 10 signals, 2 warnings; coverage partial"
+  },
+  {
+   "name": "ZTL without authorisation",
+   "ok": true,
+   "detail": "422 error: Ogni percorso trovato entra in ZTL Quadrilatero della Moda, attiva in questo orario. Se hai l'autorizzazione, attivala i"
+  },
+  {
+   "name": "ZTL with authorisation",
+   "ok": true,
+   "detail": "200 authorised [\"ztl-quadrilatero-della-moda\"] fast ztl [] terminal 0 m"
+  },
+  {
+   "name": "Roccella route",
+   "ok": true,
+   "detail": "200 715 ms engine=durable-object 0.946 km"
+  },
+  {
+   "name": "Rome refused",
+   "ok": true,
+   "detail": "400 Coordinate, modalità di trasporto o livello di evitamento non validi."
+  },
+  {
+   "name": "4 in parallel",
+   "ok": true,
+   "detail": "200/270ms/durable-object 200/5506ms/durable-object 200/6171ms/durable-object 200/2254ms/durable-object"
+  }
+ ]
+}
