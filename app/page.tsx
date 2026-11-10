@@ -70,8 +70,11 @@ import { evaluateVoiceGuidance } from "@/lib/voice-guidance";
 import {
   createGpsTraceRecorder,
   deleteGpsTrace,
+  gpsTraceToGpx,
   listGpsTraces,
+  pruneExpiredGpsTraces,
   readGpsTrace,
+  storedTraceBytes,
   type TraceRecorderStatus,
   type TraceStorage,
   type TraceSummary,
@@ -221,6 +224,30 @@ const emptyFeatureCollection = {
 };
 
 const mapStyle = "https://tiles.openfreemap.org/styles/liberty";
+
+/**
+ * Phase 4.34: what a field trace records about a route besides its geometry: the objective it was
+ * chosen for and the pavé it was expected to have, so a road test can be compared with them.
+ */
+function traceRouteDetails(route: RouteResult, objective: "safe" | "fast") {
+  return {
+    objective,
+    pave: {
+      confirmedMeters: Math.round(route.confirmedPaveMeters ?? 0),
+      probableMeters: Math.round(route.probablePaveMeters ?? 0),
+      unknownMeters: Math.round(route.unknownSurfaceMeters ?? 0),
+    },
+    roughSections: (route.roughSections ?? []).map(({ startMeters, endMeters, confirmedMeters, probableMeters, name, surface }) => ({
+      startMeters, endMeters, confirmedMeters, probableMeters, ...(name ? { name } : {}), ...(surface ? { surface } : {}),
+    })),
+  };
+}
+
+/** Phase 4.34: the rough section a field note made during navigation refers to, if one is near. */
+function nearbyRoughSection(sections: RoughSection[] | undefined, progressMeters: number | null) {
+  if (progressMeters === null || !sections?.length) return null;
+  return sections.find((section) => progressMeters >= section.startMeters - 150 && progressMeters <= section.endMeters + 100) ?? null;
+}
 
 function routeGeoJSON(result: RouteResult) {
   return {
@@ -438,6 +465,8 @@ export default function Home() {
   const lastJourneyCalculationRef = useRef(0);
   const navigationFixStateRef = useRef(createNavigationFixState());
   const traceRecorderRef = useRef<ReturnType<typeof createGpsTraceRecorder> | null>(null);
+  /** Phase 4.34: rough sections whose warning the current route's trace has already recorded. */
+  const tracedPaveWarningsRef = useRef<Set<number>>(new Set());
   const lastSpokenInstructionRef = useRef("");
   const journeyActiveRef = useRef(false);
   const selectedRouteRef = useRef<RouteResult | null>(null);
@@ -709,12 +738,15 @@ export default function Home() {
     );
     navigationFixStateRef.current = withReplacementRoute(navigationFixStateRef.current, 0);
     setGpsProgress(null);
+    traceRecorderRef.current?.recordEvent("route-switch", routeKind);
+    tracedPaveWarningsRef.current = new Set();
     traceRecorderRef.current?.addRoute({
       progressMeters: 0,
       minutes: nextSelectedRoute.minutes,
       distanceKm: nextSelectedRoute.distance,
       coordinates: nextSelectedRoute.coordinates,
       instructions: nextSelectedRoute.instructions ?? [],
+      ...traceRouteDetails(nextSelectedRoute, routeKind),
     });
     setActiveRoute(routeKind);
   }
@@ -1268,6 +1300,15 @@ export default function Home() {
     }).hud,
     [selectedRoute.roughSections, paveWarningProgress, transportMode],
   );
+  // Phase 4.34: a field trace records when each section's warning first appeared, and how far ahead.
+  useEffect(() => {
+    const recorder = traceRecorderRef.current;
+    if (!paveHud || !recorder || recorder.status !== "recording") return;
+    const start = Math.round(paveHud.sectionStartMeters * 10) / 10;
+    if (tracedPaveWarningsRef.current.has(start)) return;
+    tracedPaveWarningsRef.current.add(start);
+    recorder.recordEvent("pave-warning-shown", `${start}:${paveHud.kind === "ahead" ? paveHud.distanceMeters : 0}`);
+  }, [paveHud]);
   useEffect(() => {
     if (!isJourneyActive || !voiceEnabled) return;
     const canSpeak = journeyMode === "simulation"
@@ -1327,10 +1368,22 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    window.queueMicrotask(() => setTraces(listGpsTraces(traceStorage())));
+    window.queueMicrotask(() => {
+      // Phase 4.34: traces are kept on the device for at most a week.
+      pruneExpiredGpsTraces(traceStorage());
+      setTraces(listGpsTraces(traceStorage()));
+    });
     // iOS does not reliably fire pagehide, so a hidden page also saves what is buffered.
+    // Phase 4.34: the trace records when the page was hidden and shown again, so a gap in the
+    // fixes can be told apart: screen lock or background, rather than a lost GPS signal.
+    let hidden = document.visibilityState !== "visible";
     const saveTrace = () => {
-      if (document.visibilityState !== "visible") traceRecorderRef.current?.flush();
+      const nowHidden = document.visibilityState !== "visible";
+      if (nowHidden !== hidden) {
+        hidden = nowHidden;
+        traceRecorderRef.current?.recordEvent(nowHidden ? "page-hidden" : "page-visible");
+      }
+      if (nowHidden) traceRecorderRef.current?.flush();
     };
     window.addEventListener("pagehide", saveTrace);
     document.addEventListener("visibilitychange", saveTrace);
@@ -2096,12 +2149,14 @@ export default function Home() {
         setGpsProgress(replacementProgress);
       }
       if (isReroute) {
+        tracedPaveWarningsRef.current = new Set();
         traceRecorderRef.current?.addRoute({
           progressMeters: navigationFixStateRef.current.progressMeters,
           minutes: nextSelectedRoute.minutes,
           distanceKm: nextSelectedRoute.distance,
           coordinates: nextSelectedRoute.coordinates,
           instructions: nextSelectedRoute.instructions ?? [],
+          ...traceRouteDetails(nextSelectedRoute, nextRoute),
         });
       } else {
         storePlan({
@@ -2650,12 +2705,14 @@ export default function Home() {
         area: areaIdRef.current,
         mode: transportModeRef.current,
       });
+      tracedPaveWarningsRef.current = new Set();
       recorder.addRoute({
         progressMeters: 0,
         minutes: routeForJourney.minutes,
         distanceKm: routeForJourney.distance,
         coordinates: routeForJourney.coordinates,
         instructions: routeForJourney.instructions ?? [],
+        ...traceRouteDetails(routeForJourney, activeRouteRef.current),
       });
       traceRecorderRef.current = recorder;
       setTraceStatus(recorder.status);
@@ -2700,7 +2757,8 @@ export default function Home() {
     armGpsWatch(navigationSessionRef.current);
   }
 
-  async function exportGpsTrace(id: string) {
+  /** JSON is what replay reads; GPX (Phase 4.34) opens in map tools. Neither leaves the device unless shared. */
+  async function exportGpsTrace(id: string, format: "json" | "gpx" = "json") {
     traceRecorderRef.current?.flush();
     const storage = traceStorage();
     const trace = storage && readGpsTrace(storage, id);
@@ -2708,8 +2766,10 @@ export default function Home() {
       setStatus("Non riesco a leggere questa traccia dal dispositivo.");
       return;
     }
-    const name = `lastrico-gps-trace-${trace.startedAt.slice(0, 16).replace(/[:T]/g, "-")}.json`;
-    const file = new File([JSON.stringify(trace)], name, { type: "application/json" });
+    const name = `lastrico-gps-trace-${trace.startedAt.slice(0, 16).replace(/[:T]/g, "-")}.${format}`;
+    const file = format === "gpx"
+      ? new File([gpsTraceToGpx(trace)], name, { type: "application/gpx+xml" })
+      : new File([JSON.stringify(trace)], name, { type: "application/json" });
     if (navigator.canShare?.({ files: [file] })) {
       try {
         await navigator.share({ files: [file], title: "Traccia GPS Lastrico" });
@@ -3395,7 +3455,8 @@ export default function Home() {
                             traces={traces}
                             journeyActive={isJourneyActive}
                             onToggle={setTraceEnabled}
-                            onExport={(id) => void exportGpsTrace(id)}
+                            onExport={(id, format) => void exportGpsTrace(id, format)}
+                            sizeOf={(id) => storedTraceBytes(traceStorage(), id)}
                             onDelete={removeGpsTrace}
                           />
                         </>
@@ -3508,6 +3569,7 @@ export default function Home() {
               <span className="hud-badge subtle">{activeRoute === "safe" ? "Anti-pavé" : antiPaveOutcome?.status === "fastest-avoids-pave" ? "Più rapido e anti-pavé" : "Più rapido"}</span>
               {traceStatus === "recording" && <span className="hud-badge subtle" data-testid="gps-trace-indicator">REC</span>}
               {traceStatus === "suspended" && <span className="hud-badge warning" data-testid="gps-trace-indicator">REC sospesa</span>}
+              {traceStatus === "full" && <span className="hud-badge warning" data-testid="gps-trace-indicator">REC piena</span>}
             </div>
 
             {gpsAcquireIssue && navigationPhase === "starting" && (
@@ -3839,6 +3901,9 @@ export default function Home() {
         areaId={areaId}
         activeRoute={activeRoute}
         predictedSurfaceCategory={selectedRoute.paveMeters > 0 ? "Pavé noto" : "Nessun pavé noto"}
+        roughSection={isJourneyActive ? nearbyRoughSection(selectedRoute.roughSections, navigationProgress.routeProgressMeters) : null}
+        wasWarningShown={(startMeters) => tracedPaveWarningsRef.current.has(Math.round(startMeters * 10) / 10)}
+        onFeedbackSaved={(item) => traceRecorderRef.current?.recordEvent("field-note", item.kind)}
         routeSummary={{
           from: startLocation.label || undefined,
           to: endLocation.label || undefined,

@@ -1283,9 +1283,19 @@ scenario("E6", "GPS recording is opt-in, local, and exports what was recorded", 
   await session.waitFor(`window.__exports.length === 1`, 3_000, "export");
   const trace = JSON.parse(await session.evaluate(`window.__exports[0]`));
   assert.ok(trace.fixes?.length >= 5, "fixes exported");
+  // Phase 4.34: v2 traces carry the route's objective and pavé, the limits are stated, GPX exports.
+  assert.equal(trace.version, 2);
+  assert.ok(["fast", "safe"].includes(trace.routes[0]?.objective), "route objective recorded");
+  assert.ok(Number.isFinite(trace.routes[0]?.pave?.confirmedMeters), "route pavé recorded");
+  assert.match(await session.evaluate(`document.querySelector("[data-testid=gps-trace-limits]")?.innerText ?? ""`), /3 tracce .* 7 giorni/);
+  await session.tap("[data-testid=gps-trace-export-gpx]");
+  await session.waitFor(`window.__exports.length === 2`, 3_000, "GPX export");
+  const gpx = await session.evaluate(`window.__exports[1]`);
+  assert.match(gpx, /^<\?xml[^>]*>\n<gpx version="1\.1"/);
+  assert.equal((gpx.match(/<trkpt /g) ?? []).length, trace.fixes.length, "every fix in the GPX track");
   await session.tap("[data-testid=gps-trace-delete]");
   await session.waitFor(`!document.querySelector("[data-testid=gps-trace-item]")`, 3_000, "trace deleted");
-  note(`${trace.fixes.length} fixes recorded and exported, 0 uploads, then deleted`);
+  note(`${trace.fixes.length} fixes recorded, exported as JSON v2 and GPX, 0 uploads, then deleted`);
 });
 
 scenario("E7", "The voice switch really controls speech", async (session, note) => {

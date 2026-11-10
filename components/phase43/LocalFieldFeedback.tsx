@@ -85,6 +85,15 @@ export function exportLocalFeedbackCsv(): string {
     "destination",
     "active_route",
     "note",
+    "segment_street",
+    "segment_surface",
+    "segment_start_latitude",
+    "segment_start_longitude",
+    "segment_end_latitude",
+    "segment_end_longitude",
+    "segment_confirmed_m",
+    "segment_probable_m",
+    "segment_warning_shown",
   ];
 
   const rows = items.map((item) => {
@@ -102,6 +111,15 @@ export function exportLocalFeedbackCsv(): string {
       sanitizeCsvValue(item.routeSummary?.to ?? ""),
       sanitizeCsvValue(item.routeSummary?.activeRoute ?? ""),
       sanitizeCsvValue(item.note),
+      sanitizeCsvValue(item.roadSegment?.name ?? ""),
+      sanitizeCsvValue(item.roadSegment?.surface ?? ""),
+      sanitizeCsvValue(item.roadSegment ? item.roadSegment.start[1].toFixed(6) : ""),
+      sanitizeCsvValue(item.roadSegment ? item.roadSegment.start[0].toFixed(6) : ""),
+      sanitizeCsvValue(item.roadSegment ? item.roadSegment.end[1].toFixed(6) : ""),
+      sanitizeCsvValue(item.roadSegment ? item.roadSegment.end[0].toFixed(6) : ""),
+      sanitizeCsvValue(item.roadSegment?.confirmedMeters ?? ""),
+      sanitizeCsvValue(item.roadSegment?.probableMeters ?? ""),
+      sanitizeCsvValue(item.roadSegment ? (item.roadSegment.warningShown ? "yes" : "no") : ""),
     ].join(",");
   });
 
@@ -133,6 +151,11 @@ const FEEDBACK_OPTIONS: Record<FieldFeedbackKind, { label: string; desc: string;
   false_pave_smooth: {
     label: "Pavé segnalato ma asfalto liscio",
     desc: "La strada è stata asfaltata di recente o non è sconnessa",
+    category: "surface",
+  },
+  incorrect_pave_warning: {
+    label: "Avviso di pavé sbagliato",
+    desc: "L’avviso è comparso dove non c’è pavé, nel punto sbagliato o troppo tardi",
     category: "surface",
   },
   hazardous_surface: {
@@ -170,6 +193,8 @@ export function LocalFieldFeedback({
   areaId,
   activeRoute,
   predictedSurfaceCategory,
+  roughSection,
+  wasWarningShown,
   routeSummary,
   onFeedbackSaved,
   className = "",
@@ -214,6 +239,20 @@ export function LocalFieldFeedback({
       note: note.trim(),
       areaId,
       predictedSurfaceCategory,
+      // Phase 4.34: the section the note is about, only with the person's consent to keep the position.
+      roadSegment: category === "surface" && includeLocation && roughSection
+        ? {
+            start: roughSection.start,
+            end: roughSection.end,
+            startMeters: Math.round(roughSection.startMeters),
+            endMeters: Math.round(roughSection.endMeters),
+            confirmedMeters: Math.round(roughSection.confirmedMeters),
+            probableMeters: Math.round(roughSection.probableMeters),
+            ...(roughSection.name ? { name: roughSection.name } : {}),
+            ...(roughSection.surface ? { surface: roughSection.surface } : {}),
+            warningShown: wasWarningShown?.(roughSection.startMeters) ?? false,
+          }
+        : undefined,
       routeSummary: routeSummary
         ? {
             from: routeSummary.from,
@@ -510,6 +549,14 @@ export function LocalFieldFeedback({
                   </small>
                 </div>
               </label>
+            )}
+
+            {/* Phase 4.34: the rough section of the route this surface note will refer to. */}
+            {category === "surface" && roughSection && includeLocation && (
+              <p className="p43-field-segment" data-testid="field-note-segment">
+                {`Tratto allegato: ${roughSection.name ?? "tratto senza nome"}${roughSection.surface ? ` (${roughSection.surface})` : ""}, `
+                  + `${Math.round(roughSection.confirmedMeters)} m confermati e ${Math.round(roughSection.probableMeters)} m probabili secondo OSM.`}
+              </p>
             )}
 
             {/* Note Area */}

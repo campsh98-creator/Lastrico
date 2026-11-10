@@ -1,5 +1,6 @@
 import type { RoutingProviderName, TransportMode } from "./routing-types";
 import { logProviderFailure } from "./server-log.ts";
+import { PROVIDER_USER_AGENT } from "./provider-identity.ts";
 
 type Coordinate = [number, number];
 type SemanticDirection = "left" | "right" | "straight" | "uturn" | "roundabout" | "depart" | "arrive";
@@ -393,7 +394,7 @@ async function fetchValhallaRoutes(
             "Content-Type": "application/json",
             "Accept": "application/json",
             "X-Client-Id": "lastrico-milano",
-            "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
+            "User-Agent": PROVIDER_USER_AGENT,
           },
           body: JSON.stringify({
             locations: points.map(([lon, lat], index) => ({
@@ -560,7 +561,7 @@ async function fetchOsrmCarRoutes(
     const response = await withProviderTimeout(signal, timeoutMs, async (callSignal) => {
       const response = await fetch(url, {
         headers: {
-          "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
+          "User-Agent": PROVIDER_USER_AGENT,
         },
         cache: "no-store",
         signal: callSignal,

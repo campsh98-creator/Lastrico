@@ -4,10 +4,11 @@ Use a safe passenger test or stop the vehicle before interacting with the screen
 
 ## Evidence to capture on every run
 
-- [ ] Before starting, open **Mostra diagnostica affidabilità GPS** and enable **Registra traccia GPS per il collaudo**. Confirm **REC** appears in the HUD.
+- [ ] Before starting, open **Dettagli tecnici e registrazione GPS** and enable **Registra traccia GPS per il collaudo**. Confirm **REC** appears in the HUD.
 - [ ] After each run, use **Esporta** and confirm the file reaches a place you can open it. The share sheet and download paths in standalone mode have not been verified on a device.
 - [ ] Save real traces only in `outputs/field-traces/`, which git ignores. They reveal where someone was, so never commit or share them without consent.
-- [ ] Replay each trace with `node scripts/replay-gps-trace.mjs <trace.json>` and attach the summary to any failure report.
+- [ ] Replay each trace with `node scripts/replay-gps-trace.mjs <trace.json> --text` and attach the findings to any failure report.
+- [ ] When the surface is wrong, add a field note (menu › **Note di collaudo sul dispositivo** › Fondo stradale): pavé missing, asphalt shown as pavé, or **Avviso di pavé sbagliato**. Keep the position attached so the note carries the route's section.
 
 ## Install and permissions
 

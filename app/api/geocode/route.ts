@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createGeocodeFetcher, validAreaGeocodeResult } from "../../../lib/geocoding";
 
 import { PILOT_AREAS, isPilotAreaId, PilotArea } from "../../../lib/pilot-areas";
+import { PROVIDER_USER_AGENT } from "../../../lib/provider-identity";
 const NOMINATIM_MIN_INTERVAL_MS = 1_050;
 const fetchNominatim = createGeocodeFetcher({ minimumIntervalMs: NOMINATIM_MIN_INTERVAL_MS, timeoutMs: 3_500 });
 // Bound upstream query size while allowing complete street/POI names and addresses.
@@ -49,7 +50,7 @@ async function fetchPhoton(query: string, pilot: PilotArea, callerSignal: AbortS
       headers: {
         Accept: "application/json",
         "Accept-Language": "it",
-        "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
+        "User-Agent": PROVIDER_USER_AGENT,
       },
       signal,
     });
