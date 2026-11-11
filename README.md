@@ -12,10 +12,11 @@ keeps that choice in force while you drive or ride.
 routing API to real Valhalla responses, and the GPS position is simulated. See
 <a href="docs/assets/readme/PROVENANCE.md">how these images were made</a>.</sub></p>
 
-> **Status: experimental beta.** The newest features in this branch run locally and have
-> passed automated and emulated-browser tests. They have not yet been validated on a physical
-> iPhone or released to the public pilot. See [availability](#supported-cities-and-availability)
-> and the [engineering status](docs/ENGINEERING_STATUS.md).
+> **Status: experimental beta.** The Phase 4.34 navigation diagnostics release is deployed to
+> the public Milan/Roccella pilot on Cloudflare Workers Free. It includes opt-in local GPS diagnostics
+> and has passed automated and emulated mobile browser tests. Physical iPhone road validation
+> remains pending. Automated tests do not certify real-world turn accuracy or road conditions.
+> See [availability](#supported-cities-and-availability) and the [engineering status](docs/ENGINEERING_STATUS.md).
 
 > **Safety notice.** Lastrico does not guarantee route safety, prevent accidents, or replace
 > road signs, traffic rules, rider judgement, or certified navigation. Surface data comes from
@@ -121,28 +122,25 @@ Rome is a local experiment.
 
 | Area | Local development build | Public pilot | Notes |
 | --- | --- | --- | --- |
-| **Milan** | ✅ Citywide surface data, ZTL, central traffic signals | ✅ Phase 4.33 version | Main test area |
-| **Roccella Ionica** | ✅ | ✅ Phase 4.33 version | Small pilot area |
+| **Milan** | ✅ Citywide surface data, ZTL, central traffic signals | ✅ Phase 4.34 version | Main test area |
+| **Roccella Ionica** | ✅ | ✅ Phase 4.34 version | Small pilot area |
 | **Rome** | 🧪 Experimental (Phase 4.23) | ❌ Never deployed | Local only; not advertised as supported |
 
 **Public pilot:** [lastrico-pilot.campsh.workers.dev](https://lastrico-pilot.campsh.workers.dev).
-- It runs the Phase 4.33 release, Milan and Roccella only, deployed on 9 November 2026 (version
-  `170ac277`). That includes continuous anti-pavé rerouting, surface warnings, traffic signals,
-  ZTL handling and reverse A/B.
+- It runs the Phase 4.34 release, Milan and Roccella only, deployed on 11 November 2026 (version
+  `fe69e630`). That includes continuous anti-pavé rerouting, surface warnings, traffic signals,
+  ZTL handling, reverse A/B, and opt-in local GPS diagnostics for physical road testing.
 - It runs on Cloudflare's Workers Free plan, which allows 10 ms of CPU per ordinary request.
-  - Before, route calculations failed intermittently on that limit: about 1 request in 300 on
-    7 November, 1 in 18 on 8 November, and 12 of 14 in a one-minute burst.
-  - Now route computation runs in a Durable Object, which allows 30 s of CPU per request on the
-    Free plan, and the homepage is a static file.
+  - Route computation runs in a Durable Object, which allows 30 s of CPU per request on the
+    Free plan, and the homepage is a static file snapshot (0 ms Worker CPU).
 - Measured on the pilot after the release:
-  - 52 of 52 route requests succeeded, including a burst and parallel requests;
-  - up to 345 ms of CPU in the Durable Object, and 0–3 ms in the Worker in front of it;
-  - no CPU stops, 503 responses or exceptions;
-  - the mobile end-to-end suite passed 81 of 81 against it.
-- This is a small sample, not a capacity guarantee. The community-report list and address search
-  still run in the ordinary Worker, and no physical iPhone has tested this version yet.
+  - 18 of 18 post-deployment smoke tests passed;
+  - mobile browser emulation verified address autocomplete (sub-850 ms) and single-shot route calculation;
+  - opt-in GPS trace recording verified locally with zero automatic network uploads (capped at 3 traces / 2.5 MB / 7 days);
+  - no CPU stops, 503 responses or exceptions.
+- Physical iPhone road validation on Milan corridors remains pending; automated tests do not certify real-world turn accuracy or road conditions.
 - The full breakdown is in the [engineering status](docs/ENGINEERING_STATUS.md) and the release
-  report, `outputs/phase433-final-release-report.md` (Italian).
+  report, `outputs/phase434-pilot-release-report.md` (Italian).
 
 ## Architecture
 

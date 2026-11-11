@@ -1,15 +1,15 @@
 # Engineering status
 
-Status on 9 November 2026, `main` at `c31d073`. This page separates what exists locally from
+Status on 11 November 2026, `main` at `336462d`. This page separates what exists locally from
 what is online, and fixed defects from open problems. Every claim points to
 the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
 ## 1. Where each feature stands
 
 **Legend**
-- **Local:** implemented on `main` and covered by the 461 unit and integration tests.
-- **Pilot:** included in the public pilot, version `170ac277` (Phase 4.33 release, Milan and
-  Roccella only, deployed on 9 November 2026). The previous version was `03a6776e` (Phase 4.28).
+- **Local:** implemented on `main` and covered by unit and integration tests.
+- **Pilot:** included in the public pilot, version `fe69e630` (Phase 4.34 release, Milan and
+  Roccella only, deployed on 11 November 2026). The previous version was `170ac277` (Phase 4.33).
 - **Emulated:** passed the end-to-end suite in headless Chrome with simulated GPS.
 - **iPhone:** checked on a physical iPhone.
 
@@ -34,10 +34,10 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Route computation in a Durable Object, explicit 503 on failure (Phase 4.33) | ✅ | ✅ | ✅ local Worker runtime | — |
 | Provider timers cleared after each call (Phase 4.33) | ✅ | ✅ | ✅ | — |
 | Homepage served as a static snapshot (Phase 4.33) | ✅ | ✅ | ✅ | — |
-| Field-trace v2: route objective and pavé, warnings shown, page hidden; GPX export; 7-day retention (Phase 4.34) | ✅ | ❌ | ✅ | ❌ |
+| Field-trace v2: route objective and pavé, warnings shown, page hidden; GPX export; 7-day retention (Phase 4.34) | ✅ | ✅ | ✅ | ❌ |
 | Trace triage by category, `scripts/replay-gps-trace.mjs --text` (Phase 4.34) | ✅ | — | — | — |
-| Field note "wrong pavé warning", with the route's rough section attached (Phase 4.34) | ✅ | ❌ | ✅ | ❌ |
-| Provider User-Agent names the project repository (Phase 4.34) | ✅ | ❌ | — | — |
+| Field note "wrong pavé warning", with the route's rough section attached (Phase 4.34) | ✅ | ✅ | ✅ | ❌ |
+| Provider User-Agent names the project repository (Phase 4.34) | ✅ | ✅ | — | — |
 | Offline audit of central-Milan signals, signs, one-ways and turn restrictions; 144 points ranked for on-site checks (Phase 4.34, `outputs/phase434/intersection-audit.md`) | ✅ | — | — | ❌ |
 | "Descrivi la tua preferenza" rule-based preference prompt | ✅ | ✅ | ✅ | — |
 | Moderated community surface reports (D1) | ✅ | ✅ | ✅ | — |
@@ -109,11 +109,11 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
    - Travel times have no live traffic.
    - FOSSGIS Valhalla, Nominatim and OpenFreeMap are rate-limited community services.
    - The reroute surface-aware search adds one provider call, about 1 s.
-8. **Out of date outbound User-Agent: fixed on `main`, not yet on the pilot.**
+8. **Out of date outbound User-Agent: fixed on `main` and on the pilot (Phase 4.34).**
    - Up to Phase 4.33, the geocoding and routing requests named the old beta URL, which answers
      HTTP 401.
    - Phase 4.34 names the project repository through one constant (`lib/provider-identity.ts`).
-     One request to each provider with it answered 200 on 10 November 2026.
+     One request to each provider with it answered 200 on 10 November 2026, and it is deployed on the pilot.
 
 ## 4. Workers Free: verified behaviour (Phase 4.33)
 
@@ -193,8 +193,8 @@ twice: at 16:12 UTC before the final fixes, and at 19:17 UTC with them. Evidence
 ## 6. How the current numbers were produced
 
 **Unit and integration tests**
-- `npm test`: 447 of 447 on 9 November 2026, together with TypeScript, ESLint and the production
-  build.
+- `npm test`: 477 of 477 passed (2 skipped for Rome in Milan release copy) on 11 November 2026,
+  together with TypeScript, ESLint and the production build.
 
 **End-to-end, emulated**
 - `npm run test:e2e` runs headless Chrome against the local Worker with simulated GPS.
