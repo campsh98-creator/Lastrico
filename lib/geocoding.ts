@@ -1,3 +1,5 @@
+import { PROVIDER_USER_AGENT } from "./provider-identity.ts";
+
 function abortable<T>(operation: Promise<T>, signal: AbortSignal): Promise<T> {
   return new Promise((resolve, reject) => {
     const abort = () => reject(signal.reason);
@@ -48,7 +50,7 @@ export function createGeocodeFetcher({ minimumIntervalMs = 1_050, timeoutMs = 12
         headers: {
           Accept: "application/json",
           "Accept-Language": "it",
-          "User-Agent": "Lastrico-Milano-Beta/0.5.0 (+https://lastrico-milano.cscda39.chatgpt.site)",
+          "User-Agent": PROVIDER_USER_AGENT,
         },
         signal,
       });

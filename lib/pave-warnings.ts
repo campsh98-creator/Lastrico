@@ -38,9 +38,10 @@ export function surfaceWords(section: RoughSection): SurfaceWords {
 }
 
 export type PaveWarningResult = {
+  /** sectionStartMeters (Phase 4.34) identifies the section, so a field trace can tell when its warning appeared. */
   hud:
-    | { kind: "ahead"; distanceMeters: number; lengthMeters: number; confirmed: boolean; words: SurfaceWords; name?: string }
-    | { kind: "inside"; remainingMeters: number; confirmed: boolean; words: SurfaceWords; name?: string }
+    | { kind: "ahead"; distanceMeters: number; lengthMeters: number; confirmed: boolean; words: SurfaceWords; name?: string; sectionStartMeters: number }
+    | { kind: "inside"; remainingMeters: number; confirmed: boolean; words: SurfaceWords; name?: string; sectionStartMeters: number }
     | null;
   speak: { text: string; section: AnnouncedSection } | null;
 };
@@ -92,9 +93,9 @@ export function evaluatePaveWarning(input: {
   const ahead = sections.find((section) => section.startMeters > progress);
   const named = (section: RoughSection) => (section.name ? { name: section.name } : {});
   const hud: PaveWarningResult["hud"] = inside
-    ? { kind: "inside", remainingMeters: Math.round(inside.endMeters - progress), confirmed: isConfirmedSection(inside), words: surfaceWords(inside), ...named(inside) }
+    ? { kind: "inside", remainingMeters: Math.round(inside.endMeters - progress), confirmed: isConfirmedSection(inside), words: surfaceWords(inside), ...named(inside), sectionStartMeters: inside.startMeters }
     : ahead && ahead.startMeters - progress <= policy.hudMeters
-      ? { kind: "ahead", distanceMeters: Math.round(ahead.startMeters - progress), lengthMeters: Math.round(ahead.endMeters - ahead.startMeters), confirmed: isConfirmedSection(ahead), words: surfaceWords(ahead), ...named(ahead) }
+      ? { kind: "ahead", distanceMeters: Math.round(ahead.startMeters - progress), lengthMeters: Math.round(ahead.endMeters - ahead.startMeters), confirmed: isConfirmedSection(ahead), words: surfaceWords(ahead), ...named(ahead), sectionStartMeters: ahead.startMeters }
       : null;
 
   let speak: PaveWarningResult["speak"] = null;

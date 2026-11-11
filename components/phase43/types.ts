@@ -37,6 +37,7 @@ export type FieldFeedbackCategory = "surface" | "navigation";
 export type FieldFeedbackKind =
   | "unmapped_pave"
   | "false_pave_smooth"
+  | "incorrect_pave_warning"
   | "hazardous_surface"
   | "incorrect_maneuver"
   | "road_closure"
@@ -60,6 +61,22 @@ export type FieldFeedbackItem = {
     distanceKm?: number;
     minutes?: number;
   };
+  /**
+   * Phase 4.34: the rough section of the route the note refers to, as the app had it: where it
+   * starts and ends, its OSM street and surface, its metres, and whether its warning was shown.
+   * Attached only when the person keeps the position in the note.
+   */
+  roadSegment?: {
+    start: [number, number];
+    end: [number, number];
+    startMeters: number;
+    endMeters: number;
+    confirmedMeters: number;
+    probableMeters: number;
+    name?: string;
+    surface?: string;
+    warningShown: boolean;
+  };
 };
 
 export type LocalFieldFeedbackProps = {
@@ -70,6 +87,9 @@ export type LocalFieldFeedbackProps = {
   areaId?: string;
   activeRoute?: "fast" | "safe";
   predictedSurfaceCategory?: string;
+  /** Phase 4.34: the rough section near the current position, during navigation. */
+  roughSection?: import("@/lib/rough-sections").RoughSection | null;
+  wasWarningShown?: (sectionStartMeters: number) => boolean;
   routeSummary?: {
     from?: string;
     to?: string;

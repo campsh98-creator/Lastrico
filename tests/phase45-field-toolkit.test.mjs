@@ -277,6 +277,16 @@ test("Phase 4.5: CSV export formatting, header contract, and formula injection s
       "destination",
       "active_route",
       "note",
+      // Phase 4.34: the rough section a surface note refers to, appended so earlier columns keep their place.
+      "segment_street",
+      "segment_surface",
+      "segment_start_latitude",
+      "segment_start_longitude",
+      "segment_end_latitude",
+      "segment_end_longitude",
+      "segment_confirmed_m",
+      "segment_probable_m",
+      "segment_warning_shown",
     ];
     assert.equal(lines[0], expectedHeaders.join(","));
 

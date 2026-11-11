@@ -91,7 +91,15 @@ physical iPhone checklist.
 npm run build && node scripts/e2e-mobile-chrome.mjs
 ```
 
-## Replaying a GPS trace
+## Replaying and diagnosing a GPS trace
+
+Field recording is off by default. Turn it on in **Dettagli tecnici e registrazione GPS** ›
+**Registra traccia GPS per il collaudo**; **REC** shows in the HUD while it records.
+- Traces stay in the browser's storage: at most 3 traces and 2.5 MB in all (about two hours at
+  one fix per second; then the oldest trace is dropped, or recording stops and the HUD shows
+  **REC piena**), deleted automatically after 7 days. Nothing is uploaded.
+- **Esporta** writes the JSON that replay reads; **GPX** writes the track and the routes for map
+  tools.
 
 Exported traces can be replayed through the same per-fix logic the app runs:
 
@@ -99,8 +107,32 @@ Exported traces can be replayed through the same per-fix logic the app runs:
 node scripts/replay-gps-trace.mjs outputs/field-traces/<trace>.json
 ```
 
+Phase 4.34 adds a triage of the trace by category (`lib/trace-diagnosis.ts`):
+- GPS accuracy, map matching and wrong-turn detection;
+- routing API, instructions and pavé evidence;
+- app interruption (screen lock or background) and changed behaviour.
+
+```bash
+node scripts/replay-gps-trace.mjs outputs/field-traces/<trace>.json --text
+```
+
+`--diagnose` prints the same findings as JSON, and `--gpx=<file>` also writes the GPX.
+- Each finding is "measured" (the trace shows it) or "possible" (one plausible reading), with its
+  evidence and what to check. None of them concludes that the route was wrong.
+- The file is validated first: unknown fields, for example an added name or e-mail, are refused.
+
 Real traces reveal where someone was. Keep them in `outputs/field-traces/`, which git ignores,
 and never commit them.
+
+## Auditing junction data
+
+`node scripts/audit-milan-intersections.mjs` checks, offline and deterministically, the central
+Milan traffic signals, stop and give-way signs, one-ways, turn restrictions and conditional rules
+against the checksummed OSM archives.
+- It writes `outputs/phase434/intersection-audit.{json,md}` with a ranked list of points to check
+  on site. None of them is verified on the ground.
+- With the provider archive unpacked (`outputs/phase425-benchmark/responses/`), it also checks the
+  archived Valhalla routes against the turn restrictions.
 
 ## Pilot deployment
 

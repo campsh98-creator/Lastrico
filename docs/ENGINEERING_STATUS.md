@@ -34,6 +34,11 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Route computation in a Durable Object, explicit 503 on failure (Phase 4.33) | ✅ | ✅ | ✅ local Worker runtime | — |
 | Provider timers cleared after each call (Phase 4.33) | ✅ | ✅ | ✅ | — |
 | Homepage served as a static snapshot (Phase 4.33) | ✅ | ✅ | ✅ | — |
+| Field-trace v2: route objective and pavé, warnings shown, page hidden; GPX export; 7-day retention (Phase 4.34) | ✅ | ❌ | ✅ | ❌ |
+| Trace triage by category, `scripts/replay-gps-trace.mjs --text` (Phase 4.34) | ✅ | — | — | — |
+| Field note "wrong pavé warning", with the route's rough section attached (Phase 4.34) | ✅ | ❌ | ✅ | ❌ |
+| Provider User-Agent names the project repository (Phase 4.34) | ✅ | ❌ | — | — |
+| Offline audit of central-Milan signals, signs, one-ways and turn restrictions; 144 points ranked for on-site checks (Phase 4.34, `outputs/phase434/intersection-audit.md`) | ✅ | — | — | ❌ |
 | "Descrivi la tua preferenza" rule-based preference prompt | ✅ | ✅ | ✅ | — |
 | Moderated community surface reports (D1) | ✅ | ✅ | ✅ | — |
 | Milan coverage | ✅ citywide | ✅ | ✅ | ✅ |
@@ -104,10 +109,11 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
    - Travel times have no live traffic.
    - FOSSGIS Valhalla, Nominatim and OpenFreeMap are rate-limited community services.
    - The reroute surface-aware search adds one provider call, about 1 s.
-8. **Out of date outbound User-Agent.**
-   - The geocoding and routing requests still name the old beta URL as the contact address.
-   - That URL now answers HTTP 401.
-   - Update it at the next release.
+8. **Out of date outbound User-Agent: fixed on `main`, not yet on the pilot.**
+   - Up to Phase 4.33, the geocoding and routing requests named the old beta URL, which answers
+     HTTP 401.
+   - Phase 4.34 names the project repository through one constant (`lib/provider-identity.ts`).
+     One request to each provider with it answered 200 on 10 November 2026.
 
 ## 4. Workers Free: verified behaviour (Phase 4.33)
 

@@ -272,6 +272,10 @@ async function renderControls(props) {
   const source = (await readFile(file, "utf8")).replace(
     'from "react"',
     `from "${new URL("../node_modules/react/index.js", import.meta.url).href}"`,
+  ).replace(
+    // Phase 4.34: the control shows the retention limits from lib/gps-trace.ts.
+    'from "@/lib/gps-trace"',
+    `from "${new URL("../lib/gps-trace.ts", import.meta.url).href}"`,
   );
   const { outputText } = ts.transpileModule(source, {
     compilerOptions: { target: ts.ScriptTarget.ESNext, module: ts.ModuleKind.ESNext, jsx: ts.JsxEmit.React },
