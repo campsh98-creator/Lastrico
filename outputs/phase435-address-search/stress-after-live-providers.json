@@ -1,0 +1,247 @@
+{
+  "base": "http://127.0.0.1:8799",
+  "live": true,
+  "edits": [
+    {
+      "n": 1,
+      "field": "start",
+      "action": "street",
+      "mode": "live",
+      "text": "Via Savona",
+      "ms": 7237,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": true,
+      "statusKind": "partial",
+      "rows": 2,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Via Savona",
+      "picked": "Via Savona, Foppette · Milano"
+    },
+    {
+      "n": 2,
+      "field": "end",
+      "action": "street",
+      "mode": "live",
+      "text": "Argelati",
+      "ms": 5845,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": true,
+      "statusKind": "partial",
+      "rows": 1,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Via Filippo Argelati",
+      "picked": "Via Filippo Argelati, Conchetta · Milano"
+    },
+    {
+      "n": 3,
+      "field": "start",
+      "action": "place",
+      "mode": "live",
+      "text": "Porta Romana",
+      "ms": 6164,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": null,
+      "statusKind": "partial",
+      "rows": 2,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Corso di Porta Romana",
+      "picked": "Corso di Porta Romana, Brolo · Milano"
+    },
+    {
+      "n": 4,
+      "field": "end",
+      "action": "street",
+      "mode": "live",
+      "text": "Argelati",
+      "ms": 5441,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": true,
+      "statusKind": "partial",
+      "rows": 1,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Via Filippo Argelati",
+      "picked": null
+    },
+    {
+      "n": 5,
+      "field": "start",
+      "action": "erase-retype",
+      "mode": "live",
+      "text": "Viale Monza",
+      "ms": 6266,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": true,
+      "statusKind": "partial",
+      "rows": 1,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Viale Monza",
+      "picked": "Viale Monza, Gorla · Milano"
+    },
+    {
+      "n": 6,
+      "field": "end",
+      "action": "place",
+      "mode": "live",
+      "text": "Porta Romana",
+      "ms": 6140,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": null,
+      "statusKind": "partial",
+      "rows": 2,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Corso di Porta Romana",
+      "picked": "Corso di Porta Romana, Brolo · Milano"
+    },
+    {
+      "n": 7,
+      "field": "start",
+      "action": "rapid",
+      "mode": "live",
+      "text": "via filippo argelati, milano",
+      "ms": 5802,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": true,
+      "statusKind": "partial",
+      "rows": 1,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Via Filippo Argelati",
+      "picked": "Via Filippo Argelati, Conchetta · Milano"
+    },
+    {
+      "n": 8,
+      "field": "end",
+      "action": "street",
+      "mode": "live",
+      "text": "Via Gallarate",
+      "ms": 5828,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": true,
+      "statusKind": "partial",
+      "rows": 1,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Via Gallarate",
+      "picked": null
+    },
+    {
+      "n": 9,
+      "field": "start",
+      "action": "place",
+      "mode": "live",
+      "text": "Porta Romana",
+      "ms": 6141,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": null,
+      "statusKind": "partial",
+      "rows": 2,
+      "status": "Luoghi e numeri civici non disponibili ora: mostro le vie.Riprova",
+      "firstRow": "Corso di Porta Romana",
+      "picked": "Corso di Porta Romana, Brolo · Milano"
+    },
+    {
+      "n": 10,
+      "field": "end",
+      "action": "swap-then-edit",
+      "mode": "live",
+      "text": "Argelati",
+      "ms": 8841,
+      "outcome": "rows",
+      "honest": true,
+      "localFirst": true,
+      "statusKind": null,
+      "rows": 5,
+      "status": null,
+      "firstRow": "Via Filippo Argelati",
+      "picked": "Via Filippo Argelati, Conchetta · Milano"
+    }
+  ],
+  "summary": {
+    "edits": 10,
+    "honest": 10,
+    "silent": 0,
+    "stale": 0,
+    "streetEditsWithIndexRowFirst": 7,
+    "streetEdits": 7,
+    "tapFailures": 0,
+    "byMode": {
+      "live": {
+        "edits": 10,
+        "honest": 10
+      }
+    }
+  },
+  "console": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/reports"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Via+Savona&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Argelati&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Porta+Romana&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Argelati&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Viale+Monza&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Porta+Romana&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=via+filippo+argelati%2C+milano&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Via+Gallarate&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Porta+Romana&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Via+Filippo+Argelati&area=milan&purpose=suggest"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "url": "http://127.0.0.1:8799/api/geocode?q=Corso+Buenos+Aires&area=milan&purpose=suggest"
+    }
+  ],
+  "exceptions": [],
+  "pickerChoices": 1,
+  "finalJourney": {
+    "finalStartRow": "Via Filippo Argelati",
+    "finalEndRow": "Corso Buenos Aires",
+    "routed": true,
+    "start": null,
+    "end": null,
+    "listFor": null,
+    "rows": [],
+    "status": null,
+    "appStatus": "4 percorsi reali confrontati; 62 way OSM abbinate al percorso (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
+    "planner": false
+  },
+  "civic": {},
+  "purposes": {}
+}

@@ -1,10 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createGeocodeFetcher, validAreaGeocodeResult } from "../../../lib/geocoding";
+import {
+  ProviderHttpError,
+  classifyProviderFailure,
+  createGeocodeFetcher,
+  createProviderBreaker,
+  retryAfterMilliseconds,
+  validAreaGeocodeResult,
+} from "../../../lib/geocoding";
 
 import { PILOT_AREAS, isPilotAreaId, PilotArea } from "../../../lib/pilot-areas";
 import { PROVIDER_USER_AGENT } from "../../../lib/provider-identity";
 const NOMINATIM_MIN_INTERVAL_MS = 1_050;
 const fetchNominatim = createGeocodeFetcher({ minimumIntervalMs: NOMINATIM_MIN_INTERVAL_MS, timeoutMs: 3_500 });
+const PHOTON_TIMEOUT_MS = 4_000;
+// Phase 4.35: per-isolate breakers, so a provider outage answers at once instead of at each deadline.
+const nominatimBreaker = createProviderBreaker();
+const photonBreaker = createProviderBreaker();
+
+/**
+ * Phase 4.35: why the page is asking.
+ * - `suggest`: the person is typing. The public Nominatim policy forbids search-as-you-type, so
+ *   typing never reaches Nominatim: Photon only (built for it, fair use).
+ * - `search`: an explicit action (Enter, the search button, Calcola, a house number chosen from
+ *   the list): one Nominatim search, Photon as fallback.
+ * - absent: the behaviour before Phase 4.35, kept for clients that do not send it (Roccella).
+ */
+type SearchPurpose = "suggest" | "search" | "legacy";
+
+/** Breaker state reported in an error answer, so the page can say why and when to retry. */
+class SearchUnavailable extends Error {
+  readonly reason: string;
+  readonly retryAfterMs: number;
+  constructor(reason: string, retryAfterMs: number) {
+    super("Tutti i servizi di ricerca indirizzi non sono disponibili.");
+    this.reason = reason;
+    this.retryAfterMs = retryAfterMs;
+  }
+}
+
+function recordFailure(breaker: ReturnType<typeof createProviderBreaker>, error: unknown, signal: AbortSignal) {
+  const failure = classifyProviderFailure(error, signal);
+  if (failure) breaker.failure(failure.kind, { status: failure.status, retryAfterMs: failure.retryAfterMs ?? null });
+}
 // Bound upstream query size while allowing complete street/POI names and addresses.
 const MAX_QUERY_CHARACTERS = 300;
 
@@ -36,13 +73,25 @@ function nonEmpty(...values: (string | undefined)[]): string | undefined {
 }
 
 async function fetchPhoton(query: string, pilot: PilotArea, callerSignal: AbortSignal): Promise<GeocodeApiResponseItem[]> {
+  if (photonBreaker.isOpen()) throw new SearchUnavailable("photon_cooling_down", photonBreaker.retryAfterMs());
+  try {
+    const results = await fetchPhotonOnce(query, pilot, callerSignal);
+    photonBreaker.success();
+    return results;
+  } catch (error) {
+    recordFailure(photonBreaker, error, callerSignal);
+    throw error;
+  }
+}
+
+async function fetchPhotonOnce(query: string, pilot: PilotArea, callerSignal: AbortSignal): Promise<GeocodeApiResponseItem[]> {
   const photonUrl = new URL("https://photon.komoot.io/api/");
   photonUrl.searchParams.set("q", query);
   photonUrl.searchParams.set("limit", "10");
   photonUrl.searchParams.set("bbox", `${pilot.bounds.west},${pilot.bounds.south},${pilot.bounds.east},${pilot.bounds.north}`);
 
   const timeout = new AbortController();
-  const timer = setTimeout(() => timeout.abort(new DOMException("Photon timed out", "TimeoutError")), 4_000);
+  const timer = setTimeout(() => timeout.abort(new DOMException("Photon timed out", "TimeoutError")), PHOTON_TIMEOUT_MS);
   const signal = typeof AbortSignal.any === "function" ? AbortSignal.any([callerSignal, timeout.signal]) : callerSignal;
 
   try {
@@ -54,7 +103,7 @@ async function fetchPhoton(query: string, pilot: PilotArea, callerSignal: AbortS
       },
       signal,
     });
-    if (!response.ok) throw new Error(`Photon returned HTTP ${response.status}`);
+    if (!response.ok) throw new ProviderHttpError(response.status, retryAfterMilliseconds(response.headers.get("Retry-After")));
     const data = await response.json();
     if (!data || typeof data !== "object" || !Array.isArray((data as { features?: unknown }).features)) {
       throw new Error("Risposta Photon non valida");
@@ -147,12 +196,36 @@ export async function GET(request: NextRequest) {
     ? `${commaParts[0]} ${commaParts[1]}`
     : (commaParts[0] ?? query.split(",")[0].trim());
 
-  const cacheKey = `${pilot.id}:${queryWithoutCity.toLowerCase().trim()}`;
-  const cached = geocodeCache.get(cacheKey);
-  if (cached && (Date.now() - cached.timestamp) < CACHE_TTL_MS && cached.results.length > 0) {
+  const purposeParam = request.nextUrl.searchParams.get("purpose");
+  const purpose: SearchPurpose = purposeParam === "suggest" || purposeParam === "search" ? purposeParam : "legacy";
+  // Typing answers come from Photon only, so they never stand in for a Nominatim answer; a
+  // suggestion may reuse a full search answer, which is at least as good.
+  const searchKey = `${pilot.id}:${queryWithoutCity.toLowerCase().trim()}`;
+  const suggestKey = `${searchKey}#suggest`;
+  const cached = freshCached(searchKey) ?? (purpose === "suggest" ? freshCached(suggestKey) : undefined);
+  if (cached) {
     return NextResponse.json({ results: cached.results }, {
       headers: { "Cache-Control": "public, max-age=3600, s-maxage=86400" },
     });
+  }
+  const cacheKey = purpose === "suggest" ? suggestKey : searchKey;
+
+  if (purpose === "suggest") {
+    try {
+      const results = await fetchPhoton(queryWithoutCity, pilot, request.signal);
+      if (!results.length) return emptyAnswer();
+      remember(cacheKey, results);
+      return NextResponse.json({ results }, {
+        headers: { "Cache-Control": "public, max-age=3600, s-maxage=86400" },
+      });
+    } catch (error) {
+      if (!request.signal.aborted) {
+        console.warn(`[geocode] Photon suggestion failed for "${query}" (${pilot.id}):`, error instanceof Error ? error.message : error);
+      }
+      return unavailableAnswer(error instanceof SearchUnavailable
+        ? error
+        : new SearchUnavailable("photon_unavailable", photonBreaker.retryAfterMs()));
+    }
   }
 
   const useStructuredStreet = isStructuredStreetNumberQuery(queryWithoutCity);
@@ -245,6 +318,7 @@ export async function GET(request: NextRequest) {
 
     const runNominatim = async (): Promise<GeocodeApiResponseItem[]> => {
       try {
+        if (nominatimBreaker.isOpen()) throw new SearchUnavailable("nominatim_cooling_down", nominatimBreaker.retryAfterMs());
         const data = await fetchNominatim(url, signalNominatim);
         if (!Array.isArray(data)) throw new Error("Risposta indirizzi non valida");
         let mapped = mapResults(data);
@@ -263,9 +337,11 @@ export async function GET(request: NextRequest) {
             mapped = mapResults(fallbackData);
           }
         }
+        nominatimBreaker.success();
         return mapped;
       } catch (err) {
         nominatimFailed = true;
+        if (!(err instanceof SearchUnavailable)) recordFailure(nominatimBreaker, err, signalNominatim);
         if (!signalNominatim.aborted) {
           console.warn(`[geocode] Nominatim failed for "${query}" (${pilot.id}):`, err instanceof Error ? err.message : err);
         }
@@ -342,32 +418,57 @@ export async function GET(request: NextRequest) {
         finishIfReady();
       });
 
-      photonTimer = setTimeout(startPhoton, 250);
+      // An explicit search gives Nominatim a fair chance before also asking Photon (hedge);
+      // the pre-4.35 race at 250 ms stays for clients that send no purpose.
+      photonTimer = setTimeout(startPhoton, purpose === "search" ? 1_200 : 250);
     });
 
     if (results.length === 0) {
       if (nominatimFailed && photonFailed) {
         throw new Error("Tutti i servizi di ricerca indirizzi non sono disponibili.");
       }
-      return NextResponse.json({ results: [] }, {
-        headers: { "Cache-Control": "public, max-age=300" },
-      });
+      return emptyAnswer();
     }
 
-    if (geocodeCache.size >= CACHE_MAX_ENTRIES) {
-      const oldestKey = geocodeCache.keys().next().value;
-      if (oldestKey) geocodeCache.delete(oldestKey);
-    }
-    geocodeCache.set(cacheKey, { timestamp: Date.now(), results });
+    remember(cacheKey, results);
 
     return NextResponse.json({ results }, {
       headers: { "Cache-Control": "public, max-age=3600, s-maxage=86400" },
     });
   } catch (error) {
     console.error(`[geocode] Search failed for "${query}" (${pilot.id}):`, error instanceof Error ? error.message : error);
-    return NextResponse.json(
-      { error: "La ricerca indirizzi è temporaneamente indisponibile." },
-      { status: 503 },
-    );
+    const coolingDown = nominatimBreaker.isOpen() && photonBreaker.isOpen();
+    return unavailableAnswer(new SearchUnavailable(
+      coolingDown ? "providers_cooling_down" : "providers_unavailable",
+      coolingDown ? Math.min(nominatimBreaker.retryAfterMs(), photonBreaker.retryAfterMs()) : 0,
+    ));
   }
+}
+
+function freshCached(key: string) {
+  const entry = geocodeCache.get(key);
+  return entry && (Date.now() - entry.timestamp) < CACHE_TTL_MS && entry.results.length > 0 ? entry : undefined;
+}
+
+function remember(key: string, results: GeocodeApiResponseItem[]) {
+  if (geocodeCache.size >= CACHE_MAX_ENTRIES) {
+    const oldestKey = geocodeCache.keys().next().value;
+    if (oldestKey) geocodeCache.delete(oldestKey);
+  }
+  geocodeCache.set(key, { timestamp: Date.now(), results });
+}
+
+/** A provider answered and found nothing. Short and private: a prefix being typed changes soon. */
+function emptyAnswer() {
+  return NextResponse.json({ results: [] }, { headers: { "Cache-Control": "private, max-age=60" } });
+}
+
+/** No provider answered. Never cached; `retryable` and `reason` let the page say so honestly. */
+function unavailableAnswer(error: SearchUnavailable) {
+  const headers: Record<string, string> = { "Cache-Control": "no-store" };
+  if (error.retryAfterMs > 0) headers["Retry-After"] = String(Math.ceil(error.retryAfterMs / 1000));
+  return NextResponse.json(
+    { error: "La ricerca indirizzi è temporaneamente indisponibile.", retryable: true, reason: error.reason },
+    { status: 503, headers },
+  );
 }

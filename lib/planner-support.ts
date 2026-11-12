@@ -2,6 +2,8 @@
 
 export const ADDRESS_SEARCH_TIMEOUT_MS = 12_000;
 export const AUTOCOMPLETE_DEBOUNCE_MS = 320;
+/** Phase 4.35: an address-search request still unanswered after this is reported as failed. */
+export const AUTOCOMPLETE_CLIENT_TIMEOUT_MS = 8_000;
 export const MIN_AUTOCOMPLETE_CHARS = 3;
 export const ROUTE_TIMEOUT_MS = 20_000;
 export const REROUTE_TIMEOUT_MS = 8_000;

@@ -390,6 +390,32 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .address-suggestion-option.active, .address-suggestion-option:hover { background: var(--p43-selected-surface); }
 .address-suggestion-option b { display: block; font-size: var(--t-sm); font-weight: 600; line-height: 1.25; }
 .address-suggestion-option small { display: block; color: var(--muted); font-size: var(--t-xs); line-height: 1.2; }
+/* Phase 4.35: the list's own status line (searching, partial answer, failure, nothing found). */
+.address-suggestion-list { display: flex; flex-direction: column; }
+.address-search-status {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px var(--space-3);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: var(--t-xs);
+  line-height: 1.3;
+}
+.address-search-status:first-child { border-top: 0; }
+.address-search-status > span:not(.spinner) { flex: 1; }
+.address-search-status.unavailable { color: var(--ink); }
+.address-search-status button {
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--white);
+  color: var(--ink);
+  font-size: var(--t-xs);
+  font-weight: 600;
+}
 .route-field {
   position: relative;
   min-height: 52px;

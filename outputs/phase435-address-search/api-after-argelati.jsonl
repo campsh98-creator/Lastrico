@@ -1,0 +1,7 @@
+{"q":"Via Filippo Argelati","purpose":"search","status":200,"ms":555,"retryAfter":null,"cache":"public, max-age=3600, s-maxage=86400","count":2,"first":"Via Filippo Argelati, Navigli · 20143 · Milano","reason":null}
+{"q":"Via Filippo Argelati, Milano","purpose":"search","status":200,"ms":125,"retryAfter":null,"cache":"public, max-age=3600, s-maxage=86400","count":2,"first":"Via Filippo Argelati, Navigli · 20143 · Milano","reason":null}
+{"q":"Filippo Argelati","purpose":"search","status":200,"ms":738,"retryAfter":null,"cache":"public, max-age=3600, s-maxage=86400","count":2,"first":"Via Filippo Argelati, Navigli · 20143 · Milano","reason":null}
+{"q":"Argelati","purpose":"search","status":200,"ms":95,"retryAfter":null,"cache":"public, max-age=3600, s-maxage=86400","count":6,"first":"Cascina Magolfa, Navigli · Milano","reason":null}
+{"q":"Via Filippo Argelati 12","purpose":"search","status":200,"ms":647,"retryAfter":null,"cache":"public, max-age=3600, s-maxage=86400","count":1,"first":"Via Filippo Argelati 12, Navigli · 20143 · Milano","reason":null}
+{"q":"Via Filippo Argelati","purpose":"suggest","status":200,"ms":26,"retryAfter":null,"cache":"public, max-age=3600, s-maxage=86400","count":2,"first":"Via Filippo Argelati, Navigli · 20143 · Milano","reason":null}
+{"q":"Argelati","purpose":"suggest","status":200,"ms":10,"retryAfter":null,"cache":"public, max-age=3600, s-maxage=86400","count":6,"first":"Cascina Magolfa, Navigli · Milano","reason":null}

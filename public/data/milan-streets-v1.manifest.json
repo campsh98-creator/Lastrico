@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "file": "milan-streets-v1.json",
+  "sha256": "7a312924d460d9a7e15f1a526587b7786f73f776658d9441ede5e3f1e6ad778c",
+  "bytes": 263459,
+  "license": "ODbL-1.0",
+  "attribution": "© OpenStreetMap contributors",
+  "source": {
+    "file": "data/sources/milan-street-names.osm.json.gz",
+    "sha256": "4a9e5208f03dd5406e6a673dc1bec519bef78da88b2eeb9ead3242bcb190e505",
+    "osmBase": "2026-11-12T15:37:30Z",
+    "retrievedAt": "2026-11-12T15:39:40.377Z"
+  },
+  "counts": {
+    "streets": 4668,
+    "distinctNames": 4644,
+    "quarters": 211,
+    "withVariants": 286
+  },
+  "method": "scripts/osm/build-milan-street-index.mjs (deterministic)"
+}
