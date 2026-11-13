@@ -1,0 +1,22 @@
+=== Lastrico Post-Deployment Smoke Test on https://lastrico-pilot.campsh.workers.dev ===
+
+• Checking: Homepage HTTP 200 and HTML headers... PASS (186 ms)
+• Checking: Web App Manifest... PASS (44 ms)
+• Checking: App assets and service worker... PASS (1117 ms)
+• Checking: Internal tools and experiments are not served... PASS (225 ms)
+• Checking: Bad routing input is refused cleanly... PASS (479 ms)
+• Checking: Autocomplete: 'Porta Romana' (Milan)... PASS (315 ms)
+• Checking: Autocomplete: 'Largo Promessi Sposi' (Southern Milan Expansion)... PASS (252 ms)
+• Checking: Autocomplete: 'Via Marina' (Roccella Ionica)... PASS (54 ms)
+• Checking: Route: Porta Romana -> Promessi Sposi (car)... PASS (4741 ms)
+• Checking: Route: Porta Romana -> Promessi Sposi (motorcycle)... PASS (4344 ms)
+• Checking: Route: Porta Romana -> Promessi Sposi (bicycle)... PASS (4758 ms)
+• Checking: Anti-Pavé Alternative: Castello -> Missori (Bicycle)... PASS (2619 ms)
+• Checking: Anti-Pavé Alternative: Duomo -> Centrale (Motorcycle)... PASS (1915 ms)
+• Checking: Anti-Pavé Alternative: Duomo -> Centrale (Bicycle)... PASS (1659 ms)
+• Checking: Navigation Route Request (isNavigation=1)... PASS (2213 ms)
+• Checking: Roccella Ionica Route (car)... PASS (436 ms)
+• Checking: Roccella Ionica Route (motorcycle)... PASS (134 ms)
+• Checking: Roccella Ionica Route (bicycle)... PASS (148 ms)
+
+=== Summary: 18 Passed, 0 Failed ===

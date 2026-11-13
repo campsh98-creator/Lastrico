@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "provider": "OpenStreetMap via Overpass API",
+  "license": "ODbL-1.0",
+  "licenseUrl": "https://opendatacommons.org/licenses/odbl/1.0/",
+  "attribution": "© OpenStreetMap contributors",
+  "selection": "Named highway ways inside the Comune di Milano (admin_level 8), with geometry; named suburb/quarter/neighbourhood nodes, with position.",
+  "query": "[out:json][timeout:180];\narea[\"boundary\"=\"administrative\"][\"admin_level\"=\"8\"][\"name\"=\"Milano\"]->.comune;\nway(area.comune)[\"highway\"][\"name\"];\nout tags geom qt;\nnode(area.comune)[\"place\"~\"^(suburb|quarter|neighbourhood)$\"][\"name\"];\nout qt;",
+  "endpoint": "https://overpass-api.de/api/interpreter",
+  "retrievedAt": "2026-11-12T15:39:40.377Z",
+  "serverDate": "Thu, 12 Nov 2026 15:39:35 GMT",
+  "osmBase": "2026-11-12T15:37:30Z",
+  "rawSha256": "9bbc3689260991d7de020836cbfc1726a6f47b963b88a93fd377e4d986631dd4",
+  "rawBytes": 21332491,
+  "file": "milan-street-names.osm.json.gz",
+  "sha256": "4a9e5208f03dd5406e6a673dc1bec519bef78da88b2eeb9ead3242bcb190e505",
+  "gzipSha256": "0c13db433f877cb357a695f8a776f7286f23f0496aa1e47b3a9c30d6ce6119dd",
+  "gzipBytes": 1512446,
+  "counts": {
+    "ways": 31935,
+    "places": 211
+  }
+}

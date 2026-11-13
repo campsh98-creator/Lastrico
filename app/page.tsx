@@ -93,6 +93,7 @@ import {
 import {
   ADDRESS_SEARCH_TIMEOUT_MS,
   AddressChoiceNeeded,
+  AUTOCOMPLETE_CLIENT_TIMEOUT_MS,
   AUTOCOMPLETE_DEBOUNCE_MS,
   clearStoredPlan,
   CURRENT_POSITION_LABEL,
@@ -120,6 +121,26 @@ import {
   vehicleCameraPadding,
   visibleMapPadding,
 } from "@/lib/map-appearance";
+import {
+  AddressSearchUnavailable,
+  geocodeRequestUrl,
+  hasHouseNumber,
+  inlineSearchStatus,
+  mergeAddressResults,
+  readGeocodeAnswer,
+  searchPurposeFor,
+  type InlineSearchStatus,
+  type SearchPurpose,
+} from "@/lib/address-search";
+import {
+  confidentStreet,
+  loadStreetIndex,
+  parseStreetQuery,
+  searchStreets,
+  streetOnly,
+  type StreetIndex,
+  type StreetSuggestion,
+} from "@/lib/street-index";
 import { Dialog } from "@/components/ui/Dialog";
 import { directionIcon, Icon, type IconName } from "@/components/ui/Icon";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -178,6 +199,12 @@ type GeocodeResult = LocationChoice & {
   primary: string;
   secondary: string;
   type: string;
+  /** Phase 4.35: a row of the local Milan street index (street-level, see lib/street-index.ts). */
+  source?: "street-index";
+  precision?: "street";
+  streetName?: string;
+  quarter?: string | null;
+  houseNumber?: string;
 };
 
 type RouteApiResponse = {
@@ -501,6 +528,8 @@ export default function Home() {
   const autocompleteControllerRef = useRef<AbortController | null>(null);
   const focusedAddressFieldRef = useRef<"start" | "end" | null>(null);
   const geocodeCacheRef = useRef<Map<string, { timestamp: number; results: GeocodeResult[] }>>(new Map());
+  // Phase 4.35: the local Milan street index, loaded on the first address focus in Milan.
+  const streetIndexRef = useRef<StreetIndex | null>(null);
   const rerouteFailuresRef = useRef(0);
   // Phase 4.31: the routing objective of the journey, fixed at start; reroutes never change it.
   const journeyObjectiveRef = useRef<RouteKind>("safe");
@@ -514,6 +543,10 @@ export default function Home() {
   const [inlineSuggestions, setInlineSuggestions] = useState<GeocodeResult[]>([]);
   const [inlineSuggestionTarget, setInlineSuggestionTarget] = useState<"start" | "end" | null>(null);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  // Phase 4.35: what the suggestion list says while searching or after a failure, and which field
+  // shows a spinner. A failure is never silent.
+  const [inlineStatus, setInlineStatus] = useState<{ target: "start" | "end"; status: InlineSearchStatus; query: string } | null>(null);
+  const [autocompleteLoadingTarget, setAutocompleteLoadingTarget] = useState<"start" | "end" | null>(null);
   const [transportMode, setTransportMode] = useState<TransportMode>("car");
   const [avoidance, setAvoidance] = useState<Avoidance>("strong");
   const [maxExtraMinutes, setMaxExtraMinutes] = useState<number | null>(null);
@@ -1068,6 +1101,7 @@ export default function Home() {
       setInlineSuggestions([]);
       setInlineSuggestionTarget(null);
       setActiveSuggestionIndex(-1);
+      setInlineStatus(null);
     };
     document.addEventListener("pointerdown", handleOutsidePointerDown);
     return () => document.removeEventListener("pointerdown", handleOutsidePointerDown);
@@ -1761,9 +1795,44 @@ export default function Home() {
     setInlineSuggestions([]);
     setInlineSuggestionTarget(null);
     setActiveSuggestionIndex(-1);
+    setInlineStatus(null);
+    setAutocompleteLoadingTarget(null);
   }
 
-  async function runAutocomplete(target: "start" | "end", query: string) {
+  /** Phase 4.35: loads the Milan street index once; a failed load is retried on the next focus. */
+  function ensureStreetIndex(): Promise<StreetIndex | null> {
+    if (areaIdRef.current !== "milan") return Promise.resolve(null);
+    if (streetIndexRef.current) return Promise.resolve(streetIndexRef.current);
+    return loadStreetIndex()
+      .then((index) => {
+        streetIndexRef.current = index;
+        return index;
+      })
+      .catch(() => null);
+  }
+
+  /** Street rows for what was typed, from the local index; none outside Milan or before it loads. */
+  function localStreets(text: string, areaIdForText: PilotAreaId): StreetSuggestion[] {
+    const index = streetIndexRef.current;
+    if (areaIdForText !== "milan" || !index) return [];
+    return searchStreets(index, text, { limit: 6 });
+  }
+
+  function showInline(target: "start" | "end", results: GeocodeResult[], status: InlineSearchStatus | null, query: string) {
+    setInlineSuggestionTarget(results.length || status ? target : null);
+    setInlineSuggestions(results);
+    setActiveSuggestionIndex(-1);
+    setInlineStatus(status ? { target, status, query } : null);
+  }
+
+  /**
+   * Phase 4.35: one search for a field. Local streets show at once; the provider answer is merged
+   * in when it arrives. Typing (`explicit` false) never reaches Nominatim in Milan; Enter, the
+   * search button and Riprova do. Every outcome ends in a list, a message or both: a failed or
+   * empty provider answer is said, never swallowed. A stale answer (other request, other text,
+   * other field or area, field confirmed, route being calculated) is dropped.
+   */
+  async function runAutocomplete(target: "start" | "end", query: string, { explicit = false } = {}) {
     const trimmed = query.trim();
     if (trimmed.length < MIN_AUTOCOMPLETE_CHARS) return;
     const requestId = autocompleteRequestIdRef.current + 1;
@@ -1772,11 +1841,17 @@ export default function Home() {
     const controller = new AbortController();
     autocompleteControllerRef.current = controller;
     const requestedArea = areaIdRef.current;
-    try {
-      const results = await fetchAddresses(trimmed, controller.signal);
+    // A request that hangs (lost mobile connection) ends as a failure the list can say, instead of
+    // "Cerco…" forever. The server answers within its own provider deadlines (≤ 4.3 s).
+    let timedOut = false;
+    const timer = window.setTimeout(() => {
+      timedOut = true;
+      controller.abort(new DOMException("Ricerca scaduta", "TimeoutError"));
+    }, AUTOCOMPLETE_CLIENT_TIMEOUT_MS);
+    const stillCurrent = () => {
       const currentText = target === "start" ? startTextRef.current : endTextRef.current;
       const currentLocation = target === "start" ? startLocationRef.current : (endLocationRef.current ?? endLocation);
-      if (!shouldApplyAutocompleteResponse({
+      return (timedOut || !controller.signal.aborted) && shouldApplyAutocompleteResponse({
         activeRequestId: autocompleteRequestIdRef.current,
         responseRequestId: requestId,
         activeAreaId: areaIdRef.current,
@@ -1787,23 +1862,33 @@ export default function Home() {
         requestedQuery: trimmed,
         fieldConfirmed: isConfirmedAddressField(currentText, currentLocation),
         isCalculating: loadingRef.current,
-      })) {
-        return;
-      }
-      setInlineSuggestionTarget(target);
-      setInlineSuggestions(results);
-      setActiveSuggestionIndex(-1);
-    } catch {
-      // Do not surface premature errors while the user is still typing.
-      if (autocompleteRequestIdRef.current === requestId) {
-        setInlineSuggestions([]);
-        setInlineSuggestionTarget(null);
-        setActiveSuggestionIndex(-1);
-      }
+      });
+    };
+    await ensureStreetIndex();
+    if (!stillCurrent()) {
+      window.clearTimeout(timer);
+      return;
+    }
+    const local = localStreets(trimmed, requestedArea);
+    const { houseNumber } = parseStreetQuery(trimmed);
+    const areaName = PILOT_AREAS[requestedArea].name;
+    showInline(target, mergeAddressResults(local, [], { houseNumber }), inlineSearchStatus({ query: trimmed, areaName, shown: local.length, remote: "pending", explicit }), trimmed);
+    if (explicit) setAutocompleteLoadingTarget(target);
+    try {
+      const remote = await requestAddresses(trimmed, controller.signal, searchPurposeFor(requestedArea, explicit));
+      if (!stillCurrent()) return;
+      const merged = mergeAddressResults(local, remote, { houseNumber });
+      showInline(target, merged, inlineSearchStatus({ query: trimmed, areaName, shown: merged.length, remote: remote.length ? "answered" : "empty", explicit }), trimmed);
+    } catch (error) {
+      if (!stillCurrent()) return;
+      const retryable = error instanceof AddressSearchUnavailable ? error.retryable : true;
+      showInline(target, mergeAddressResults(local, [], { houseNumber }), inlineSearchStatus({ query: trimmed, areaName, shown: local.length, remote: "failed", retryable, explicit }), trimmed);
     } finally {
+      window.clearTimeout(timer);
       if (autocompleteControllerRef.current === controller) {
         autocompleteControllerRef.current = null;
       }
+      if (autocompleteRequestIdRef.current === requestId) setAutocompleteLoadingTarget(null);
     }
   }
 
@@ -1813,7 +1898,11 @@ export default function Home() {
       window.clearTimeout(autocompleteTimerRef.current);
       autocompleteTimerRef.current = null;
     }
+    // A new keystroke supersedes the request in flight: its answer can no longer be applied.
+    autocompleteRequestIdRef.current += 1;
     autocompleteControllerRef.current?.abort();
+    autocompleteControllerRef.current = null;
+    setAutocompleteLoadingTarget(null);
     focusedAddressFieldRef.current = target;
     if (target === "start") {
       const resetStart: LocationChoice = { label: "", coordinate: startLocationRef.current.coordinate };
@@ -1835,16 +1924,21 @@ export default function Home() {
       setInlineSuggestions([]);
       setInlineSuggestionTarget(null);
       setActiveSuggestionIndex(-1);
+      setInlineStatus(null);
       return;
     }
-    // Instant cache check: if client cache already has results for this exact query, display them immediately
+    // Instant answer from what is already here: Milan streets from the local index, plus provider
+    // rows already fetched for this exact text. The provider is asked after the debounce.
     const requestedArea = areaIdRef.current;
-    const cacheKey = `${requestedArea}:${trimmed.toLocaleLowerCase("it")}`;
-    const cached = geocodeCacheRef.current.get(cacheKey);
-    if (cached && (Date.now() - cached.timestamp) < 300_000 && cached.results.length > 0) {
-      setInlineSuggestionTarget(target);
-      setInlineSuggestions(cached.results);
-      setActiveSuggestionIndex(-1);
+    const local = localStreets(trimmed, requestedArea);
+    const cached = geocodeCacheRef.current.get(`${requestedArea}:${searchPurposeFor(requestedArea, false) ?? "legacy"}:${trimmed.toLocaleLowerCase("it")}`);
+    const cachedRemote = cached && (Date.now() - cached.timestamp) < 300_000 ? cached.results : [];
+    const instant = mergeAddressResults(local, cachedRemote, { houseNumber: parseStreetQuery(trimmed).houseNumber });
+    if (instant.length) {
+      showInline(target, instant, null, trimmed);
+    } else if (inlineSuggestionTarget === target) {
+      // Rows for older text must not stay under the new text while the search runs.
+      showInline(target, [], null, trimmed);
     }
     autocompleteTimerRef.current = window.setTimeout(() => {
       autocompleteTimerRef.current = null;
@@ -1852,7 +1946,50 @@ export default function Home() {
     }, AUTOCOMPLETE_DEBOUNCE_MS);
   }
 
+  /**
+   * Phase 4.35: a street-index row with a typed civic number is street-level. Choosing it runs one
+   * explicit search for that number; when the provider has it, its exact position is used, and
+   * otherwise the street's own point, said plainly in the status line.
+   */
+  async function resolveHouseNumber(target: "start" | "end", result: GeocodeResult) {
+    const houseNumber = result.houseNumber;
+    const streetName = result.streetName ?? result.primary;
+    if (!houseNumber) return;
+    const requestId = autocompleteRequestIdRef.current + 1;
+    autocompleteRequestIdRef.current = requestId;
+    autocompleteControllerRef.current?.abort();
+    const controller = new AbortController();
+    autocompleteControllerRef.current = controller;
+    const typed = target === "start" ? startTextRef.current : endTextRef.current;
+    setAutocompleteLoadingTarget(target);
+    setInlineStatus({ target, status: { kind: "searching", message: `Cerco il civico ${houseNumber}…`, retry: false }, query: typed.trim() });
+    let exact: GeocodeResult | null = null;
+    try {
+      const answers = await requestAddresses(`${streetName} ${houseNumber}`, controller.signal, "search");
+      exact = answers.find((answer) => hasHouseNumber(answer, houseNumber)
+        && answer.primary.toLocaleLowerCase("it").includes(streetName.toLocaleLowerCase("it"))) ?? null;
+    } catch {
+      exact = null;
+    }
+    // Edited, cancelled or superseded meanwhile: the person has moved on.
+    if (controller.signal.aborted || autocompleteRequestIdRef.current !== requestId
+      || (target === "start" ? startTextRef.current : endTextRef.current) !== typed) return;
+    if (autocompleteControllerRef.current === controller) autocompleteControllerRef.current = null;
+    setAutocompleteLoadingTarget(null);
+    if (exact) {
+      chooseAddress(target, exact);
+      return;
+    }
+    const street = streetOnly(result as StreetSuggestion);
+    chooseAddress(target, street);
+    setStatus(`Civico ${houseNumber} non trovato: uso ${streetName}, senza numero civico.`);
+  }
+
   function chooseAddress(target: "start" | "end", result: GeocodeResult) {
+    if (result.source === "street-index" && result.houseNumber) {
+      void resolveHouseNumber(target, result);
+      return;
+    }
     const label = result.label;
     const location = { label, coordinate: result.coordinate };
     const shouldContinue = pendingCalculationRef.current;
@@ -1919,23 +2056,56 @@ export default function Home() {
     setStatus("Ricerca indirizzo chiusa.");
   }
 
-  async function fetchAddresses(text: string, signal?: AbortSignal) {
+  /**
+   * Phase 4.35: one provider request through /api/geocode. Returns the rows in the area (possibly
+   * none); throws AddressSearchUnavailable when no answer could be had. Non-empty answers are kept
+   * five minutes per area, purpose and text.
+   */
+  async function requestAddresses(text: string, signal: AbortSignal | undefined, purpose: SearchPurpose | null): Promise<GeocodeResult[]> {
     const trimmed = text.trim();
     if (trimmed.length < 3) throw new PlannerMessage("Inserisci almeno tre caratteri.");
     const requestedArea = areaIdRef.current;
-    const cacheKey = `${requestedArea}:${trimmed.toLocaleLowerCase("it")}`;
+    const cacheKey = `${requestedArea}:${purpose ?? "legacy"}:${trimmed.toLocaleLowerCase("it")}`;
     const cached = geocodeCacheRef.current.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < 300_000 && cached.results.length > 0) {
       return cached.results;
     }
-    const response = await fetch(`/api/geocode?q=${encodeURIComponent(trimmed)}&area=${requestedArea}`, { signal });
-    const data = await readApiJson<{ results?: GeocodeResult[]; error?: string }>(response);
+    const response = await fetch(geocodeRequestUrl(trimmed, requestedArea, purpose), { signal });
+    const answers = await readGeocodeAnswer(response);
     if (signal?.aborted || requestedArea !== areaIdRef.current) throw new DOMException("Ricerca superata", "AbortError");
-    if (!response.ok) throw new PlannerMessage(data.error ?? "La ricerca indirizzi non è disponibile. Riprova.");
-    const results = (data.results ?? []).filter((result) => coordinateInArea(result.coordinate, PILOT_AREAS[requestedArea]));
-    if (!results.length) throw new PlannerMessage(`Non trovo “${trimmed}” a ${PILOT_AREAS[requestedArea].name}.`);
-    geocodeCacheRef.current.set(cacheKey, { timestamp: Date.now(), results });
+    const results = answers.filter((result) => coordinateInArea(result.coordinate, PILOT_AREAS[requestedArea]));
+    if (results.length) geocodeCacheRef.current.set(cacheKey, { timestamp: Date.now(), results });
     return results;
+  }
+
+  /**
+   * Explicit lookup for a typed address (Calcola without a chosen suggestion). Provider answers
+   * first, as before; in Milan the local street index answers when the providers cannot or find
+   * nothing, so a street is still found during an outage.
+   */
+  async function fetchAddresses(text: string, signal?: AbortSignal) {
+    const trimmed = text.trim();
+    if (trimmed.length < 3) throw new PlannerMessage("Inserisci almeno tre caratteri.");
+    const requestedArea = areaIdRef.current;
+    let failure: unknown = null;
+    try {
+      const results = await requestAddresses(trimmed, signal, searchPurposeFor(requestedArea, true));
+      if (results.length) return results;
+    } catch (error) {
+      if (signal?.aborted || (error instanceof DOMException && error.name === "AbortError")) throw error;
+      failure = error;
+    }
+    if (requestedArea === "milan") {
+      await ensureStreetIndex();
+      if (signal?.aborted) throw new DOMException("Ricerca superata", "AbortError");
+      const local = localStreets(trimmed, requestedArea).map((street) => (street.houseNumber ? streetOnly(street) : street));
+      const confident = confidentStreet(local);
+      if (confident) return [confident];
+      if (local.length) return local;
+    }
+    if (failure instanceof AddressSearchUnavailable) throw new PlannerMessage(failure.message);
+    if (failure) throw failure;
+    throw new PlannerMessage(`Non trovo “${trimmed}” a ${PILOT_AREAS[requestedArea].name}.`);
   }
 
   async function searchAddresses(target: "start" | "end") {
@@ -1944,8 +2114,16 @@ export default function Home() {
       setStatus(`Inserisci ${target === "start" ? "la partenza" : "la destinazione"}.`);
       return;
     }
+    if (text.trim().length < MIN_AUTOCOMPLETE_CHARS) {
+      showInline(target, [], { kind: "empty", message: "Inserisci almeno tre caratteri.", retry: false }, text.trim());
+      return;
+    }
     focusedAddressFieldRef.current = target;
-    await runAutocomplete(target, text.trim());
+    if (autocompleteTimerRef.current !== null) {
+      window.clearTimeout(autocompleteTimerRef.current);
+      autocompleteTimerRef.current = null;
+    }
+    await runAutocomplete(target, text.trim(), { explicit: true });
   }
 
   /** Editing a field cancels its search, so a late answer cannot open a list for old text. */
@@ -2292,11 +2470,72 @@ export default function Home() {
 
   function handleAddressInputFocus(target: "start" | "end") {
     focusedAddressFieldRef.current = target;
+    void ensureStreetIndex();
     if (inlineSuggestionTarget && inlineSuggestionTarget !== target) {
       setInlineSuggestions([]);
       setInlineSuggestionTarget(null);
       setActiveSuggestionIndex(-1);
+      setInlineStatus(null);
     }
+  }
+
+  /**
+   * The suggestion list of one field: the rows, then what the search says (searching, partial or
+   * failed provider answer, nothing found). "Riprova" really runs the search again.
+   */
+  function renderAddressSuggestions(target: "start" | "end") {
+    if (addressSearchTarget) return null;
+    const rows = inlineSuggestionTarget === target ? inlineSuggestions : [];
+    const status = inlineStatus?.target === target ? inlineStatus.status : null;
+    if (!rows.length && !status) return null;
+    return (
+      <div className="address-suggestions" data-testid="address-suggestions" data-target={target}>
+        {rows.length > 0 && (
+          <div
+            id={`${target}-address-results`}
+            className="address-suggestion-list"
+            role="listbox"
+            aria-label={target === "start" ? "Indirizzi di partenza" : "Indirizzi di destinazione"}
+          >
+            {rows.map((result, index) => (
+              <button
+                type="button"
+                role="option"
+                id={`${target}-suggestion-${index}`}
+                aria-selected={activeSuggestionIndex === index}
+                key={result.id}
+                className={`address-suggestion-option ${activeSuggestionIndex === index ? "active" : ""}`}
+                data-testid={`address-suggestion-${index}`}
+                data-source={result.source ?? "provider"}
+                onPointerDown={(event) => event.preventDefault()}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => chooseAddress(target, result)}
+              >
+                <b>{result.primary}</b>
+                <small>{result.secondary || area.name}</small>
+              </button>
+            ))}
+          </div>
+        )}
+        {status && (
+          <div className={`address-search-status ${status.kind}`} role="status" data-testid="address-search-status" data-kind={status.kind}>
+            {status.kind === "searching" && <span className="spinner" aria-hidden="true" />}
+            <span>{status.message}</span>
+            {status.retry && (
+              <button
+                type="button"
+                data-testid="address-search-retry"
+                onPointerDown={(event) => event.preventDefault()}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => void searchAddresses(target)}
+              >
+                Riprova
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    );
   }
 
   function handleAddressInputKeyDown(target: "start" | "end", event: React.KeyboardEvent<HTMLInputElement>) {
@@ -2312,11 +2551,12 @@ export default function Home() {
       setActiveSuggestionIndex((prev) => (prev <= 0 ? inlineSuggestions.length - 1 : prev - 1));
       return;
     }
-    if (hasInline && event.key === "Escape") {
+    if ((hasInline || inlineStatus?.target === target) && event.key === "Escape") {
       event.preventDefault();
       setInlineSuggestions([]);
       setInlineSuggestionTarget(null);
       setActiveSuggestionIndex(-1);
+      setInlineStatus(null);
       return;
     }
     if (event.key === "Enter") {
@@ -2328,10 +2568,7 @@ export default function Home() {
           return;
         }
       }
-      const currentText = target === "start" ? startTextRef.current : endTextRef.current;
-      if (currentText.trim().length >= MIN_AUTOCOMPLETE_CHARS) {
-        void runAutocomplete(target, currentText.trim());
-      }
+      void searchAddresses(target);
     }
   }
 
@@ -3058,39 +3295,12 @@ export default function Home() {
                           onClick={startText.trim() ? () => void searchAddresses("start") : useCurrentLocation}
                           aria-label={startText.trim() ? "Cerca indirizzo di partenza" : "Usa posizione GPS"}
                         >
-                          {addressSearchLoading && addressSearchTarget === "start"
+                          {(addressSearchLoading && addressSearchTarget === "start") || autocompleteLoadingTarget === "start"
                             ? <span className="spinner" aria-hidden="true" />
                             : <Icon name={startText.trim() ? "search" : "locate"} />}
                         </button>
                       </div>
-                      {inlineSuggestionTarget === "start" && inlineSuggestions.length > 0 && !addressSearchTarget && (
-                        <div
-                          id="start-address-results"
-                          className="address-suggestions"
-                          role="listbox"
-                          data-testid="address-suggestions"
-                          data-target="start"
-                          aria-label="Indirizzi di partenza"
-                        >
-                          {inlineSuggestions.map((result, index) => (
-                            <button
-                              type="button"
-                              role="option"
-                              id={`start-suggestion-${index}`}
-                              aria-selected={activeSuggestionIndex === index}
-                              key={result.id}
-                              className={`address-suggestion-option ${activeSuggestionIndex === index ? "active" : ""}`}
-                              data-testid={`address-suggestion-${index}`}
-                              onPointerDown={(event) => event.preventDefault()}
-                              onMouseDown={(event) => event.preventDefault()}
-                              onClick={() => chooseAddress("start", result)}
-                            >
-                              <b>{result.primary}</b>
-                              <small>{result.secondary || area.name}</small>
-                            </button>
-                          ))}
-                        </div>
-                      )}
+                      {renderAddressSuggestions("start")}
                     </div>
                     <button type="button" className="swap-button" onClick={swapLocations} aria-label="Inverti partenza e destinazione" title="Inverti partenza e destinazione" data-testid="swap-locations" disabled={isJourneyActive}>
                       <Icon name="swap" size={18} />
@@ -3118,39 +3328,12 @@ export default function Home() {
                           aria-activedescendant={inlineSuggestionTarget === "end" && activeSuggestionIndex >= 0 ? `end-suggestion-${activeSuggestionIndex}` : undefined}
                         />
                         <button type="button" onClick={() => void searchAddresses("end")} aria-label="Cerca indirizzo di destinazione">
-                          {addressSearchLoading && addressSearchTarget === "end"
+                          {(addressSearchLoading && addressSearchTarget === "end") || autocompleteLoadingTarget === "end"
                             ? <span className="spinner" aria-hidden="true" />
                             : <Icon name="search" />}
                         </button>
                       </div>
-                      {inlineSuggestionTarget === "end" && inlineSuggestions.length > 0 && !addressSearchTarget && (
-                        <div
-                          id="end-address-results"
-                          className="address-suggestions"
-                          role="listbox"
-                          data-testid="address-suggestions"
-                          data-target="end"
-                          aria-label="Indirizzi di destinazione"
-                        >
-                          {inlineSuggestions.map((result, index) => (
-                            <button
-                              type="button"
-                              role="option"
-                              id={`end-suggestion-${index}`}
-                              aria-selected={activeSuggestionIndex === index}
-                              key={result.id}
-                              className={`address-suggestion-option ${activeSuggestionIndex === index ? "active" : ""}`}
-                              data-testid={`address-suggestion-${index}`}
-                              onPointerDown={(event) => event.preventDefault()}
-                              onMouseDown={(event) => event.preventDefault()}
-                              onClick={() => chooseAddress("end", result)}
-                            >
-                              <b>{result.primary}</b>
-                              <small>{result.secondary || area.name}</small>
-                            </button>
-                          ))}
-                        </div>
-                      )}
+                      {renderAddressSuggestions("end")}
                     </div>
                   </div>
                 </div>

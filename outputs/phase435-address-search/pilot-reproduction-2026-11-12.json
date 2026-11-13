@@ -1,0 +1,202 @@
+{
+  "what": "Live reproduction on lastrico-pilot (Phase 4.34, version fe69e630) with `wrangler tail`, 12 November 2026. Only request outcomes and the Worker’s own log lines are kept (no IPs, no headers).",
+  "probe": "Phase A: distinct queries 2.5 s apart. Phase B: typing \"Via Bergognone 12\" at 400 ms per key, the previous request aborted at each key (what the page does), then three new queries.",
+  "directComparison": [
+    {
+      "at": "2026-11-12T15:21:26Z",
+      "pilot": "Via Ripamonti → 503 after 4639 ms",
+      "nominatimDirect": "200 in 974 ms, 2 results",
+      "photonDirect": "timeout after 15 s"
+    },
+    {
+      "at": "2026-11-12T15:22:08Z",
+      "pilot": "Viale Monza → 503 after 4547 ms",
+      "nominatimDirect": "200 in 785 ms, 5 results",
+      "photonDirect": "timeout after 15 s"
+    }
+  ],
+  "events": [
+    {
+      "at": "2026-11-12T15:20:05.409000Z",
+      "query": "Via",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 295,
+      "cpuMs": 4,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:06.198000Z",
+      "query": "Via B",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 368,
+      "cpuMs": 2,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:06.659000Z",
+      "query": "Via Be",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 253,
+      "cpuMs": 2,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:07.011000Z",
+      "query": "Via Ber",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 306,
+      "cpuMs": 1,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:07.408000Z",
+      "query": "Via Berg",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 313,
+      "cpuMs": 4,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:07.820000Z",
+      "query": "Via Bergo",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 320,
+      "cpuMs": 2,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:08.221000Z",
+      "query": "Via Bergog",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 312,
+      "cpuMs": 1,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:08.692000Z",
+      "query": "Via Bergogn",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 239,
+      "cpuMs": 1,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:09.051000Z",
+      "query": "Via Bergogno",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 283,
+      "cpuMs": 1,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:09.424000Z",
+      "query": "Via Bergognon",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 312,
+      "cpuMs": 1,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:09.824000Z",
+      "query": "Via Bergognone",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 315,
+      "cpuMs": 1,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:10.633000Z",
+      "query": "Via Bergognone 1",
+      "outcome": "canceled",
+      "status": null,
+      "wallMs": 314,
+      "cpuMs": 1,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:20:11.045000Z",
+      "query": "Via Bergognone 12",
+      "outcome": "ok",
+      "status": 503,
+      "wallMs": 4251,
+      "cpuMs": 3,
+      "logs": [
+        "[geocode] Nominatim failed for \"Via Bergognone 12\" (milan): Geocoding timed out",
+        "[geocode] Photon fallback failed for \"Via Bergognone 12\" (milan): Photon timed out",
+        "[geocode] Search failed for \"Via Bergognone 12\" (milan): Tutti i servizi di ricerca indirizzi non sono disponibili."
+      ]
+    },
+    {
+      "at": "2026-11-12T15:20:15.500000Z",
+      "query": "Via Tortona",
+      "outcome": "ok",
+      "status": 503,
+      "wallMs": 4251,
+      "cpuMs": 3,
+      "logs": [
+        "[geocode] Nominatim failed for \"Via Tortona\" (milan): Geocoding timed out",
+        "[geocode] Photon fallback failed for \"Via Tortona\" (milan): Photon timed out",
+        "[geocode] Search failed for \"Via Tortona\" (milan): Tutti i servizi di ricerca indirizzi non sono disponibili."
+      ]
+    },
+    {
+      "at": "2026-11-12T15:20:21.898000Z",
+      "query": "Corso Lodi",
+      "outcome": "ok",
+      "status": 503,
+      "wallMs": 4250,
+      "cpuMs": 3,
+      "logs": [
+        "[geocode] Nominatim failed for \"Corso Lodi\" (milan): Geocoding timed out",
+        "[geocode] Photon fallback failed for \"Corso Lodi\" (milan): Photon timed out",
+        "[geocode] Search failed for \"Corso Lodi\" (milan): Tutti i servizi di ricerca indirizzi non sono disponibili."
+      ]
+    },
+    {
+      "at": "2026-11-12T15:20:28.195000Z",
+      "query": "Via Filippo Argelati",
+      "outcome": "ok",
+      "status": 200,
+      "wallMs": 1,
+      "cpuMs": 1,
+      "logs": []
+    },
+    {
+      "at": "2026-11-12T15:21:22.091000Z",
+      "query": "Via Ripamonti",
+      "outcome": "ok",
+      "status": 503,
+      "wallMs": 4251,
+      "cpuMs": 4,
+      "logs": [
+        "[geocode] Nominatim failed for \"Via Ripamonti\" (milan): Geocoding timed out",
+        "[geocode] Photon fallback failed for \"Via Ripamonti\" (milan): Photon timed out",
+        "[geocode] Search failed for \"Via Ripamonti\" (milan): Tutti i servizi di ricerca indirizzi non sono disponibili."
+      ]
+    },
+    {
+      "at": "2026-11-12T15:22:04.446000Z",
+      "query": "Viale Monza",
+      "outcome": "ok",
+      "status": 503,
+      "wallMs": 4251,
+      "cpuMs": 4,
+      "logs": [
+        "[geocode] Nominatim failed for \"Viale Monza\" (milan): Geocoding timed out",
+        "[geocode] Photon fallback failed for \"Viale Monza\" (milan): Photon timed out",
+        "[geocode] Search failed for \"Viale Monza\" (milan): Tutti i servizi di ricerca indirizzi non sono disponibili."
+      ]
+    }
+  ]
+}
