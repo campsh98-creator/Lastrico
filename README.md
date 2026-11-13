@@ -128,7 +128,7 @@ Rome is a local experiment.
 
 **Public pilot:** [lastrico-pilot.campsh.workers.dev](https://lastrico-pilot.campsh.workers.dev).
 - It runs the Phase 4.35 release, Milan and Roccella only, deployed on 13 November 2026 (version
-  `73411cc6`, from PR #14, not yet merged into `main`). That includes continuous anti-pavé
+  `73411cc6`, built from PR #14, now merged into `main`). That includes continuous anti-pavé
   rerouting, surface warnings, traffic signals, ZTL handling, reverse A/B, opt-in local GPS
   diagnostics, and a local Milan street index for address search.
 - It runs on Cloudflare's Workers Free plan, which allows 10 ms of CPU per ordinary request.

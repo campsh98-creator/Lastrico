@@ -2,7 +2,7 @@
 
 - **Data:** 13 novembre 2026, 01:01 UTC.
 - **Ambiente:** Cloudflare Workers Free, `lastrico-pilot.campsh.workers.dev`, solo Milano e Roccella.
-- **Codice:** commit `54bd605` (ramo `fix/phase435-milan-address-search`, PR #14, **non ancora unita a `main`**).
+- **Codice:** commit `54bd605` (ramo `fix/phase435-milan-address-search`, PR #14). La PR è stata unita a `main` dopo il rilascio, il 13 novembre 2026 (unione `df9def9`), con lo stesso codice.
 - **CI GitHub:** "Lint, test and build" superata (run `43329685052`).
 - **Versione pubblicata:** `73411cc6-a8a5-4377-9852-c2ca54438f0b`.
 - **Versione precedente:** `fe69e630-a6ea-4788-a432-1b8c6b885b5f` (Fase 4.34).
@@ -77,7 +77,6 @@ Dati in `pilot-after-release-probe-2026-11-13.jsonl`.
   - Le vie restano trovabili, mentre i luoghi richiedono una ricerca esplicita.
   - La pagina vera invia meno richieste di questa raffica, perché aspetta 320 ms di pausa nella digitazione.
   - Una possibile fase successiva: interrogare Photon direttamente dal telefono anziché dal Worker. È una scelta di prodotto e di policy, da valutare a parte.
-- **La PR #14 non è unita a `main`.** Il pilot gira sul commit `54bd605` del ramo. Finché la PR non è unita, `main` non contiene il codice pubblicato.
 - **Nessun iPhone fisico** ha ancora usato la Fase 4.35. Le verifiche mobile sono in emulazione.
 - **Limiti invariati dalla PR:** copertura dell'indice 98,1 % dello stradario ufficiale; limitatore e interruttori per singola istanza; Roccella usa ancora Nominatim durante la digitazione.
 
