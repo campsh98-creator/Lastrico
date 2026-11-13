@@ -1,7 +1,7 @@
 # Engineering status
 
-Status on 13 November 2026, `main` at `8370bf7`. Phase 4.35 (Milan address search) is on PR #14,
-commit `54bd605`: deployed to the pilot, not yet merged into `main`. This page separates what exists locally from
+Status on 13 November 2026, `main` at `df9def9` (Phase 4.35, PR #14). The pilot runs the same code,
+built from commit `54bd605`. This page separates what exists locally from
 what is online, and fixed defects from open problems. Every claim points to
 the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
@@ -41,7 +41,7 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Field note "wrong pavé warning", with the route's rough section attached (Phase 4.34) | ✅ | ✅ | ✅ | ❌ |
 | Provider User-Agent names the project repository (Phase 4.34) | ✅ | ✅ | — | — |
 | Offline audit of central-Milan signals, signs, one-ways and turn restrictions; 144 points ranked for on-site checks (Phase 4.34, `outputs/phase434/intersection-audit.md`) | ✅ | — | — | ❌ |
-| Milan address search: local index of 4,668 streets, typing without Nominatim, provider breakers, honest list statuses with Riprova (Phase 4.35) | ✅ PR #14 | ✅ | ✅ | ❌ |
+| Milan address search: local index of 4,668 streets, typing without Nominatim, provider breakers, honest list statuses with Riprova (Phase 4.35) | ✅ | ✅ | ✅ | ❌ |
 | "Descrivi la tua preferenza" rule-based preference prompt | ✅ | ✅ | ✅ | — |
 | Moderated community surface reports (D1) | ✅ | ✅ | ✅ | — |
 | Milan coverage | ✅ citywide | ✅ | ✅ | ✅ |
