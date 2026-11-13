@@ -1,6 +1,7 @@
 # Engineering status
 
-Status on 11 November 2026, `main` at `336462d`. This page separates what exists locally from
+Status on 13 November 2026, `main` at `8370bf7`. Phase 4.35 (Milan address search) is on PR #14,
+commit `54bd605`: deployed to the pilot, not yet merged into `main`. This page separates what exists locally from
 what is online, and fixed defects from open problems. Every claim points to
 the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
@@ -8,8 +9,9 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
 **Legend**
 - **Local:** implemented on `main` and covered by unit and integration tests.
-- **Pilot:** included in the public pilot, version `fe69e630` (Phase 4.34 release, Milan and
-  Roccella only, deployed on 11 November 2026). The previous version was `170ac277` (Phase 4.33).
+- **Pilot:** included in the public pilot, version `73411cc6` (Phase 4.35 release of PR #14,
+  commit `54bd605`, Milan and Roccella only, deployed on 13 November 2026). The previous version
+  was `fe69e630` (Phase 4.34).
 - **Emulated:** passed the end-to-end suite in headless Chrome with simulated GPS.
 - **iPhone:** checked on a physical iPhone.
 
@@ -39,6 +41,7 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Field note "wrong pavé warning", with the route's rough section attached (Phase 4.34) | ✅ | ✅ | ✅ | ❌ |
 | Provider User-Agent names the project repository (Phase 4.34) | ✅ | ✅ | — | — |
 | Offline audit of central-Milan signals, signs, one-ways and turn restrictions; 144 points ranked for on-site checks (Phase 4.34, `outputs/phase434/intersection-audit.md`) | ✅ | — | — | ❌ |
+| Milan address search: local index of 4,668 streets, typing without Nominatim, provider breakers, honest list statuses with Riprova (Phase 4.35) | ✅ PR #14 | ✅ | ✅ | ❌ |
 | "Descrivi la tua preferenza" rule-based preference prompt | ✅ | ✅ | ✅ | — |
 | Moderated community surface reports (D1) | ✅ | ✅ | ✅ | — |
 | Milan coverage | ✅ citywide | ✅ | ✅ | ✅ |
@@ -62,7 +65,7 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | **False reroutes** (GPS multipath, loop-shaped starts) | Single noisy fixes counted as leaving the route; a defect introduced in 4.29 at loop starts. | Net-displacement and course-consistency checks, and progress preference at loop starts. Regression tests are in `tests/phase431-navigation.test.mjs`. |
 | **Arrow lag and jumps** (field case A) | The pilot moves the marker one fix at a time, with no fusion. | GPS fusion and interpolated motion (Phases 4.29 and 4.31). The browser lag fell from 9.0 m to 2.5–3.7 m. |
 | **Re-centring did not recover a stalled GPS** (field case C) | Probably a GPS watch that iOS had stopped delivering. This is unconfirmed without a trace; a failed Worker reroute is the other candidate. | The button now restarts the GPS watch when the last fix is older than 5 s. The field-test trace now records each reroute's reason and result. |
-| **Milan address search froze after repeated edits; "Via Filippo Argelati" not found** (field report, Microsoft Edge, 12 November) | 1. The Nominatim rate limiter chained every call on one promise shared across requests. A request cancelled by Workers when its client aborted (each keystroke) never settled its link, so every later Nominatim lookup in that isolate timed out for minutes. Reproduced on the pilot with `wrangler tail`. 2. Photon, the fallback, was timing out at the same time. 3. The page swallowed every failure, so a 503 looked like "address not found". 4. Typing used Nominatim, against its usage policy. | **Local, Phase 4.35, not deployed.** <ul><li>Fetcher spacing kept in plain numbers, with fail-fast; provider breakers.</li><li>Typing never reaches Nominatim (`purpose=suggest`).</li><li>A local index of 4,668 Milan streets from OSM, served as a static asset.</li><li>Honest list statuses with Riprova.</li></ul> Measured: 98.1 % of the Comune's street directory found in the top 5; 50/50 browser edits under injected faults, against 17 silent failures on the pilot frontend. Evidence: `outputs/phase435-address-search/`. |
+| **Milan address search froze after repeated edits; "Via Filippo Argelati" not found** (field report, Microsoft Edge, 12 November) | 1. The Nominatim rate limiter chained every call on one promise shared across requests. A request cancelled by Workers when its client aborted (each keystroke) never settled its link, so every later Nominatim lookup in that isolate timed out for minutes. Reproduced on the pilot with `wrangler tail`. 2. Photon, the fallback, was timing out at the same time. 3. The page swallowed every failure, so a 503 looked like "address not found". 4. Typing used Nominatim, against its usage policy. | **Pilot, Phase 4.35 (`73411cc6`, 13 November 2026).** <ul><li>Fetcher spacing kept in plain numbers, with fail-fast; provider breakers.</li><li>Typing never reaches Nominatim (`purpose=suggest`).</li><li>A local index of 4,668 Milan streets from OSM, served as a static asset.</li><li>Honest list statuses with Riprova.</li></ul> Measured: 98.1 % of the Comune's street directory found in the top 5; 50/50 browser edits under injected faults, against 17 silent failures on the pilot frontend. On the pilot after the release: the same typing burst that froze 4.34, then new searches answered 200 in 0.3–1 s; 50/50 and 10/10 (live providers) browser edits. Evidence: `outputs/phase435-address-search/`, report `outputs/phase435-milan-release-report.md`. |
 | **Routing CPU and memory peaks** | A brute-force corridor comparison (59 % of CPU), and all 117 Milan tiles expanded in memory (107 MB, against a 128 MB isolate limit). | A spatial grid and per-request caching (same results), plus at most 64 expanded tiles. Median CPU per request fell from 20 to 12 ms, total CPU by 50 %, and memory to 76 MB. Report: `outputs/phase430-worker-reliability-report.md`. |
 
 ## 3. Open problems
@@ -110,6 +113,11 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
    - Travel times have no live traffic.
    - FOSSGIS Valhalla, Nominatim and OpenFreeMap are rate-limited community services.
    - The reroute surface-aware search adds one provider call, about 1 s.
+   - **Photon throttles the pilot's address suggestions (Phase 4.35).** On 13 November, after
+     about nine suggestion requests in four seconds, Photon answered the Worker HTTP 503, while
+     it answered direct calls normally. The breaker then serves the Milan street index alone for
+     at least 20 s, and the list says that places and civic numbers are unavailable. Streets
+     stay searchable; places need an explicit search meanwhile.
 8. **Out of date outbound User-Agent: fixed on `main` and on the pilot (Phase 4.34).**
    - Up to Phase 4.33, the geocoding and routing requests named the old beta URL, which answers
      HTTP 401.

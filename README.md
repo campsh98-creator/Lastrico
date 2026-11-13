@@ -12,9 +12,9 @@ keeps that choice in force while you drive or ride.
 routing API to real Valhalla responses, and the GPS position is simulated. See
 <a href="docs/assets/readme/PROVENANCE.md">how these images were made</a>.</sub></p>
 
-> **Status: experimental beta.** The Phase 4.34 navigation diagnostics release is deployed to
-> the public Milan/Roccella pilot on Cloudflare Workers Free. It includes opt-in local GPS diagnostics
-> and has passed automated and emulated mobile browser tests. Physical iPhone road validation
+> **Status: experimental beta.** The Phase 4.35 release (reliable Milan address search) is deployed to
+> the public Milan/Roccella pilot on Cloudflare Workers Free, on top of the Phase 4.34 navigation
+> diagnostics. It has passed automated and emulated mobile browser tests. Physical iPhone road validation
 > remains pending. Automated tests do not certify real-world turn accuracy or road conditions.
 > See [availability](#supported-cities-and-availability) and the [engineering status](docs/ENGINEERING_STATUS.md).
 
@@ -122,25 +122,29 @@ Rome is a local experiment.
 
 | Area | Local development build | Public pilot | Notes |
 | --- | --- | --- | --- |
-| **Milan** | ✅ Citywide surface data, ZTL, central traffic signals | ✅ Phase 4.34 version | Main test area |
-| **Roccella Ionica** | ✅ | ✅ Phase 4.34 version | Small pilot area |
+| **Milan** | ✅ Citywide surface data, ZTL, central traffic signals | ✅ Phase 4.35 version | Main test area |
+| **Roccella Ionica** | ✅ | ✅ Phase 4.35 version | Small pilot area |
 | **Rome** | 🧪 Experimental (Phase 4.23) | ❌ Never deployed | Local only; not advertised as supported |
 
 **Public pilot:** [lastrico-pilot.campsh.workers.dev](https://lastrico-pilot.campsh.workers.dev).
-- It runs the Phase 4.34 release, Milan and Roccella only, deployed on 11 November 2026 (version
-  `fe69e630`). That includes continuous anti-pavé rerouting, surface warnings, traffic signals,
-  ZTL handling, reverse A/B, and opt-in local GPS diagnostics for physical road testing.
+- It runs the Phase 4.35 release, Milan and Roccella only, deployed on 13 November 2026 (version
+  `73411cc6`, from PR #14, not yet merged into `main`). That includes continuous anti-pavé
+  rerouting, surface warnings, traffic signals, ZTL handling, reverse A/B, opt-in local GPS
+  diagnostics, and a local Milan street index for address search.
 - It runs on Cloudflare's Workers Free plan, which allows 10 ms of CPU per ordinary request.
   - Route computation runs in a Durable Object, which allows 30 s of CPU per request on the
     Free plan, and the homepage is a static file snapshot (0 ms Worker CPU).
-- Measured on the pilot after the release:
+- Measured on the pilot after the Phase 4.35 release:
   - 18 of 18 post-deployment smoke tests passed;
-  - mobile browser emulation verified address autocomplete (sub-850 ms) and single-shot route calculation;
-  - opt-in GPS trace recording verified locally with zero automatic network uploads (capped at 3 traces / 2.5 MB / 7 days);
-  - no CPU stops, 503 responses or exceptions.
+  - "Via Filippo Argelati" found first, also typed as "Via F. Argelati"; street suggestions appear
+    in under 25 ms in mobile browser emulation;
+  - 50 of 50 origin/destination edits shown correctly under injected provider faults, and 10 of
+    10 with the real providers, each ending in a calculated route;
+  - after the typing burst that froze the Phase 4.34 search, new searches answered in 0.3–1 s.
 - Physical iPhone road validation on Milan corridors remains pending; automated tests do not certify real-world turn accuracy or road conditions.
 - The full breakdown is in the [engineering status](docs/ENGINEERING_STATUS.md) and the release
-  report, `outputs/phase434-pilot-release-report.md` (Italian).
+  reports, `outputs/phase435-milan-release-report.md` and `outputs/phase434-pilot-release-report.md`
+  (Italian).
 
 ## Architecture
 

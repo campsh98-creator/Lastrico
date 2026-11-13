@@ -1,0 +1,11 @@
+{"at":"2026-11-13T01:05:30.150Z","q":"Via","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:31.038Z","q":"Via B","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:31.293Z","q":"Via Be","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:31.690Z","q":"Via Ber","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:32.116Z","q":"Via Berg","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:32.502Z","q":"Via Berga","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:32.900Z","q":"Via Bergam","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:33.304Z","q":"Via Bergami","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:33.727Z","q":"Via Bergamin","purpose":"suggest","outcome":"ok","status":200,"logs":[]}
+{"at":"2026-11-13T01:05:34.113Z","q":"Via Bergamini","purpose":"suggest","outcome":"ok","status":503,"logs":["[geocode] Photon suggestion failed for \"Via Bergamini\" (milan): Servizio di ricerca non disponibile (HTTP 503)"]}
+{"at":"2026-11-13T01:05:34.942Z","q":"Via Bergamini 7","purpose":"suggest","outcome":"ok","status":503,"logs":["[geocode] Photon suggestion failed for \"Via Bergamini 7\" (milan): Tutti i servizi di ricerca indirizzi non sono disponibili."]}
