@@ -20,9 +20,13 @@ import { PILOT_AREAS, type PilotAreaId } from "./pilot-areas.ts";
 import { buildRouteProgressModel, type ProgressInstruction } from "./route-progress.ts";
 
 export const GPS_TRACE_SCHEMA = "lastrico-gps-trace";
-/** Phase 4.34: v2 adds each route's objective, pavé exposure and rough sections, and new events. */
-export const GPS_TRACE_VERSION = 2;
-export const SUPPORTED_TRACE_VERSIONS: readonly number[] = [1, 2];
+/**
+ * Phase 4.34: v2 adds each route's objective, pavé exposure and rough sections, and new events.
+ * Phase 4.37: v3 adds an optional `generation` summary to each route (how it was produced). v1 and
+ * v2 traces still parse and replay unchanged: the summary never takes part in replay decisions.
+ */
+export const GPS_TRACE_VERSION = 3;
+export const SUPPORTED_TRACE_VERSIONS: readonly number[] = [1, 2, 3];
 export const GPS_TRACE_APP_VERSION = "0.5.0";
 /** Four hours at one fix per second. */
 export const MAX_TRACE_FIXES = 14_400;
@@ -61,6 +65,43 @@ export type TracePaveExposure = {
   unknownMeters: number;
 };
 
+/**
+ * Phase 4.37 (trace v3): how a route was produced, built only from what the routes API already
+ * returns (`antiPave`, `candidateDiagnostics`). Counts and short fixed labels: no coordinates, no
+ * street names, no free text. Everything is whole numbers; labels come from the closed sets below.
+ */
+export type TraceGenerationCandidate = {
+  /** "base-N", "detour-N", "surface-aware-valhalla[-N]", or "other". */
+  source: string;
+  seconds: number;
+  meters: number;
+  /** Weighted pavé metres the selection used. */
+  weightedPave: number;
+  /** Metres of confirmed pavé. */
+  confirmedPave: number;
+  /** Metres whose surface is unknown (unknown is not smooth). */
+  unknown: number;
+  /** The selection rule's verdict for this candidate, or "none". */
+  verdict: string;
+  /** Allowed for the mode and access rules at the departure time. */
+  legal: boolean;
+  /** U-turn manoeuvres on the candidate; absent when the server did not report them. */
+  uTurns?: number;
+};
+
+export type TraceGeneration = {
+  /** The anti-pavé outcome status of the response. */
+  antiPave: string;
+  searchAttempted: boolean;
+  searchFailed: boolean;
+  /** How many routes the penalised anti-pavé search produced. */
+  searchGenerated: number;
+  /** At most MAX_TRACE_GENERATION_CANDIDATES, in the order the server listed them. */
+  candidates: TraceGenerationCandidate[];
+  /** Candidates left out (over the cap, or without complete numbers); absent when none. */
+  omitted?: number;
+};
+
 export type TraceRoute<T extends ProgressInstruction = ProgressInstruction> = {
   /** Number of fixes recorded before this route became active. */
   atFix: number;
@@ -76,6 +117,8 @@ export type TraceRoute<T extends ProgressInstruction = ProgressInstruction> = {
   pave?: TracePaveExposure;
   /** v2: the rough sections the app could warn about on this route. */
   roughSections?: TraceRoughSection[];
+  /** v3: how the route was produced (anti-pavé search and the candidates it was chosen among). */
+  generation?: TraceGeneration;
 };
 
 /** [timestamp, lon, lat, accuracy, heading, speed, receivedAt, lastCalculationAt, calculating, cooldownMs] */
@@ -139,6 +182,8 @@ export const READINGS_CLEARED_EVENT = "readings-cleared";
  *   diagnostics events signal-loss, foreground-resume, off-route, reroute-start, wake-lock.
  * - Phase 4.34: pave-warning-shown ("<section start m>:<distance m>"), page-hidden, page-visible,
  *   route-switch (the person chose the other route), field-note (the note's kind).
+ * - Phase 4.37 (trace v3): no new event type. Each route entry may instead carry a `generation`
+ *   summary (see TraceGeneration), recorded with the initial plan, every reroute and every switch.
  */
 export const TRACE_EVENT_TYPES = [
   "reroute-start", "reroute-success", "reroute-failure", "voice-spoken", "pave-warning-spoken",
@@ -292,6 +337,117 @@ const TRACE_FIELDS = new Set(["schema", "version", "appVersion", "id", "startedA
 const finite = (value: unknown) => typeof value === "number" && Number.isFinite(value);
 const finiteOrNull = (value: unknown) => value === null || finite(value);
 
+/** Phase 4.37: the closed label sets of a generation summary; "other" stands for anything newer. */
+export const TRACE_GENERATION_STATUSES: readonly string[] = [
+  "alternative", "fastest-avoids-pave", "no-pave", "over-extra-time", "access-restricted",
+  "generation-failed", "generation-skipped", "no-better-route", "other",
+];
+export const TRACE_GENERATION_VERDICTS: readonly string[] = [
+  "selected", "fastest", "illegal", "equivalent-to-fastest", "over-avoidance-time-limit", "over-extra-minutes",
+  "dominated", "adds-confirmed-pave", "more-known-pave", "risk-reduction-too-small", "unknown-surface-burden",
+  "time-cost-exceeds-saving", "a-better-alternative-was-chosen", "none", "other",
+];
+/** Candidate sources the routes API names (app/api/routes/route.ts); extend here if it gains a new one. */
+export const TRACE_GENERATION_SOURCE_PATTERN = /^(?:base-[1-9]\d?|detour-[1-9]\d?|surface-aware-valhalla(?:-[1-9]\d?)?|other)$/;
+export const MAX_TRACE_GENERATION_CANDIDATES = 8;
+const MAX_GENERATION_COUNT = 10_000_000;
+const MAX_GENERATION_U_TURNS = 1_000;
+const GENERATION_KEYS = new Set(["antiPave", "searchAttempted", "searchFailed", "searchGenerated", "candidates", "omitted"]);
+const CANDIDATE_KEYS = new Set(["source", "seconds", "meters", "weightedPave", "confirmedPave", "unknown", "verdict", "legal", "uTurns"]);
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+const boundedInteger = (value: unknown, max: number) =>
+  typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= max;
+const wholeCount = (value: unknown, max = MAX_GENERATION_COUNT) =>
+  typeof value === "number" && Number.isFinite(value) ? Math.min(max, Math.max(0, Math.round(value))) : null;
+
+/**
+ * Phase 4.37: why a generation summary is not acceptable, or null when it is. Strict on purpose:
+ * only the keys Lastrico writes, whole bounded numbers, booleans, and labels from the closed sets,
+ * so an edited trace cannot carry coordinates, street names or other text into a shared report.
+ */
+export function validateTraceGeneration(value: unknown): string | null {
+  if (!isRecord(value)) return "must be an object";
+  const extra = Object.keys(value).filter((key) => !GENERATION_KEYS.has(key));
+  if (extra.length) return `has unexpected keys: ${extra.join(", ")}`;
+  if (typeof value.antiPave !== "string" || !TRACE_GENERATION_STATUSES.includes(value.antiPave)) return "has an unknown antiPave status";
+  if (typeof value.searchAttempted !== "boolean" || typeof value.searchFailed !== "boolean") return "needs boolean search flags";
+  if (!boundedInteger(value.searchGenerated, 100)) return "has an invalid searchGenerated";
+  if (value.omitted !== undefined && !boundedInteger(value.omitted, 1_000)) return "has an invalid omitted";
+  if (!Array.isArray(value.candidates) || value.candidates.length > MAX_TRACE_GENERATION_CANDIDATES) return "has an invalid candidate list";
+  for (const [index, candidate] of value.candidates.entries()) {
+    if (!isRecord(candidate)) return `candidate ${index} must be an object`;
+    const keys = Object.keys(candidate).filter((key) => !CANDIDATE_KEYS.has(key));
+    if (keys.length) return `candidate ${index} has unexpected keys: ${keys.join(", ")}`;
+    if (typeof candidate.source !== "string" || !TRACE_GENERATION_SOURCE_PATTERN.test(candidate.source)) return `candidate ${index} has an unknown source`;
+    if (typeof candidate.verdict !== "string" || !TRACE_GENERATION_VERDICTS.includes(candidate.verdict)) return `candidate ${index} has an unknown verdict`;
+    if (typeof candidate.legal !== "boolean") return `candidate ${index} needs a boolean legal`;
+    for (const field of ["seconds", "meters", "weightedPave", "confirmedPave", "unknown"]) {
+      if (!boundedInteger(candidate[field], MAX_GENERATION_COUNT)) return `candidate ${index} has an invalid ${field}`;
+    }
+    if (candidate.uTurns !== undefined && !boundedInteger(candidate.uTurns, MAX_GENERATION_U_TURNS)) return `candidate ${index} has an invalid uTurns`;
+  }
+  return null;
+}
+
+function summarizeCandidate(value: unknown): TraceGenerationCandidate | null {
+  if (!isRecord(value) || typeof value.eligibleModeAndAccess !== "boolean") return null;
+  const seconds = wholeCount(value.seconds);
+  const meters = wholeCount(value.distance);
+  const weightedPave = wholeCount(value.weightedPaveMeters);
+  const confirmedPave = wholeCount(value.confirmedPaveMeters);
+  const unknown = wholeCount(value.unknownSurfaceMeters);
+  // A candidate without complete numbers is left out rather than recorded as zero: unknown is not smooth.
+  if (seconds === null || meters === null || weightedPave === null || confirmedPave === null || unknown === null) return null;
+  const source = typeof value.source === "string" && TRACE_GENERATION_SOURCE_PATTERN.test(value.source) ? value.source : "other";
+  const verdict = value.selectionVerdict === null || value.selectionVerdict === undefined ? "none"
+    : typeof value.selectionVerdict === "string" && TRACE_GENERATION_VERDICTS.includes(value.selectionVerdict) ? value.selectionVerdict : "other";
+  const uTurns = wholeCount(value.uTurnCount, MAX_GENERATION_U_TURNS);
+  return {
+    source, seconds, meters, weightedPave, confirmedPave, unknown, verdict, legal: value.eligibleModeAndAccess,
+    ...(uTurns === null ? {} : { uTurns }),
+  };
+}
+
+/**
+ * Phase 4.37: the generation summary of a routes API response, or undefined for a response that
+ * predates the anti-pavé outcome (its search is then unknown, not "not attempted"). Reads only
+ * `antiPave.status`, `antiPave.search` and each candidate's source, seconds, distance, weighted /
+ * confirmed pavé, unknown metres, selection verdict, legality and `uTurnCount`: no geometry, no names.
+ * With more than MAX_TRACE_GENERATION_CANDIDATES candidates, the chosen and fastest ones and those
+ * the penalised search produced are kept first; the original order is preserved.
+ */
+export function summarizeRouteGeneration(
+  response: { antiPave?: unknown; candidateDiagnostics?: unknown } | null | undefined,
+): TraceGeneration | undefined {
+  const outcome = response?.antiPave;
+  if (!isRecord(outcome) || !isRecord(outcome.search)) return undefined;
+  const search = outcome.search;
+  const listed = Array.isArray(response?.candidateDiagnostics) ? response.candidateDiagnostics : [];
+  const summarized = listed.flatMap((item, order) => {
+    const candidate = summarizeCandidate(item);
+    return candidate ? [{ candidate, order }] : [];
+  });
+  const priority = ({ candidate }: { candidate: TraceGenerationCandidate }) =>
+    candidate.verdict === "selected" || candidate.verdict === "fastest" ? 0
+      : candidate.source.startsWith("surface-aware-valhalla") ? 1 : candidate.legal ? 2 : 3;
+  const kept = [...summarized]
+    .sort((a, b) => priority(a) - priority(b) || a.order - b.order)
+    .slice(0, MAX_TRACE_GENERATION_CANDIDATES)
+    .sort((a, b) => a.order - b.order)
+    .map(({ candidate }) => candidate);
+  const omitted = listed.length - kept.length;
+  return {
+    antiPave: typeof outcome.status === "string" && TRACE_GENERATION_STATUSES.includes(outcome.status) ? outcome.status : "other",
+    searchAttempted: search.attempted === true,
+    searchFailed: search.failed === true,
+    searchGenerated: wholeCount(search.generated, 100) ?? 0,
+    candidates: kept,
+    ...(omitted > 0 ? { omitted } : {}),
+  };
+}
+
 /**
  * Phase 4.34: validates an exported trace before replay. It accepts only the fields Lastrico writes,
  * so an edited file cannot carry names, e-mails or device identifiers into a shared report.
@@ -329,6 +485,9 @@ export function parseGpsTrace(input: string | unknown): GpsTrace {
       || !Array.isArray(candidate.instructions) || candidate.coordinates.some((point) => !Array.isArray(point) || !finite(point[0]) || !finite(point[1]))) {
       throw new Error(`Malformed route ${index}`);
     }
+    // Phase 4.37: the generation summary is checked whenever present, whatever the trace version says.
+    const generationProblem = candidate.generation === undefined ? null : validateTraceGeneration(candidate.generation);
+    if (generationProblem) throw new Error(`Malformed route ${index}: generation ${generationProblem}`);
   });
   (trace.events as unknown[]).forEach((event, index) => {
     const candidate = event as Partial<TraceEvent> | null;
@@ -442,7 +601,13 @@ export function createGpsTraceRecorder(
       recorder.flush();
       if ((status as TraceRecorderStatus) !== "recording") return;
       const key = routeKey(summary.id, summary.routes);
-      const value = JSON.stringify({ ...route, atFix: summary.fixes });
+      // Defence in depth: a summary that would not pass parseGpsTrace is never written.
+      const { generation, ...rest } = route;
+      const value = JSON.stringify({
+        ...rest,
+        ...(generation !== undefined && validateTraceGeneration(generation) === null ? { generation } : {}),
+        atFix: summary.fixes,
+      });
       const bytes = (key.length + value.length) * 2;
       if (!fitsBudget(bytes)) {
         status = "full";

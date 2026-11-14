@@ -37,6 +37,8 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 | Provider timers cleared after each call (Phase 4.33) | ✅ | ✅ | ✅ | — |
 | Homepage served as a static snapshot (Phase 4.33) | ✅ | ✅ | ✅ | — |
 | Field-trace v2: route objective and pavé, warnings shown, page hidden; GPX export; 7-day retention (Phase 4.34) | ✅ | ✅ | ✅ | ❌ |
+| Penalised anti-pavé search targets stone slices from 15 m (Milan); cheap improvement ends the planner search only when no stone is left; U-turn costs 60 s in the comparison (Phase 4.37; not yet on the pilot) | ✅ | ❌ | ❌ | ❌ |
+| Field-trace v3: how each route was generated (anti-pavé status, candidates and verdicts, no coordinates); honest "nessun pavé noto" reroute notice (Phase 4.37; not yet on the pilot) | ✅ | ❌ | ❌ | ❌ |
 | Trace triage by category, `scripts/replay-gps-trace.mjs --text` (Phase 4.34) | ✅ | — | — | — |
 | Field note "wrong pavé warning", with the route's rough section attached (Phase 4.34) | ✅ | ✅ | ✅ | ❌ |
 | Provider User-Agent names the project repository (Phase 4.34) | ✅ | ✅ | — | — |

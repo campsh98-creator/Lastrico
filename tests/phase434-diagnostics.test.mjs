@@ -93,7 +93,8 @@ test("recording is off by default, shown while on, and never sends anything", as
 test("a v2 trace carries the route's objective, pavé exposure and rough sections, and the new events", () => {
   const { trace } = recordTrace({ events: (step) => step === 5 ? [["page-hidden"], ["page-visible"]] : step === 8 ? [["pave-warning-shown", "600:180"]] : [] });
   assert.equal(trace.version, GPS_TRACE_VERSION);
-  assert.equal(GPS_TRACE_VERSION, 2);
+  // Phase 4.37: v3 only adds the optional per-route `generation`; the v2 fields are unchanged.
+  assert.equal(GPS_TRACE_VERSION, 3);
   assert.equal(trace.routes[0].objective, "safe");
   assert.deepEqual(trace.routes[0].pave, route.pave);
   assert.deepEqual(trace.routes[0].roughSections, route.roughSections);
@@ -115,7 +116,7 @@ test("export and import round-trip; v1 traces still load; edited or foreign file
   };
   refuse((copy) => { copy.email = "someone@example.com"; }, /Unexpected trace fields: email/);
   refuse((copy) => { copy.deviceId = "abc"; }, /Unexpected trace fields/);
-  refuse((copy) => { copy.version = 3; }, /Unsupported trace format/);
+  refuse((copy) => { copy.version = 4; }, /Unsupported trace format/);
   refuse((copy) => { copy.area = "torino"; }, /Unsupported area/);
   refuse((copy) => { copy.decisions.pop(); }, /Each fix needs its decision/);
   refuse((copy) => { copy.fixes[2][1] = "9.18"; }, /Malformed fix 2/);

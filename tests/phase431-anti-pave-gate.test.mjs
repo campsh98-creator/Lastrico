@@ -65,10 +65,13 @@ test("Porta Romana: a distinct anti-pavé route along Viale Filippetti is offere
   assert.equal(status, 200);
   assert.equal(payload.hasDistinctAlternative, true);
   assert.equal(payload.antiPave.status, "alternative");
-  assert.equal(payload.fast.confirmedPaveMeters, 567);
+  // Phase 4.37: the penalised search now targets stone slices down to 15 m, and its route is both faster
+  // (−8 s) and far lighter (111 m confirmed) than the provider's own fastest (567 m, Viale Sabotino): it
+  // becomes the fastest legal candidate. The anti-pavé alternative is unchanged (74 m, Viale Filippetti).
+  assert.equal(payload.fast.confirmedPaveMeters, 111);
+  assert.ok(payload.fast.confirmedPaveMeters + 400 <= 567, "at least 400 m less confirmed stone than the provider's own fastest route");
   assert.equal(payload.safe.confirmedPaveMeters, 74);
   assert.ok(metersOn(payload.safe.coordinates, FILIPPETTI) > 400, "the anti-pavé route runs along Viale Filippetti");
-  assert.ok(metersOn(payload.fast.coordinates, SABOTINO) > 400, "the fastest runs along Viale Sabotino");
   const extraSeconds = (payload.safe.minutes - payload.fast.minutes) * 60;
   assert.ok(extraSeconds > 0 && extraSeconds <= 30, `+${Math.round(extraSeconds)} s`);
   assert.notDeepEqual(payload.safe.coordinates, payload.fast.coordinates, "two real routes, not one shown twice");

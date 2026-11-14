@@ -130,3 +130,32 @@ export function buildLinearCostFactors(
     totalPenalizedMeters: Math.round(totalPenalizedMeters),
   };
 }
+
+/** The slice length the penalised anti-pavé search has always targeted. */
+export const PENALISED_SLICE_MINIMUM_METERS = 25;
+/** Phase 4.37: the lowest slice length Milan targets, whatever the mode's minimum pavé reduction. */
+export const MILAN_PENALISED_SLICE_CAP_METERS = 15;
+
+/**
+ * Phase 4.37: the shortest stone slice the penalised anti-pavé search targets.
+ *
+ * The Piazzale Lodi roundabout slice measures 24.99 m on the plan's own geometry, so with a fixed
+ * 25 m minimum the search never ran and a legal shortcut with no stone was never generated
+ * (Phase 4.36, routing-forensics R2). The warnings already start at 15 m and the selection rule
+ * at the mode's minimum pavé reduction; the search now follows the same idea. Milan only: other
+ * areas keep 25 m.
+ */
+export function penalisedSliceMinimumMeters(areaId: string, minimumPaveReduction: number): number {
+  return areaId === "milan"
+    ? Math.min(minimumPaveReduction, MILAN_PENALISED_SLICE_CAP_METERS)
+    : PENALISED_SLICE_MINIMUM_METERS;
+}
+
+/**
+ * Phase 4.37: whether a cheap improvement may end the planner's search only when it leaves almost
+ * no stone, and a clean penalised route makes the geometric detours unnecessary. Reroutes in
+ * navigation keep their fast gate; only Milan planner requests use the stricter rule.
+ */
+export function stopsOnlyWhenClean(areaId: string, navigationRequest: boolean): boolean {
+  return areaId === "milan" && !navigationRequest;
+}
