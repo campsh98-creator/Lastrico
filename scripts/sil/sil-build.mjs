@@ -20,6 +20,8 @@ import { ASOF, RESOLVER_VERSION, metres, readJson, resolveAll, sha256, stable, v
 import { covered, groupCoverage, runsOf } from "./sil-coverage.mjs";
 import { JOIN, atmTramAxes, classifyDbtAxes, dbtAxes, indexAxes, joinAxes, joinAxesDetailed, nearestAxisM, osmAxes } from "./sil-rails.mjs";
 import { loadDbtCache, ringIndex } from "./sil-dbt-cache.mjs";
+import { tupleFingerprint } from "../../lib/sil-layers.ts";
+import { ASSOC_SOURCE, compileSourceLayers } from "./sil-layers.mjs";
 
 const here = fileURLToPath(new URL(".", import.meta.url));
 const ALL = ["car", "motorcycle", "bicycle"];
@@ -88,6 +90,8 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
   const tiles = [];
   const tileHashes = [];
   const compat = { tiles: 0, indexCompatible: 0, identicalHash: 0, differing: [] };
+  // Phase 4.40: the runtime holds production tiles, so the layers are bound to their identity (a tuple fingerprint).
+  const prodMeta = productionTilesDir ? JSON.parse(await readFile(join(productionTilesDir, "metadata.json"), "utf8")) : null;
   for (const key of Object.keys(foundation.tiles).sort()) {
     const fTile = await readFoundationArtifact(foundationDir, foundation.tiles[key]);
     if (fTile.baseTileSha256 === null) continue; // rail-only tile with no base tuples
@@ -118,7 +122,7 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
       }
       return segKey;
     });
-    tiles.push({ key, sha8: baseSha.slice(0, 8), refs });
+    tiles.push({ key, sha8: baseSha.slice(0, 8), refs, fp: tupleFingerprint(tuples), count: tuples.length });
   }
   const baseTilesSha256 = sha256(tileHashes.join("\n"));
   const segList = [...segs.values()];
@@ -343,6 +347,18 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
   }
   lap("overlayMs", t); t = performance.now();
 
+  // ---- 5b. Phase 4.40: source-separated layers (osm, dbt, atm, assoc). The fused overlay above is unchanged. ----
+  const pick = ({ id, licenceId, attribution, datasetDate = null, retrievedAt = null, licenceNote }) => ({ id, licenceId, attribution, datasetDate, retrievedAt, ...(licenceNote ? { licenceNote } : {}) });
+  const layerSources = { osm: pick(sources.find((s) => s.id === "osm.foundation.rails")),
+    ...(dbt ? { dbt: pick(sources.find((s) => s.id === EXTERNAL.dbt.id)) } : {}), ...(atm ? { atm: pick(sources.find((s) => s.id === EXTERNAL.atm.id)) } : {}) };
+  const layers = compileSourceLayers({
+    tiles: tiles.filter((tile) => !compat.differing.includes(tile.key)), segs, osmJoin, osmAsked, dbt, dbtJoin, dbtPartial, inDbtArea: inDbtBox, atm,
+    atmNear: (sgm) => atmIndex !== null && nearestAxisM(atmIndex, sgm.mid) < Infinity, fusedTiles: overlayTiles,
+    sources: layerSources, assocSource: ASSOC_SOURCE, datasetVersion: `sil-layers-milan-${asOf}.0`, asOf,
+    base: { tilesetVersion: prodMeta?.version ?? null, sourceDatasetSha256: prodMeta?.sourceDatasetSha256 ?? null }, skippedTiles: [...compat.differing].sort(),
+  });
+  lap("layersMs", t); t = performance.now();
+
   // ---- 6. coverage, facts, manifest ----
   const sumM = (pred) => Math.round(segList.filter(pred).reduce((n, s) => n + s.L, 0));
   const coverageReport = {
@@ -458,6 +474,7 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
   const out = resolve(outputDir);
   await rm(out, { recursive: true, force: true });
   await mkdir(join(out, "overlay"), { recursive: true });
+  for (const [rel, json] of Object.entries(layers.files)) { await mkdir(join(out, rel, ".."), { recursive: true }); await writeFile(join(out, rel), json); }
   await writeFile(join(out, "ledger.sil.json"), ledgerJson);
   for (const [key, json] of Object.entries(overlayJson)) await writeFile(join(out, "overlay", `${key}.sil.json`), json);
   await writeFile(join(out, "manifest.json"), stable(manifest, 1));
@@ -466,7 +483,7 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
   lap("writeMs", t);
   T.peakRssMiB = Math.round(process.resourceUsage().maxRSS / 1024); // KiB reported by Node
   await writeFile(join(out, "timings.json"), stable(T, 1)); // not part of the deterministic set
-  return { manifest, coverage: coverageReport, facts, timings: T, ledger, views, overlayTiles, segs, tiles };
+  return { manifest, coverage: coverageReport, facts, timings: T, ledger, views, overlayTiles, segs, tiles, layers };
 }
 
 function arg(name) { return process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3); }

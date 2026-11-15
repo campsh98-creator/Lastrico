@@ -6,6 +6,7 @@
  *   node scripts/benchmark-milan-routing.mjs --label=before [--live] [--only=id] [--no-stability]
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { resolve } from "node:path";
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import { NextRequest } from "next/server.js";
@@ -19,6 +20,14 @@ const live = process.argv.includes("--live");
 const withStability = !process.argv.includes("--no-stability");
 // Phase 4.31: a fixed Milan departure time ("YYYY-MM-DDTHH:MM"), so time windows and ZTL rules are reproducible.
 const departure = arg("departure");
+// Phase 4.40: --sil-layers=<dir> runs the same benchmark with the SIL in shadow mode, layers read from a local build.
+// Without the flag nothing changes: the mode stays "off" and the responses carry no diagnostics.
+const silLayers = arg("sil-layers");
+if (silLayers) {
+  const { configureSilShadow } = await import("../lib/sil-shadow.ts");
+  const { createFsLayerProvider } = await import("../tests/helpers/sil-fs-provider.mjs");
+  configureSilShadow({ mode: "shadow", provider: createFsLayerProvider(resolve(silLayers)) });
+}
 const base = new URL("outputs/phase425-benchmark/", root);
 const archive = new URL("responses/", base);
 const out = new URL(`${label}/`, base);
@@ -95,7 +104,7 @@ async function runCase(journey, mode, kind) {
   const cpuUsed = process.cpuUsage(cpu);
   const computeMs = performance.now() - started;
   const row = { id: journey.id, baseId: journey.baseId ?? journey.id, kind, mode, status: response.status, error: payload.error ?? null,
-    computeMs: Math.round(computeMs), cpuMs: Math.round((cpuUsed.user + cpuUsed.system) / 1000), handlerTotalMs: payload.performance?.totalMs ?? null, providerCalls: currentCalls.length, providerMs: currentCalls.reduce((a, c) => a + c.providerMs, 0),
+    silStatus: payload.diagnostics?.sil?.status ?? null, silMs: payload.diagnostics?.sil?.processingMs ?? null, silLookups: payload.diagnostics?.sil?.tileLookups ?? null, computeMs: Math.round(computeMs), cpuMs: Math.round((cpuUsed.user + cpuUsed.system) / 1000), handlerTotalMs: payload.performance?.totalMs ?? null, providerCalls: currentCalls.length, providerMs: currentCalls.reduce((a, c) => a + c.providerMs, 0),
     captured: currentCalls.filter((c) => !c.cached).length, fast: pick(payload.fast), safe: pick(payload.safe),
     hasDistinctAlternative: payload.hasDistinctAlternative ?? false, alternativesAnalyzed: payload.alternativesAnalyzed ?? 0,
     directCandidateGenerated: payload.optimization?.directCandidateGenerated ?? false,
