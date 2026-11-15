@@ -1,6 +1,8 @@
 # TEMPORARY (Phase 4.37 review of PR #16): runs only on pushes to the PR branch and is removed before merge.
-# Linux evidence the Windows development machine cannot give: the mobile E2E suite in real Chrome, and the
-# Milan-only release copy (no Rome, Roccella kept). It deploys nothing: the publish step is a dry run.
+# Earlier runs of this workflow already gave the Linux evidence for the Milan-only release copy (no Rome, Roccella kept,
+# 535 tests, 0 failures) and for the complete mobile E2E suite. What is left is one scenario, F1 (arrow glide), that
+# failed in full-suite runs on the branch but passed once on the baseline: this study repeats the full mocked suite three
+# times on each side, on separate runners, to tell a load-sensitive scenario from a regression. Nothing is deployed.
 name: Phase 4.37 verification (temporary)
 
 on:
@@ -12,103 +14,18 @@ permissions:
   contents: read
 
 jobs:
-  linux-e2e-and-release:
-    name: Linux E2E and Milan-only release check
+  f1-repeat-study:
+    name: F1 repeat study (${{ matrix.variant }} #${{ matrix.rep }})
     runs-on: ubuntu-latest
-    timeout-minutes: 70
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [baseline, branch]
+        rep: [1, 2, 3]
     env:
       FORCE_COLOR: "0"
-    steps:
-      - name: Check out repository (full history, the release script needs it)
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Use Node.js 24
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-      - name: Install locked dependencies
-        run: npm ci
-      - name: Prepare the Milan-only release copy
-        run: |
-          node scripts/prepare-milan-release.mjs "$RUNNER_TEMP/milan-release" 2>&1 | tail -25
-      - name: Release copy sources have no Rome and keep Roccella
-        working-directory: ${{ runner.temp }}/milan-release
-        run: |
-          echo "== files with rome in their name (outside node_modules)"
-          # "Rome" as a word only: Promessi Sposi and Chrome contain the letters r-o-m-e.
-          find . -path ./node_modules -prune -o -iname '*rome*' -print | grep -iE '(^|[/_.-])rome([/_.-]|$)' > "$RUNNER_TEMP/rome-files.txt" || true
-          wc -l < "$RUNNER_TEMP/rome-files.txt"
-          head -20 "$RUNNER_TEMP/rome-files.txt"
-          echo "== files with roccella in their name (outside node_modules)"
-          find . -path ./node_modules -prune -o -iname '*roccella*' -print | wc -l
-          echo "== pilot areas in the release copy"
-          node -e "import('./lib/pilot-areas.ts').then((m) => console.log(JSON.stringify(Object.keys(m.PILOT_AREAS))))"
-          test ! -s "$RUNNER_TEMP/rome-files.txt"
-      - name: Tests in the release copy (build + all tests)
-        working-directory: ${{ runner.temp }}/milan-release
-        run: npm test 2>&1 | tee "$RUNNER_TEMP/release-tests.txt" | tail -60
-      - name: Release build excludes Rome data and includes Roccella
-        working-directory: ${{ runner.temp }}/milan-release
-        run: |
-          echo "== dist files with rome in the name"
-          find dist -iname '*rome*' | grep -iE '(^|[/_.-])rome([/_.-]|$)' | tee "$RUNNER_TEMP/dist-rome.txt" | head -20 || true
-          echo "== references to Rome data files in dist"
-          grep -rlE "rome-tiles|rome-compact|rome-osm|rome-pilot|rome-road" dist | tee "$RUNNER_TEMP/dist-rome-refs.txt" | head -20
-          echo "== roccella files in dist"
-          find dist -iname '*roccella*' | wc -l
-          test ! -s "$RUNNER_TEMP/dist-rome.txt"
-          test ! -s "$RUNNER_TEMP/dist-rome-refs.txt"
-      - name: Publish dry run (deploys nothing)
-        working-directory: ${{ runner.temp }}/milan-release
-        continue-on-error: true
-        run: npm run deploy:pilot -- --dry-run 2>&1 | tail -40
-      - name: Start the local Worker from the release build
-        working-directory: ${{ runner.temp }}/milan-release
-        run: |
-          WRANGLER_SEND_METRICS=false WRANGLER_LOG_PATH=.wrangler/wrangler.log nohup npx wrangler dev --config dist/server/wrangler.json --port 8799 --local --show-interactive-dev-session=false > "$RUNNER_TEMP/wrangler.log" 2>&1 &
-          for i in $(seq 1 90); do curl -sf -o /dev/null http://127.0.0.1:8799/manifest.webmanifest && break; sleep 2; done
-          curl -s -o /dev/null -w "worker status %{http_code}\n" http://127.0.0.1:8799/manifest.webmanifest
-      - name: Mobile E2E, arrow-glide scenario F1 and layout 390x844 alone (same conditions as the first baseline run)
-        working-directory: ${{ runner.temp }}/milan-release
-        continue-on-error: true
-        env:
-          CHROME_PATH: /usr/bin/google-chrome
-        run: node tests/e2e/acceptance.mjs --mock-only --only=D1-390x844-light,D1-390x844-dark,F1,E6 2>&1 | tail -12
-      - name: Mobile E2E acceptance, mocked scenarios
-        working-directory: ${{ runner.temp }}/milan-release
-        continue-on-error: true
-        env:
-          CHROME_PATH: /usr/bin/google-chrome
-        run: node tests/e2e/acceptance.mjs --mock-only 2>&1 | tee "$RUNNER_TEMP/e2e-mock.txt" | tail -80
-      - name: Mobile E2E acceptance, complete suite (live providers, paced by the app)
-        working-directory: ${{ runner.temp }}/milan-release
-        continue-on-error: true
-        env:
-          CHROME_PATH: /usr/bin/google-chrome
-        run: node tests/e2e/acceptance.mjs 2>&1 | tee "$RUNNER_TEMP/e2e-full.txt" | tail -120
-      - name: Mobile Chrome GPS journey (scripts/e2e-mobile-chrome.mjs)
-        working-directory: ${{ runner.temp }}/milan-release
-        continue-on-error: true
-        run: |
-          sudo mkdir -p "/Applications/Google Chrome.app/Contents/MacOS"
-          sudo ln -sf /usr/bin/google-chrome "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-          node scripts/e2e-mobile-chrome.mjs http://localhost:8799 2>&1 | tee "$RUNNER_TEMP/e2e-mobile.txt" | tail -80
-      - name: Summary
-        if: always()
-        run: |
-          for f in e2e-mock e2e-full e2e-mobile release-tests; do
-            echo "== $f: $(grep -cE '^(PASS|✔)' "$RUNNER_TEMP/$f.txt" 2>/dev/null || echo 0) pass lines, $(grep -cE '^(FAIL|✖)' "$RUNNER_TEMP/$f.txt" 2>/dev/null || echo 0) fail lines"
-          done
-          grep -E "^ℹ (tests|pass|fail|skipped)" "$RUNNER_TEMP/release-tests.txt" 2>/dev/null || true
-
-  baseline-e2e:
-    name: Baseline (3e31da9) for the E2E scenarios that failed on the branch
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    env:
-      FORCE_COLOR: "0"
+      COMMIT: ${{ matrix.variant == 'baseline' && '3e31da9' || github.sha }}
     steps:
       - name: Check out repository (full history)
         uses: actions/checkout@v7
@@ -121,25 +38,21 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Prepare and build the baseline Milan-only release copy
+      - name: Prepare and build the Milan-only release copy of the commit under study
         run: |
-          node scripts/prepare-milan-release.mjs "$RUNNER_TEMP/milan-base" --commit=3e31da9 2>&1 | tail -5
-          cd "$RUNNER_TEMP/milan-base" && npm run build 2>&1 | tail -3
+          echo "commit under study: $COMMIT"
+          node scripts/prepare-milan-release.mjs "$RUNNER_TEMP/rc" --commit="$COMMIT" 2>&1 | tail -3
+          cd "$RUNNER_TEMP/rc" && npm run build 2>&1 | tail -2
       - name: Start the local Worker
-        working-directory: ${{ runner.temp }}/milan-base
+        working-directory: ${{ runner.temp }}/rc
         run: |
-          WRANGLER_SEND_METRICS=false WRANGLER_LOG_PATH=.wrangler/wrangler.log nohup npx wrangler dev --config dist/server/wrangler.json --port 8799 --local --show-interactive-dev-session=false > "$RUNNER_TEMP/wrangler-base.log" 2>&1 &
+          WRANGLER_SEND_METRICS=false WRANGLER_LOG_PATH=.wrangler/wrangler.log nohup npx wrangler dev --config dist/server/wrangler.json --port 8799 --local --show-interactive-dev-session=false > "$RUNNER_TEMP/wrangler.log" 2>&1 &
           for i in $(seq 1 90); do curl -sf -o /dev/null http://127.0.0.1:8799/manifest.webmanifest && break; sleep 2; done
-      - name: Baseline E2E, the whole mocked suite (same conditions as the branch's full run)
-        working-directory: ${{ runner.temp }}/milan-base
+      - name: Full mocked E2E suite
+        working-directory: ${{ runner.temp }}/rc
         continue-on-error: true
         env:
           CHROME_PATH: /usr/bin/google-chrome
-        run: node tests/e2e/acceptance.mjs --mock-only 2>&1 | tee "$RUNNER_TEMP/e2e-base.txt" | grep -E "^(FAIL|[0-9]+/[0-9]+ passed)"
-      - name: Baseline mobile Chrome GPS journey (scripts/e2e-mobile-chrome.mjs)
-        working-directory: ${{ runner.temp }}/milan-base
-        continue-on-error: true
         run: |
-          sudo mkdir -p "/Applications/Google Chrome.app/Contents/MacOS"
-          sudo ln -sf /usr/bin/google-chrome "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-          node scripts/e2e-mobile-chrome.mjs http://localhost:8799 2>&1 | tail -40
+          node tests/e2e/acceptance.mjs --mock-only 2>&1 | tee "$RUNNER_TEMP/e2e.txt" | grep -E "^(FAIL|[0-9]+/[0-9]+ passed)"
+          echo "STUDY ${{ matrix.variant }} #${{ matrix.rep }}: $(grep -E '^PASS F1' "$RUNNER_TEMP/e2e.txt" | cut -c1-60 || true) | $(grep -E '^FAIL F1' "$RUNNER_TEMP/e2e.txt" | cut -c1-120 || true)"
