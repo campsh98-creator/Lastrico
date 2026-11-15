@@ -228,3 +228,86 @@ Il benchmark richiede l'archivio dei provider decompresso (`outputs/phase425-ben
 **Esito Fase 4.40: criteri di accettazione superati in locale.** Il motore dei percorsi di Milano legge ora gli strati SIL durante una richiesta e produce una diagnostica che distingue le fonti (OSM, DBT del Comune, ATM) senza cambiare alcuna decisione: su 264 casi reali di Milano, risposta, geometrie, percorso scelto, pavé, tempi, legalità e richieste al provider sono identici a prima. Roccella è invariata, Roma non è stata toccata. Se uno strato manca, è danneggiato o non coincide con la mappa, il percorso si calcola lo stesso e la diagnostica lo dice; «sconosciuto» non diventa mai «nessun binario». Nel 14,6 % dei metri percorsi esistono binari mappati nei dati aperti (2020 per il Comune), ma per il 18 % dei metri agganciati l'assegnazione è ambigua e per il 10 % dei binari mappati le fonti discordano: sono evidenze, non prove di binari oggi presenti.
 
 **Raccomandazione: GO per revisione tecnica e validazione controllata in ombra. NO-GO per produzione, avvisi o penalità sui binari e per pubblicare gli strati.** Prima servono: chiarire le licenze (versione CC BY del DBT, miscela OSM+DBT), misurare CPU e memoria su Cloudflare, decidere come consegnare i dati, rieseguire tutto dopo la PR #16 e la CI Linux, e un sopralluogo fisico. Nulla è stato pubblicato, unito o distribuito; il commit è locale.
+
+---
+
+# Aggiornamento: gate tecnico finale (15 novembre 2026, commit `de3848c`)
+
+**Questa sezione prevale sui numeri di CPU del §8 e sulla raccomandazione del §12 dove differiscono.**
+
+## G1. Il +10,9 % di CPU: causa e ottimizzazione
+
+Il +10,9 % veniva dal confronto fra due processi interi di 264 richieste, con orologio CPU di Windows a 15,6 ms per misura e con le **letture a freddo dei file di strato** dentro il conteggio: non separava la diagnostica dal resto. Ho quindi misurato in un solo processo, con A/B alternati su input identici (`scripts/sil/sil-overhead-measure.mjs`, 7 giri, 263 richieste ciascuno).
+
+**Profilo prima dell'ottimizzazione:** 57 % del costo della diagnostica = calcolo geometrico dell'aggancio (distanza dal segmento con `Math.hypot` per ogni candidato); 4,5 % riepilogo; 4 % costruzione degli indici di tessera.
+
+**Ottimizzazione:** si verifica prima l'allineamento (senza radice quadrata), poi la distanza al quadrato. Stesso insieme di accettazione; nessun controllo di provenienza o di impronta toccato; nessun contatore rimosso. Metri, quote e oracolo 4.39b **identici** a prima (14,64 / 80,03 / 0 / 5,33 %; 522 percorsi su 526 entro 1 m).
+
+| Misura (Node locale, non workerd) | Prima | Dopo |
+|---|---:|---:|
+| Diagnostica, cache calda: p50 / p95 / media | 1,27 / 3,26 / 1,48 ms | **0,77 / 2,51 / 1,04 ms** |
+| Diagnostica, cache svuotata a ogni giro: media | 1,44 ms | 1,05 ms |
+| Diagnostica in % del tempo del gestore (p50 21 ms, media 26,4 ms) | 5,6–6,1 % | **3,7–4,0 %** |
+| CPU della diagnostica per richiesta (mediana dei giri) | 1,7 ms | 1,4–1,5 ms |
+| **Percorso disattivato** (`mode: off`), 2 milioni di chiamate | 79 ns | **89 ns per chiamata**, CPU non misurabile |
+
+**Costo sull'intera richiesta:** quattro coppie di processi alternati col benchmark vero (`outputs/phase440/request-ab-runs.json`). Senza SIL: CPU media 18,4 ms, tempo medio 15,2 ms (p50 12,5, p95 33,5). Con SIL: CPU 20,7 ms (+12,8 %, ma con orologio a 15,6 ms), tempo medio 16,3 ms (**+7 %**), p50 13,75, p95 34,8. Lo scarto fra il +4 % della diagnostica e il +7 % sul tempo intero è il **primo accesso** ai circa 228 file di strato (lettura da disco e analisi del JSON) in un processo di sole 264 richieste.
+
+**Conclusione sull'obiettivo del 5 %:** a regime la diagnostica sta **sotto il 5 %** del tempo del gestore (3,7–4,0 %); con avvio a freddo in Node il totale è circa +7 % del tempo. **Nel Durable Object non è dimostrato**: costo dell'`import()` a freddo, CPU e memoria reali sono ignoti. Nessun controllo è stato indebolito. Margine residuo: l'aggancio geometrico a passi di 10 m; ridurlo ancora cambierebbe la risoluzione, quindi i metri, e non è stato fatto.
+
+**Memoria:** struttura invariata (array tipizzati), misura precedente +0,94 MiB piatta su 800 richieste; non rimisurata, la modifica non alloca nulla di nuovo.
+
+## G2. Disattivato per impostazione predefinita
+
+Verificato: senza `configureSilShadow` e senza `LASTRICO_SIL_MODE` il modo è `off` (test «off is the default»); la risposta non ha la chiave `diagnostics` (test e 264/264 casi A contro A'); manifesto e provider non vengono interrogati (test: chiamate vuote); il costo è una lettura di variabile e un confronto di stringa (≈ 89 ns). L'indice committato è vuoto: in `shadow` senza dati l'esito è `unavailable` (`no-provider`), senza effetti sul percorso.
+
+## G3. Parità dopo l'ottimizzazione
+
+Rieseguiti: baseline 4.39b contro 4.40 spento **264/264**; spento contro ombra (ignorando solo `diagnostics`) **264/264**; baseline contro ombra **264/264**; tutti gli invarianti 264/264 (stato, geometrie, percorso scelto, pavé, durata e distanza, legalità, richieste al provider 817 = 817); `unexpectedDifferences` vuoto. Suite completa (Windows, archivio messo da parte): 573 test, 543 superati, 22 falliti, 8 saltati, **stesso insieme di 22 falliti della baseline `b5ba991`**. TypeScript, build ed ESLint puliti. Test mirati 4.39, 4.39b, 4.40: 45/45.
+
+## G4. Separazione, licenze e fail-safe: intatti
+
+I 29 test su separazione, metadati di licenza, rifiuto di fonti o licenze non ammesse, impronta della tessera e ripiego passano; i corridoi reali danno gli stessi numeri (Corso Lodi 683 m DBT con disaccordo visibile, Piazzale Lodi e Via Lazzaro Papi 0 m, Via Friuli 72 m, Viale Umbria 340 m). Nessun dato degli strati è in Git. **Blocchi di distribuzione invariati:** versione CC BY del DBT (2.5 IT o 4.0) e attribuzione da chiedere al Comune; stato giuridico del contatore composto OSM+DBT; termini d'uso del portale non letti; canale di consegna dei dati fuori dal repository.
+
+## G5. Ancestry Git e rischio per una PR documentale
+
+Verificato in sola lettura:
+- `docs/phase436-closure` è **6 commit avanti a `main`** (base `3e31da9`): i 3 documentali (`54245de`, `28bfa37`, `1dd00e7`) **più `6fd4908` (4.38), `bca48c1` (4.39), `b5ba991` (4.39b)**, perché il ramo nasce da `b5ba991`. Una PR verso `main` porterebbe anche 22 file di `scripts/`, 4 di `lib/`, 6 di `tests/`: **non sarebbe solo documentale**.
+- **Strategia pulita, non eseguita:** ramo nuovo da `main` aggiornato e `git cherry-pick 54245de 28bfa37 1dd00e7`. Prova a secco con `git merge-tree` (nessuna modifica): `54245de` e `28bfa37` si applicano **senza conflitti** a `main` e alla testa della PR #16; `1dd00e7` dipende da `28bfa37` e cita il ramo 4.40 (accettabile, o da riscrivere). La PR #16 modifica anche `docs/ENGINEERING_STATUS.md`: ricontrollare dopo la sua unione.
+- Catena 4.38–4.39b e ramo 4.40 contro la testa della PR #16: **nessun conflitto testuale**. File in comune: `app/api/routes/route.ts` e `scripts/benchmark-milan-routing.mjs`.
+
+## G6. Ordine di integrazione e test dopo ciascun passo
+
+| # | Passo | Test dopo il passo |
+|---|---|---|
+| 1 | Unire la PR #16 in `main` (validazione pilota a parte) | CI della PR; nuovo benchmark = **nuova baseline A** (PR #16, SIL assente) |
+| 2 | PR documentale pulita (cherry-pick dei 3 commit da `main` aggiornato) | lint e test di apertura del repository; `sha256sum -c` del manifesto (un file con fine riga normalizzata, noto) |
+| 3 | Rebase di 4.38 | test 4.38, suite completa contro la baseline del passo 1, tessere di Milano e Roccella |
+| 4 | Rebase di 4.39 e 4.39b | test 4.39 e 4.39b; ricostruzione dell'overlay e confronto byte per byte; payload del benchmark invariati (264/264) |
+| 5 | Rebase di 4.40 (risolvere `route.ts`, 3 punti, e `benchmark-milan-routing.mjs`) | `tsc`, ESLint, build; 29 test 4.40; benchmark spento contro baseline del passo 1 (264/264); ombra contro spento ignorando `diagnostics` (264/264); parità e oracolo; Roccella; copia di rilascio solo-Milano e esclusione di Roma |
+| 6 | PR di integrazione 4.38–4.40, **in bozza** | CI Linux completa (G7) e revisione |
+| 7 | Solo dopo G8: ombra su Cloudflare isolato | misure del Durable Object; nessuna attivazione sul pilota |
+
+## G7. Minimo di CI Linux
+
+Serve un flusso remoto autorizzato (oggi nessun push). Si può riusare «Lint, test and build» della PR #16:
+1. Node 24 su Ubuntu: `npm ci`, `tsc --noEmit`, ESLint, `vinext build`, `node --test tests/*.test.mjs`. **Atteso:** i 22 test che falliscono su Windows (fini riga CRLF, Node 26) passano; ogni fallimento è una regressione da indagare.
+2. L'archivio dei provider va decompresso **solo** in un job di benchmark separato (nella suite fa fallire `phase434-intersection-audit`): baseline, spento, ombra con provider fabbricato dal test; la parità con gli strati reali resta locale finché le licenze non sono chiarite.
+3. Controlli: nessun dato di Roma nella copia solo-Milano; `git ls-files data/surfaces/sil-layers` vuoto.
+4. Ripetere tre volte l'E2E mobile (sensibile al carico, come nella PR #16).
+
+## G8. Minimo di prova isolata su Cloudflare (Durable Object)
+
+Nessuna risorsa creata, nulla distribuito. Da eseguire solo con approvazione, su un Worker di prova separato dal pilota:
+1. **Locale con workerd** (`wrangler dev`, nessuna risorsa): corpus identico, `off` contro `shadow`, risposte identiche; verifica che `LASTRICO_SIL_MODE` arrivi a `process.env` o quale binding usare; dimensione del pacchetto e `wrangler deploy --dry-run`.
+2. **Worker di prova** con Durable Object e strati come risorsa del Worker di prova (mai nel pilota): 50 richieste sequenziali e 10 concorrenti su percorsi di Milano, `off` e `shadow` alternati, prima richiesta a freddo registrata a parte.
+3. **Registrare:** CPU del Durable Object per richiesta (p50, p95, max), errori 1102/503, richieste secondarie (limite 50), memoria (nessuna terminazione per i 128 MB), costo del primo `import()` dei 276 pezzi.
+4. **Superamento:** risposte identiche salvo `diagnostics`; CPU in ombra ≤ +5 % in p50 e nessun p95 oltre +10 ms; nessun errore di limiti; memoria senza crescita su 500 richieste.
+5. Gli strati usati nella prova sono interni e vanno rimossi dal Worker di prova alla fine.
+
+## G9. Raccomandazione GO / NO-GO per aprire una PR di integrazione
+
+- **NO-GO ora** per una PR di integrazione pronta all'unione: la PR #16 non è unita, la baseline va rifatta, la CI Linux non è stata eseguita, la PR documentale pulita non esiste.
+- **GO condizionato** per una **PR in bozza** della catena 4.38–4.40 **dopo** unione della PR #16, rebase e CI Linux verde (G6 passi 1–5, G7), senza dati degli strati e dichiarando: spenta per impostazione predefinita, nessun uso in produzione, licenze aperte.
+- **NO-GO** per attivare l'ombra sul pilota, per avvisi o penalità sui binari e per pubblicare gli strati, finché G8 e le licenze non sono chiariti.
+- Nessuna prontezza di produzione è dichiarata.
