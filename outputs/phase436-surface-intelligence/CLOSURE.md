@@ -67,7 +67,7 @@ La Fase 4.36 ha consegnato diagnosi e raccomandazioni; non ha implementato nulla
 | P0-4 penalità di 60 s per svolta a U (mai rifiuto) | 4.37, PR #16 | Implementata (stessa PR). |
 | P1-1 ri-estrazione OSM con provenienza; correzione `junction=circular` | 4.38 | Implementata, commit locale (`6fd4908`). |
 | P1-2 join DBT → binari e SIL in ombra, offline | 4.39 e 4.39b | Implementate, commit locali (`bca48c1`, `b5ba991`). Copertura DBT cittadina. |
-| P1-2 `diagnostics.sil` nel runtime, payload byte-identici | **4.40** | **In corso** finché i test di accettazione non passano. |
+| P1-2 `diagnostics.sil` nel runtime, payload identici | **4.40** | Implementata in locale (ramo `feat/phase440-sil-runtime-shadow`, commit `ac17c0d` e `f66bd41`); test di accettazione superati il 15 novembre 2026 (264/264 casi identici). Validazione controllata in ombra, misure su Cloudflare e chiarimento delle licenze in attesa. |
 | Decisione del proprietario sulla licenza mista | prima di qualsiasi distribuzione | **Aperta.** Nessun overlay combinato OSM/DBT/ATM va pubblicato. |
 | P2 verifiche sul campo (rotatoria 111768010 e 111767966, Corso Lodi, Via Fra Cristoforo) | squadra | **Non avviate.** Unica via per chiudere le domande dati-contro-realtà. |
 | P3 classifica in ombra con valore atteso; opzioni Pareto; prova sensori | dopo P0–P2 | **Non avviata.** Sensori: NO-GO per qualsiasi registratore nell'app; GO condizionato solo a una Fase 1 interna, in attesa della decisione del proprietario. |
