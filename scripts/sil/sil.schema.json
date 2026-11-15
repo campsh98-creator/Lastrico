@@ -87,7 +87,9 @@
         "CC-BY-4.0",
         "CC-BY-SA-4.0",
         "PROJECT-CONTRIBUTION-TBD",
-        "UNKNOWN"
+        "UNKNOWN",
+        "CC-BY-2.5-IT",
+        "CC-BY-VERSION-CONFLICT"
       ],
       "description": "PROJECT-CONTRIBUTION-TBD = contribution terms for user/field reports are an open owner decision."
     },

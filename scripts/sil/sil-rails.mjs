@@ -11,6 +11,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { metres, sha256 } from "./sil-core.mjs";
+import { ringIndex } from "./sil-dbt-cache.mjs";
 
 const LON0 = 9.19, LAT0 = 45.465;
 const KX = 111_320 * Math.cos((LAT0 * Math.PI) / 180), KY = 110_540;
@@ -44,8 +45,17 @@ export function indexAxes(axes) {
  * `segments`: [{ key, a, b }] (lon/lat). Returns Map(key -> { alongM, tracks, axes: Set(axisIndex) }).
  */
 export function joinAxes(axes, segments) {
+  return joinAxesDetailed(axes, segments).flagged;
+}
+
+/**
+ * Same join, also reporting near misses: segments where an axis runs along 20 % to 50 % of the length
+ * (a track that enters or leaves, or a segment that should be split). They are NOT flagged.
+ */
+export function joinAxesDetailed(axes, segments) {
   const { grid, edges } = indexAxes(axes);
   const out = new Map();
+  const partial = new Map();
   for (const segment of segments) {
     const A = toM(segment.a), B = toM(segment.b);
     const dx = B[0] - A[0], dy = B[1] - A[1], len = Math.hypot(dx, dy) || 1e-9;
@@ -69,8 +79,9 @@ export function joinAxes(axes, segments) {
       }
     }
     if (along >= JOIN.flagShare * L) out.set(segment.key, { alongM: Math.round(along * 10) / 10, tracks, axes: used });
+    else if (along >= 0.2 * L) partial.set(segment.key, { alongM: Math.round(along * 10) / 10, axes: used });
   }
-  return out;
+  return { flagged: out, partial };
 }
 
 // ---------- OSM axes from the Phase 4.38 sidecar ----------
@@ -188,4 +199,55 @@ export function nearestAxisM(index, point, limit = JOIN.atmM) {
     }
   }
   return best <= limit ? best : Infinity;
+}
+
+// ---------- DBT 2020, citywide classification ----------
+const PCELL = 0.002;
+function polygonIndex(polygons) {
+  const list = polygons.map((f) => ({ rings: f.geometry.rings, bb: bbox(f.geometry.rings), inside: ringIndex(f.geometry.rings) }));
+  const grid = new Map();
+  list.forEach((q, i) => {
+    for (let x = Math.floor(q.bb[0] / PCELL); x <= Math.floor(q.bb[2] / PCELL); x++) for (let y = Math.floor(q.bb[1] / PCELL); y <= Math.floor(q.bb[3] / PCELL); y++) {
+      const k = `${x}:${y}`;
+      if (!grid.has(k)) grid.set(k, []);
+      grid.get(k).push(i);
+    }
+  });
+  return (p) => (grid.get(`${Math.floor(p[0] / PCELL)}:${Math.floor(p[1] / PCELL)}`) ?? []).some((i) => {
+    const q = list[i];
+    return p[0] >= q.bb[0] && p[0] <= q.bb[2] && p[1] >= q.bb[1] && p[1] <= q.bb[3] && q.inside(p);
+  });
+}
+
+/**
+ * Classifies DBT tram axes with the same rule as dbtAxes(), for any set of features (citywide).
+ * `contains(point)` says whether a point lies in the area the DBT was asked about (the municipality); axis
+ * samples outside it are not counted. The polygon layers only need to hold what lies under the axes.
+ */
+export function classifyDbtAxes({ axes: features, vehicular, bed, contains }) {
+  const inVeh = polygonIndex(vehicular), inBed = polygonIndex(bed);
+  const axes = [];
+  for (const feature of features) {
+    const a = feature.attributes;
+    const edges = [];
+    for (const path of feature.geometry.paths) for (let i = 1; i < path.length; i++) edges.push([path[i - 1], path[i]]);
+    let veh = 0, bd = 0, total = 0;
+    for (const [p, q] of edges) {
+      const L = metres(p, q);
+      const n = Math.max(1, Math.ceil(L / 2));
+      for (let k = 0; k < n; k++) {
+        const m = [p[0] + ((q[0] - p[0]) * (k + 0.5)) / n, p[1] + ((q[1] - p[1]) * (k + 0.5)) / n];
+        if (contains && !contains(m)) continue;
+        total += L / n;
+        if (inVeh(m)) veh += L / n;
+        if (inBed(m)) bd += L / n;
+      }
+    }
+    const vehShare = total ? veh / total : 0, bedShare = total ? bd / total : 0;
+    const sharing = a.el_trv_pos === "02" && vehShare >= 0.8 && bedShare < 0.2 ? "shared_carriageway"
+      : a.el_trv_pos === "01" && bedShare >= 0.8 && vehShare < 0.2 ? "own_right_of_way" : "unknown";
+    axes.push({ id: a.segmentid, pos: a.el_trv_pos, status: a.el_trv_sta, sharing, edges, vehShare: Math.round(vehShare * 100) / 100, bedShare: Math.round(bedShare * 100) / 100, sampledM: Math.round(total) });
+  }
+  axes.sort((x, y) => String(x.id).localeCompare(String(y.id)));
+  return axes;
 }

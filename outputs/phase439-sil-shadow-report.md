@@ -122,7 +122,7 @@ L'identità dei payload è per costruzione: nessun file di `app/`, `worker/` o `
 ## 8. Limiti noti di licenza e qualità dei dati
 
 **Licenze (lettura dei testi, non consulenza legale):**
-1. L'overlay mescola fatti derivati da OSM (**ODbL 1.0**) e dal DBT/ATM (**CC BY**, CKAN `cc-by`; la versione 4.0 non è riverificata). Se un unico file venisse distribuito pubblicamente, resta aperta la questione della **condivisione alla pari** dell'ODbL. In questa fase non si distribuisce nulla; il manifesto elenca fonti, licenze e attribuzioni.
+1. L'overlay mescola fatti derivati da OSM (**ODbL 1.0**) e dal DBT/ATM (**CC BY**). **Correzione della Fase 4.39b:** per il DBT la versione non è 4.0 senza dubbi: il servizio REST dice CC BY 4.0, la risorsa CKAN dice CC BY 2.5 IT (vedi `outputs/phase439b-dbt-citywide-report.md` §1). Se un unico file venisse distribuito pubblicamente, resta aperta la questione della **condivisione alla pari** dell'ODbL. In questa fase non si distribuisce nulla; il manifesto elenca fonti, licenze e attribuzioni.
 2. I dati DBT/ATM vanno mantenuti come strato separato con la propria provenienza e **mai scritti in OSM**.
 3. Le segnalazioni utente non hanno ancora termini di contributo: **non incluse** (nessuna evidenza «riportata» nel registro).
 

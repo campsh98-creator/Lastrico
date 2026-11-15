@@ -220,17 +220,22 @@ export function resolveAttribute({ target, topic, attr, mode, evidence, sources,
 
 export function resolveAll({ ledger, policy, variant, mode = "car", asOf = ledger.asOf, topics = Object.keys(TOPIC_ATTRS) }) {
   const views = [];
+  // Evidence indexed by way: resolveAttribute only ever looks at evidence whose refs touch the target's way,
+  // so passing that subset gives the same views as passing everything, in time linear in the evidence.
+  const byWay = new Map();
+  for (const ev of ledger.evidence) for (const wayId of new Set(ev.refs.map((r) => r.wayId))) { if (!byWay.has(wayId)) byWay.set(wayId, []); byWay.get(wayId).push(ev); }
   for (const topic of topics) {
     // targets are per topic: a partial-interval rails ref must not create sub-interval surface views
     const targets = new Map();
     for (const ev of ledger.evidence) if (ev.topic === topic) for (const r of ev.refs) targets.set(`${r.wayId}:${r.fromM}:${r.toM}`, { wayId: r.wayId, fromM: r.fromM, toM: r.toM });
     for (const t of [...targets.values()].sort((x, y) => x.wayId - y.wayId || x.fromM - y.fromM || x.toM - y.toM)) {
       const attributes = {};
-      const relevant = ledger.evidence.filter((e) => e.topic === topic && e.refs.some((r) => r.wayId === t.wayId && overlapM(r, t) > 0));
+      const onWay = byWay.get(t.wayId) ?? [];
+      const relevant = onWay.filter((e) => e.topic === topic && e.refs.some((r) => r.wayId === t.wayId && overlapM(r, t) > 0));
       for (const attr of TOPIC_ATTRS[topic]) {
         const mentioned = relevant.some((e) => e.claim[attr] !== undefined);
         if (!mentioned && attr !== PRIMARY[topic]) continue;
-        attributes[attr] = resolveAttribute({ target: t, topic, attr, mode, evidence: ledger.evidence, sources: ledger.sources, policy, variant, asOf });
+        attributes[attr] = resolveAttribute({ target: t, topic, attr, mode, evidence: onWay, sources: ledger.sources, policy, variant, asOf });
       }
       views.push({ ref: t, topic, mode, attributes });
     }

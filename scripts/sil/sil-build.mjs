@@ -18,12 +18,19 @@ import { readFoundationArtifact } from "../osm/compile-osm-foundation.mjs";
 import { verifyTileBinding } from "../osm/segment-identity.mjs";
 import { ASOF, RESOLVER_VERSION, metres, readJson, resolveAll, sha256, stable, validate } from "./sil-core.mjs";
 import { covered, groupCoverage, runsOf } from "./sil-coverage.mjs";
-import { JOIN, atmTramAxes, dbtAxes, indexAxes, joinAxes, nearestAxisM, osmAxes } from "./sil-rails.mjs";
+import { JOIN, atmTramAxes, classifyDbtAxes, dbtAxes, indexAxes, joinAxes, joinAxesDetailed, nearestAxisM, osmAxes } from "./sil-rails.mjs";
+import { loadDbtCache, ringIndex } from "./sil-dbt-cache.mjs";
 
 const here = fileURLToPath(new URL(".", import.meta.url));
 const ALL = ["car", "motorcycle", "bicycle"];
 /** The cached DBT features cover this box only (the public Lodi landmark box). Nothing outside it is claimed. */
 export const DBT_BOX = [9.2025, 45.4430, 9.2175, 45.4550];
+/** The Comune's own metadata disagree on the licence version: the service says CC BY 4.0, the CKAN resource says CC BY 2.5 IT. */
+const DBT_CITYWIDE = {
+  name: "Comune di Milano, Database Topografico 2020, tram axes EL_TRV (layer 19, all 3,094) with carriageway (39) and railway-bed (45) polygons, REST service, municipality-wide",
+  licenceId: "CC-BY-VERSION-CONFLICT", retrievedAt: "2026-11-15",
+  licenceNote: "Attribution-only in every statement found. The REST service description says CC BY 4.0; the CKAN resource of dataset DS2889 says CC BY 2.5 IT (A25_CCBY25IT); the CKAN dataset says generic cc-by. Version to be confirmed with the Comune before any distribution.",
+};
 const EXTERNAL = {
   dbt: { id: "dbt2020.el_trv", name: "Comune di Milano, Database Topografico 2020, tram axis EL_TRV, REST layers 19, 39, 45 (Lodi landmark box only)",
     licenceId: "CC-BY-4.0", licenceNote: "CKAN license_id cc-by; the portal states CC BY 4.0, the version was not re-verified",
@@ -35,6 +42,12 @@ const EXTERNAL = {
 };
 
 const round1 = (x) => Math.round(x * 10) / 10;
+const toMetres = (p) => [(p[0] - 9.19) * 111_320 * Math.cos((45.465 * Math.PI) / 180), (p[1] - 45.465) * 110_540];
+function distPointSeg(px, py, [ax, ay], [bx, by]) {
+  const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy;
+  const t = l2 ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l2)) : 0;
+  return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+}
 const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 
 /** Consecutive edges of one way become one run. `items`: [{ group, wayId, edge, ... }]. */
@@ -50,7 +63,7 @@ function toRuns(items) {
   return runs;
 }
 
-export async function buildSil({ foundationDir, tilesDir, productionTilesDir = null, outputDir, asOf = ASOF, dbtCache = null, atmFile = null, variant = "P-A" }) {
+export async function buildSil({ foundationDir, tilesDir, productionTilesDir = null, outputDir, asOf = ASOF, dbtCache = null, dbtCitywideCache = null, atmFile = null, variant = "P-A" }) {
   const T = {};
   const lap = (name, t0) => { T[name] = Math.round(performance.now() - t0); };
   let t = performance.now();
@@ -126,25 +139,39 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
   // ---- 3. rails axes and joins ----
   const osm = osmAxes(groups);
   const osmJoin = joinAxes(osm.axes, segList);
-  let dbt = null, dbtJoin = new Map(), dbtSegments = [];
-  if (dbtCache) {
+  // DBT: either the citywide cache (area asked = the municipality) or the legacy Lodi box cache.
+  let dbt = null, dbtArea = null, dbtJoin = new Map(), dbtPartial = new Map(), dbtSegments = [], dbtCityCache = null;
+  if (dbtCitywideCache) {
+    dbtCityCache = await loadDbtCache(dbtCitywideCache);
+    if (!dbtCityCache.ring) throw new Error("DBT cache has no municipal boundary: the area asked about is unknown");
+    const ring = dbtCityCache.ring;
+    const bb = ring.reduce((b, [x, y]) => [Math.min(b[0], x), Math.min(b[1], y), Math.max(b[2], x), Math.max(b[3], y)], [1e9, 1e9, -1e9, -1e9]);
+    const insideRing = ringIndex([ring]);
+    dbtArea = { label: "comune-di-milano", contains: (p) => p[0] >= bb[0] && p[0] <= bb[2] && p[1] >= bb[1] && p[1] <= bb[3] && insideRing(p) };
+    dbt = { axes: classifyDbtAxes({ axes: dbtCityCache.axes, vehicular: dbtCityCache.vehicular, bed: dbtCityCache.bed, contains: dbtArea.contains }),
+      inputs: { cacheInputsSha256: dbtCityCache.inputsSha256, ...dbtCityCache.totals, layers: dbtCityCache.inputs.reduce((m, i) => (m[i.layer] = (m[i.layer] ?? 0) + i.features, m), {}) },
+      sourceSha256: dbtCityCache.inputsSha256, citywide: true };
+  } else if (dbtCache) {
     dbt = dbtAxes(dbtCache, DBT_BOX);
-    const pad = 20;
-    dbtSegments = segList.filter((s) => s.mid[0] >= DBT_BOX[0] - pad / 78000 && s.mid[0] <= DBT_BOX[2] + pad / 78000 && s.mid[1] >= DBT_BOX[1] - pad / 110540 && s.mid[1] <= DBT_BOX[3] + pad / 110540);
-    dbtJoin = joinAxes(dbt.axes, dbtSegments);
+    dbt.sourceSha256 = dbt.inputs["dbt-box-19-wgs.json"].sha256;
+    dbtArea = { label: "lodi-box", contains: (p) => p[0] >= DBT_BOX[0] && p[0] <= DBT_BOX[2] && p[1] >= DBT_BOX[1] && p[1] <= DBT_BOX[3] };
+  }
+  if (dbt) {
+    dbtSegments = segList.filter((s) => dbtArea.contains(s.mid));
+    ({ flagged: dbtJoin, partial: dbtPartial } = joinAxesDetailed(dbt.axes, dbtSegments));
   }
   const atm = atmFile ? atmTramAxes(atmFile) : null;
   const atmIndex = atm ? indexAxes(atm.axes) : null;
   lap("joinMs", t); t = performance.now();
 
   // ---- 4. evidence ----
-  const inDbtBox = (s) => s.mid[0] >= DBT_BOX[0] && s.mid[0] <= DBT_BOX[2] && s.mid[1] >= DBT_BOX[1] && s.mid[1] <= DBT_BOX[3];
+  const inDbtBox = (s) => (dbtArea ? dbtArea.contains(s.mid) : false); // the area the DBT was asked about
   const osmRetrieved = foundation.sourceGroups.flatMap((g) => g.sources.map((s) => s.retrievedAt).filter(Boolean)).map((d) => d.slice(0, 10)).sort().at(-1) ?? asOf;
   const sources = [
     { id: "osm.foundation.rails", name: "OpenStreetMap railway ways in the Phase 4.38 sidecar (only where the extraction asked for them)",
       licenceId: "ODbL-1.0", attribution: "© OpenStreetMap contributors", retrievedAt: osmRetrieved, datasetDate: null,
       authoritativeFor: ["rails_presence.presence", "rails_presence.railType"] },
-    ...(dbt ? [{ ...EXTERNAL.dbt, sha256: dbt.inputs["dbt-box-19-wgs.json"].sha256 }] : []),
+    ...(dbt ? [{ ...EXTERNAL.dbt, ...(dbt.citywide ? DBT_CITYWIDE : {}), sha256: dbt.sourceSha256 }] : []),
     ...(atm ? [{ ...EXTERNAL.atm, sha256: atm.sha256 }] : []),
   ].sort((a, b) => a.id.localeCompare(b.id));
 
@@ -321,7 +348,7 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
   const coverageReport = {
     segmentsUnique: segList.length, metresUnique: sumM(() => true),
     railsQueriedByOsmExtraction: { segments: queriedUnique.osm.size, metres: sumM((s) => queriedUnique.osm.has(s.key)) },
-    railsQueriedByDbtBox: { segments: queriedUnique.dbt.size, metres: sumM((s) => queriedUnique.dbt.has(s.key)) },
+    railsQueriedByDbtArea: { segments: queriedUnique.dbt.size, metres: sumM((s) => queriedUnique.dbt.has(s.key)) },
     railsQueriedByAnySource: { segments: queriedUnique.any.size, metres: sumM((s) => queriedUnique.any.has(s.key)) },
     railsUnknownByCoverage: { segments: segList.length - queriedUnique.any.size, metres: sumM((s) => !queriedUnique.any.has(s.key)) },
     byBoundGroup: foundation.sourceGroups.map((g, i) => ({ group: g.name, segments: segList.filter((s) => s.group === i).length, metres: sumM((s) => s.group === i),
@@ -329,12 +356,60 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
     groups: coverage.map((g) => ({ name: g.name, sources: g.sources.length, railsSources: g.sources.filter((x) => x.rails).length, corridorSources: g.sources.filter((x) => x.corridors.length).length, restrictionSources: g.sources.filter((x) => x.restrictions).length,
       sourcesWithoutBox: g.sourcesWithoutBox, capabilityBasis: [...new Set(g.sources.map((x) => x.basis))].sort() })),
     railCorridors: corridorStats,
-    dbtBox: dbt ? DBT_BOX : null,
+    dbtArea: dbtArea ? dbtArea.label : null,
     tilesWithOverlay: Object.keys(overlayTiles).length, tilesBase: tiles.length,
   };
+  // How good is the DBT join? Counts only.
+  let dbtQuality = null;
+  if (dbt) {
+    const mixed = [...dbtJoin.values()].filter((v) => new Set([...v.axes].map((ai) => dbt.axes[ai].sharing)).size > 1).length;
+    const multiAxis = [...dbtJoin.values()].filter((v) => v.axes.size > 1).length;
+    const flaggedBySharing = {};
+    for (const v of dbtJoin.values()) { const top = [...v.axes].map((ai) => dbt.axes[ai].sharing).sort()[0]; flaggedBySharing[top] = (flaggedBySharing[top] ?? 0) + 1; }
+    // axis side: how much axis length lies within 5 m of ANY compiled segment (an axis the compiled network cannot carry is lost)
+    const segGrid = new Map();
+    const cell = 25;
+    for (const sg of dbtSegments) {
+      const A = toMetres(sg.a), B = toMetres(sg.b);
+      for (let x = Math.floor(Math.min(A[0], B[0]) / cell) - 1; x <= Math.floor(Math.max(A[0], B[0]) / cell) + 1; x++) {
+        for (let y = Math.floor(Math.min(A[1], B[1]) / cell) - 1; y <= Math.floor(Math.max(A[1], B[1]) / cell) + 1; y++) {
+          const k = x + ":" + y;
+          if (!segGrid.has(k)) segGrid.set(k, []);
+          segGrid.get(k).push([A, B]);
+        }
+      }
+    }
+    let axisM = 0, axisCarried = 0;
+    const byClass = {};
+    for (const axis of dbt.axes) for (const [p, q] of axis.edges) {
+      const L = metres(p, q), n = Math.max(1, Math.ceil(L / 2)), P = toMetres(p), Q = toMetres(q);
+      for (let k = 0; k < n; k++) {
+        const m = [p[0] + ((q[0] - p[0]) * (k + 0.5)) / n, p[1] + ((q[1] - p[1]) * (k + 0.5)) / n];
+        if (!dbtArea.contains(m)) continue;
+        axisM += L / n;
+        const cls = byClass[axis.sharing] ?? (byClass[axis.sharing] = { m: 0, carried: 0 });
+        cls.m += L / n;
+        const mx = P[0] + ((Q[0] - P[0]) * (k + 0.5)) / n, my = P[1] + ((Q[1] - P[1]) * (k + 0.5)) / n;
+        if ((segGrid.get(Math.floor(mx / cell) + ":" + Math.floor(my / cell)) ?? []).some(([A, B]) => distPointSeg(mx, my, A, B) <= JOIN.alongM)) { axisCarried += L / n; cls.carried += L / n; }
+      }
+    }
+    dbtQuality = {
+      axesByClass: dbt.axes.reduce((m, a) => { const k = a.pos + ":" + a.sharing; m[k] = (m[k] ?? 0) + 1; return m; }, {}),
+      axesUnknownClass: dbt.axes.filter((a) => a.sharing === "unknown").length,
+      unknownClassReason: dbt.axes.filter((a) => a.sharing === "unknown").reduce((m, a) => {
+        const r = a.vehShare >= 0.8 && a.bedShare >= 0.2 ? "both-polygons" : a.vehShare < 0.8 && a.bedShare < 0.8 ? "neither-polygon-dominant" : a.pos === "02" ? "pos02-but-bed-polygon" : "pos01-but-carriageway-polygon";
+        m[r] = (m[r] ?? 0) + 1; return m;
+      }, {}),
+      carriedByClass: Object.fromEntries(Object.entries(byClass).sort().map(([k, v]) => [k, { metres: Math.round(v.m), carriedPercent: v.m ? Math.round((v.carried / v.m) * 1000) / 10 : null }])),
+      axisMetresInArea: Math.round(axisM), axisMetresWithin5mOfACompiledSegment: Math.round(axisCarried),
+      axisSideCarriedPercent: axisM ? Math.round((axisCarried / axisM) * 1000) / 10 : null,
+      segmentsFlagged: dbtJoin.size, segmentsNearMiss20to50Percent: dbtPartial.size,
+      flaggedWithMixedSharing: mixed, flaggedWithSeveralAxes: multiAxis, flaggedBySharing,
+    };
+  }
   // OSM against DBT inside the DBT box: where both sources look, how often do they agree?
   const box = segList.filter(inDbtBox);
-  const agreement = dbt ? { segmentsInBox: box.length, osmAskedInBox: box.filter(osmAsked).length,
+  const agreement = dbt ? { area: dbtArea.label, segmentsInBox: box.length, osmAskedInBox: box.filter(osmAsked).length,
     both: box.filter((x) => osmJoin.has(x.key) && dbtJoin.has(x.key)).length,
     dbtOnlyWhereOsmAsked: box.filter((x) => dbtJoin.has(x.key) && !osmJoin.has(x.key) && osmAsked(x)).length,
     osmOnly: box.filter((x) => osmJoin.has(x.key) && !dbtJoin.has(x.key)).length,
@@ -351,8 +426,8 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
     osmRailways: osm.stats, osmTramAxes: osm.axes.length,
     osmTramFlaggedSegments: [...osmJoin.keys()].length, osmTramFlaggedMetres: Math.round([...osmJoin.values()].reduce((n, v) => n + v.alongM, 0)),
     dbt: dbt ? { axisFeatures: dbt.axes.length, byPos: dbt.axes.reduce((m, a) => (m[a.pos] = (m[a.pos] ?? 0) + 1, m), {}),
-      bySharing: dbt.axes.reduce((m, a) => (m[a.sharing] = (m[a.sharing] ?? 0) + 1, m), {}), segmentsInBox: dbtSegments.length,
-      flaggedSegments: dbtJoin.size, flaggedMetres: Math.round([...dbtJoin.values()].reduce((n, v) => n + v.alongM, 0)), inputs: dbt.inputs } : null,
+      bySharing: dbt.axes.reduce((m, a) => (m[a.sharing] = (m[a.sharing] ?? 0) + 1, m), {}), segmentsInArea: dbtSegments.length,
+      flaggedSegments: dbtJoin.size, flaggedMetres: Math.round([...dbtJoin.values()].reduce((n, v) => n + v.alongM, 0)), inputs: dbt.inputs, quality: dbtQuality } : null,
     atm: atm ? { routes: atm.routes, lines: atm.lines, sha256: atm.sha256, ...atmStats } : null,
     evidence: { total: evidence.length, byTopic: evidence.reduce((m, e) => (m[e.topic] = (m[e.topic] ?? 0) + 1, m), {}), ...stats },
     views: views.length, overlay: counts,
@@ -365,7 +440,7 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
     sources: sources.map((s) => ({ id: s.id, licenceId: s.licenceId, attribution: s.attribution })),
     coverage: coverageReport,
     inputs: { foundationDatasetVersion: foundation.datasetVersion, foundationManifestSha256: sha256(manifestBytes), identityVersion: foundation.identityVersion,
-      dbtInputs: dbt?.inputs ?? null, atmSha256: atm?.sha256 ?? null },
+      dbtInputs: dbt?.inputs ?? null, dbtArea: dbtArea?.label ?? null, atmSha256: atm?.sha256 ?? null },
     ...(productionTilesDir ? { productionTileCompat: { tiles: compat.tiles, indexCompatible: compat.indexCompatible, identicalHash: compat.identicalHash, differingTiles: compat.differing.sort() } } : {}),
     facts: { osmTramAxes: osm.axes.length, evidence: evidence.length, entries: counts.entries },
   };
@@ -389,6 +464,7 @@ export async function buildSil({ foundationDir, tilesDir, productionTilesDir = n
   await writeFile(join(out, "coverage.json"), stable(coverageReport, 1));
   await writeFile(join(out, "facts.json"), stable({ ...facts, reviewTasks: tasks }, 1));
   lap("writeMs", t);
+  T.peakRssMiB = Math.round(process.resourceUsage().maxRSS / 1024); // KiB reported by Node
   await writeFile(join(out, "timings.json"), stable(T, 1)); // not part of the deterministic set
   return { manifest, coverage: coverageReport, facts, timings: T, ledger, views, overlayTiles, segs, tiles };
 }
@@ -400,7 +476,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1
   const result = await buildSil({
     foundationDir: resolve(arg("foundation")), tilesDir: resolve(arg("tiles")), outputDir: arg("output"),
     productionTilesDir: arg("production-tiles") ? resolve(arg("production-tiles")) : null,
-    dbtCache: arg("dbt-cache") ? resolve(arg("dbt-cache")) : null, atmFile: arg("atm") ? resolve(arg("atm")) : null,
+    dbtCache: arg("dbt-cache") ? resolve(arg("dbt-cache")) : null, dbtCitywideCache: arg("dbt-citywide-cache") ? resolve(arg("dbt-citywide-cache")) : null, atmFile: arg("atm") ? resolve(arg("atm")) : null,
     asOf: arg("as-of") ?? ASOF,
   });
   console.log(JSON.stringify({ datasetVersion: result.manifest.datasetVersion, coverage: result.coverage, facts: result.facts, timings: result.timings }, null, 1));
