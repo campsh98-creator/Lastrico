@@ -1,9 +1,9 @@
 {
- "note": "Phase 4.37 offline benchmark, same 264 Milan cases (88 journeys x car/motorcycle/bicycle, avoidance strong, departure Monday 2026-11-09 12:00). Before = 3e31da9 on the Phase 4.25-4.31 archive; after = branch on the archive plus 120 responses recorded on 2026-11-14 (a newer provider graph). Predicted effects on OSM data, not ground truth. 'Shown route' = the anti-pave route when a distinct alternative is offered, else the fastest.",
+ "note": "Phase 4.37 offline benchmark, same 264 Milan cases (88 journeys x car/motorcycle/bicycle, avoidance strong, departure Monday 2026-11-09 12:00). Before = 3e31da9 on the Phase 4.25-4.31 archive; after = the branch with the review corrections (guard on penalised routes that add confirmed stone, provider-request ceiling) on the archive plus 121 responses recorded on 2026-11-14 (a newer provider graph). Predicted effects on OSM data, not ground truth. Shown route = the anti-pave route when a distinct alternative is offered, else the fastest.",
  "cases": 264,
  "withoutRoutePayload": 1,
- "identical": 244,
- "changed": 19,
+ "identical": 246,
+ "changed": 17,
  "totalShownConfirmedStoneM": {
   "before": 50483,
   "after": 47402
@@ -14,7 +14,7 @@
  },
  "providerRequestsAnsweredFromArchive": {
   "before": 817,
-  "after": 869
+  "after": 870
  },
  "changedCases": [
   {
@@ -196,60 +196,6 @@
    "fastSeconds": {
     "before": 899,
     "after": 899
-   },
-   "distinctAlternative": {
-    "before": true,
-    "after": true
-   },
-   "status": {
-    "before": "alternative",
-    "after": "alternative"
-   }
-  },
-  {
-   "case": "de-angeli-san-babila-car",
-   "shownConfirmedStoneM": {
-    "before": 35,
-    "after": 35
-   },
-   "shownSeconds": {
-    "before": 1193,
-    "after": 1193
-   },
-   "fastConfirmedStoneM": {
-    "before": 85,
-    "after": 258
-   },
-   "fastSeconds": {
-    "before": 1145,
-    "after": 1116
-   },
-   "distinctAlternative": {
-    "before": true,
-    "after": true
-   },
-   "status": {
-    "before": "alternative",
-    "after": "alternative"
-   }
-  },
-  {
-   "case": "de-angeli-san-babila-motorcycle",
-   "shownConfirmedStoneM": {
-    "before": 86,
-    "after": 86
-   },
-   "shownSeconds": {
-    "before": 1192,
-    "after": 1192
-   },
-   "fastConfirmedStoneM": {
-    "before": 85,
-    "after": 511
-   },
-   "fastSeconds": {
-    "before": 1145,
-    "after": 1118
    },
    "distinctAlternative": {
     "before": true,

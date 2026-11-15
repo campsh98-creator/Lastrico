@@ -5,7 +5,9 @@
  *   node scripts/record-phase437-fixtures.mjs            offline check: lists any missing response, writes nothing
  *   node scripts/record-phase437-fixtures.mjs --live     records only the missing responses from the public provider
  *
- * Only public OSM junction coordinates are used. Live requests are serial, at least 1.2 s apart, with an
+ * A response already in the Phase 4.25 archive (outputs/phase425-benchmark/responses, restored from
+ * provider-responses.tar.gz) is copied instead of requested again. Only public coordinates are used
+ * (OSM junctions, benchmark journeys). Live requests are serial, at least 1.2 s apart, with an
  * honest User-Agent (FOSSGIS etiquette). The public provider changes over time: a live run does not
  * reproduce earlier answers, which is why the recorded responses are versioned.
  */
@@ -24,6 +26,7 @@ const { GET } = await loadApi("app/api/routes/route.ts");
 const nativeFetch = globalThis.fetch;
 let lastNetworkAt = 0;
 let recorded = 0;
+let copied = 0;
 const missing = [];
 
 globalThis.fetch = async (url, init = {}) => {
@@ -34,6 +37,17 @@ globalThis.fetch = async (url, init = {}) => {
     entry = JSON.parse(gunzipSync(await readFile(new URL(`${key}.json.gz`, providerDir))));
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
+  }
+  if (!entry) {
+    try {
+      const archived = JSON.parse(await readFile(new URL(`outputs/phase425-benchmark/responses/${key}.json`, root), "utf8"));
+      entry = { request, status: archived.status, body: archived.body, retrievedAt: archived.retrievedAt };
+      await mkdir(providerDir, { recursive: true });
+      await writeFile(new URL(`${key}.json.gz`, providerDir), gzipSync(JSON.stringify(entry)));
+      copied += 1;
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+    }
   }
   if (!entry) {
     missing.push(key);
@@ -60,5 +74,5 @@ for (const c of cases) {
   console.log(`${c.id}: ${response.status} ${payload.antiPave?.status} attempted=${payload.antiPave?.search?.attempted} slices=${payload.antiPave?.search?.slices}`);
 }
 globalThis.fetch = nativeFetch;
-console.log(live ? `recorded ${recorded} new response(s)` : `missing ${missing.length} response(s)`);
+console.log(`copied ${copied} archived response(s); ` + (live ? `recorded ${recorded} new response(s)` : `missing ${missing.length} response(s)`));
 if (!live && missing.length) process.exit(1);

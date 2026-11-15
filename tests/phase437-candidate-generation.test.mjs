@@ -12,7 +12,7 @@ import {
   pointDistanceMeters,
   stopsOnlyWhenClean,
 } from "../lib/surface-aware-routing.ts";
-import { selectOptimizedRoute, U_TURN_PENALTY_SECONDS, uTurnCount } from "../lib/route-optimization.ts";
+import { addsConfirmedPave, isLegalCandidate, selectOptimizedRoute, U_TURN_PENALTY_SECONDS, uTurnCount } from "../lib/route-optimization.ts";
 
 /**
  * Phase 4.37 — anti-pavé candidate generation (package P0). Phase 4.36 found that the Piazzale Lodi stone
@@ -115,19 +115,20 @@ const { cases } = JSON.parse(await readFile(new URL("tests/fixtures/phase437/cas
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const { GET } = await loadApi("app/api/routes/route.ts");
 
-async function run(id) {
+async function run(id, { navigation = false, answerEverythingWith = null } = {}) {
   const c = cases.find((entry) => entry.id === id);
   const nativeFetch = globalThis.fetch;
   const requests = [];
   globalThis.fetch = async (url, init = {}) => {
     const request = { url: String(url), method: init.method ?? "GET", body: init.body ?? null };
     requests.push(request);
-    const key = sha256(JSON.stringify(request));
+    const key = answerEverythingWith ?? sha256(JSON.stringify(request));
     const entry = JSON.parse(gunzipSync(await readFile(new URL(`tests/fixtures/phase437/provider/${key}.json.gz`, root))));
     return new Response(entry.body, { status: entry.status, headers: { "Content-Type": "application/json" } });
   };
   try {
     const params = new URLSearchParams({ area: "milan", start: c.start, end: c.end, mode: c.mode, avoid: "strong", departure: "2026-11-09T12:00" });
+    if (navigation) params.set("navigation", "1");
     const response = await GET(new NextRequest(`http://localhost/api/routes?${params}`));
     return { c, status: response.status, payload: await response.json(), requests };
   } finally {
@@ -157,4 +158,131 @@ test("Piazzale Lodi, outbound-like replica: the outcome is unchanged and no requ
   assert.equal(payload.fast.confirmedPaveMeters, c.before.fastConfirmedMeters);
   assert.equal(payload.safe.confirmedPaveMeters, c.before.safeConfirmedMeters);
   assert.equal(payload.hasDistinctAlternative, true);
+});
+
+// ---- Phase 4.37 review: a penalised route must not add confirmed stone to the fastest card --------------------------
+
+test("addsConfirmedPave is the selection's own rule: a small swap for probable stone passes, a large one does not", () => {
+  const reference = candidate({ duration: 600, risk: 100, id: "reference" });
+  reference.surfaceScore.confirmedMeters = 85;
+  reference.surfaceScore.probableMeters = 437;
+  const heavy = candidate({ duration: 580, risk: 100, id: "heavy" });
+  heavy.surfaceScore.confirmedMeters = 511; // De Angeli → San Babila by motorcycle: +426 m confirmed for −388 m probable
+  heavy.surfaceScore.probableMeters = 49;
+  assert.equal(addsConfirmedPave(heavy, reference), true);
+  const small = candidate({ duration: 580, risk: 100, id: "small" });
+  small.surfaceScore.confirmedMeters = 85 + 30; // within max(10, min(50, 10 % of the 400 m of probable stone removed))
+  small.surfaceScore.probableMeters = 437; // no probable stone removed: tolerance is the 10 m minimum
+  assert.equal(addsConfirmedPave(small, reference), true, "+30 m with no probable stone removed is over the 10 m tolerance");
+  small.surfaceScore.probableMeters = 0; // 437 m removed: tolerance min(50, 43.7) = 43.7 m
+  assert.equal(addsConfirmedPave(small, reference), false, "+30 m for 437 m of probable stone removed is accepted");
+  const lighter = candidate({ duration: 700, risk: 20, id: "lighter" });
+  lighter.surfaceScore.confirmedMeters = 20;
+  assert.equal(addsConfirmedPave(lighter, reference), false);
+  assert.equal(addsConfirmedPave({ ...heavy, surfaceScore: { ...heavy.surfaceScore, confirmedMeters: undefined } }, reference), false, "unknown split: no verdict");
+});
+
+test("De Angeli → San Babila by motorcycle: the penalised route that adds 426 m of confirmed stone is dropped", async () => {
+  const { c, status, payload } = await run("de-angeli-san-babila-motorcycle");
+  assert.equal(status, 200);
+  assert.equal(payload.antiPave.search.attempted, true);
+  assert.ok(payload.antiPave.search.discarded >= 1, "the penalised candidate is discarded, and says so");
+  assert.equal(payload.fast.confirmedPaveMeters, c.after.fastConfirmedMeters, "the fastest card stays the provider's own route");
+  assert.equal(Math.round(payload.fast.minutes * 60), c.after.fastSeconds);
+  assert.equal(payload.safe.confirmedPaveMeters, c.after.safeConfirmedMeters);
+  assert.equal(payload.hasDistinctAlternative, true);
+  assert.ok(!payload.candidateDiagnostics.some((d) => d.source.startsWith("surface-aware-valhalla") && d.confirmedPaveMeters > 85 + 50), "no penalised route with more confirmed stone in the pool");
+});
+
+test("every Phase 4.37 behaviour in the handler is keyed on the Milan area (Rome and Roccella keep the old rules)", async () => {
+  const source = (await readFile(new URL("app/api/routes/route.ts", root), "utf8")).replace(/\r\n/g, "\n");
+  for (const needle of [
+    'area.id !== "milan" || !addsConfirmedPave(candidate, preliminaryFast)',
+    'area.id === "milan"\n    ? { ...MODE_POLICY[mode], uTurnPenaltySeconds: U_TURN_PENALTY_SECONDS }',
+    "penalisedSliceMinimumMeters(area.id, policy.minimumPaveReduction)",
+    "stopsOnlyWhenClean(area.id, navigationRequest)",
+  ]) assert.ok(source.includes(needle), `missing: ${needle}`);
+  // The rules that decide are pure functions of the area id, tested above.
+  assert.equal(penalisedSliceMinimumMeters("roccella", 12), 25);
+  assert.equal(stopsOnlyWhenClean("rome", false), false);
+});
+
+// ---- Phase 4.37 review: provider requests are capped -------------------------------------------------------------------
+
+test("a planner calculation never exceeds 7 provider requests and a reroute never exceeds 4, even if every answer says 'keep going'", async () => {
+  // Answer every request with the first recorded base response: the handler sees a provider that always succeeds, the
+  // worst case for a search that asks for more.
+  const probe = await run("piazzale-lodi-return-car");
+  const baseKey = sha256(JSON.stringify(probe.requests[0]));
+  for (const id of ["piazzale-lodi-return-car", "piazzale-lodi-outbound-car", "de-angeli-san-babila-motorcycle"]) {
+    const planner = await run(id, { answerEverythingWith: baseKey });
+    assert.ok(planner.requests.length <= 7, `${id}: planner made ${planner.requests.length} requests`);
+    assert.equal(planner.payload.antiPave.search.providerRequests, planner.requests.length, "the counter matches the real requests");
+    const navigation = await run(id, { navigation: true, answerEverythingWith: baseKey });
+    assert.ok(navigation.requests.length <= 4, `${id}: reroute made ${navigation.requests.length} requests`);
+  }
+});
+
+test("the real fixtures report how many provider requests they used", async () => {
+  for (const id of ["piazzale-lodi-return-car", "piazzale-lodi-outbound-car", "de-angeli-san-babila-motorcycle"]) {
+    const { payload, requests } = await run(id);
+    assert.equal(payload.antiPave.search.providerRequests, requests.length, id);
+  }
+});
+
+// ---- Phase 4.37 review: the U-turn penalty cannot make routing illegal or add detours -------------------------------
+
+function seededRandom(seed) {
+  let state = seed >>> 0;
+  return () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 2 ** 32;
+  };
+}
+
+test("U-turn penalty, 600 random pools: never selects an illegal or over-limit route, only ever avoids U-turns, at a bounded cost", () => {
+  const random = seededRandom(437);
+  const weight = { balanced: CAR.balancedPaveDivisor / 60, strong: CAR.balancedPaveDivisor / 600 };
+  let differing = 0;
+  for (let round = 0; round < 600; round += 1) {
+    const avoidance = round % 2 === 0 ? "strong" : "balanced";
+    const fastDuration = 400 + Math.floor(random() * 800);
+    const fast = candidate({ duration: fastDuration, risk: 150 + Math.floor(random() * 500), unknown: Math.floor(random() * 60), uTurns: random() < 0.3 ? 1 : 0, id: "fast" });
+    const pool = [fast];
+    const size = 3 + Math.floor(random() * 5);
+    for (let i = 0; i < size; i += 1) {
+      const slower = 1 + random() * (avoidance === "strong" ? 0.7 : 0.4);
+      const c = candidate({
+        duration: Math.round(fastDuration * slower), risk: Math.floor(random() * 400), unknown: Math.floor(random() * 300),
+        uTurns: random() < 0.3 ? 1 + Math.floor(random() * 2) : 0, id: `c${i}`,
+      });
+      c.route.coordinates[0][1] += (i + 1) * 0.01 + random() * 0.001; // distinct corridors
+      if (random() < 0.1) c.route.provider = "osrm-public-fallback"; // wrong profile for a car ⇒ illegal
+      if (random() < 0.1) c.surfaceScore.blockingRestrictionMeters = 25; // known restriction ⇒ illegal
+      pool.push(c);
+    }
+    const plain = selectOptimizedRoute(pool, fast, "car", avoidance, null, CAR, equivalent);
+    const penalised = selectOptimizedRoute(pool, fast, "car", avoidance, null, { ...CAR, uTurnPenaltySeconds: U_TURN_PENALTY_SECONDS }, equivalent);
+    const chosen = penalised.safe;
+    if (chosen !== fast) {
+      assert.ok(isLegalCandidate(chosen, "car"), "a candidate that is not legal is never selected");
+      const limit = CAR.limits[avoidance];
+      assert.ok(chosen.route.duration <= fast.route.duration * limit.factor + limit.seconds, "the raw time limit is untouched by the penalty");
+      assert.ok(chosen.riskMeters + CAR.minimumPaveReduction <= fast.riskMeters, "it still removes the minimum stone");
+      assert.ok(!addsConfirmedPave(chosen, fast), "it still never adds confirmed stone");
+    }
+    if (chosen !== plain.safe) {
+      differing += 1;
+      const a = plain.safe;
+      const utility = (selection, candidate) => selection.scores.get(candidate).utility;
+      const avoided = uTurnCount(a.route) - uTurnCount(chosen.route);
+      assert.ok(avoided > 0, "the pick only changes to a route with fewer U-turns");
+      // Cost, in the selection's own units (metres of stone; seconds × weight): at most 60 s per U-turn avoided.
+      const cost = utility(plain, chosen) - utility(plain, a);
+      assert.ok(cost <= U_TURN_PENALTY_SECONDS * weight[avoidance] * avoided + 1e-9, `cost ${cost.toFixed(1)} exceeds the bound`);
+      // The route that is not chosen is not removed: it is still eligible, only less attractive.
+      assert.notEqual(penalised.verdicts.get(a), "illegal");
+    }
+  }
+  assert.ok(differing > 0 && differing < 300, `the penalty changes some picks but not most of them (${differing} of 600)`);
 });

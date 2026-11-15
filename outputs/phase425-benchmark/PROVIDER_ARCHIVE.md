@@ -8,10 +8,10 @@ answers. This archive cannot be regenerated.
 | Item | Value |
 | --- | --- |
 | File | `provider-responses.tar.gz` (5.8 MB; 45 MB unpacked) |
-| SHA-256 | `8b6b9ef725af6700628c6d21b086f9484f0e1c8233fe256222d28176997a2300` |
-| Content | 2,280 JSON files, one per request, named by the SHA-256 of `{url, method, body}` (2,160 from Phases 4.25–4.31 plus 120 added in Phase 4.37) |
+| SHA-256 | `de22f1521988829d8961a83aa384a3b20faebc81589d16b6132e4deb887bed03` |
+| Content | 2,281 JSON files, one per request, named by the SHA-256 of `{url, method, body}` (2,160 from Phases 4.25–4.31 plus 121 added in Phase 4.37) |
 | Provider | `https://valhalla1.openstreetmap.de/route` only (FOSSGIS public instance) |
-| Retrieved | 7–8 November 2026, paced at least 1.05 s apart; the 120 Phase 4.37 responses on 14 November 2026 (provider graph tileset 2026-11-14T03:50Z, a newer graph than the 7–8 November ones), paced at least 1.1 s apart |
+| Retrieved | 7–8 November 2026, paced at least 1.05 s apart; the 121 Phase 4.37 responses on 14–15 November 2026 (provider graph tileset 2026-11-14T03:50Z, a newer graph than the 7–8 November ones), paced at least 1.1 s apart |
 | Licence of the data | Route geometry derived from © OpenStreetMap contributors, ODbL 1.0 |
 
 The requests contain only the benchmark journeys of `tests/fixtures/phase425-milan-journeys.json`,

@@ -48,6 +48,21 @@ export function uTurnCount(route: EngineRoute): number {
   return (route.instructions ?? []).filter((instruction) => instruction.direction === "uturn").length;
 }
 
+/**
+ * Phase 4.37: whether `candidate` adds confirmed stone to `reference` beyond the tolerance the selection uses
+ * (a small increase is accepted when it removes far more probable stone). Shared by the selection and by the
+ * guard on penalised-search candidates, so the two cannot drift apart.
+ */
+export function addsConfirmedPave(candidate: OptimizationCandidate, reference: OptimizationCandidate): boolean {
+  const confirmed = candidate.surfaceScore.confirmedMeters;
+  const referenceConfirmed = reference.surfaceScore.confirmedMeters;
+  if (confirmed === undefined || referenceConfirmed === undefined) return false;
+  const probableRemoved = Math.max(0, (reference.surfaceScore.probableMeters ?? 0) - (candidate.surfaceScore.probableMeters ?? 0));
+  const tolerance = Math.max(CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS,
+    Math.min(CONFIRMED_PAVE_SWAP_MAX_METERS, probableRemoved * CONFIRMED_PAVE_SWAP_SHARE));
+  return confirmed > referenceConfirmed + tolerance;
+}
+
 export type OptimizationPolicy = {
   minimumPaveReduction: number;
   balancedPaveDivisor: number;
@@ -133,12 +148,7 @@ export function selectOptimizedRoute<T extends OptimizationCandidate>(
   const uTurnSeconds = (candidate: T) => (policy.uTurnPenaltySeconds ?? 0) * uTurnCount(candidate.route);
   const utility = (candidate: T) => burden(candidate)
     + ((candidate.route.duration + uTurnSeconds(candidate)) - (fast.route.duration + uTurnSeconds(fast))) * secondsWeight;
-  const confirmed = (candidate: T) => candidate.surfaceScore.confirmedMeters;
-  const probableRemoved = (candidate: T) => Math.max(0, (fast.surfaceScore.probableMeters ?? 0) - (candidate.surfaceScore.probableMeters ?? 0));
-  const confirmedTolerance = (candidate: T) => Math.max(CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS,
-    Math.min(CONFIRMED_PAVE_SWAP_MAX_METERS, probableRemoved(candidate) * CONFIRMED_PAVE_SWAP_SHARE));
-  const addsConfirmed = (candidate: T) => confirmed(candidate) !== undefined && confirmed(fast) !== undefined
-    && confirmed(candidate)! > confirmed(fast)! + confirmedTolerance(candidate);
+  const addsConfirmed = (candidate: T) => addsConfirmedPave(candidate, fast);
   const reducing = frontier.filter((candidate) => !equivalent(candidate.route, fast.route)
     && !addsConfirmed(candidate)
     && rawPave(candidate) <= rawPave(fast)

@@ -36,10 +36,11 @@ test("a reroute without an alternative does not turn the next reroutes into fast
 // Phase 4.37: a route with no known pavé must not be described as "no alternative with less pavé".
 test("status no-pave says the route has no known pavé, never that no alternative exists", () => {
   const text = rerouteOutcomeNotice("safe", false, "no-pave");
-  assert.match(text, /pavé noto/, "known pavé: unknown surface is not smooth surface");
+  assert.match(text, /nei dati disponibili/, "the claim is about the available data: unknown surface is not smooth surface");
+  assert.match(text, /nessun tratto significativo di pavé rilevato/);
   assert.doesNotMatch(text, /nessuna alternativa/);
   assert.doesNotMatch(text, /nessuna alternativa con meno pavé/);
-  assert.equal(text, "Nuovo percorso · nessun pavé noto di rilievo sul tragitto");
+  assert.equal(text, "Nuovo percorso · nessun tratto significativo di pavé rilevato nei dati disponibili.");
   // The objective and a real alternative still come first, exactly as before.
   assert.equal(rerouteOutcomeNotice("fast", false, "no-pave"), "Nuovo percorso più rapido");
   assert.equal(rerouteOutcomeNotice("safe", true, "no-pave"), "Nuovo percorso · anti-pavé mantenuto");
