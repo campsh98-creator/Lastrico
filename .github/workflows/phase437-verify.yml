@@ -96,3 +96,44 @@ jobs:
             echo "== $f: $(grep -cE '^(PASS|✔)' "$RUNNER_TEMP/$f.txt" 2>/dev/null || echo 0) pass lines, $(grep -cE '^(FAIL|✖)' "$RUNNER_TEMP/$f.txt" 2>/dev/null || echo 0) fail lines"
           done
           grep -E "^ℹ (tests|pass|fail|skipped)" "$RUNNER_TEMP/release-tests.txt" 2>/dev/null || true
+
+  baseline-e2e:
+    name: Baseline (3e31da9) for the E2E scenarios that failed on the branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      FORCE_COLOR: "0"
+    steps:
+      - name: Check out repository (full history)
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Prepare and build the baseline Milan-only release copy
+        run: |
+          node scripts/prepare-milan-release.mjs "$RUNNER_TEMP/milan-base" --commit=3e31da9 2>&1 | tail -5
+          cd "$RUNNER_TEMP/milan-base" && npm run build 2>&1 | tail -3
+      - name: Start the local Worker
+        working-directory: ${{ runner.temp }}/milan-base
+        run: |
+          WRANGLER_SEND_METRICS=false WRANGLER_LOG_PATH=.wrangler/wrangler.log nohup npx wrangler dev --config dist/server/wrangler.json --port 8799 --local --show-interactive-dev-session=false > "$RUNNER_TEMP/wrangler-base.log" 2>&1 &
+          for i in $(seq 1 90); do curl -sf -o /dev/null http://127.0.0.1:8799/manifest.webmanifest && break; sleep 2; done
+      - name: Baseline E2E scenarios (layout 390x844, arrow glide, GPS recording)
+        working-directory: ${{ runner.temp }}/milan-base
+        continue-on-error: true
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node tests/e2e/acceptance.mjs --mock-only --only=D1-390x844-light,D1-390x844-dark,F1,E6 2>&1 | tail -20
+      - name: Baseline mobile Chrome GPS journey (scripts/e2e-mobile-chrome.mjs)
+        working-directory: ${{ runner.temp }}/milan-base
+        continue-on-error: true
+        run: |
+          sudo mkdir -p "/Applications/Google Chrome.app/Contents/MacOS"
+          sudo ln -sf /usr/bin/google-chrome "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+          node scripts/e2e-mobile-chrome.mjs http://localhost:8799 2>&1 | tail -40
