@@ -1,0 +1,28 @@
+wayId,role,name,highway,surface,smoothness,surface_bike,oneway,electrified_trolley,rawLengthM,nodes,archiveVersion,archiveTimestamp,currentVersion,unchangedSinceArchive,compiledSegments,compiledLengthM,compiledCategory,route0TraversalM,route0AlongStartM
+111768010,ring,Piazzale Lodi,primary,asphalt,excellent,milanese_paving,yes,contact_line trolley_wire=yes,31,13,19,2025-11-07T00:51:45Z,19,true,12,31,confirmed_smooth,31.1,415
+287070936,ring,Piazzale Lodi,primary,sett,bad,milanese_paving,yes,contact_line trolley_wire=yes,25,11,17,2025-11-07T00:51:45Z,17,true,10,25,confirmed_rough,25,390
+111767966,ring,Piazzale Lodi,primary,asphalt,good,,yes,contact_line trolley_wire=yes,13.1,6,17,2025-11-07T00:51:45Z,17,true,5,13.1,confirmed_smooth,13,446.1
+4858617,ring,Piazzale Lodi,primary,asphalt,,,yes,contact_line trolley_wire=yes,47,16,38,2026-01-31T15:24:36Z,38,true,15,47,confirmed_smooth,0,
+111767965,ring,Piazzale Lodi,primary,asphalt,good,,yes,contact_line trolley_wire=yes,8.1,3,20,2025-11-07T00:51:45Z,20,true,2,8.1,confirmed_smooth,0,
+111767978,ring,Piazzale Lodi,primary,asphalt,excellent,milanese_paving,yes,contact_line trolley_wire=yes,41.6,13,19,2025-11-07T00:51:45Z,19,true,12,41.6,confirmed_smooth,0,
+111767984,ring,Piazzale Lodi,primary,asphalt,,milanese_paving,yes,contact_line trolley_wire=yes,21.1,8,17,2026-02-09T20:38:00Z,17,true,7,21.1,confirmed_smooth,0,
+287070933,ring,Piazzale Lodi,primary,asphalt,,milanese_paving,yes,contact_line trolley_wire=yes,23.8,9,15,2025-11-07T00:51:45Z,15,true,8,23.8,confirmed_smooth,0,
+287070935,ring,Piazzale Lodi,primary,asphalt,,,yes,,16.3,7,16,2026-01-31T15:22:03Z,16,true,6,16.3,confirmed_smooth,0,
+702135495,ring,Piazzale Lodi,primary,asphalt,excellent,,yes,contact_line trolley_wire=yes,7.3,3,8,2025-11-07T00:51:45Z,8,true,2,7.3,confirmed_smooth,0,
+713165251,ring,Piazzale Lodi,primary,asphalt,,milanese_paving,yes,contact_line trolley_wire=yes,8.2,3,7,2026-01-31T15:22:35Z,7,true,2,8.2,confirmed_smooth,0,
+713165261,ring,Piazzale Lodi,primary,asphalt,,milanese_paving,(junction),contact_line trolley_wire=yes,10.3,5,6,2026-01-31T15:22:00Z,6,true,4,10.3,confirmed_smooth,0,
+37039790,cycle track,Piazzale Lodi,cycleway,asphalt,good,,yes,,56.1,8,19,2025-11-07T00:46:38Z,19,true,7,56.1,confirmed_smooth,0,
+288900525,arm/neighbour,Viale Isonzo,primary,asphalt,,,yes,,207,11,10,2025-09-19T11:53:39Z,10,true,10,207,confirmed_smooth,209.9,459.1
+289749136,arm/neighbour,Viale Umbria,primary,asphalt,,,yes,,64.2,6,14,2026-02-12T20:12:01Z,14,true,5,64.2,confirmed_smooth,67.2,322.8
+37631196,arm/neighbour,Corso Lodi,primary,sett,intermediate,,yes,,43.4,6,18,2025-09-19T11:53:39Z,18,true,5,43.4,confirmed_rough,0,
+37631198,arm/neighbour,Corso Lodi,primary,asphalt,excellent,,yes,,81.9,12,23,2025-09-19T11:53:39Z,23,true,11,81.9,confirmed_smooth,0,
+48534971,arm/neighbour,Viale Umbria,primary,asphalt,,,yes,,62.2,5,20,2026-02-12T20:12:09Z,20,true,4,62.2,confirmed_smooth,0,
+111768022,arm/neighbour,Viale Umbria,service,asphalt,,milanese_paving,yes,contact_line trolley_wire=yes,15.5,2,10,2026-02-12T20:12:18Z,10,true,1,15.5,confirmed_smooth,0,
+111768026,arm/neighbour,Via Sannio,residential,sett,intermediate,,yes,,13.7,6,13,2026-05-10T08:02:19Z,13,true,5,13.7,confirmed_rough,0,
+175568507,arm/neighbour,Viale Isonzo,primary,asphalt,good,,yes,contact_line trolley_wire=yes,59.7,6,13,2025-09-19T11:53:39Z,13,true,5,59.7,confirmed_smooth,0,
+287070928,arm/neighbour,Viale Umbria,service,,,milanese_paving,yes,contact_line trolley_wire=yes,14.6,3,9,2023-10-03T14:34:54Z,9,true,2,14.6,confirmed_rough,0,
+529556307,cycle track,Piazzale Lodi,cycleway,paving_stones,excellent,,yes,,32.8,11,9,2025-11-07T00:46:38Z,9,true,10,32.8,confirmed_smooth,0,
+1156699180,cycle track,Piazzale Lodi,cycleway,asphalt,,,yes,,7.7,3,4,2025-11-07T00:46:38Z,4,true,2,7.7,confirmed_smooth,0,
+48534970,arm/neighbour,Viale Isonzo,service,,,,yes,contact_line trolley_wire=yes,209,15,9,2023-12-05T22:15:00Z,9,true,14,209,unknown,0,
+161606045,arm/neighbour,Corso Lodi,secondary,asphalt,intermediate,milanese_paving,yes,,12.4,4,12,2025-11-07T00:51:45Z,12,true,3,12.4,confirmed_smooth,0,
+290523327,arm/neighbour,Corso Lodi,secondary,asphalt,intermediate,,yes,,56.8,9,11,2025-09-19T11:53:39Z,11,true,8,56.8,confirmed_smooth,0,

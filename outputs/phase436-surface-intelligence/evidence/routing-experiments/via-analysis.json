@@ -1,0 +1,62 @@
+{
+ "note": "744 archived via-waypoint responses (Phase 4.25-4.31 corpus, public landmark journeys); U-turn = Valhalla maneuver type 12/13 in the primary route; near via = within 120 m of the via point. Observational (not an intervention): the via point was NOT chosen by this rule.",
+ "viaRequestsAnalysed": 740,
+ "byRule": {
+  "all": {
+   "n": 740,
+   "uturnPct": 30.7,
+   "uturnNearViaPct": 21.2
+  },
+  "via within 15 m of an intersection node": {
+   "n": 99,
+   "uturnPct": 20.2,
+   "uturnNearViaPct": 11.1
+  },
+  "via farther than 15 m from any intersection node": {
+   "n": 641,
+   "uturnPct": 32.3,
+   "uturnNearViaPct": 22.8
+  },
+  "via farther than 30 m from any intersection node": {
+   "n": 461,
+   "uturnPct": 31.5,
+   "uturnNearViaPct": 22.6
+  },
+  "nearest way two-way": {
+   "n": 303,
+   "uturnPct": 51.2,
+   "uturnNearViaPct": 41.9
+  },
+  "nearest way one-way": {
+   "n": 437,
+   "uturnPct": 16.5,
+   "uturnNearViaPct": 6.9
+  },
+  "nearest way primary/secondary/tertiary": {
+   "n": 98,
+   "uturnPct": 20.4,
+   "uturnNearViaPct": 7.1
+  },
+  "nearest way residential/service/other minor": {
+   "n": 642,
+   "uturnPct": 32.2,
+   "uturnNearViaPct": 23.4
+  },
+  "via >12 m from any way (snaps elsewhere)": {
+   "n": 456,
+   "uturnPct": 35.1,
+   "uturnNearViaPct": 26.1
+  },
+  "graph-aligned rule (<=15 m from intersection AND two-way AND not service)": {
+   "n": 22,
+   "uturnPct": 4.5,
+   "uturnNearViaPct": 4.5
+  },
+  "NOT graph-aligned": {
+   "n": 718,
+   "uturnPct": 31.5,
+   "uturnNearViaPct": 21.7
+  }
+ },
+ "medianDistanceToIntersectionM": 36.59532088969294
+}

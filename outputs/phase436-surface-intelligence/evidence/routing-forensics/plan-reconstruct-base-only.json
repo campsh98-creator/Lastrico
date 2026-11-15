@@ -1,0 +1,184 @@
+{
+ "scenario": "base-only",
+ "navigation": false,
+ "extraSecondsAssumed": null,
+ "note": "Stub provider; route 0 is the plan's own route. Requests after the base call are answered 503 (logged).",
+ "route0Length": {
+  "traceKm": 4.703,
+  "geometryMeters": 4699
+ },
+ "providerRequestsInOrder": [
+  {
+   "n": 1,
+   "kind": "base",
+   "locations": [
+    "break",
+    "break"
+   ],
+   "alternates": 2,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false
+  },
+  {
+   "n": 2,
+   "kind": "via-waypoint-detour",
+   "locations": [
+    "break",
+    "through",
+    "break"
+   ],
+   "alternates": 0,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false,
+   "viaFromStartMeters": 736,
+   "viaFromRoute0Meters": 448
+  },
+  {
+   "n": 3,
+   "kind": "base",
+   "hasHeading": false
+  },
+  {
+   "n": 4,
+   "kind": "via-waypoint-detour",
+   "locations": [
+    "break",
+    "through",
+    "break"
+   ],
+   "alternates": 0,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false,
+   "viaFromStartMeters": 234,
+   "viaFromRoute0Meters": 234
+  },
+  {
+   "n": 5,
+   "kind": "base",
+   "hasHeading": false
+  },
+  {
+   "n": 6,
+   "kind": "via-waypoint-detour",
+   "locations": [
+    "break",
+    "through",
+    "break"
+   ],
+   "alternates": 0,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false,
+   "viaFromStartMeters": 994,
+   "viaFromRoute0Meters": 707
+  },
+  {
+   "n": 7,
+   "kind": "base",
+   "hasHeading": false
+  }
+ ],
+ "fast": {
+  "km": 4.703,
+  "min": 15.63,
+  "confirmedPave": 25,
+  "probablePave": 0,
+  "unknown": 285,
+  "rough": [
+   {
+    "at": 391,
+    "to": 416,
+    "name": "Piazzale Lodi",
+    "surface": "sett"
+   }
+  ]
+ },
+ "safe": {
+  "km": 4.703,
+  "min": 15.63,
+  "confirmedPave": 25,
+  "probablePave": 0,
+  "unknown": 285,
+  "rough": [
+   {
+    "at": 391,
+    "to": 416,
+    "name": "Piazzale Lodi",
+    "surface": "sett"
+   }
+  ]
+ },
+ "hasDistinctAlternative": false,
+ "antiPave": {
+  "status": "no-better-route",
+  "standard": {
+   "source": "base-1",
+   "legal": true,
+   "seconds": 938,
+   "meters": 4703,
+   "paveMeters": 25,
+   "confirmedPaveMeters": 25
+  },
+  "avoidedVsStandardMeters": 0,
+  "search": {
+   "attempted": false,
+   "failed": false,
+   "generated": 0
+  }
+ },
+ "optimization": {
+  "strategy": "pareto-conservative-unknown",
+  "frontierSize": 1,
+  "unknownMeterPenalty": 1,
+  "directCandidateGenerated": false,
+  "directCandidates": 0
+ },
+ "alternativesAnalyzed": 1,
+ "dataNotice": "1 percorso reale controllato: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
+ "candidates": [
+  {
+   "source": "base-1",
+   "provider": "valhalla-fossgis",
+   "distance": 4703,
+   "seconds": 938,
+   "paveMeters": 25,
+   "weightedPaveMeters": 25,
+   "riskMeters": 25,
+   "unknownSurfaceMeters": 285,
+   "confirmedPaveMeters": 25,
+   "probablePaveMeters": 0,
+   "selectionVerdict": "fastest",
+   "selectionBurden": 25,
+   "selectionUtility": 25,
+   "paretoOptimal": true,
+   "distinctFromFast": false,
+   "eligibleModeAndAccess": true,
+   "confirmedRestrictionMeters": 0,
+   "blockingRestrictionMeters": 0,
+   "surfaceCoveragePercent": 93.9
+  }
+ ]
+}

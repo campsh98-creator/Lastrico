@@ -1,0 +1,69 @@
+{
+  "policyVersion": "sil-policy-0.1.0-experimental",
+  "resolverVersion": "si-resolver-0.1.0",
+  "note": "Every number below is a PLAUSIBLE default chosen for design feasibility, not calibrated against field data. Owner-adjustable; changing any value changes policyVersion and therefore datasetVersion.",
+  "asOfRule": "The resolver takes asOf as an explicit input (dataset build date). It never reads the wall clock, so a rebuild is byte-identical.",
+  "variants": {
+    "P-A": { "label": "default: contest only when weak dissent comes from >= 2 DISTINCT evidence kinds; a single weak dissent is flagged", "contestedMinDissentKinds": 2 },
+    "P-B": { "label": "conservative for comfort: any applicable weak dissent contests", "contestedMinDissentKinds": 1 }
+  },
+  "coarseMultiplier": 2.0,
+  "inferredVotes": false,
+  "materialFamilies": {
+    "stone_rough": ["sett", "cobblestone", "unhewn_cobblestone"],
+    "stone_probable": ["paving_stones"],
+    "smooth_paved": ["asphalt", "concrete"],
+    "paved_generic": ["paved"],
+    "unpaved_loose": ["unpaved", "compacted", "gravel", "fine_gravel"],
+    "other": ["other"]
+  },
+  "osmSmoothnessToLevel": { "excellent": "smooth", "good": "smooth", "intermediate": "moderate", "bad": "rough", "very_bad": "very_rough", "horrible": "very_rough", "very_horrible": "very_rough", "impassable": "very_rough" },
+  "staleness": {
+    "_doc": "days since observedAt (start of period). fresh <= freshDays < aging <= agingDays < stale. observedAt null => unknown_age (never invented). Works/maintenance feeds are NOT here: they are review triggers only.",
+    "tagged":   { "*": { "freshDays": 1825, "agingDays": 3650 } },
+    "measured": { "surface_material": { "freshDays": 730, "agingDays": 1825 }, "physical_roughness": { "freshDays": 365, "agingDays": 1095 }, "rails_presence": { "freshDays": 3650, "agingDays": 7300 }, "*": { "freshDays": 730, "agingDays": 1825 } },
+    "reported": { "*": { "freshDays": 90, "agingDays": 365 } },
+    "derived":  { "rails_presence.service": { "freshDays": 365, "agingDays": 730 }, "rails_presence": { "freshDays": 3650, "agingDays": 5475 }, "direction": { "freshDays": 365, "agingDays": 730 }, "*": { "freshDays": 1825, "agingDays": 3650 } },
+    "inferred": { "*": { "freshDays": 0, "agingDays": 0 } }
+  },
+  "levels": {
+    "_doc": "decisive: human_verified|field_verified measured/reported evidence with a known date, exact/partial coverage, not stale. supporting: tagged; derived from a source authoritative for that attribute; unverified measured that is fresh/aging. weak: everything else that may vote (unverified reports, non-authoritative derived, coarse coverage, stale non-tagged). trigger: adjacent coverage (opens a review task, never votes). informational: wrong mode, non-discriminating source, rejected, inferred (v0)."
+  },
+  "bands": {
+    "_doc": "Ordinal rule prior, not a probability. unverified evidence never exceeds medium; contested and weak-dissent cap at low.",
+    "high": "decisive, fresh",
+    "medium": "decisive aging; OR supporting with a known fresh/aging date; OR >= 2 independent evidences of different sources agree and at least one is supporting",
+    "low": "supporting with unknown or stale age; weak-only agreement; contested; weak dissent present",
+    "none": "no voting evidence"
+  },
+  "reviewTasks": {
+    "contested": "P1",
+    "weak_dissent": "P2",
+    "adjacent_trigger": "P2",
+    "stale_winner": "P3",
+    "unknown_on_travelled_corridor": "P3"
+  },
+  "adapter": {
+    "_doc": "Maps a resolved attribute view to the EXISTING scorer categories. Policy, not data: versioned separately from the ledger. Only the car/motorcycle overlay is compiled in v0.",
+    "materialKnown": "same mapping as scripts/osm/normalize.mjs classifySurface (no override emitted when the base category already equals it)",
+    "contestedStoneVsSmooth": { "surfaceCategory": "probable_rough", "roughnessWeight": 0.65, "why": "weak evidence is never called confirmed; 0.65 is the existing paving_stones weight" },
+    "weakDissentOnly": { "surfaceCategory": null, "flag": "SURFACE_WEAK_DISSENT" },
+    "unknown": { "surfaceCategory": null, "flag": "SURFACE_UNKNOWN_BY_EVIDENCE only when a source was ignored; never smooth" },
+    "rails": "flag bits only, never a surface category; warning and weighting are a separate product decision per mode"
+  },
+  "flagBits": {
+    "RAILS_MAPPED": 0,
+    "RAILS_SHARED_CARRIAGEWAY": 1,
+    "RAILS_CONTESTED": 2,
+    "SURFACE_CONTESTED": 3,
+    "SURFACE_WEAK_DISSENT": 4,
+    "SURFACE_UNKNOWN_BY_EVIDENCE": 5,
+    "CONF_BIT0": 6,
+    "CONF_BIT1": 7,
+    "FRESH_BIT0": 8,
+    "FRESH_BIT1": 9,
+    "DIRECTION_OVERRIDE": 10,
+    "NEEDS_REVIEW": 11,
+    "RAIL_CROSSING_MAPPED": 12
+  }
+}

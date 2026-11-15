@@ -1,0 +1,39 @@
+{
+ "generatedBy": "exp-run-field.mjs",
+ "requested": 40,
+ "ran": 35,
+ "skipped": [
+  {
+   "id": "ztl-b-promessi-sposi-vetra-bicycle-12",
+   "missing": 1,
+   "status": 200
+  },
+  {
+   "id": "ztl-b-promessi-sposi-vetra-bicycle-21",
+   "missing": 1,
+   "status": 200
+  },
+  {
+   "id": "ztl-b-promessi-sposi-vetra-bicycle-21-auth",
+   "missing": 1,
+   "status": 200
+  },
+  {
+   "id": "ztl-piazza-cavour-via-monte-napo-car-12-auth",
+   "missing": 1,
+   "status": 200
+  },
+  {
+   "id": "ztl-piazza-cavour-via-monte-napo-bicycle-12",
+   "missing": 1,
+   "status": 200
+  }
+ ],
+ "statuses": {
+  "alternative": 7,
+  "over-extra-time": 1,
+  "fastest-avoids-pave": 19,
+  "no-better-route": 7,
+  "no-pave": 1
+ }
+}

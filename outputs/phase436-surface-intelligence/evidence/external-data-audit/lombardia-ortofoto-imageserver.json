@@ -1,0 +1,80 @@
+{
+ "retrievedUtc": "2026-11-14T14:38:19.213Z",
+ "services": {
+  "Ortofoto2021": {
+   "description": "Ortofoto Agea 2021 - Regione Lombardia",
+   "copyrightText": "Ortofoto Agea 2021 - Regione Lombardia",
+   "pixelSizeX": 0.199998446399971,
+   "pixelSizeY": 0.19999844639997102,
+   "extent": {
+    "xmin": 939794.0619046448,
+    "ymin": 5566168.310173543,
+    "xmax": 1283777.12715745,
+    "ymax": 5886253.493165826,
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    }
+   },
+   "bandCount": 3,
+   "pixelType": "U8",
+   "serviceDataType": "esriImageServiceDataTypeRGB",
+   "maxImageHeight": 4100,
+   "maxImageWidth": 15000,
+   "capabilities": "Catalog,Mensuration,Image,Metadata",
+   "name": "BaseMap/Ortofoto2021",
+   "serviceDescription": "Ortofoto Agea 2021 - Regione Lombardia",
+   "hasMultidimensions": false
+  },
+  "Ortofoto2018_2019": {
+   "description": "Ortofoto Agea 2018 - Regione Lombardia",
+   "copyrightText": "Ortofoto 2018 – proprietà esclusiva di AGEA",
+   "pixelSizeX": 0.19999999999993495,
+   "pixelSizeY": 0.19999999999993454,
+   "extent": {
+    "xmin": 460668.4000000004,
+    "ymin": 4947422.223600072,
+    "xmax": 691621.9999999253,
+    "ymax": 5165393.6236000005,
+    "spatialReference": {
+     "wkid": 32632,
+     "latestWkid": 32632
+    }
+   },
+   "bandCount": 3,
+   "pixelType": "U16",
+   "serviceDataType": "esriImageServiceDataTypeGeneric",
+   "maxImageHeight": 4100,
+   "maxImageWidth": 15000,
+   "capabilities": "Catalog,Mensuration,Image,Metadata",
+   "name": "BaseMap/Ortofoto2018_2019",
+   "serviceDescription": "Ortofoto Agea 2018 - Regione Lombardia",
+   "hasMultidimensions": false
+  },
+  "ortofoto2015UTM32N": {
+   "description": "Il servizio di mappa permette la visualizzazione del territorio lombardo rilevato nel periodo da giugno a settembre 2015 da AGEA (Agenzia per le erogazioni in agricoltura). Le ortofoto hanno risoluzione GSD 45x45 cm nelle zone montane alpine e 25x 25",
+   "copyrightText": "Ortofoto 20 cm/Ortofoto 50 cm ©2015 Consorzio TeA - Tutti i diritti riservati",
+   "pixelSizeX": 0.19999999999993492,
+   "pixelSizeY": 0.19999999999993454,
+   "extent": {
+    "xmin": 460668.4000000397,
+    "ymin": 4947422.100000071,
+    "xmax": 691622.1999999646,
+    "ymax": 5165393.5,
+    "spatialReference": {
+     "wkid": 32632,
+     "latestWkid": 32632
+    }
+   },
+   "bandCount": 3,
+   "pixelType": "U16",
+   "serviceDataType": "esriImageServiceDataTypeGeneric",
+   "maxImageHeight": 4100,
+   "maxImageWidth": 15000,
+   "capabilities": "Catalog,Image,Metadata",
+   "name": "BaseMap/ortofoto2015UTM32N",
+   "serviceDescription": "Il servizio di mappa permette la visualizzazione del territorio lombardo rilevato nel periodo da giugno a settembre 2015 da AGEA (Agenzia per le erogazioni in agricoltura). Le ortofoto hanno risoluzione GSD 45x45 cm nelle zone montane alpine e 25x 25",
+   "hasMultidimensions": false
+  }
+ }
+}

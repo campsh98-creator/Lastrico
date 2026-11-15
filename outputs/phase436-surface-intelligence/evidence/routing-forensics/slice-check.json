@@ -1,0 +1,56 @@
+{
+ "route0": {
+  "vertices": 242,
+  "paveMeters": 25,
+  "confirmedMeters": 25,
+  "probableMeters": 0,
+  "weightedPaveMeters": 25,
+  "unknownMeters": 285,
+  "totalMeters": 4693,
+  "roughSegmentCount": 10,
+  "roughSliceLengthsMetersByMinimum": {
+   "min25": [],
+   "min24": [
+    24.99
+   ],
+   "min20": [
+    24.99
+   ],
+   "min15": [
+    24.99
+   ],
+   "min10": [
+    24.99
+   ],
+   "min0": [
+    24.99
+   ]
+  },
+  "penalisedFactorsWithMin25": 0,
+  "penalisedMetersWithMin25": 0,
+  "roughFeatures": [
+   "Piazzale Lodi:sett"
+  ]
+ },
+ "route1": {
+  "vertices": 211,
+  "paveMeters": 0,
+  "confirmedMeters": 0,
+  "probableMeters": 0,
+  "weightedPaveMeters": 0,
+  "unknownMeters": 285,
+  "totalMeters": 4326,
+  "roughSegmentCount": 0,
+  "roughSliceLengthsMetersByMinimum": {
+   "min25": [],
+   "min24": [],
+   "min20": [],
+   "min15": [],
+   "min10": [],
+   "min0": []
+  },
+  "penalisedFactorsWithMin25": 0,
+  "penalisedMetersWithMin25": 0,
+  "roughFeatures": []
+ }
+}

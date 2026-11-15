@@ -1,0 +1,139 @@
+{
+  "route": 1,
+  "routePolylineMetres": 4326,
+  "appReported": {
+    "confirmedMeters": 0,
+    "probableMeters": 0,
+    "unknownMeters": 285
+  },
+  "appReportedRoughSections": [],
+  "lastricoOffline": {
+    "total": 4326,
+    "pave": 0,
+    "confirmed": 0,
+    "probable": 0,
+    "smooth": 4041,
+    "unpaved": 0,
+    "unknown": 285,
+    "coveragePct": 93.4,
+    "embeddedRailsMeters": 0,
+    "ambiguousSamples": 22,
+    "restrictionMeters": 0,
+    "roughSections": []
+  },
+  "lastricoSampleTotals": {
+    "confirmed_rough": 0,
+    "probable_rough": 0,
+    "confirmed_smooth": 4041,
+    "unpaved_loose": 0,
+    "unknown": 285,
+    "no-match": 0
+  },
+  "independentRawTotals": {
+    "rough": 0,
+    "probable": 0,
+    "smooth": 4041,
+    "loose": 0,
+    "unknown": 285,
+    "no-match": 0
+  },
+  "unknownRuns": [
+    {
+      "from": 3621.4,
+      "to": 3650.7,
+      "m": 29.4,
+      "wayId": 137158656,
+      "category": "unknown",
+      "name": "Via Fra Cristoforo",
+      "highway": "unclassified",
+      "surfaceTag": null,
+      "smoothness": null,
+      "why": "no surface tag",
+      "wayLenM": 29.4
+    },
+    {
+      "from": 3650.7,
+      "to": 3658.3,
+      "m": 7.6,
+      "wayId": 1236292178,
+      "category": "unknown",
+      "name": "Via Fra Cristoforo",
+      "highway": "unclassified",
+      "surfaceTag": null,
+      "smoothness": null,
+      "why": "no surface tag",
+      "wayLenM": 7.5
+    },
+    {
+      "from": 3658.3,
+      "to": 3679.8,
+      "m": 21.5,
+      "wayId": 273258718,
+      "category": "unknown",
+      "name": "Via Fra Cristoforo",
+      "highway": "unclassified",
+      "surfaceTag": null,
+      "smoothness": null,
+      "why": "no surface tag",
+      "wayLenM": 21.6
+    },
+    {
+      "from": 3679.8,
+      "to": 3763.9,
+      "m": 84.2,
+      "wayId": 273258717,
+      "category": "unknown",
+      "name": "Via Fra Cristoforo",
+      "highway": "unclassified",
+      "surfaceTag": null,
+      "smoothness": null,
+      "why": "no surface tag",
+      "wayLenM": 84.1
+    },
+    {
+      "from": 3885.1,
+      "to": 4002,
+      "m": 116.9,
+      "wayId": 273258719,
+      "category": "unknown",
+      "name": "Via Fra Cristoforo",
+      "highway": "unclassified",
+      "surfaceTag": null,
+      "smoothness": null,
+      "why": "no surface tag",
+      "wayLenM": 116.9
+    },
+    {
+      "from": 4146.4,
+      "to": 4155.2,
+      "m": 8.8,
+      "wayId": 1452931018,
+      "category": "unknown",
+      "name": "Alzaia Naviglio Pavese",
+      "highway": "residential",
+      "surfaceTag": null,
+      "smoothness": null,
+      "why": "no surface tag",
+      "wayLenM": 8.8
+    },
+    {
+      "from": 4309.2,
+      "to": 4326,
+      "m": 16.7,
+      "wayId": "<redacted>",
+      "category": "unknown",
+      "name": "<destination street>",
+      "highway": "service",
+      "surfaceTag": null,
+      "smoothness": null,
+      "why": "no surface tag",
+      "wayLenM": 16.7
+    }
+  ],
+  "unknownRunsByCause": [
+    {
+      "why": "no surface tag",
+      "metres": 285
+    }
+  ]
+}

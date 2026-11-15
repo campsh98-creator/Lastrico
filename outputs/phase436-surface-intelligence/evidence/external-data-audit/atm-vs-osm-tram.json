@@ -1,0 +1,30 @@
+{
+ "osmTramWaysInArchive": 661,
+ "atmTramRouteMetresInPilotBox": 80995,
+ "atmWithin15mOfOsmTram": 65087,
+ "atmSharePct": 80.4,
+ "atmLinesInPilotBox": [
+  "1",
+  "10",
+  "12",
+  "14",
+  "15",
+  "16",
+  "19",
+  "2",
+  "24",
+  "3",
+  "33",
+  "4",
+  "5",
+  "9"
+ ],
+ "dbtTramMetresInPilotBoxPartOfLandmarkBox": 2759,
+ "dbtWithin15mOfOsmTram": 925,
+ "dbtMissingFromOsmByDbtStreet": {
+  "PIAZZALE MEDAGLIE DORO": 48,
+  "(none)": 1250,
+  "CORSO LODI": 535
+ },
+ "dbtSharePct": 33.5
+}

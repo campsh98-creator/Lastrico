@@ -1,0 +1,1933 @@
+{
+ "runs": [
+  {
+   "case": "replica-return-heading",
+   "variant": "G1",
+   "label": "slice minimum 20 m",
+   "status": 200,
+   "antiPave": "fastest-avoids-pave",
+   "hasDistinctAlternative": false,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 131,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 72,
+     "factors": 1,
+     "locations": 2
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 332,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 78,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 79,
+     "factors": 0,
+     "locations": 3
+    }
+   ],
+   "requestsTotal": 5,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "surface-aware-valhalla",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 574,
+     "meters": 3076,
+     "confirmed": 0,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 0,
+     "maneuvers": 3,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 0
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 43
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "confirmed": 197,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 197,
+     "maneuvers": 7,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 545
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "confirmed": 286,
+     "probable": 10,
+     "unknown": 0,
+     "risk": 292,
+     "maneuvers": 10,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 382
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 8,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 160
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "confirmed": 56,
+     "probable": 0,
+     "unknown": 40,
+     "risk": 56,
+     "maneuvers": 19,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 439
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "confirmed": 746,
+     "probable": 0,
+     "unknown": 5,
+     "risk": 746,
+     "maneuvers": 11,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 1103
+    }
+   ],
+   "shown": {
+    "fastPave": 0,
+    "fastConfirmed": 0,
+    "fastSeconds": 574,
+    "safePave": 0,
+    "safeConfirmed": 0,
+    "safeSeconds": 574
+   }
+  },
+  {
+   "case": "replica-return-heading",
+   "variant": "G2",
+   "label": "slice minimum 15 m",
+   "status": 200,
+   "antiPave": "fastest-avoids-pave",
+   "hasDistinctAlternative": false,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 131,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 72,
+     "factors": 1,
+     "locations": 2
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 332,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 78,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 79,
+     "factors": 0,
+     "locations": 3
+    }
+   ],
+   "requestsTotal": 5,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "surface-aware-valhalla",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 574,
+     "meters": 3076,
+     "confirmed": 0,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 0,
+     "maneuvers": 3,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 0
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 43
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "confirmed": 197,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 197,
+     "maneuvers": 7,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 545
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "confirmed": 286,
+     "probable": 10,
+     "unknown": 0,
+     "risk": 292,
+     "maneuvers": 10,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 382
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 8,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 160
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "confirmed": 56,
+     "probable": 0,
+     "unknown": 40,
+     "risk": 56,
+     "maneuvers": 19,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 439
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "confirmed": 746,
+     "probable": 0,
+     "unknown": 5,
+     "risk": 746,
+     "maneuvers": 11,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 1103
+    }
+   ],
+   "shown": {
+    "fastPave": 0,
+    "fastConfirmed": 0,
+    "fastSeconds": 574,
+    "safePave": 0,
+    "safeConfirmed": 0,
+    "safeSeconds": 574
+   }
+  },
+  {
+   "case": "replica-return-heading",
+   "variant": "G3",
+   "label": "no early stop",
+   "status": 200,
+   "antiPave": "no-better-route",
+   "hasDistinctAlternative": false,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 131,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 332,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 78,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 79,
+     "factors": 0,
+     "locations": 3
+    }
+   ],
+   "requestsTotal": 4,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": false,
+    "nothingToTarget": true,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "base-1",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 25
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "confirmed": 197,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 197,
+     "maneuvers": 7,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 527
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "confirmed": 286,
+     "probable": 10,
+     "unknown": 0,
+     "risk": 292,
+     "maneuvers": 10,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 364
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 8,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 142
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "confirmed": 56,
+     "probable": 0,
+     "unknown": 40,
+     "risk": 56,
+     "maneuvers": 19,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 421
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "confirmed": 746,
+     "probable": 0,
+     "unknown": 5,
+     "risk": 746,
+     "maneuvers": 11,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 1085
+    }
+   ],
+   "shown": {
+    "fastPave": 25,
+    "fastConfirmed": 25,
+    "fastSeconds": 595,
+    "safePave": 25,
+    "safeConfirmed": 25,
+    "safeSeconds": 595
+   }
+  },
+  {
+   "case": "replica-return-heading",
+   "variant": "G4",
+   "label": "early stop only when the improvement leaves no stone",
+   "status": 200,
+   "antiPave": "no-better-route",
+   "hasDistinctAlternative": false,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 131,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 332,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 78,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 79,
+     "factors": 0,
+     "locations": 3
+    }
+   ],
+   "requestsTotal": 4,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": false,
+    "nothingToTarget": true,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "base-1",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 25
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "confirmed": 197,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 197,
+     "maneuvers": 7,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 527
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "confirmed": 286,
+     "probable": 10,
+     "unknown": 0,
+     "risk": 292,
+     "maneuvers": 10,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 364
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 8,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 142
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "confirmed": 56,
+     "probable": 0,
+     "unknown": 40,
+     "risk": 56,
+     "maneuvers": 19,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 421
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "confirmed": 746,
+     "probable": 0,
+     "unknown": 5,
+     "risk": 746,
+     "maneuvers": 11,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 1085
+    }
+   ],
+   "shown": {
+    "fastPave": 25,
+    "fastConfirmed": 25,
+    "fastSeconds": 595,
+    "safePave": 25,
+    "safeConfirmed": 25,
+    "safeSeconds": 595
+   }
+  },
+  {
+   "case": "replica-return-heading",
+   "variant": "G5",
+   "label": "slice 15 m + stop-when-clean",
+   "status": 200,
+   "antiPave": "fastest-avoids-pave",
+   "hasDistinctAlternative": false,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 131,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 72,
+     "factors": 1,
+     "locations": 2
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 332,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 78,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 79,
+     "factors": 0,
+     "locations": 3
+    }
+   ],
+   "requestsTotal": 5,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "surface-aware-valhalla",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 574,
+     "meters": 3076,
+     "confirmed": 0,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 0,
+     "maneuvers": 3,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 0
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 43
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "confirmed": 197,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 197,
+     "maneuvers": 7,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 545
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "confirmed": 286,
+     "probable": 10,
+     "unknown": 0,
+     "risk": 292,
+     "maneuvers": 10,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 382
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 8,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 160
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "confirmed": 56,
+     "probable": 0,
+     "unknown": 40,
+     "risk": 56,
+     "maneuvers": 19,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 439
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "confirmed": 746,
+     "probable": 0,
+     "unknown": 5,
+     "risk": 746,
+     "maneuvers": 11,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 1103
+    }
+   ],
+   "shown": {
+    "fastPave": 0,
+    "fastConfirmed": 0,
+    "fastSeconds": 574,
+    "safePave": 0,
+    "safeConfirmed": 0,
+    "safeSeconds": 574
+   }
+  },
+  {
+   "case": "replica-return-heading",
+   "variant": "G6",
+   "label": "slice 15 m + stop-when-clean + refine while stone left",
+   "status": 200,
+   "antiPave": "fastest-avoids-pave",
+   "hasDistinctAlternative": false,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 131,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 72,
+     "factors": 1,
+     "locations": 2
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 332,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 78,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 79,
+     "factors": 0,
+     "locations": 3
+    }
+   ],
+   "requestsTotal": 5,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "surface-aware-valhalla",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 574,
+     "meters": 3076,
+     "confirmed": 0,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 0,
+     "maneuvers": 3,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 0
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 43
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "confirmed": 197,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 197,
+     "maneuvers": 7,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 545
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "confirmed": 286,
+     "probable": 10,
+     "unknown": 0,
+     "risk": 292,
+     "maneuvers": 10,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 382
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 8,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 160
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "confirmed": 56,
+     "probable": 0,
+     "unknown": 40,
+     "risk": 56,
+     "maneuvers": 19,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 439
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "confirmed": 746,
+     "probable": 0,
+     "unknown": 5,
+     "risk": 746,
+     "maneuvers": 11,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 1103
+    }
+   ],
+   "shown": {
+    "fastPave": 0,
+    "fastConfirmed": 0,
+    "fastSeconds": 574,
+    "safePave": 0,
+    "safeConfirmed": 0,
+    "safeSeconds": 574
+   }
+  },
+  {
+   "case": "replica-outbound",
+   "variant": "G0",
+   "label": "production",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 244,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "agent1-cache",
+     "ms": 79,
+     "factors": 2,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "confirmed": 280,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 280,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 280
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 122
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "confirmed": 265,
+     "probable": 0,
+     "unknown": 138,
+     "risk": 265,
+     "maneuvers": 13,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 521
+    }
+   ],
+   "shown": {
+    "fastPave": 280,
+    "fastConfirmed": 280,
+    "fastSeconds": 544,
+    "safePave": 50,
+    "safeConfirmed": 50,
+    "safeSeconds": 631
+   }
+  },
+  {
+   "case": "replica-outbound",
+   "variant": "G1",
+   "label": "slice minimum 20 m",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 244,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 431,
+     "factors": 3,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "confirmed": 280,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 280,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 280
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 122
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "confirmed": 265,
+     "probable": 0,
+     "unknown": 138,
+     "risk": 265,
+     "maneuvers": 13,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 521
+    }
+   ],
+   "shown": {
+    "fastPave": 280,
+    "fastConfirmed": 280,
+    "fastSeconds": 544,
+    "safePave": 50,
+    "safeConfirmed": 50,
+    "safeSeconds": 631
+   }
+  },
+  {
+   "case": "replica-outbound",
+   "variant": "G2",
+   "label": "slice minimum 15 m",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 244,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 431,
+     "factors": 3,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "confirmed": 280,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 280,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 280
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 122
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "confirmed": 265,
+     "probable": 0,
+     "unknown": 138,
+     "risk": 265,
+     "maneuvers": 13,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 521
+    }
+   ],
+   "shown": {
+    "fastPave": 280,
+    "fastConfirmed": 280,
+    "fastSeconds": 544,
+    "safePave": 50,
+    "safeConfirmed": 50,
+    "safeSeconds": 631
+   }
+  },
+  {
+   "case": "replica-outbound",
+   "variant": "G3",
+   "label": "no early stop",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 244,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "agent1-cache",
+     "ms": 79,
+     "factors": 2,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "confirmed": 280,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 280,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 280
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 122
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "confirmed": 265,
+     "probable": 0,
+     "unknown": 138,
+     "risk": 265,
+     "maneuvers": 13,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 521
+    }
+   ],
+   "shown": {
+    "fastPave": 280,
+    "fastConfirmed": 280,
+    "fastSeconds": 544,
+    "safePave": 50,
+    "safeConfirmed": 50,
+    "safeSeconds": 631
+   }
+  },
+  {
+   "case": "replica-outbound",
+   "variant": "G4",
+   "label": "early stop only when the improvement leaves no stone",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 244,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "agent1-cache",
+     "ms": 79,
+     "factors": 2,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "confirmed": 280,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 280,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 280
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 122
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "confirmed": 265,
+     "probable": 0,
+     "unknown": 138,
+     "risk": 265,
+     "maneuvers": 13,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 521
+    }
+   ],
+   "shown": {
+    "fastPave": 280,
+    "fastConfirmed": 280,
+    "fastSeconds": 544,
+    "safePave": 50,
+    "safeConfirmed": 50,
+    "safeSeconds": 631
+   }
+  },
+  {
+   "case": "replica-outbound",
+   "variant": "G5",
+   "label": "slice 15 m + stop-when-clean",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 244,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 431,
+     "factors": 3,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "confirmed": 280,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 280,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 280
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 122
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "confirmed": 265,
+     "probable": 0,
+     "unknown": 138,
+     "risk": 265,
+     "maneuvers": 13,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 521
+    }
+   ],
+   "shown": {
+    "fastPave": 280,
+    "fastConfirmed": 280,
+    "fastSeconds": 544,
+    "safePave": 50,
+    "safeConfirmed": 50,
+    "safeSeconds": 631
+   }
+  },
+  {
+   "case": "replica-outbound",
+   "variant": "G6",
+   "label": "slice 15 m + stop-when-clean + refine while stone left",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 244,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 431,
+     "factors": 3,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 302,
+     "factors": 6,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 3,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "surface-aware-valhalla",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "confirmed": 280,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 280,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 280
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 6,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 122
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "confirmed": 265,
+     "probable": 0,
+     "unknown": 138,
+     "risk": 265,
+     "maneuvers": 13,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 521
+    },
+    {
+     "source": "surface-aware-valhalla-2",
+     "seconds": 723,
+     "meters": 3813,
+     "confirmed": 0,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 0,
+     "maneuvers": 8,
+     "uturns": 0,
+     "verdict": "a-better-alternative-was-chosen",
+     "utility": 149
+    }
+   ],
+   "shown": {
+    "fastPave": 280,
+    "fastConfirmed": 280,
+    "fastSeconds": 544,
+    "safePave": 50,
+    "safeConfirmed": 50,
+    "safeSeconds": 631
+   }
+  },
+  {
+   "case": "replica-return",
+   "variant": "G0",
+   "label": "production",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 342,
+     "factors": 0,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 1,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": false,
+    "baseAlreadyImproves": true,
+    "attempted": false,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-2"
+   },
+   "fastSource": "base-2",
+   "safeSource": "base-1",
+   "pool": [
+    {
+     "source": "base-2",
+     "seconds": 571,
+     "meters": 2855,
+     "confirmed": 195,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 195,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 195
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 45
+    },
+    {
+     "source": "base-3",
+     "seconds": 637,
+     "meters": 3236,
+     "confirmed": 649,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 649,
+     "maneuvers": 9,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 703
+    }
+   ],
+   "shown": {
+    "fastPave": 195,
+    "fastConfirmed": 195,
+    "fastSeconds": 571,
+    "safePave": 25,
+    "safeConfirmed": 25,
+    "safeSeconds": 595
+   }
+  },
+  {
+   "case": "replica-return",
+   "variant": "G4",
+   "label": "early stop only when the improvement leaves no stone",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 342,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "live",
+     "ms": 365,
+     "factors": 2,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 2,
+   "requestsNew": 1,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-2"
+   },
+   "fastSource": "base-2",
+   "safeSource": "base-1",
+   "pool": [
+    {
+     "source": "base-2",
+     "seconds": 571,
+     "meters": 2855,
+     "confirmed": 195,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 195,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 195
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 45
+    },
+    {
+     "source": "base-3",
+     "seconds": 637,
+     "meters": 3236,
+     "confirmed": 649,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 649,
+     "maneuvers": 9,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 703
+    }
+   ],
+   "shown": {
+    "fastPave": 195,
+    "fastConfirmed": 195,
+    "fastSeconds": 571,
+    "safePave": 25,
+    "safeConfirmed": 25,
+    "safeSeconds": 595
+   }
+  },
+  {
+   "case": "replica-return",
+   "variant": "G5",
+   "label": "slice 15 m + stop-when-clean",
+   "status": 200,
+   "antiPave": "alternative",
+   "hasDistinctAlternative": true,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 342,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "penalised",
+     "hit": "exp-live-cache",
+     "ms": 365,
+     "factors": 2,
+     "locations": 2
+    }
+   ],
+   "requestsTotal": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": true,
+    "nothingToTarget": false,
+    "failed": false,
+    "preliminaryFastSource": "base-2"
+   },
+   "fastSource": "base-2",
+   "safeSource": "base-1",
+   "pool": [
+    {
+     "source": "base-2",
+     "seconds": 571,
+     "meters": 2855,
+     "confirmed": 195,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 195,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 195
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "selected",
+     "utility": 45
+    },
+    {
+     "source": "base-3",
+     "seconds": 637,
+     "meters": 3236,
+     "confirmed": 649,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 649,
+     "maneuvers": 9,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 703
+    }
+   ],
+   "shown": {
+    "fastPave": 195,
+    "fastConfirmed": 195,
+    "fastSeconds": 571,
+    "safePave": 25,
+    "safeConfirmed": 25,
+    "safeSeconds": 595
+   }
+  },
+  {
+   "case": "replica-return-heading",
+   "variant": "G0",
+   "label": "production",
+   "status": 200,
+   "antiPave": "no-better-route",
+   "hasDistinctAlternative": false,
+   "calls": [
+    {
+     "kind": "base",
+     "hit": "agent1-cache",
+     "ms": 131,
+     "factors": 0,
+     "locations": 2
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 332,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 78,
+     "factors": 0,
+     "locations": 3
+    },
+    {
+     "kind": "via",
+     "hit": "exp-live-cache",
+     "ms": 79,
+     "factors": 0,
+     "locations": 3
+    }
+   ],
+   "requestsTotal": 4,
+   "requestsNew": 0,
+   "missing": 0,
+   "flags": {
+    "canGenerate": true,
+    "baseAlreadyImproves": false,
+    "attempted": false,
+    "nothingToTarget": true,
+    "failed": false,
+    "preliminaryFastSource": "base-1"
+   },
+   "fastSource": "base-1",
+   "safeSource": "base-1",
+   "pool": [
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "confirmed": 25,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 25,
+     "maneuvers": 5,
+     "uturns": 0,
+     "verdict": "fastest",
+     "utility": 25
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "confirmed": 197,
+     "probable": 0,
+     "unknown": 302,
+     "risk": 197,
+     "maneuvers": 7,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 527
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "confirmed": 286,
+     "probable": 10,
+     "unknown": 0,
+     "risk": 292,
+     "maneuvers": 10,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 364
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "confirmed": 50,
+     "probable": 0,
+     "unknown": 0,
+     "risk": 50,
+     "maneuvers": 8,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 142
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "confirmed": 56,
+     "probable": 0,
+     "unknown": 40,
+     "risk": 56,
+     "maneuvers": 19,
+     "uturns": 1,
+     "verdict": "dominated",
+     "utility": 421
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "confirmed": 746,
+     "probable": 0,
+     "unknown": 5,
+     "risk": 746,
+     "maneuvers": 11,
+     "uturns": 0,
+     "verdict": "dominated",
+     "utility": 1085
+    }
+   ],
+   "shown": {
+    "fastPave": 25,
+    "fastConfirmed": 25,
+    "fastSeconds": 595,
+    "safePave": 25,
+    "safeConfirmed": 25,
+    "safeSeconds": 595
+   }
+  }
+ ],
+ "generatedBy": "exp-live-variants.mjs",
+ "departure": "2026-11-09T12:00",
+ "budget": 25
+}

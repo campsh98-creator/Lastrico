@@ -1,0 +1,4615 @@
+{
+ "area": "milan",
+ "asOf": "2026-11-14",
+ "description": "Phase 4.36 design fixture: real field cases encoded as SIL evidence. Design feasibility, not product validation.",
+ "evidence": [
+  {
+   "claim": {
+    "service": "no_scheduled_line"
+   },
+   "id": "ev-atm-corsolodi-nw",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence of a line says nothing about removal of rails",
+   "observedAt": "2026-07-24",
+   "observedAtBasis": "ATM file date",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      567858247
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 12.4,
+     "wayId": 161606045,
+     "wayLengthM": 12.4,
+     "wayVersion": 12
+    },
+    {
+     "anchorNodeIds": [
+      567858247,
+      252566566
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 19.5,
+     "wayId": 529556308,
+     "wayLengthM": 19.5,
+     "wayVersion": 8
+    },
+    {
+     "anchorNodeIds": [
+      252566566,
+      259982827
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 43,
+     "wayId": 290523325,
+     "wayLengthM": 43,
+     "wayVersion": 9
+    },
+    {
+     "anchorNodeIds": [
+      259982827,
+      260478476
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 64,
+     "wayId": 161606039,
+     "wayLengthM": 64,
+     "wayVersion": 16
+    },
+    {
+     "anchorNodeIds": [
+      260478476,
+      3107305689
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.6,
+     "wayId": 290523322,
+     "wayLengthM": 52.6,
+     "wayVersion": 10
+    },
+    {
+     "anchorNodeIds": [
+      3107305689,
+      11003348985
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 86.1,
+     "wayId": 305989915,
+     "wayLengthM": 86.1,
+     "wayVersion": 5
+    },
+    {
+     "anchorNodeIds": [
+      11003348985,
+      1765317175
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 33,
+     "wayId": 294819087,
+     "wayLengthM": 33,
+     "wayVersion": 7
+    },
+    {
+     "anchorNodeIds": [
+      1765317175,
+      429251598
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25.2,
+     "wayId": 232575191,
+     "wayLengthM": 25.2,
+     "wayVersion": 9
+    },
+    {
+     "anchorNodeIds": [
+      429251598,
+      1765317182
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 48,
+     "wayId": 232575190,
+     "wayLengthM": 48,
+     "wayVersion": 8
+    },
+    {
+     "anchorNodeIds": [
+      1765317182,
+      252566563
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 6.8,
+     "wayId": 900636756,
+     "wayLengthM": 6.8,
+     "wayVersion": 5
+    },
+    {
+     "anchorNodeIds": [
+      252566563,
+      259982480
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 56,
+     "wayId": 85890884,
+     "wayLengthM": 56,
+     "wayVersion": 15
+    },
+    {
+     "anchorNodeIds": [
+      259982480,
+      2987575972
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 31.5,
+     "wayId": 290523326,
+     "wayLengthM": 31.5,
+     "wayVersion": 6
+    },
+    {
+     "anchorNodeIds": [
+      2987575972,
+      3610861130
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.9,
+     "wayId": 295087306,
+     "wayLengthM": 52.9,
+     "wayVersion": 9
+    },
+    {
+     "anchorNodeIds": [
+      3610861130,
+      259982777
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 60.5,
+     "wayId": 290523318,
+     "wayLengthM": 60.5,
+     "wayVersion": 10
+    },
+    {
+     "anchorNodeIds": [
+      259982777,
+      3788722364
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 45.5,
+     "wayId": 181343587,
+     "wayLengthM": 45.5,
+     "wayVersion": 13
+    },
+    {
+     "anchorNodeIds": [
+      3788722364,
+      3788722360
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 22.4,
+     "wayId": 375509949,
+     "wayLengthM": 22.4,
+     "wayVersion": 7
+    },
+    {
+     "anchorNodeIds": [
+      3788722360,
+      10995041782
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 6.5,
+     "wayId": 375509948,
+     "wayLengthM": 6.5,
+     "wayVersion": 9
+    },
+    {
+     "anchorNodeIds": [
+      10995041782,
+      9287919191
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 9.6,
+     "wayId": 1184663891,
+     "wayLengthM": 9.6,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "atm.ds538.2026-07-24",
+   "sourceRef": {
+    "note": "Agent 3: no tram route within 12 m of Corso Lodi, Via Lazzaro Papi or the ring in the 45-route tram file; nearest line 9 at 46 m"
+   },
+   "spatialPrecisionM": 12,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "railType": "tram",
+    "service": "in_service"
+   },
+   "id": "ev-atm-friuli",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2026-07-24",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1480169044,
+      1480169036
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 58.2,
+     "wayId": 264333608,
+     "wayLengthM": 58.2,
+     "wayVersion": 8
+    },
+    {
+     "anchorNodeIds": [
+      1480169036,
+      306419190
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 13.7,
+     "wayId": 266141929,
+     "wayLengthM": 13.7,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "atm.ds538.2026-07-24",
+   "sourceRef": {
+    "note": "Agent 3: ATM tram line 19 within 5 m of Via Friuli"
+   },
+   "spatialPrecisionM": 5,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "atM": 0.9,
+    "crossingAngleDeg": 90,
+    "trackCount": 1
+   },
+   "id": "ev-dbt-crossing-264333608-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1480169044,
+      1480169036
+     ],
+     "coverage": "partial",
+     "fromM": 0,
+     "toM": 58.2,
+     "wayId": 264333608,
+     "wayLengthM": 58.2,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "si-dbt-join.mjs: axis within 3 m and >= 60 deg"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rail_crossing",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "paved",
+    "rawValue": "01",
+    "scope": "unknown"
+   },
+   "id": "ev-dbt-fon-fracristoforo",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      12088355865,
+      1236455755
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 29.4,
+     "wayId": 137158656,
+     "wayLengthM": 29.4,
+     "wayVersion": 8
+    },
+    {
+     "anchorNodeIds": [
+      1236455755,
+      11188933374
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 7.5,
+     "wayId": 1236292178,
+     "wayLengthM": 7.5,
+     "wayVersion": 1
+    },
+    {
+     "anchorNodeIds": [
+      11188933374,
+      2781360066
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 21.6,
+     "wayId": 273258718,
+     "wayLengthM": 21.6,
+     "wayVersion": 2
+    },
+    {
+     "anchorNodeIds": [
+      2781360066,
+      1504504876
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 84.1,
+     "wayId": 273258717,
+     "wayLengthM": 84.1,
+     "wayVersion": 4
+    },
+    {
+     "anchorNodeIds": [
+      1504504861,
+      1504504852
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 116.9,
+     "wayId": 273258719,
+     "wayLengthM": 116.9,
+     "wayVersion": 3
+    }
+   ],
+   "sourceId": "dbt2020.fon",
+   "sourceRef": {
+    "field": "EL_STR_FON",
+    "populationNote": "constant 01 on all 55,554 street segments, including known sett streets",
+    "value": "01 pavimentato"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-111767966",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      563283432,
+      2907294415
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 13.1,
+     "wayId": 111767966,
+     "wayLengthM": 13.1,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-111768010",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      563283432
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 31,
+     "wayId": 111768010,
+     "wayLengthM": 31,
+     "wayVersion": 19
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-164940303",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      429251597,
+      429251599
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 164940303,
+     "wayLengthM": 25,
+     "wayVersion": 12
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-164940304",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      429251599,
+      252565668
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 97.1,
+     "wayId": 164940304,
+     "wayLengthM": 97.1,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-264363537",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      252565670,
+      444382211
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 28.7,
+     "wayId": 264363537,
+     "wayLengthM": 28.7,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-287070933",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      794971364,
+      5427139182
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 23.8,
+     "wayId": 287070933,
+     "wayLengthM": 23.8,
+     "wayVersion": 15
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-287070935",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      616588274,
+      206145273
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 16.3,
+     "wayId": 287070935,
+     "wayLengthM": 16.3,
+     "wayVersion": 16
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-287070936",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2907294443,
+      1272557605
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 287070936,
+     "wayLengthM": 25,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-713165251",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      5427139182,
+      616588274
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 8.2,
+     "wayId": 713165251,
+     "wayLengthM": 8.2,
+     "wayVersion": 7
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "absent"
+   },
+   "id": "ev-dbt-norails-713165261",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "absence in a source not declared complete: weak by rule, never 'no rails'",
+   "observedAt": "2020-03",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      206145273,
+      2907294443
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 10.3,
+     "wayId": 713165261,
+     "wayLengthM": 10.3,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "join": "no DBT tram axis within 5 m of any compiled segment of this way (si-dbt-join.mjs); nearest elements 15-31 m away per Agent 3"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 9.6,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-1184663891-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      10995041782,
+      9287919191
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 9.6,
+     "wayId": 1184663891,
+     "wayLengthM": 9.6,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 64,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-161606039-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982827,
+      260478476
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 64,
+     "wayId": 161606039,
+     "wayLengthM": 64,
+     "wayVersion": 16
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 45.6,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-181343587-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982777,
+      3788722364
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 45.5,
+     "wayId": 181343587,
+     "wayLengthM": 45.5,
+     "wayVersion": 13
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 48,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-232575190-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      429251598,
+      1765317182
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 48,
+     "wayId": 232575190,
+     "wayLengthM": 48,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 25.2,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-232575191-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1765317175,
+      429251598
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25.2,
+     "wayId": 232575191,
+     "wayLengthM": 25.2,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 51,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 1
+   },
+   "id": "ev-dbt-rails-264333608-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1480169044,
+      1480169036
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 58.2,
+     "wayId": 264333608,
+     "wayLengthM": 58.2,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 7.8,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 1
+   },
+   "id": "ev-dbt-rails-266141929-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1480169036,
+      306419190
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 13.7,
+     "wayId": 266141929,
+     "wayLengthM": 13.7,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 60.5,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-290523318-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3610861130,
+      259982777
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 60.5,
+     "wayId": 290523318,
+     "wayLengthM": 60.5,
+     "wayVersion": 10
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 52.6,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-290523322-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      260478476,
+      3107305689
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.6,
+     "wayId": 290523322,
+     "wayLengthM": 52.6,
+     "wayVersion": 10
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 43,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-290523325-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      252566566,
+      259982827
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 43,
+     "wayId": 290523325,
+     "wayLengthM": 43,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 31.5,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-290523326-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982480,
+      2987575972
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 31.5,
+     "wayId": 290523326,
+     "wayLengthM": 31.5,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 33,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-294819087-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      11003348985,
+      1765317175
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 33,
+     "wayId": 294819087,
+     "wayLengthM": 33,
+     "wayVersion": 7
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 52.9,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-295087306-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2987575972,
+      3610861130
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.9,
+     "wayId": 295087306,
+     "wayLengthM": 52.9,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 86.1,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-305989915-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3107305689,
+      11003348985
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 86.1,
+     "wayId": 305989915,
+     "wayLengthM": 86.1,
+     "wayVersion": 5
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 6.5,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-375509948-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3788722360,
+      10995041782
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 6.5,
+     "wayId": 375509948,
+     "wayLengthM": 6.5,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 22.4,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-375509949-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3788722364,
+      3788722360
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 22.4,
+     "wayId": 375509949,
+     "wayLengthM": 22.4,
+     "wayVersion": 7
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 14.2,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 1
+   },
+   "id": "ev-dbt-rails-529556308-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      5207175341,
+      252566566
+     ],
+     "coverage": "exact",
+     "fromM": 3.8,
+     "toM": 19.5,
+     "wayId": 529556308,
+     "wayLengthM": 19.5,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 56,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-85890884-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      252566563,
+      259982480
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 56,
+     "wayId": 85890884,
+     "wayLengthM": 56,
+     "wayVersion": 15
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "alignment": "longitudinal",
+    "presence": "present",
+    "railMetresAlong": 6.8,
+    "railType": "tram",
+    "service": "in_service",
+    "sharing": "shared_carriageway",
+    "trackCount": 2
+   },
+   "id": "ev-dbt-rails-900636756-0",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "embedding (flush / protruding) is not stated by DBT and is left out, i.e. unknown",
+   "observedAt": "2020-03",
+   "observedAtBasis": "DBT aerial restitution March/April 2020 (period start used)",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1765317182,
+      252566563
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 6.8,
+     "wayId": 900636756,
+     "wayLengthM": 6.8,
+     "wayVersion": 5
+    }
+   ],
+   "sourceId": "dbt2020.el_trv",
+   "sourceRef": {
+    "elementStatus": "01 in esercizio",
+    "join": "si-dbt-join.mjs: tram axis within 5 m and 30 deg of the compiled segment, >= 50 % of its length",
+    "note": "POS code read from the spec (02 = shared carriageway), not from the Comune's swapped _d labels",
+    "pos": "02"
+   },
+   "spatialPrecisionM": 3.1,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "scope": "unknown"
+   },
+   "id": "ev-inferred-neighbour-fracristoforo",
+   "kind": "inferred",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "a neighbour's tag is not evidence for an untagged way; never votes in v0",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      12088355865,
+      1236455755
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 29.4,
+     "wayId": 137158656,
+     "wayLengthM": 29.4,
+     "wayVersion": 8
+    },
+    {
+     "anchorNodeIds": [
+      1236455755,
+      11188933374
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 7.5,
+     "wayId": 1236292178,
+     "wayLengthM": 7.5,
+     "wayVersion": 1
+    },
+    {
+     "anchorNodeIds": [
+      11188933374,
+      2781360066
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 21.6,
+     "wayId": 273258718,
+     "wayLengthM": 21.6,
+     "wayVersion": 2
+    },
+    {
+     "anchorNodeIds": [
+      2781360066,
+      1504504876
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 84.1,
+     "wayId": 273258717,
+     "wayLengthM": 84.1,
+     "wayVersion": 4
+    },
+    {
+     "anchorNodeIds": [
+      1504504861,
+      1504504852
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 116.9,
+     "wayId": 273258719,
+     "wayLengthM": 116.9,
+     "wayVersion": 3
+    }
+   ],
+   "sourceId": "inference.heuristic.v0",
+   "sourceRef": {
+    "basis": "adjacent way 273258720 is tagged asphalt"
+   },
+   "spatialPrecisionM": 100,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "scope": "partial_width"
+   },
+   "id": "ev-kartaview-2203776",
+   "kind": "measured",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "Agent 3's own visual reading: rectangular granite sett in the foreground, asphalt only on far lanes; NOT human-verified. Image not stored.",
+   "observedAt": "2016-06-15",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      5427139182,
+      616588274
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 8.2,
+     "wayId": 713165251,
+     "wayLengthM": 8.2,
+     "wayVersion": 7
+    },
+    {
+     "anchorNodeIds": [
+      616588274,
+      206145273
+     ],
+     "coverage": "partial",
+     "fromM": 0,
+     "toM": 16.3,
+     "wayId": 287070935,
+     "wayLengthM": 16.3,
+     "wayVersion": 16
+    },
+    {
+     "anchorNodeIds": [
+      794971364,
+      5427139182
+     ],
+     "coverage": "partial",
+     "fromM": 0,
+     "toM": 23.8,
+     "wayId": 287070933,
+     "wayLengthM": 23.8,
+     "wayVersion": 15
+    },
+    {
+     "anchorNodeIds": [
+      1272557605,
+      563283432
+     ],
+     "coverage": "adjacent",
+     "fromM": 0,
+     "toM": 31,
+     "wayId": 111768010,
+     "wayLengthM": 31,
+     "wayVersion": 19
+    },
+    {
+     "anchorNodeIds": [
+      563283432,
+      2907294415
+     ],
+     "coverage": "adjacent",
+     "fromM": 0,
+     "toM": 13.1,
+     "wayId": 111767966,
+     "wayLengthM": 13.1,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "kartaview.2203776",
+   "sourceRef": {
+    "gpsAccuracyM": 5,
+    "heading": 338.78,
+    "matchedWayId": 287070933,
+    "photoId": 2203776,
+    "provider": "KartaView",
+    "sequenceId": 7455,
+    "size": "2592x1936",
+    "viewConeNote": "ways 111768010 (67.6 m) and 111767966 (76.7 m) are outside the view cone: adjacent only (Agent 3, external-data-audit.md D)"
+   },
+   "spatialPrecisionM": 5,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "agent_visual"
+  },
+  {
+   "claim": {
+    "basis": "osm_smoothness",
+    "level": "smooth",
+    "osmSmoothness": "good"
+   },
+   "id": "ev-osm-smoothness-111767966",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2023-09",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      563283432,
+      2907294415
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 13.1,
+     "wayId": 111767966,
+     "wayLengthM": 13.1,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "changeset": 140880308,
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 17
+   },
+   "spatialPrecisionM": 3,
+   "topic": "physical_roughness",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "osm_smoothness",
+    "level": "smooth",
+    "osmSmoothness": "excellent"
+   },
+   "id": "ev-osm-smoothness-111768010",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2023-09",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      563283432
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 31,
+     "wayId": 111768010,
+     "wayLengthM": 31,
+     "wayVersion": 19
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "changeset": 140880308,
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 19
+   },
+   "spatialPrecisionM": 3,
+   "topic": "physical_roughness",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "osm_smoothness",
+    "level": "rough",
+    "osmSmoothness": "bad"
+   },
+   "id": "ev-osm-smoothness-161606039",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982827,
+      260478476
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 64,
+     "wayId": 161606039,
+     "wayLengthM": 64,
+     "wayVersion": 16
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-09-07T16:53:25Z",
+    "wayVersion": 16
+   },
+   "spatialPrecisionM": 3,
+   "topic": "physical_roughness",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "osm_smoothness",
+    "level": "moderate",
+    "osmSmoothness": "intermediate"
+   },
+   "id": "ev-osm-smoothness-161606045",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      567858247
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 12.4,
+     "wayId": 161606045,
+     "wayLengthM": 12.4,
+     "wayVersion": 12
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 12
+   },
+   "spatialPrecisionM": 3,
+   "topic": "physical_roughness",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "osm_smoothness",
+    "level": "rough",
+    "osmSmoothness": "bad"
+   },
+   "id": "ev-osm-smoothness-164940303",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2023-09-14",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      429251597,
+      429251599
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 164940303,
+     "wayLengthM": 25,
+     "wayVersion": 12
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-15T21:01:31Z",
+    "wayVersion": 12
+   },
+   "spatialPrecisionM": 3,
+   "topic": "physical_roughness",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "osm_smoothness",
+    "level": "rough",
+    "osmSmoothness": "bad"
+   },
+   "id": "ev-osm-smoothness-287070936",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2023-09",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "month",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2907294443,
+      1272557605
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 287070936,
+     "wayLengthM": 25,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "changeset": 140880308,
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 17
+   },
+   "spatialPrecisionM": 3,
+   "topic": "physical_roughness",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "osm_smoothness",
+    "level": "moderate",
+    "osmSmoothness": "intermediate"
+   },
+   "id": "ev-osm-smoothness-295087306",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2987575972,
+      3610861130
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.9,
+     "wayId": 295087306,
+     "wayLengthM": 52.9,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-02-18T12:11:45Z",
+    "wayVersion": 9
+   },
+   "spatialPrecisionM": 3,
+   "topic": "physical_roughness",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "osm_smoothness",
+    "level": "rough",
+    "osmSmoothness": "bad"
+   },
+   "id": "ev-osm-smoothness-900636756",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1765317182,
+      252566563
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 6.8,
+     "wayId": 900636756,
+     "wayLengthM": 6.8,
+     "wayVersion": 5
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-11-22T18:01:19Z",
+    "wayVersion": 5
+   },
+   "spatialPrecisionM": 3,
+   "topic": "physical_roughness",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-111767966",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2019-02-20",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      563283432,
+      2907294415
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 13.1,
+     "wayId": 111767966,
+     "wayLengthM": 13.1,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "changeset": 67401242,
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 17
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-111768010",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2023-09-05",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      563283432
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 31,
+     "wayId": 111768010,
+     "wayLengthM": 31,
+     "wayVersion": 19
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "changeset": 140859948,
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 19
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-1184663891",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      10995041782,
+      9287919191
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 9.6,
+     "wayId": 1184663891,
+     "wayLengthM": 9.6,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-02-18T12:11:34Z",
+    "wayVersion": 6
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-161606039",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982827,
+      260478476
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 64,
+     "wayId": 161606039,
+     "wayLengthM": 64,
+     "wayVersion": 16
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-09-07T16:53:25Z",
+    "wayVersion": 16
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-161606045",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      567858247
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 12.4,
+     "wayId": 161606045,
+     "wayLengthM": 12.4,
+     "wayVersion": 12
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 12
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-164940303",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2023-09-05",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      429251597,
+      429251599
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 164940303,
+     "wayLengthM": 25,
+     "wayVersion": 12
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "changeset": 140859948,
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-15T21:01:31Z",
+    "wayVersion": 12
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-164940304",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      429251599,
+      252565668
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 97.1,
+     "wayId": 164940304,
+     "wayLengthM": 97.1,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-02-18T12:07:46Z",
+    "wayVersion": 8
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-181343587",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982777,
+      3788722364
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 45.5,
+     "wayId": 181343587,
+     "wayLengthM": 45.5,
+     "wayVersion": 13
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-02-18T12:11:25Z",
+    "wayVersion": 13
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-232575190",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      429251598,
+      1765317182
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 48,
+     "wayId": 232575190,
+     "wayLengthM": 48,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-24T16:57:56Z",
+    "wayVersion": 8
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-232575191",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1765317175,
+      429251598
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25.2,
+     "wayId": 232575191,
+     "wayLengthM": 25.2,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-02-07T14:07:51Z",
+    "wayVersion": 9
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-273258720",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1504504876,
+      1504504861
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 121.1,
+     "wayId": 273258720,
+     "wayLengthM": 121.1,
+     "wayVersion": 10
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-10-25T18:15:25Z",
+    "wayVersion": 10
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-287070933",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      794971364,
+      5427139182
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 23.8,
+     "wayId": 287070933,
+     "wayLengthM": 23.8,
+     "wayVersion": 15
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 15
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-287070935",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      616588274,
+      206145273
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 16.3,
+     "wayId": 287070935,
+     "wayLengthM": 16.3,
+     "wayVersion": 16
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:22:03Z",
+    "wayVersion": 16
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-287070936",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": "2023-09-05",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2907294443,
+      1272557605
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 287070936,
+     "wayLengthM": 25,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "changeset": 140859948,
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 17
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-290523318",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3610861130,
+      259982777
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 60.5,
+     "wayId": 290523318,
+     "wayLengthM": 60.5,
+     "wayVersion": 10
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-24T17:10:29Z",
+    "wayVersion": 10
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-290523322",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      260478476,
+      3107305689
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.6,
+     "wayId": 290523322,
+     "wayLengthM": 52.6,
+     "wayVersion": 10
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-02-07T14:02:51Z",
+    "wayVersion": 10
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-290523325",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      252566566,
+      259982827
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 43,
+     "wayId": 290523325,
+     "wayLengthM": 43,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:23:28Z",
+    "wayVersion": 9
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-290523326",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982480,
+      2987575972
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 31.5,
+     "wayId": 290523326,
+     "wayLengthM": 31.5,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-11-22T18:01:19Z",
+    "wayVersion": 6
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-294819087",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      11003348985,
+      1765317175
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 33,
+     "wayId": 294819087,
+     "wayLengthM": 33,
+     "wayVersion": 7
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-02-07T14:04:43Z",
+    "wayVersion": 7
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-295087306",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2987575972,
+      3610861130
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.9,
+     "wayId": 295087306,
+     "wayLengthM": 52.9,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-02-18T12:11:45Z",
+    "wayVersion": 9
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-305989915",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3107305689,
+      11003348985
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 86.1,
+     "wayId": 305989915,
+     "wayLengthM": 86.1,
+     "wayVersion": 5
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-02-26T16:21:29Z",
+    "wayVersion": 5
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-375509948",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3788722360,
+      10995041782
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 6.5,
+     "wayId": 375509948,
+     "wayLengthM": 6.5,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-19T02:41:12Z",
+    "wayVersion": 9
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-375509949",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3788722364,
+      3788722360
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 22.4,
+     "wayId": 375509949,
+     "wayLengthM": 22.4,
+     "wayVersion": 7
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-19T02:41:12Z",
+    "wayVersion": 7
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-529556308",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      567858247,
+      252566566
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 19.5,
+     "wayId": 529556308,
+     "wayLengthM": 19.5,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:23:06Z",
+    "wayVersion": 8
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-713165251",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      5427139182,
+      616588274
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 8.2,
+     "wayId": 713165251,
+     "wayLengthM": 8.2,
+     "wayVersion": 7
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:22:35Z",
+    "wayVersion": 7
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "asphalt",
+    "rawValue": "asphalt",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-713165261",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      206145273,
+      2907294443
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 10.3,
+     "wayId": 713165261,
+     "wayLengthM": 10.3,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:22:00Z",
+    "wayVersion": 6
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-85890884",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      252566563,
+      259982480
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 56,
+     "wayId": 85890884,
+     "wayLengthM": 56,
+     "wayVersion": 15
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-29T02:57:49Z",
+    "wayVersion": 15
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "sett",
+    "scope": "whole_width"
+   },
+   "id": "ev-osm-surface-900636756",
+   "kind": "tagged",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1765317182,
+      252566563
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 6.8,
+     "wayId": 900636756,
+     "wayLengthM": 6.8,
+     "wayVersion": 5
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-11-22T18:01:19Z",
+    "wayVersion": 5
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-111768010",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": "2013",
+   "observedAtBasis": "osm_changeset_with_declared_source_survey",
+   "observedAtPrecision": "year",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      563283432
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 31,
+     "wayId": 111768010,
+     "wayLengthM": 31,
+     "wayVersion": 19
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "declaredSource": "survey",
+    "historyReadBy": "Agent 2, osm-data-audit.md",
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 19
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-161606039",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982827,
+      260478476
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 64,
+     "wayId": 161606039,
+     "wayLengthM": 64,
+     "wayVersion": 16
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-09-07T16:53:25Z",
+    "wayVersion": 16
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-161606045",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      567858247
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 12.4,
+     "wayId": 161606045,
+     "wayLengthM": 12.4,
+     "wayVersion": 12
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 12
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-232575190",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      429251598,
+      1765317182
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 48,
+     "wayId": 232575190,
+     "wayLengthM": 48,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-24T16:57:56Z",
+    "wayVersion": 8
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-232575191",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1765317175,
+      429251598
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25.2,
+     "wayId": 232575191,
+     "wayLengthM": 25.2,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-02-07T14:07:51Z",
+    "wayVersion": 9
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-287070933",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      794971364,
+      5427139182
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 23.8,
+     "wayId": 287070933,
+     "wayLengthM": 23.8,
+     "wayVersion": 15
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 15
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-287070936",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2907294443,
+      1272557605
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 287070936,
+     "wayLengthM": 25,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-11-07T00:51:45Z",
+    "wayVersion": 17
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-290523318",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3610861130,
+      259982777
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 60.5,
+     "wayId": 290523318,
+     "wayLengthM": 60.5,
+     "wayVersion": 10
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-24T17:10:29Z",
+    "wayVersion": 10
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-290523322",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      260478476,
+      3107305689
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.6,
+     "wayId": 290523322,
+     "wayLengthM": 52.6,
+     "wayVersion": 10
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-02-07T14:02:51Z",
+    "wayVersion": 10
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-290523325",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      252566566,
+      259982827
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 43,
+     "wayId": 290523325,
+     "wayLengthM": 43,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:23:28Z",
+    "wayVersion": 9
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-290523326",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      259982480,
+      2987575972
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 31.5,
+     "wayId": 290523326,
+     "wayLengthM": 31.5,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-11-22T18:01:19Z",
+    "wayVersion": 6
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-294819087",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      11003348985,
+      1765317175
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 33,
+     "wayId": 294819087,
+     "wayLengthM": 33,
+     "wayVersion": 7
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-02-07T14:04:43Z",
+    "wayVersion": 7
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-295087306",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2987575972,
+      3610861130
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 52.9,
+     "wayId": 295087306,
+     "wayLengthM": 52.9,
+     "wayVersion": 9
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2025-02-18T12:11:45Z",
+    "wayVersion": 9
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-305989915",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      3107305689,
+      11003348985
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 86.1,
+     "wayId": 305989915,
+     "wayLengthM": 86.1,
+     "wayVersion": 5
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-02-26T16:21:29Z",
+    "wayVersion": 5
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-529556308",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      567858247,
+      252566566
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 19.5,
+     "wayId": 529556308,
+     "wayLengthM": 19.5,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:23:06Z",
+    "wayVersion": 8
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-713165251",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      5427139182,
+      616588274
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 8.2,
+     "wayId": 713165251,
+     "wayLengthM": 8.2,
+     "wayVersion": 7
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:22:35Z",
+    "wayVersion": 7
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-713165261",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      206145273,
+      2907294443
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 10.3,
+     "wayId": 713165261,
+     "wayLengthM": 10.3,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-31T15:22:00Z",
+    "wayVersion": 6
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-85890884",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      252566563,
+      259982480
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 56,
+     "wayId": 85890884,
+     "wayLengthM": 56,
+     "wayVersion": 15
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2026-01-29T02:57:49Z",
+    "wayVersion": 15
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "rawValue": "milanese_paving",
+    "scope": "unknown"
+   },
+   "id": "ev-osm-surfacebike-900636756",
+   "kind": "derived",
+   "modes": [
+    "bicycle"
+   ],
+   "notes": "non-standard key surface_bike: discarded by the compiler when surface exists (D4); describes what cyclists ride, not proven for the car lane",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1765317182,
+      252566563
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 6.8,
+     "wayId": 900636756,
+     "wayLengthM": 6.8,
+     "wayVersion": 5
+    }
+   ],
+   "sourceId": "osm.citywide.2026-11-04",
+   "sourceRef": {
+    "sourceTimestamp": "2023-11-22T18:01:19Z",
+    "wayVersion": 5
+   },
+   "spatialPrecisionM": 3,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "presence": "present",
+    "railType": "tram"
+   },
+   "consent": {
+    "aggregated": false,
+    "version": "owner-direct-observation"
+   },
+   "id": "ev-owner-report-rails",
+   "kind": "reported",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "'tram rails ... around Corso Lodi / Via Lazzaro Papi' (shared-context.md): area-level, hence +-150 m and coarse coverage.",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      1272557605,
+      567858247
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 12.4,
+     "wayId": 161606045,
+     "wayLengthM": 12.4,
+     "wayVersion": 12
+    },
+    {
+     "anchorNodeIds": [
+      567858247,
+      252566566
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 19.5,
+     "wayId": 529556308,
+     "wayLengthM": 19.5,
+     "wayVersion": 8
+    },
+    {
+     "anchorNodeIds": [
+      252566566,
+      259982827
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 43,
+     "wayId": 290523325,
+     "wayLengthM": 43,
+     "wayVersion": 9
+    },
+    {
+     "anchorNodeIds": [
+      259982827,
+      260478476
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 64,
+     "wayId": 161606039,
+     "wayLengthM": 64,
+     "wayVersion": 16
+    },
+    {
+     "anchorNodeIds": [
+      260478476,
+      3107305689
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 52.6,
+     "wayId": 290523322,
+     "wayLengthM": 52.6,
+     "wayVersion": 10
+    },
+    {
+     "anchorNodeIds": [
+      3107305689,
+      11003348985
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 86.1,
+     "wayId": 305989915,
+     "wayLengthM": 86.1,
+     "wayVersion": 5
+    },
+    {
+     "anchorNodeIds": [
+      11003348985,
+      1765317175
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 33,
+     "wayId": 294819087,
+     "wayLengthM": 33,
+     "wayVersion": 7
+    },
+    {
+     "anchorNodeIds": [
+      1765317175,
+      429251598
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 25.2,
+     "wayId": 232575191,
+     "wayLengthM": 25.2,
+     "wayVersion": 9
+    },
+    {
+     "anchorNodeIds": [
+      429251598,
+      1765317182
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 48,
+     "wayId": 232575190,
+     "wayLengthM": 48,
+     "wayVersion": 8
+    },
+    {
+     "anchorNodeIds": [
+      1765317182,
+      252566563
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 6.8,
+     "wayId": 900636756,
+     "wayLengthM": 6.8,
+     "wayVersion": 5
+    },
+    {
+     "anchorNodeIds": [
+      252566563,
+      259982480
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 56,
+     "wayId": 85890884,
+     "wayLengthM": 56,
+     "wayVersion": 15
+    },
+    {
+     "anchorNodeIds": [
+      259982480,
+      2987575972
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 31.5,
+     "wayId": 290523326,
+     "wayLengthM": 31.5,
+     "wayVersion": 6
+    },
+    {
+     "anchorNodeIds": [
+      2987575972,
+      3610861130
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 52.9,
+     "wayId": 295087306,
+     "wayLengthM": 52.9,
+     "wayVersion": 9
+    },
+    {
+     "anchorNodeIds": [
+      3610861130,
+      259982777
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 60.5,
+     "wayId": 290523318,
+     "wayLengthM": 60.5,
+     "wayVersion": 10
+    },
+    {
+     "anchorNodeIds": [
+      259982777,
+      3788722364
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 45.5,
+     "wayId": 181343587,
+     "wayLengthM": 45.5,
+     "wayVersion": 13
+    },
+    {
+     "anchorNodeIds": [
+      3788722364,
+      3788722360
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 22.4,
+     "wayId": 375509949,
+     "wayLengthM": 22.4,
+     "wayVersion": 7
+    },
+    {
+     "anchorNodeIds": [
+      3788722360,
+      10995041782
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 6.5,
+     "wayId": 375509948,
+     "wayLengthM": 6.5,
+     "wayVersion": 9
+    },
+    {
+     "anchorNodeIds": [
+      10995041782,
+      9287919191
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 9.6,
+     "wayId": 1184663891,
+     "wayLengthM": 9.6,
+     "wayVersion": 6
+    },
+    {
+     "anchorNodeIds": [
+      429251597,
+      429251599
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 164940303,
+     "wayLengthM": 25,
+     "wayVersion": 12
+    },
+    {
+     "anchorNodeIds": [
+      429251599,
+      252565668
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 97.1,
+     "wayId": 164940304,
+     "wayLengthM": 97.1,
+     "wayVersion": 8
+    }
+   ],
+   "sourceId": "owner.field.2026-11",
+   "spatialPrecisionM": 150,
+   "topic": "rails_presence",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "material": "sett",
+    "scope": "whole_width"
+   },
+   "consent": {
+    "aggregated": false,
+    "version": "owner-direct-observation"
+   },
+   "id": "ev-owner-report-ring",
+   "kind": "reported",
+   "modes": [
+    "car",
+    "motorcycle",
+    "bicycle"
+   ],
+   "notes": "Outbound journey, no GPS: 'the traversed part of the roundabout was physically stone setts' (shared-context.md). Location = the ~69 m traversal, so +-35 m; date not stated, therefore null.",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      2907294443,
+      1272557605
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 25,
+     "wayId": 287070936,
+     "wayLengthM": 25,
+     "wayVersion": 17
+    },
+    {
+     "anchorNodeIds": [
+      1272557605,
+      563283432
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 31,
+     "wayId": 111768010,
+     "wayLengthM": 31,
+     "wayVersion": 19
+    },
+    {
+     "anchorNodeIds": [
+      563283432,
+      2907294415
+     ],
+     "coverage": "coarse",
+     "fromM": 0,
+     "toM": 13.1,
+     "wayId": 111767966,
+     "wayLengthM": 13.1,
+     "wayVersion": 17
+    }
+   ],
+   "sourceId": "owner.field.2026-11",
+   "spatialPrecisionM": 35,
+   "topic": "surface_material",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "provider_graph",
+    "oneway": "forward"
+   },
+   "id": "ev-provider-direction-713165261",
+   "kind": "derived",
+   "modes": [
+    "car",
+    "motorcycle"
+   ],
+   "observedAt": "2026-11-14",
+   "observedAtPrecision": "day",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      206145273,
+      2907294443
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 10.3,
+     "wayId": 713165261,
+     "wayLengthM": 10.3,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "provider.valhalla.fossgis",
+   "sourceRef": {
+    "probe": "V9, routing-forensics.md section 8: a route against the ring flow returns the full 241 m loop"
+   },
+   "spatialPrecisionM": 1,
+   "topic": "direction",
+   "verification": "unverified",
+   "verifierRole": "none"
+  },
+  {
+   "claim": {
+    "basis": "topology",
+    "oneway": "forward"
+   },
+   "id": "ev-topology-direction-713165261",
+   "kind": "inferred",
+   "modes": [
+    "car",
+    "motorcycle"
+   ],
+   "notes": "closed loop whose other ring ways are oneway=yes (Agent 2 D8); informational",
+   "observedAt": null,
+   "observedAtPrecision": "unknown",
+   "recordedAt": "2026-11-14",
+   "refs": [
+    {
+     "anchorNodeIds": [
+      206145273,
+      2907294443
+     ],
+     "coverage": "exact",
+     "fromM": 0,
+     "toM": 10.3,
+     "wayId": 713165261,
+     "wayLengthM": 10.3,
+     "wayVersion": 6
+    }
+   ],
+   "sourceId": "inference.heuristic.v0",
+   "spatialPrecisionM": 1,
+   "topic": "direction",
+   "verification": "unverified",
+   "verifierRole": "none"
+  }
+ ],
+ "schemaVersion": "0.1.0",
+ "sources": [
+  {
+   "attribution": "ATM Milano via Comune di Milano open data, CC BY",
+   "authoritativeFor": [
+    "rails_presence.service"
+   ],
+   "datasetDate": "2026-07-24",
+   "id": "atm.ds538.2026-07-24",
+   "licenceId": "CC-BY-4.0",
+   "licenceNote": "describes service (lines), not tracks",
+   "name": "ATM Milano, surface line routes (CKAN ds538)",
+   "retrievedAt": "2026-11-14",
+   "sha256": "4c0469fc2bab9027cd70603f088d1d24b13ea11e19c5b77a51cffe4fbfbbec0b"
+  },
+  {
+   "attribution": "Comune di Milano, Database Topografico 2020, CC BY",
+   "authoritativeFor": [
+    "rails_presence"
+   ],
+   "completeFor": [],
+   "datasetDate": "2020-03",
+   "id": "dbt2020.el_trv",
+   "licenceId": "CC-BY-4.0",
+   "licenceNote": "CKAN license_id cc-by; version not stated in CKAN, the portal states CC BY 4.0 (not re-verified; Agent 3)",
+   "name": "Comune di Milano, Database Topografico 2020, tram axis EL_TRV (REST layer 19, landmark box)",
+   "retrievedAt": "2026-11-14",
+   "sha256": "631bea33fdc21dc471cdf2dea6d7d0b169b0caaee2863e99d4ad81582232af1b"
+  },
+  {
+   "attribution": "Comune di Milano, Database Topografico 2020, CC BY",
+   "datasetDate": "2020-03",
+   "id": "dbt2020.fon",
+   "licenceId": "CC-BY-4.0",
+   "licenceNote": "FON = 01 'pavimentato' on 55,554 of 55,554 street segments (Agent 3): carries no material information",
+   "name": "Comune di Milano, Database Topografico 2020, field EL_STR_FON",
+   "nonDiscriminatingFor": [
+    "surface_material.material"
+   ],
+   "retrievedAt": "2026-11-14"
+  },
+  {
+   "attribution": "derived from © OpenStreetMap contributors",
+   "id": "inference.heuristic.v0",
+   "licenceId": "ODbL-1.0",
+   "name": "Heuristic inference (neighbour / topology); never votes in v0",
+   "retrievedAt": "2026-11-14"
+  },
+  {
+   "attribution": "KartaView contributor, photo 2203776, CC BY-SA 4.0 (image not stored; reference only)",
+   "datasetDate": "2016-06-15",
+   "id": "kartaview.2203776",
+   "licenceId": "CC-BY-SA-4.0",
+   "name": "KartaView photo 2203776 (sequence 7455), 2016-06-15",
+   "retrievedAt": "2026-11-14"
+  },
+  {
+   "attribution": "© OpenStreetMap contributors",
+   "datasetDate": "2026-11-04",
+   "id": "osm.citywide.2026-11-04",
+   "licenceId": "ODbL-1.0",
+   "licenceNote": "sha256 = manifest of the 8 citywide sectors (data/sources/milan-citywide-expansion.source.json)",
+   "name": "OpenStreetMap, Overpass citywide extract used by the compiled Milan tiles",
+   "retrievedAt": "2026-11-04",
+   "sha256": "6a07224314116cefff25a1a85a84532ce95a5698fa06682fd3eff8472411b781"
+  },
+  {
+   "attribution": "© OpenStreetMap contributors",
+   "datasetDate": "2026-10-28",
+   "id": "osm.pilot.2026-10-28",
+   "licenceId": "ODbL-1.0",
+   "name": "OpenStreetMap API map.json, central pilot extract",
+   "retrievedAt": "2026-10-28",
+   "sha256": "894dfeeb16709df2857db688fd2dedde1f14096363ba76ba22087da2eeeb2bf7"
+  },
+  {
+   "attribution": "Lastrico project field observation",
+   "id": "owner.field.2026-11",
+   "licenceId": "PROJECT-CONTRIBUTION-TBD",
+   "licenceNote": "contribution terms for field/user reports are an open owner decision",
+   "name": "Project owner's own field observation (outbound journey, no GPS recorded)",
+   "retrievedAt": "2026-11-14"
+  },
+  {
+   "attribution": "© OpenStreetMap contributors; routing by FOSSGIS Valhalla",
+   "authoritativeFor": [
+    "direction.oneway"
+   ],
+   "datasetDate": "2026-11-14",
+   "id": "provider.valhalla.fossgis",
+   "licenceId": "ODbL-1.0",
+   "name": "Valhalla routing graph at valhalla1.openstreetmap.de, live probe V9 (Agent 1)",
+   "retrievedAt": "2026-11-14"
+  }
+ ]
+}

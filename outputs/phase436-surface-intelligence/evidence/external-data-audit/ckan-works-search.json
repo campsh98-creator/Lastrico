@@ -1,0 +1,110 @@
+{
+ "retrievedUtc": "2026-11-14T14:41:53.033Z",
+ "search": {
+  "manutenzione strade": {
+   "count": 0,
+   "top": []
+  },
+  "asfaltatura": {
+   "count": 0,
+   "top": []
+  },
+  "cantieri": {
+   "count": 0,
+   "top": []
+  },
+  "pavimentazione": {
+   "count": 0,
+   "top": []
+  },
+  "lavori stradali": {
+   "count": 0,
+   "top": []
+  },
+  "pavé": {
+   "count": 0,
+   "top": []
+  },
+  "porfido": {
+   "count": 0,
+   "top": []
+  },
+  "binari": {
+   "count": 0,
+   "top": []
+  },
+  "tram": {
+   "count": 354,
+   "top": [
+    "ds1549-estensione-rete-tram-serie-storica | Estensione della rete di tram - Serie storica | 2026-05-08",
+    "ds1548-densita-rete-tram-serie-storica | Densità della rete di tram - Serie storica | 2026-05-08",
+    "ds1564-disponibilita-vetture-tram-serie-storica | Disponibilità di vetture del tram per il trasporto pubblico locale - Serie storica | 2026-05-08",
+    "ds1565-vetture-tram-utilizzate-serie-storica | Vetture del tram utilizzate per il trasporto pubblico locale - Serie storica | 2026-05-08",
+    "ds919-openwifimilano-registered | Open Wifi Milano: Registrazioni giornaliere | 2026-11-13",
+    "ds616_aste_di_vendita_immobili_pubblici_nel_comune_di_milano | Aste di Vendita immobili pubblici nel Comune di Milano | 2026-10-12",
+    "ds3032_personale-a-tempo-indeterminato-per-fascia-di-eta-e-categoria-anno-2025 | Personale a tempo indeterminato per fascia di età e categoria - anno 2025 | 2026-11-04",
+    "ds536_atm-orari-linee-di-superficie-urbane | ATM - Orari linee di superficie urbane | 2026-07-24"
+   ]
+  }
+ },
+ "ds925": {
+  "fields": [
+   "_id",
+   "Feature_ID",
+   "Numero di protocollo ingresso",
+   "Data protocollo ingresso",
+   "Data prevista inizio lavori",
+   "Data prevista fine lavori",
+   "Totale giorni previsti di lavori",
+   "Superficie occupata in mq",
+   "Pavimentazione area occupata",
+   "Tipologia area coinvolta",
+   "Impresa proprietaria area concessione/autorizzazione",
+   "Tipo di utility/attività",
+   "Nome via",
+   "Civico o descrizione di Punto Inizio intervento",
+   "Civico o descrizione di Punto Fine Intervento",
+   "Coefficiente microzona",
+   "Municipio",
+   "CAP",
+   "ID_NIL",
+   "NIL",
+   "LONG_X_4326",
+   "LAT_Y_4326",
+   "Location"
+  ],
+  "total": 214,
+  "Lodi": {
+   "total": 4,
+   "rows": [
+    {
+     "via": "Via TAGLIAMENTO",
+     "area": "Marciapiede",
+     "pav": "Asfalto Colato"
+    },
+    {
+     "via": "Via SERLIO SEBASTIANO",
+     "area": "Marciapiede e Carreggiata",
+     "pav": "Asfalto Colato"
+    },
+    {
+     "via": "Via CINQUECENTO (DEI)",
+     "area": "Marciapiede e Carreggiata",
+     "pav": "Conglomerato Bituminoso"
+    },
+    {
+     "via": "Via BONCOMPAGNI CARLO",
+     "area": "Carreggiata",
+     "pav": "Asfalto Colato"
+    }
+   ]
+  },
+  "Papi": {
+   "total": 0,
+   "rows": []
+  },
+  "pietra": {
+   "total": 4
+  }
+ }
+}

@@ -1,0 +1,228 @@
+{
+ "asOf": "2026-11-14",
+ "comparison": [
+  {
+   "P-A bicycle": "known sett [medium/fresh]",
+   "P-A car": "known sett [medium/fresh]",
+   "P-A+bikeWide car": "known sett [medium/fresh]",
+   "P-B bicycle": "known sett [medium/fresh]",
+   "P-B car": "known sett [medium/fresh]",
+   "attribute": "material",
+   "case": "ring #1 sett (25.0 m)",
+   "topic": "surface_material",
+   "wayId": 287070936
+  },
+  {
+   "P-A bicycle": "contested [low/fresh]",
+   "P-A car": "known asphalt +weakDissent [low/fresh]",
+   "P-A+bikeWide car": "contested [low/fresh]",
+   "P-B bicycle": "contested [low/fresh]",
+   "P-B car": "contested [low/fresh]",
+   "attribute": "material",
+   "case": "ring #2 asphalt+surface_bike (31.0 m)",
+   "topic": "surface_material",
+   "wayId": 111768010
+  },
+  {
+   "P-A bicycle": "known asphalt +weakDissent [low/aging]",
+   "P-A car": "known asphalt +weakDissent [low/aging]",
+   "P-A+bikeWide car": "known asphalt +weakDissent [low/aging]",
+   "P-B bicycle": "contested [low/aging]",
+   "P-B car": "contested [low/aging]",
+   "attribute": "material",
+   "case": "ring #3 asphalt (13.1 m)",
+   "topic": "surface_material",
+   "wayId": 111767966
+  },
+  {
+   "P-A bicycle": "contested [low/unknown_age]",
+   "P-A car": "known asphalt +weakDissent [low/unknown_age]",
+   "P-A+bikeWide car": "contested [low/unknown_age]",
+   "P-B bicycle": "contested [low/unknown_age]",
+   "P-B car": "contested [low/unknown_age]",
+   "attribute": "material",
+   "case": "ring ahead-of-photo way (8.2 m)",
+   "topic": "surface_material",
+   "wayId": 713165251
+  },
+  {
+   "P-A bicycle": "known asphalt +weakDissent [low/unknown_age]",
+   "P-A car": "known asphalt +weakDissent [low/unknown_age]",
+   "P-A+bikeWide car": "known asphalt +weakDissent [low/unknown_age]",
+   "P-B bicycle": "contested [low/unknown_age]",
+   "P-B car": "contested [low/unknown_age]",
+   "attribute": "material",
+   "case": "ring 287070935 (16.3 m)",
+   "topic": "surface_material",
+   "wayId": 287070935
+  },
+  {
+   "P-A bicycle": "known sett [low/unknown_age]",
+   "P-A car": "known sett [low/unknown_age]",
+   "P-A+bikeWide car": "known sett [low/unknown_age]",
+   "P-B bicycle": "known sett [low/unknown_age]",
+   "P-B car": "known sett [low/unknown_age]",
+   "attribute": "material",
+   "case": "Corso Lodi sett two-way 305989915",
+   "topic": "surface_material",
+   "wayId": 305989915
+  },
+  {
+   "P-A bicycle": "known sett [medium/fresh]",
+   "P-A car": "known sett [medium/fresh]",
+   "P-A+bikeWide car": "known sett [medium/fresh]",
+   "P-B bicycle": "known sett [medium/fresh]",
+   "P-B car": "known sett [medium/fresh]",
+   "attribute": "material",
+   "case": "Papi sett 164940303",
+   "topic": "surface_material",
+   "wayId": 164940303
+  },
+  {
+   "P-A bicycle": "unknown [none/unknown_age]",
+   "P-A car": "unknown [none/unknown_age]",
+   "P-A+bikeWide car": "unknown [none/unknown_age]",
+   "P-B bicycle": "unknown [none/unknown_age]",
+   "P-B car": "unknown [none/unknown_age]",
+   "attribute": "material",
+   "case": "Fra Cristoforo 273258717 (untagged)",
+   "topic": "surface_material",
+   "wayId": 273258717
+  },
+  {
+   "P-A bicycle": "known asphalt [low/unknown_age]",
+   "P-A car": "known asphalt [low/unknown_age]",
+   "P-A+bikeWide car": "known asphalt [low/unknown_age]",
+   "P-B bicycle": "known asphalt [low/unknown_age]",
+   "P-B car": "known asphalt [low/unknown_age]",
+   "attribute": "material",
+   "case": "Fra Cristoforo neighbour 273258720",
+   "topic": "surface_material",
+   "wayId": 273258720
+  },
+  {
+   "P-A bicycle": "known smooth [medium/fresh]",
+   "P-A car": "known smooth [medium/fresh]",
+   "P-A+bikeWide car": "known smooth [medium/fresh]",
+   "P-B bicycle": "known smooth [medium/fresh]",
+   "P-B car": "known smooth [medium/fresh]",
+   "attribute": "level",
+   "case": "ring #2 roughness (smoothness=excellent)",
+   "topic": "physical_roughness",
+   "wayId": 111768010
+  },
+  {
+   "P-A bicycle": "known rough [medium/fresh]",
+   "P-A car": "known rough [medium/fresh]",
+   "P-A+bikeWide car": "known rough [medium/fresh]",
+   "P-B bicycle": "known rough [medium/fresh]",
+   "P-B car": "known rough [medium/fresh]",
+   "attribute": "level",
+   "case": "ring #1 roughness (smoothness=bad)",
+   "topic": "physical_roughness",
+   "wayId": 287070936
+  },
+  {
+   "P-A bicycle": "known present [medium/fresh]",
+   "P-A car": "known present [medium/fresh]",
+   "P-A+bikeWide car": "known present [medium/fresh]",
+   "P-B bicycle": "known present [medium/fresh]",
+   "P-B car": "known present [medium/fresh]",
+   "attribute": "presence",
+   "case": "Corso Lodi 305989915 rails presence",
+   "topic": "rails_presence",
+   "wayId": 305989915
+  },
+  {
+   "P-A bicycle": "known no_scheduled_line +weakDissent [low/fresh]",
+   "P-A car": "known no_scheduled_line +weakDissent [low/fresh]",
+   "P-A+bikeWide car": "known no_scheduled_line +weakDissent [low/fresh]",
+   "P-B bicycle": "contested [low/fresh]",
+   "P-B car": "contested [low/fresh]",
+   "attribute": "service",
+   "case": "Corso Lodi 305989915 rails service",
+   "topic": "rails_presence",
+   "wayId": 305989915
+  },
+  {
+   "P-A bicycle": "known shared_carriageway [medium/fresh]",
+   "P-A car": "known shared_carriageway [medium/fresh]",
+   "P-A+bikeWide car": "known shared_carriageway [medium/fresh]",
+   "P-B bicycle": "known shared_carriageway [medium/fresh]",
+   "P-B car": "known shared_carriageway [medium/fresh]",
+   "attribute": "sharing",
+   "case": "Corso Lodi 305989915 rails sharing",
+   "topic": "rails_presence",
+   "wayId": 305989915
+  },
+  {
+   "P-A bicycle": "-",
+   "P-A car": "-",
+   "P-A+bikeWide car": "-",
+   "P-B bicycle": "-",
+   "P-B car": "-",
+   "attribute": "embedding",
+   "case": "Corso Lodi 305989915 rails embedding",
+   "topic": "rails_presence",
+   "wayId": 305989915
+  },
+  {
+   "P-A bicycle": "contested [low/fresh]",
+   "P-A car": "contested [low/fresh]",
+   "P-A+bikeWide car": "contested [low/fresh]",
+   "P-B bicycle": "contested [low/fresh]",
+   "P-B car": "contested [low/fresh]",
+   "attribute": "presence",
+   "case": "Papi 164940303 rails presence",
+   "topic": "rails_presence",
+   "wayId": 164940303
+  },
+  {
+   "P-A bicycle": "known absent [low/fresh]",
+   "P-A car": "known absent [low/fresh]",
+   "P-A+bikeWide car": "known absent [low/fresh]",
+   "P-B bicycle": "known absent [low/fresh]",
+   "P-B car": "known absent [low/fresh]",
+   "attribute": "presence",
+   "case": "ring #1 rails presence",
+   "topic": "rails_presence",
+   "wayId": 287070936
+  },
+  {
+   "P-A bicycle": "unknown [none/unknown_age]",
+   "P-A car": "known forward [medium/fresh]",
+   "P-A+bikeWide car": "known forward [medium/fresh]",
+   "P-B bicycle": "unknown [none/unknown_age]",
+   "P-B car": "known forward [medium/fresh]",
+   "attribute": "oneway",
+   "case": "ring 713165261 direction",
+   "topic": "direction",
+   "wayId": 713165261
+  }
+ ],
+ "ledgerSha256": "bf49585d4d216eeddefa9bdf00553983ad290491a898506bd84cb24e6867d66d",
+ "note": "design feasibility on the real field cases, not product validation",
+ "policyVersion": "sil-policy-0.1.0-experimental",
+ "resolverVersion": "si-resolver-0.1.0",
+ "ringTraversal69m": {
+  "P-A": {
+   "confirmedStoneM": 25,
+   "probableStoneM_afterAdapter": 0,
+   "weakDissentFlaggedM": 44.1,
+   "weightedStoneM": 25
+  },
+  "P-A+bikeWide": {
+   "confirmedStoneM": 25,
+   "probableStoneM_afterAdapter": 31,
+   "weakDissentFlaggedM": 13.1,
+   "weightedStoneM": 45.2
+  },
+  "P-B": {
+   "confirmedStoneM": 25,
+   "probableStoneM_afterAdapter": 44.1,
+   "weakDissentFlaggedM": 0,
+   "weightedStoneM": 53.7
+  },
+  "baseline_today_confirmedStoneM": 25
+ }
+}

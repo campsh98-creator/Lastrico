@@ -1,0 +1,52 @@
+{
+ "query": {
+  "bbox": "9.2055,45.4490,9.2090,45.4525",
+  "limit": "200"
+ },
+ "count": 3,
+ "byMonth": {
+  "2025-06": 3
+ },
+ "sequences": 0,
+ "licences": [
+  "https://creativecommons.org/licenses/by-sa/4.0/"
+ ],
+ "photos": [
+  {
+   "id": "e015baaa-478e-48c3-b2aa-8894a328fa31",
+   "collection": "49e639fc-76c8-44f8-b88f-403927f1a2b1",
+   "lon": 9.20555,
+   "lat": 45.45185,
+   "datetime": "2025-06-02T06:07:20.259000+00:00",
+   "azimuth": 232,
+   "thumb": "https://panoramax.openstreetmap.fr/derivates/e0/15/ba/aa/478e-48c3-b2aa-8894a328fa31/thumb.jpg",
+   "sd": "https://panoramax.openstreetmap.fr/derivates/e0/15/ba/aa/478e-48c3-b2aa-8894a328fa31/sd.jpg",
+   "hd": "https://panoramax.openstreetmap.fr/images/e0/15/ba/aa/478e-48c3-b2aa-8894a328fa31.jpg",
+   "producer": "Robot8A/robot8a"
+  },
+  {
+   "id": "6522aff6-12da-496c-98ec-b41548dc58ef",
+   "collection": "49e639fc-76c8-44f8-b88f-403927f1a2b1",
+   "lon": 9.20554,
+   "lat": 45.45186,
+   "datetime": "2025-06-02T06:07:23.167000+00:00",
+   "azimuth": 267,
+   "thumb": "https://panoramax.openstreetmap.fr/derivates/65/22/af/f6/12da-496c-98ec-b41548dc58ef/thumb.jpg",
+   "sd": "https://panoramax.openstreetmap.fr/derivates/65/22/af/f6/12da-496c-98ec-b41548dc58ef/sd.jpg",
+   "hd": "https://panoramax.openstreetmap.fr/images/65/22/af/f6/12da-496c-98ec-b41548dc58ef.jpg",
+   "producer": "Robot8A/robot8a"
+  },
+  {
+   "id": "d90342ec-b3a2-474d-97fc-f3c0441d17e7",
+   "collection": "49e639fc-76c8-44f8-b88f-403927f1a2b1",
+   "lon": 9.20554,
+   "lat": 45.45186,
+   "datetime": "2025-06-02T06:07:24.662000+00:00",
+   "azimuth": 195,
+   "thumb": "https://panoramax.openstreetmap.fr/derivates/d9/03/42/ec/b3a2-474d-97fc-f3c0441d17e7/thumb.jpg",
+   "sd": "https://panoramax.openstreetmap.fr/derivates/d9/03/42/ec/b3a2-474d-97fc-f3c0441d17e7/sd.jpg",
+   "hd": "https://panoramax.openstreetmap.fr/images/d9/03/42/ec/b3a2-474d-97fc-f3c0441d17e7.jpg",
+   "producer": "Robot8A/robot8a"
+  }
+ ]
+}

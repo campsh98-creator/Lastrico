@@ -1,0 +1,1459 @@
+{
+ "retrievedUtc": "2026-11-14T14:11:56.404Z",
+ "service": "https://gisportal.comune.milano.it/federated/rest/services/DBGT/Milano_2020_DBGT/MapServer",
+ "boxWgs84": "9.2025,45.4430,9.2175,45.4550",
+ "layers": {
+  "20": {
+   "name": "010206 - Tratti minimi dell'elemento di metropolitana",
+   "geometryType": "esriGeometryPolyline",
+   "total": 452,
+   "fields": {
+    "el_met_liv": {
+     "citywide": [
+      {
+       "el_met_liv": "02",
+       "n": 446,
+       "len": 37067.89773935194
+      },
+      {
+       "el_met_liv": "01",
+       "n": 6,
+       "len": 69.29093697994605
+      }
+     ],
+     "box": []
+    },
+    "el_met_liv_d": {
+     "citywide": [
+      {
+       "el_met_liv_d": "non in sottopasso",
+       "n": 446,
+       "len": 37067.89773935194
+      },
+      {
+       "el_met_liv_d": "in sottopasso",
+       "n": 6,
+       "len": 69.29093697994605
+      }
+     ],
+     "box": []
+    },
+    "el_met_sed": {
+     "citywide": [
+      {
+       "el_met_sed": "-99993",
+       "n": 409,
+       "len": 34545.83910390989
+      },
+      {
+       "el_met_sed": "02",
+       "n": 43,
+       "len": 2591.3495724219933
+      }
+     ],
+     "box": []
+    },
+    "el_met_sed_d": {
+     "citywide": [
+      {
+       "el_met_sed_d": null,
+       "n": 409,
+       "len": 34545.83910390989
+      },
+      {
+       "el_met_sed_d": "su ponte/viadotto/cavalcavia",
+       "n": 43,
+       "len": 2591.3495724219933
+      }
+     ],
+     "box": []
+    }
+   }
+  },
+  "34": {
+   "name": "020301 - Ponte/viadotto/cavalcavia",
+   "geometryType": "esriGeometryPolygon",
+   "total": 1638,
+   "fields": {
+    "ponte_liv": {
+     "citywide": [
+      {
+       "ponte_liv": "02",
+       "n": 1638,
+       "len": 112844.21061702579
+      }
+     ],
+     "box": [
+      {
+       "ponte_liv": "02",
+       "n": 13,
+       "len": 420.6676601799898
+      }
+     ]
+    },
+    "ponte_liv_d": {
+     "citywide": [
+      {
+       "ponte_liv_d": "in sovrappasso",
+       "n": 1638,
+       "len": 112844.21061702579
+      }
+     ],
+     "box": [
+      {
+       "ponte_liv_d": "in sovrappasso",
+       "n": 13,
+       "len": 420.6676601799898
+      }
+     ]
+    },
+    "ponte_stru": {
+     "citywide": [
+      {
+       "ponte_stru": "01",
+       "n": 1638,
+       "len": 112844.21061702579
+      }
+     ],
+     "box": [
+      {
+       "ponte_stru": "01",
+       "n": 13,
+       "len": 420.6676601799898
+      }
+     ]
+    },
+    "ponte_stru_d": {
+     "citywide": [
+      {
+       "ponte_stru_d": "fisso",
+       "n": 1638,
+       "len": 112844.21061702579
+      }
+     ],
+     "box": [
+      {
+       "ponte_stru_d": "fisso",
+       "n": 13,
+       "len": 420.6676601799898
+      }
+     ]
+    },
+    "ponte_ty": {
+     "citywide": [
+      {
+       "ponte_ty": "01",
+       "n": 1288,
+       "len": 81328.42507325411
+      },
+      {
+       "ponte_ty": "95",
+       "n": 309,
+       "len": 5544.96979190282
+      },
+      {
+       "ponte_ty": "02",
+       "n": 35,
+       "len": 25314.02494000747
+      },
+      {
+       "ponte_ty": "03",
+       "n": 6,
+       "len": 656.790811861393
+      }
+     ],
+     "box": [
+      {
+       "ponte_ty": "01",
+       "n": 11,
+       "len": 394.29202452189105
+      },
+      {
+       "ponte_ty": "95",
+       "n": 2,
+       "len": 26.375635658098766
+      }
+     ]
+    },
+    "ponte_ty_d": {
+     "citywide": [
+      {
+       "ponte_ty_d": "ponte",
+       "n": 1288,
+       "len": 81328.42507325411
+      },
+      {
+       "ponte_ty_d": "altro",
+       "n": 309,
+       "len": 5544.96979190282
+      },
+      {
+       "ponte_ty_d": "viadotto",
+       "n": 35,
+       "len": 25314.02494000747
+      },
+      {
+       "ponte_ty_d": "cavalcavia",
+       "n": 6,
+       "len": 656.790811861393
+      }
+     ],
+     "box": [
+      {
+       "ponte_ty_d": "ponte",
+       "n": 11,
+       "len": 394.29202452189105
+      },
+      {
+       "ponte_ty_d": "altro",
+       "n": 2,
+       "len": 26.375635658098766
+      }
+     ]
+    }
+   }
+  },
+  "35": {
+   "name": "010202 - Tratti minimi dell'elemento ferroviario",
+   "geometryType": "esriGeometryPolyline",
+   "total": 4549,
+   "fields": {
+    "el_fer_liv": {
+     "citywide": [
+      {
+       "el_fer_liv": "02",
+       "n": 4049,
+       "len": 539701.4526225947
+      },
+      {
+       "el_fer_liv": "01",
+       "n": 500,
+       "len": 27803.915998575107
+      }
+     ],
+     "box": [
+      {
+       "el_fer_liv": "02",
+       "n": 131,
+       "len": 26789.12564026564
+      },
+      {
+       "el_fer_liv": "01",
+       "n": 3,
+       "len": 1348.9972509479219
+      }
+     ]
+    },
+    "el_fer_liv_d": {
+     "citywide": [
+      {
+       "el_fer_liv_d": "non in sottopasso",
+       "n": 4049,
+       "len": 539701.4526225947
+      },
+      {
+       "el_fer_liv_d": "in sottopasso",
+       "n": 500,
+       "len": 27803.915998575107
+      }
+     ],
+     "box": [
+      {
+       "el_fer_liv_d": "non in sottopasso",
+       "n": 131,
+       "len": 26789.12564026564
+      },
+      {
+       "el_fer_liv_d": "in sottopasso",
+       "n": 3,
+       "len": 1348.9972509479219
+      }
+     ]
+    },
+    "el_fer_nbi": {
+     "citywide": [
+      {
+       "el_fer_nbi": 2,
+       "n": 4549,
+       "len": 567505.3686211698
+      }
+     ],
+     "box": [
+      {
+       "el_fer_nbi": 2,
+       "n": 134,
+       "len": 28138.122891213563
+      }
+     ]
+    },
+    "el_fer_pos": {
+     "citywide": [
+      {
+       "el_fer_pos": "01",
+       "n": 4538,
+       "len": 567412.8652309182
+      },
+      {
+       "el_fer_pos": "02",
+       "n": 11,
+       "len": 92.50339025159981
+      }
+     ],
+     "box": [
+      {
+       "el_fer_pos": "01",
+       "n": 134,
+       "len": 28138.122891213563
+      }
+     ]
+    },
+    "el_fer_pos_d": {
+     "citywide": [
+      {
+       "el_fer_pos_d": "in sede propria",
+       "n": 4538,
+       "len": 567412.8652309182
+      },
+      {
+       "el_fer_pos_d": "passaggio a livello",
+       "n": 11,
+       "len": 92.50339025159981
+      }
+     ],
+     "box": [
+      {
+       "el_fer_pos_d": "in sede propria",
+       "n": 134,
+       "len": 28138.122891213563
+      }
+     ]
+    },
+    "el_fer_sed": {
+     "citywide": [
+      {
+       "el_fer_sed": "01",
+       "n": 4140,
+       "len": 545552.2262508362
+      },
+      {
+       "el_fer_sed": "02",
+       "n": 366,
+       "len": 14131.442243855547
+      },
+      {
+       "el_fer_sed": "03",
+       "n": 43,
+       "len": 7821.700126478052
+      }
+     ],
+     "box": [
+      {
+       "el_fer_sed": "01",
+       "n": 134,
+       "len": 28138.122891213563
+      }
+     ]
+    },
+    "el_fer_sed_d": {
+     "citywide": [
+      {
+       "el_fer_sed_d": "a raso",
+       "n": 4140,
+       "len": 545552.2262508362
+      },
+      {
+       "el_fer_sed_d": "su ponte/viadotto/cavalcavia",
+       "n": 366,
+       "len": 14131.442243855547
+      },
+      {
+       "el_fer_sed_d": "in galleria",
+       "n": 43,
+       "len": 7821.700126478052
+      }
+     ],
+     "box": [
+      {
+       "el_fer_sed_d": "a raso",
+       "n": 134,
+       "len": 28138.122891213563
+      }
+     ]
+    }
+   }
+  },
+  "37": {
+   "name": "010103 - Area di circolazione ciclabile",
+   "geometryType": "esriGeometryPolygon",
+   "total": 2798,
+   "fields": {
+    "ac_cic_fon": {
+     "citywide": [
+      {
+       "ac_cic_fon": "01",
+       "n": 2798,
+       "len": 347504.25701469806
+      }
+     ],
+     "box": [
+      {
+       "ac_cic_fon": "01",
+       "n": 46,
+       "len": 4048.4472701026552
+      }
+     ]
+    },
+    "ac_cic_fon_d": {
+     "citywide": [
+      {
+       "ac_cic_fon_d": "pavimentato",
+       "n": 2798,
+       "len": 347504.25701469806
+      }
+     ],
+     "box": [
+      {
+       "ac_cic_fon_d": "pavimentato",
+       "n": 46,
+       "len": 4048.4472701026552
+      }
+     ]
+    },
+    "ac_cic_liv": {
+     "citywide": [
+      {
+       "ac_cic_liv": "02",
+       "n": 2750,
+       "len": 344610.1933720298
+      },
+      {
+       "ac_cic_liv": "01",
+       "n": 48,
+       "len": 2894.0636426682936
+      }
+     ],
+     "box": [
+      {
+       "ac_cic_liv": "02",
+       "n": 46,
+       "len": 4048.4472701026552
+      }
+     ]
+    },
+    "ac_cic_liv_d": {
+     "citywide": [
+      {
+       "ac_cic_liv_d": "non in sottopasso",
+       "n": 2750,
+       "len": 344610.1933720298
+      },
+      {
+       "ac_cic_liv_d": "in sottopasso",
+       "n": 48,
+       "len": 2894.0636426682936
+      }
+     ],
+     "box": [
+      {
+       "ac_cic_liv_d": "non in sottopasso",
+       "n": 46,
+       "len": 4048.4472701026552
+      }
+     ]
+    },
+    "ac_cic_sed": {
+     "citywide": [
+      {
+       "ac_cic_sed": "01",
+       "n": 2732,
+       "len": 336605.7706867218
+      },
+      {
+       "ac_cic_sed": "02",
+       "n": 58,
+       "len": 9944.800319348433
+      },
+      {
+       "ac_cic_sed": "03",
+       "n": 8,
+       "len": 953.6860086278647
+      }
+     ],
+     "box": [
+      {
+       "ac_cic_sed": "01",
+       "n": 45,
+       "len": 3965.044775878033
+      },
+      {
+       "ac_cic_sed": "02",
+       "n": 1,
+       "len": 83.40249422462209
+      }
+     ]
+    },
+    "ac_cic_sed_d": {
+     "citywide": [
+      {
+       "ac_cic_sed_d": "a raso",
+       "n": 2732,
+       "len": 336605.7706867218
+      },
+      {
+       "ac_cic_sed_d": "su ponte",
+       "n": 58,
+       "len": 9944.800319348433
+      },
+      {
+       "ac_cic_sed_d": "in galleria/ sottopassaggio/sotterraneo",
+       "n": 8,
+       "len": 953.6860086278647
+      }
+     ],
+     "box": [
+      {
+       "ac_cic_sed_d": "a raso",
+       "n": 45,
+       "len": 3965.044775878033
+      },
+      {
+       "ac_cic_sed_d": "su ponte",
+       "n": 1,
+       "len": 83.40249422462209
+      }
+     ]
+    },
+    "ac_cic_pos": {
+     "citywide": [
+      {
+       "ac_cic_pos": "02",
+       "n": 2298,
+       "len": 209914.00057778365
+      },
+      {
+       "ac_cic_pos": "01",
+       "n": 500,
+       "len": 137590.25643691444
+      }
+     ],
+     "box": [
+      {
+       "ac_cic_pos": "02",
+       "n": 46,
+       "len": 4048.4472701026552
+      }
+     ]
+    },
+    "ac_cic_pos_d": {
+     "citywide": [
+      {
+       "ac_cic_pos_d": "su sede stradale",
+       "n": 2298,
+       "len": 209914.00057778365
+      },
+      {
+       "ac_cic_pos_d": "isolata",
+       "n": 500,
+       "len": 137590.25643691444
+      }
+     ],
+     "box": [
+      {
+       "ac_cic_pos_d": "su sede stradale",
+       "n": 46,
+       "len": 4048.4472701026552
+      }
+     ]
+    }
+   }
+  },
+  "38": {
+   "name": "010102 - Area di circolazione pedonale",
+   "geometryType": "esriGeometryPolygon",
+   "total": 71151,
+   "fields": {
+    "ac_ped_fon": {
+     "citywide": [
+      {
+       "ac_ped_fon": "01",
+       "n": 71151,
+       "len": 7441134.573820681
+      }
+     ],
+     "box": [
+      {
+       "ac_ped_fon": "01",
+       "n": 1218,
+       "len": 119268.45662959837
+      }
+     ]
+    },
+    "ac_ped_fon_d": {
+     "citywide": [
+      {
+       "ac_ped_fon_d": "pavimentato",
+       "n": 71151,
+       "len": 7441134.573820681
+      }
+     ],
+     "box": [
+      {
+       "ac_ped_fon_d": "pavimentato",
+       "n": 1218,
+       "len": 119268.45662959837
+      }
+     ]
+    },
+    "ac_ped_liv": {
+     "citywide": [
+      {
+       "ac_ped_liv": "02",
+       "n": 59186,
+       "len": 7052097.957194296
+      },
+      {
+       "ac_ped_liv": "01",
+       "n": 11965,
+       "len": 389036.6166263858
+      }
+     ],
+     "box": [
+      {
+       "ac_ped_liv": "02",
+       "n": 972,
+       "len": 112141.64764185756
+      },
+      {
+       "ac_ped_liv": "01",
+       "n": 246,
+       "len": 7126.808987740817
+      }
+     ]
+    },
+    "ac_ped_liv_d": {
+     "citywide": [
+      {
+       "ac_ped_liv_d": "non in sottopasso",
+       "n": 59186,
+       "len": 7052097.957194296
+      },
+      {
+       "ac_ped_liv_d": "in sottopasso",
+       "n": 11965,
+       "len": 389036.6166263858
+      }
+     ],
+     "box": [
+      {
+       "ac_ped_liv_d": "non in sottopasso",
+       "n": 972,
+       "len": 112141.64764185756
+      },
+      {
+       "ac_ped_liv_d": "in sottopasso",
+       "n": 246,
+       "len": 7126.808987740817
+      }
+     ]
+    },
+    "ac_ped_sed": {
+     "citywide": [
+      {
+       "ac_ped_sed": "01",
+       "n": 69911,
+       "len": 7392658.767248196
+      },
+      {
+       "ac_ped_sed": "02",
+       "n": 1230,
+       "len": 45681.93133352559
+      },
+      {
+       "ac_ped_sed": "03",
+       "n": 10,
+       "len": 2793.875238960526
+      }
+     ],
+     "box": [
+      {
+       "ac_ped_sed": "01",
+       "n": 1202,
+       "len": 118673.08395700264
+      },
+      {
+       "ac_ped_sed": "02",
+       "n": 16,
+       "len": 595.372672595731
+      }
+     ]
+    },
+    "ac_ped_sed_d": {
+     "citywide": [
+      {
+       "ac_ped_sed_d": "a raso",
+       "n": 69911,
+       "len": 7392658.767248196
+      },
+      {
+       "ac_ped_sed_d": "su ponte/passerella pedonale",
+       "n": 1230,
+       "len": 45681.93133352559
+      },
+      {
+       "ac_ped_sed_d": "in galleria/sottopassaggio pedonale",
+       "n": 10,
+       "len": 2793.875238960526
+      }
+     ],
+     "box": [
+      {
+       "ac_ped_sed_d": "a raso",
+       "n": 1202,
+       "len": 118673.08395700264
+      },
+      {
+       "ac_ped_sed_d": "su ponte/passerella pedonale",
+       "n": 16,
+       "len": 595.372672595731
+      }
+     ]
+    },
+    "ac_ped_zon": {
+     "citywide": [
+      {
+       "ac_ped_zon": "01",
+       "n": 53978,
+       "len": 5552549.861357531
+      },
+      {
+       "ac_ped_zon": "05",
+       "n": 8526,
+       "len": 203212.13420428825
+      },
+      {
+       "ac_ped_zon": "07",
+       "n": 3213,
+       "len": 1308461.3728901902
+      },
+      {
+       "ac_ped_zon": "04",
+       "n": 3071,
+       "len": 169107.12944213298
+      },
+      {
+       "ac_ped_zon": "10",
+       "n": 1513,
+       "len": 25456.748415726677
+      },
+      {
+       "ac_ped_zon": "09",
+       "n": 798,
+       "len": 181191.64526870672
+      },
+      {
+       "ac_ped_zon": "06",
+       "n": 52,
+       "len": 1155.682242106555
+      }
+     ],
+     "box": [
+      {
+       "ac_ped_zon": "01",
+       "n": 913,
+       "len": 101578.10284967623
+      },
+      {
+       "ac_ped_zon": "05",
+       "n": 193,
+       "len": 4569.7844601799125
+      },
+      {
+       "ac_ped_zon": "04",
+       "n": 53,
+       "len": 2557.024527560904
+      },
+      {
+       "ac_ped_zon": "07",
+       "n": 26,
+       "len": 6979.056643978487
+      },
+      {
+       "ac_ped_zon": "10",
+       "n": 20,
+       "len": 381.5833336091144
+      },
+      {
+       "ac_ped_zon": "09",
+       "n": 13,
+       "len": 3202.9048145937295
+      }
+     ]
+    },
+    "ac_ped_zon_d": {
+     "citywide": [
+      {
+       "ac_ped_zon_d": "su marciapiede",
+       "n": 53978,
+       "len": 5552549.861357531
+      },
+      {
+       "ac_ped_zon_d": "galleria pedonale",
+       "n": 8526,
+       "len": 203212.13420428825
+      },
+      {
+       "ac_ped_zon_d": "vialetto",
+       "n": 3213,
+       "len": 1308461.3728901902
+      },
+      {
+       "ac_ped_zon_d": "area a porticato",
+       "n": 3071,
+       "len": 169107.12944213298
+      },
+      {
+       "ac_ped_zon_d": "passaggio pedonale",
+       "n": 1513,
+       "len": 25456.748415726677
+      },
+      {
+       "ac_ped_zon_d": "aree solo pedonali (sagrato, piazza)",
+       "n": 798,
+       "len": 181191.64526870672
+      },
+      {
+       "ac_ped_zon_d": "percorsi a gradinate",
+       "n": 52,
+       "len": 1155.682242106555
+      }
+     ],
+     "box": [
+      {
+       "ac_ped_zon_d": "su marciapiede",
+       "n": 913,
+       "len": 101578.10284967623
+      },
+      {
+       "ac_ped_zon_d": "galleria pedonale",
+       "n": 193,
+       "len": 4569.7844601799125
+      },
+      {
+       "ac_ped_zon_d": "area a porticato",
+       "n": 53,
+       "len": 2557.024527560904
+      },
+      {
+       "ac_ped_zon_d": "vialetto",
+       "n": 26,
+       "len": 6979.056643978487
+      },
+      {
+       "ac_ped_zon_d": "passaggio pedonale",
+       "n": 20,
+       "len": 381.5833336091144
+      },
+      {
+       "ac_ped_zon_d": "aree solo pedonali (sagrato, piazza)",
+       "n": 13,
+       "len": 3202.9048145937295
+      }
+     ]
+    }
+   }
+  },
+  "40": {
+   "name": "020205 - Manufatto infrastruttura trasporto (fino a 1:5000)",
+   "geometryType": "esriGeometryPolygon",
+   "total": 25741,
+   "fields": {
+    "man_tr_liv": {
+     "citywide": [
+      {
+       "man_tr_liv": 0,
+       "n": 21932,
+       "len": 1265475.779936923
+      },
+      {
+       "man_tr_liv": 1,
+       "n": 3798,
+       "len": 173310.33557586276
+      },
+      {
+       "man_tr_liv": -1,
+       "n": 11,
+       "len": 6255.509002352095
+      }
+     ],
+     "box": [
+      {
+       "man_tr_liv": 0,
+       "n": 308,
+       "len": 19087.717302694557
+      },
+      {
+       "man_tr_liv": 1,
+       "n": 37,
+       "len": 1999.326306985513
+      }
+     ]
+    },
+    "man_tr_ty": {
+     "citywide": [
+      {
+       "man_tr_ty": "01",
+       "n": 15091,
+       "len": 817245.3588489116
+      },
+      {
+       "man_tr_ty": "09",
+       "n": 10064,
+       "len": 454535.93180311495
+      },
+      {
+       "man_tr_ty": "12",
+       "n": 363,
+       "len": 157616.47960298456
+      },
+      {
+       "man_tr_ty": "03",
+       "n": 218,
+       "len": 15306.226595196698
+      },
+      {
+       "man_tr_ty": "08",
+       "n": 2,
+       "len": 177.67940704591877
+      },
+      {
+       "man_tr_ty": "06",
+       "n": 2,
+       "len": 153.90044743154567
+      },
+      {
+       "man_tr_ty": "95",
+       "n": 1,
+       "len": 6.0478104525869645
+      }
+     ],
+     "box": [
+      {
+       "man_tr_ty": "01",
+       "n": 198,
+       "len": 8964.386942827741
+      },
+      {
+       "man_tr_ty": "09",
+       "n": 141,
+       "len": 6478.2388928044165
+      },
+      {
+       "man_tr_ty": "12",
+       "n": 4,
+       "len": 5306.784086729106
+      },
+      {
+       "man_tr_ty": "03",
+       "n": 2,
+       "len": 337.6336873188047
+      }
+     ]
+    },
+    "man_tr_ty_d": {
+     "citywide": [
+      {
+       "man_tr_ty_d": "spartitraffico",
+       "n": 15091,
+       "len": 817245.3588489116
+      },
+      {
+       "man_tr_ty_d": "rampa",
+       "n": 10064,
+       "len": 454535.93180311495
+      },
+      {
+       "man_tr_ty_d": "banchina/ marciapiede ferroviario",
+       "n": 363,
+       "len": 157616.47960298456
+      },
+      {
+       "man_tr_ty_d": "rotatoria",
+       "n": 218,
+       "len": 15306.226595196698
+      },
+      {
+       "man_tr_ty_d": "piattaforma decollo atterraggio elicotteri",
+       "n": 2,
+       "len": 177.67940704591877
+      },
+      {
+       "man_tr_ty_d": "pista di rullaggio",
+       "n": 2,
+       "len": 153.90044743154567
+      },
+      {
+       "man_tr_ty_d": "altro",
+       "n": 1,
+       "len": 6.0478104525869645
+      }
+     ],
+     "box": [
+      {
+       "man_tr_ty_d": "spartitraffico",
+       "n": 198,
+       "len": 8964.386942827741
+      },
+      {
+       "man_tr_ty_d": "rampa",
+       "n": 141,
+       "len": 6478.2388928044165
+      },
+      {
+       "man_tr_ty_d": "banchina/ marciapiede ferroviario",
+       "n": 4,
+       "len": 5306.784086729106
+      },
+      {
+       "man_tr_ty_d": "rotatoria",
+       "n": 2,
+       "len": 337.6336873188047
+      }
+     ]
+    }
+   }
+  },
+  "41": {
+   "name": "010104 - Area stradale",
+   "geometryType": "esriGeometryPolygon",
+   "total": 7015,
+   "fields": {
+    "ar_str_liv": {
+     "citywide": [
+      {
+       "ar_str_liv": "02",
+       "n": 6570,
+       "len": 3877104.745551033
+      },
+      {
+       "ar_str_liv": "01",
+       "n": 445,
+       "len": 46141.728215559015
+      }
+     ],
+     "box": [
+      {
+       "ar_str_liv": "02",
+       "n": 105,
+       "len": 79585.96147940964
+      }
+     ]
+    },
+    "ar_str_liv_d": {
+     "citywide": [
+      {
+       "ar_str_liv_d": "non in sottopasso",
+       "n": 6570,
+       "len": 3877104.745551033
+      },
+      {
+       "ar_str_liv_d": "in sottopasso",
+       "n": 445,
+       "len": 46141.728215559015
+      }
+     ],
+     "box": [
+      {
+       "ar_str_liv_d": "non in sottopasso",
+       "n": 105,
+       "len": 79585.96147940964
+      }
+     ]
+    },
+    "ar_str_sed": {
+     "citywide": [
+      {
+       "ar_str_sed": "01",
+       "n": 6633,
+       "len": 3846929.8341920194
+      },
+      {
+       "ar_str_sed": "02",
+       "n": 351,
+       "len": 62530.78562728339
+      },
+      {
+       "ar_str_sed": "03",
+       "n": 31,
+       "len": 13785.853947289386
+      }
+     ],
+     "box": [
+      {
+       "ar_str_sed": "01",
+       "n": 104,
+       "len": 79411.11536963085
+      },
+      {
+       "ar_str_sed": "02",
+       "n": 1,
+       "len": 174.84610977879976
+      }
+     ]
+    },
+    "ar_str_sed_d": {
+     "citywide": [
+      {
+       "ar_str_sed_d": "a raso",
+       "n": 6633,
+       "len": 3846929.8341920194
+      },
+      {
+       "ar_str_sed_d": "su ponte/viadotto/cavalcavia",
+       "n": 351,
+       "len": 62530.78562728339
+      },
+      {
+       "ar_str_sed_d": "in galleria/sotterranea",
+       "n": 31,
+       "len": 13785.853947289386
+      }
+     ],
+     "box": [
+      {
+       "ar_str_sed_d": "a raso",
+       "n": 104,
+       "len": 79411.11536963085
+      },
+      {
+       "ar_str_sed_d": "su ponte/viadotto/cavalcavia",
+       "n": 1,
+       "len": 174.84610977879976
+      }
+     ]
+    },
+    "ar_str_sta": {
+     "citywide": [
+      {
+       "ar_str_sta": "01",
+       "n": 7013,
+       "len": 3921908.887247265
+      },
+      {
+       "ar_str_sta": "02",
+       "n": 2,
+       "len": 1337.5865193272002
+      }
+     ],
+     "box": [
+      {
+       "ar_str_sta": "01",
+       "n": 105,
+       "len": 79585.96147940964
+      }
+     ]
+    },
+    "ar_str_sta_d": {
+     "citywide": [
+      {
+       "ar_str_sta_d": "in esercizio",
+       "n": 7013,
+       "len": 3921908.887247265
+      },
+      {
+       "ar_str_sta_d": "in costruzione",
+       "n": 2,
+       "len": 1337.5865193272002
+      }
+     ],
+     "box": [
+      {
+       "ar_str_sta_d": "in esercizio",
+       "n": 105,
+       "len": 79585.96147940964
+      }
+     ]
+    }
+   }
+  },
+  "42": {
+   "name": "010105 - Viabilità mista secondaria",
+   "geometryType": "esriGeometryPolygon",
+   "total": 1212,
+   "fields": {
+    "ar_vms_liv": {
+     "citywide": [
+      {
+       "ar_vms_liv": "02",
+       "n": 1172,
+       "len": 505114.84930346493
+      },
+      {
+       "ar_vms_liv": "01",
+       "n": 40,
+       "len": 1841.5356388267128
+      }
+     ],
+     "box": []
+    },
+    "ar_vms_liv_d": {
+     "citywide": [
+      {
+       "ar_vms_liv_d": "non in sottopasso",
+       "n": 1172,
+       "len": 505114.84930346493
+      },
+      {
+       "ar_vms_liv_d": "in sottopasso",
+       "n": 40,
+       "len": 1841.5356388267128
+      }
+     ],
+     "box": []
+    },
+    "ar_vms_sed": {
+     "citywide": [
+      {
+       "ar_vms_sed": "04",
+       "n": 1054,
+       "len": 503525.8917899477
+      },
+      {
+       "ar_vms_sed": "02",
+       "n": 157,
+       "len": 3391.730600730552
+      },
+      {
+       "ar_vms_sed": "03",
+       "n": 1,
+       "len": 38.76255161341043
+      }
+     ],
+     "box": []
+    },
+    "ar_vms_sed_d": {
+     "citywide": [
+      {
+       "ar_vms_sed_d": "a raso",
+       "n": 1054,
+       "len": 503525.8917899477
+      },
+      {
+       "ar_vms_sed_d": "su ponticello",
+       "n": 157,
+       "len": 3391.730600730552
+      },
+      {
+       "ar_vms_sed_d": "sotterraneo",
+       "n": 1,
+       "len": 38.76255161341043
+      }
+     ],
+     "box": []
+    },
+    "ar_vms_ty": {
+     "citywide": [
+      {
+       "ar_vms_ty": "01",
+       "n": 1205,
+       "len": 506862.8669890506
+      },
+      {
+       "ar_vms_ty": "05",
+       "n": 7,
+       "len": 93.51795324105079
+      }
+     ],
+     "box": []
+    },
+    "ar_vms_ty_d": {
+     "citywide": [
+      {
+       "ar_vms_ty_d": "carrareccia, carreggiabile, carrozzabile",
+       "n": 1205,
+       "len": 506862.8669890506
+      },
+      {
+       "ar_vms_ty_d": "sentiero",
+       "n": 7,
+       "len": 93.51795324105079
+      }
+     ],
+     "box": []
+    }
+   }
+  },
+  "45": {
+   "name": "010201 - Sede di trasporto su ferro",
+   "geometryType": "esriGeometryPolygon",
+   "total": 915,
+   "fields": {
+    "sd_fer_liv": {
+     "citywide": [
+      {
+       "sd_fer_liv": "02",
+       "n": 798,
+       "len": 508591.22747930314
+      },
+      {
+       "sd_fer_liv": "01",
+       "n": 117,
+       "len": 15477.811776762164
+      }
+     ],
+     "box": [
+      {
+       "sd_fer_liv": "02",
+       "n": 18,
+       "len": 12112.18910381567
+      },
+      {
+       "sd_fer_liv": "01",
+       "n": 1,
+       "len": 153.62252793530564
+      }
+     ]
+    },
+    "sd_fer_liv_d": {
+     "citywide": [
+      {
+       "sd_fer_liv_d": "non in sottopasso",
+       "n": 798,
+       "len": 508591.22747930314
+      },
+      {
+       "sd_fer_liv_d": "in sottopasso",
+       "n": 117,
+       "len": 15477.811776762164
+      }
+     ],
+     "box": [
+      {
+       "sd_fer_liv_d": "non in sottopasso",
+       "n": 18,
+       "len": 12112.18910381567
+      },
+      {
+       "sd_fer_liv_d": "in sottopasso",
+       "n": 1,
+       "len": 153.62252793530564
+      }
+     ]
+    },
+    "sd_fer_sed": {
+     "citywide": [
+      {
+       "sd_fer_sed": "01",
+       "n": 789,
+       "len": 500994.3453996499
+      },
+      {
+       "sd_fer_sed": "02",
+       "n": 110,
+       "len": 17358.69462882928
+      },
+      {
+       "sd_fer_sed": "03",
+       "n": 16,
+       "len": 5715.999227586114
+      }
+     ],
+     "box": [
+      {
+       "sd_fer_sed": "01",
+       "n": 19,
+       "len": 12265.811631750976
+      }
+     ]
+    },
+    "sd_fer_sed_d": {
+     "citywide": [
+      {
+       "sd_fer_sed_d": "a raso",
+       "n": 789,
+       "len": 500994.3453996499
+      },
+      {
+       "sd_fer_sed_d": "su ponte/viadotto/cavalcavia",
+       "n": 110,
+       "len": 17358.69462882928
+      },
+      {
+       "sd_fer_sed_d": "in galleria",
+       "n": 16,
+       "len": 5715.999227586114
+      }
+     ],
+     "box": [
+      {
+       "sd_fer_sed_d": "a raso",
+       "n": 19,
+       "len": 12265.811631750976
+      }
+     ]
+    },
+    "sd_fer_ty": {
+     "citywide": [
+      {
+       "sd_fer_ty": "02",
+       "n": 451,
+       "len": 137057.87377703108
+      },
+      {
+       "sd_fer_ty": "01",
+       "n": 423,
+       "len": 356776.3565053275
+      },
+      {
+       "sd_fer_ty": "03",
+       "n": 41,
+       "len": 30234.80897370671
+      }
+     ],
+     "box": [
+      {
+       "sd_fer_ty": "02",
+       "n": 13,
+       "len": 2516.090892461757
+      },
+      {
+       "sd_fer_ty": "01",
+       "n": 6,
+       "len": 9749.72073928922
+      }
+     ]
+    },
+    "sd_fer_ty_d": {
+     "citywide": [
+      {
+       "sd_fer_ty_d": "tranvia",
+       "n": 451,
+       "len": 137057.87377703108
+      },
+      {
+       "sd_fer_ty_d": "ferrovia",
+       "n": 423,
+       "len": 356776.3565053275
+      },
+      {
+       "sd_fer_ty_d": "metropolitana",
+       "n": 41,
+       "len": 30234.80897370671
+      }
+     ],
+     "box": [
+      {
+       "sd_fer_ty_d": "tranvia",
+       "n": 13,
+       "len": 2516.090892461757
+      },
+      {
+       "sd_fer_ty_d": "ferrovia",
+       "n": 6,
+       "len": 9749.72073928922
+      }
+     ]
+    }
+   }
+  }
+ }
+}

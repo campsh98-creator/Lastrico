@@ -1,0 +1,5832 @@
+{
+ "asOf": "2026-11-14",
+ "ledgerSha256": "bf49585d4d216eeddefa9bdf00553983ad290491a898506bd84cb24e6867d66d",
+ "policyVariant": "P-A",
+ "policyVersion": "sil-policy-0.1.0-experimental",
+ "resolverVersion": "si-resolver-0.1.0",
+ "schemaVersion": "0.1.0",
+ "views": [
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-85890884-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 85890884: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-85890884-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-85890884-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-85890884-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 85890884: known = present [band medium; fresh] | rests on: ev-dbt-rails-85890884-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-85890884-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-85890884-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-85890884-0"
+     ],
+     "explanation": "rails_presence.service for car on way 85890884: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-85890884-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-85890884-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 85890884: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-85890884-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-85890884-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 56,
+    "wayId": 85890884
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-85890884"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 85890884: known = sett [band low; unknown_age] | rests on: ev-osm-surface-85890884[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-85890884 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-85890884",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-85890884"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-85890884"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 56,
+    "wayId": 85890884
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "level": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-smoothness-111767966"
+       ],
+       "level": "supporting",
+       "value": "smooth"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "physical_roughness.level for car on way 111767966: known = smooth [band medium; fresh] | rests on: ev-osm-smoothness-111767966[smooth; tagged/unverified; supporting; fresh 1170d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2023-09",
+      "oldestObservedAt": "2023-09",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-smoothness-111767966"
+     ],
+     "value": "smooth",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 13.1,
+    "wayId": 111767966
+   },
+   "topic": "physical_roughness"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-111767966"
+       ],
+       "level": "weak",
+       "value": "absent"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 111767966: known = absent [band low; fresh] | rests on: ev-dbt-norails-111767966[absent; derived/unverified; weak; fresh 2449d; cov exact; CAPPED_ABSENCE_NOT_COMPLETE_SOURCE] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-norails-111767966"
+     ],
+     "value": "absent",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 13.1,
+    "wayId": 111767966
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-111767966"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      },
+      {
+       "ids": [
+        "ev-owner-report-ring"
+       ],
+       "level": "weak",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-owner-report-ring"
+     ],
+     "explanation": "surface_material.material for car on way 111767966: known = asphalt [band low; aging] | rests on: ev-osm-surface-111767966[asphalt; tagged/unverified; supporting; aging 2824d; cov exact] | dissent: ev-owner-report-ring[sett; reported/unverified; weak; age unknown; cov coarse] | adjacent (review trigger only, never a vote): ev-kartaview-2203776 | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(reported), R9_ADJACENT_ONLY:ev-kartaview-2203776",
+     "freshness": {
+      "newestObservedAt": "2019-02-20",
+      "oldestObservedAt": "2019-02-20",
+      "state": "aging"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(reported)",
+      "R9_ADJACENT_ONLY:ev-kartaview-2203776"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      },
+      {
+       "priority": "P2",
+       "reason": "adjacent_trigger"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-111767966"
+     ],
+     "value": "asphalt",
+     "weakDissent": true
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 13.1,
+    "wayId": 111767966
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "level": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-smoothness-111768010"
+       ],
+       "level": "supporting",
+       "value": "smooth"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "physical_roughness.level for car on way 111768010: known = smooth [band medium; fresh] | rests on: ev-osm-smoothness-111768010[smooth; tagged/unverified; supporting; fresh 1170d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2023-09",
+      "oldestObservedAt": "2023-09",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-smoothness-111768010"
+     ],
+     "value": "smooth",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 31,
+    "wayId": 111768010
+   },
+   "topic": "physical_roughness"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-111768010"
+       ],
+       "level": "weak",
+       "value": "absent"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 111768010: known = absent [band low; fresh] | rests on: ev-dbt-norails-111768010[absent; derived/unverified; weak; fresh 2449d; cov exact; CAPPED_ABSENCE_NOT_COMPLETE_SOURCE] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-norails-111768010"
+     ],
+     "value": "absent",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 31,
+    "wayId": 111768010
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-111768010"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      },
+      {
+       "ids": [
+        "ev-owner-report-ring"
+       ],
+       "level": "weak",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-owner-report-ring"
+     ],
+     "explanation": "surface_material.material for car on way 111768010: known = asphalt [band low; fresh] | rests on: ev-osm-surface-111768010[asphalt; tagged/unverified; supporting; fresh 1166d; cov exact] | dissent: ev-owner-report-ring[sett; reported/unverified; weak; age unknown; cov coarse] | adjacent (review trigger only, never a vote): ev-kartaview-2203776 | ignored: ev-osm-surfacebike-111768010 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(reported), R9_ADJACENT_ONLY:ev-kartaview-2203776",
+     "freshness": {
+      "newestObservedAt": "2023-09-05",
+      "oldestObservedAt": "2023-09-05",
+      "state": "fresh"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-111768010",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(reported)",
+      "R9_ADJACENT_ONLY:ev-kartaview-2203776",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-111768010"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      },
+      {
+       "priority": "P2",
+       "reason": "adjacent_trigger"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-111768010"
+     ],
+     "value": "asphalt",
+     "weakDissent": true
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 31,
+    "wayId": 111768010
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [],
+     "confidence": {
+      "band": "none",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 137158656: unknown [band none; unknown_age] | ignored: ev-dbt-fon-fracristoforo (SOURCE_NON_DISCRIMINATING); ev-inferred-neighbour-fracristoforo (INFERRED_NO_VOTE) | why: R7_NO_VOTING_EVIDENCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-dbt-fon-fracristoforo",
+       "reason": "SOURCE_NON_DISCRIMINATING"
+      },
+      {
+       "id": "ev-inferred-neighbour-fracristoforo",
+       "reason": "INFERRED_NO_VOTE"
+      }
+     ],
+     "reasons": [
+      "R7_NO_VOTING_EVIDENCE",
+      "SOURCE_NON_DISCRIMINATING:ev-dbt-fon-fracristoforo",
+      "INFERRED_NO_VOTE:ev-inferred-neighbour-fracristoforo"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P3",
+       "reason": "unknown_no_voting_evidence"
+      }
+     ],
+     "state": "unknown",
+     "supportingIds": [],
+     "value": null,
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 29.4,
+    "wayId": 137158656
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "level": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-smoothness-161606039"
+       ],
+       "level": "supporting",
+       "value": "rough"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "physical_roughness.level for car on way 161606039: known = rough [band low; unknown_age] | rests on: ev-osm-smoothness-161606039[rough; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-smoothness-161606039"
+     ],
+     "value": "rough",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 64,
+    "wayId": 161606039
+   },
+   "topic": "physical_roughness"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-161606039-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 161606039: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-161606039-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-161606039-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-161606039-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 161606039: known = present [band medium; fresh] | rests on: ev-dbt-rails-161606039-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-161606039-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-161606039-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-161606039-0"
+     ],
+     "explanation": "rails_presence.service for car on way 161606039: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-161606039-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-161606039-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 161606039: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-161606039-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-161606039-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 64,
+    "wayId": 161606039
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-161606039"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 161606039: known = sett [band low; unknown_age] | rests on: ev-osm-surface-161606039[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-161606039 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-161606039",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-161606039"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-161606039"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 64,
+    "wayId": 161606039
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "level": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-smoothness-161606045"
+       ],
+       "level": "supporting",
+       "value": "moderate"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "physical_roughness.level for car on way 161606045: known = moderate [band low; unknown_age] | rests on: ev-osm-smoothness-161606045[moderate; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-smoothness-161606045"
+     ],
+     "value": "moderate",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 12.4,
+    "wayId": 161606045
+   },
+   "topic": "physical_roughness"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-owner-report-rails"
+       ],
+       "level": "weak",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 161606045: known = present [band low; unknown_age] | rests on: ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.service for car on way 161606045: known = no_scheduled_line [band medium; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 12.4,
+    "wayId": 161606045
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-161606045"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 161606045: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-161606045[asphalt; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-161606045 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-161606045",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-161606045"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-161606045"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 12.4,
+    "wayId": 161606045
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "level": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-smoothness-164940303"
+       ],
+       "level": "supporting",
+       "value": "rough"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "physical_roughness.level for car on way 164940303: known = rough [band medium; fresh] | rests on: ev-osm-smoothness-164940303[rough; tagged/unverified; supporting; fresh 1157d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2023-09-14",
+      "oldestObservedAt": "2023-09-14",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-smoothness-164940303"
+     ],
+     "value": "rough",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 25,
+    "wayId": 164940303
+   },
+   "topic": "physical_roughness"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-164940303"
+       ],
+       "level": "weak",
+       "value": "absent"
+      },
+      {
+       "ids": [
+        "ev-owner-report-rails"
+       ],
+       "level": "weak",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 164940303: contested [band low; fresh] | candidates: absent (weak, ev-dbt-norails-164940303) vs present (weak, ev-owner-report-rails) | why: R6X_WEAK_ONLY_DISAGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6X_WEAK_ONLY_DISAGREE"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P1",
+       "reason": "contested"
+      }
+     ],
+     "state": "contested",
+     "supportingIds": [],
+     "value": null,
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 25,
+    "wayId": 164940303
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-164940303"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 164940303: known = sett [band medium; fresh] | rests on: ev-osm-surface-164940303[sett; tagged/unverified; supporting; fresh 1166d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2023-09-05",
+      "oldestObservedAt": "2023-09-05",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-164940303"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 25,
+    "wayId": 164940303
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-164940304"
+       ],
+       "level": "weak",
+       "value": "absent"
+      },
+      {
+       "ids": [
+        "ev-owner-report-rails"
+       ],
+       "level": "weak",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 164940304: contested [band low; fresh] | candidates: absent (weak, ev-dbt-norails-164940304) vs present (weak, ev-owner-report-rails) | why: R6X_WEAK_ONLY_DISAGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6X_WEAK_ONLY_DISAGREE"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P1",
+       "reason": "contested"
+      }
+     ],
+     "state": "contested",
+     "supportingIds": [],
+     "value": null,
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 97.1,
+    "wayId": 164940304
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-164940304"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 164940304: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-164940304[asphalt; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-164940304"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 97.1,
+    "wayId": 164940304
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-181343587-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 181343587: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-181343587-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-181343587-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-181343587-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 181343587: known = present [band medium; fresh] | rests on: ev-dbt-rails-181343587-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-181343587-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-181343587-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-181343587-0"
+     ],
+     "explanation": "rails_presence.service for car on way 181343587: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-181343587-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-181343587-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 181343587: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-181343587-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-181343587-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 45.5,
+    "wayId": 181343587
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-181343587"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 181343587: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-181343587[asphalt; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-181343587"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 45.5,
+    "wayId": 181343587
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-232575190-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 232575190: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-232575190-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-232575190-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-232575190-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 232575190: known = present [band medium; fresh] | rests on: ev-dbt-rails-232575190-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-232575190-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-232575190-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-232575190-0"
+     ],
+     "explanation": "rails_presence.service for car on way 232575190: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-232575190-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-232575190-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 232575190: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-232575190-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-232575190-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 48,
+    "wayId": 232575190
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-232575190"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 232575190: known = sett [band low; unknown_age] | rests on: ev-osm-surface-232575190[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-232575190 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-232575190",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-232575190"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-232575190"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 48,
+    "wayId": 232575190
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-232575191-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 232575191: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-232575191-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-232575191-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-232575191-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 232575191: known = present [band medium; fresh] | rests on: ev-dbt-rails-232575191-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-232575191-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-232575191-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-232575191-0"
+     ],
+     "explanation": "rails_presence.service for car on way 232575191: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-232575191-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-232575191-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 232575191: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-232575191-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-232575191-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 25.2,
+    "wayId": 232575191
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-232575191"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 232575191: known = sett [band low; unknown_age] | rests on: ev-osm-surface-232575191[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-232575191 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-232575191",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-232575191"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-232575191"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 25.2,
+    "wayId": 232575191
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-264333608-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 264333608: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-264333608-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-264333608-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-264333608-0"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 264333608: known = present [band medium; fresh] | rests on: ev-dbt-rails-264333608-0[present; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-264333608-0"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-friuli",
+        "ev-dbt-rails-264333608-0"
+       ],
+       "level": "supporting",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.service for car on way 264333608: known = in_service [band medium; fresh] | rests on: ev-atm-friuli[in_service; derived/unverified; supporting; fresh 113d; cov exact]; ev-dbt-rails-264333608-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-friuli",
+      "ev-dbt-rails-264333608-0"
+     ],
+     "value": "in_service",
+     "weakDissent": false
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-264333608-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 264333608: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-264333608-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-264333608-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 58.2,
+    "wayId": 264333608
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-264363537"
+       ],
+       "level": "weak",
+       "value": "absent"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 264363537: known = absent [band low; fresh] | rests on: ev-dbt-norails-264363537[absent; derived/unverified; weak; fresh 2449d; cov exact; CAPPED_ABSENCE_NOT_COMPLETE_SOURCE] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-norails-264363537"
+     ],
+     "value": "absent",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 28.7,
+    "wayId": 264363537
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-266141929-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 266141929: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-266141929-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-266141929-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-266141929-0"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 266141929: known = present [band medium; fresh] | rests on: ev-dbt-rails-266141929-0[present; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-266141929-0"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-friuli",
+        "ev-dbt-rails-266141929-0"
+       ],
+       "level": "supporting",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.service for car on way 266141929: known = in_service [band medium; fresh] | rests on: ev-atm-friuli[in_service; derived/unverified; supporting; fresh 113d; cov exact]; ev-dbt-rails-266141929-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-friuli",
+      "ev-dbt-rails-266141929-0"
+     ],
+     "value": "in_service",
+     "weakDissent": false
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-266141929-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 266141929: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-266141929-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-266141929-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 13.7,
+    "wayId": 266141929
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [],
+     "confidence": {
+      "band": "none",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 273258717: unknown [band none; unknown_age] | ignored: ev-dbt-fon-fracristoforo (SOURCE_NON_DISCRIMINATING); ev-inferred-neighbour-fracristoforo (INFERRED_NO_VOTE) | why: R7_NO_VOTING_EVIDENCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-dbt-fon-fracristoforo",
+       "reason": "SOURCE_NON_DISCRIMINATING"
+      },
+      {
+       "id": "ev-inferred-neighbour-fracristoforo",
+       "reason": "INFERRED_NO_VOTE"
+      }
+     ],
+     "reasons": [
+      "R7_NO_VOTING_EVIDENCE",
+      "SOURCE_NON_DISCRIMINATING:ev-dbt-fon-fracristoforo",
+      "INFERRED_NO_VOTE:ev-inferred-neighbour-fracristoforo"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P3",
+       "reason": "unknown_no_voting_evidence"
+      }
+     ],
+     "state": "unknown",
+     "supportingIds": [],
+     "value": null,
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 84.1,
+    "wayId": 273258717
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [],
+     "confidence": {
+      "band": "none",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 273258718: unknown [band none; unknown_age] | ignored: ev-dbt-fon-fracristoforo (SOURCE_NON_DISCRIMINATING); ev-inferred-neighbour-fracristoforo (INFERRED_NO_VOTE) | why: R7_NO_VOTING_EVIDENCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-dbt-fon-fracristoforo",
+       "reason": "SOURCE_NON_DISCRIMINATING"
+      },
+      {
+       "id": "ev-inferred-neighbour-fracristoforo",
+       "reason": "INFERRED_NO_VOTE"
+      }
+     ],
+     "reasons": [
+      "R7_NO_VOTING_EVIDENCE",
+      "SOURCE_NON_DISCRIMINATING:ev-dbt-fon-fracristoforo",
+      "INFERRED_NO_VOTE:ev-inferred-neighbour-fracristoforo"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P3",
+       "reason": "unknown_no_voting_evidence"
+      }
+     ],
+     "state": "unknown",
+     "supportingIds": [],
+     "value": null,
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 21.6,
+    "wayId": 273258718
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [],
+     "confidence": {
+      "band": "none",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 273258719: unknown [band none; unknown_age] | ignored: ev-dbt-fon-fracristoforo (SOURCE_NON_DISCRIMINATING); ev-inferred-neighbour-fracristoforo (INFERRED_NO_VOTE) | why: R7_NO_VOTING_EVIDENCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-dbt-fon-fracristoforo",
+       "reason": "SOURCE_NON_DISCRIMINATING"
+      },
+      {
+       "id": "ev-inferred-neighbour-fracristoforo",
+       "reason": "INFERRED_NO_VOTE"
+      }
+     ],
+     "reasons": [
+      "R7_NO_VOTING_EVIDENCE",
+      "SOURCE_NON_DISCRIMINATING:ev-dbt-fon-fracristoforo",
+      "INFERRED_NO_VOTE:ev-inferred-neighbour-fracristoforo"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P3",
+       "reason": "unknown_no_voting_evidence"
+      }
+     ],
+     "state": "unknown",
+     "supportingIds": [],
+     "value": null,
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 116.9,
+    "wayId": 273258719
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-273258720"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 273258720: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-273258720[asphalt; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-273258720"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 121.1,
+    "wayId": 273258720
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-287070933"
+       ],
+       "level": "weak",
+       "value": "absent"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 287070933: known = absent [band low; fresh] | rests on: ev-dbt-norails-287070933[absent; derived/unverified; weak; fresh 2449d; cov exact; CAPPED_ABSENCE_NOT_COMPLETE_SOURCE] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-norails-287070933"
+     ],
+     "value": "absent",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 23.8,
+    "wayId": 287070933
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-287070933"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      },
+      {
+       "ids": [
+        "ev-kartaview-2203776"
+       ],
+       "level": "weak",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-kartaview-2203776"
+     ],
+     "explanation": "surface_material.material for car on way 287070933: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-287070933[asphalt; tagged/unverified; supporting; age unknown; cov exact] | dissent: ev-kartaview-2203776[sett; measured/unverified; weak; stale 3804d; cov partial; STALE] | ignored: ev-osm-surfacebike-287070933 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(measured)",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-287070933",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(measured)",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-287070933"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-287070933"
+     ],
+     "value": "asphalt",
+     "weakDissent": true
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 23.8,
+    "wayId": 287070933
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-287070935"
+       ],
+       "level": "weak",
+       "value": "absent"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 287070935: known = absent [band low; fresh] | rests on: ev-dbt-norails-287070935[absent; derived/unverified; weak; fresh 2449d; cov exact; CAPPED_ABSENCE_NOT_COMPLETE_SOURCE] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-norails-287070935"
+     ],
+     "value": "absent",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 16.3,
+    "wayId": 287070935
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-287070935"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      },
+      {
+       "ids": [
+        "ev-kartaview-2203776"
+       ],
+       "level": "weak",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-kartaview-2203776"
+     ],
+     "explanation": "surface_material.material for car on way 287070935: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-287070935[asphalt; tagged/unverified; supporting; age unknown; cov exact] | dissent: ev-kartaview-2203776[sett; measured/unverified; weak; stale 3804d; cov partial; STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(measured)",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(measured)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-287070935"
+     ],
+     "value": "asphalt",
+     "weakDissent": true
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 16.3,
+    "wayId": 287070935
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "level": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-smoothness-287070936"
+       ],
+       "level": "supporting",
+       "value": "rough"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "physical_roughness.level for car on way 287070936: known = rough [band medium; fresh] | rests on: ev-osm-smoothness-287070936[rough; tagged/unverified; supporting; fresh 1170d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2023-09",
+      "oldestObservedAt": "2023-09",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-smoothness-287070936"
+     ],
+     "value": "rough",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 25,
+    "wayId": 287070936
+   },
+   "topic": "physical_roughness"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-287070936"
+       ],
+       "level": "weak",
+       "value": "absent"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 287070936: known = absent [band low; fresh] | rests on: ev-dbt-norails-287070936[absent; derived/unverified; weak; fresh 2449d; cov exact; CAPPED_ABSENCE_NOT_COMPLETE_SOURCE] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-norails-287070936"
+     ],
+     "value": "absent",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 25,
+    "wayId": 287070936
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-287070936",
+        "ev-owner-report-ring"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 287070936: known = sett [band medium; fresh] | rests on: ev-osm-surface-287070936[sett; tagged/unverified; supporting; fresh 1166d; cov exact]; ev-owner-report-ring[sett; reported/unverified; weak; age unknown; cov coarse] | ignored: ev-osm-surfacebike-287070936 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2023-09-05",
+      "oldestObservedAt": "2023-09-05",
+      "state": "fresh"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-287070936",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R3_AGREE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-287070936"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-287070936",
+      "ev-owner-report-ring"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 25,
+    "wayId": 287070936
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523318-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 290523318: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-290523318-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523318-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523318-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 290523318: known = present [band medium; fresh] | rests on: ev-dbt-rails-290523318-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523318-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-290523318-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-290523318-0"
+     ],
+     "explanation": "rails_presence.service for car on way 290523318: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-290523318-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523318-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 290523318: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-290523318-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523318-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 60.5,
+    "wayId": 290523318
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-290523318"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 290523318: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-290523318[asphalt; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-290523318 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-290523318",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-290523318"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-290523318"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 60.5,
+    "wayId": 290523318
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523322-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 290523322: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-290523322-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523322-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523322-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 290523322: known = present [band medium; fresh] | rests on: ev-dbt-rails-290523322-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523322-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-290523322-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-290523322-0"
+     ],
+     "explanation": "rails_presence.service for car on way 290523322: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-290523322-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523322-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 290523322: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-290523322-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523322-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 52.6,
+    "wayId": 290523322
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-290523322"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 290523322: known = sett [band low; unknown_age] | rests on: ev-osm-surface-290523322[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-290523322 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-290523322",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-290523322"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-290523322"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 52.6,
+    "wayId": 290523322
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523325-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 290523325: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-290523325-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523325-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523325-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 290523325: known = present [band medium; fresh] | rests on: ev-dbt-rails-290523325-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523325-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-290523325-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-290523325-0"
+     ],
+     "explanation": "rails_presence.service for car on way 290523325: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-290523325-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523325-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 290523325: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-290523325-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523325-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 43,
+    "wayId": 290523325
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-290523325"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 290523325: known = sett [band low; unknown_age] | rests on: ev-osm-surface-290523325[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-290523325 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-290523325",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-290523325"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-290523325"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 43,
+    "wayId": 290523325
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523326-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 290523326: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-290523326-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523326-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523326-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 290523326: known = present [band medium; fresh] | rests on: ev-dbt-rails-290523326-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523326-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-290523326-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-290523326-0"
+     ],
+     "explanation": "rails_presence.service for car on way 290523326: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-290523326-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-290523326-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 290523326: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-290523326-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-290523326-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 31.5,
+    "wayId": 290523326
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-290523326"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 290523326: known = sett [band low; unknown_age] | rests on: ev-osm-surface-290523326[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-290523326 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-290523326",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-290523326"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-290523326"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 31.5,
+    "wayId": 290523326
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-294819087-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 294819087: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-294819087-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-294819087-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-294819087-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 294819087: known = present [band medium; fresh] | rests on: ev-dbt-rails-294819087-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-294819087-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-294819087-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-294819087-0"
+     ],
+     "explanation": "rails_presence.service for car on way 294819087: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-294819087-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-294819087-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 294819087: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-294819087-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-294819087-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 33,
+    "wayId": 294819087
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-294819087"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 294819087: known = sett [band low; unknown_age] | rests on: ev-osm-surface-294819087[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-294819087 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-294819087",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-294819087"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-294819087"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 33,
+    "wayId": 294819087
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "level": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-smoothness-295087306"
+       ],
+       "level": "supporting",
+       "value": "moderate"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "physical_roughness.level for car on way 295087306: known = moderate [band low; unknown_age] | rests on: ev-osm-smoothness-295087306[moderate; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-smoothness-295087306"
+     ],
+     "value": "moderate",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 52.9,
+    "wayId": 295087306
+   },
+   "topic": "physical_roughness"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-295087306-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 295087306: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-295087306-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-295087306-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-295087306-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 295087306: known = present [band medium; fresh] | rests on: ev-dbt-rails-295087306-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-295087306-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-295087306-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-295087306-0"
+     ],
+     "explanation": "rails_presence.service for car on way 295087306: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-295087306-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-295087306-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 295087306: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-295087306-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-295087306-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 52.9,
+    "wayId": 295087306
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-295087306"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 295087306: known = sett [band low; unknown_age] | rests on: ev-osm-surface-295087306[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-295087306 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-295087306",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-295087306"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-295087306"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 52.9,
+    "wayId": 295087306
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-305989915-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 305989915: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-305989915-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-305989915-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-305989915-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 305989915: known = present [band medium; fresh] | rests on: ev-dbt-rails-305989915-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-305989915-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-305989915-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-305989915-0"
+     ],
+     "explanation": "rails_presence.service for car on way 305989915: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-305989915-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-305989915-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 305989915: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-305989915-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-305989915-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 86.1,
+    "wayId": 305989915
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-305989915"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 305989915: known = sett [band low; unknown_age] | rests on: ev-osm-surface-305989915[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-305989915 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-305989915",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-305989915"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-305989915"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 86.1,
+    "wayId": 305989915
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-375509948-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 375509948: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-375509948-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-375509948-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-375509948-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 375509948: known = present [band medium; fresh] | rests on: ev-dbt-rails-375509948-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-375509948-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-375509948-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-375509948-0"
+     ],
+     "explanation": "rails_presence.service for car on way 375509948: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-375509948-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-375509948-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 375509948: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-375509948-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-375509948-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 6.5,
+    "wayId": 375509948
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-375509948"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 375509948: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-375509948[asphalt; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-375509948"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 6.5,
+    "wayId": 375509948
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-375509949-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 375509949: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-375509949-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-375509949-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-375509949-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 375509949: known = present [band medium; fresh] | rests on: ev-dbt-rails-375509949-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-375509949-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-375509949-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-375509949-0"
+     ],
+     "explanation": "rails_presence.service for car on way 375509949: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-375509949-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-375509949-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 375509949: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-375509949-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-375509949-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 22.4,
+    "wayId": 375509949
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-375509949"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 375509949: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-375509949[asphalt; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-375509949"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 22.4,
+    "wayId": 375509949
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-529556308-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 529556308: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-529556308-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-529556308-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-529556308-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 529556308: known = present [band medium; fresh] | rests on: ev-dbt-rails-529556308-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-529556308-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-529556308-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-529556308-0"
+     ],
+     "explanation": "rails_presence.service for car on way 529556308: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-529556308-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-529556308-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 529556308: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-529556308-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-529556308-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 19.5,
+    "wayId": 529556308
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-529556308"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 529556308: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-529556308[asphalt; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-529556308 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-529556308",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-529556308"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-529556308"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 19.5,
+    "wayId": 529556308
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-529556308-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 529556308: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-529556308-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-529556308-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-529556308-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 529556308: known = present [band medium; fresh] | rests on: ev-dbt-rails-529556308-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-529556308-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-529556308-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-529556308-0"
+     ],
+     "explanation": "rails_presence.service for car on way 529556308: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-529556308-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-529556308-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 529556308: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-529556308-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-529556308-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 3.8,
+    "toM": 19.5,
+    "wayId": 529556308
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-713165251"
+       ],
+       "level": "weak",
+       "value": "absent"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 713165251: known = absent [band low; fresh] | rests on: ev-dbt-norails-713165251[absent; derived/unverified; weak; fresh 2449d; cov exact; CAPPED_ABSENCE_NOT_COMPLETE_SOURCE] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-norails-713165251"
+     ],
+     "value": "absent",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 8.2,
+    "wayId": 713165251
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-713165251"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      },
+      {
+       "ids": [
+        "ev-kartaview-2203776"
+       ],
+       "level": "weak",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-kartaview-2203776"
+     ],
+     "explanation": "surface_material.material for car on way 713165251: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-713165251[asphalt; tagged/unverified; supporting; age unknown; cov exact] | dissent: ev-kartaview-2203776[sett; measured/unverified; weak; stale 3804d; cov exact; STALE] | ignored: ev-osm-surfacebike-713165251 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(measured)",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-713165251",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(measured)",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-713165251"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-713165251"
+     ],
+     "value": "asphalt",
+     "weakDissent": true
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 8.2,
+    "wayId": 713165251
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "oneway": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-provider-direction-713165261"
+       ],
+       "level": "supporting",
+       "value": "forward"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "direction.oneway for car on way 713165261: known = forward [band medium; fresh] | rests on: ev-provider-direction-713165261[forward; derived/unverified; supporting; fresh 0d; cov exact] | ignored: ev-topology-direction-713165261 (INFERRED_NO_VOTE) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2026-11-14",
+      "oldestObservedAt": "2026-11-14",
+      "state": "fresh"
+     },
+     "ignored": [
+      {
+       "id": "ev-topology-direction-713165261",
+       "reason": "INFERRED_NO_VOTE"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "INFERRED_NO_VOTE:ev-topology-direction-713165261"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-provider-direction-713165261"
+     ],
+     "value": "forward",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 10.3,
+    "wayId": 713165261
+   },
+   "topic": "direction"
+  },
+  {
+   "attributes": {
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-norails-713165261"
+       ],
+       "level": "weak",
+       "value": "absent"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 713165261: known = absent [band low; fresh] | rests on: ev-dbt-norails-713165261[absent; derived/unverified; weak; fresh 2449d; cov exact; CAPPED_ABSENCE_NOT_COMPLETE_SOURCE] | why: R6_WEAK_ONLY_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R6_WEAK_ONLY_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-norails-713165261"
+     ],
+     "value": "absent",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 10.3,
+    "wayId": 713165261
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-713165261"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 713165261: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-713165261[asphalt; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-713165261 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-713165261",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-713165261"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-713165261"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 10.3,
+    "wayId": 713165261
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "level": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-smoothness-900636756"
+       ],
+       "level": "supporting",
+       "value": "rough"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "physical_roughness.level for car on way 900636756: known = rough [band low; unknown_age] | rests on: ev-osm-smoothness-900636756[rough; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-smoothness-900636756"
+     ],
+     "value": "rough",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 6.8,
+    "wayId": 900636756
+   },
+   "topic": "physical_roughness"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-900636756-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 900636756: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-900636756-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-900636756-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-900636756-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 900636756: known = present [band medium; fresh] | rests on: ev-dbt-rails-900636756-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-900636756-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-900636756-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-900636756-0"
+     ],
+     "explanation": "rails_presence.service for car on way 900636756: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-900636756-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-900636756-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 900636756: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-900636756-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-900636756-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 6.8,
+    "wayId": 900636756
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-900636756"
+       ],
+       "level": "supporting",
+       "value": "sett"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 900636756: known = sett [band low; unknown_age] | rests on: ev-osm-surface-900636756[sett; tagged/unverified; supporting; age unknown; cov exact] | ignored: ev-osm-surfacebike-900636756 (MODE_NOT_APPLICABLE(bicycle!=car)) | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-osm-surfacebike-900636756",
+       "reason": "MODE_NOT_APPLICABLE(bicycle!=car)"
+      }
+     ],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "MODE_NOT_APPLICABLE:ev-osm-surfacebike-900636756"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-900636756"
+     ],
+     "value": "sett",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 6.8,
+    "wayId": 900636756
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "alignment": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-1184663891-0"
+       ],
+       "level": "supporting",
+       "value": "longitudinal"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.alignment for car on way 1184663891: known = longitudinal [band medium; fresh] | rests on: ev-dbt-rails-1184663891-0[longitudinal; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-1184663891-0"
+     ],
+     "value": "longitudinal",
+     "weakDissent": false
+    },
+    "presence": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-1184663891-0",
+        "ev-owner-report-rails"
+       ],
+       "level": "supporting",
+       "value": "present"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.presence for car on way 1184663891: known = present [band medium; fresh] | rests on: ev-dbt-rails-1184663891-0[present; derived/unverified; supporting; fresh 2449d; cov exact]; ev-owner-report-rails[present; reported/unverified; weak; age unknown; cov coarse] | why: R3_AGREE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R3_AGREE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-1184663891-0",
+      "ev-owner-report-rails"
+     ],
+     "value": "present",
+     "weakDissent": false
+    },
+    "service": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-atm-corsolodi-nw"
+       ],
+       "level": "supporting",
+       "value": "no_scheduled_line"
+      },
+      {
+       "ids": [
+        "ev-dbt-rails-1184663891-0"
+       ],
+       "level": "weak",
+       "value": "in_service"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [
+      "ev-dbt-rails-1184663891-0"
+     ],
+     "explanation": "rails_presence.service for car on way 1184663891: known = no_scheduled_line [band low; fresh] | rests on: ev-atm-corsolodi-nw[no_scheduled_line; derived/unverified; supporting; fresh 113d; cov exact] | dissent: ev-dbt-rails-1184663891-0[in_service; derived/unverified; weak; stale 2449d; cov exact; CAPPED_STALE] | why: R2_SINGLE_SOURCE, R5_WEAK_DISSENT(derived)",
+     "freshness": {
+      "newestObservedAt": "2026-07-24",
+      "oldestObservedAt": "2026-07-24",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE",
+      "R5_WEAK_DISSENT(derived)"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P2",
+       "reason": "weak_dissent"
+      }
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-atm-corsolodi-nw"
+     ],
+     "value": "no_scheduled_line",
+     "weakDissent": true
+    },
+    "sharing": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-dbt-rails-1184663891-0"
+       ],
+       "level": "supporting",
+       "value": "shared_carriageway"
+      }
+     ],
+     "confidence": {
+      "band": "medium",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "rails_presence.sharing for car on way 1184663891: known = shared_carriageway [band medium; fresh] | rests on: ev-dbt-rails-1184663891-0[shared_carriageway; derived/unverified; supporting; fresh 2449d; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": "2020-03",
+      "oldestObservedAt": "2020-03",
+      "state": "fresh"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-dbt-rails-1184663891-0"
+     ],
+     "value": "shared_carriageway",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 9.6,
+    "wayId": 1184663891
+   },
+   "topic": "rails_presence"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [
+      {
+       "ids": [
+        "ev-osm-surface-1184663891"
+       ],
+       "level": "supporting",
+       "value": "asphalt"
+      }
+     ],
+     "confidence": {
+      "band": "low",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 1184663891: known = asphalt [band low; unknown_age] | rests on: ev-osm-surface-1184663891[asphalt; tagged/unverified; supporting; age unknown; cov exact] | why: R2_SINGLE_SOURCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [],
+     "reasons": [
+      "R2_SINGLE_SOURCE"
+     ],
+     "state": "known",
+     "supportingIds": [
+      "ev-osm-surface-1184663891"
+     ],
+     "value": "asphalt",
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 9.6,
+    "wayId": 1184663891
+   },
+   "topic": "surface_material"
+  },
+  {
+   "attributes": {
+    "material": {
+     "candidates": [],
+     "confidence": {
+      "band": "none",
+      "basis": "rule_prior_v0",
+      "value": null
+     },
+     "dissentingIds": [],
+     "explanation": "surface_material.material for car on way 1236292178: unknown [band none; unknown_age] | ignored: ev-dbt-fon-fracristoforo (SOURCE_NON_DISCRIMINATING); ev-inferred-neighbour-fracristoforo (INFERRED_NO_VOTE) | why: R7_NO_VOTING_EVIDENCE",
+     "freshness": {
+      "newestObservedAt": null,
+      "oldestObservedAt": null,
+      "state": "unknown_age"
+     },
+     "ignored": [
+      {
+       "id": "ev-dbt-fon-fracristoforo",
+       "reason": "SOURCE_NON_DISCRIMINATING"
+      },
+      {
+       "id": "ev-inferred-neighbour-fracristoforo",
+       "reason": "INFERRED_NO_VOTE"
+      }
+     ],
+     "reasons": [
+      "R7_NO_VOTING_EVIDENCE",
+      "SOURCE_NON_DISCRIMINATING:ev-dbt-fon-fracristoforo",
+      "INFERRED_NO_VOTE:ev-inferred-neighbour-fracristoforo"
+     ],
+     "reviewTasks": [
+      {
+       "priority": "P3",
+       "reason": "unknown_no_voting_evidence"
+      }
+     ],
+     "state": "unknown",
+     "supportingIds": [],
+     "value": null,
+     "weakDissent": false
+    }
+   },
+   "mode": "car",
+   "ref": {
+    "fromM": 0,
+    "toM": 7.5,
+    "wayId": 1236292178
+   },
+   "topic": "surface_material"
+  }
+ ]
+}

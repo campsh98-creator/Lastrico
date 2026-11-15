@@ -1,0 +1,160 @@
+{
+ "generatedBy": "exp-crosscheck-return-plan.mjs",
+ "departure": "2026-11-09T12:00",
+ "route0": {
+  "meters": 4693,
+  "seconds": 938,
+  "L0": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 285,
+   "risk": 25
+  },
+  "Lb_ringSett": {
+   "confirmed": 69
+  },
+  "Lac": {
+   "confirmed": 25,
+   "probable": 52,
+   "risk": 54
+  },
+  "unknownByWhy": {
+   "untagged": 284.98158067704514,
+   "nomatch": 0,
+   "conflict": 0,
+   "other": 0
+  },
+  "unknownByClass": {
+   "unclassified": 259.4652819026744,
+   "residential": 8.78459833785423,
+   "service": 16.73170043651647
+  },
+  "expectedRoughMetresInUnknown": {
+   "global": 3,
+   "zoned": 2
+  },
+  "railMetres": {
+   "tagged": 0,
+   "mapped-adjacent": 0,
+   "none-in-covered-area": 0,
+   "unknown-outside-coverage": 4692.865829592252
+  }
+ },
+ "extraSecondsSweep": [
+  {
+   "extraSeconds": 22,
+   "picks": {
+    "A@L0": "shortcut-first(counterfactual)",
+    "A@Lb(ring sett)": "shortcut-first(counterfactual)",
+    "A@Lac": "shortcut-first(counterfactual)",
+    "B": "shortcut-first(counterfactual)",
+    "C-global": "shortcut-first(counterfactual)",
+    "C-zoned": "shortcut-first(counterfactual)",
+    "D-regret": "shortcut-first(counterfactual)",
+    "D-maximin": "shortcut-first(counterfactual)"
+   }
+  },
+  {
+   "extraSeconds": 40,
+   "picks": {
+    "A@L0": "shortcut-first(counterfactual)",
+    "A@Lb(ring sett)": "shortcut-first(counterfactual)",
+    "A@Lac": "shortcut-first(counterfactual)",
+    "B": "shortcut-first(counterfactual)",
+    "C-global": "shortcut-first(counterfactual)",
+    "C-zoned": "shortcut-first(counterfactual)",
+    "D-regret": "shortcut-first(counterfactual)",
+    "D-maximin": "shortcut-first(counterfactual)"
+   }
+  },
+  {
+   "extraSeconds": 60,
+   "picks": {
+    "A@L0": "shortcut-first(counterfactual)",
+    "A@Lb(ring sett)": "shortcut-first(counterfactual)",
+    "A@Lac": "shortcut-first(counterfactual)",
+    "B": "shortcut-first(counterfactual)",
+    "C-global": "shortcut-first(counterfactual)",
+    "C-zoned": "shortcut-first(counterfactual)",
+    "D-regret": "shortcut-first(counterfactual)",
+    "D-maximin": "shortcut-first(counterfactual)"
+   }
+  },
+  {
+   "extraSeconds": 90,
+   "picks": {
+    "A@L0": "route0-plan",
+    "A@Lb(ring sett)": "shortcut-first(counterfactual)",
+    "A@Lac": "shortcut-first(counterfactual)",
+    "B": "route0-plan",
+    "C-global": "route0-plan",
+    "C-zoned": "route0-plan",
+    "D-regret": "route0-plan",
+    "D-maximin": "route0-plan"
+   }
+  },
+  {
+   "extraSeconds": 120,
+   "picks": {
+    "A@L0": "route0-plan",
+    "A@Lb(ring sett)": "shortcut-first(counterfactual)",
+    "A@Lac": "route0-plan",
+    "B": "route0-plan",
+    "C-global": "route0-plan",
+    "C-zoned": "route0-plan",
+    "D-regret": "route0-plan",
+    "D-maximin": "route0-plan"
+   }
+  },
+  {
+   "extraSeconds": 180,
+   "picks": {
+    "A@L0": "route0-plan",
+    "A@Lb(ring sett)": "route0-plan",
+    "A@Lac": "route0-plan",
+    "B": "route0-plan",
+    "C-global": "route0-plan",
+    "C-zoned": "route0-plan",
+    "D-regret": "route0-plan",
+    "D-maximin": "route0-plan"
+   }
+  }
+ ],
+ "shortcutFirst": {
+  "meters": 4453,
+  "L0": {
+   "confirmed": 0,
+   "probable": 0,
+   "unknown": 285,
+   "risk": 0
+  },
+  "expectedRoughMetresInUnknown": {
+   "global": 3,
+   "zoned": 2
+  },
+  "railMetres": {
+   "tagged": 0,
+   "mapped-adjacent": 0,
+   "none-in-covered-area": 0,
+   "unknown-outside-coverage": 4453.349228197971
+  }
+ },
+ "breakEvenSecondsSlowerThanPlanA": {
+  "baselineData": 30,
+  "ringCounterfactualSett": 82.8
+ },
+ "reproducesRecordedPlan": {
+  "recorded": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 285,
+   "kmFromTrace": 4.703
+  },
+  "mine": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 285,
+   "km": 4.693
+  }
+ }
+}

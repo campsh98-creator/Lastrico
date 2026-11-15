@@ -1,0 +1,802 @@
+{
+  "_note": "Redacted summary. Raw trace is not stored in the repository. Coordinates rounded to 3 decimals.",
+  "integrity": {
+    "schema": "lastrico-gps-trace",
+    "version": 2,
+    "appVersion": "0.5.0",
+    "area": "milan",
+    "mode": "car",
+    "synthetic": false,
+    "startedAtUtc": "2026-11-13T18:26:50.898Z",
+    "fileBytes": 317624,
+    "sha256": "2aa69324cfdb2247323917c8aebe5f99891ae98418a4776f71f57bff07e4bffa",
+    "fixes": 951,
+    "decisions": 951,
+    "routes": 2,
+    "events": 8,
+    "durationSeconds": 1013,
+    "decisionOutcomes": {
+      "accepted": 930,
+      "rejected:invalid": 21
+    },
+    "timestampDeltaSeconds": {
+      "n": 950,
+      "min": 0.2,
+      "p25": 1,
+      "median": 1,
+      "p75": 1,
+      "p90": 1,
+      "p95": 2.4,
+      "max": 3.1,
+      "mean": 1.1
+    },
+    "nonMonotonicTimestamps": 0,
+    "duplicateTimestamps": 0,
+    "gapsOver2_5s": [
+      {
+        "atFix": 133,
+        "gapSeconds": 3
+      },
+      {
+        "atFix": 156,
+        "gapSeconds": 2.9
+      },
+      {
+        "atFix": 172,
+        "gapSeconds": 2.7
+      },
+      {
+        "atFix": 180,
+        "gapSeconds": 3.1
+      },
+      {
+        "atFix": 188,
+        "gapSeconds": 2.7
+      },
+      {
+        "atFix": 238,
+        "gapSeconds": 2.6
+      },
+      {
+        "atFix": 255,
+        "gapSeconds": 2.8
+      },
+      {
+        "atFix": 343,
+        "gapSeconds": 2.8
+      },
+      {
+        "atFix": 351,
+        "gapSeconds": 2.6
+      },
+      {
+        "atFix": 359,
+        "gapSeconds": 2.8
+      },
+      {
+        "atFix": 366,
+        "gapSeconds": 3
+      },
+      {
+        "atFix": 398,
+        "gapSeconds": 2.8
+      },
+      {
+        "atFix": 505,
+        "gapSeconds": 2.8
+      },
+      {
+        "atFix": 513,
+        "gapSeconds": 2.6
+      },
+      {
+        "atFix": 530,
+        "gapSeconds": 2.6
+      },
+      {
+        "atFix": 549,
+        "gapSeconds": 2.7
+      },
+      {
+        "atFix": 577,
+        "gapSeconds": 2.7
+      },
+      {
+        "atFix": 591,
+        "gapSeconds": 2.6
+      },
+      {
+        "atFix": 609,
+        "gapSeconds": 2.7
+      },
+      {
+        "atFix": 638,
+        "gapSeconds": 2.9
+      },
+      {
+        "atFix": 646,
+        "gapSeconds": 2.8
+      },
+      {
+        "atFix": 684,
+        "gapSeconds": 3.1
+      },
+      {
+        "atFix": 692,
+        "gapSeconds": 3
+      },
+      {
+        "atFix": 717,
+        "gapSeconds": 2.9
+      },
+      {
+        "atFix": 732,
+        "gapSeconds": 3.1
+      },
+      {
+        "atFix": 740,
+        "gapSeconds": 2.9
+      },
+      {
+        "atFix": 758,
+        "gapSeconds": 2.8
+      },
+      {
+        "atFix": 796,
+        "gapSeconds": 2.6
+      },
+      {
+        "atFix": 813,
+        "gapSeconds": 2.6
+      },
+      {
+        "atFix": 835,
+        "gapSeconds": 2.7
+      },
+      {
+        "atFix": 883,
+        "gapSeconds": 2.6
+      },
+      {
+        "atFix": 913,
+        "gapSeconds": 2.7
+      }
+    ],
+    "deliveryLatencySeconds": {
+      "n": 951,
+      "min": 0,
+      "p25": 2.2,
+      "median": 2.2,
+      "p75": 2.2,
+      "p90": 2.2,
+      "p95": 2.2,
+      "max": 2.3,
+      "mean": 1.9
+    }
+  },
+  "quality": {
+    "accuracyMeters": {
+      "n": 951,
+      "min": 4.8,
+      "p25": 7.9,
+      "median": 10.3,
+      "p75": 16.1,
+      "p90": 30,
+      "p95": 104.9,
+      "max": 148,
+      "mean": 18.9
+    },
+    "accuracyBuckets": {
+      "<10": 433,
+      "10-20": 328,
+      "20-30": 95,
+      "30-50": 28,
+      "50-100": 13,
+      ">=100": 54
+    },
+    "fixesWorseThan30m": 95,
+    "speedMetersPerSecond": {
+      "n": 893,
+      "min": 0,
+      "p25": 0.4,
+      "median": 3.7,
+      "p75": 6.6,
+      "p90": 8.4,
+      "p95": 9.2,
+      "max": 13.1,
+      "mean": 3.8
+    },
+    "speedKmhMax": 47.3,
+    "nullSpeed": 58,
+    "nullHeading": 241,
+    "stationaryFixes": 295,
+    "stationarySharePercent": 31,
+    "poorAccuracyRuns": [
+      {
+        "fromFix": 6,
+        "toFix": 9,
+        "atSeconds": 6,
+        "fixes": 4,
+        "worstMeters": 33.7,
+        "cell": [
+          9.209,
+          45.45
+        ],
+        "activeRoute": 0,
+        "alongActiveRouteMeters": 6.2,
+        "meanSpeedMs": 0.1
+      },
+      {
+        "fromFix": 247,
+        "toFix": 255,
+        "atSeconds": 253.2,
+        "fixes": 9,
+        "worstMeters": 134.8,
+        "cell": [
+          9.205,
+          45.447
+        ],
+        "activeRoute": 1,
+        "alongActiveRouteMeters": 488.3,
+        "meanSpeedMs": 0.3
+      },
+      {
+        "fromFix": 262,
+        "toFix": 289,
+        "atSeconds": 270,
+        "fixes": 28,
+        "worstMeters": 141,
+        "cell": [
+          9.205,
+          45.447
+        ],
+        "activeRoute": 1,
+        "alongActiveRouteMeters": 488.1,
+        "meanSpeedMs": 6.3
+      }
+    ]
+  },
+  "motion": {
+    "firstFixAbove1_5ms": {
+      "fix": 1,
+      "atSeconds": 1
+    },
+    "stopsOver15s": [
+      {
+        "fromFix": 2,
+        "atSeconds": 2,
+        "durationSeconds": 33.1,
+        "activeRoute": 0,
+        "alongActiveRouteMeters": 7
+      },
+      {
+        "fromFix": 513,
+        "atSeconds": 538.6,
+        "durationSeconds": 25.4,
+        "activeRoute": 1,
+        "alongActiveRouteMeters": 1993.9
+      },
+      {
+        "fromFix": 566,
+        "atSeconds": 595,
+        "durationSeconds": 18.4,
+        "activeRoute": 1,
+        "alongActiveRouteMeters": 2154.1
+      },
+      {
+        "fromFix": 684,
+        "atSeconds": 726.1,
+        "durationSeconds": 42.9,
+        "activeRoute": 1,
+        "alongActiveRouteMeters": 2731.4
+      },
+      {
+        "fromFix": 732,
+        "atSeconds": 783.1,
+        "durationSeconds": 19.4,
+        "activeRoute": 1,
+        "alongActiveRouteMeters": 2766.5
+      }
+    ],
+    "totalStoppedSeconds": 249.5,
+    "movingAverageKmh": 18.7,
+    "overallAverageKmh": 14.1
+  },
+  "trajectory": {
+    "acceptedFixes": 930,
+    "trajectoryLengthKm": 3.973,
+    "plannedRouteLengthKm": [
+      {
+        "route": 0,
+        "atFix": 0,
+        "plannedKm": 4.703,
+        "polylineKm": 4.693,
+        "plannedMinutes": 15.6
+      },
+      {
+        "route": 1,
+        "atFix": 106,
+        "plannedKm": 4.334,
+        "polylineKm": 4.326,
+        "plannedMinutes": 14.7
+      }
+    ],
+    "routeOffsetWhileActiveMeters": [
+      {
+        "route": 0,
+        "n": 102,
+        "min": 0.4,
+        "p25": 2.3,
+        "median": 3.3,
+        "p75": 5.4,
+        "p90": 8.8,
+        "p95": 37.9,
+        "max": 65.7,
+        "mean": 7
+      },
+      {
+        "route": 1,
+        "n": 754,
+        "min": 0,
+        "p25": 1.3,
+        "median": 2.2,
+        "p75": 3.8,
+        "p90": 5.5,
+        "p95": 6.8,
+        "max": 10.8,
+        "mean": 2.7
+      }
+    ],
+    "routeOffsetsOnRoute1Bands": {
+      "<=15 m": 754,
+      "15-30 m": 0,
+      "30-60 m": 0,
+      ">60 m": 0
+    },
+    "routeOffsetsOnRoute1ExcursionsOver40m": [],
+    "lastFixDistanceToDestinationMeters": 140.9,
+    "lastFixAlongRoute1Meters": 3748.5,
+    "route1LengthMeters": 4326.2,
+    "routeCompletionPercent": 86.6,
+    "arrivedFlagInDecisions": false,
+    "elapsedFromRerouteSeconds": 917
+  },
+  "reroute": {
+    "firstOffRouteEventAtFix": 105,
+    "rerouteStartFix": 105,
+    "rerouteStartAtSeconds": 95,
+    "lastFixWithin15mOfRoute0": {
+      "fix": 98,
+      "atSeconds": 88.1,
+      "alongRoute0Meters": 64.6
+    },
+    "firstInstructionAfterDepartAlongMeters": 218.8,
+    "events": [
+      {
+        "atFix": 0,
+        "type": "pave-warning-shown",
+        "detail": "391:391",
+        "atSeconds": 0
+      },
+      {
+        "atFix": 0,
+        "type": "wake-lock",
+        "detail": "true",
+        "atSeconds": 0
+      },
+      {
+        "atFix": 105,
+        "type": "off-route",
+        "atSeconds": 95
+      },
+      {
+        "atFix": 105,
+        "type": "reroute-start",
+        "atSeconds": 95
+      },
+      {
+        "atFix": 105,
+        "type": "reroute-start",
+        "detail": "wrong-turn",
+        "atSeconds": 95
+      },
+      {
+        "atFix": 106,
+        "type": "off-route",
+        "atSeconds": 96
+      },
+      {
+        "atFix": 106,
+        "type": "reroute-success",
+        "detail": "safe:no-alternative",
+        "atSeconds": 96
+      },
+      {
+        "atFix": 106,
+        "type": "reroute-success",
+        "atSeconds": 96
+      }
+    ],
+    "fixesAroundDecision": [
+      {
+        "fix": 101,
+        "t": 91,
+        "accuracy": 7.8,
+        "speedMs": 5.7,
+        "heading": 209,
+        "progressMeters": 63.9,
+        "offRouteMeters": 41.8,
+        "offRouteReadings": 0,
+        "instruction": "1-turn",
+        "offsetFromRoute0": 44.4,
+        "alongRoute0": 58.3
+      },
+      {
+        "fix": 102,
+        "t": 92,
+        "accuracy": 6.5,
+        "speedMs": 5.7,
+        "heading": 219,
+        "progressMeters": 63.9,
+        "offRouteMeters": 49.3,
+        "pendingJump": {
+          "progressMeters": 63.9,
+          "confirmations": 0,
+          "elapsedSeconds": 1
+        },
+        "offRouteReadings": 0,
+        "instruction": "1-turn",
+        "offsetFromRoute0": 50.3,
+        "alongRoute0": 58.3
+      },
+      {
+        "fix": 103,
+        "t": 93,
+        "accuracy": 6.4,
+        "speedMs": 5.4,
+        "heading": 211,
+        "progressMeters": 63.9,
+        "offRouteMeters": 55.4,
+        "pendingJump": {
+          "progressMeters": 63.9,
+          "confirmations": 0,
+          "elapsedSeconds": 2
+        },
+        "offRouteReadings": 0,
+        "instruction": "1-turn",
+        "offsetFromRoute0": 55.9,
+        "alongRoute0": 58.3
+      },
+      {
+        "fix": 104,
+        "t": 94,
+        "accuracy": 6.5,
+        "speedMs": 4.9,
+        "heading": 207,
+        "progressMeters": 63.9,
+        "offRouteMeters": 60.8,
+        "pendingJump": {
+          "progressMeters": 63.9,
+          "confirmations": 0,
+          "elapsedSeconds": 3
+        },
+        "offRouteReadings": 0,
+        "shouldRecalculate": true,
+        "instruction": "1-turn",
+        "offsetFromRoute0": 61.2,
+        "alongRoute0": 58.1
+      },
+      {
+        "fix": 105,
+        "t": 95,
+        "accuracy": 6.6,
+        "speedMs": 4.4,
+        "heading": 203,
+        "progressMeters": 63.9,
+        "offRouteMeters": 65.5,
+        "pendingJump": {
+          "progressMeters": 63.9,
+          "confirmations": 0,
+          "elapsedSeconds": 4
+        },
+        "offRouteReadings": 1,
+        "instruction": "1-turn",
+        "offsetFromRoute0": 65.7,
+        "alongRoute0": 58.3
+      },
+      {
+        "fix": 106,
+        "t": 96,
+        "accuracy": 7.2,
+        "speedMs": 3.9,
+        "heading": 206,
+        "progressMeters": 9,
+        "offRouteMeters": 6.5,
+        "offRouteReadings": 0,
+        "instruction": "1-turn",
+        "offsetFromRoute0": 70.2,
+        "alongRoute0": 58.3
+      },
+      {
+        "fix": 107,
+        "t": 97,
+        "accuracy": 7.1,
+        "speedMs": 2.5,
+        "heading": 211,
+        "progressMeters": 12,
+        "offRouteMeters": 6.6,
+        "offRouteReadings": 0,
+        "instruction": "1-turn",
+        "offsetFromRoute0": 73.3,
+        "alongRoute0": 58.3
+      },
+      {
+        "fix": 108,
+        "t": 98,
+        "accuracy": 7.6,
+        "speedMs": 0.8,
+        "heading": 213,
+        "progressMeters": 14.3,
+        "offRouteMeters": 6.4,
+        "offRouteReadings": 0,
+        "instruction": "1-turn",
+        "offsetFromRoute0": 74.9,
+        "alongRoute0": 58.3
+      }
+    ],
+    "route0FirstTurnDistanceMeters": 219,
+    "route1StartFixDistanceFromRoute0Meters": 61.2
+  },
+  "surface": {
+    "routes": [
+      {
+        "route": 0,
+        "objective": "fast",
+        "pave": {
+          "confirmedMeters": 25,
+          "probableMeters": 0,
+          "unknownMeters": 285
+        },
+        "roughSections": [
+          {
+            "startMeters": 391,
+            "endMeters": 416,
+            "confirmedMeters": 25,
+            "probableMeters": 0,
+            "name": "Piazzale Lodi",
+            "surface": "sett"
+          }
+        ],
+        "totalMeters": 4693.1,
+        "unknownSharePercent": 6.1,
+        "confirmedSharePercent": 0.5
+      },
+      {
+        "route": 1,
+        "objective": "fast",
+        "pave": {
+          "confirmedMeters": 0,
+          "probableMeters": 0,
+          "unknownMeters": 285
+        },
+        "roughSections": [],
+        "totalMeters": 4326.2,
+        "unknownSharePercent": 6.6,
+        "confirmedSharePercent": 0
+      }
+    ],
+    "warningEvents": [
+      {
+        "atFix": 0,
+        "type": "pave-warning-shown",
+        "detail": "391:391"
+      }
+    ],
+    "voiceEvents": 0,
+    "roughSectionProximity": [
+      {
+        "name": "Piazzale Lodi",
+        "surface": "sett",
+        "startMeters": 391,
+        "endMeters": 416,
+        "confirmedMeters": 25,
+        "nearestFixDistanceToSectionMeters": 129.5,
+        "nearestFixIndex": 181,
+        "fixesWithin30mOfSection": 0,
+        "sectionTraversedByDriver": false
+      }
+    ]
+  },
+  "instructionPasses": [
+    {
+      "route": 0,
+      "instructions": [
+        {
+          "id": "0-depart",
+          "type": "depart",
+          "modifier": "",
+          "road": "[origin street]",
+          "distance": 219,
+          "alongMeters": 0
+        },
+        {
+          "id": "1-turn",
+          "type": "turn",
+          "modifier": "right",
+          "road": "Viale Umbria",
+          "distance": 173,
+          "alongMeters": 218.8
+        },
+        {
+          "id": "2-roundabout",
+          "type": "roundabout",
+          "modifier": "",
+          "road": "Piazzale Lodi",
+          "distance": 68,
+          "alongMeters": 390.1
+        },
+        {
+          "id": "3-roundabout exit",
+          "type": "roundabout exit",
+          "modifier": "",
+          "road": "Viale Isonzo",
+          "distance": 2704,
+          "alongMeters": 459.1
+        },
+        {
+          "id": "4-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "Alzaia Naviglio Pavese",
+          "distance": 672,
+          "alongMeters": 3164.7
+        },
+        {
+          "id": "5-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "Alzaia Naviglio Pavese",
+          "distance": 156,
+          "alongMeters": 3833.1
+        },
+        {
+          "id": "6-turn",
+          "type": "turn",
+          "modifier": "right",
+          "road": "Via Fra Cristoforo",
+          "distance": 382,
+          "alongMeters": 3988.6
+        },
+        {
+          "id": "7-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "Via Don Rodrigo",
+          "distance": 145,
+          "alongMeters": 4369.2
+        },
+        {
+          "id": "8-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "[destination area street 2]",
+          "distance": 164,
+          "alongMeters": 4513.6
+        },
+        {
+          "id": "9-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "[destination area street 1]",
+          "distance": 17,
+          "alongMeters": 4676.4
+        },
+        {
+          "id": "10-arrive",
+          "type": "arrive",
+          "modifier": "",
+          "distance": 0,
+          "alongMeters": 4693.1
+        }
+      ]
+    },
+    {
+      "route": 1,
+      "instructions": [
+        {
+          "id": "0-depart",
+          "type": "depart",
+          "modifier": "",
+          "road": "Via Friuli",
+          "distance": 2796,
+          "alongMeters": 0
+        },
+        {
+          "id": "1-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "Alzaia Naviglio Pavese",
+          "distance": 672,
+          "alongMeters": 2797.8
+        },
+        {
+          "id": "2-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "Alzaia Naviglio Pavese",
+          "distance": 156,
+          "alongMeters": 3466.1
+        },
+        {
+          "id": "3-turn",
+          "type": "turn",
+          "modifier": "right",
+          "road": "Via Fra Cristoforo",
+          "distance": 382,
+          "alongMeters": 3621.6
+        },
+        {
+          "id": "4-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "Via Don Rodrigo",
+          "distance": 145,
+          "alongMeters": 4002.2
+        },
+        {
+          "id": "5-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "[destination area street 2]",
+          "distance": 164,
+          "alongMeters": 4146.7
+        },
+        {
+          "id": "6-turn",
+          "type": "turn",
+          "modifier": "left",
+          "road": "[destination area street 1]",
+          "distance": 17,
+          "alongMeters": 4309.5
+        },
+        {
+          "id": "7-arrive",
+          "type": "arrive",
+          "modifier": "",
+          "distance": 0,
+          "alongMeters": 4326.2
+        }
+      ]
+    }
+  ],
+  "corridorSplit": {
+    "route1VertexFirstOver30mFromRoute0": 0,
+    "route1VertexLastOver30mFromRoute0": 12,
+    "route1AlongAtDivergenceMeters": 0,
+    "route1AlongAtRejoinMeters": 222.4,
+    "maxSeparationMeters": 139.5,
+    "divergedCell": [
+      9.209,
+      45.449
+    ],
+    "rejoinedCell": [
+      9.208,
+      45.448
+    ],
+    "route1VerticesWithin30mOfRoute0AfterDivergence": 198
+  },
+  "origin": {
+    "cell": [
+      9.209,
+      45.45
+    ],
+    "redacted": true
+  },
+  "destination": {
+    "cell": [
+      9.174,
+      45.435
+    ],
+    "redacted": true
+  }
+}

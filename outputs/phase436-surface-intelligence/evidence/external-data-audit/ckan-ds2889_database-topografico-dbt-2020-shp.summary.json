@@ -1,0 +1,35 @@
+{
+  "id": "ds2889_database-topografico-dbt-2020-shp",
+  "title": "Database Topografico (DBT) 2020 - formato SHP",
+  "license_id": "cc-by",
+  "license_title": "Creative Commons Attribution",
+  "license_url": "http://www.opendefinition.org/licenses/cc-by",
+  "metadata_modified": "2026-05-08T09:53:14.675852",
+  "notes": "Il dataset espone l'intero Database Topografico 2020 del Comune di Milano in formato shapefile.\r\n\r\nDati proiettati nei seguenti sistemi di riferimento:\r\n\r\n* RDN2008 / UTM zone 32N (EPSG: 7791)\r\n* Gauss-Boaga/ROMA40 - Monte Mario/Italy zone 1 (EPSG: 3003)\r\n\r\nRestituzione da volo marzo/aprile 2020, scala nominale 1:1.000.\r\n\r\nDettaglio informativo dei singoli strati componenti:\r\n\r\nSTRATO 01 VIABILITA’, MOBILITA’ E TRASPORTI\r\n\r\nSTRATO 02 IMMOBILI ED ANTROPIZZAZIONI\r\n\r\nSTRATO 04 IDROGRAFIA\r\n\r\nSTRATO 05 OROGRAFIA\r\n\r\nSTRATO 06 VEGETAZIONE\r\n\r\nSTRATO 07 RETI TECNOLOGICHE\r\n\r\nSTRATO 08 LOCALITA’ SIGNIFICATIVE\r\n\r\nSTRATO 09 AMBITI AMMINISTRATIVI\r\n\r\nSTRATO 10 AREE DI PERTINENZA.\r\n\r\nQuesta base dati è utilizzabile per rappresentazioni e analisi geografiche; può essere utilizzata per visualizzare, interrogare e produrre cartografie o come elemento per effettuare operazioni di overlay mapping con altre basi dati geografiche.\r\n\r\nI servizi di mappa WMS sono disponibili al seguente link: https://gisportal.comune.milano.it/federated/services/DBGT/Milano_2020_DBGT/MapServer/WMSServer?request=GetCapabilities&service=WMS",
+  "resources": [
+    {
+      "id": "c37e8966-15ae-405e-99a1-cd5846007e03",
+      "name": "DS2889_DBT_2020.zip",
+      "format": "SHP",
+      "url": "https://gisportal.comune.milano.it/download/area_download/SIT/DBT2020/DBT_2020.zip",
+      "size": 0,
+      "mimetype": "application/zip",
+      "created": "2025-02-05T08:50:52.470271",
+      "last_modified": null,
+      "datastore_active": false,
+      "description": "Sistema geografico di riferimento: RDN2008 / UTM zone 32N (EPSG: 7791). Anteprima NON disponibile"
+    },
+    {
+      "id": "0fe0abb6-633d-4617-ac82-954a4f3c31ce",
+      "name": "DS2889_DBT_2020_Gauss-Boaga.zip",
+      "format": "SHP",
+      "url": "https://gisportal.comune.milano.it/download/area_download/SIT/DBT2020/DBT_2020_Gauss-Boaga.zip",
+      "size": 0,
+      "mimetype": "application/zip",
+      "created": "2025-02-05T08:52:35.139464",
+      "last_modified": null,
+      "datastore_active": false,
+      "description": "Sistema geografico di riferimento: Gauss-Boaga/ROMA40 - Monte Mario/Italy zone 1 (EPSG: 3003). Anteprima NON disponibile"
+    }
+  ]
+}

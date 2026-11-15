@@ -1,0 +1,11 @@
+{
+ "query": {
+  "bbox": "9.2070,45.4455,9.2135,45.4495",
+  "limit": "200"
+ },
+ "count": 0,
+ "byMonth": {},
+ "sequences": 0,
+ "licences": [],
+ "photos": []
+}

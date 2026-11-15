@@ -1,0 +1,151 @@
+{
+ "asOf": "2026-11-14",
+ "kind": "TOY synthetic illustration, seed 436062; classes differ by construction; not evidence of real separability",
+ "pulseCapture": [
+  {
+   "fs": 60,
+   "meanPeakCaptured": 0.38,
+   "missedEntirely": 0.407,
+   "p05": 0,
+   "pulseMs": 10
+  },
+  {
+   "fs": 60,
+   "meanPeakCaptured": 0.74,
+   "missedEntirely": 0,
+   "p05": 0.32,
+   "pulseMs": 20
+  },
+  {
+   "fs": 60,
+   "meanPeakCaptured": 0.93,
+   "missedEntirely": 0,
+   "p05": 0.81,
+   "pulseMs": 40
+  },
+  {
+   "fs": 60,
+   "meanPeakCaptured": 0.98,
+   "missedEntirely": 0,
+   "p05": 0.95,
+   "pulseMs": 80
+  },
+  {
+   "fs": 60,
+   "meanPeakCaptured": 1,
+   "missedEntirely": 0,
+   "p05": 0.99,
+   "pulseMs": 160
+  },
+  {
+   "fs": 200,
+   "meanPeakCaptured": 0.9,
+   "missedEntirely": 0,
+   "p05": 0.74,
+   "pulseMs": 10
+  },
+  {
+   "fs": 200,
+   "meanPeakCaptured": 0.97,
+   "missedEntirely": 0,
+   "p05": 0.93,
+   "pulseMs": 20
+  },
+  {
+   "fs": 200,
+   "meanPeakCaptured": 0.99,
+   "missedEntirely": 0,
+   "p05": 0.98,
+   "pulseMs": 40
+  },
+  {
+   "fs": 200,
+   "meanPeakCaptured": 1,
+   "missedEntirely": 0,
+   "p05": 1,
+   "pulseMs": 80
+  },
+  {
+   "fs": 200,
+   "meanPeakCaptured": 1,
+   "missedEntirely": 0,
+   "p05": 1,
+   "pulseMs": 160
+  }
+ ],
+ "reading": "Sustained roughness: high median RMS, many elevated windows, near-Gaussian (crest ~3-4, kurtosis ~0). Isolated shock: median RMS unchanged, 1-3 windows elevated, crest and kurtosis high, contrast >> 1. Tram crossing: a short burst of 4 pulses (spacing = geometry / speed). Mixed: the patch raises the median only if the context window covers it. Thresholds must come from field data.",
+ "toyFeatures": {
+  "roughPatchPlusPothole": {
+   "contrastMaxOverMedianRms": 3.4,
+   "eventsAbove7SigmaPer100m": 9,
+   "maxCrest": 5.1,
+   "maxExcessKurtosis": 18.4,
+   "maxWindowRmsMs2": 0.676,
+   "medianCrest": 2.6,
+   "medianExcessKurtosis": -0.1,
+   "medianWindowRmsMs2": 0.201,
+   "shareOfWindowsAbove2xSmoothRms": 0.5,
+   "windows": 36
+  },
+  "singlePothole": {
+   "contrastMaxOverMedianRms": 7.9,
+   "eventsAbove7SigmaPer100m": 0.9,
+   "maxCrest": 5.2,
+   "maxExcessKurtosis": 19.1,
+   "maxWindowRmsMs2": 0.662,
+   "medianCrest": 2.7,
+   "medianExcessKurtosis": -0.1,
+   "medianWindowRmsMs2": 0.084,
+   "shareOfWindowsAbove2xSmoothRms": 0.06,
+   "windows": 36
+  },
+  "smoothAsphalt": {
+   "contrastMaxOverMedianRms": 1.2,
+   "eventsAbove7SigmaPer100m": 0,
+   "maxCrest": 3.8,
+   "maxExcessKurtosis": 2.1,
+   "maxWindowRmsMs2": 0.106,
+   "medianCrest": 2.6,
+   "medianExcessKurtosis": -0.3,
+   "medianWindowRmsMs2": 0.086,
+   "shareOfWindowsAbove2xSmoothRms": 0,
+   "windows": 36
+  },
+  "speedHumpHeave": {
+   "contrastMaxOverMedianRms": 1.3,
+   "eventsAbove7SigmaPer100m": 0,
+   "maxCrest": 3.7,
+   "maxExcessKurtosis": 2,
+   "maxWindowRmsMs2": 0.114,
+   "medianCrest": 2.7,
+   "medianExcessKurtosis": 0,
+   "medianWindowRmsMs2": 0.087,
+   "shareOfWindowsAbove2xSmoothRms": 0,
+   "windows": 36
+  },
+  "sustainedRough": {
+   "contrastMaxOverMedianRms": 1.1,
+   "eventsAbove7SigmaPer100m": 30.6,
+   "maxCrest": 3.3,
+   "maxExcessKurtosis": 1.3,
+   "maxWindowRmsMs2": 0.398,
+   "medianCrest": 2.6,
+   "medianExcessKurtosis": -0.1,
+   "medianWindowRmsMs2": 0.354,
+   "shareOfWindowsAbove2xSmoothRms": 1,
+   "windows": 36
+  },
+  "tramCrossingDoubleTrackPerpendicular": {
+   "contrastMaxOverMedianRms": 6.3,
+   "eventsAbove7SigmaPer100m": 1.8,
+   "maxCrest": 7.1,
+   "maxExcessKurtosis": 35.7,
+   "maxWindowRmsMs2": 0.561,
+   "medianCrest": 2.6,
+   "medianExcessKurtosis": -0.1,
+   "medianWindowRmsMs2": 0.089,
+   "shareOfWindowsAbove2xSmoothRms": 0.11,
+   "windows": 36
+  }
+ }
+}

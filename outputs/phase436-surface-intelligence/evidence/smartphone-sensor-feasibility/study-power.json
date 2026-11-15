@@ -1,0 +1,507 @@
+{
+ "asOf": "2026-11-14",
+ "blandAltman": [
+  {
+   "limitsOfAgreementLog": 0.196,
+   "pairs": 30,
+   "sdOfLogDifference": 0.1,
+   "seOfLimitLog": 0.032
+  },
+  {
+   "limitsOfAgreementLog": 0.196,
+   "pairs": 60,
+   "sdOfLogDifference": 0.1,
+   "seOfLimitLog": 0.022
+  },
+  {
+   "limitsOfAgreementLog": 0.196,
+   "pairs": 120,
+   "sdOfLogDifference": 0.1,
+   "seOfLimitLog": 0.016
+  },
+  {
+   "limitsOfAgreementLog": 0.294,
+   "pairs": 30,
+   "sdOfLogDifference": 0.15,
+   "seOfLimitLog": 0.047
+  },
+  {
+   "limitsOfAgreementLog": 0.294,
+   "pairs": 60,
+   "sdOfLogDifference": 0.15,
+   "seOfLimitLog": 0.033
+  },
+  {
+   "limitsOfAgreementLog": 0.294,
+   "pairs": 120,
+   "sdOfLogDifference": 0.15,
+   "seOfLimitLog": 0.023
+  },
+  {
+   "limitsOfAgreementLog": 0.49,
+   "pairs": 30,
+   "sdOfLogDifference": 0.25,
+   "seOfLimitLog": 0.079
+  },
+  {
+   "limitsOfAgreementLog": 0.49,
+   "pairs": 60,
+   "sdOfLogDifference": 0.25,
+   "seOfLimitLog": 0.055
+  },
+  {
+   "limitsOfAgreementLog": 0.49,
+   "pairs": 120,
+   "sdOfLogDifference": 0.25,
+   "seOfLimitLog": 0.039
+  }
+ ],
+ "iccPrecision": [
+  {
+   "ci95": [
+    0.78,
+    0.96
+   ],
+   "estimateMedian": 0.913,
+   "label": "all sites pooled (class effect inflates ICC)",
+   "passesK": 8,
+   "sitesN": 11,
+   "trueIcc": 0.917
+  },
+  {
+   "ci95": [
+    0.08,
+    0.91
+   ],
+   "estimateMedian": 0.682,
+   "label": "within one class",
+   "passesK": 8,
+   "sitesN": 4,
+   "trueIcc": 0.735
+  },
+  {
+   "ci95": [
+    0.37,
+    0.88
+   ],
+   "estimateMedian": 0.717,
+   "label": "within one class",
+   "passesK": 8,
+   "sitesN": 8,
+   "trueIcc": 0.735
+  },
+  {
+   "ci95": [
+    0.12,
+    0.73
+   ],
+   "estimateMedian": 0.466,
+   "label": "within one class",
+   "passesK": 8,
+   "sitesN": 8,
+   "trueIcc": 0.5
+  }
+ ],
+ "kind": "SIMULATION + closed-form planning numbers with ASSUMED variance components; not a prediction",
+ "minSitesForSmallestRankTest": [
+  {
+   "sitesPerClass": 3,
+   "smallestTwoSidedExactMannWhitneyP": 0.1
+  },
+  {
+   "sitesPerClass": 4,
+   "smallestTwoSidedExactMannWhitneyP": 0.0286
+  },
+  {
+   "sitesPerClass": 5,
+   "smallestTwoSidedExactMannWhitneyP": 0.0079
+  }
+ ],
+ "passesVsSites": [
+  {
+   "passesPerSite": 1,
+   "power": 0.44,
+   "siteMeanSd": 0.2915,
+   "sitesPerClass": 8
+  },
+  {
+   "passesPerSite": 3,
+   "power": 0.57,
+   "siteMeanSd": 0.2646,
+   "sitesPerClass": 8
+  },
+  {
+   "passesPerSite": 8,
+   "power": 0.63,
+   "siteMeanSd": 0.2556,
+   "sitesPerClass": 8
+  },
+  {
+   "passesPerSite": 16,
+   "power": 0.65,
+   "siteMeanSd": 0.2528,
+   "sitesPerClass": 8
+  },
+  {
+   "passesPerSite": 32,
+   "power": 0.65,
+   "siteMeanSd": 0.2514,
+   "sitesPerClass": 8
+  },
+  {
+   "passesPerSite": 8,
+   "power": 0.18,
+   "siteMeanSd": 0.2556,
+   "sitesPerClass": 4
+  },
+  {
+   "passesPerSite": 8,
+   "power": 0.86,
+   "siteMeanSd": 0.2556,
+   "sitesPerClass": 12
+  },
+  {
+   "passesPerSite": 8,
+   "power": 0.96,
+   "siteMeanSd": 0.2556,
+   "sitesPerClass": 16
+  }
+ ],
+ "repeatability": {
+  "note": "relative SE of an SD estimate ~ 1/sqrt(2 df), df = sites*(passes-1)",
+  "passesForSiteMeanSe": [
+   {
+    "passesForSe0p05": 4,
+    "passesForSe0p10": 1,
+    "rho": 0.1
+   },
+   {
+    "passesForSe0p05": 9,
+    "passesForSe0p10": 3,
+    "rho": 0.15
+   },
+   {
+    "passesForSe0p05": 25,
+    "passesForSe0p10": 7,
+    "rho": 0.25
+   }
+  ],
+  "rows": [
+   {
+    "df": 77,
+    "passes": 8,
+    "relSePct": 8.1,
+    "sites": 11
+   },
+   {
+    "df": 55,
+    "passes": 6,
+    "relSePct": 9.5,
+    "sites": 11
+   },
+   {
+    "df": 42,
+    "passes": 8,
+    "relSePct": 10.9,
+    "sites": 6
+   },
+   {
+    "df": 28,
+    "passes": 8,
+    "relSePct": 13.4,
+    "sites": 4
+   }
+  ]
+ },
+ "seed": 436061,
+ "shockRejection": [
+  {
+   "observedRate": 0.9,
+   "shocks": 30,
+   "wilsonLower95": 0.744
+  },
+  {
+   "observedRate": 0.95,
+   "shocks": 30,
+   "wilsonLower95": 0.833
+  },
+  {
+   "observedRate": 0.98,
+   "shocks": 30,
+   "wilsonLower95": 0.833
+  },
+  {
+   "observedRate": 0.9,
+   "shocks": 60,
+   "wilsonLower95": 0.799
+  },
+  {
+   "observedRate": 0.95,
+   "shocks": 60,
+   "wilsonLower95": 0.863
+  },
+  {
+   "observedRate": 0.98,
+   "shocks": 60,
+   "wilsonLower95": 0.911
+  },
+  {
+   "observedRate": 0.9,
+   "shocks": 120,
+   "wilsonLower95": 0.833
+  },
+  {
+   "observedRate": 0.95,
+   "shocks": 120,
+   "wilsonLower95": 0.895
+  },
+  {
+   "observedRate": 0.98,
+   "shocks": 120,
+   "wilsonLower95": 0.941
+  }
+ ],
+ "siteLevelPower": {
+  "criterion": "AUC_site point >= 0.85 and 95% lower bound >= 0.75 (parametric d, t critical value)",
+  "passesPerSite": 8,
+  "rows": [
+   {
+    "dTrueSiteMeans": 2,
+    "deltaLog": 0.405,
+    "effect": "x1.5",
+    "powerBySitesPerClass": {
+     "3": 0.02,
+     "4": 0.09,
+     "6": 0.21,
+     "8": 0.34,
+     "10": 0.43,
+     "12": 0.52,
+     "16": 0.68
+    },
+    "rho": 0.1,
+    "scenario": "optimistic",
+    "tau": 0.2,
+    "trueAucPassLevel": 0.9,
+    "trueAucSiteMeans": 0.921
+   },
+   {
+    "dTrueSiteMeans": 3.16,
+    "deltaLog": 0.642,
+    "effect": "x1.9",
+    "powerBySitesPerClass": {
+     "3": 0.09,
+     "4": 0.33,
+     "6": 0.72,
+     "8": 0.9,
+     "10": 0.97,
+     "12": 0.99,
+     "16": 1
+    },
+    "rho": 0.1,
+    "scenario": "optimistic",
+    "tau": 0.2,
+    "trueAucPassLevel": 0.979,
+    "trueAucSiteMeans": 0.987
+   },
+   {
+    "dTrueSiteMeans": 4.51,
+    "deltaLog": 0.916,
+    "effect": "x2.5",
+    "powerBySitesPerClass": {
+     "3": 0.22,
+     "4": 0.73,
+     "6": 0.98,
+     "8": 1,
+     "10": 1,
+     "12": 1,
+     "16": 1
+    },
+    "rho": 0.1,
+    "scenario": "optimistic",
+    "tau": 0.2,
+    "trueAucPassLevel": 0.998,
+    "trueAucSiteMeans": 0.999
+   },
+   {
+    "dTrueSiteMeans": 1.59,
+    "deltaLog": 0.405,
+    "effect": "x1.5",
+    "powerBySitesPerClass": {
+     "3": 0.01,
+     "4": 0.04,
+     "6": 0.1,
+     "8": 0.14,
+     "10": 0.19,
+     "12": 0.21,
+     "16": 0.31
+    },
+    "rho": 0.15,
+    "scenario": "moderate",
+    "tau": 0.25,
+    "trueAucPassLevel": 0.837,
+    "trueAucSiteMeans": 0.869
+   },
+   {
+    "dTrueSiteMeans": 2.51,
+    "deltaLog": 0.642,
+    "effect": "x1.9",
+    "powerBySitesPerClass": {
+     "3": 0.04,
+     "4": 0.17,
+     "6": 0.44,
+     "8": 0.63,
+     "10": 0.76,
+     "12": 0.86,
+     "16": 0.96
+    },
+    "rho": 0.15,
+    "scenario": "moderate",
+    "tau": 0.25,
+    "trueAucPassLevel": 0.94,
+    "trueAucSiteMeans": 0.962
+   },
+   {
+    "dTrueSiteMeans": 3.59,
+    "deltaLog": 0.916,
+    "effect": "x2.5",
+    "powerBySitesPerClass": {
+     "3": 0.11,
+     "4": 0.45,
+     "6": 0.86,
+     "8": 0.97,
+     "10": 0.99,
+     "12": 1,
+     "16": 1
+    },
+    "rho": 0.15,
+    "scenario": "moderate",
+    "tau": 0.25,
+    "trueAucPassLevel": 0.987,
+    "trueAucSiteMeans": 0.994
+   },
+   {
+    "dTrueSiteMeans": 1.12,
+    "deltaLog": 0.405,
+    "effect": "x1.5",
+    "powerBySitesPerClass": {
+     "3": 0.01,
+     "4": 0.01,
+     "6": 0.03,
+     "8": 0.04,
+     "10": 0.05,
+     "12": 0.05,
+     "16": 0.06
+    },
+    "rho": 0.25,
+    "scenario": "pessimistic",
+    "tau": 0.35,
+    "trueAucPassLevel": 0.747,
+    "trueAucSiteMeans": 0.786
+   },
+   {
+    "dTrueSiteMeans": 1.78,
+    "deltaLog": 0.642,
+    "effect": "x1.9",
+    "powerBySitesPerClass": {
+     "3": 0.01,
+     "4": 0.06,
+     "6": 0.14,
+     "8": 0.22,
+     "10": 0.28,
+     "12": 0.36,
+     "16": 0.49
+    },
+    "rho": 0.25,
+    "scenario": "pessimistic",
+    "tau": 0.35,
+    "trueAucPassLevel": 0.854,
+    "trueAucSiteMeans": 0.896
+   },
+   {
+    "dTrueSiteMeans": 2.54,
+    "deltaLog": 0.916,
+    "effect": "x2.5",
+    "powerBySitesPerClass": {
+     "3": 0.05,
+     "4": 0.17,
+     "6": 0.44,
+     "8": 0.65,
+     "10": 0.79,
+     "12": 0.87,
+     "16": 0.96
+    },
+    "rho": 0.25,
+    "scenario": "pessimistic",
+    "tau": 0.35,
+    "trueAucPassLevel": 0.934,
+    "trueAucSiteMeans": 0.964
+   }
+  ],
+  "sims": 4000
+ },
+ "speedResidualPasses": [
+  {
+   "approxPct": 11,
+   "passesPerSpeedIndependent": 16,
+   "passesPerSpeedWhen3SitesPooled": 6,
+   "residualLog": 0.1,
+   "rho": 0.1
+  },
+  {
+   "approxPct": 20,
+   "passesPerSpeedIndependent": 5,
+   "passesPerSpeedWhen3SitesPooled": 2,
+   "residualLog": 0.18,
+   "rho": 0.1
+  },
+  {
+   "approxPct": 35,
+   "passesPerSpeedIndependent": 2,
+   "passesPerSpeedWhen3SitesPooled": 1,
+   "residualLog": 0.3,
+   "rho": 0.1
+  },
+  {
+   "approxPct": 11,
+   "passesPerSpeedIndependent": 36,
+   "passesPerSpeedWhen3SitesPooled": 12,
+   "residualLog": 0.1,
+   "rho": 0.15
+  },
+  {
+   "approxPct": 20,
+   "passesPerSpeedIndependent": 11,
+   "passesPerSpeedWhen3SitesPooled": 4,
+   "residualLog": 0.18,
+   "rho": 0.15
+  },
+  {
+   "approxPct": 35,
+   "passesPerSpeedIndependent": 4,
+   "passesPerSpeedWhen3SitesPooled": 2,
+   "residualLog": 0.3,
+   "rho": 0.15
+  },
+  {
+   "approxPct": 11,
+   "passesPerSpeedIndependent": 99,
+   "passesPerSpeedWhen3SitesPooled": 33,
+   "residualLog": 0.1,
+   "rho": 0.25
+  },
+  {
+   "approxPct": 20,
+   "passesPerSpeedIndependent": 31,
+   "passesPerSpeedWhen3SitesPooled": 11,
+   "residualLog": 0.18,
+   "rho": 0.25
+  },
+  {
+   "approxPct": 35,
+   "passesPerSpeedIndependent": 11,
+   "passesPerSpeedWhen3SitesPooled": 4,
+   "residualLog": 0.3,
+   "rho": 0.25
+  }
+ ]
+}

@@ -1,0 +1,103 @@
+{
+ "query": {
+  "lat": "45.4641",
+  "lng": "9.1900",
+  "radius": "300"
+ },
+ "count": 4,
+ "years": {
+  "2016": 1,
+  "2017": 2,
+  "2018": 1
+ },
+ "resolutions": {
+  "2592x1936": 3,
+  "3072x1728": 1
+ },
+ "photos": [
+  {
+   "id": "2219387",
+   "shotDate": "2016-06-15 16:45:38.000",
+   "dateAdded": "2016-06-15 16:40:27",
+   "distance": 13.36,
+   "heading": 208.89,
+   "lat": 45.46516,
+   "lng": 9.18912,
+   "width": "2592",
+   "height": "1936",
+   "projection": "PLANE",
+   "gpsAccuracy": "10.0000",
+   "wayId": "171931724",
+   "sequenceId": "7461",
+   "blur": "BLURRED",
+   "thumb": "https://storage1.openstreetcam.org/files/photo/2016/6/15/th/7461_a9277_576184fa51845.jpg",
+   "proc": "https://storage1.openstreetcam.org/files/photo/2016/6/15/proc/7461_a9277_576184fa51845.jpg",
+   "lth": "https://storage1.openstreetcam.org/files/photo/2016/6/15/lth/7461_a9277_576184fa51845.jpg",
+   "deviceName": "",
+   "platform": ""
+  },
+  {
+   "id": "19521179",
+   "shotDate": "2017-02-22 16:03:19.000",
+   "dateAdded": "2017-03-06 15:26:51",
+   "distance": 0,
+   "heading": 0,
+   "lat": 45.46235,
+   "lng": 9.19,
+   "width": "2592",
+   "height": "1936",
+   "projection": "PLANE",
+   "gpsAccuracy": "10.0000",
+   "wayId": "43375972",
+   "sequenceId": "51043",
+   "blur": "BLURRED",
+   "thumb": "https://storage1.openstreetcam.org/files/photo/2017/3/6/th/51043_3b530_58bd7f90ecc65.jpg",
+   "proc": "https://storage1.openstreetcam.org/files/photo/2017/3/6/proc/51043_3b530_58bd7f90ecc65.jpg",
+   "lth": "https://storage1.openstreetcam.org/files/photo/2017/3/6/lth/51043_3b530_58bd7f90ecc65.jpg",
+   "deviceName": "iPhone6",
+   "platform": "iPhone6"
+  },
+  {
+   "id": "19544004",
+   "shotDate": "2017-02-22 15:10:06.000",
+   "dateAdded": "2017-03-06 16:18:48",
+   "distance": 11.39,
+   "heading": 0,
+   "lat": 45.46272,
+   "lng": 9.18999,
+   "width": "2592",
+   "height": "1936",
+   "projection": "PLANE",
+   "gpsAccuracy": "10.0000",
+   "wayId": "274987589",
+   "sequenceId": "51044",
+   "blur": "BLURRED",
+   "thumb": "https://storage1.openstreetcam.org/files/photo/2017/3/6/th/51044_d7ced_58bd8be43b160.jpg",
+   "proc": "https://storage1.openstreetcam.org/files/photo/2017/3/6/proc/51044_d7ced_58bd8be43b160.jpg",
+   "lth": "https://storage1.openstreetcam.org/files/photo/2017/3/6/lth/51044_d7ced_58bd8be43b160.jpg",
+   "deviceName": "iPhone6",
+   "platform": "iPhone6"
+  },
+  {
+   "id": "323545027",
+   "shotDate": "2018-10-12 08:12:17.000",
+   "dateAdded": "2018-10-29 14:10:00",
+   "distance": 4.25,
+   "heading": 173,
+   "lat": 45.46365,
+   "lng": 9.18841,
+   "width": "3072",
+   "height": "1728",
+   "projection": "PLANE",
+   "gpsAccuracy": "9.6000",
+   "wayId": "141634886",
+   "sequenceId": "1302669",
+   "blur": "BLURRED",
+   "thumb": "https://storage9.openstreetcam.org/files/photo/2018/10/29/th/1302669_78a16_575.jpg",
+   "proc": "https://storage9.openstreetcam.org/files/photo/2018/10/29/proc/1302669_78a16_575.jpg",
+   "lth": "https://storage9.openstreetcam.org/files/photo/2018/10/29/lth/1302669_78a16_575.jpg",
+   "deviceName": "waylens",
+   "platform": "Waylens"
+  }
+ ]
+}

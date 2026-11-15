@@ -1,0 +1,37 @@
+{
+ "query": {
+  "lat": "45.4495",
+  "lng": "9.2069",
+  "radius": "500"
+ },
+ "count": 1,
+ "years": {
+  "2016": 1
+ },
+ "resolutions": {
+  "2592x1936": 1
+ },
+ "photos": [
+  {
+   "id": "2203663",
+   "shotDate": "2016-06-15 15:57:18.000",
+   "dateAdded": "2016-06-15 15:23:24",
+   "distance": 27.96,
+   "heading": 76.01,
+   "lat": 45.4468,
+   "lng": 9.20715,
+   "width": "2592",
+   "height": "1936",
+   "projection": "PLANE",
+   "gpsAccuracy": "5.0000",
+   "wayId": "23799890",
+   "sequenceId": "7455",
+   "blur": "BLURRED",
+   "thumb": "https://storage1.openstreetcam.org/files/photo/2016/6/15/th/7455_c7de7_576172ec36f62.jpg",
+   "proc": "https://storage1.openstreetcam.org/files/photo/2016/6/15/proc/7455_c7de7_576172ec36f62.jpg",
+   "lth": "https://storage1.openstreetcam.org/files/photo/2016/6/15/lth/7455_c7de7_576172ec36f62.jpg",
+   "deviceName": "",
+   "platform": ""
+  }
+ ]
+}

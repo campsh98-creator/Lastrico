@@ -1,0 +1,529 @@
+{
+ "corsoLodi": {
+  "ways": 84,
+  "totalWayMetres": 5099.7,
+  "composition": {
+   "primary|oneway=yes|asphalt": 1865.9,
+   "primary|oneway=yes|sett": 683.1,
+   "residential|oneway=yes|asphalt": 573.9,
+   "residential|oneway=yes|concrete:plates": 499.5,
+   "secondary|oneway=no|sett": 456.1,
+   "cycleway|oneway=-|asphalt": 241.2,
+   "secondary|oneway=no|asphalt": 159.7,
+   "cycleway|oneway=-|paving_stones": 155,
+   "secondary|oneway=yes|asphalt": 88.7,
+   "cycleway|oneway=-|(none)": 84.6,
+   "residential|oneway=yes|sett": 73,
+   "secondary|oneway=yes|sett": 67.5,
+   "primary|oneway=yes|paving_stones": 57.5,
+   "residential|oneway=-|asphalt": 53.4,
+   "residential|oneway=yes|paving_stones": 22.5,
+   "residential|oneway=no|asphalt": 18.1
+  }
+ },
+ "viaLazzaroPapi": {
+  "ways": [
+   {
+    "wayId": 164940302,
+    "name": "Via Lazzaro Papi",
+    "highway": "residential",
+    "oneway": "yes",
+    "lanes": "",
+    "surface": "sett",
+    "smoothness": "",
+    "railTags": "",
+    "lengthM": 20.5,
+    "heading": 241,
+    "compiledCategory": "confirmed_rough",
+    "compiledEmbeddedRailsFlag": false,
+    "version": 10,
+    "timestamp": "2025-11-15T21:01:31Z",
+    "unchangedSinceArchive": true
+   },
+   {
+    "wayId": 164940303,
+    "name": "Via Lazzaro Papi",
+    "highway": "residential",
+    "oneway": "yes",
+    "lanes": "1",
+    "surface": "sett",
+    "smoothness": "bad",
+    "railTags": "",
+    "lengthM": 25,
+    "heading": 2,
+    "compiledCategory": "confirmed_rough",
+    "compiledEmbeddedRailsFlag": false,
+    "version": 12,
+    "timestamp": "2025-11-15T21:01:31Z",
+    "unchangedSinceArchive": true
+   },
+   {
+    "wayId": 164940304,
+    "name": "Via Lazzaro Papi",
+    "highway": "residential",
+    "oneway": "no",
+    "lanes": "2",
+    "surface": "asphalt",
+    "smoothness": "",
+    "railTags": "",
+    "lengthM": 97.1,
+    "heading": 29,
+    "compiledCategory": "confirmed_smooth",
+    "compiledEmbeddedRailsFlag": false,
+    "version": 8,
+    "timestamp": "2025-02-18T12:07:46Z",
+    "unchangedSinceArchive": true
+   },
+   {
+    "wayId": 264363555,
+    "name": "Via Lazzaro Papi",
+    "highway": "residential",
+    "oneway": "no",
+    "lanes": "2",
+    "surface": "asphalt",
+    "smoothness": "",
+    "railTags": "",
+    "lengthM": 131.3,
+    "heading": 31,
+    "compiledCategory": "confirmed_smooth",
+    "compiledEmbeddedRailsFlag": false,
+    "version": 5,
+    "timestamp": "2023-11-22T15:39:23Z",
+    "unchangedSinceArchive": true
+   }
+  ],
+  "totalWayMetres": 273.9,
+  "composition": {
+   "residential|oneway=no|asphalt": 228.4,
+   "residential|oneway=yes|sett": 45.5
+  }
+ },
+ "allUnchangedSinceArchive": true,
+ "waysCheckedAgainstCurrentOsm": 88,
+ "railTagsOnAnyCorsoLodiOrPapiWay": 0,
+ "embeddedRailsFlagOnCompiledCorsoLodiOrPapi": 0,
+ "compiledEmbeddedRailsFlagAnywhere": {
+  "segments": 401,
+  "metres": 6666.7
+ },
+ "archiveTramWays": {
+  "ways": 661,
+  "metres": 44106.9,
+  "inCitywideExtracts": 0
+ },
+ "nearestArchiveTramWayMetres": {
+  "Piazzale Lodi ring": 699.4,
+  "Corso Lodi": 42.9,
+  "Via Lazzaro Papi": 337.1
+ },
+ "currentOsmRailWaysWithin": {
+  "30 m of Corso Lodi / Via Lazzaro Papi, 80 m of Piazzale Lodi (Overpass 2026-11-14T13:49:43Z)": [
+   {
+    "id": 290763406,
+    "railway": "subway",
+    "name": "Linea M3",
+    "service": null,
+    "layer": "-2",
+    "tunnel": "yes"
+   },
+   {
+    "id": 290937654,
+    "railway": "subway",
+    "name": "Linea M3",
+    "service": null,
+    "layer": "-2",
+    "tunnel": "yes"
+   },
+   {
+    "id": 299473679,
+    "railway": "subway",
+    "name": null,
+    "service": "crossover",
+    "layer": "-2",
+    "tunnel": "yes"
+   },
+   {
+    "id": 299473681,
+    "railway": "subway",
+    "name": null,
+    "service": "crossover",
+    "layer": "-2",
+    "tunnel": "yes"
+   },
+   {
+    "id": 1073872173,
+    "railway": "subway",
+    "name": null,
+    "service": "siding",
+    "layer": "-2",
+    "tunnel": "yes"
+   },
+   {
+    "id": 1074227871,
+    "railway": "subway",
+    "name": null,
+    "service": "siding",
+    "layer": "-2",
+    "tunnel": "yes"
+   },
+   {
+    "id": 1074227872,
+    "railway": "subway",
+    "name": null,
+    "service": "siding",
+    "layer": "-2",
+    "tunnel": "yes"
+   },
+   {
+    "id": 1188280516,
+    "railway": "rail",
+    "name": "Cintura sud di Milano",
+    "service": null,
+    "layer": null,
+    "tunnel": null
+   },
+   {
+    "id": 1188280517,
+    "railway": "rail",
+    "name": "Cintura sud di Milano",
+    "service": null,
+    "layer": null,
+    "tunnel": null
+   },
+   {
+    "id": 1188280519,
+    "railway": "rail",
+    "name": "Cintura sud di Milano",
+    "service": null,
+    "layer": "-1",
+    "tunnel": "building_passage"
+   },
+   {
+    "id": 1188280520,
+    "railway": "rail",
+    "name": "Cintura sud di Milano",
+    "service": null,
+    "layer": "-1",
+    "tunnel": "building_passage"
+   },
+   {
+    "id": 1346896414,
+    "railway": "rail",
+    "name": "Cintura sud di Milano",
+    "service": null,
+    "layer": null,
+    "tunnel": null
+   },
+   {
+    "id": 1346896415,
+    "railway": "rail",
+    "name": "Cintura sud di Milano",
+    "service": null,
+    "layer": null,
+    "tunnel": null
+   }
+  ]
+ },
+ "corridorNorthwestOfPiazzaleLodi": {
+  "fromRingToFarEnd_NWbound": {
+   "totalM": 675.3,
+   "byS": {
+    "asphalt": 176.3,
+    "sett": 499
+   },
+   "settShare": 73.9,
+   "ways": [
+    {
+     "id": 161606045,
+     "hw": "secondary",
+     "oneway": "yes",
+     "surface": "asphalt",
+     "smoothness": "intermediate",
+     "m": 12.4
+    },
+    {
+     "id": 529556308,
+     "hw": "secondary",
+     "oneway": "yes",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 19.5
+    },
+    {
+     "id": 290523325,
+     "hw": "secondary",
+     "oneway": "yes",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 43
+    },
+    {
+     "id": 161606039,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": "bad",
+     "m": 64
+    },
+    {
+     "id": 290523322,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 52.6
+    },
+    {
+     "id": 305989915,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 86.1
+    },
+    {
+     "id": 294819087,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 33
+    },
+    {
+     "id": 232575191,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 25.2
+    },
+    {
+     "id": 232575190,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 48
+    },
+    {
+     "id": 900636756,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": "bad",
+     "m": 6.8
+    },
+    {
+     "id": 85890884,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 56
+    },
+    {
+     "id": 290523326,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 31.5
+    },
+    {
+     "id": 295087306,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": "intermediate",
+     "m": 52.9
+    },
+    {
+     "id": 290523318,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 60.5
+    },
+    {
+     "id": 181343587,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 45.5
+    },
+    {
+     "id": 375509949,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 22.4
+    },
+    {
+     "id": 375509948,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 6.5
+    },
+    {
+     "id": 1184663891,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 9.6
+    }
+   ]
+  },
+  "fromFarEndToRing_SEbound": {
+   "totalM": 681.7,
+   "byS": {
+    "asphalt": 201.2,
+    "sett": 480.5
+   },
+   "settShare": 70.5,
+   "ways": [
+    {
+     "id": 1184663891,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 9.6
+    },
+    {
+     "id": 375509948,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 6.5
+    },
+    {
+     "id": 375509949,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 22.4
+    },
+    {
+     "id": 181343587,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 45.5
+    },
+    {
+     "id": 290523318,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "asphalt",
+     "smoothness": null,
+     "m": 60.5
+    },
+    {
+     "id": 295087306,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": "intermediate",
+     "m": 52.9
+    },
+    {
+     "id": 290523326,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 31.5
+    },
+    {
+     "id": 85890884,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 56
+    },
+    {
+     "id": 900636756,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": "bad",
+     "m": 6.8
+    },
+    {
+     "id": 232575190,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 48
+    },
+    {
+     "id": 232575191,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 25.2
+    },
+    {
+     "id": 294819087,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 33
+    },
+    {
+     "id": 305989915,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 86.1
+    },
+    {
+     "id": 290523322,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 52.6
+    },
+    {
+     "id": 161606039,
+     "hw": "secondary",
+     "oneway": "no",
+     "surface": "sett",
+     "smoothness": "bad",
+     "m": 64
+    },
+    {
+     "id": 161606037,
+     "hw": "secondary",
+     "oneway": "yes",
+     "surface": "sett",
+     "smoothness": null,
+     "m": 24.5
+    },
+    {
+     "id": 290523327,
+     "hw": "secondary",
+     "oneway": "yes",
+     "surface": "asphalt",
+     "smoothness": "intermediate",
+     "m": 56.8
+    }
+   ]
+  }
+ }
+}

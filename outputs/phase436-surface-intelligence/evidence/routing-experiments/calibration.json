@@ -1,0 +1,207 @@
+{
+ "note": "p* = (known weighted stone saved) / (unknown metres added) for an eligible, distinct alternative that adds unknown metres. If the share of rough metres among the unknown ones is below p*, the alternative is better than the fastest route in expectation. Priors are PROXIES from tagged ways (base-rates.json).",
+ "priorExpectedWeightedRoughPerUnknownMetre": {
+  "outerPooledUntagged": 0.0584,
+  "corePooledUntagged": 0.2047,
+  "pooledUntagged": 0.0783,
+  "residentialGlobal": 0.0641,
+  "residentialCore": 0.2282,
+  "residentialOuter": 0.0279,
+  "serviceGlobal": 0.0905,
+  "unclassifiedGlobal": 0.0037
+ },
+ "unknownInventoryOnProductionPicks": {
+  "picks": 298,
+  "totalMeters": 1311850,
+  "unknownMeters": 99000,
+  "noMatchMeters": 71281,
+  "noMatchInsideTileArea": 0,
+  "untaggedMeters": 26298,
+  "otherMeters": 1411,
+  "casesWithUnknownGt100": 108,
+  "casesWithNoMatchGt1000": [
+   {
+    "case": "lorenteggio-lambrate-car",
+    "noMatchM": 10377,
+    "routeM": 21445
+   },
+   {
+    "case": "bovisa-rogoredo-car",
+    "noMatchM": 8433,
+    "routeM": 16252
+   },
+   {
+    "case": "bovisa-rogoredo-motorcycle",
+    "noMatchM": 8433,
+    "routeM": 16252
+   },
+   {
+    "case": "baggio-san-siro-motorcycle",
+    "noMatchM": 6951,
+    "routeM": 6951
+   },
+   {
+    "case": "baggio-san-siro-car",
+    "noMatchM": 5813,
+    "routeM": 5813
+   },
+   {
+    "case": "baggio-san-siro-bicycle",
+    "noMatchM": 5491,
+    "routeM": 5491
+   },
+   {
+    "case": "forlanini-rogoredo-car",
+    "noMatchM": 5400,
+    "routeM": 6670
+   },
+   {
+    "case": "forlanini-rogoredo-motorcycle",
+    "noMatchM": 5400,
+    "routeM": 6670
+   },
+   {
+    "case": "bicocca-niguarda-car",
+    "noMatchM": 2173,
+    "routeM": 2173
+   },
+   {
+    "case": "bicocca-niguarda-motorcycle",
+    "noMatchM": 2173,
+    "routeM": 2173
+   }
+  ],
+  "medianUnknownShareFastPct": null,
+  "medianUnknownSharePct": 0.6,
+  "p90UnknownSharePct": 11.2,
+  "byMode": {
+   "car": {
+    "medianUnknownSharePct": 0.6,
+    "noMatchMeters": 35128,
+    "untaggedMeters": 9604
+   },
+   "motorcycle": {
+    "medianUnknownSharePct": 0.5,
+    "noMatchMeters": 25689,
+    "untaggedMeters": 8764
+   },
+   "bicycle": {
+    "medianUnknownSharePct": 0.8,
+    "noMatchMeters": 10464,
+    "untaggedMeters": 7931
+   }
+  }
+ },
+ "breakEven": {
+  "offeredByProduction": {
+   "n": 52,
+   "pStarQuantiles": {
+    "p10": 1.295,
+    "median": 8.738,
+    "p90": 493
+   },
+   "belowOuterPrior": 0,
+   "belowCorePrior": 0,
+   "below5pct": 0,
+   "above50pct": 52,
+   "meanAddedUnknownM": 78,
+   "meanSavedKnownM": 436
+  },
+  "rejectedByProduction": {
+   "n": 100,
+   "pStarQuantiles": {
+    "p10": 0.05,
+    "median": 1.888,
+    "p90": 48.667
+   },
+   "belowOuterPrior": 12,
+   "belowCorePrior": 18,
+   "below5pct": 11,
+   "above50pct": 75,
+   "meanAddedUnknownM": 2222,
+   "meanSavedKnownM": 221
+  },
+  "lowestPStarAmongOffered": [
+   {
+    "case": "corso-magenta-cordusio-motorcycle",
+    "group": "HOLDOUT",
+    "mode": "motorcycle",
+    "saved": 104,
+    "dU": 146,
+    "pStar": 0.712,
+    "dt": 27
+   },
+   {
+    "case": "corso-magenta-cordusio-bicycle",
+    "group": "HOLDOUT",
+    "mode": "bicycle",
+    "saved": 104,
+    "dU": 146,
+    "pStar": 0.712,
+    "dt": 28
+   },
+   {
+    "case": "sant-agostino-colonne-motorcycle",
+    "group": "DEV",
+    "mode": "motorcycle",
+    "saved": 98,
+    "dU": 110,
+    "pStar": 0.891,
+    "dt": 100
+   },
+   {
+    "case": "colonne-porta-genova-motorcycle",
+    "group": "DEV",
+    "mode": "motorcycle",
+    "saved": 140,
+    "dU": 134,
+    "pStar": 1.045,
+    "dt": 134
+   },
+   {
+    "case": "abbiategrasso-colonne-bicycle",
+    "group": "DEV",
+    "mode": "bicycle",
+    "saved": 295,
+    "dU": 265,
+    "pStar": 1.113,
+    "dt": 142
+   },
+   {
+    "case": "duomo-isola-bicycle",
+    "group": "HOLDOUT",
+    "mode": "bicycle",
+    "saved": 202,
+    "dU": 156,
+    "pStar": 1.295,
+    "dt": 89
+   },
+   {
+    "case": "rogoredo-porta-romana-bicycle",
+    "group": "CORRIDOR",
+    "mode": "bicycle",
+    "saved": 902,
+    "dU": 638,
+    "pStar": 1.414,
+    "dt": 255
+   },
+   {
+    "case": "via-torino-santambrogio-bicycle",
+    "group": "DEV",
+    "mode": "bicycle",
+    "saved": 117,
+    "dU": 63,
+    "pStar": 1.857,
+    "dt": 96
+   }
+  ]
+ },
+ "productionUnknownBurden": {
+  "note": "route-optimization.ts:104-118: each ADDED unknown metre costs 1.0 stone-metre when it replaces avoided stone without smooth gain, 0.35 up to 1.25x the stone saved, 1.0 beyond: equivalent to an assumed rough share of 35-100 %, versus 2-4 % outer / 17 % core among tagged residential ways",
+  "impliedShare": [
+   0.35,
+   1
+  ]
+ },
+ "baseRatesSource": "outputs/phase436-surface-intelligence/evidence/routing-experiments/base-rates.json"
+}

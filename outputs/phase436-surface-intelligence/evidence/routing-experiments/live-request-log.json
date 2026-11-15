@@ -1,0 +1,417 @@
+{
+ "requests": [
+  {
+   "n": 1,
+   "utc": "2026-11-14T14:47:13.713Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "variants:returnh:G0",
+   "label": "replica-return-heading",
+   "status": 200,
+   "elapsedMs": 332,
+   "key": "0f09575832ee",
+   "locations": 3,
+   "linearCostFactors": 0,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 2,
+   "utc": "2026-11-14T14:47:14.923Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "variants:returnh:G0",
+   "label": "replica-return-heading",
+   "status": 200,
+   "elapsedMs": 78,
+   "key": "503948463c6b",
+   "locations": 3,
+   "linearCostFactors": 0,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 3,
+   "utc": "2026-11-14T14:47:16.136Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "variants:returnh:G0",
+   "label": "replica-return-heading",
+   "status": 200,
+   "elapsedMs": 79,
+   "key": "c070c18503f7",
+   "locations": 3,
+   "linearCostFactors": 0,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 4,
+   "utc": "2026-11-14T14:47:16.264Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "variants:returnh:G1",
+   "label": "replica-return-heading",
+   "status": 200,
+   "elapsedMs": 72,
+   "key": "05531090c62d",
+   "locations": 2,
+   "linearCostFactors": 1,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 5,
+   "utc": "2026-11-14T18:31:55.824Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "variants:outbound:G1",
+   "label": "replica-outbound",
+   "status": 200,
+   "elapsedMs": 431,
+   "key": "2a2fd86e5298",
+   "locations": 2,
+   "linearCostFactors": 3,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 6,
+   "utc": "2026-11-14T18:32:05.870Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "variants:outbound:G6",
+   "label": "replica-outbound",
+   "status": 200,
+   "elapsedMs": 302,
+   "key": "5ccc1e1a6d75",
+   "locations": 2,
+   "linearCostFactors": 6,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 7,
+   "utc": "2026-11-14T18:32:18.879Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "probes",
+   "label": "replica-return-heading P1 shortest",
+   "status": 200,
+   "elapsedMs": 325,
+   "key": "e7577f954db0",
+   "locations": 2,
+   "linearCostFactors": 0,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2,
+     "shortest": true
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 8,
+   "utc": "2026-11-14T18:32:20.087Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "probes",
+   "label": "replica-outbound P1 shortest",
+   "status": 200,
+   "elapsedMs": 83,
+   "key": "b44ec03f1e02",
+   "locations": 2,
+   "linearCostFactors": 0,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2,
+     "shortest": true
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 9,
+   "utc": "2026-11-14T18:32:45.299Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:corso-magenta-porta-venezia-motorcycle",
+   "label": "corso-magenta-porta-venezia-motorcycle",
+   "status": 200,
+   "elapsedMs": 299,
+   "key": "432e1aff0247",
+   "locations": 2,
+   "linearCostFactors": 4,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 10,
+   "utc": "2026-11-14T18:32:46.512Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:corso-magenta-porta-venezia-motorcycle",
+   "label": "corso-magenta-porta-venezia-motorcycle",
+   "status": 200,
+   "elapsedMs": 99,
+   "key": "a3cb203b48f2",
+   "locations": 2,
+   "linearCostFactors": 12,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 11,
+   "utc": "2026-11-14T18:32:46.705Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:repubblica-santambrogio-motorcycle",
+   "label": "repubblica-santambrogio-motorcycle",
+   "status": 200,
+   "elapsedMs": 110,
+   "key": "c7edc2872600",
+   "locations": 2,
+   "linearCostFactors": 4,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 12,
+   "utc": "2026-11-14T18:32:46.925Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:duomo-isola-motorcycle",
+   "label": "duomo-isola-motorcycle",
+   "status": 200,
+   "elapsedMs": 93,
+   "key": "95ce4a02cc64",
+   "locations": 2,
+   "linearCostFactors": 3,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 13,
+   "utc": "2026-11-14T18:32:48.132Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:duomo-isola-motorcycle",
+   "label": "duomo-isola-motorcycle",
+   "status": 200,
+   "elapsedMs": 108,
+   "key": "a5875248b83b",
+   "locations": 3,
+   "linearCostFactors": 0,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 14,
+   "utc": "2026-11-14T18:32:49.345Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:duomo-isola-motorcycle",
+   "label": "duomo-isola-motorcycle",
+   "status": 200,
+   "elapsedMs": 118,
+   "key": "8e6a4d050e04",
+   "locations": 3,
+   "linearCostFactors": 0,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 15,
+   "utc": "2026-11-14T18:32:50.550Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:duomo-isola-motorcycle",
+   "label": "duomo-isola-motorcycle",
+   "status": 200,
+   "elapsedMs": 104,
+   "key": "085bff634b9f",
+   "locations": 3,
+   "linearCostFactors": 0,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 16,
+   "utc": "2026-11-14T18:32:51.755Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:duomo-isola-motorcycle",
+   "label": "duomo-isola-motorcycle",
+   "status": 200,
+   "elapsedMs": 110,
+   "key": "e7835fee281c",
+   "locations": 2,
+   "linearCostFactors": 11,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 17,
+   "utc": "2026-11-14T18:32:52.120Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:san-siro-citta-studi-bicycle",
+   "label": "san-siro-citta-studi-bicycle",
+   "status": 200,
+   "elapsedMs": 131,
+   "key": "fcd06a87105d",
+   "locations": 2,
+   "linearCostFactors": 4,
+   "costingOptions": {
+    "bicycle": {
+     "bicycle_type": "hybrid",
+     "use_roads": 0.35,
+     "use_hills": 0.45
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 18,
+   "utc": "2026-11-14T18:32:52.414Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:de-angeli-san-babila-motorcycle",
+   "label": "de-angeli-san-babila-motorcycle",
+   "status": 200,
+   "elapsedMs": 95,
+   "key": "24212ff7f0a0",
+   "locations": 2,
+   "linearCostFactors": 4,
+   "costingOptions": {
+    "motorcycle": {
+     "use_highways": 0.35,
+     "use_tolls": 0.2,
+     "use_trails": 0
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 19,
+   "utc": "2026-11-14T18:32:52.571Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:cenacolo-missori-bicycle",
+   "label": "cenacolo-missori-bicycle",
+   "status": 200,
+   "elapsedMs": 73,
+   "key": "641637a23c59",
+   "locations": 2,
+   "linearCostFactors": 4,
+   "costingOptions": {
+    "bicycle": {
+     "bicycle_type": "hybrid",
+     "use_roads": 0.35,
+     "use_hills": 0.45
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 20,
+   "utc": "2026-11-14T18:32:53.776Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "earlystop:cenacolo-missori-bicycle",
+   "label": "cenacolo-missori-bicycle",
+   "status": 200,
+   "elapsedMs": 88,
+   "key": "487d38c1c1e6",
+   "locations": 2,
+   "linearCostFactors": 12,
+   "costingOptions": {
+    "bicycle": {
+     "bicycle_type": "hybrid",
+     "use_roads": 0.35,
+     "use_hills": 0.45
+    }
+   },
+   "alternates": 0
+  },
+  {
+   "n": 21,
+   "utc": "2026-11-14T18:42:32.424Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "variants:return:G4",
+   "label": "replica-return",
+   "status": 200,
+   "elapsedMs": 365,
+   "key": "75c1c6f5f26b",
+   "locations": 2,
+   "linearCostFactors": 2,
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "alternates": 0
+  }
+ ]
+}

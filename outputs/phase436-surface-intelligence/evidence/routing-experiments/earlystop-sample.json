@@ -1,0 +1,169 @@
+{
+ "rule": "sha256('earlystop:'+id) ascending among early-stop cases with >= 50 m weighted stone left",
+ "eligible": 27,
+ "variant": "G4 stop-when-clean",
+ "rows": [
+  {
+   "case": "corso-magenta-porta-venezia-motorcycle",
+   "mode": "motorcycle",
+   "eligibleOfPool": 27,
+   "productionPick": {
+    "seconds": 870,
+    "risk": 695,
+    "confirmed": 695,
+    "unknown": 68,
+    "uturns": 0
+   },
+   "variantPick": {
+    "seconds": 870,
+    "risk": 695,
+    "confirmed": 695,
+    "unknown": 68,
+    "uturns": 0,
+    "source": "base-2"
+   },
+   "variantFastSeconds": 781,
+   "productionFastSeconds": 781,
+   "requestsProduction": 1,
+   "requestsVariant": 3,
+   "requestsNew": 0,
+   "missing": 0,
+   "status": "alternative"
+  },
+  {
+   "case": "repubblica-santambrogio-motorcycle",
+   "mode": "motorcycle",
+   "eligibleOfPool": 27,
+   "productionPick": {
+    "seconds": 785,
+    "risk": 599,
+    "confirmed": 599,
+    "unknown": 2,
+    "uturns": 0
+   },
+   "variantPick": {
+    "seconds": 882,
+    "risk": 377,
+    "confirmed": 377,
+    "unknown": 0,
+    "uturns": 0,
+    "source": "surface-aware-valhalla"
+   },
+   "variantFastSeconds": 696,
+   "productionFastSeconds": 696,
+   "requestsProduction": 1,
+   "requestsVariant": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "status": "alternative"
+  },
+  {
+   "case": "duomo-isola-motorcycle",
+   "mode": "motorcycle",
+   "eligibleOfPool": 27,
+   "productionPick": {
+    "seconds": 893,
+    "risk": 1036,
+    "confirmed": 769,
+    "unknown": 0,
+    "uturns": 0
+   },
+   "variantPick": {
+    "seconds": 828,
+    "risk": 986,
+    "confirmed": 520,
+    "unknown": 0,
+    "uturns": 0,
+    "source": "surface-aware-valhalla"
+   },
+   "variantFastSeconds": 828,
+   "productionFastSeconds": 846,
+   "requestsProduction": 1,
+   "requestsVariant": 6,
+   "requestsNew": 0,
+   "missing": 0,
+   "status": "fastest-avoids-pave"
+  },
+  {
+   "case": "san-siro-citta-studi-bicycle",
+   "mode": "bicycle",
+   "eligibleOfPool": 27,
+   "productionPick": {
+    "seconds": 1949,
+    "risk": 332,
+    "confirmed": 164,
+    "unknown": 660,
+    "uturns": 0
+   },
+   "variantPick": {
+    "seconds": 1950,
+    "risk": 288,
+    "confirmed": 170,
+    "unknown": 459,
+    "uturns": 0,
+    "source": "surface-aware-valhalla"
+   },
+   "variantFastSeconds": 1884,
+   "productionFastSeconds": 1884,
+   "requestsProduction": 1,
+   "requestsVariant": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "status": "alternative"
+  },
+  {
+   "case": "de-angeli-san-babila-motorcycle",
+   "mode": "motorcycle",
+   "eligibleOfPool": 27,
+   "productionPick": {
+    "seconds": 1192,
+    "risk": 249,
+    "confirmed": 86,
+    "unknown": 0,
+    "uturns": 0
+   },
+   "variantPick": {
+    "seconds": 1192,
+    "risk": 249,
+    "confirmed": 86,
+    "unknown": 0,
+    "uturns": 0,
+    "source": "base-2"
+   },
+   "variantFastSeconds": 1118,
+   "productionFastSeconds": 1145,
+   "requestsProduction": 1,
+   "requestsVariant": 2,
+   "requestsNew": 0,
+   "missing": 0,
+   "status": "alternative"
+  },
+  {
+   "case": "cenacolo-missori-bicycle",
+   "mode": "bicycle",
+   "eligibleOfPool": 27,
+   "productionPick": {
+    "seconds": 568,
+    "risk": 772,
+    "confirmed": 463,
+    "unknown": 34,
+    "uturns": 0
+   },
+   "variantPick": {
+    "seconds": 568,
+    "risk": 772,
+    "confirmed": 463,
+    "unknown": 34,
+    "uturns": 0,
+    "source": "base-1"
+   },
+   "variantFastSeconds": 538,
+   "productionFastSeconds": 538,
+   "requestsProduction": 1,
+   "requestsVariant": 3,
+   "requestsNew": 0,
+   "missing": 0,
+   "status": "alternative"
+  }
+ ]
+}

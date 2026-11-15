@@ -1,0 +1,693 @@
+{
+ "generatedBy": "experiments/phase436-surface-intelligence/scripts/exp-waytags.mjs",
+ "source": "data/sources/milan-citywide-*.osm.json.gz (Overpass way[highway], retrieved 2026-11-04) plus the 11 pilot OSM-API extracts (Oct 2026); newest version of each way; car-usable classes, area/access=no/motor_vehicle=no excluded; metres by flat-earth metric",
+ "caveat": "PROXY. Shares are among ways that carry a surface tag; they describe mapped streets, not the untagged ones. Missingness is not shown to be random (UNVERIFIED); Phase 4.17 showed that predicting the surface of a single way from context fails (NO-GO).",
+ "byHighwayClass": {
+  "secondary": {
+   "metres": 97931,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0235,
+   "pStoneProbableAmongKnown": 0.0064,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 2304,
+   "stoneProbableMetres": 628
+  },
+  "residential": {
+   "metres": 670091,
+   "taggedCoveragePct": 86.8,
+   "pStoneConfirmedAmongKnown": 0.0482,
+   "pStoneProbableAmongKnown": 0.0244,
+   "untaggedMetres": 88073,
+   "stoneConfirmedMetres": 28049,
+   "stoneProbableMetres": 14221
+  },
+  "tertiary": {
+   "metres": 137166,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.064,
+   "pStoneProbableAmongKnown": 0.0099,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 8783,
+   "stoneProbableMetres": 1361
+  },
+  "primary": {
+   "metres": 76143,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0252,
+   "pStoneProbableAmongKnown": 0.0012,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 1922,
+   "stoneProbableMetres": 91
+  },
+  "unclassified": {
+   "metres": 44693,
+   "taggedCoveragePct": 65.8,
+   "pStoneConfirmedAmongKnown": 0.0004,
+   "pStoneProbableAmongKnown": 0.005,
+   "untaggedMetres": 15271,
+   "stoneConfirmedMetres": 13,
+   "stoneProbableMetres": 147
+  },
+  "service": {
+   "metres": 290125,
+   "taggedCoveragePct": 31.2,
+   "pStoneConfirmedAmongKnown": 0.043,
+   "pStoneProbableAmongKnown": 0.073,
+   "untaggedMetres": 197803,
+   "stoneConfirmedMetres": 3892,
+   "stoneProbableMetres": 6608
+  },
+  "motorway": {
+   "metres": 2904,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "trunk": {
+   "metres": 14821,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "living_street": {
+   "metres": 295,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  }
+ },
+ "byZoneAndClass": {
+  "core|secondary": {
+   "metres": 16640,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0497,
+   "pStoneProbableAmongKnown": 0.0006,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 827,
+   "stoneProbableMetres": 10
+  },
+  "core|residential": {
+   "metres": 111004,
+   "taggedCoveragePct": 94.5,
+   "pStoneConfirmedAmongKnown": 0.1763,
+   "pStoneProbableAmongKnown": 0.0799,
+   "untaggedMetres": 6121,
+   "stoneConfirmedMetres": 18491,
+   "stoneProbableMetres": 8380
+  },
+  "outer|residential": {
+   "metres": 559087,
+   "taggedCoveragePct": 85.3,
+   "pStoneConfirmedAmongKnown": 0.02,
+   "pStoneProbableAmongKnown": 0.0122,
+   "untaggedMetres": 81951,
+   "stoneConfirmedMetres": 9558,
+   "stoneProbableMetres": 5841
+  },
+  "core|tertiary": {
+   "metres": 24958,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.2069,
+   "pStoneProbableAmongKnown": 0.0397,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 5163,
+   "stoneProbableMetres": 992
+  },
+  "outer|primary": {
+   "metres": 76143,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0252,
+   "pStoneProbableAmongKnown": 0.0012,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 1922,
+   "stoneProbableMetres": 91
+  },
+  "outer|secondary": {
+   "metres": 81291,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0182,
+   "pStoneProbableAmongKnown": 0.0076,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 1477,
+   "stoneProbableMetres": 618
+  },
+  "outer|tertiary": {
+   "metres": 112208,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0323,
+   "pStoneProbableAmongKnown": 0.0033,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 3621,
+   "stoneProbableMetres": 369
+  },
+  "outer|unclassified": {
+   "metres": 44540,
+   "taggedCoveragePct": 66,
+   "pStoneConfirmedAmongKnown": 0.0004,
+   "pStoneProbableAmongKnown": 0.005,
+   "untaggedMetres": 15147,
+   "stoneConfirmedMetres": 13,
+   "stoneProbableMetres": 147
+  },
+  "outer|service": {
+   "metres": 267123,
+   "taggedCoveragePct": 29.8,
+   "pStoneConfirmedAmongKnown": 0.0317,
+   "pStoneProbableAmongKnown": 0.0686,
+   "untaggedMetres": 186089,
+   "stoneConfirmedMetres": 2520,
+   "stoneProbableMetres": 5460
+  },
+  "core|service": {
+   "metres": 23002,
+   "taggedCoveragePct": 47.3,
+   "pStoneConfirmedAmongKnown": 0.126,
+   "pStoneProbableAmongKnown": 0.1055,
+   "untaggedMetres": 11715,
+   "stoneConfirmedMetres": 1371,
+   "stoneProbableMetres": 1149
+  },
+  "outer|motorway": {
+   "metres": 2904,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "outer|trunk": {
+   "metres": 14821,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "core|unclassified": {
+   "metres": 152,
+   "taggedCoveragePct": 18.8,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 124,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "outer|living_street": {
+   "metres": 177,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "core|living_street": {
+   "metres": 118,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  }
+ },
+ "bySectorForMinorClasses": {
+  "c-s-central|residential": {
+   "metres": 79277,
+   "taggedCoveragePct": 73.4,
+   "pStoneConfirmedAmongKnown": 0.0215,
+   "pStoneProbableAmongKnown": 0.0014,
+   "untaggedMetres": 21056,
+   "stoneConfirmedMetres": 1253,
+   "stoneProbableMetres": 81
+  },
+  "c-s-central|tertiary": {
+   "metres": 14224,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.1432,
+   "pStoneProbableAmongKnown": 0.0241,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 2036,
+   "stoneProbableMetres": 343
+  },
+  "c-s-central|unclassified": {
+   "metres": 5816,
+   "taggedCoveragePct": 40.7,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 3446,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "c-s-central|service": {
+   "metres": 31485,
+   "taggedCoveragePct": 26.7,
+   "pStoneConfirmedAmongKnown": 0.0237,
+   "pStoneProbableAmongKnown": 0.0327,
+   "untaggedMetres": 22935,
+   "stoneConfirmedMetres": 199,
+   "stoneProbableMetres": 275
+  },
+  "c-s-west|tertiary": {
+   "metres": 16749,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.1191,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 1995,
+   "stoneProbableMetres": 0
+  },
+  "c-s-west|residential": {
+   "metres": 57183,
+   "taggedCoveragePct": 77.8,
+   "pStoneConfirmedAmongKnown": 0.0189,
+   "pStoneProbableAmongKnown": 0.01,
+   "untaggedMetres": 12723,
+   "stoneConfirmedMetres": 840,
+   "stoneProbableMetres": 445
+  },
+  "c-s-west|service": {
+   "metres": 54014,
+   "taggedCoveragePct": 25.9,
+   "pStoneConfirmedAmongKnown": 0.0218,
+   "pStoneProbableAmongKnown": 0.0631,
+   "untaggedMetres": 39952,
+   "stoneConfirmedMetres": 305,
+   "stoneProbableMetres": 884
+  },
+  "c-s-west|unclassified": {
+   "metres": 11418,
+   "taggedCoveragePct": 37,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 7189,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "c-s-east|residential": {
+   "metres": 48610,
+   "taggedCoveragePct": 84.3,
+   "pStoneConfirmedAmongKnown": 0.0104,
+   "pStoneProbableAmongKnown": 0.001,
+   "untaggedMetres": 7641,
+   "stoneConfirmedMetres": 427,
+   "stoneProbableMetres": 42
+  },
+  "c-s-east|tertiary": {
+   "metres": 14274,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "c-s-east|unclassified": {
+   "metres": 14309,
+   "taggedCoveragePct": 80.5,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0.0032,
+   "untaggedMetres": 2796,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 37
+  },
+  "c-s-east|service": {
+   "metres": 42082,
+   "taggedCoveragePct": 16.6,
+   "pStoneConfirmedAmongKnown": 0.0022,
+   "pStoneProbableAmongKnown": 0.0012,
+   "untaggedMetres": 34891,
+   "stoneConfirmedMetres": 16,
+   "stoneProbableMetres": 9
+  },
+  "c-west|residential": {
+   "metres": 112526,
+   "taggedCoveragePct": 92.5,
+   "pStoneConfirmedAmongKnown": 0.0355,
+   "pStoneProbableAmongKnown": 0.0147,
+   "untaggedMetres": 8423,
+   "stoneConfirmedMetres": 3696,
+   "stoneProbableMetres": 1531
+  },
+  "c-west|tertiary": {
+   "metres": 17609,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0468,
+   "pStoneProbableAmongKnown": 0.0171,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 824,
+   "stoneProbableMetres": 301
+  },
+  "c-west|unclassified": {
+   "metres": 23,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "c-west|service": {
+   "metres": 28860,
+   "taggedCoveragePct": 44.6,
+   "pStoneConfirmedAmongKnown": 0.0384,
+   "pStoneProbableAmongKnown": 0.0202,
+   "untaggedMetres": 15873,
+   "stoneConfirmedMetres": 495,
+   "stoneProbableMetres": 259
+  },
+  "c-east|tertiary": {
+   "metres": 27208,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0555,
+   "pStoneProbableAmongKnown": 0.0008,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 1510,
+   "stoneProbableMetres": 22
+  },
+  "c-east|residential": {
+   "metres": 97021,
+   "taggedCoveragePct": 92.4,
+   "pStoneConfirmedAmongKnown": 0.0467,
+   "pStoneProbableAmongKnown": 0.0077,
+   "untaggedMetres": 7413,
+   "stoneConfirmedMetres": 4187,
+   "stoneProbableMetres": 694
+  },
+  "c-east|service": {
+   "metres": 28270,
+   "taggedCoveragePct": 32.4,
+   "pStoneConfirmedAmongKnown": 0.0584,
+   "pStoneProbableAmongKnown": 0.0428,
+   "untaggedMetres": 18916,
+   "stoneConfirmedMetres": 535,
+   "stoneProbableMetres": 393
+  },
+  "c-east|unclassified": {
+   "metres": 3523,
+   "taggedCoveragePct": 73.5,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0.011,
+   "untaggedMetres": 934,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 29
+  },
+  "c-n-west|tertiary": {
+   "metres": 13900,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0.0222,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 309
+  },
+  "c-n-west|residential": {
+   "metres": 74381,
+   "taggedCoveragePct": 66.7,
+   "pStoneConfirmedAmongKnown": 0.0031,
+   "pStoneProbableAmongKnown": 0.0034,
+   "untaggedMetres": 24750,
+   "stoneConfirmedMetres": 155,
+   "stoneProbableMetres": 167
+  },
+  "c-n-west|service": {
+   "metres": 33472,
+   "taggedCoveragePct": 19.1,
+   "pStoneConfirmedAmongKnown": 0.0371,
+   "pStoneProbableAmongKnown": 0.1828,
+   "untaggedMetres": 26394,
+   "stoneConfirmedMetres": 238,
+   "stoneProbableMetres": 1171
+  },
+  "c-n-west|unclassified": {
+   "metres": 3649,
+   "taggedCoveragePct": 75.2,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0.0042,
+   "untaggedMetres": 905,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 12
+  },
+  "c-n-central|tertiary": {
+   "metres": 13575,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0358,
+   "pStoneProbableAmongKnown": 0.0192,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 486,
+   "stoneProbableMetres": 261
+  },
+  "c-n-central|residential": {
+   "metres": 91632,
+   "taggedCoveragePct": 97.1,
+   "pStoneConfirmedAmongKnown": 0.0547,
+   "pStoneProbableAmongKnown": 0.032,
+   "untaggedMetres": 2379,
+   "stoneConfirmedMetres": 4866,
+   "stoneProbableMetres": 2847
+  },
+  "c-n-central|unclassified": {
+   "metres": 2063,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "c-n-central|service": {
+   "metres": 45085,
+   "taggedCoveragePct": 47.7,
+   "pStoneConfirmedAmongKnown": 0.0485,
+   "pStoneProbableAmongKnown": 0.0845,
+   "untaggedMetres": 23346,
+   "stoneConfirmedMetres": 1043,
+   "stoneProbableMetres": 1818
+  },
+  "c-n-east|tertiary": {
+   "metres": 10639,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "c-n-east|residential": {
+   "metres": 60757,
+   "taggedCoveragePct": 98.4,
+   "pStoneConfirmedAmongKnown": 0.017,
+   "pStoneProbableAmongKnown": 0.0265,
+   "untaggedMetres": 985,
+   "stoneConfirmedMetres": 1014,
+   "stoneProbableMetres": 1582
+  },
+  "c-n-east|unclassified": {
+   "metres": 3887,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0034,
+   "pStoneProbableAmongKnown": 0.018,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 13,
+   "stoneProbableMetres": 70
+  },
+  "c-n-east|service": {
+   "metres": 18581,
+   "taggedCoveragePct": 39.3,
+   "pStoneConfirmedAmongKnown": 0.0659,
+   "pStoneProbableAmongKnown": 0.1862,
+   "untaggedMetres": 11287,
+   "stoneConfirmedMetres": 481,
+   "stoneProbableMetres": 1358
+  },
+  "p-sw|residential": {
+   "metres": 15850,
+   "taggedCoveragePct": 93.2,
+   "pStoneConfirmedAmongKnown": 0.2876,
+   "pStoneProbableAmongKnown": 0.2319,
+   "untaggedMetres": 1078,
+   "stoneConfirmedMetres": 4248,
+   "stoneProbableMetres": 3425
+  },
+  "p-sw|service": {
+   "metres": 1350,
+   "taggedCoveragePct": 61.3,
+   "pStoneConfirmedAmongKnown": 0.2648,
+   "pStoneProbableAmongKnown": 0.1498,
+   "untaggedMetres": 522,
+   "stoneConfirmedMetres": 219,
+   "stoneProbableMetres": 124
+  },
+  "p-sw|tertiary": {
+   "metres": 996,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0515,
+   "pStoneProbableAmongKnown": 0.0621,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 51,
+   "stoneProbableMetres": 62
+  },
+  "p-se|residential": {
+   "metres": 7626,
+   "taggedCoveragePct": 93.6,
+   "pStoneConfirmedAmongKnown": 0.2559,
+   "pStoneProbableAmongKnown": 0.0127,
+   "untaggedMetres": 489,
+   "stoneConfirmedMetres": 1826,
+   "stoneProbableMetres": 91
+  },
+  "p-se|tertiary": {
+   "metres": 1923,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.362,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 696,
+   "stoneProbableMetres": 0
+  },
+  "p-se|service": {
+   "metres": 3408,
+   "taggedCoveragePct": 37.5,
+   "pStoneConfirmedAmongKnown": 0.0113,
+   "pStoneProbableAmongKnown": 0.0119,
+   "untaggedMetres": 1939,
+   "stoneConfirmedMetres": 14,
+   "stoneProbableMetres": 15
+  },
+  "p-se|unclassified": {
+   "metres": 3,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 0
+  },
+  "p-nw|tertiary": {
+   "metres": 2773,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.2394,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 664,
+   "stoneProbableMetres": 0
+  },
+  "p-nw|residential": {
+   "metres": 9246,
+   "taggedCoveragePct": 94.6,
+   "pStoneConfirmedAmongKnown": 0.2855,
+   "pStoneProbableAmongKnown": 0.2861,
+   "untaggedMetres": 497,
+   "stoneConfirmedMetres": 2498,
+   "stoneProbableMetres": 2502
+  },
+  "p-nw|service": {
+   "metres": 1022,
+   "taggedCoveragePct": 56.9,
+   "pStoneConfirmedAmongKnown": 0.1911,
+   "pStoneProbableAmongKnown": 0.2791,
+   "untaggedMetres": 428,
+   "stoneConfirmedMetres": 111,
+   "stoneProbableMetres": 162
+  },
+  "p-ne|residential": {
+   "metres": 9114,
+   "taggedCoveragePct": 94.8,
+   "pStoneConfirmedAmongKnown": 0.2414,
+   "pStoneProbableAmongKnown": 0.0174,
+   "untaggedMetres": 473,
+   "stoneConfirmedMetres": 2086,
+   "stoneProbableMetres": 150
+  },
+  "p-ne|tertiary": {
+   "metres": 1266,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.1918,
+   "pStoneProbableAmongKnown": 0.021,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 243,
+   "stoneProbableMetres": 27
+  },
+  "p-ne|service": {
+   "metres": 1384,
+   "taggedCoveragePct": 46.3,
+   "pStoneConfirmedAmongKnown": 0.3557,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 743,
+   "stoneConfirmedMetres": 228,
+   "stoneProbableMetres": 0
+  },
+  "p-w-sw|residential": {
+   "metres": 4973,
+   "taggedCoveragePct": 97.1,
+   "pStoneConfirmedAmongKnown": 0.0967,
+   "pStoneProbableAmongKnown": 0.1168,
+   "untaggedMetres": 144,
+   "stoneConfirmedMetres": 467,
+   "stoneProbableMetres": 564
+  },
+  "p-w-sw|service": {
+   "metres": 817,
+   "taggedCoveragePct": 29.5,
+   "pStoneConfirmedAmongKnown": 0,
+   "pStoneProbableAmongKnown": 0.583,
+   "untaggedMetres": 576,
+   "stoneConfirmedMetres": 0,
+   "stoneProbableMetres": 140
+  },
+  "p-w-sw|tertiary": {
+   "metres": 773,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.3189,
+   "pStoneProbableAmongKnown": 0.0468,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 246,
+   "stoneProbableMetres": 36
+  },
+  "p-w-nw|residential": {
+   "metres": 1894,
+   "taggedCoveragePct": 98.9,
+   "pStoneConfirmedAmongKnown": 0.2602,
+   "pStoneProbableAmongKnown": 0.0533,
+   "untaggedMetres": 21,
+   "stoneConfirmedMetres": 487,
+   "stoneProbableMetres": 100
+  },
+  "p-w-nw|tertiary": {
+   "metres": 1257,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0256,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 32,
+   "stoneProbableMetres": 0
+  },
+  "p-w-nw|service": {
+   "metres": 295,
+   "taggedCoveragePct": 100,
+   "pStoneConfirmedAmongKnown": 0.0261,
+   "pStoneProbableAmongKnown": 0,
+   "untaggedMetres": 0,
+   "stoneConfirmedMetres": 8,
+   "stoneProbableMetres": 0
+  }
+ },
+ "tramWays": {
+  "metresInArchive": 44107,
+  "highwayWaysWithTramAdjacency": 969,
+  "waysWithShareGe50pct": 662
+ },
+ "wayTagsSha256": "1785ae311551247f820ec88a6e7bebb5e67c9f6c6728c0e6e305a444ac5046ec",
+ "ways": 60222
+}

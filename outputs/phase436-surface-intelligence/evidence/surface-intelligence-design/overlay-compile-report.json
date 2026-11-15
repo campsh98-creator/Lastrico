@@ -1,0 +1,63 @@
+{
+ "baseTiles": {
+  "baseTilesSha256": "7908593cb9abd7758c71b0b8d391ffa3a36a62b806841e06a32096cdef193146",
+  "bytes": 8828888,
+  "count": 117
+ },
+ "determinism": {
+  "P-A": {
+   "runsIdentical": true,
+   "sha256": "0a609104f7252a686a5ca6f89ae3567da3e4aaa4631d0f883f90c2175db0290b"
+  },
+  "P-B": {
+   "runsIdentical": true,
+   "sha256": "b634a9afafbceb9923893062454ee3d66ae8eef4b3fa8898dea9191618acfd01"
+  }
+ },
+ "timings": {
+  "loadArchiveMs": 13331,
+  "loadTilesMs": 3031
+ },
+ "variants": {
+  "P-A": {
+   "categoryOverrides": 0,
+   "compileMs": 279,
+   "directionOverrides": 4,
+   "entries": 100,
+   "knownBaseMismatch": [],
+   "knownBaseMismatchCount": 0,
+   "needsReview": 40,
+   "overlayBytes": 4672,
+   "overlayGzipBytes": 1627,
+   "railsContested": 7,
+   "railsMapped": 38,
+   "railsShared": 35,
+   "surfaceContested": 0,
+   "tilesWithOverlay": 5,
+   "tuplesTouched": 100,
+   "unknownByEvidence": 18,
+   "viewsResolved": 73,
+   "weakDissent": 33
+  },
+  "P-B": {
+   "categoryOverrides": 33,
+   "compileMs": 59,
+   "directionOverrides": 4,
+   "entries": 100,
+   "knownBaseMismatch": [],
+   "knownBaseMismatchCount": 0,
+   "needsReview": 40,
+   "overlayBytes": 4705,
+   "overlayGzipBytes": 1639,
+   "railsContested": 7,
+   "railsMapped": 38,
+   "railsShared": 35,
+   "surfaceContested": 33,
+   "tilesWithOverlay": 5,
+   "tuplesTouched": 100,
+   "unknownByEvidence": 18,
+   "viewsResolved": 73,
+   "weakDissent": 0
+  }
+ }
+}

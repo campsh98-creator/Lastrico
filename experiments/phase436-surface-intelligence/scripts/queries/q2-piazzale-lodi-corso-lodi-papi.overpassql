@@ -1,0 +1,18 @@
+[out:json][timeout:180];
+way["name"="Piazzale Lodi"]["highway"](45.40,9.05,45.55,9.32)->.pl;
+node(w.pl)->.pln;
+way(bn.pln)["highway"]->.touch;
+way["name"="Via Lazzaro Papi"]["highway"](45.40,9.05,45.55,9.32)->.lp;
+way["name"="Corso Lodi"]["highway"](45.40,9.05,45.55,9.32)->.cl;
+(.pl;.touch;.lp;.cl;)->.hw;
+way["railway"~"^(tram|rail|light_rail|subway|narrow_gauge)$"](around.pl:80)->.rails1;
+way["railway"~"^(tram|rail|light_rail|subway|narrow_gauge)$"](around.lp:30)->.rails2;
+way["railway"~"^(tram|rail|light_rail|subway|narrow_gauge)$"](around.cl:30)->.rails3;
+(.hw;.rails1;.rails2;.rails3;)->.all;
+.all out meta;
+node(w.all);
+out meta;
+rel(bw.all)["type"="restriction"]->.rest;
+.rest out meta;
+rel(bw.all)["type"="route"]["route"~"^(tram|trolleybus|bus)$"]->.routes;
+.routes out tags;

@@ -1,0 +1,353 @@
+{
+ "counts": {
+  "byKind": {
+   "derived": 53,
+   "inferred": 2,
+   "measured": 1,
+   "reported": 2,
+   "tagged": 36
+  },
+  "byTopic": {
+   "direction": 2,
+   "physical_roughness": 8,
+   "rail_crossing": 1,
+   "rails_presence": 32,
+   "surface_material": 51
+  },
+  "evidence": 94,
+  "focusWays": 33,
+  "sources": 9,
+  "ways": 36
+ },
+ "maxAbsLengthDiffM": 0,
+ "ringTopology": {
+  "287070935 -> 713165261 chained end-to-start": true,
+  "713165261 -> 287070936 chained end-to-start": true
+ },
+ "ways": [
+  {
+   "archiveLengthM": 56,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 3,
+   "tilesLengthM": 56,
+   "wayId": 85890884,
+   "wayVersion": 15
+  },
+  {
+   "archiveLengthM": 13.1,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 5,
+   "tilesLengthM": 13.1,
+   "wayId": 111767966,
+   "wayVersion": 17
+  },
+  {
+   "archiveLengthM": 31,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 12,
+   "tilesLengthM": 31,
+   "wayId": 111768010,
+   "wayVersion": 19
+  },
+  {
+   "archiveLengthM": 29.4,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 7,
+   "tilesLengthM": 29.4,
+   "wayId": 137158656,
+   "wayVersion": 8
+  },
+  {
+   "archiveLengthM": 64,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 3,
+   "tilesLengthM": 64,
+   "wayId": 161606039,
+   "wayVersion": 16
+  },
+  {
+   "archiveLengthM": 12.4,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 3,
+   "tilesLengthM": 12.4,
+   "wayId": 161606045,
+   "wayVersion": 12
+  },
+  {
+   "archiveLengthM": 25,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 2,
+   "tilesLengthM": 25,
+   "wayId": 164940303,
+   "wayVersion": 12
+  },
+  {
+   "archiveLengthM": 97.1,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 4,
+   "tilesLengthM": 97.1,
+   "wayId": 164940304,
+   "wayVersion": 8
+  },
+  {
+   "archiveLengthM": 45.5,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 2,
+   "tilesLengthM": 45.5,
+   "wayId": 181343587,
+   "wayVersion": 13
+  },
+  {
+   "archiveLengthM": 48,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 48,
+   "wayId": 232575190,
+   "wayVersion": 8
+  },
+  {
+   "archiveLengthM": 25.2,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 2,
+   "tilesLengthM": 25.2,
+   "wayId": 232575191,
+   "wayVersion": 9
+  },
+  {
+   "archiveLengthM": 58.2,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 2,
+   "tilesLengthM": 58.2,
+   "wayId": 264333608,
+   "wayVersion": 8
+  },
+  {
+   "archiveLengthM": 28.7,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 2,
+   "tilesLengthM": 28.7,
+   "wayId": 264363537,
+   "wayVersion": 6
+  },
+  {
+   "archiveLengthM": 13.7,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 13.7,
+   "wayId": 266141929,
+   "wayVersion": 6
+  },
+  {
+   "archiveLengthM": 84.1,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 5,
+   "tilesLengthM": 84.1,
+   "wayId": 273258717,
+   "wayVersion": 4
+  },
+  {
+   "archiveLengthM": 21.6,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 21.6,
+   "wayId": 273258718,
+   "wayVersion": 2
+  },
+  {
+   "archiveLengthM": 116.9,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 3,
+   "tilesLengthM": 116.9,
+   "wayId": 273258719,
+   "wayVersion": 3
+  },
+  {
+   "archiveLengthM": 121.1,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 7,
+   "tilesLengthM": 121.1,
+   "wayId": 273258720,
+   "wayVersion": 10
+  },
+  {
+   "archiveLengthM": 23.8,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 8,
+   "tilesLengthM": 23.8,
+   "wayId": 287070933,
+   "wayVersion": 15
+  },
+  {
+   "archiveLengthM": 16.3,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 6,
+   "tilesLengthM": 16.3,
+   "wayId": 287070935,
+   "wayVersion": 16
+  },
+  {
+   "archiveLengthM": 25,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 10,
+   "tilesLengthM": 25,
+   "wayId": 287070936,
+   "wayVersion": 17
+  },
+  {
+   "archiveLengthM": 60.5,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 3,
+   "tilesLengthM": 60.5,
+   "wayId": 290523318,
+   "wayVersion": 10
+  },
+  {
+   "archiveLengthM": 52.6,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 3,
+   "tilesLengthM": 52.6,
+   "wayId": 290523322,
+   "wayVersion": 10
+  },
+  {
+   "archiveLengthM": 43,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 43,
+   "wayId": 290523325,
+   "wayVersion": 9
+  },
+  {
+   "archiveLengthM": 31.5,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 31.5,
+   "wayId": 290523326,
+   "wayVersion": 6
+  },
+  {
+   "archiveLengthM": 33,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 2,
+   "tilesLengthM": 33,
+   "wayId": 294819087,
+   "wayVersion": 7
+  },
+  {
+   "archiveLengthM": 52.9,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 52.9,
+   "wayId": 295087306,
+   "wayVersion": 9
+  },
+  {
+   "archiveLengthM": 86.1,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 86.1,
+   "wayId": 305989915,
+   "wayVersion": 5
+  },
+  {
+   "archiveLengthM": 6.5,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 6.5,
+   "wayId": 375509948,
+   "wayVersion": 9
+  },
+  {
+   "archiveLengthM": 22.4,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 22.4,
+   "wayId": 375509949,
+   "wayVersion": 7
+  },
+  {
+   "archiveLengthM": 19.5,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 4,
+   "tilesLengthM": 19.5,
+   "wayId": 529556308,
+   "wayVersion": 8
+  },
+  {
+   "archiveLengthM": 8.2,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 2,
+   "tilesLengthM": 8.2,
+   "wayId": 713165251,
+   "wayVersion": 7
+  },
+  {
+   "archiveLengthM": 10.3,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 4,
+   "tilesLengthM": 10.3,
+   "wayId": 713165261,
+   "wayVersion": 6
+  },
+  {
+   "archiveLengthM": 6.8,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 6.8,
+   "wayId": 900636756,
+   "wayVersion": 5
+  },
+  {
+   "archiveLengthM": 9.6,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 1,
+   "tilesLengthM": 9.6,
+   "wayId": 1184663891,
+   "wayVersion": 6
+  },
+  {
+   "archiveLengthM": 7.5,
+   "diffM": 0,
+   "source": "osm.citywide.2026-11-04",
+   "tileSegments": 2,
+   "tilesLengthM": 7.5,
+   "wayId": 1236292178,
+   "wayVersion": 1
+  }
+ ]
+}

@@ -1,0 +1,216 @@
+{
+ "requests": [
+  {
+   "n": 1,
+   "utc": "2026-11-14T13:56:22.784Z",
+   "host": "overpass-api.de",
+   "stage": "overpass",
+   "label": "Overpass: Via Friuli ways + turn-restriction relations (no coordinates in the query)",
+   "cached": false,
+   "status": 0,
+   "elapsedMs": 25009,
+   "key": "132222bd868c",
+   "error": "client timeout after 25 s (no response)"
+  },
+  {
+   "n": 2,
+   "utc": "2026-11-14T13:56:55Z (approx., before request 3)",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "manual",
+   "label": "GET /status (no coordinates): provider version and tileset date",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": null,
+   "key": null,
+   "note": "version 3.9.1-8064c73; tileset_last_modified 1794628228 = 2026-11-14T03:50:28Z, i.e. AFTER the recorded drive (2026-11-13T18:26Z): live answers come from a newer graph than the plan"
+  },
+  {
+   "n": 3,
+   "utc": "2026-11-14T13:57:08.027Z",
+   "host": "overpass.private.coffee",
+   "stage": "overpass",
+   "label": "Overpass: Via Friuli ways + turn-restriction relations (no coordinates in the query)",
+   "cached": false,
+   "status": 0,
+   "elapsedMs": 25009,
+   "key": "66b98b7f25e0",
+   "error": "client timeout after 25 s (no response)"
+  },
+  {
+   "n": 4,
+   "utc": "2026-11-14T13:58:01.504Z",
+   "host": "api.openstreetmap.org",
+   "stage": "osmapi",
+   "label": "OSM API 0.6: relations of Via Friuli way 264363537 (turn restrictions into Via Friuli), by way id",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 270,
+   "key": "5b47b4c3b3f2"
+  },
+  {
+   "n": 5,
+   "utc": "2026-11-14T13:58:09.168Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "direct",
+   "label": "V2 turn probe: Via Lazzaro Papi north junction (heading SE) -> Via Friuli lower end [break,break]",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 229,
+   "key": "4771a9be4d8c"
+  },
+  {
+   "n": 6,
+   "utc": "2026-11-14T13:58:10.325Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "direct",
+   "label": "V1 base: Via Lazzaro Papi north junction (heading SE) -> Naviglio Pavese junction [production payload, alternates 2]",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 131,
+   "key": "6e246a1310d3"
+  },
+  {
+   "n": 7,
+   "utc": "2026-11-14T13:58:13.549Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "direct",
+   "label": "V3 shortcut: Via Friuli upper node -> Naviglio Pavese junction [production payload]",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 111,
+   "key": "535766c35111"
+  },
+  {
+   "n": 8,
+   "utc": "2026-11-14T13:58:17.517Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "direct",
+   "label": "V4 penalised: V1 + linear_cost_factors x15 on the Piazzale Lodi sett ring way (25 m)",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 92,
+   "key": "ff5b25bfba40"
+  },
+  {
+   "n": 9,
+   "utc": "2026-11-14T13:59:08.686Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "handler-return",
+   "label": "handler handler-return: SA0 -> E1",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 342,
+   "key": "d73ad81f2452"
+  },
+  {
+   "n": 10,
+   "utc": "2026-11-14T13:59:30.487Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "handler-outbound",
+   "label": "handler handler-outbound: E1 -> SA0",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 244,
+   "key": "89ae04b4615b"
+  },
+  {
+   "n": 11,
+   "utc": "2026-11-14T13:59:31.643Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "handler-outbound",
+   "label": "handler handler-outbound: E1 -> SA0",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 79,
+   "key": "23de0400781c"
+  },
+  {
+   "n": 12,
+   "utc": "2026-11-14T14:00:27.582Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "controls",
+   "label": "V5 control: V1 with alternates 0, no cost factors",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 236,
+   "key": "525a3db0bb1f"
+  },
+  {
+   "n": 13,
+   "utc": "2026-11-14T14:00:28.737Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "controls",
+   "label": "V6 sensitivity: linear_cost_factors x2 on the Piazzale Lodi sett ring way",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 87,
+   "key": "b924e4f82cc1"
+  },
+  {
+   "n": 14,
+   "utc": "2026-11-14T14:00:29.898Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "controls",
+   "label": "V7 sensitivity: linear_cost_factors x4 on the Piazzale Lodi sett ring way",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 81,
+   "key": "10018a7daffa"
+  },
+  {
+   "n": 15,
+   "utc": "2026-11-14T13:59:30.487Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "outbound-probe",
+   "label": "outbound-probe: replay of handler-outbound (cached)",
+   "cached": true,
+   "status": 200,
+   "elapsedMs": 244,
+   "key": "89ae04b4615b"
+  },
+  {
+   "n": 16,
+   "utc": "2026-11-14T13:59:31.643Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "outbound-probe",
+   "label": "outbound-probe: replay of handler-outbound (cached)",
+   "cached": true,
+   "status": 200,
+   "elapsedMs": 79,
+   "key": "23de0400781c"
+  },
+  {
+   "n": 17,
+   "utc": "2026-11-14T14:02:20.190Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "outbound-probe",
+   "label": "V8 outbound probe: E1 -> Via Lazzaro Papi north junction, x15 on 5 stone slices of fast+safe",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 247,
+   "key": "f7881d213e6d"
+  },
+  {
+   "n": 18,
+   "utc": "2026-11-14T14:02:20.190Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "outbound-probe",
+   "label": "cache read of V8",
+   "cached": true,
+   "status": 200,
+   "elapsedMs": 247,
+   "key": "f7881d213e6d"
+  },
+  {
+   "n": 19,
+   "utc": "2026-11-14T14:05:11.245Z",
+   "host": "valhalla1.openstreetmap.de",
+   "stage": "ring-probe",
+   "label": "V9 ring probe: downstream -> upstream point on ring way 713165261 (against the ring flow)",
+   "cached": false,
+   "status": 200,
+   "elapsedMs": 214,
+   "key": "e141b733e570"
+  }
+ ]
+}

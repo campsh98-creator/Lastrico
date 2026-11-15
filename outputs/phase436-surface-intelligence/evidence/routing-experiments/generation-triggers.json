@@ -1,0 +1,83 @@
+{
+ "cases": 297,
+ "flagCounts": {
+  "canGenerate=true,baseAlreadyImproves=false,attempted=true,nothingToTarget=false": 188,
+  "canGenerate=false,baseAlreadyImproves=true,attempted=false,nothingToTarget=false": 36,
+  "canGenerate=false,baseAlreadyImproves=false,attempted=false,nothingToTarget=false": 67,
+  "canGenerate=true,baseAlreadyImproves=false,attempted=false,nothingToTarget=true": 6
+ },
+ "nothingToTargetAt25": 6,
+ "wouldTargetAtMinimum": {
+  "10": 6,
+  "12": 6,
+  "15": 6,
+  "20": 0,
+  "25": 0
+ },
+ "earlyStopSkipped": 36,
+ "earlyStopSkippedWithStoneLeft": 33,
+ "earlyStopSkippedWithStoneLeftOver50m": 32,
+ "searchRanButNotAccepted": 45,
+ "sliceLengthsJustBelow25": [
+  16.5,
+  17.55,
+  17.55,
+  19.74,
+  19.74,
+  19.74
+ ],
+ "byGroup": {
+  "DEV": {
+   "cases": 97,
+   "nothingToTarget": 4,
+   "wouldTarget20": 0,
+   "wouldTarget15": 4,
+   "earlyStopSkipped": 12
+  },
+  "CORRIDOR": {
+   "cases": 54,
+   "nothingToTarget": 0,
+   "wouldTarget20": 0,
+   "wouldTarget15": 0,
+   "earlyStopSkipped": 5
+  },
+  "HOLDOUT": {
+   "cases": 111,
+   "nothingToTarget": 2,
+   "wouldTarget20": 0,
+   "wouldTarget15": 2,
+   "earlyStopSkipped": 14
+  },
+  "FIELD": {
+   "cases": 35,
+   "nothingToTarget": 0,
+   "wouldTarget20": 0,
+   "wouldTarget15": 0,
+   "earlyStopSkipped": 5
+  }
+ },
+ "byMode": {
+  "car": {
+   "cases": 106,
+   "nothingToTarget": 1,
+   "wouldTarget20": 0,
+   "wouldTarget15": 1,
+   "earlyStopSkipped": 12
+  },
+  "motorcycle": {
+   "cases": 101,
+   "nothingToTarget": 3,
+   "wouldTarget20": 0,
+   "wouldTarget15": 3,
+   "earlyStopSkipped": 11
+  },
+  "bicycle": {
+   "cases": 90,
+   "nothingToTarget": 2,
+   "wouldTarget20": 0,
+   "wouldTarget15": 2,
+   "earlyStopSkipped": 13
+  }
+ },
+ "note": "Slices measured on the fastest base route exactly as route.ts:688 does (extractRoughSlices over the scorer's rough edge indices). The 25 m minimum skips the penalised search only when ALL stone slices are shorter than 25 m."
+}

@@ -1,0 +1,722 @@
+{
+ "sources": [
+  "milan-citywide-s-east.osm.json.gz",
+  "milan-citywide-s-central.osm.json.gz"
+ ],
+ "relationsInSources": 0,
+ "note": "Overpass way[highway] + skeleton nodes: no relation elements, so no turn restrictions exist in this data",
+ "friuliWays": [
+  {
+   "way": 264338764,
+   "nodes": 4,
+   "oneway": "yes",
+   "surface": "asphalt"
+  },
+  {
+   "way": 264363537,
+   "nodes": 3,
+   "oneway": "yes",
+   "surface": "asphalt"
+  },
+  {
+   "way": 264363540,
+   "nodes": 4,
+   "oneway": "yes",
+   "surface": "asphalt"
+  },
+  {
+   "way": 264363542,
+   "nodes": 5,
+   "oneway": "yes",
+   "surface": "asphalt"
+  }
+ ],
+ "junctions": [
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.212,
+    45.452
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lane_markings,lit,loc_ref,name,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264333600,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "concrete:plates",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264338764,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lanes,lit,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lane_markings,lit,loc_ref,name,oneway,sidewalk,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.212,
+    45.452
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": 264338764,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "passes through (oneway)",
+     "tagKeys": "highway,lanes,lit,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": null,
+     "highway": "footway",
+     "oneway": null,
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "crossing,footway,highway,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.211,
+    45.451
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": 264338764,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "passes through (oneway)",
+     "tagKeys": "highway,lanes,lit,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": null,
+     "highway": "footway",
+     "oneway": null,
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "check_date:surface,crossing,footway,highway,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.211,
+    45.451
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "no",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "highway,lanes,lit,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264338764,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lanes,lit,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264363540,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": null,
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "cycleway:both,highway,lanes,lit,loc_ref,name,name:etymology:wikidata,sidewalk:both,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.21,
+    45.45
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "concrete:plates",
+     "maxspeed": "30",
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "cycling_width,highway,lit,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,short_name,sidewalk,surface"
+    },
+    {
+     "way": 264363537,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264363540,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "concrete:plates",
+     "maxspeed": "30",
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "cycling_width,highway,lanes,lit,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,parking:both,parking:both:orientation,parking:condition:both,parking:condition:both:residents,short_name,sidewalk,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.21,
+    45.45
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": 264363537,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "passes through (oneway)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": null,
+     "highway": "footway",
+     "oneway": null,
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "crossing,footway,highway,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.209,
+    45.45
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "cycling_width,highway,lanes,loc_ref,name,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264363537,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264363542,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": "30",
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lanes,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.211,
+    45.451
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "no",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "highway,lanes,lit,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264338764,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lanes,lit,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264363540,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": null,
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "cycleway:both,highway,lanes,lit,loc_ref,name,name:etymology:wikidata,sidewalk:both,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.211,
+    45.451
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": 264363540,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "passes through (oneway)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": null,
+     "highway": "footway",
+     "oneway": null,
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "check_date:surface,crossing,footway,highway,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.21,
+    45.45
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": 264363540,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "passes through (oneway)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": null,
+     "highway": "footway",
+     "oneway": null,
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "crossing,footway,highway,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.21,
+    45.45
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "concrete:plates",
+     "maxspeed": "30",
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "cycling_width,highway,lit,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,short_name,sidewalk,surface"
+    },
+    {
+     "way": 264363537,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264363540,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "concrete:plates",
+     "maxspeed": "30",
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "cycling_width,highway,lanes,lit,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,parking:both,parking:both:orientation,parking:condition:both,parking:condition:both:residents,short_name,sidewalk,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.209,
+    45.45
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "cycling_width,highway,lanes,loc_ref,name,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264363537,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lanes,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": 264363542,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": "30",
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lanes,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.209,
+    45.449
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": 264363542,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": "30",
+     "direction": "passes through (oneway)",
+     "tagKeys": "highway,lanes,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": null,
+     "highway": "footway",
+     "oneway": null,
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "sett",
+     "maxspeed": null,
+     "direction": "two-way",
+     "tagKeys": "crossing,footway,highway,smoothness,surface,traffic_signal:arrow"
+    }
+   ]
+  },
+  {
+   "node": "<node id withheld>",
+   "at": [
+    9.209,
+    45.448
+   ],
+   "nodeTags": null,
+   "ways": [
+    {
+     "way": "<withheld>",
+     "name": "<other street>",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": null,
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "highway,lanes,lit,loc_ref,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": "Corso Lodi",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "concrete:plates",
+     "maxspeed": "30",
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "cycling_width,highway,lit,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,oneway:bicycle,sidewalk:left,sidewalk:right,surface"
+    },
+    {
+     "way": "<withheld>",
+     "name": "Corso Lodi",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": "30",
+     "direction": "leaves node (oneway starts here)",
+     "tagKeys": "cycling_width,highway,lane_markings,lit,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,oneway:bicycle,smoothness,surface"
+    },
+    {
+     "way": 264363542,
+     "name": "Via Friuli",
+     "highway": "residential",
+     "oneway": "yes",
+     "access": null,
+     "motor_vehicle": null,
+     "vehicle": null,
+     "surface": "asphalt",
+     "maxspeed": "30",
+     "direction": "arrives at node (oneway ends here)",
+     "tagKeys": "highway,lanes,loc_ref,maxspeed,name,name:etymology:wikidata,oneway,sidewalk,surface"
+    }
+   ]
+  }
+ ]
+}

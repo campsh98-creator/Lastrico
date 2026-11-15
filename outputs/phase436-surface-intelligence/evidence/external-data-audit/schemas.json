@@ -1,0 +1,357 @@
+{
+  "_meta": {
+    "phase": "4.36",
+    "agent": "3 (municipal and external datasets)",
+    "retrievedUtc": "2026-11-14",
+    "status": "v2 (final): DBT 2020 (shapefile + REST), ATM ds538, KartaView, Panoramax, Lombardy AGEA orthophotos, ds925, Mapillary (docs only), Google Street View / commercial (public documentation only)",
+    "labels": "VERIFIED = seen in a file/response named here; STRONGLY SUPPORTED; PLAUSIBLE; UNVERIFIED",
+    "rule": "a source is said to carry a pavement attribute only if the field exists in the inspected schema AND is populated with more than one value"
+  },
+  "sources": {
+    "dbt2020_shapefile": {
+      "name": "Comune di Milano - Database Topografico (DBT) 2020, SHP release",
+      "ckan": "https://dati.comune.milano.it/dataset/ds2889_database-topografico-dbt-2020-shp",
+      "download": "https://gisportal.comune.milano.it/download/area_download/SIT/DBT2020/DBT_2020.zip",
+      "bytes": 596533009,
+      "alternateDownload": "https://gisportal.comune.milano.it/download/area_download/SIT/DBT2020/DBT_2020_Gauss-Boaga.zip (435373991 B, EPSG:3003)",
+      "licence": "CKAN license_id cc-by (Creative Commons Attribution; version not stated in CKAN; the portal states CC BY 4.0)",
+      "access": "open, no registration",
+      "crs": "EPSG:7791 RDN2008 / UTM zone 32N (from .prj of every shapefile); identical to EPSG:32632 projection parameters; datum shift to WGS84 not applied by the server (verified 0.000 m vs Node UTM32 inverse)",
+      "survey": "aerial photogrammetric restitution March/April 2020, nominal scale 1:1000 (CKAN notes); shapefiles processed 2022-07..2022-12, packaged 2023-02/03 (zip listing)",
+      "specification": "national Catalogo dei Dati Territoriali - Specifiche di contenuto per i DB Geotopografici, version 2.0 (30 March 2016, document stamped released 2022-05-03), shipped inside the zip as Catalogo_Dati_Territoriali_Specifica_Completa.pdf (6,733,829 B)",
+      "layers": {
+        "EL_STR (road element) + EL_STR_EL_STR_TRA_SG": {
+          "geometry": "polyline (centreline segments)",
+          "records": {
+            "elements": 25586,
+            "segments": 55554
+          },
+          "fields": {
+            "NOME": "street name, 100% filled",
+            "EL_STR_TY": "type, 8 values",
+            "EL_STR_CL": "width class 01/02/03",
+            "EL_STR_CF": "functional class 01..06",
+            "EL_STR_FON": "fondo = surface type",
+            "EL_STR_SED": "01 a raso 55021 / 02 ponte 489 / 03 galleria 44",
+            "EL_STR_LIV": "01 sottopasso 585 / 02 not",
+            "EL_STR_STA": "01 in esercizio 55550 / 02 in costruzione 4",
+            "VIA_ID": "Comune street code"
+          },
+          "EL_STR_FON_values": {
+            "01": 55554
+          },
+          "hasMaterialField": false
+        },
+        "AC_VEI (vehicular circulation area, carriageway polygons)": {
+          "geometry": "polygon",
+          "records": {
+            "areas": 10868,
+            "subareas": 37892
+          },
+          "fields": {
+            "NOME": "street name",
+            "AC_VEI_ZON": "zone: 01 tronco carreggiata, 0102 rampa, 0103 controviale, 0105 vicolo, 0204 piazza, 0205/0206 incrocio|rotatoria (codes differ by class), 0301 parcheggio, 0307 area di pertinenza, 03 area traffico non strutturato, 04 fascia di sosta laterale, 05 piazzola, 06 golfo di fermata, 07 banchina",
+            "AC_VEI_FON": "fondo",
+            "AC_VEI_SED": "01 a raso / 02 ponte / 03 galleria",
+            "AC_VEI_LIV": "sottopasso flag"
+          },
+          "AC_VEI_FON_values": {
+            "01": 37892
+          },
+          "hasMaterialField": false
+        },
+        "EL_TRV (tram element) + EL_TRV_EL_TRV_TRA_SG": {
+          "geometry": "polyline (track axis, one per track)",
+          "records": {
+            "elements": 1522,
+            "segments": 3096
+          },
+          "fields": {
+            "EL_TRV_STA": "01 in esercizio 1520 / 03 in disuso 2 (element level)",
+            "EL_TRV_POS": "01 / 02 (segment level)",
+            "EL_TRV_SED": "01 / 02 / 03 (segment level)",
+            "EL_TRV_LIV": "01 sottopasso 32 / 02 not 3064"
+          },
+          "EL_TRV_POS_values": {
+            "01": 1317,
+            "02": 1779
+          },
+          "EL_TRV_SED_values": {
+            "01": 3072,
+            "02": 18,
+            "03": 6
+          },
+          "specDecoding": {
+            "EL_TRV_POS": "01 in sede propria (separated by ballast/kerbs/refuge); 02 su sede veicolare (shares the carriageway, rails flush with pavement)",
+            "EL_TRV_SED": "01 a raso; 02 su ponte/viadotto; 03 in galleria"
+          },
+          "labelDefectInComuneServices": "the REST service and CKAN description columns (_d) print el_trv_pos 02 as 'su ponte/viadotto' and el_trv_sed 01 as 'in sede propria': swapped versus the national specification; the codes agree with the specification: inside the landmark box pos=02 lies 100% inside AC_VEI carriageway polygons and pos=01 100% inside tram sede polygons (dbt-tram-pos-crosstab.json)",
+          "hasMaterialField": false,
+          "tramInCarriagewayFlag": "EL_TRV_POS = 02 (VERIFIED against geometry in the landmark box)"
+        },
+        "SD_FER (rail/tram right-of-way polygon)": {
+          "geometry": "polygon",
+          "records": {
+            "areas": 447,
+            "subareas": 915
+          },
+          "SD_FER_TY": {
+            "01 ferrovia": 51,
+            "02 tranvia": 384,
+            "03 metropolitana": 12
+          }
+        },
+        "AR_STR (road area polygon)": {
+          "geometry": "polygon",
+          "records": 5456,
+          "fields": [
+            "NOME",
+            "AR_STR_SED",
+            "AR_STR_LIV",
+            "AR_STR_STA"
+          ]
+        },
+        "AC_CIC / EL_CIC (cycle areas / cycle elements)": {
+          "AC_CIC_FON_values": {
+            "01": 2798
+          },
+          "EL_CIC_FON_values": {
+            "01": 2371
+          },
+          "EL_CIC_POS": {
+            "01 isolata": 620,
+            "02 su sede stradale": 1751
+          }
+        },
+        "AC_PED (pedestrian areas, REST layer 38)": {
+          "ac_ped_fon_values": {
+            "01": 71151
+          }
+        },
+        "ES_AMM (administrative street extent)": {
+          "records": 4359,
+          "ES_AMM_CF": "functional class",
+          "ES_AMM_CU": "street code",
+          "ES_AMM_EXT": "0% filled"
+        },
+        "GZ_STR (junctions)": {
+          "records": 17576,
+          "GZ_STR_TY": {
+            "10": 80,
+            "01": 13348,
+            "05": 1958,
+            "03": 1705,
+            "06": 485
+          }
+        }
+      },
+      "surfaceMaterialAttribute": "NONE in any inspected layer; FON is a constant 01 'pavimentato' (spec: asphalt or concrete; no stone class, spec text has no porfido/sampietrini/cubetti/ciottoli)",
+      "measuresRoadSurface": false,
+      "isProxy": "geometry-only proxies: tram-in-carriageway (EL_TRV_POS=02), carriageway polygon decomposition, roundabout/piazza zone, width class",
+      "spatialMatch": {
+        "toLastrico": "99.3% of OSM car-way metres in the landmark box have an aligned DBT street element within 12 m (p50 offset 0.5 m, p99 4.0 m); street-name agreement 93.8%",
+        "keys": "NOME (street name), VIA_ID, SEGMENTID/CLASSREF (no OSM id)"
+      },
+      "label": "VERIFIED",
+      "zipEntryAccess": "HTTP Range on the 596 MB zip (accept-ranges: bytes): central directory (226,225 B) + chosen entries only; 29 MB total pulled for DBF/PRJ/spec; listing in dbt2020-zip-listing.json (1,754 entries)"
+    },
+    "dbt2020_rest": {
+      "name": "DBGT Milano 2020 ArcGIS MapServer (same data as the shapefile release, 118 layers)",
+      "url": "https://gisportal.comune.milano.it/federated/rest/services/DBGT/Milano_2020_DBGT/MapServer",
+      "capabilities": "Map,Query,Data",
+      "maxRecordCount": 2000,
+      "spatialReference": 7791,
+      "transportLayers": {
+        "1": "Label strade (EL_STR segments, 55554)",
+        "19": "010204 Elemento tranviario (3094)",
+        "20": "010206 metropolitana (452)",
+        "35": "010202 elemento ferroviario (4549)",
+        "37": "010103 area circolazione ciclabile (2798)",
+        "38": "010102 area circolazione pedonale (71151)",
+        "39": "010101 area circolazione veicolare (37892)",
+        "41": "010104 area stradale (7015)",
+        "42": "010105 viabilita mista secondaria (1212)",
+        "45": "010201 sede trasporto su ferro (915)"
+      },
+      "wms": "https://gisportal.comune.milano.it/federated/services/DBGT/Milano_2020_DBGT/MapServer/WMSServer?request=GetCapabilities&service=WMS",
+      "label": "VERIFIED"
+    },
+    "atm_ds538": {
+      "name": "ATM - Percorsi delle linee di superficie urbane (ds538)",
+      "ckan": "https://dati.comune.milano.it/dataset/ds538_atm-percorsi-linee-di-superficie-urbane",
+      "geojson": {
+        "url": "https://dati.comune.milano.it/dataset/8bfe2015-2669-4796-9940-36b3c155b258/resource/b5acc06f-65fb-4481-9428-347fd1c18096/download/tpl_percorsi.geojson",
+        "bytes": 7745168,
+        "lastModified": "2026-07-24",
+        "crs": "CRS84 (WGS84 lon/lat)"
+      },
+      "otherFormats": {
+        "SHP": 1285691,
+        "CSV": 62446
+      },
+      "licence": "CKAN cc-by",
+      "geometry": "one LineString per route variant (413 routes: BUS 360, TRAM 45, FILOBUS 8); vertex spacing about 10 m",
+      "fields": {
+        "linea": "line number",
+        "mezzo": "BUS|FILOBUS|TRAM",
+        "percorso": "route code",
+        "verso": "As|Di",
+        "nome": "route name (some with works annotations 'LAV. ...')",
+        "tipo_perc": "Canonico|Barrato",
+        "lung_km": "length km (string)",
+        "num_ferm": "stops (string)"
+      },
+      "surfaceAttributes": "none",
+      "trackAttributes": "none: a route is a service line, not a physical track; no sede/embedded/rail-type attribute",
+      "measuresRoadSurface": false,
+      "isProxy": "service proxy: tram line passes here (not rail type, not condition)",
+      "label": "VERIFIED",
+      "checksums": {
+        "tpl_percorsi.geojson": "sha256 4c0469fc2bab9027cd70603f088d1d24b13ea11e19c5b77a51cffe4fbfbbec0b",
+        "tpl_percorsi.csv": "sha256 8c8f9d8228ebe9aebaab57d2fc4a4d97faa20f159796d9548b9cbb56b0eb1b1e"
+      },
+      "tramLinesNearLandmarks": {
+        "Corso Lodi NW arm": "no ATM tram route runs on it; nearest TRAM line 9 at 46 m (Piazzale Medaglie d'Oro end), line 24 at 495 m, line 19 at 608 m",
+        "Piazzale Lodi ring": "nearest TRAM line 19 at 635 m",
+        "Via Lazzaro Papi": "nearest TRAM line 9 at 341 m",
+        "bus/trolleybus on landmark ways": "ring: bus 65, 153, trolleybus 90, 91, 92; Corso Lodi: bus 65, 153, 62(near Papi), 34; Papi: bus 62"
+      }
+    },
+    "kartaview_api": {
+      "name": "KartaView (ex OpenStreetCam) public API v2.0",
+      "url": "https://api.kartaview.org/2.0/photo/?lat=&lng=&radius=&join=sequence",
+      "access": "no key, no registration; radius limited to 1..500 m (server validator message); host api.openstreetcam.org failed TLS hostname check in this environment",
+      "licence": "imagery CC BY-SA 4.0 (to be confirmed on the terms page, see report)",
+      "photoFields": [
+        "id",
+        "shotDate",
+        "dateAdded",
+        "lat",
+        "lng",
+        "heading",
+        "gpsAccuracy",
+        "width",
+        "height",
+        "projection",
+        "wayId (OSM way matched by KartaView)",
+        "sequenceId",
+        "autoImgProcessingResult",
+        "fileurl*/imageProcUrl"
+      ],
+      "coverageMilanLandmarks": {
+        "within500mOfPiazzaleLodi": 1,
+        "within500mOfCorsoLodiNWarmMid": 1,
+        "within500mOfCorsoLodiSEarm": 0,
+        "withinPiazzaDuomo300m": 4,
+        "shotYears": [
+          2016,
+          2017,
+          2018
+        ]
+      },
+      "measuresRoadSurface": false,
+      "isProxy": "direct visual evidence for a human or a model, only where a photo exists",
+      "label": "VERIFIED"
+    },
+    "panoramax": {
+      "name": "Panoramax open street-level imagery (federated STAC API)",
+      "url": "https://api.panoramax.xyz/api/search?bbox=&limit=",
+      "access": "no key, no registration (read)",
+      "licence": "CC-BY-SA-4.0 per feature link rel=license",
+      "fields": [
+        "id",
+        "collection",
+        "geometry (lon,lat)",
+        "properties.datetime",
+        "view:azimuth",
+        "quality:horizontal_accuracy",
+        "pers:interior_orientation",
+        "exif",
+        "assets.hd/sd/thumb"
+      ],
+      "coverageLandmarks": {
+        "Piazzale Lodi (bbox +-200 m)": 0,
+        "Corso Lodi NW arm (bbox)": "67 photos, all 2025-06, one phone, positions within ~25 m of one spot at the NW end, none along the arm",
+        "Via Lazzaro Papi (bbox)": "3 photos 2025-06",
+        "Corso Lodi SE (bbox)": "2 photos 2023-01, 1049x634"
+      },
+      "measuresRoadSurface": false,
+      "label": "VERIFIED"
+    },
+    "lombardia_agea_orthophoto": {
+      "name": "Regione Lombardia / AGEA orthophotos (Geoportale, ArcGIS ImageServer)",
+      "services": "https://www.cartografia.servizirl.it/arcgis2/rest/services/BaseMap/{Ortofoto2021|Ortofoto2018_2019|ortofoto2015UTM32N|Ortofoto2012UTM32N}",
+      "pixelSizeM": {
+        "Ortofoto2021": 0.2,
+        "Ortofoto2018_2019": 0.2,
+        "ortofoto2015UTM32N": 0.2
+      },
+      "years": [
+        2012,
+        2015,
+        2018,
+        2021,
+        2024
+      ],
+      "access": "viewing services are public (no token) but exportImage/identify failed in this session (HTTP 500 / 'Could not access any server machines'); full-resolution files are not downloadable: public bodies request by PEC through the competent Province/Citta Metropolitana",
+      "licence": "AGEA (2012-2021) / MASAF (2024) exclusive ownership; Regione Lombardia has an institutional-use licence; commercial use and third-party transfer expressly forbidden (Allegato 1, primary document read)",
+      "fitForLastrico": false,
+      "measuresRoadSurface": false,
+      "label": "VERIFIED (metadata, licence) / UNVERIFIED (image content)"
+    },
+    "ds925_avvisi_manomissione": {
+      "name": "Comune di Milano - Avvisi di manomissione (utility excavation notices)",
+      "ckan": "https://dati.comune.milano.it/dataset/ds925_avvisi-di-manomissione",
+      "licence": "CKAN cc-by",
+      "geometry": "points (LONG_X_4326, LAT_Y_4326)",
+      "records": 214,
+      "refreshed": "2026-11-14 (daily)",
+      "surfaceField": "Pavimentazione area occupata (self-declared by utility operators): Asfalto Colato, Conglomerato Bituminoso, Pietra (4 records), Altro, Materiali Speciali, ...",
+      "areaField": "Tipologia area coinvolta (Marciapiede, Carreggiata, ...)",
+      "landmarkRecords": {
+        "Corso Lodi / Piazzale Lodi / Via Lazzaro Papi": 0
+      },
+      "measuresRoadSurface": "self-declared material of an excavation patch, not of the street",
+      "label": "VERIFIED"
+    },
+    "mapillary": {
+      "name": "Mapillary Graph API v4",
+      "access": "access token required for graph.mapillary.com and tiles.mapillary.com (client registration) - NOT obtained",
+      "licence": "other users' content CC BY-SA 4.0 (Terms of Use section 3(b), effective 2024-02-15); some datasets CC BY-NC-SA",
+      "limits": "Search 10,000 req/min/app; Entity 60,000 req/min/app; tiles 50,000/day; bbox < 0.01 deg square; radius max 50 m",
+      "fields": [
+        "captured_at",
+        "compass_angle",
+        "geometry",
+        "is_pano",
+        "camera_type",
+        "quality_score",
+        "creator",
+        "sequence"
+      ],
+      "terms": "automated access only through published interfaces; no unblurring/re-identification; commercial use of training allowed under section 12 with safeguards (per fetched summary, re-read before relying)",
+      "coverageMilan": "UNVERIFIED (no token); OSM mapillary=* tags: 296 ways citywide, 0 in the Piazzale Lodi / Corso Lodi / Papi box",
+      "measuresRoadSurface": false,
+      "label": "STRONGLY SUPPORTED"
+    },
+    "google_street_view_static": {
+      "name": "Google Street View Static API",
+      "price": "Static Street View: first 10,000 events/month free, then USD 7.00 per 1,000 (10,001-100,000), 5.60 (100,001-500,000); Metadata free (pricing page read 2026-11-14)",
+      "terms": "Maps Platform terms reported (third-party quotes, official page not retrievable) to forbid caching beyond narrow limits, scraping/export and ML training; needs an API key (registration) - NOT obtained",
+      "coverageMilan": "UNVERIFIED (metadata endpoint needs a key)",
+      "measuresRoadSurface": false,
+      "label": "STRONGLY SUPPORTED (price) / UNVERIFIED (terms text)"
+    },
+    "commercial_road_condition": {
+      "items": {
+        "Blyncsy": "vendor/Bentley listing: from USD 8 per mile incl. one licence (US listing; Milan price UNKNOWN)",
+        "RoadBotics": "USD 50-150 per mile in vendor-linked 2017/2021 articles (old; UNKNOWN today)",
+        "Vaisala RoadAI": "price UNKNOWN; defects and condition index, no sett/surface-type claim found",
+        "HERE": "Map Attributes API: PAVED Y/N only; Map Creator documents cobblestone as paved material",
+        "TomTom": "iOS SDK RoadConditionType enum lists cobblestone, unpaved, poor-condition paved; Routing API exposure not confirmed"
+      },
+      "measuresRoadSurface": "vendors measure condition (defects) from imagery/probes; none verified to classify sett in Milan",
+      "label": "PLAUSIBLE; prices UNKNOWN for Milan"
+    }
+  }
+}

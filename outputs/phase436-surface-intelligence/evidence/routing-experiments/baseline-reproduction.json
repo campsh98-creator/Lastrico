@@ -1,0 +1,47 @@
+{
+ "generatedBy": "experiments/phase436-surface-intelligence/scripts/exp-run-baseline.mjs",
+ "departure": "2026-11-09T12:00",
+ "handlerPatches": [
+  "P0-capture (no behaviour change)"
+ ],
+ "cases": {
+  "main": 264,
+  "shift": 90
+ },
+ "crossCheckAgainst": "outputs/phase431/anti-pave-availability-p431-decision-noon-vs-p431-decision-swap.json (rows[].after, 264 cases)",
+ "compared": 264,
+ "identical": 264,
+ "differing": 0,
+ "differences": [],
+ "statusCountsMine": {
+  "alternative": 138,
+  "no-better-route": 43,
+  "access-restricted": 8,
+  "error": 1,
+  "fastest-avoids-pave": 9,
+  "no-pave": 65
+ },
+ "statusCountsStoredAfter": {
+  "alternative": 138,
+  "no-better-route": 43,
+  "error": 1,
+  "no-pave": 65,
+  "fastest-avoids-pave": 9,
+  "access-restricted": 8
+ },
+ "shownKnownPaveMeters": {
+  "mine": 80526,
+  "stored": 80526
+ },
+ "shownConfirmedMeters": {
+  "mine": 50483,
+  "stored": 50483
+ },
+ "providerCalls": {
+  "all": 1120,
+  "archive": 1120,
+  "miss": 0
+ },
+ "casesWithMissingResponses": [],
+ "poolsFileSha256": "8658a72442c0472e47b295effb0101a00708ab3f3f9ac3d5b01e82f8d72d179c"
+}

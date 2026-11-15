@@ -1,0 +1,499 @@
+{
+  "archive": [
+    {
+      "file": "milan-citywide-s-central.osm.json.gz",
+      "kind": "citywide",
+      "node": 22813,
+      "way": 6622,
+      "relation": 0,
+      "retrievedAt": "2026-11-04T11:40:01Z",
+      "osmBase": "2026-11-04T11:40:01Z",
+      "generator": "openstreetmap-overpass-api",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-citywide-s-west.osm.json.gz",
+      "kind": "citywide",
+      "node": 21184,
+      "way": 5673,
+      "relation": 0,
+      "retrievedAt": "2026-11-04T11:41:02Z",
+      "osmBase": "2026-11-04T11:41:02Z",
+      "generator": "openstreetmap-overpass-api",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-citywide-s-east.osm.json.gz",
+      "kind": "citywide",
+      "node": 18329,
+      "way": 4638,
+      "relation": 0,
+      "retrievedAt": "2026-11-04T11:43:06Z",
+      "osmBase": "2026-11-04T11:43:06Z",
+      "generator": "openstreetmap-overpass-api",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-citywide-west.osm.json.gz",
+      "kind": "citywide",
+      "node": 34134,
+      "way": 11057,
+      "relation": 0,
+      "retrievedAt": "2026-11-04T11:43:06Z",
+      "osmBase": "2026-11-04T11:43:06Z",
+      "generator": "openstreetmap-overpass-api",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-citywide-east.osm.json.gz",
+      "kind": "citywide",
+      "node": 32345,
+      "way": 10212,
+      "relation": 0,
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "osmBase": "2026-11-04T11:45:06Z",
+      "generator": "openstreetmap-overpass-api",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-citywide-n-west.osm.json.gz",
+      "kind": "citywide",
+      "node": 29600,
+      "way": 8411,
+      "relation": 0,
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "osmBase": "2026-11-04T11:45:06Z",
+      "generator": "openstreetmap-overpass-api",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-citywide-n-central.osm.json.gz",
+      "kind": "citywide",
+      "node": 38452,
+      "way": 12427,
+      "relation": 0,
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "osmBase": "2026-11-04T11:45:06Z",
+      "generator": "openstreetmap-overpass-api",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-citywide-n-east.osm.json.gz",
+      "kind": "citywide",
+      "node": 76105,
+      "way": 4974,
+      "relation": 0,
+      "retrievedAt": "2026-11-04T11:54:35.817Z",
+      "osmBase": null,
+      "generator": "openstreetmap-overpass-api",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-sw.osm.json.gz",
+      "kind": "pilot",
+      "node": 20855,
+      "way": 3466,
+      "relation": 338,
+      "retrievedAt": "2026-10-26T00:44:35.823656+00:00",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (2069 spike-07.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-se.osm.json.gz",
+      "kind": "pilot",
+      "node": 16844,
+      "way": 2820,
+      "relation": 256,
+      "retrievedAt": "2026-10-26T00:44:38.031299+00:00",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (1569840 spike-07.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-nw.osm.json.gz",
+      "kind": "pilot",
+      "node": 21988,
+      "way": 3129,
+      "relation": 325,
+      "retrievedAt": "2026-10-26T00:44:40.986242+00:00",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (2526605 spike-07.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-ne.osm.json.gz",
+      "kind": "pilot",
+      "node": 17124,
+      "way": 2685,
+      "relation": 252,
+      "retrievedAt": "2026-10-26T00:44:43.832077+00:00",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (2080 spike-07.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-w-sw.osm.json.gz",
+      "kind": "pilot",
+      "node": 18498,
+      "way": 2874,
+      "relation": 228,
+      "retrievedAt": "2026-10-28T23:03:09.249Z",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (1967315 spike-08.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-w-nw.osm.json.gz",
+      "kind": "pilot",
+      "node": 16638,
+      "way": 2667,
+      "relation": 276,
+      "retrievedAt": "2026-10-28T23:03:12.813Z",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (1940038 spike-08.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-n-nw.osm.json.gz",
+      "kind": "pilot",
+      "node": 8833,
+      "way": 1354,
+      "relation": 117,
+      "retrievedAt": "2026-10-28T23:03:15.611Z",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (2009100 spike-08.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-n-ne.osm.json.gz",
+      "kind": "pilot",
+      "node": 9140,
+      "way": 1592,
+      "relation": 136,
+      "retrievedAt": "2026-10-28T23:03:18.355Z",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (1962202 spike-08.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-e-nw.osm.json.gz",
+      "kind": "pilot",
+      "node": 10277,
+      "way": 1549,
+      "relation": 167,
+      "retrievedAt": "2026-10-28T23:03:21.196Z",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (2009099 spike-08.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-s-sw.osm.json.gz",
+      "kind": "pilot",
+      "node": 9221,
+      "way": 1424,
+      "relation": 99,
+      "retrievedAt": "2026-10-28T23:03:24.001Z",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (1774354 spike-08.openstreetmap.org)",
+      "sha256Ok": true
+    },
+    {
+      "file": "milan-pilot-s-se.osm.json.gz",
+      "kind": "pilot",
+      "node": 7815,
+      "way": 1334,
+      "relation": 87,
+      "retrievedAt": "2026-10-28T23:03:26.733Z",
+      "osmBase": null,
+      "generator": "openstreetmap-cgimap 2.1.0 (1967315 spike-08.openstreetmap.org)",
+      "sha256Ok": true
+    }
+  ],
+  "carUsableMetres": 1396988.4,
+  "surfaceByHighwayClass": {
+    "secondary": {
+      "m": 100404,
+      "confirmed_rough": 2315.9,
+      "probable_rough": 627.8,
+      "confirmed_smooth": 97332.1,
+      "unpaved_loose": 0,
+      "unknown_untagged": 128.2,
+      "unknown_tagged": 0,
+      "unknown_conflict": 0
+    },
+    "residential": {
+      "m": 674568.7,
+      "confirmed_rough": 30194.9,
+      "probable_rough": 14307.2,
+      "confirmed_smooth": 541299.3,
+      "unpaved_loose": 250.7,
+      "unknown_untagged": 88108.2,
+      "unknown_tagged": 278.2,
+      "unknown_conflict": 130.2
+    },
+    "tertiary": {
+      "m": 138661.5,
+      "confirmed_rough": 8812.8,
+      "probable_rough": 1361,
+      "confirmed_smooth": 128376.9,
+      "unpaved_loose": 0,
+      "unknown_untagged": 91.2,
+      "unknown_tagged": 7.6,
+      "unknown_conflict": 12
+    },
+    "primary": {
+      "m": 78989,
+      "confirmed_rough": 1921.9,
+      "probable_rough": 33.1,
+      "confirmed_smooth": 76999.1,
+      "unpaved_loose": 0,
+      "unknown_untagged": 35,
+      "unknown_tagged": 0,
+      "unknown_conflict": 0
+    },
+    "unclassified": {
+      "m": 46471.5,
+      "confirmed_rough": 13.2,
+      "probable_rough": 106.9,
+      "confirmed_smooth": 30179.1,
+      "unpaved_loose": 177.7,
+      "unknown_untagged": 15994.7,
+      "unknown_tagged": 0,
+      "unknown_conflict": 0
+    },
+    "service": {
+      "m": 331400.6,
+      "confirmed_rough": 4969.2,
+      "probable_rough": 6240.8,
+      "confirmed_smooth": 86132.2,
+      "unpaved_loose": 9104.3,
+      "unknown_untagged": 222851.8,
+      "unknown_tagged": 2001.9,
+      "unknown_conflict": 100.5
+    },
+    "motorway": {
+      "m": 6699.4,
+      "confirmed_rough": 0,
+      "probable_rough": 0,
+      "confirmed_smooth": 6699.4,
+      "unpaved_loose": 0,
+      "unknown_untagged": 0,
+      "unknown_tagged": 0,
+      "unknown_conflict": 0
+    },
+    "trunk": {
+      "m": 19498.6,
+      "confirmed_rough": 0,
+      "probable_rough": 0,
+      "confirmed_smooth": 19303.5,
+      "unpaved_loose": 0,
+      "unknown_untagged": 195.1,
+      "unknown_tagged": 0,
+      "unknown_conflict": 0
+    },
+    "living_street": {
+      "m": 295.1,
+      "confirmed_rough": 0,
+      "probable_rough": 0,
+      "confirmed_smooth": 295.1,
+      "unpaved_loose": 0,
+      "unknown_untagged": 0,
+      "unknown_tagged": 0,
+      "unknown_conflict": 0
+    }
+  },
+  "surfaceValueTable": [
+    {
+      "rawToCategory": "asphalt -> confirmed_smooth",
+      "metres": 968704
+    },
+    {
+      "rawToCategory": "(none) -> unknown",
+      "metres": 327404.1
+    },
+    {
+      "rawToCategory": "sett -> confirmed_rough",
+      "metres": 41174.3
+    },
+    {
+      "rawToCategory": "paving_stones -> probable_rough",
+      "metres": 22676.8
+    },
+    {
+      "rawToCategory": "concrete:plates -> confirmed_smooth",
+      "metres": 13527.3
+    },
+    {
+      "rawToCategory": "fine_gravel -> unpaved_loose",
+      "metres": 6529.5
+    },
+    {
+      "rawToCategory": "concrete -> confirmed_smooth",
+      "metres": 3207.6
+    },
+    {
+      "rawToCategory": "cobblestone:flattened -> confirmed_rough",
+      "metres": 2726.1
+    },
+    {
+      "rawToCategory": "cobblestone -> confirmed_rough",
+      "metres": 2449.7
+    },
+    {
+      "rawToCategory": "paved -> unknown",
+      "metres": 2039.2
+    },
+    {
+      "rawToCategory": "unpaved -> unpaved_loose",
+      "metres": 1479.7
+    },
+    {
+      "rawToCategory": "paving_stones -> confirmed_smooth",
+      "metres": 1026.7
+    },
+    {
+      "rawToCategory": "unhewn_cobblestone -> confirmed_rough",
+      "metres": 917.8
+    },
+    {
+      "rawToCategory": "(none) -> confirmed_rough",
+      "metres": 661.4
+    },
+    {
+      "rawToCategory": "compacted -> unpaved_loose",
+      "metres": 580.7
+    },
+    {
+      "rawToCategory": "dirt -> unpaved_loose",
+      "metres": 513
+    },
+    {
+      "rawToCategory": "gravel -> unpaved_loose",
+      "metres": 264.4
+    },
+    {
+      "rawToCategory": "asphalt -> unknown (smoothness conflict)",
+      "metres": 242.7
+    },
+    {
+      "rawToCategory": "pebblestone -> confirmed_rough",
+      "metres": 186.2
+    },
+    {
+      "rawToCategory": "ground -> unpaved_loose",
+      "metres": 165.3
+    },
+    {
+      "rawToCategory": "concrete:lanes -> confirmed_smooth",
+      "metres": 151.1
+    },
+    {
+      "rawToCategory": "grass_paver -> unknown",
+      "metres": 122.6
+    },
+    {
+      "rawToCategory": "metal -> unknown",
+      "metres": 57.3
+    },
+    {
+      "rawToCategory": "grass -> unknown",
+      "metres": 52.3
+    },
+    {
+      "rawToCategory": "cobblestone:rounded -> confirmed_rough",
+      "metres": 50.9
+    },
+    {
+      "rawToCategory": "cobblestone:flattened:large_stone -> confirmed_rough",
+      "metres": 34.3
+    },
+    {
+      "rawToCategory": "milanese_paving -> confirmed_rough",
+      "metres": 27.1
+    },
+    {
+      "rawToCategory": "sand -> unknown",
+      "metres": 16.3
+    }
+  ],
+  "ignoredSignals": {
+    "carWaysWithRoughSurfaceBikeButOtherSurface": {
+      "ways": 370,
+      "metres": 19026.1,
+      "note": "surface_bike=milanese_paving/sett/cobble while surface is not stone: normalize.mjs:60-63 reads surface_bike only when surface is empty"
+    },
+    "asphaltOrConcreteWithSmoothnessBadOrWorse": {
+      "ways": 8,
+      "metres": 242.7,
+      "note": "normalize.mjs:106-113 turns these into category unknown with roughnessWeight 0 (no penalty, no smooth credit)"
+    },
+    "carWaysTaggedTramYesOrEmbeddedRails": {
+      "ways": 53,
+      "metres": 2795.3,
+      "note": "become embeddedRails=true (normalize.mjs:276-288); flag is counted by the scorer but read by no ranking or warning code"
+    },
+    "carWaysWithTrolleyWire": {
+      "metres": 46083.9,
+      "note": "trolleybus overhead wire, not rails; not used"
+    },
+    "carWaysWithElectrified": {
+      "metres": 40779.6
+    }
+  },
+  "railwayWaysInArchive": {
+    "tram": {
+      "ways": 661,
+      "m": 44106.9
+    },
+    "other": {
+      "platform|citywide": 292,
+      "tram_stop|citywide": 1,
+      "razed|pilot": 243,
+      "subway|pilot": 39,
+      "platform|pilot": 52,
+      "disused|pilot": 59,
+      "miniature|pilot": 1,
+      "rail|pilot": 67
+    },
+    "tramInCitywideExtracts": 0
+  },
+  "relations": {
+    "total": 1628,
+    "byType": {
+      "multipolygon": 1020,
+      "boundary": 14,
+      "route": 155,
+      "network": 3,
+      "collection": 1,
+      "public_transport": 72,
+      "restriction": 220,
+      "waterway": 7,
+      "enforcement": 54,
+      "route_master": 66,
+      "superroute": 2,
+      "site": 5,
+      "associatedStreet": 2,
+      "street": 1,
+      "building": 2,
+      "destination_sign": 4
+    },
+    "inCitywideExtracts": 0,
+    "inPilotExtracts": 2281
+  },
+  "nodeTags": {
+    "nodesTotal": 357762,
+    "tagged": 28443,
+    "barrier": 4340,
+    "traffic_calming": 42,
+    "traffic_signals": 316,
+    "stop": 41,
+    "rail_crossings": 537,
+    "citywideNodesWithTags": "see node.timestamp-less count in junction-via-friuli.json (0)"
+  },
+  "citywideNodeProvenance": {
+    "nodesWithoutTimestamp": 153563,
+    "withVersion1": 153563,
+    "withTimestamp": 0
+  }
+}
