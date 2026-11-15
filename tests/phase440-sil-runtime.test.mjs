@@ -543,7 +543,7 @@ test("the build scripts write layers only outside Git", async () => {
   const generator = await readFile(url("scripts/sil/generate-sil-layer-index.mjs"), "utf8");
   const committed = await readFile(url("lib/sil-layer-index.ts"), "utf8");
   const header = committed.split("\nexport const silLayerIndex")[0].replace(/\r/g, "");
-  assert.ok(generator.replace(/\\`/g, "`").includes(header.split("\n").slice(0, 4).join("\n")), "the committed index header is the generator's header");
+  assert.ok(generator.replace(/\r/g, "").replace(/\\`/g, "`").includes(header.split("\n").slice(0, 4).join("\n")), "the committed index header is the generator's header");
 });
 
 // ---- F. real layers and the known Milan corridors (run when a local layer set has been built) -------------------------------
