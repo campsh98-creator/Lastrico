@@ -64,7 +64,7 @@ Dei 17 casi cambiati, 14 mostrano meno pietra o un'alternativa nuova (per esempi
 |---|---|
 | `tsc --noEmit` | 0 errori |
 | ESLint (repository, sorgenti tracciati) | 0 problemi |
-| CI GitHub «Lint, test and build» (Linux) sul primo commit | superata: 544 test, 535 superati, 0 falliti, 9 saltati |
+| CI GitHub «Lint, test and build» (Linux) sul commit con le correzioni della revisione (`4650d07`, dopo la rimozione del workflow temporaneo) | **superata:** 544 test, 535 superati, 0 falliti, 9 saltati (`main` a `3e31da9`: 512, 504, 0, 8) |
 | Test nuovi/aggiornati in locale | `phase437-candidate-generation` 13/13; `phase437-trace-generation` 16/16 (compreso il test con la traccia reale); gate Fase 4.31 6/6; `phase431-navigation` 14/14 |
 | Test completo su Windows | 31 fallimenti dovuti all'ambiente (percorsi, CRLF); **gli stessi 31 sul `3e31da9`** (misurato prima delle ultime modifiche); la CI su Linux non ne ha |
 | Replay della traccia reale del 13 novembre | 0 differenze di decisione, 1 ricalcolo, 930 rilevazioni accettate |
