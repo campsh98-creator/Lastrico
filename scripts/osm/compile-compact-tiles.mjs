@@ -1,17 +1,19 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { normalizeOsmFeature, classifySurface } from "./normalize.mjs";
+import { normalizeOsmFeature, normalizeOsmDirection, classifySurface } from "./normalize.mjs";
 import { extractHighways } from "./build-representative-network.mjs";
 import { generateChunks } from "./generate-tile-chunks.mjs";
+import { compileMilanFoundation, readFoundationGroup } from "./compile-osm-foundation.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "../..");
 const datasetPath = join(root, "data/surfaces/milan-central.json");
 const manifestPath = join(root, "data/surfaces/milan-central.manifest.json");
 const representativePath = join(root, "data/milan-road-network-representative.json");
+const pilotSourceManifest = join(root, "data/sources/milan-pilot-osm.source.json");
 const citywideManifestPath = join(root, "data/sources/milan-citywide-expansion.source.json");
 const sourceDir = join(root, "data/sources");
 const outputPath = join(root, "data/surfaces/milan-compact-tiles.json");
@@ -119,7 +121,8 @@ export function compileCompactSegments(
                   (seg.isMotorAllowed ? 2 : 0) |
                   (seg.isBicycleAllowed ? 4 : 0) |
                   (seg.embeddedRails ? 8 : 0) |
-                  (seg.cycling?.value?.hasFacility ? 16 : 0);
+                  (seg.cycling?.value?.hasFacility ? 16 : 0) |
+                  ((seg.inferredCircularOnewayModes ?? 0) << 5);
 
     const ma = seg.modeAccess;
     const maBits = ma ? ((ma.car ? 1 : 0) | (ma.motorcycle ? 2 : 0) | (ma.bicycle ? 4 : 0)) : -1;
@@ -251,7 +254,7 @@ function dropCoveredBoundaryStubs(segments, pilotHashes, bounds) {
  * Rebuild the exact Milan segment list that feeds the compact tiles, with raw OSM tags.
  * Shared by the compiler and the data-quality audit so both describe the same data.
  */
-export async function collectMilanSegments({ surfaceRules = MILAN_SURFACE_RULES } = {}) {
+export async function collectMilanSegments({ surfaceRules = MILAN_SURFACE_RULES, topologyRules } = {}) {
   const [datasetRaw, manifestRaw, representativeRaw] = await Promise.all([
     readFile(datasetPath, "utf8"),
     readFile(manifestPath, "utf8"),
@@ -268,7 +271,15 @@ export async function collectMilanSegments({ surfaceRules = MILAN_SURFACE_RULES 
   // 1. Start with all 37,106 original pilot segments to guarantee bit-for-bit backward compatibility
   const mergedMap = new Map();
   for (const s of pilotSegments) {
-    mergedMap.set(s.segmentHash, surfaceRules === "2026-10" ? s : reclassified(s, surfaceRules));
+    const segment = surfaceRules === "2026-10" ? s : reclassified(s, surfaceRules);
+    const circular = topologyRules !== "legacy" && s.rawTags?.junction === "circular"
+      ? normalizeOsmDirection(s.rawTags, { topologyRules }) : null;
+    const direction = circular ? {
+      isOneway: circular.isOneway,
+      modeDirections: circular.modeDirections,
+      inferredCircularOnewayModes: circular.inferredCircularOnewayModes,
+    } : {};
+    mergedMap.set(s.segmentHash, { ...segment, ...direction, foundationSourceGroup: "pilot" });
   }
 
   // 2. Add genuine unclipped segments extending outside the core pilot bounds from representative network
@@ -283,10 +294,10 @@ export async function collectMilanSegments({ surfaceRules = MILAN_SURFACE_RULES 
         a[0] < PILOT.west || a[0] > PILOT.east || a[1] < PILOT.south || a[1] > PILOT.north ||
         b[0] < PILOT.west || b[0] > PILOT.east || b[1] < PILOT.south || b[1] > PILOT.north;
       if (isOutside) {
-        const segs = normalizeOsmFeature({ ...way, coordinates: [a, b] }, { ingestedAt, surfaceRules }).segments;
+        const segs = normalizeOsmFeature({ ...way, coordinates: [a, b] }, { ingestedAt, surfaceRules, topologyRules }).segments;
         for (const seg of segs) {
           if (!mergedMap.has(seg.segmentHash)) {
-            mergedMap.set(seg.segmentHash, seg);
+            mergedMap.set(seg.segmentHash, { ...seg, foundationSourceGroup: "pilot" });
             addedOutside++;
           }
         }
@@ -308,7 +319,9 @@ export async function collectMilanSegments({ surfaceRules = MILAN_SURFACE_RULES 
   try {
     citywideManifestRaw = await readFile(citywideManifestPath, "utf8");
     citywideManifest = JSON.parse(citywideManifestRaw);
-  } catch {}
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
 
   if (citywideManifest && Array.isArray(citywideManifest.sources)) {
     const responses = [];
@@ -330,7 +343,7 @@ export async function collectMilanSegments({ surfaceRules = MILAN_SURFACE_RULES 
         // Keep exact October snapshot inside already-covered pilot source bboxes
         if (pointInPilotSourceBboxes(a) && pointInPilotSourceBboxes(b)) continue;
 
-        const segs = normalizeOsmFeature({ ...way, coordinates: [a, b] }, { ingestedAt, surfaceRules }).segments;
+        const segs = normalizeOsmFeature({ ...way, coordinates: [a, b] }, { ingestedAt, surfaceRules, topologyRules }).segments;
         for (const seg of segs) {
           // In the expansion ring, retain only segments accessible by at least one Lastrico mode (car, motorcycle, or bicycle)
           // and skip unnamed private courtyard/parking service aisles to keep the Cloudflare Worker bundle well under 3 MB gzipped.
@@ -344,7 +357,7 @@ export async function collectMilanSegments({ surfaceRules = MILAN_SURFACE_RULES 
           }
 
           if (!mergedMap.has(seg.segmentHash)) {
-            mergedMap.set(seg.segmentHash, seg);
+            mergedMap.set(seg.segmentHash, { ...seg, foundationSourceGroup: "legacy-citywide" });
             addedOutside++;
           }
         }
@@ -367,8 +380,11 @@ export async function compileMilanCompactTiles({
   compactManifest = compactManifestPath,
   tilesDir = join(root, "data/surfaces/milan-tiles"),
   indexTs = join(root, "lib/milan-tile-index.ts"),
+  foundationDir = join(root, "work/osm-foundation"),
+  foundationManifests = [],
+  topologyRules,
 } = {}) {
-  const { allSegments, pilotSegments, manifest, addedOutside, citywideManifestRaw, ingestedAt, removedBoundaryStubs } = await collectMilanSegments({ surfaceRules });
+  const { allSegments, pilotSegments, manifest, addedOutside, citywideManifestRaw, ingestedAt, removedBoundaryStubs } = await collectMilanSegments({ surfaceRules, topologyRules });
 
   const compactTilesData = compileCompactSegments(allSegments, {
     manifest: { ...manifest, generatedAt: ingestedAt },
@@ -453,6 +469,21 @@ export async function compileMilanCompactTiles({
 
   await generateChunks("milan", output, tilesDir, indexTs);
 
+  let foundation;
+  if (foundationDir) {
+    const groups = [await readFoundationGroup({ name: "pilot", manifestPath: pilotSourceManifest })];
+    if (citywideManifestRaw) {
+      groups.push(await readFoundationGroup({ name: "legacy-citywide", manifestPath: citywideManifestPath,
+        legacyNodes: true, verifiedManifestSha256: sha256(citywideManifestRaw) }));
+    }
+    for (const [index, path] of foundationManifests.entries()) {
+      groups.push(await readFoundationGroup({ name: `supplemental-${index}`, manifestPath: resolve(path), supplement: true }));
+    }
+    foundation = await compileMilanFoundation({ directory: foundationDir, tilesDir,
+      baseCompactSha256: compactManifestData.checksums.compactTilesSha256, pilotBounds: manifest.area.bounds,
+      coverageBounds: JSON.parse(citywideManifestRaw ?? "null")?.bounds ?? manifest.area.bounds, groups, allSegments });
+  }
+
   return {
     outputPath: output,
     compactManifestPath: compactManifest,
@@ -462,11 +493,37 @@ export async function compileMilanCompactTiles({
     surfaceBreakdownMeters,
     surfaceBreakdownPercent,
     bytes: Buffer.byteLength(jsonOutput),
+    ...(foundation ? { foundationDir, foundationDatasetVersion: foundation.datasetVersion,
+      foundationCoverage: foundation.coverage } : {}),
   };
 }
 
+async function main(args) {
+  const options = { foundationManifests: [] };
+  for (const arg of args) {
+    if (arg.startsWith("--output-dir=") && arg.length > "--output-dir=".length) {
+      const directory = resolve(arg.slice("--output-dir=".length));
+      await mkdir(directory, { recursive: true });
+      Object.assign(options, {
+        output: join(directory, "milan-compact-tiles.json"),
+        compactManifest: join(directory, "milan-compact-tiles.manifest.json"),
+        tilesDir: join(directory, "milan-tiles"),
+        indexTs: null,
+        foundationDir: join(directory, "osm-foundation"),
+      });
+    } else if (arg.startsWith("--foundation-manifest=") && arg.length > "--foundation-manifest=".length) {
+      options.foundationManifests.push(arg.slice("--foundation-manifest=".length));
+    } else if (arg === "--legacy-topology") {
+      options.topologyRules = "legacy";
+    } else {
+      throw new Error(`Unknown or incomplete argument: ${arg}`);
+    }
+  }
+  return compileMilanCompactTiles(options);
+}
+
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-  compileMilanCompactTiles().then(console.log).catch((error) => {
+  main(process.argv.slice(2)).then(console.log).catch((error) => {
     console.error(error);
     process.exitCode = 1;
   });

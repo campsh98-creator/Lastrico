@@ -355,6 +355,7 @@ type AccessContext = { departure?: DepartureTime; authorisedZtl: ReadonlySet<str
 const NO_AUTHORISATION: ReadonlySet<string> = new Set();
 
 const PEDESTRIAN_ALLOWED = new Set(["yes", "designated", "permissive"]);
+const MODE_BITS = { car: 1, motorcycle: 2, bicycle: 4 };
 
 // Provider and archive share OSM node positions: a way this close to every sample is the
 // way the route is on, not a parallel street (measured: 99.99% of matched rough metres on
@@ -438,6 +439,8 @@ function plainAccessRestriction(
   }
   const direction = segment.modeDirections?.[mode];
   if (direction !== "forward" && direction !== "backward") return null;
+  // The provider-compatible circular default guides matching. Only confirmed directions can reject a route.
+  if (segment.inferredCircularOnewayModes && segment.inferredCircularOnewayModes & MODE_BITS[mode]) return null;
   const start = direction === "backward" ? segment.coordinates[1] : segment.coordinates[0];
   const end = direction === "backward" ? segment.coordinates[0] : segment.coordinates[1];
   return headingsAlign(a, b, start, end, true) ? null : "prohibited";

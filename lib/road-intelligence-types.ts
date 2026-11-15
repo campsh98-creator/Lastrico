@@ -139,6 +139,8 @@ export type RoadSegmentRecord = {
   modeAccess?: Record<"car" | "motorcycle" | "bicycle", boolean>;
   /** Permitted travel relative to this record's coordinate order. */
   modeDirections?: Record<"car" | "motorcycle" | "bicycle", "both" | "forward" | "backward" | "unknown">;
+  /** Mode bits (car 1, motorcycle 2, bicycle 4) using the untagged circular-junction default. */
+  inferredCircularOnewayModes?: number;
   embeddedRails: boolean;
 
   /** Explicit attribute provenance */

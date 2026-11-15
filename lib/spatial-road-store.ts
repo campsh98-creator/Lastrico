@@ -277,7 +277,7 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
   const explicitSmoothness = rawTags?.smoothness?.trim().toLowerCase();
   const hasSmoothness = ["excellent", "good", "intermediate", "bad", "very_bad", "horrible", "very_horrible", "impassable"].includes(explicitSmoothness ?? "");
 
-  return {
+  const segment: RoadSegmentRecord = {
     segmentHash: h,
     osmWayId: w,
     name: nameId >= 0 ? (meta.names[nameId] ?? null) : null,
@@ -310,6 +310,9 @@ function hydrateTuple(tuple: CompactTuple, meta: CompactTileMetadata): RoadSegme
     roughnessWeight: rw,
     rawTags,
   };
+  const inferredCircularOnewayModes = (flags >> 5) & 7;
+  if (inferredCircularOnewayModes) segment.inferredCircularOnewayModes = inferredCircularOnewayModes;
+  return segment;
 }
 
 function roughDetailsFromSegments(segments: RoadSegmentRecord[]): PaveDetail[] {

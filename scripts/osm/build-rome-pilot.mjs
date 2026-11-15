@@ -70,7 +70,7 @@ export async function buildRome({ download = false } = {}) {
     for(let i=1;i<way.coordinates.length;i++) {
       const edge = clipEdge(way.coordinates[i-1],way.coordinates[i],ROME_BOUNDS);
       if(!edge) continue;
-      for(const segment of normalizeOsmFeature({...way,coordinates:edge},{ingestedAt:generatedAt,pilotArea:'ROME_PILOT'}).segments) {
+      for(const segment of normalizeOsmFeature({...way,coordinates:edge},{ingestedAt:generatedAt,pilotArea:'ROME_PILOT',topologyRules:'legacy'}).segments) {
         // Inferred tracktype is not confirmed material evidence. Keep it unknown.
         if(segment.surface.state !== 'known') {segment.surfaceCategory='unknown';segment.roughnessWeight=0;segment.surface.value='unknown';}
         segments.push(segment);
