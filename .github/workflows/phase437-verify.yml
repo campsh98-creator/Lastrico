@@ -37,7 +37,8 @@ jobs:
         working-directory: ${{ runner.temp }}/milan-release
         run: |
           echo "== files with rome in their name (outside node_modules)"
-          find . -path ./node_modules -prune -o -iname '*rome*' -print > "$RUNNER_TEMP/rome-files.txt"
+          # "Rome" as a word only: Promessi Sposi and Chrome contain the letters r-o-m-e.
+          find . -path ./node_modules -prune -o -iname '*rome*' -print | grep -iE '(^|[/_.-])rome([/_.-]|$)' > "$RUNNER_TEMP/rome-files.txt" || true
           wc -l < "$RUNNER_TEMP/rome-files.txt"
           head -20 "$RUNNER_TEMP/rome-files.txt"
           echo "== files with roccella in their name (outside node_modules)"
@@ -52,7 +53,7 @@ jobs:
         working-directory: ${{ runner.temp }}/milan-release
         run: |
           echo "== dist files with rome in the name"
-          find dist -iname '*rome*' | tee "$RUNNER_TEMP/dist-rome.txt" | head -20
+          find dist -iname '*rome*' | grep -iE '(^|[/_.-])rome([/_.-]|$)' | tee "$RUNNER_TEMP/dist-rome.txt" | head -20 || true
           echo "== references to Rome data files in dist"
           grep -rlE "rome-tiles|rome-compact|rome-osm|rome-pilot|rome-road" dist | tee "$RUNNER_TEMP/dist-rome-refs.txt" | head -20
           echo "== roccella files in dist"
