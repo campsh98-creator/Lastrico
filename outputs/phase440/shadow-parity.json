@@ -84,11 +84,11 @@
   },
   "processingMs": {
    "n": 263,
-   "min": 0.2,
-   "median": 2,
-   "p95": 5.9,
-   "max": 67.5,
-   "mean": 2.63
+   "min": 0.1,
+   "median": 0.7,
+   "p95": 2.3,
+   "max": 38.4,
+   "mean": 1.08
   },
   "sharePercent": {
    "railsMapped": 14.64,
@@ -140,56 +140,56 @@
    "a": {
     "n": 264,
     "min": 0,
-    "median": 31,
-    "p95": 79,
-    "max": 422,
-    "mean": 32.31
+    "median": 16,
+    "p95": 62,
+    "max": 203,
+    "mean": 19.49
    },
    "b": {
     "n": 264,
     "min": 0,
-    "median": 31,
-    "p95": 94,
-    "max": 485,
-    "mean": 35.83
+    "median": 16,
+    "p95": 63,
+    "max": 281,
+    "mean": 21.03
    },
-   "totalA": 8529,
-   "totalB": 9459
+   "totalA": 5145,
+   "totalB": 5553
   },
   "computeMs": {
    "a": {
     "n": 264,
-    "min": 4,
-    "median": 23,
-    "p95": 60,
-    "max": 204,
-    "mean": 28.5
+    "min": 1,
+    "median": 12,
+    "p95": 33,
+    "max": 111,
+    "mean": 14.9
    },
    "b": {
     "n": 264,
-    "min": 3,
-    "median": 25,
-    "p95": 67,
-    "max": 224,
-    "mean": 30.05
+    "min": 2,
+    "median": 14,
+    "p95": 36,
+    "max": 139,
+    "mean": 15.84
    }
   },
   "handlerTotalMs": {
    "a": {
     "n": 264,
     "min": 0,
-    "median": 21,
-    "p95": 58,
-    "max": 177,
-    "mean": 26.25
+    "median": 11,
+    "p95": 32,
+    "max": 96,
+    "mean": 13.85
    },
    "b": {
     "n": 264,
     "min": 0,
-    "median": 21,
-    "p95": 60,
-    "max": 140,
-    "mean": 25.27
+    "median": 12,
+    "p95": 32,
+    "max": 89,
+    "mean": 13.66
    }
   },
   "providerCalls": {

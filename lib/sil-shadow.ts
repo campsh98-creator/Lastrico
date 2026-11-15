@@ -123,14 +123,12 @@ function metresBetween(a: readonly number[], b: readonly number[]): number {
   const lat = (a[1] + b[1]) / 2;
   return Math.hypot((b[0] - a[0]) * 111_320 * Math.cos((lat * Math.PI) / 180), (b[1] - a[1]) * 110_540);
 }
-function distanceToSegment(px: number, py: number, ax: number, ay: number, bx: number, by: number): number {
-  const dx = bx - ax;
-  const dy = by - ay;
-  const l2 = dx * dx + dy * dy;
-  const t = l2 ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l2)) : 0;
-  return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+function squaredDistanceToSegment(px: number, py: number, ax: number, ay: number, sx: number, sy: number, l2: number): number {
+  const t = l2 ? Math.max(0, Math.min(1, ((px - ax) * sx + (py - ay) * sy) / l2)) : 0;
+  const ex = px - (ax + t * sx);
+  const ey = py - (ay + t * sy);
+  return ex * ex + ey * ey;
 }
-
 // ---------------------------------------------------------------------------------------------------------------------
 // per-segment state code. 13 bits: osm(2) dbt(2) dbtClass(2) atm(2) assoc(5)
 // ---------------------------------------------------------------------------------------------------------------------
@@ -337,6 +335,8 @@ export type SilRouteAccumulator = { byCode: Float64Array; unmatched: number; amb
 export function walkSilRoute(index: SilIndex, coordinates: ReadonlyArray<readonly number[]>): SilRouteAccumulator {
   const acc: SilRouteAccumulator = { byCode: new Float64Array(1 << 13), unmatched: 0, ambiguousRouteMatch: 0, total: 0 };
   const { stepMetres: STEP, reachMetres: REACH, cosAligned: COS, cellMetres: CELL } = SIL_LIMITS;
+  const REACH2 = REACH * REACH;
+  const COS2 = COS * COS;
   for (let i = 1; i < coordinates.length; i++) {
     const L = metresBetween(coordinates[i - 1], coordinates[i]);
     const px0 = toX(coordinates[i - 1][0]);
@@ -344,6 +344,7 @@ export function walkSilRoute(index: SilIndex, coordinates: ReadonlyArray<readonl
     const dx = toX(coordinates[i][0]) - px0;
     const dy = toY(coordinates[i][1]) - py0;
     const len = Math.hypot(dx, dy) || 1e-9;
+    const len2 = len * len;
     const n = Math.max(1, Math.round(L / STEP));
     for (let k = 0; k < n; k++) {
       const px = px0 + (dx * (k + 0.5)) / n;
@@ -361,13 +362,16 @@ export function walkSilRoute(index: SilIndex, coordinates: ReadonlyArray<readonl
         for (let at = tile.start[cell], end = tile.start[cell + 1]; at < end; at++) {
           const row = tile.items[at];
           const o = row * 5;
-          const d = distanceToSegment(px, py, g[o], g[o + 1], g[o + 2], g[o + 3]);
-          if (d > REACH) continue;
-          const cos = Math.abs((dx * (g[o + 2] - g[o]) + dy * (g[o + 3] - g[o + 1])) / (len * g[o + 4]));
-          if (cos < COS) continue;
+          // Alignment first (cheap, no square root), then the squared distance; same accept set as cos >= 0.866 and d <= 12 m.
+          const sx = g[o + 2] - g[o];
+          const sy = g[o + 3] - g[o + 1];
+          const dot = dx * sx + dy * sy;
+          if (dot * dot < COS2 * len2 * g[o + 4] * g[o + 4]) continue;
+          const d2 = squaredDistanceToSegment(px, py, g[o], g[o + 1], sx, sy, g[o + 4] * g[o + 4]);
+          if (d2 > REACH2) continue;
           const code = tile.codes[row];
           if (bestCode >= 0 && bestCode !== code) ambiguous = true;
-          if (d < bestD) { bestCode = code; bestD = d; }
+          if (d2 < bestD) { bestCode = code; bestD = d2; }
         }
       }
       const share = L / n;
