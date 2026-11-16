@@ -1,0 +1,116 @@
+# Isolated preview of Phase 4.37 (PR #16) for the real-iPhone validation.
+# Manual only. Publishes the Worker `lastrico-preview-437` WITHOUT the production D1 database and never touches `lastrico-pilot`.
+# Requires the repository secrets CLOUDFLARE_API_TOKEN (Workers Scripts: Edit) and CLOUDFLARE_ACCOUNT_ID.
+# The `delete` action removes the preview. See outputs/phase437-pilot-validation-plan.md, sections 4 and 5.
+name: Preview 4.37 (isolated)
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "dry-run builds and checks only (uploads nothing); deploy publishes the preview; delete removes it"
+        type: choice
+        options: [dry-run, deploy, delete]
+        default: dry-run
+      commit:
+        description: "Exact commit to build (reviewed head of PR #16)"
+        type: string
+        default: "1a5d8e95066cb106283e169cc0b862a108e6f1be"
+      confirm:
+        description: "Type the Worker name to confirm: lastrico-preview-437"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-437
+  cancel-in-progress: false
+
+env:
+  PREVIEW_NAME: lastrico-preview-437
+  PILOT_NAME: lastrico-pilot
+
+jobs:
+  preview:
+    name: Preview Worker (${{ inputs.action }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Guard inputs
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+          COMMIT: ${{ inputs.commit }}
+        run: |
+          [ "$CONFIRM" = "$PREVIEW_NAME" ] || { echo "confirm must equal $PREVIEW_NAME"; exit 1; }
+          echo "$COMMIT" | grep -Eq '^[0-9a-f]{40}$' || { echo "commit must be a full 40-character SHA"; exit 1; }
+      - name: Check out the exact commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Delete the preview
+        if: inputs.action == 'delete'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler delete "$PREVIEW_NAME" --force
+      - name: Prepare the Milan-only release copy
+        if: inputs.action != 'delete'
+        run: |
+          if [ -n "$(git status --porcelain --untracked-files=no)" ]; then echo "dirty tree"; exit 1; fi
+          node scripts/prepare-milan-release.mjs "$RUNNER_TEMP/release"
+      - name: Test the release copy
+        if: inputs.action != 'delete'
+        working-directory: ${{ runner.temp }}/release
+        run: npm test
+      - name: Build and check the release copy (no upload)
+        if: inputs.action != 'delete'
+        working-directory: ${{ runner.temp }}/release
+        run: npm run deploy:pilot -- --dry-run
+      - name: No Rome in the build
+        if: inputs.action != 'delete'
+        working-directory: ${{ runner.temp }}/release
+        run: |
+          if grep -rIlE "rome-road-store|rome-tile|rome-tiles-packed|['\"]rome['\"]" app components lib worker data; then echo "Rome found"; exit 1; fi
+      - name: Rewrite the generated config for the isolated preview
+        if: inputs.action != 'delete'
+        working-directory: ${{ runner.temp }}/release
+        run: |
+          node -e '
+            const fs = require("fs");
+            const p = "dist/server/wrangler.json";
+            const c = JSON.parse(fs.readFileSync(p, "utf8"));
+            c.name = process.env.PREVIEW_NAME;
+            c.topLevelName = process.env.PREVIEW_NAME;
+            c.d1_databases = [];
+            fs.writeFileSync(p, JSON.stringify(c));
+            const used = (v) => (Array.isArray(v) ? v.length > 0 : v && Object.keys(v).length > 0);
+            const bad = ["kv_namespaces", "r2_buckets", "queues", "services", "hyperdrive", "vectorize"].filter((k) => used(c[k]));
+            const bindings = JSON.stringify(c.durable_objects && c.durable_objects.bindings);
+            if (c.name === process.env.PILOT_NAME || bad.length) { console.error("Unsafe preview config", c.name, bad); process.exit(1); }
+            if (bindings !== JSON.stringify([{ name: "ROUTE_ENGINE", class_name: "RouteEngine" }])) { console.error("Unexpected Durable Object bindings", bindings); process.exit(1); }
+            console.log("preview config ok:", c.name, "d1:", c.d1_databases.length, bindings);
+          '
+      - name: Dry run of the preview upload
+        if: inputs.action != 'delete'
+        working-directory: ${{ runner.temp }}/release
+        run: npx wrangler deploy --dry-run --config dist/server/wrangler.json
+      - name: Publish the preview
+        if: inputs.action == 'deploy'
+        working-directory: ${{ runner.temp }}/release
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx wrangler deploy --config dist/server/wrangler.json
+          echo "Preview Worker $PREVIEW_NAME published. Delete it within 48 hours (action: delete)."
