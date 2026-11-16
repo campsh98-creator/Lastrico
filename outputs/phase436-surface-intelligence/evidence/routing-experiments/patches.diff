@@ -1,0 +1,70 @@
+# Variants: G0=production; G1=slice minimum 20 m; G2=slice minimum 15 m; G3=no early stop; G4=early stop only when the improvement leaves no stone; G5=slice 15 m + stop-when-clean; G6=slice 15 m + stop-when-clean + refine while stone left
+# Patches are applied in memory by exp-harness.mjs (loadPatchedHandler); each anchor matches exactly once in app/api/routes/route.ts at 3e31da9.
+
+# P0-capture: Expose the internal candidate pool and decision state to the experiment harness (no behaviour change).
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 901 @@
+- const calculationCompletedAt = performance.now();
++ const calculationCompletedAt = performance.now();
++     globalThis.__EXP_CAPTURE?.({ scored, generated, fast, safe, selection, hasDistinctAlternative, antiPaveStatus, baseScored, baseRoutes,
++       surfaceAwareRoutes, detourResponses, canGenerate, baseAlreadyImproves, surfaceAwareAttempted, surfaceAwareNothingToTarget,
++       surfaceAwareFailed, preliminaryFast, preliminarySafe, fastestBase, policy, avoidance, mode, navigationRequest, standard, deadline });
+
+# S20-main: Penalised-search slice minimum 25 -> 20 m (route.ts:688).
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 688 @@
+- const roughSlices = extractRoughSlices(fastestBase.coordinates, isSegmentRough, 25);
++ const roughSlices = extractRoughSlices(fastestBase.coordinates, isSegmentRough, 20);
+
+# S20-seen: Same minimum for the stone slices of other candidates used by the refinement (route.ts:724).
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 724 @@
+- ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), 25) : [];
++ ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), 20) : [];
+
+# S15-main: Penalised-search slice minimum 25 -> 15 m (route.ts:688).
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 688 @@
+- const roughSlices = extractRoughSlices(fastestBase.coordinates, isSegmentRough, 25);
++ const roughSlices = extractRoughSlices(fastestBase.coordinates, isSegmentRough, 15);
+
+# S15-seen: Same minimum for the stone slices of other candidates used by the refinement (route.ts:724).
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 724 @@
+- ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), 25) : [];
++ ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), 15) : [];
+
+# E0-no-early-stop: Remove the cheap-improvement early stop: the penalised search runs whenever stone remains (route.ts:653).
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 653 @@
+- const baseAlreadyImproves = improvesCheaply(preliminarySafe, preliminaryFast);
++ const baseAlreadyImproves = false;
+
+# E1-stop-when-clean: Early stop only if the cheap improvement leaves less than the minimum reduction of weighted stone (route.ts:653).
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 653 @@
+- const baseAlreadyImproves = improvesCheaply(preliminarySafe, preliminaryFast);
++ const baseAlreadyImproves = improvesCheaply(preliminarySafe, preliminaryFast) && preliminarySafe.riskMeters < policy.minimumPaveReduction;
+
+# R1-refine-while-stone-left: Run the planner refinement while the first penalised candidate still has at least the minimum reduction of stone, not only while it keeps half (route.ts:716-717).
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 716 @@
+- if (!isLegalCandidate(firstScored, mode) || firstScored.surfaceScore.weightedPaveMeters >= Math.max(
+-             policy.minimumPaveReduction, preliminaryFast.surfaceScore.weightedPaveMeters * 0.5)) {
++ if (!isLegalCandidate(firstScored, mode) || firstScored.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction) {
+
+# R1b-refine-gate2: Second refinement gate (route.ts:798-799): refine while the pool still holds at least the minimum reduction of stone.
+--- a/app/api/routes/route.ts
++++ b/app/api/routes/route.ts (in memory)
+@@ line 798 @@
+- if (poolSafe.surfaceScore.weightedPaveMeters >= Math.max(
+-         policy.minimumPaveReduction, poolFast.surfaceScore.weightedPaveMeters * 0.5)) {
++ if (poolSafe.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction) {

@@ -1,0 +1,47 @@
+{
+ "inventory": {
+  "unknownByWhy": {
+   "untagged": 26298,
+   "nomatch": 71281,
+   "conflict": 0,
+   "other": 1411
+  },
+  "unknownByClass": {
+   "?": 71281,
+   "residential": 16040,
+   "cycleway": 3245,
+   "service": 1542,
+   "pedestrian": 170,
+   "footway": 142,
+   "unclassified": 6572
+  },
+  "roughByMaterial": {
+   "sett": 50316,
+   "paving_stones": 31183,
+   "cobblestone": 3297,
+   "unhewn_cobblestone": 258
+  },
+  "rail": {
+   "tagged": 8891,
+   "mapped-adjacent": 52804,
+   "none-in-covered-area": 450613,
+   "unknown-outside-coverage": 799541
+  },
+  "smoothnessSamples": 0,
+  "nonShiftPickedRoutes": 298
+ },
+ "layerTouch": {
+  "La": {
+   "casesWithAnyDifferenceInRisk": 215,
+   "meanAbsRiskChangeOnProdPick": 34.2
+  },
+  "Lb": {
+   "casesWithAnyDifferenceInRisk": 10,
+   "meanAbsRiskChangeOnProdPick": 0
+  },
+  "Lc": {
+   "casesWithAnyDifferenceInRisk": 233,
+   "meanAbsRiskChangeOnProdPick": 76.9
+  }
+ }
+}

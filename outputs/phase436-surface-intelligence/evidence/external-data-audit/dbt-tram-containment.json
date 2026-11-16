@@ -1,0 +1,109 @@
+{
+ "totalM": 6097,
+ "insideVehicularAreaM": 2332,
+ "insideTramSedeM": 1495,
+ "insideAreaStradaleM": 2581,
+ "insideNoneM": 2021,
+ "insideVehAndSedeM": 0,
+ "byNearestDbtStreet": {
+  "PIAZZALE MEDAGLIE DORO": {
+   "m": 226,
+   "inVeh": 159,
+   "inSede": 60,
+   "inArea": 166,
+   "none": 0
+  },
+  "(none)": {
+   "m": 2323,
+   "inVeh": 109,
+   "inSede": 0,
+   "inArea": 302,
+   "none": 2021
+  },
+  "VIALE MONTE NERO": {
+   "m": 660,
+   "inVeh": 16,
+   "inSede": 644,
+   "inArea": 16,
+   "none": 0
+  },
+  "VIALE SABOTINO": {
+   "m": 92,
+   "inVeh": 0,
+   "inSede": 92,
+   "inArea": 0,
+   "none": 0
+  },
+  "VIA TITO LIVIO": {
+   "m": 516,
+   "inVeh": 53,
+   "inSede": 463,
+   "inArea": 53,
+   "none": 0
+  },
+  "VIA LATTANZIO": {
+   "m": 16,
+   "inVeh": 16,
+   "inSede": 0,
+   "inArea": 16,
+   "none": 0
+  },
+  "VIA COMELICO": {
+   "m": 431,
+   "inVeh": 415,
+   "inSede": 0,
+   "inArea": 431,
+   "none": 0
+  },
+  "VIALE UMBRIA": {
+   "m": 325,
+   "inVeh": 73,
+   "inSede": 238,
+   "inArea": 88,
+   "none": 0
+  },
+  "VIA ANGELO MAJ": {
+   "m": 162,
+   "inVeh": 162,
+   "inSede": 0,
+   "inArea": 162,
+   "none": 0
+  },
+  "VIA LUCANO": {
+   "m": 17,
+   "inVeh": 0,
+   "inSede": 0,
+   "inArea": 17,
+   "none": 0
+  },
+  "VIA FRIULI": {
+   "m": 64,
+   "inVeh": 64,
+   "inSede": 0,
+   "inArea": 64,
+   "none": 0
+  },
+  "CORSO LODI": {
+   "m": 1074,
+   "inVeh": 1074,
+   "inSede": 0,
+   "inArea": 1074,
+   "none": 0
+  },
+  "PIAZZA BRUNO BUOZZI": {
+   "m": 191,
+   "inVeh": 191,
+   "inSede": 0,
+   "inArea": 191,
+   "none": 0
+  }
+ },
+ "vehAC_VEI_ZON": {
+  "0204": 471.38122211251164,
+  "0205": 427.86879004190365,
+  "01": 1432.8712188675236
+ },
+ "sedeTypes": {
+  "tranvia": 1495.4870659277642
+ }
+}

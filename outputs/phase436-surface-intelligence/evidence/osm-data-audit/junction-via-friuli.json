@@ -1,0 +1,287 @@
+{
+  "junction": {
+    "alongRoute0M": 65.4,
+    "nodeVersionInArchive": 1,
+    "nodeTagsInArchive": {},
+    "waysMeeting": 4
+  },
+  "archived": [
+    {
+      "label": "ORIGIN-A",
+      "version": 10,
+      "timestamp": "2026-07-29T14:08:16Z",
+      "nodesInWay": 2,
+      "lengthM": 9.9,
+      "startsAtJunction": true,
+      "endsAtJunction": false,
+      "leavesWithHeading": 113.2,
+      "tags": {
+        "highway": "residential",
+        "name": "<origin street>",
+        "oneway": "yes",
+        "surface": "concrete:plates",
+        "sidewalk": "both",
+        "maxspeed": "30"
+      },
+      "fileOfNewestVersion": "milan-citywide-s-east.osm.json.gz"
+    },
+    {
+      "label": "VF 264363537",
+      "id": 264363537,
+      "version": 6,
+      "timestamp": "2026-07-29T14:08:12Z",
+      "nodesInWay": 3,
+      "lengthM": 28.7,
+      "startsAtJunction": true,
+      "endsAtJunction": false,
+      "leavesWithHeading": 209.1,
+      "tags": {
+        "highway": "residential",
+        "name": "Via Friuli",
+        "oneway": "yes",
+        "lanes": "2",
+        "surface": "asphalt",
+        "sidewalk": "both"
+      },
+      "fileOfNewestVersion": "milan-citywide-s-east.osm.json.gz"
+    },
+    {
+      "label": "VF 264363540",
+      "id": 264363540,
+      "version": 6,
+      "timestamp": "2025-11-15T21:01:31Z",
+      "nodesInWay": 4,
+      "lengthM": 181,
+      "startsAtJunction": false,
+      "endsAtJunction": true,
+      "arrivesWithHeading": 210.6,
+      "tags": {
+        "highway": "residential",
+        "name": "Via Friuli",
+        "oneway": "yes",
+        "lanes": "2",
+        "surface": "asphalt",
+        "sidewalk": "separate"
+      },
+      "fileOfNewestVersion": "milan-citywide-s-east.osm.json.gz"
+    },
+    {
+      "label": "ORIGIN-B",
+      "version": 7,
+      "timestamp": "2026-07-29T14:08:18Z",
+      "nodesInWay": 3,
+      "lengthM": 10.8,
+      "startsAtJunction": false,
+      "endsAtJunction": true,
+      "arrivesWithHeading": 111.3,
+      "tags": {
+        "highway": "residential",
+        "name": "<origin street>",
+        "oneway": "yes",
+        "lanes": "1",
+        "surface": "concrete:plates",
+        "sidewalk": "both",
+        "maxspeed": "30"
+      },
+      "fileOfNewestVersion": "milan-citywide-s-east.osm.json.gz"
+    }
+  ],
+  "archivedTaggedNodesWithin100m": [],
+  "archivedNodeTagCounts": {
+    "citywide": 0,
+    "pilot": 28443
+  },
+  "archiveRelationsTouchingJunctionWays": [],
+  "restrictionRelationsInWholeArchive": 220,
+  "turn": {
+    "originArrivesHeading": 111.3,
+    "viaFriuliLeavesHeading": 209.1,
+    "signedTurnDeg": 97.8,
+    "meaning": "right turn"
+  },
+  "viaFriuliOneWayAllowsEntryFromJunction": true,
+  "viaFriuliInboundWayEndsAtJunction": true,
+  "current": {
+    "osmBase": "2026-11-14T13:43:36Z",
+    "junctionNodeExists": true,
+    "junctionNodeTags": {},
+    "junctionNodeVersion": 5,
+    "waysAtJunction": [
+      {
+        "label": "ORIGIN-A",
+        "version": 10,
+        "archivedVersion": 10,
+        "timestamp": "2026-07-29T14:08:16Z",
+        "startsAtJunction": true,
+        "endsAtJunction": false,
+        "leavesWithHeading": 113.2,
+        "tags": {
+          "highway": "residential",
+          "name": "<origin street>",
+          "oneway": "yes",
+          "surface": "concrete:plates",
+          "sidewalk": "both",
+          "maxspeed": "30"
+        },
+        "tagsChangedSinceArchive": false,
+        "nodesChanged": false
+      },
+      {
+        "label": "VF 264363537",
+        "id": 264363537,
+        "version": 6,
+        "archivedVersion": 6,
+        "timestamp": "2026-07-29T14:08:12Z",
+        "startsAtJunction": true,
+        "endsAtJunction": false,
+        "leavesWithHeading": 209.1,
+        "tags": {
+          "highway": "residential",
+          "name": "Via Friuli",
+          "oneway": "yes",
+          "lanes": "2",
+          "surface": "asphalt",
+          "sidewalk": "both"
+        },
+        "tagsChangedSinceArchive": false,
+        "nodesChanged": false
+      },
+      {
+        "label": "VF 264363540",
+        "id": 264363540,
+        "version": 6,
+        "archivedVersion": 6,
+        "timestamp": "2025-11-15T21:01:31Z",
+        "startsAtJunction": false,
+        "endsAtJunction": true,
+        "arrivesWithHeading": 210.6,
+        "tags": {
+          "highway": "residential",
+          "name": "Via Friuli",
+          "oneway": "yes",
+          "lanes": "2",
+          "surface": "asphalt",
+          "sidewalk": "separate"
+        },
+        "tagsChangedSinceArchive": false,
+        "nodesChanged": false
+      },
+      {
+        "label": "ORIGIN-B",
+        "version": 7,
+        "archivedVersion": 7,
+        "timestamp": "2026-07-29T14:08:18Z",
+        "startsAtJunction": false,
+        "endsAtJunction": true,
+        "arrivesWithHeading": 111.3,
+        "tags": {
+          "highway": "residential",
+          "name": "<origin street>",
+          "oneway": "yes",
+          "lanes": "1",
+          "surface": "concrete:plates",
+          "sidewalk": "both",
+          "maxspeed": "30"
+        },
+        "tagsChangedSinceArchive": false,
+        "nodesChanged": false
+      }
+    ],
+    "relationsReturnedForViaFriuliAndTouchingWays": [
+      {
+        "id": 3123413,
+        "tags": {
+          "restriction": "only_straight_on",
+          "type": "restriction"
+        },
+        "members": 3
+      }
+    ],
+    "restrictionsTouchingJunctionWays": [],
+    "taggedNodesWithin100m": [
+      {
+        "tags": {
+          "crossing": "marked",
+          "crossing:markings": "yes",
+          "highway": "crossing",
+          "tactile_paving": "no"
+        },
+        "distM": 9.9
+      },
+      {
+        "tags": {
+          "crossing": "uncontrolled",
+          "crossing:markings": "zebra",
+          "highway": "crossing"
+        },
+        "distM": 32.5
+      },
+      {
+        "tags": {
+          "highway": "stop"
+        },
+        "distM": 29.1
+      },
+      {
+        "tags": {
+          "crossing": "marked",
+          "crossing:markings": "yes",
+          "highway": "crossing",
+          "tactile_paving": "no"
+        },
+        "distM": 8.8
+      },
+      {
+        "tags": {
+          "crossing": "marked",
+          "crossing:markings": "yes",
+          "highway": "crossing",
+          "tactile_paving": "no"
+        },
+        "distM": 8.4
+      },
+      {
+        "tags": {
+          "highway": "stop"
+        },
+        "distM": 7
+      },
+      {
+        "tags": {
+          "barrier": "kerb",
+          "check_date:tactile_paving": "2026-03-31",
+          "kerb": "lowered",
+          "tactile_paving": "no"
+        },
+        "distM": 10.3
+      },
+      {
+        "tags": {
+          "barrier": "kerb",
+          "check_date:tactile_paving": "2026-03-31",
+          "kerb": "lowered",
+          "tactile_paving": "no"
+        },
+        "distM": 9.5
+      },
+      {
+        "tags": {
+          "barrier": "kerb",
+          "check_date:tactile_paving": "2026-03-26",
+          "kerb": "lowered",
+          "tactile_paving": "no"
+        },
+        "distM": 9.9
+      },
+      {
+        "tags": {
+          "barrier": "kerb",
+          "check_date:tactile_paving": "2026-03-26",
+          "kerb": "lowered",
+          "tactile_paving": "no"
+        },
+        "distM": 10.5
+      }
+    ]
+  }
+}

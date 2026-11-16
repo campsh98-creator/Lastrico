@@ -1,0 +1,27 @@
+{
+ "retrievedUtc": "2026-11-14T14:38:46.956Z",
+ "note": "point = Piazzale Lodi centroid (public landmark)",
+ "out": {
+  "Ortofoto2021": {
+   "identify": {
+    "error": {
+     "code": 500,
+     "message": "Error performing identify operation",
+     "details": []
+    }
+   }
+  },
+  "Ortofoto2018_2019": {
+   "identify": {
+    "error": {
+     "code": 400,
+     "extendedCode": -2147467259,
+     "message": "Unable to complete operation.",
+     "details": [
+      "General function failure"
+     ]
+    }
+   }
+  }
+ }
+}

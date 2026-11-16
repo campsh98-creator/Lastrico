@@ -5,6 +5,30 @@ built from commit `54bd605`. This page separates what exists locally from
 what is online, and fixed defects from open problems. Every claim points to
 the evidence in `outputs/`; the detailed phase reports there are in Italian.
 
+## Phase tracker: routing forensics and Surface Intelligence (4.36 to 4.40)
+
+Updated on 15 November 2026. None of the phases below is on the pilot. Phases 4.38 to 4.40 exist only
+as unpublished development work: nothing is merged into `main`, deployed or running on the pilot.
+
+| Phase | Status | What it is | Where |
+| --- | --- | --- | --- |
+| **4.36** | **COMPLETED: research and feasibility** | Forensic audit of the 13 November return trip, data and external-source audit, routing experiments, Surface Intelligence Layer (SIL) design, smartphone-sensing feasibility. No production code. Closed and archived on 15 November 2026. | `outputs/phase436-surface-intelligence/` (`CLOSURE.md`, `final-decision-report.md`); scripts in `experiments/phase436-surface-intelligence/scripts/` |
+| **4.37** | **IMPLEMENTED: PR #16, pilot validation pending** | Anti-pavé candidate generation fix (P0 of the 4.36 plan), U-turn cost, trace v3. PR #16 is open with CI green and is not merged; its files live on the PR branch only. | branch `fix/phase437-anti-pave-candidates`, `outputs/phase437-anti-pave-report.md` on that branch |
+| **4.38** | **IMPLEMENTED LOCALLY: OSM foundation, not merged** | Versioned OSM provenance, segment identities, circular-way direction fix. | Not published; report to follow with the implementation PR |
+| **4.39** | **IMPLEMENTED LOCALLY: offline SIL, not merged** | Evidence ledger, deterministic resolver, static rail overlay, coverage flags, offline shadow reader. | Not published; report to follow with the implementation PR |
+| **4.39b** | **IMPLEMENTED LOCALLY: citywide municipal DBT acquisition, not merged** | Comune di Milano DBT 2020 tram axes for the whole city, with explicit coverage. Combined OSM/DBT/ATM data must not be distributed until the licences are settled. | Not published; report to follow with the implementation PR |
+| **4.40** | **IMPLEMENTED LOCALLY AND TECHNICALLY VALIDATED: runtime shadow integration; not merged, not deployed, not production-ready** | Source-separated SIL layers (OSM, DBT, ATM, internal association) and a read-only shadow adapter that adds `diagnostics.sil` to Milan route responses. Off by default. Acceptance tests passed locally on 15 November 2026: 264 of 264 Milan cases identical in status, geometry, selection, surface, time, legality and provider requests; no external request. Not measured on Cloudflare, Linux CI not run, layers not distributable (licences open). Not for production. | Not published; report to follow with the implementation PR |
+
+**Handoff from 4.36.** Phase 4.36 recommended and did not implement: the candidate-generation fixes (now 4.37),
+OSM re-extraction with provenance (4.38), the rails layer and the SIL in shadow mode (4.39, 4.39b, 4.40), field
+surveys of the disputed sections, and a shadow ranking. Still open from that list: the owner's decision on mixed
+licences, the field surveys, the shadow ranking, and any sensing work (an in-app recorder is a no-go). The
+research is not reopened because integration is unfinished. The mapping of every recommendation to its phase is
+in `outputs/phase436-surface-intelligence/CLOSURE.md`.
+
+**Rail data is evidence, not measurement.** The DBT layer says where the Comune mapped tram rails in 2020. It
+does not say they are physically present or rough today, and the product must not claim otherwise.
+
 ## 1. Where each feature stands
 
 **Legend**

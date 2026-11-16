@@ -1,0 +1,753 @@
+{
+ "aliasing": [
+  {
+   "aliasHz": 27.8,
+   "folded": false,
+   "jointHz": 27.8,
+   "kmh": 10,
+   "pitchM": 0.1,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 4.4,
+   "folded": true,
+   "jointHz": 55.6,
+   "kmh": 20,
+   "pitchM": 0.1,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 23.3,
+   "folded": true,
+   "jointHz": 83.3,
+   "kmh": 30,
+   "pitchM": 0.1,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 23.1,
+   "folded": false,
+   "jointHz": 23.1,
+   "kmh": 10,
+   "pitchM": 0.12,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 13.7,
+   "folded": true,
+   "jointHz": 46.3,
+   "kmh": 20,
+   "pitchM": 0.12,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 9.4,
+   "folded": true,
+   "jointHz": 69.4,
+   "kmh": 30,
+   "pitchM": 0.12,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 18.5,
+   "folded": false,
+   "jointHz": 18.5,
+   "kmh": 10,
+   "pitchM": 0.15,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 23,
+   "folded": true,
+   "jointHz": 37,
+   "kmh": 20,
+   "pitchM": 0.15,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 4.4,
+   "folded": true,
+   "jointHz": 55.6,
+   "kmh": 30,
+   "pitchM": 0.15,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 13.9,
+   "folded": false,
+   "jointHz": 13.9,
+   "kmh": 10,
+   "pitchM": 0.2,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 27.8,
+   "folded": false,
+   "jointHz": 27.8,
+   "kmh": 20,
+   "pitchM": 0.2,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 18.3,
+   "folded": true,
+   "jointHz": 41.7,
+   "kmh": 30,
+   "pitchM": 0.2,
+   "rate": "web-60Hz"
+  },
+  {
+   "aliasHz": 27.8,
+   "folded": false,
+   "jointHz": 27.8,
+   "kmh": 10,
+   "pitchM": 0.1,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 44.4,
+   "folded": true,
+   "jointHz": 55.6,
+   "kmh": 20,
+   "pitchM": 0.1,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 16.7,
+   "folded": true,
+   "jointHz": 83.3,
+   "kmh": 30,
+   "pitchM": 0.1,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 23.1,
+   "folded": false,
+   "jointHz": 23.1,
+   "kmh": 10,
+   "pitchM": 0.12,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 46.3,
+   "folded": false,
+   "jointHz": 46.3,
+   "kmh": 20,
+   "pitchM": 0.12,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 30.6,
+   "folded": true,
+   "jointHz": 69.4,
+   "kmh": 30,
+   "pitchM": 0.12,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 18.5,
+   "folded": false,
+   "jointHz": 18.5,
+   "kmh": 10,
+   "pitchM": 0.15,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 37,
+   "folded": false,
+   "jointHz": 37,
+   "kmh": 20,
+   "pitchM": 0.15,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 44.4,
+   "folded": true,
+   "jointHz": 55.6,
+   "kmh": 30,
+   "pitchM": 0.15,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 13.9,
+   "folded": false,
+   "jointHz": 13.9,
+   "kmh": 10,
+   "pitchM": 0.2,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 27.8,
+   "folded": false,
+   "jointHz": 27.8,
+   "kmh": 20,
+   "pitchM": 0.2,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 41.7,
+   "folded": false,
+   "jointHz": 41.7,
+   "kmh": 30,
+   "pitchM": 0.2,
+   "rate": "native-100Hz"
+  },
+  {
+   "aliasHz": 27.8,
+   "folded": false,
+   "jointHz": 27.8,
+   "kmh": 10,
+   "pitchM": 0.1,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 55.6,
+   "folded": false,
+   "jointHz": 55.6,
+   "kmh": 20,
+   "pitchM": 0.1,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 83.3,
+   "folded": false,
+   "jointHz": 83.3,
+   "kmh": 30,
+   "pitchM": 0.1,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 23.1,
+   "folded": false,
+   "jointHz": 23.1,
+   "kmh": 10,
+   "pitchM": 0.12,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 46.3,
+   "folded": false,
+   "jointHz": 46.3,
+   "kmh": 20,
+   "pitchM": 0.12,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 69.4,
+   "folded": false,
+   "jointHz": 69.4,
+   "kmh": 30,
+   "pitchM": 0.12,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 18.5,
+   "folded": false,
+   "jointHz": 18.5,
+   "kmh": 10,
+   "pitchM": 0.15,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 37,
+   "folded": false,
+   "jointHz": 37,
+   "kmh": 20,
+   "pitchM": 0.15,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 55.6,
+   "folded": false,
+   "jointHz": 55.6,
+   "kmh": 30,
+   "pitchM": 0.15,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 13.9,
+   "folded": false,
+   "jointHz": 13.9,
+   "kmh": 10,
+   "pitchM": 0.2,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 27.8,
+   "folded": false,
+   "jointHz": 27.8,
+   "kmh": 20,
+   "pitchM": 0.2,
+   "rate": "native-200Hz"
+  },
+  {
+   "aliasHz": 41.7,
+   "folded": false,
+   "jointHz": 41.7,
+   "kmh": 30,
+   "pitchM": 0.2,
+   "rate": "native-200Hz"
+  }
+ ],
+ "asOf": "2026-11-14",
+ "betaByWaviness": [
+  {
+   "beta": 0.25,
+   "rmsRatio30over10": 1.32,
+   "waviness": 1.5
+  },
+  {
+   "beta": 0.5,
+   "rmsRatio30over10": 1.73,
+   "waviness": 2
+  },
+  {
+   "beta": 0.75,
+   "rmsRatio30over10": 2.28,
+   "waviness": 2.5
+  },
+  {
+   "beta": 1,
+   "rmsRatio30over10": 3,
+   "waviness": 3
+  }
+ ],
+ "betaNote": "RMS in a fixed temporal band scales as v^((w-1)/2); two surfaces with different w need different exponents, so one global beta cannot normalise both.",
+ "classRatioDrift": [
+  {
+   "ratioAt20Over10": 0.84,
+   "ratioAt30Over10": 0.76,
+   "wAsphalt": 2,
+   "wSett": 1.5
+  },
+  {
+   "ratioAt20Over10": 1,
+   "ratioAt30Over10": 1,
+   "wAsphalt": 2,
+   "wSett": 2
+  },
+  {
+   "ratioAt20Over10": 1.19,
+   "ratioAt30Over10": 1.32,
+   "wAsphalt": 2,
+   "wSett": 2.5
+  }
+ ],
+ "jitterCoherence": [
+  {
+   "coherence": 0.998,
+   "hz": 10,
+   "jitterMs": 1
+  },
+  {
+   "coherence": 0.982,
+   "hz": 30,
+   "jitterMs": 1
+  },
+  {
+   "coherence": 0.931,
+   "hz": 60,
+   "jitterMs": 1
+  },
+  {
+   "coherence": 0.992,
+   "hz": 10,
+   "jitterMs": 2
+  },
+  {
+   "coherence": 0.931,
+   "hz": 30,
+   "jitterMs": 2
+  },
+  {
+   "coherence": 0.753,
+   "hz": 60,
+   "jitterMs": 2
+  },
+  {
+   "coherence": 0.969,
+   "hz": 10,
+   "jitterMs": 4
+  },
+  {
+   "coherence": 0.753,
+   "hz": 30,
+   "jitterMs": 4
+  },
+  {
+   "coherence": 0.321,
+   "hz": 60,
+   "jitterMs": 4
+  }
+ ],
+ "kind": "analytic derivation, no data",
+ "maxSpeedForPitchKmh": [
+  {
+   "rate": "web-60Hz",
+   "rows": [
+    {
+     "nyquistKmh": 9.7,
+     "pitchM": 0.09,
+     "practicalKmh": 8.7
+    },
+    {
+     "nyquistKmh": 10.8,
+     "pitchM": 0.1,
+     "practicalKmh": 9.7
+    },
+    {
+     "nyquistKmh": 13,
+     "pitchM": 0.12,
+     "practicalKmh": 11.7
+    },
+    {
+     "nyquistKmh": 16.2,
+     "pitchM": 0.15,
+     "practicalKmh": 14.6
+    },
+    {
+     "nyquistKmh": 21.6,
+     "pitchM": 0.2,
+     "practicalKmh": 19.4
+    },
+    {
+     "nyquistKmh": 23.8,
+     "pitchM": 0.22,
+     "practicalKmh": 21.4
+    }
+   ]
+  },
+  {
+   "rate": "native-100Hz",
+   "rows": [
+    {
+     "nyquistKmh": 16.2,
+     "pitchM": 0.09,
+     "practicalKmh": 14.6
+    },
+    {
+     "nyquistKmh": 18,
+     "pitchM": 0.1,
+     "practicalKmh": 16.2
+    },
+    {
+     "nyquistKmh": 21.6,
+     "pitchM": 0.12,
+     "practicalKmh": 19.4
+    },
+    {
+     "nyquistKmh": 27,
+     "pitchM": 0.15,
+     "practicalKmh": 24.3
+    },
+    {
+     "nyquistKmh": 36,
+     "pitchM": 0.2,
+     "practicalKmh": 32.4
+    },
+    {
+     "nyquistKmh": 39.6,
+     "pitchM": 0.22,
+     "practicalKmh": 35.6
+    }
+   ]
+  },
+  {
+   "rate": "native-200Hz",
+   "rows": [
+    {
+     "nyquistKmh": 32.4,
+     "pitchM": 0.09,
+     "practicalKmh": 29.2
+    },
+    {
+     "nyquistKmh": 36,
+     "pitchM": 0.1,
+     "practicalKmh": 32.4
+    },
+    {
+     "nyquistKmh": 43.2,
+     "pitchM": 0.12,
+     "practicalKmh": 38.9
+    },
+    {
+     "nyquistKmh": 54,
+     "pitchM": 0.15,
+     "practicalKmh": 48.6
+    },
+    {
+     "nyquistKmh": 72,
+     "pitchM": 0.2,
+     "practicalKmh": 64.8
+    },
+    {
+     "nyquistKmh": 79.2,
+     "pitchM": 0.22,
+     "practicalKmh": 71.3
+    }
+   ]
+  }
+ ],
+ "milanDriveContext": {
+  "caveat": "one evening drive, one car, one route; piecewise-linear CDF from 6 knots; order of magnitude only",
+  "movingFixAbove_8p33ms_30kmh": 0.14,
+  "movingFixBelow_2p5ms_9kmh": 0.2,
+  "movingFixBelow_3ms_10p8kmh": 0.26,
+  "movingFixBelow_5p56ms_20kmh": 0.54,
+  "percentilesMs": {
+   "max": 13.1,
+   "median": 3.7,
+   "p25": 0.4,
+   "p75": 6.6,
+   "p90": 8.4,
+   "p95": 9.2
+  },
+  "source": "evidence/gps-trace-summary.redacted.json quality.speedMetersPerSecond (percentiles only)"
+ },
+ "minWavelengthM": [
+  {
+   "rate": "web-60Hz",
+   "rows": [
+    {
+     "kmh": 8,
+     "nMaxCyclesPerM": 12.15,
+     "nyquistLambdaMinM": 0.074,
+     "practicalLambdaMinM": 0.082
+    },
+    {
+     "kmh": 10,
+     "nMaxCyclesPerM": 9.72,
+     "nyquistLambdaMinM": 0.093,
+     "practicalLambdaMinM": 0.103
+    },
+    {
+     "kmh": 12,
+     "nMaxCyclesPerM": 8.1,
+     "nyquistLambdaMinM": 0.111,
+     "practicalLambdaMinM": 0.123
+    },
+    {
+     "kmh": 18,
+     "nMaxCyclesPerM": 5.4,
+     "nyquistLambdaMinM": 0.167,
+     "practicalLambdaMinM": 0.185
+    },
+    {
+     "kmh": 20,
+     "nMaxCyclesPerM": 4.86,
+     "nyquistLambdaMinM": 0.185,
+     "practicalLambdaMinM": 0.206
+    },
+    {
+     "kmh": 30,
+     "nMaxCyclesPerM": 3.24,
+     "nyquistLambdaMinM": 0.278,
+     "practicalLambdaMinM": 0.309
+    },
+    {
+     "kmh": 50,
+     "nMaxCyclesPerM": 1.94,
+     "nyquistLambdaMinM": 0.463,
+     "practicalLambdaMinM": 0.514
+    }
+   ]
+  },
+  {
+   "rate": "native-100Hz",
+   "rows": [
+    {
+     "kmh": 8,
+     "nMaxCyclesPerM": 20.25,
+     "nyquistLambdaMinM": 0.044,
+     "practicalLambdaMinM": 0.049
+    },
+    {
+     "kmh": 10,
+     "nMaxCyclesPerM": 16.2,
+     "nyquistLambdaMinM": 0.056,
+     "practicalLambdaMinM": 0.062
+    },
+    {
+     "kmh": 12,
+     "nMaxCyclesPerM": 13.5,
+     "nyquistLambdaMinM": 0.067,
+     "practicalLambdaMinM": 0.074
+    },
+    {
+     "kmh": 18,
+     "nMaxCyclesPerM": 9,
+     "nyquistLambdaMinM": 0.1,
+     "practicalLambdaMinM": 0.111
+    },
+    {
+     "kmh": 20,
+     "nMaxCyclesPerM": 8.1,
+     "nyquistLambdaMinM": 0.111,
+     "practicalLambdaMinM": 0.123
+    },
+    {
+     "kmh": 30,
+     "nMaxCyclesPerM": 5.4,
+     "nyquistLambdaMinM": 0.167,
+     "practicalLambdaMinM": 0.185
+    },
+    {
+     "kmh": 50,
+     "nMaxCyclesPerM": 3.24,
+     "nyquistLambdaMinM": 0.278,
+     "practicalLambdaMinM": 0.309
+    }
+   ]
+  },
+  {
+   "rate": "native-200Hz",
+   "rows": [
+    {
+     "kmh": 8,
+     "nMaxCyclesPerM": 40.5,
+     "nyquistLambdaMinM": 0.022,
+     "practicalLambdaMinM": 0.025
+    },
+    {
+     "kmh": 10,
+     "nMaxCyclesPerM": 32.4,
+     "nyquistLambdaMinM": 0.028,
+     "practicalLambdaMinM": 0.031
+    },
+    {
+     "kmh": 12,
+     "nMaxCyclesPerM": 27,
+     "nyquistLambdaMinM": 0.033,
+     "practicalLambdaMinM": 0.037
+    },
+    {
+     "kmh": 18,
+     "nMaxCyclesPerM": 18,
+     "nyquistLambdaMinM": 0.05,
+     "practicalLambdaMinM": 0.056
+    },
+    {
+     "kmh": 20,
+     "nMaxCyclesPerM": 16.2,
+     "nyquistLambdaMinM": 0.056,
+     "practicalLambdaMinM": 0.062
+    },
+    {
+     "kmh": 30,
+     "nMaxCyclesPerM": 10.8,
+     "nyquistLambdaMinM": 0.083,
+     "practicalLambdaMinM": 0.093
+    },
+    {
+     "kmh": 50,
+     "nMaxCyclesPerM": 6.48,
+     "nyquistLambdaMinM": 0.139,
+     "practicalLambdaMinM": 0.154
+    }
+   ]
+  }
+ ],
+ "quantisation": {
+  "note": "WebKit iOS path read 2026-11-14 shows no rounding; Chromium/Android rounding UNVERIFIED. If rounded, floor = q/sqrt(12).",
+  "stepMs2": 0.1,
+  "uniformNoiseRmsMs2": 0.0289
+ },
+ "rates": [
+  {
+   "fs": 60,
+   "id": "web-60Hz",
+   "note": "iOS WebKit NSTimer poll 1/60 s (source read 2026-11-14); Chromium pump 60 Hz"
+  },
+  {
+   "fs": 100,
+   "id": "native-100Hz",
+   "note": "assumed native iOS ceiling; UNVERIFIED (Apple page not readable)"
+  },
+  {
+   "fs": 200,
+   "id": "native-200Hz",
+   "note": "Android registerListener cap without HIGH_SAMPLING_RATE_SENSORS (developer.android.com, 2026-11-14)"
+  }
+ ],
+ "settBandResolvable60Hz": [
+  {
+   "kmh": 8,
+   "nMaxCyclesPerM": 12.15,
+   "settBandFractionResolvable": 1
+  },
+  {
+   "kmh": 10,
+   "nMaxCyclesPerM": 9.72,
+   "settBandFractionResolvable": 0.85
+  },
+  {
+   "kmh": 12,
+   "nMaxCyclesPerM": 8.1,
+   "settBandFractionResolvable": 0.65
+  },
+  {
+   "kmh": 18,
+   "nMaxCyclesPerM": 5.4,
+   "settBandFractionResolvable": 0.19
+  },
+  {
+   "kmh": 20,
+   "nMaxCyclesPerM": 4.86,
+   "settBandFractionResolvable": 0.07
+  },
+  {
+   "kmh": 30,
+   "nMaxCyclesPerM": 3.24,
+   "settBandFractionResolvable": 0
+  },
+  {
+   "kmh": 50,
+   "nMaxCyclesPerM": 1.94,
+   "settBandFractionResolvable": 0
+  }
+ ],
+ "speedErrorToNormalisedRms": [
+  {
+   "gpsSpeedSdMs": 0.2,
+   "kmh": 10,
+   "nRmsRelErrorBeta05": 0.036,
+   "nRmsRelErrorBeta095": 0.068,
+   "relSpeedError": 0.072
+  },
+  {
+   "gpsSpeedSdMs": 0.2,
+   "kmh": 20,
+   "nRmsRelErrorBeta05": 0.018,
+   "nRmsRelErrorBeta095": 0.034,
+   "relSpeedError": 0.036
+  },
+  {
+   "gpsSpeedSdMs": 0.2,
+   "kmh": 30,
+   "nRmsRelErrorBeta05": 0.012,
+   "nRmsRelErrorBeta095": 0.023,
+   "relSpeedError": 0.024
+  },
+  {
+   "gpsSpeedSdMs": 0.5,
+   "kmh": 10,
+   "nRmsRelErrorBeta05": 0.09,
+   "nRmsRelErrorBeta095": 0.171,
+   "relSpeedError": 0.18
+  },
+  {
+   "gpsSpeedSdMs": 0.5,
+   "kmh": 20,
+   "nRmsRelErrorBeta05": 0.045,
+   "nRmsRelErrorBeta095": 0.085,
+   "relSpeedError": 0.09
+  },
+  {
+   "gpsSpeedSdMs": 0.5,
+   "kmh": 30,
+   "nRmsRelErrorBeta05": 0.03,
+   "nRmsRelErrorBeta095": 0.057,
+   "relSpeedError": 0.06
+  }
+ ]
+}

@@ -1,0 +1,96 @@
+{
+ "note": "30 journeys x 3 modes, start and end shifted by a few metres (tests/fixtures/phase425-milan-journeys.json `stability`); flip = alternative offered in one run only",
+ "cells": {
+  "A@L0": {
+   "pairs": 90,
+   "decisionFlips": 11,
+   "flipRate": 0.122,
+   "meanRiskDeltaGapM": 57.5,
+   "maxRiskDeltaGapM": 813
+  },
+  "B@L0": {
+   "pairs": 90,
+   "decisionFlips": 11,
+   "flipRate": 0.122,
+   "meanRiskDeltaGapM": 57.4,
+   "maxRiskDeltaGapM": 813
+  },
+  "C-global@L0": {
+   "pairs": 90,
+   "decisionFlips": 11,
+   "flipRate": 0.122,
+   "meanRiskDeltaGapM": 56.8,
+   "maxRiskDeltaGapM": 813
+  },
+  "C-zoned@L0": {
+   "pairs": 90,
+   "decisionFlips": 10,
+   "flipRate": 0.111,
+   "meanRiskDeltaGapM": 56.7,
+   "maxRiskDeltaGapM": 813
+  },
+  "D-regret@L0": {
+   "pairs": 90,
+   "decisionFlips": 11,
+   "flipRate": 0.122,
+   "meanRiskDeltaGapM": 56.9,
+   "maxRiskDeltaGapM": 813
+  },
+  "D-maximin@L0": {
+   "pairs": 90,
+   "decisionFlips": 12,
+   "flipRate": 0.133,
+   "meanRiskDeltaGapM": 57.7,
+   "maxRiskDeltaGapM": 813
+  },
+  "A@La": {
+   "pairs": 90,
+   "decisionFlips": 14,
+   "flipRate": 0.156,
+   "meanRiskDeltaGapM": 57.4,
+   "maxRiskDeltaGapM": 813
+  },
+  "A@Lc": {
+   "pairs": 90,
+   "decisionFlips": 12,
+   "flipRate": 0.133,
+   "meanRiskDeltaGapM": 58.5,
+   "maxRiskDeltaGapM": 813
+  },
+  "A@Lac": {
+   "pairs": 90,
+   "decisionFlips": 13,
+   "flipRate": 0.144,
+   "meanRiskDeltaGapM": 57.1,
+   "maxRiskDeltaGapM": 813
+  },
+  "A@Lb": {
+   "pairs": 90,
+   "decisionFlips": 11,
+   "flipRate": 0.122,
+   "meanRiskDeltaGapM": 57.5,
+   "maxRiskDeltaGapM": 813
+  },
+  "B@Lac": {
+   "pairs": 90,
+   "decisionFlips": 14,
+   "flipRate": 0.156,
+   "meanRiskDeltaGapM": 58.6,
+   "maxRiskDeltaGapM": 813
+  },
+  "C-global@Lac": {
+   "pairs": 90,
+   "decisionFlips": 13,
+   "flipRate": 0.144,
+   "meanRiskDeltaGapM": 60,
+   "maxRiskDeltaGapM": 813
+  },
+  "D-regret@Lac": {
+   "pairs": 90,
+   "decisionFlips": 13,
+   "flipRate": 0.144,
+   "meanRiskDeltaGapM": 57,
+   "maxRiskDeltaGapM": 813
+  }
+ }
+}

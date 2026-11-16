@@ -1,0 +1,20 @@
+{
+ "asOf": "2026-11-14",
+ "evidence": {
+  "phase420-tests-rerun.txt": "93bcfa6cf656ae7640df6a02db99c3abb5fe7e3da312d78a35f5a6834d68f769",
+  "segment-assignment-simulation.json": "3c08fc19c28b7511a6aa1365a41962017226c3819dddefb7bcfaba958e2708b3",
+  "shock-features-toy.json": "dacaf8375c5e143f60611b70029c88e5197911b73b8e19390be09433854d9b56",
+  "source-log.md": "a12d8278789f94f6ac27da3d3099060e199b5b2ce8f4c467721c814d1026f809",
+  "spatial-resolvability.json": "8f482a9c49434a39fa591cff6dc674f0633bacdfd7c24e9435ecf4f6c09430bd",
+  "study-power.json": "4e91181f317e06ada4e4e56887a78b261ab957ea067e9d2d3116781915416032"
+ },
+ "note": "text files are hashed as stored on disk (CRLF/LF as written by the tool); rerun the scripts to regenerate the JSON outputs byte for byte",
+ "scripts": {
+  "sens-hashes.mjs": "988c126692ad5f4c7fbefcdafcc20950a49617bea8eed80b20919c22df9cfb4e",
+  "sens-lib.mjs": "af0c343be9e8b15ebc443943cf4174128331739bd543e06c460f0f1975c3562e",
+  "sens-power.mjs": "dd44cb9bc5f0de19fe55bc69a1391f2f5515d9b6703bbfe987674f5f95fc6a07",
+  "sens-segment-assign.mjs": "a66e556c00e6deb929d960592f4b8e146e048d19dea53b4681baad4a84b95e6a",
+  "sens-shock-features.mjs": "c7630a7555c77923edc79b0612562f61a60c9b3a66aaf169e927f33facae3478",
+  "sens-spatial.mjs": "103caeac3ee5c9c3d805a97dad1b4552894a7177d67d404b7d44a803020aaf74"
+ }
+}

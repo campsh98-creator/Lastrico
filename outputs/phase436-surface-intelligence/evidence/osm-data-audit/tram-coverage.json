@@ -1,0 +1,59 @@
+{
+ "tramWayMetresInArchive": 44106.9,
+ "tramMetresWithin10mOfAHighwayWay": 43303.1,
+ "within3m": 38445.3,
+ "ofWhichNearestHighwayWayCarriesATramTag": 4038.5,
+ "ofWhichNearestHighwayWaySurfaceIsStone": 15950.1,
+ "shareOfTramTrackVisibleToLastricoPct": 9.2,
+ "topStreetsWithMappedTramNextToThemButNoTramTag": [
+  {
+   "street": "(unnamed)",
+   "tramMetres": 4820.1
+  },
+  {
+   "street": "Corso Magenta",
+   "tramMetres": 1786.7
+  },
+  {
+   "street": "Via Vincenzo Monti",
+   "tramMetres": 1333.5
+  },
+  {
+   "street": "Via Torino",
+   "tramMetres": 1306.5
+  },
+  {
+   "street": "Foro Buonaparte",
+   "tramMetres": 1284.6
+  },
+  {
+   "street": "Corso di Porta Ticinese",
+   "tramMetres": 1276.8
+  },
+  {
+   "street": "Corso di Porta Romana",
+   "tramMetres": 1262.3
+  },
+  {
+   "street": "Viale Sabotino",
+   "tramMetres": 892.3
+  },
+  {
+   "street": "Via Filippo Turati",
+   "tramMetres": 828.3
+  },
+  {
+   "street": "Via Larga",
+   "tramMetres": 824.8
+  },
+  {
+   "street": "Via Legnano",
+   "tramMetres": 819.5
+  },
+  {
+   "street": "Corso Genova",
+   "tramMetres": 799
+  }
+ ],
+ "note": "Only the 11 pilot (OSM API) extracts contain railway=* ways; the 8 citywide Overpass extracts were queried with way[highway] and contain none, so tram infrastructure south and east of the pilot box (Piazzale Lodi, Corso Lodi, Via Lazzaro Papi) is not in the archive at all."
+}

@@ -1,0 +1,143 @@
+{
+  "pipeline": {
+    "pilotSegments": 37106,
+    "addedOutside": 65180,
+    "removedBoundaryStubs": 258,
+    "segments": 102028,
+    "ways": 28146
+  },
+  "committedTiles": {
+    "tuplesCountedWithTileDuplicates": 104463,
+    "uniqueSegments": 102028,
+    "metadataTotalSegments": 102028
+  },
+  "pipelineVsTiles": {
+    "pipelineSegmentsMissingInTiles": 0,
+    "tileSegmentsNotInPipeline": 0,
+    "segmentsWithDifferentCategoryFlagsOrDirection": 0,
+    "examples": []
+  },
+  "rawVsPipeline": {
+    "rawCarUsableWays": 22622,
+    "rawCarUsableMetres": 1396988.4,
+    "waysWithPipelineLengthDifferingMoreThan1m": 3,
+    "sumAbsLengthDifferenceM": 349.9,
+    "rawCarWaysWithNoPipelineSegment": [
+      {
+        "bucket": "service: unnamed service way outside pilot box (compile-compact-tiles.mjs:341)",
+        "ways": 4203,
+        "metres": 230093.8
+      },
+      {
+        "bucket": "service: other",
+        "ways": 354,
+        "metres": 22159.4
+      },
+      {
+        "bucket": "residential: other",
+        "ways": 77,
+        "metres": 6723.2
+      },
+      {
+        "bucket": "trunk: other",
+        "ways": 23,
+        "metres": 5663.7
+      },
+      {
+        "bucket": "unclassified: other",
+        "ways": 16,
+        "metres": 1430.4
+      },
+      {
+        "bucket": "tertiary: other",
+        "ways": 8,
+        "metres": 398.4
+      },
+      {
+        "bucket": "secondary: other",
+        "ways": 3,
+        "metres": 122
+      }
+    ],
+    "unexplainedExamples": [
+      {
+        "id": 44578326,
+        "hw": "residential",
+        "name": "Via privata Bastia",
+        "len": 108.3,
+        "tags": {
+          "access": "private",
+          "motor_vehicle": "private",
+          "oneway": "no"
+        }
+      },
+      {
+        "id": 82857345,
+        "hw": "service",
+        "name": "Via Ferdinando Lassalle",
+        "len": 144.9,
+        "tags": {
+          "access": "private"
+        }
+      },
+      {
+        "id": 137158661,
+        "hw": "service",
+        "name": "Via Fra Cristoforo",
+        "len": 85.6,
+        "tags": {
+          "access": "private"
+        }
+      },
+      {
+        "id": 137998099,
+        "hw": "service",
+        "name": "Via Pietro Ogliari",
+        "len": 220.1,
+        "tags": {
+          "access": "private"
+        }
+      },
+      {
+        "id": 164247798,
+        "hw": "tertiary",
+        "name": "Viale Bligny",
+        "len": 37.3,
+        "tags": {
+          "access:conditional": "no @(Mo-Sa 07:30-09:00, 17:00-19:30; PH off)",
+          "oneway": "yes",
+          "surface": "asphalt"
+        }
+      },
+      {
+        "id": 188760046,
+        "hw": "service",
+        "name": "Via Giuseppe Ripamonti",
+        "len": 76.7,
+        "tags": {
+          "access": "no",
+          "oneway": "no"
+        }
+      },
+      {
+        "id": 228145198,
+        "hw": "service",
+        "name": "Via Giuseppe Meda",
+        "len": 58.5,
+        "tags": {
+          "access": "private",
+          "service": "driveway"
+        }
+      },
+      {
+        "id": 264480144,
+        "hw": "service",
+        "name": "Via Ferdinando Lassalle",
+        "len": 150.4,
+        "tags": {
+          "access": "private"
+        }
+      }
+    ]
+  }
+}

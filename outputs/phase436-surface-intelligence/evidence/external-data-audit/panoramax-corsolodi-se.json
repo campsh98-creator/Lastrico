@@ -1,0 +1,38 @@
+{
+ "query": {
+  "bbox": "9.2105,45.4415,9.2175,45.4475",
+  "limit": "200"
+ },
+ "count": 2,
+ "byMonth": {
+  "2023-01": 2
+ },
+ "sequences": 0,
+ "licences": [
+  "https://creativecommons.org/licenses/by-sa/4.0/"
+ ],
+ "photos": [
+  {
+   "id": "9df68e8e-f6b3-4dfc-8648-f1ae7cfd7687",
+   "collection": "0880e727-7bc5-40ec-9191-6ee04b198184",
+   "lon": 9.21649,
+   "lat": 45.44662,
+   "datetime": "2023-01-24T11:00:00+00:00",
+   "thumb": "https://panoramax.openstreetmap.fr/derivates/9d/f6/8e/8e/f6b3-4dfc-8648-f1ae7cfd7687/thumb.jpg",
+   "sd": "https://panoramax.openstreetmap.fr/derivates/9d/f6/8e/8e/f6b3-4dfc-8648-f1ae7cfd7687/sd.jpg",
+   "hd": "https://panoramax.openstreetmap.fr/images/9d/f6/8e/8e/f6b3-4dfc-8648-f1ae7cfd7687.jpg",
+   "producer": "p4n-pics"
+  },
+  {
+   "id": "df14d684-04a2-414d-a62b-1b3c46d3fac2",
+   "collection": "0880e727-7bc5-40ec-9191-6ee04b198184",
+   "lon": 9.21649,
+   "lat": 45.44662,
+   "datetime": "2023-01-24T11:00:00+00:00",
+   "thumb": "https://panoramax.openstreetmap.fr/derivates/df/14/d6/84/04a2-414d-a62b-1b3c46d3fac2/thumb.jpg",
+   "sd": "https://panoramax.openstreetmap.fr/derivates/df/14/d6/84/04a2-414d-a62b-1b3c46d3fac2/sd.jpg",
+   "hd": "https://panoramax.openstreetmap.fr/images/df/14/d6/84/04a2-414d-a62b-1b3c46d3fac2.jpg",
+   "producer": "p4n-pics"
+  }
+ ]
+}

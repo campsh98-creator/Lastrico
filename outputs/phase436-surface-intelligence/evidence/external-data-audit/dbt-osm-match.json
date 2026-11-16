@@ -1,0 +1,81 @@
+{
+ "matchability": {
+  "osmCarWayMetresInBox": 28688,
+  "withDbtStreetElementWithin12mAligned": 28487,
+  "matchPct": 99.3,
+  "offsetM": {
+   "p50": "0.5",
+   "p90": "1.6",
+   "p99": "4.0"
+  },
+  "nameAgreementPctOfMatchedBothNamed": 93.8,
+  "perHighway": {
+   "residential": {
+    "m": 19894,
+    "matchPct": 99.7
+   },
+   "primary_link": {
+    "m": 24,
+    "matchPct": 100
+   },
+   "primary": {
+    "m": 4775,
+    "matchPct": 100
+   },
+   "service": {
+    "m": 1482,
+    "matchPct": 90
+   },
+   "tertiary": {
+    "m": 842,
+    "matchPct": 100
+   },
+   "secondary": {
+    "m": 1173,
+    "matchPct": 100
+   },
+   "secondary_link": {
+    "m": 17,
+    "matchPct": 100
+   },
+   "unclassified": {
+    "m": 482,
+    "matchPct": 100
+   }
+  },
+  "landmarks": {
+   "Corso Lodi": {
+    "osmM": 3425,
+    "matchPct": 100,
+    "nameAgreePct": 92.9
+   },
+   "Piazzale Lodi": {
+    "osmM": 253,
+    "matchPct": 100,
+    "nameAgreePct": 98.7
+   },
+   "Via Lazzaro Papi": {
+    "osmM": 274,
+    "matchPct": 100,
+    "nameAgreePct": 76
+   }
+  }
+ },
+ "ringAccordingToDbt": {
+  "streetElementsNamedPiazzaleLodi": 14,
+  "EL_STR_TYcounts": {
+   "0204": 14
+  },
+  "EL_STR_FONvalues": [
+   "01"
+  ],
+  "vehicularPolygonsNamedPiazzaleLodi": 1,
+  "AC_VEI_ZONcounts": {
+   "0204": 1
+  },
+  "AC_VEI_FONvalues": [
+   "01"
+  ],
+  "note": "EL_STR_TY 0205 = rotatoria, 0204 = piazza, 0206 = incrocio (national spec v2.0); the ring is one AC_VEI polygon with zone 0204 (piazza)"
+ }
+}

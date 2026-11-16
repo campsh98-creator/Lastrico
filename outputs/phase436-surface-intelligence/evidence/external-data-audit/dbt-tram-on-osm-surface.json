@@ -1,0 +1,16 @@
+{
+ "trackMetresWithin8m": 1265,
+ "offsetM": {
+  "p50": 1,
+  "p90": 3.1
+ },
+ "byNearestOsmWay": {
+  "secondary oneway=no surface=asphalt": 277,
+  "secondary oneway=no surface=sett": 898,
+  "secondary oneway=yes surface=sett": 61,
+  "secondary oneway=yes surface=asphalt": 9,
+  "residential oneway=no surface=asphalt": 4,
+  "residential oneway=yes surface=asphalt": 4,
+  "residential oneway=yes surface=sett": 12
+ }
+}

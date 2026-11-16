@@ -1,0 +1,133 @@
+{
+ "asOf": "2026-11-14",
+ "buildCost": {
+  "syntheticCityJoin": {
+   "axes": 3096,
+   "axisEdges": 19182,
+   "compiledSegments": 102028,
+   "flaggedSegmentsSynthetic": 23687,
+   "heapDeltaMiB": 4.58,
+   "joinMs": 983,
+   "note": "SYNTHETIC axes (seeded copies of real way geometry offset 1 m): timing only, not a rails result",
+   "samples": 869397
+  }
+ },
+ "d1HotPathAnalysis": {
+  "assumedUniqueWaysPerRouteRequest": [
+   150,
+   400
+  ],
+  "basis": "ANALYTICAL: 69 ways measured on route 0 (Agent 2); the union of up to 6 candidates is assumed 150-400 ways; one row read per way; D1 latency per query was not measured (UNVERIFIED)",
+  "d1FreeRowsReadPerDay": 5000000,
+  "d1QueriesPerInvocationFree": 50,
+  "routeRequestsPerDayCeilingFromRowsRead": [
+   12500,
+   33333
+  ],
+  "statementsPerBatchAt100Params": [
+   2,
+   4
+  ],
+  "waysOnReturnRoute0": 69
+ },
+ "label": "design feasibility from real counts; modelled values are marked; not product validation",
+ "lookup": {
+  "avgTuplesPerTile": 893,
+  "binarySearchTypedNsPerLookup": 529.5,
+  "mapHasNsPerLookup": 258.4,
+  "note": "Node microbenchmark (not workerd). getHydratedSegment() hydrates tuples lazily, so a route pays one lookup per segment it actually touches (hundreds to low thousands), i.e. tens of microseconds; the per-tile figure is the worst case if a whole tile were hydrated",
+  "perHydratedTileMicroseconds": 230.8
+ },
+ "memory": {
+  "entriesModelled": 9632,
+  "fractionOfHydratedBase76MiB_parsed": 2.6,
+  "note": "heapUsed delta after forced GC; the overlay loads per tile with its base tile and is only resident for tiles in use (max 64 hydrated tiles, Phase 4.30)",
+  "parsedJsonArraysMiB": 1.96,
+  "typedArraysMiB": 0.11
+ },
+ "overlayEntry": {
+  "bytesPerEntryJson": 18.9,
+  "entryShape": "[tupleIndex, flags, categoryOverride, roughnessWeightOverride, mdBitsOverride]",
+  "gzipRatioMeasured100": 0.21,
+  "gzipRatioModelled9632": 0.14,
+  "gzipRatioUsed": 0.21,
+  "measuredEntries": 100,
+  "tileWrapperBytes": 95
+ },
+ "real": {
+  "baseTilesBytes": 8828888,
+  "baseTilesGzipBytes": 2202701,
+  "bytesPerUniqueSegment": 87,
+  "meanSegmentM": 16.05,
+  "metadataBytes": 112766,
+  "osmWaysWithSegments": 28146,
+  "tiles": 117,
+  "totalLengthM": 1637974,
+  "tuplesAcrossTiles": 104463,
+  "uniqueSegments": 102028,
+  "unknownMetres": 275487,
+  "unknownSegmentsApprox": 17160
+ },
+ "scenarios": [
+  {
+   "basis": "100 flagged tuples of the real field cases, compiled on the real tiles",
+   "bytes": 13005,
+   "entries": 100,
+   "gzipBytesApprox": 2731,
+   "label": "S0 fixture (measured)",
+   "percentOfBaseTiles": 0.1
+  },
+  {
+   "basis": "PLAUSIBLE low end: box flagged share applied to a thinner network",
+   "bytes": 105615,
+   "entries": 5000,
+   "gzipBytesApprox": 22179,
+   "label": "S1 rails only, low",
+   "percentOfBaseTiles": 1.2
+  },
+  {
+   "basis": "MODELLED: 112 flagged segments in the box x 86.0 (3,096 citywide tram axis records / 36 in the box); the box is central and dense, so this may overstate",
+   "bytes": 193159.8,
+   "entries": 9632,
+   "gzipBytesApprox": 40564,
+   "label": "S1 rails only, central",
+   "percentOfBaseTiles": 2.2
+  },
+  {
+   "basis": "PLAUSIBLE high end: pos=02 ratio (80.9) with parallel carriageways",
+   "bytes": 275715,
+   "entries": 14000,
+   "gzipBytesApprox": 57900,
+   "label": "S1 rails only, high",
+   "percentOfBaseTiles": 3.1
+  },
+  {
+   "basis": "MODELLED",
+   "bytes": 215915.4,
+   "entries": 10836,
+   "gzipBytesApprox": 45342,
+   "label": "S2 rails central + circular-way direction (51 ways, ~4 tuples) + curated stone 1,000",
+   "percentOfBaseTiles": 2.4
+  },
+  {
+   "basis": "MODELLED; Agent 2 D4 counts",
+   "bytes": 276093,
+   "entries": 14020,
+   "gzipBytesApprox": 57980,
+   "label": "S3 worst plausible: S2 + 1,184 surface_bike flags (370 ways, 19.0 km) + 2,000 reports/sensor aggregates",
+   "percentOfBaseTiles": 3.1
+  }
+ ],
+ "workersFree": {
+  "currentWorkerKiB": 13379.79,
+  "extraRequestsPerDay": 0,
+  "extraSubrequestsPerRoute": 0,
+  "headroomMiBApprox": 50.9,
+  "overlayCentralBytes": 193159.8,
+  "overlayCentralPercentOfWorker": 1.4,
+  "overlayWorstPercentOfWorker": 2,
+  "overlayWorstPlausibleBytes": 276093,
+  "sources": "cloudflare-limits-request-log.json (fetched 2026-11-14); Phase 4.35 report (13,379.79 KiB Worker, gzip 3,358.41 KiB); Phase 4.30/4.33 reports (76 MB at 64 hydrated tiles, 107 MB with all 117, 128 MB isolate)",
+  "workerUncompressedLimitMiB": 64
+ }
+}

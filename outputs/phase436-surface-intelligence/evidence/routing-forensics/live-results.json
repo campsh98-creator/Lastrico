@@ -1,0 +1,1099 @@
+{
+ "osmapi": {
+  "status": 200,
+  "way": 264363537,
+  "relations": []
+ },
+ "direct": [
+  {
+   "label": "V2 turn probe: Via Lazzaro Papi north junction (heading SE) -> Via Friuli lower end [break,break]",
+   "status": 200,
+   "purpose": "can a car go from the one-way street into Via Friuli?",
+   "request": {
+    "locations": [
+     {
+      "at": [
+       9.207,
+       45.451
+      ],
+      "type": "break",
+      "heading": 121
+     },
+     {
+      "at": [
+       9.209,
+       45.448
+      ],
+      "type": "break",
+      "heading": null
+     }
+    ],
+    "alternates": 0,
+    "linearCostFactors": 0
+   },
+   "error": null,
+   "trips": [
+    {
+     "km": 0.379,
+     "min": 1.56,
+     "maneuvers": 3,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:218m",
+      "10:Via Friuli:159m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": true,
+      "vialeUmbria": false,
+      "piazzaleLodi": false,
+      "corsoLodi": false,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 0,
+     "streetSequence": [
+      "<other street>(residential):208",
+      "Via Friuli(residential):160"
+     ]
+    }
+   ]
+  },
+  {
+   "label": "V1 base: Via Lazzaro Papi north junction (heading SE) -> Naviglio Pavese junction [production payload, alternates 2]",
+   "status": 200,
+   "purpose": "does the provider's best route use Via Friuli or Viale Umbria/Piazzale Lodi?",
+   "request": {
+    "locations": [
+     {
+      "at": [
+       9.207,
+       45.451
+      ],
+      "type": "break",
+      "heading": 121
+     },
+     {
+      "at": [
+       9.176,
+       45.444
+      ],
+      "type": "break",
+      "heading": null
+     }
+    ],
+    "alternates": 2,
+    "linearCostFactors": 0
+   },
+   "error": null,
+   "trips": [
+    {
+     "km": 3.318,
+     "min": 9.92,
+     "maneuvers": 5,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:373m",
+      "10:Viale Umbria:173m",
+      "26:Piazzale Lodi:68m",
+      "27:Viale Isonzo:2704m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": false,
+      "vialeUmbria": true,
+      "piazzaleLodi": true,
+      "corsoLodi": false,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 28,
+     "streetSequence": [
+      "<other street>(residential):208",
+      "<other street>(residential):146",
+      "Viale Umbria(primary):172",
+      "Piazzale Lodi(primary,sett):28",
+      "Piazzale Lodi(primary):44",
+      "Viale Isonzo(primary):420",
+      "<other street>(primary):210",
+      "Viale Isonzo(primary):252",
+      "<other street>(primary):249",
+      "<other street>(primary):544",
+      "<other street>(secondary):27",
+      "<other street>(residential):78",
+      "<other street>(primary):94",
+      "<other street>(primary):16"
+     ]
+    },
+    {
+     "km": 3.055,
+     "min": 10.47,
+     "maneuvers": 7,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:86m",
+      "10:<other street>:233m",
+      "15:<other street>:322m",
+      "9:<other street>:409m",
+      "15:<other street>:235m",
+      "10:<other street>:1771m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": false,
+      "vialeUmbria": false,
+      "piazzaleLodi": false,
+      "corsoLodi": true,
+      "viaLazzaroPapi": true
+     },
+     "osmSettMetersOnWays": 201,
+     "streetSequence": [
+      "<other street>(residential):93",
+      "Corso Lodi(residential):126",
+      "Corso Lodi(residential):70",
+      "Via Lazzaro Papi(residential,sett):23",
+      "<other street>(residential,sett):17",
+      "<other street>(residential,sett):47",
+      "<other street>(residential):462",
+      "<other street>(residential):197",
+      "<other street>(tertiary,sett):108",
+      "<other street>(tertiary):124",
+      "<other street>(primary):249",
+      "<other street>(primary):544",
+      "<other street>(secondary):27",
+      "<other street>(residential):78"
+     ]
+    },
+    {
+     "km": 3.701,
+     "min": 11.36,
+     "maneuvers": 10,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:86m",
+      "10:<other street>:233m",
+      "15:<other street>:19m",
+      "10:Corso Lodi:449m",
+      "15:<other street>:1196m",
+      "15:<other street>:498m",
+      "26::31m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": false,
+      "vialeUmbria": false,
+      "piazzaleLodi": false,
+      "corsoLodi": true,
+      "viaLazzaroPapi": true
+     },
+     "osmSettMetersOnWays": 264,
+     "streetSequence": [
+      "<other street>(residential):93",
+      "Corso Lodi(residential):126",
+      "Corso Lodi(residential):70",
+      "Via Lazzaro Papi(residential,sett):23",
+      "<other street>(residential,sett):17",
+      "Corso Lodi(secondary,sett):96",
+      "Corso Lodi(residential):53",
+      "Corso Lodi(secondary):158",
+      "<other street>(secondary):48",
+      "<other street>(secondary,sett):25",
+      "<other street>(secondary):62",
+      "<other street>(secondary):430",
+      "<other street>(secondary,sett):32",
+      "<other street>(secondary):452"
+     ]
+    }
+   ]
+  },
+  {
+   "label": "V3 shortcut: Via Friuli upper node -> Naviglio Pavese junction [production payload]",
+   "status": 200,
+   "purpose": "from upstream Via Friuli, no turn needed: which way does the provider go?",
+   "request": {
+    "locations": [
+     {
+      "at": [
+       9.211,
+       45.451
+      ],
+      "type": "break",
+      "heading": null
+     },
+     {
+      "at": [
+       9.176,
+       45.444
+      ],
+      "type": "break",
+      "heading": null
+     }
+    ],
+    "alternates": 2,
+    "linearCostFactors": 0
+   },
+   "error": null,
+   "trips": [
+    {
+     "km": 3.314,
+     "min": 9.72,
+     "maneuvers": 5,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:158m",
+      "10:Viale Umbria:384m",
+      "26:Piazzale Lodi:68m",
+      "27:Viale Isonzo:2704m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": false,
+      "vialeUmbria": true,
+      "piazzaleLodi": true,
+      "corsoLodi": false,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 28,
+     "streetSequence": [
+      "<other street>(residential):149",
+      "Viale Umbria(primary):375",
+      "Piazzale Lodi(primary,sett):28",
+      "Piazzale Lodi(primary):44",
+      "Viale Isonzo(primary):420",
+      "<other street>(primary):210",
+      "Viale Isonzo(primary):252",
+      "<other street>(primary):249",
+      "<other street>(primary):544",
+      "<other street>(secondary):27",
+      "<other street>(residential):78",
+      "<other street>(primary):94",
+      "<other street>(primary):16",
+      "<other street>(residential):15"
+     ]
+    },
+    {
+     "km": 3.319,
+     "min": 11.24,
+     "maneuvers": 7,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:Via Friuli:356m",
+      "10:Corso Lodi:246m",
+      "15:<other street>:303m",
+      "9:<other street>:409m",
+      "15:<other street>:235m",
+      "10:<other street>:1771m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": true,
+      "vialeUmbria": false,
+      "piazzaleLodi": false,
+      "corsoLodi": true,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 401,
+     "streetSequence": [
+      "Via Friuli(residential):172",
+      "Via Friuli(residential):158",
+      "Corso Lodi(secondary,sett):246",
+      "<other street>(residential,sett):47",
+      "<other street>(residential):462",
+      "<other street>(residential):197",
+      "<other street>(tertiary,sett):108",
+      "<other street>(tertiary):124",
+      "<other street>(primary):249",
+      "<other street>(primary):544",
+      "<other street>(secondary):27",
+      "<other street>(residential):78",
+      "<other street>(primary):94",
+      "<other street>(primary):16"
+     ]
+    },
+    {
+     "km": 3.965,
+     "min": 12.11,
+     "maneuvers": 8,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:Via Friuli:356m",
+      "10:Corso Lodi:695m",
+      "15:<other street>:1196m",
+      "15:<other street>:498m",
+      "26::31m",
+      "27:<other street>:245m",
+      "10:<other street>:944m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": true,
+      "vialeUmbria": false,
+      "piazzaleLodi": false,
+      "corsoLodi": true,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 463,
+     "streetSequence": [
+      "Via Friuli(residential):172",
+      "Via Friuli(residential):158",
+      "Corso Lodi(secondary,sett):340",
+      "Corso Lodi(residential):53",
+      "Corso Lodi(secondary):158",
+      "<other street>(secondary):48",
+      "<other street>(secondary,sett):25",
+      "<other street>(secondary):62",
+      "<other street>(secondary):430",
+      "<other street>(secondary,sett):32",
+      "<other street>(secondary):452",
+      "<other street>(service):18",
+      "<other street>(secondary):253",
+      "<other street>(secondary,paving_stones):21"
+     ]
+    }
+   ]
+  },
+  {
+   "label": "V4 penalised: V1 + linear_cost_factors x15 on the Piazzale Lodi sett ring way (25 m)",
+   "status": 200,
+   "purpose": "does the engine's own anti-pavé mechanism move the provider to the Via Friuli shortcut?",
+   "request": {
+    "locations": [
+     {
+      "at": [
+       9.207,
+       45.451
+      ],
+      "type": "break",
+      "heading": 121
+     },
+     {
+      "at": [
+       9.176,
+       45.444
+      ],
+      "type": "break",
+      "heading": null
+     }
+    ],
+    "alternates": 0,
+    "linearCostFactors": 1
+   },
+   "error": null,
+   "trips": [
+    {
+     "km": 3.076,
+     "min": 9.56,
+     "maneuvers": 3,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:218m",
+      "10:Via Friuli:2858m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": true,
+      "vialeUmbria": false,
+      "piazzaleLodi": false,
+      "corsoLodi": true,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 1,
+     "streetSequence": [
+      "<other street>(residential):208",
+      "Via Friuli(residential):158",
+      "<other street>(residential):182",
+      "Viale Isonzo(primary):215",
+      "<other street>(primary):210",
+      "Viale Isonzo(primary):252",
+      "<other street>(primary):249",
+      "<other street>(primary):544",
+      "<other street>(secondary):27",
+      "<other street>(residential):78",
+      "<other street>(primary):94",
+      "<other street>(primary):16",
+      "<other street>(residential):15",
+      "<other street>(primary):50"
+     ]
+    }
+   ]
+  }
+ ],
+ "handler-return": {
+  "from": "Via Lazzaro Papi north junction (OSM node, id withheld)",
+  "to": "Alzaia Naviglio Pavese junction (OSM node, id withheld)",
+  "requestsMade": [],
+  "status": 200,
+  "error": null,
+  "hasDistinctAlternative": true,
+  "antiPave": {
+   "status": "alternative",
+   "standard": {
+    "source": "base-1",
+    "legal": true,
+    "seconds": 595,
+    "meters": 3318,
+    "paveMeters": 25,
+    "confirmedPaveMeters": 25
+   },
+   "avoidedVsStandardMeters": 0,
+   "search": {
+    "attempted": false,
+    "failed": false,
+    "generated": 0
+   }
+  },
+  "optimization": {
+   "strategy": "pareto-conservative-unknown",
+   "frontierSize": 2,
+   "unknownMeterPenalty": 1,
+   "directCandidateGenerated": false,
+   "directCandidates": 0
+  },
+  "alternativesAnalyzed": 3,
+  "fast": {
+   "km": 2.855,
+   "min": 9.52,
+   "confirmedPave": 195,
+   "probablePave": 0,
+   "unknown": 302,
+   "rough": [
+    "<other street>:sett:98-184",
+    "<other street>:sett:849-958"
+   ],
+   "instructions": [
+    "depart:Via Lazzaro Papi:441",
+    "right:<other street>:409",
+    "left:<other street>:235",
+    "right:<other street>:1771",
+    "arrive::0"
+   ]
+  },
+  "safe": {
+   "km": 3.318,
+   "min": 9.92,
+   "confirmedPave": 25,
+   "probablePave": 0,
+   "unknown": 0,
+   "rough": [
+    "Piazzale Lodi:sett:544-569"
+   ],
+   "instructions": [
+    "depart:<other street>:373",
+    "right:Viale Umbria:173",
+    "roundabout:Piazzale Lodi:68",
+    "roundabout:Viale Isonzo:2704",
+    "arrive::0"
+   ]
+  },
+  "dataNotice": "3 percorsi reali confrontati; 48 way OSM abbinate al percorso (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
+  "candidates": [
+   {
+    "source": "base-2",
+    "provider": "valhalla-fossgis",
+    "distance": 2855,
+    "seconds": 571,
+    "confirmed": 195,
+    "probable": 0,
+    "unknown": 302,
+    "risk": 195,
+    "verdict": "fastest",
+    "burden": 195,
+    "utility": 195,
+    "pareto": true,
+    "distinct": false,
+    "detourPercent": 0
+   },
+   {
+    "source": "base-1",
+    "provider": "valhalla-fossgis",
+    "distance": 3318,
+    "seconds": 595,
+    "confirmed": 25,
+    "probable": 0,
+    "unknown": 0,
+    "risk": 25,
+    "verdict": "selected",
+    "burden": 25,
+    "utility": 45,
+    "pareto": true,
+    "distinct": true,
+    "detourPercent": 4.2
+   },
+   {
+    "source": "base-3",
+    "provider": "valhalla-fossgis",
+    "distance": 3236,
+    "seconds": 637,
+    "confirmed": 649,
+    "probable": 0,
+    "unknown": 0,
+    "risk": 649,
+    "verdict": "dominated",
+    "burden": 649,
+    "utility": 703,
+    "pareto": false,
+    "distinct": true,
+    "detourPercent": 11.4
+   }
+  ],
+  "streetSequence": {
+   "fast": [
+    "Via Lazzaro Papi(residential):53",
+    "Via Lazzaro Papi(residential,sett):64",
+    "<other street>(residential,sett):17",
+    "<other street>(residential,sett):47",
+    "<other street>(residential):462",
+    "<other street>(residential):197",
+    "<other street>(tertiary,sett):108",
+    "<other street>(tertiary):124",
+    "<other street>(primary):249",
+    "<other street>(primary):544",
+    "<other street>(secondary):27",
+    "<other street>(residential):78",
+    "<other street>(primary):94",
+    "<other street>(primary):16",
+    "<other street>(residential):15",
+    "<other street>(primary):50"
+   ],
+   "safe": [
+    "<other street>(residential):208",
+    "<other street>(residential):146",
+    "Viale Umbria(primary):172",
+    "Piazzale Lodi(primary,sett):28",
+    "Piazzale Lodi(primary):44",
+    "Viale Isonzo(primary):420",
+    "<other street>(primary):210",
+    "Viale Isonzo(primary):252",
+    "<other street>(primary):249",
+    "<other street>(primary):544",
+    "<other street>(secondary):27",
+    "<other street>(residential):78",
+    "<other street>(primary):94",
+    "<other street>(primary):16",
+    "<other street>(residential):15",
+    "<other street>(primary):50"
+   ]
+  }
+ },
+ "handler-outbound": {
+  "from": "Alzaia Naviglio Pavese junction (OSM node, id withheld)",
+  "to": "Via Lazzaro Papi north junction (OSM node, id withheld)",
+  "requestsMade": [],
+  "status": 200,
+  "error": null,
+  "hasDistinctAlternative": true,
+  "antiPave": {
+   "status": "alternative",
+   "standard": {
+    "source": "base-1",
+    "legal": true,
+    "seconds": 544,
+    "meters": 2841,
+    "paveMeters": 280,
+    "confirmedPaveMeters": 280
+   },
+   "avoidedVsStandardMeters": 230,
+   "search": {
+    "attempted": true,
+    "failed": false,
+    "generated": 1
+   }
+  },
+  "optimization": {
+   "strategy": "pareto-conservative-unknown",
+   "frontierSize": 2,
+   "unknownMeterPenalty": 1,
+   "directCandidateGenerated": true,
+   "directCandidates": 1
+  },
+  "alternativesAnalyzed": 3,
+  "fast": {
+   "km": 2.841,
+   "min": 9.06,
+   "confirmedPave": 280,
+   "probablePave": 0,
+   "unknown": 0,
+   "rough": [
+    "<other street>:sett:2340-2364",
+    "<other street>:sett:2461-2602",
+    "<other street>:sett:2628-2743"
+   ],
+   "instructions": [
+    "depart:Alzaia Naviglio Pavese:23",
+    "left:<other street>:2283",
+    "left:<other street>:321",
+    "right:<other street>:37",
+    "left:<other street>:176",
+    "arrive::0"
+   ]
+  },
+  "safe": {
+   "km": 3.398,
+   "min": 10.51,
+   "confirmedPave": 50,
+   "probablePave": 0,
+   "unknown": 0,
+   "rough": [
+    "Piazzale Lodi:sett:2890-2915",
+    "Via Lazzaro Papi:sett:3273-3298"
+   ],
+   "instructions": [
+    "depart:Alzaia Naviglio Pavese:23",
+    "left:<other street>:2740",
+    "roundabout:Piazzale Lodi:152",
+    "roundabout:Corso Lodi:360",
+    "right:Via Lazzaro Papi:123",
+    "arrive::0"
+   ]
+  },
+  "dataNotice": "3 percorsi reali confrontati; 51 way OSM abbinate al percorso (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
+  "candidates": [
+   {
+    "source": "base-1",
+    "provider": "valhalla-fossgis",
+    "distance": 2841,
+    "seconds": 544,
+    "confirmed": 280,
+    "probable": 0,
+    "unknown": 0,
+    "risk": 280,
+    "verdict": "fastest",
+    "burden": 280,
+    "utility": 280,
+    "pareto": true,
+    "distinct": false,
+    "detourPercent": 0
+   },
+   {
+    "source": "surface-aware-valhalla",
+    "provider": "valhalla-fossgis",
+    "distance": 3398,
+    "seconds": 631,
+    "confirmed": 50,
+    "probable": 0,
+    "unknown": 0,
+    "risk": 50,
+    "verdict": "selected",
+    "burden": 50,
+    "utility": 122,
+    "pareto": true,
+    "distinct": true,
+    "detourPercent": 16
+   },
+   {
+    "source": "base-2",
+    "provider": "valhalla-fossgis",
+    "distance": 3537,
+    "seconds": 700,
+    "confirmed": 265,
+    "probable": 0,
+    "unknown": 138,
+    "risk": 265,
+    "verdict": "dominated",
+    "burden": 391,
+    "utility": 521,
+    "pareto": false,
+    "distinct": true,
+    "detourPercent": 28.7
+   }
+  ],
+  "streetSequence": {
+   "fast": [
+    "<other street>(primary):34",
+    "<other street>(primary):513",
+    "<other street>(primary):946",
+    "<other street>(residential):24",
+    "<other street>(primary):252",
+    "Viale Isonzo(primary):250",
+    "<other street>(primary):232",
+    "<other street>(residential):23",
+    "<other street>(residential,sett):19",
+    "<other street>(residential):102",
+    "<other street>(residential,sett):141",
+    "<other street>(residential):21",
+    "<other street>(residential,sett):70",
+    "<other street>(residential,sett):22",
+    "Via Lazzaro Papi(residential,sett):25",
+    "Via Lazzaro Papi(residential):88"
+   ],
+   "safe": [
+    "<other street>(primary):34",
+    "<other street>(primary):513",
+    "<other street>(primary):946",
+    "<other street>(residential):24",
+    "<other street>(primary):252",
+    "Viale Isonzo(primary):250",
+    "<other street>(primary):232",
+    "Viale Isonzo(primary):238",
+    "Viale Isonzo(service):26",
+    "Viale Isonzo(primary):171",
+    "Piazzale Lodi(primary):25",
+    "Piazzale Lodi(primary):109",
+    "Piazzale Lodi(primary,sett):25",
+    "Corso Lodi(secondary):19",
+    "Corso Lodi(residential):128",
+    "Corso Lodi(residential):134"
+   ]
+  }
+ },
+ "controls": [
+  {
+   "label": "V5 control: V1 with alternates 0, no cost factors",
+   "status": 200,
+   "purpose": "is the base optimum the same without alternates and without penalty?",
+   "request": {
+    "locations": [
+     {
+      "at": [
+       9.207,
+       45.451
+      ],
+      "type": "break",
+      "heading": 121
+     },
+     {
+      "at": [
+       9.176,
+       45.444
+      ],
+      "type": "break",
+      "heading": null
+     }
+    ],
+    "alternates": 0,
+    "linearCostFactors": 0
+   },
+   "error": null,
+   "trips": [
+    {
+     "km": 3.318,
+     "min": 9.92,
+     "maneuvers": 5,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:373m",
+      "10:Viale Umbria:173m",
+      "26:Piazzale Lodi:68m",
+      "27:Viale Isonzo:2704m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": false,
+      "vialeUmbria": true,
+      "piazzaleLodi": true,
+      "corsoLodi": false,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 28,
+     "streetSequence": [
+      "<other street>(residential):208",
+      "<other street>(residential):146",
+      "Viale Umbria(primary):172",
+      "Piazzale Lodi(primary,sett):28",
+      "Piazzale Lodi(primary):44",
+      "Viale Isonzo(primary):420",
+      "<other street>(primary):210",
+      "Viale Isonzo(primary):252",
+      "<other street>(primary):249",
+      "<other street>(primary):544",
+      "<other street>(secondary):27",
+      "<other street>(residential):78",
+      "<other street>(primary):94",
+      "<other street>(primary):16"
+     ]
+    }
+   ]
+  },
+  {
+   "label": "V6 sensitivity: linear_cost_factors x2 on the Piazzale Lodi sett ring way",
+   "status": 200,
+   "purpose": "how small a penalty flips the provider to the Via Friuli shortcut?",
+   "request": {
+    "locations": [
+     {
+      "at": [
+       9.207,
+       45.451
+      ],
+      "type": "break",
+      "heading": 121
+     },
+     {
+      "at": [
+       9.176,
+       45.444
+      ],
+      "type": "break",
+      "heading": null
+     }
+    ],
+    "alternates": 0,
+    "linearCostFactors": 1
+   },
+   "error": null,
+   "trips": [
+    {
+     "km": 3.318,
+     "min": 9.92,
+     "maneuvers": 5,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:373m",
+      "10:Viale Umbria:173m",
+      "26:Piazzale Lodi:68m",
+      "27:Viale Isonzo:2704m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": false,
+      "vialeUmbria": true,
+      "piazzaleLodi": true,
+      "corsoLodi": false,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 28,
+     "streetSequence": [
+      "<other street>(residential):208",
+      "<other street>(residential):146",
+      "Viale Umbria(primary):172",
+      "Piazzale Lodi(primary,sett):28",
+      "Piazzale Lodi(primary):44",
+      "Viale Isonzo(primary):420",
+      "<other street>(primary):210",
+      "Viale Isonzo(primary):252",
+      "<other street>(primary):249",
+      "<other street>(primary):544",
+      "<other street>(secondary):27",
+      "<other street>(residential):78",
+      "<other street>(primary):94",
+      "<other street>(primary):16"
+     ]
+    }
+   ]
+  },
+  {
+   "label": "V7 sensitivity: linear_cost_factors x4 on the Piazzale Lodi sett ring way",
+   "status": 200,
+   "purpose": "how small a penalty flips the provider to the Via Friuli shortcut?",
+   "request": {
+    "locations": [
+     {
+      "at": [
+       9.207,
+       45.451
+      ],
+      "type": "break",
+      "heading": 121
+     },
+     {
+      "at": [
+       9.176,
+       45.444
+      ],
+      "type": "break",
+      "heading": null
+     }
+    ],
+    "alternates": 0,
+    "linearCostFactors": 1
+   },
+   "error": null,
+   "trips": [
+    {
+     "km": 3.318,
+     "min": 9.92,
+     "maneuvers": 5,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:<other street>:373m",
+      "10:Viale Umbria:173m",
+      "26:Piazzale Lodi:68m",
+      "27:Viale Isonzo:2704m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": false,
+      "vialeUmbria": true,
+      "piazzaleLodi": true,
+      "corsoLodi": false,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 28,
+     "streetSequence": [
+      "<other street>(residential):208",
+      "<other street>(residential):146",
+      "Viale Umbria(primary):172",
+      "Piazzale Lodi(primary,sett):28",
+      "Piazzale Lodi(primary):44",
+      "Viale Isonzo(primary):420",
+      "<other street>(primary):210",
+      "Viale Isonzo(primary):252",
+      "<other street>(primary):249",
+      "<other street>(primary):544",
+      "<other street>(secondary):27",
+      "<other street>(residential):78",
+      "<other street>(primary):94",
+      "<other street>(primary):16"
+     ]
+    }
+   ]
+  }
+ ],
+ "outbound-probe": {
+  "label": "V8 outbound probe: E1 -> Via Lazzaro Papi north junction, x15 on 5 stone slices of fast+safe",
+  "status": 200,
+  "purpose": "does a route that avoids all stone slices of both engine candidates exist, and what does it cost?",
+  "request": {
+   "locations": [
+    {
+     "at": [
+      9.176,
+      45.444
+     ],
+     "type": "break",
+     "heading": null
+    },
+    {
+     "at": [
+      9.207,
+      45.451
+     ],
+     "type": "break",
+     "heading": null
+    }
+   ],
+   "alternates": 0,
+   "linearCostFactors": 5
+  },
+  "error": null,
+  "trips": [
+   {
+    "km": 3.813,
+    "min": 12.04,
+    "maneuvers": 8,
+    "uturns": 0,
+    "firstManeuvers": [
+     "1:Alzaia Naviglio Pavese:23m",
+     "15:<other street>:2740m",
+     "26:Piazzale Lodi:94m",
+     "27:Viale Umbria:385m",
+     "15:<other street>:394m",
+     "26:<other street>:46m",
+     "27:Via Lazzaro Papi:131m"
+    ],
+    "uturnAt": [],
+    "passes": {
+     "viaFriuli": false,
+     "vialeUmbria": true,
+     "piazzaleLodi": true,
+     "corsoLodi": true,
+     "viaLazzaroPapi": true
+    },
+    "osmSettMetersOnWays": 0,
+    "streetSequence": [
+     "<other street>(primary):34",
+     "<other street>(primary):513",
+     "<other street>(primary):946",
+     "<other street>(residential):24",
+     "<other street>(primary):252",
+     "Viale Isonzo(primary):250",
+     "<other street>(primary):232",
+     "Viale Isonzo(primary):238",
+     "Viale Isonzo(service):26",
+     "Viale Isonzo(primary):171",
+     "Piazzale Lodi(primary):25",
+     "Piazzale Lodi(primary):86",
+     "Viale Umbria(primary):175",
+     "?(service):139"
+    ]
+   }
+  ],
+  "engineScore": {
+   "confirmedMeters": 0,
+   "probableMeters": 0,
+   "unknownMeters": 0,
+   "weightedPaveMeters": 0,
+   "roughFeatures": []
+  },
+  "penalisedSlices": {
+   "count": 5,
+   "meters": 330
+  },
+  "compare": {
+   "fast": {
+    "km": 2.841,
+    "min": 9.06,
+    "confirmed": 280
+   },
+   "safe": {
+    "km": 3.398,
+    "min": 10.51,
+    "confirmed": 50
+   }
+  }
+ },
+ "ring-probe": [
+  {
+   "label": "V9 ring probe: downstream -> upstream point on ring way 713165261 (against the ring flow)",
+   "status": 200,
+   "purpose": "does the provider graph allow travelling against the ring flow on way 713165261?",
+   "request": {
+    "locations": [
+     {
+      "at": [
+       9.21,
+       45.448
+      ],
+      "type": "break",
+      "heading": null
+     },
+     {
+      "at": [
+       9.21,
+       45.448
+      ],
+      "type": "break",
+      "heading": null
+     }
+    ],
+    "alternates": 0,
+    "linearCostFactors": 0
+   },
+   "error": null,
+   "trips": [
+    {
+     "km": 0.241,
+     "min": 0.82,
+     "maneuvers": 2,
+     "uturns": 0,
+     "firstManeuvers": [
+      "1:Piazzale Lodi:241m",
+      "4::0m"
+     ],
+     "uturnAt": [],
+     "passes": {
+      "viaFriuli": false,
+      "vialeUmbria": true,
+      "piazzaleLodi": true,
+      "corsoLodi": true,
+      "viaLazzaroPapi": false
+     },
+     "osmSettMetersOnWays": 22,
+     "streetSequence": [
+      "Piazzale Lodi(primary,sett):22",
+      "Piazzale Lodi(primary):44",
+      "Piazzale Lodi(primary):58",
+      "Piazzale Lodi(primary):109"
+     ]
+    }
+   ]
+  }
+ ]
+}

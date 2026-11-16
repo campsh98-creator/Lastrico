@@ -1,0 +1,176 @@
+{
+ "outbound-like (E1 -> Via Lazzaro Papi north junction)": {
+  "balanced": {
+   "fastest": "fast",
+   "selected": "fast",
+   "verdicts": {
+    "fast": "fastest",
+    "engine-safe": "time-cost-exceeds-saving",
+    "stone-free-probe": "time-cost-exceeds-saving"
+   },
+   "utility": {
+    "fast": 280,
+    "engine-safe": 775,
+    "stone-free-probe": 1483
+   }
+  },
+  "strong": {
+   "fastest": "fast",
+   "selected": "engine-safe",
+   "verdicts": {
+    "fast": "fastest",
+    "engine-safe": "selected",
+    "stone-free-probe": "a-better-alternative-was-chosen"
+   },
+   "utility": {
+    "fast": 280,
+    "engine-safe": 123,
+    "stone-free-probe": 148
+   }
+  },
+  "maximum": {
+   "fastest": "fast",
+   "selected": "stone-free-probe",
+   "verdicts": {
+    "fast": "fastest",
+    "engine-safe": "a-better-alternative-was-chosen",
+    "stone-free-probe": "selected"
+   },
+   "utility": {
+    "fast": 280,
+    "engine-safe": 50,
+    "stone-free-probe": 0
+   }
+  }
+ },
+ "return-like (Via Friuli first vs Viale Umbria roundabout), provider time of the Via Friuli path 905 s": {
+  "balanced": {
+   "fastest": "via-friuli-first",
+   "selected": "via-friuli-first",
+   "verdicts": {
+    "umbria-roundabout": "dominated",
+    "via-friuli-first": "fastest"
+   },
+   "utility": {
+    "umbria-roundabout": 300,
+    "via-friuli-first": 0
+   }
+  },
+  "strong": {
+   "fastest": "via-friuli-first",
+   "selected": "via-friuli-first",
+   "verdicts": {
+    "umbria-roundabout": "dominated",
+    "via-friuli-first": "fastest"
+   },
+   "utility": {
+    "umbria-roundabout": 53,
+    "via-friuli-first": 0
+   }
+  },
+  "maximum": {
+   "fastest": "via-friuli-first",
+   "selected": "via-friuli-first",
+   "verdicts": {
+    "umbria-roundabout": "dominated",
+    "via-friuli-first": "fastest"
+   },
+   "utility": {
+    "umbria-roundabout": 25,
+    "via-friuli-first": 0
+   }
+  }
+ },
+ "return-like, if the Via Friuli path were 30 s slower than the roundabout": {
+  "balanced": {
+   "fastest": "umbria-roundabout",
+   "selected": "umbria-roundabout",
+   "verdicts": {
+    "umbria-roundabout": "fastest",
+    "via-friuli-first": "time-cost-exceeds-saving"
+   },
+   "utility": {
+    "umbria-roundabout": 25,
+    "via-friuli-first": 250
+   }
+  },
+  "strong": {
+   "fastest": "umbria-roundabout",
+   "selected": "umbria-roundabout",
+   "verdicts": {
+    "umbria-roundabout": "fastest",
+    "via-friuli-first": "time-cost-exceeds-saving"
+   },
+   "utility": {
+    "umbria-roundabout": 25,
+    "via-friuli-first": 25
+   }
+  },
+  "maximum": {
+   "fastest": "umbria-roundabout",
+   "selected": "via-friuli-first",
+   "verdicts": {
+    "umbria-roundabout": "fastest",
+    "via-friuli-first": "selected"
+   },
+   "utility": {
+    "umbria-roundabout": 25,
+    "via-friuli-first": 0
+   }
+  }
+ },
+ "return-like, if the Via Friuli path were 31 s slower than the roundabout": {
+  "balanced": {
+   "fastest": "umbria-roundabout",
+   "selected": "umbria-roundabout",
+   "verdicts": {
+    "umbria-roundabout": "fastest",
+    "via-friuli-first": "time-cost-exceeds-saving"
+   },
+   "utility": {
+    "umbria-roundabout": 25,
+    "via-friuli-first": 258
+   }
+  },
+  "strong": {
+   "fastest": "umbria-roundabout",
+   "selected": "umbria-roundabout",
+   "verdicts": {
+    "umbria-roundabout": "fastest",
+    "via-friuli-first": "time-cost-exceeds-saving"
+   },
+   "utility": {
+    "umbria-roundabout": 25,
+    "via-friuli-first": 26
+   }
+  },
+  "maximum": {
+   "fastest": "umbria-roundabout",
+   "selected": "via-friuli-first",
+   "verdicts": {
+    "umbria-roundabout": "fastest",
+    "via-friuli-first": "selected"
+   },
+   "utility": {
+    "umbria-roundabout": 25,
+    "via-friuli-first": 0
+   }
+  }
+ },
+ "exchangeRate": {
+  "note": "utility = burden + (seconds - fastestSeconds) * secondsWeight; a candidate must also reduce risk by >= 20 m and win on utility",
+  "secondsWeightMetresPerSecond": {
+   "balanced": 8.33,
+   "strong": 0.83,
+   "maximum": 0
+  },
+  "stoneMetresWorthOneMinute": {
+   "balanced": 500,
+   "strong": 50
+  },
+  "secondsWorthOneStoneMetre": {
+   "balanced": 0.12,
+   "strong": 1.2
+  }
+ }
+}

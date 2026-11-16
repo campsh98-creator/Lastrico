@@ -1,0 +1,10 @@
+[out:json][timeout:90];
+way["name"="Via Friuli"]["highway"](45.40,9.05,45.55,9.32)->.vf;
+node(w.vf)->.vn;
+way(bn.vn)["highway"]->.touch;
+(.vf;.touch;)->.all;
+rel(bw.all)["type"="restriction"]->.rest;
+.all out meta;
+node(w.all);
+out meta;
+.rest out meta;

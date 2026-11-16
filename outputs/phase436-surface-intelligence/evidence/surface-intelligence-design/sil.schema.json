@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lastrico:surface-intelligence:schema:0.1.0",
+  "title": "Lastrico Surface Intelligence Layer (SIL) - experimental schema 0.1.0 (Phase 4.36 design, not production)",
+  "description": "Documents: #/$defs/ledger (evidence ledger, the source of truth), #/$defs/resolvedViews (resolver output), #/$defs/overlayTile (runtime sidecar keyed by existing tile tuple index), #/$defs/manifest (dataset version + hashes). Surface material, physical roughness, rails, rail crossings, direction, evidence source, observation date, spatial precision, verification, confidence, conflicts, freshness, version and licence are SEPARATE fields; nothing is collapsed into one number.",
+  "$defs": {
+    "date": { "type": "string", "pattern": "^\\d{4}(-\\d{2}(-\\d{2}(T\\d{2}:\\d{2}:\\d{2}Z)?)?)?$", "description": "ISO 8601 date at year, month, day or UTC datetime precision. Age is computed from the START of the stated period (conservative)." },
+    "nullableDate": { "anyOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+    "wayId": { "type": "integer", "minimum": 1 },
+    "nodeId": { "type": "integer", "minimum": 1 },
+    "mode": { "enum": ["car", "motorcycle", "bicycle"] },
+    "kind": { "enum": ["tagged", "measured", "reported", "derived", "inferred"], "description": "tagged = an OSM claim; measured = sensor/image/field observation; reported = user report; derived = proxy computed from another source (DBT flags, surface_bike, provider graph); inferred = model/heuristic (never votes in v0)." },
+    "verification": { "enum": ["unverified", "machine_checked", "human_verified", "field_verified", "rejected"] },
+    "verifierRole": { "enum": ["none", "agent_visual", "human_reviewer", "field_surveyor"] },
+    "topic": { "enum": ["surface_material", "physical_roughness", "rails_presence", "rail_crossing", "direction", "turn_restriction"], "description": "turn_restriction is reserved: no source exists in Phase 4.36 and the routing provider keeps authority." },
+    "coverage": { "enum": ["exact", "partial", "coarse", "adjacent"], "description": "How the observation relates to this segment interval, assigned at ingestion. exact/partial may vote; coarse (precision much larger than the interval) can only weakly dissent; adjacent never votes, it only opens a review task." },
+    "licenceId": { "enum": ["ODbL-1.0", "CC-BY-4.0", "CC-BY-SA-4.0", "PROJECT-CONTRIBUTION-TBD", "UNKNOWN"], "description": "PROJECT-CONTRIBUTION-TBD = contribution terms for user/field reports are an open owner decision." },
+    "confidenceBand": { "enum": ["none", "low", "medium", "high"], "description": "Ordinal rule-prior band, NOT a probability. unverified evidence never exceeds medium." },
+    "freshnessState": { "enum": ["unknown_age", "fresh", "aging", "stale"] },
+    "materialValue": { "enum": ["sett", "cobblestone", "unhewn_cobblestone", "paving_stones", "asphalt", "concrete", "paved", "unpaved", "compacted", "gravel", "fine_gravel", "other", "unknown"] },
+    "roughnessLevel": { "enum": ["smooth", "moderate", "rough", "very_rough", "unknown"] },
+    "osmSmoothness": { "enum": ["excellent", "good", "intermediate", "bad", "very_bad", "horrible", "very_horrible", "impassable"] },
+    "state": { "enum": ["unknown", "known", "contested"] },
+    "attributeName": { "enum": ["material", "level", "presence", "sharing", "embedding", "service", "alignment", "oneway", "crossing"] },
+
+    "segmentRef": {
+      "type": "object",
+      "description": "Segment identity that survives OSM edits: way id + linear-referenced interval (metres along the way, scorer metric) + the way version/length at observation + the two anchor node ids that re-anchor the interval after splits/merges. Compiled tile tuples are a DERIVED join target, never the identity.",
+      "required": ["wayId", "fromM", "toM", "wayVersion", "wayLengthM", "coverage"],
+      "additionalProperties": false,
+      "properties": {
+        "wayId": { "$ref": "#/$defs/wayId" },
+        "fromM": { "type": "number", "minimum": 0 },
+        "toM": { "type": "number", "minimum": 0 },
+        "wayVersion": { "type": "integer", "minimum": 1 },
+        "wayLengthM": { "type": "number", "minimum": 0 },
+        "anchorNodeIds": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/$defs/nodeId" } },
+        "direction": { "enum": ["both", "forward", "backward", "unspecified"] },
+        "carriageway": { "type": "string", "description": "Free label for separate carriageways or lanes when the way geometry cannot express them (e.g. 'left lane'); empty = whole way." },
+        "coverage": { "$ref": "#/$defs/coverage" }
+      }
+    },
+
+    "source": {
+      "type": "object",
+      "required": ["id", "name", "licenceId", "attribution", "retrievedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 3 },
+        "name": { "type": "string" },
+        "licenceId": { "$ref": "#/$defs/licenceId" },
+        "licenceNote": { "type": "string" },
+        "attribution": { "type": "string" },
+        "retrievedAt": { "$ref": "#/$defs/date" },
+        "datasetDate": { "$ref": "#/$defs/nullableDate" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "authoritativeFor": { "type": "array", "items": { "type": "string" }, "description": "'topic.attribute' pairs for which a derived claim from this source may count as supporting." },
+        "nonDiscriminatingFor": { "type": "array", "items": { "type": "string" }, "description": "'topic.attribute' pairs whose values carry no information (e.g. a constant field). Records are kept for audit and ignored by the resolver." },
+        "completeFor": { "type": "array", "items": { "type": "string" }, "description": "Topics for which the source's ABSENCE of a feature may be read as evidence of absence. Empty in v0." }
+      }
+    },
+
+    "claimSurfaceMaterial": {
+      "type": "object", "required": ["material"], "additionalProperties": false,
+      "properties": {
+        "material": { "$ref": "#/$defs/materialValue" },
+        "rawValue": { "type": "string", "description": "Value as found in the source (e.g. milanese_paving)." },
+        "scope": { "enum": ["whole_width", "partial_width", "unknown"] }
+      }
+    },
+    "claimPhysicalRoughness": {
+      "type": "object", "required": ["level", "basis"], "additionalProperties": false,
+      "properties": {
+        "level": { "$ref": "#/$defs/roughnessLevel" },
+        "basis": { "enum": ["osm_smoothness", "imu", "visual", "report_severity"] },
+        "osmSmoothness": { "$ref": "#/$defs/osmSmoothness" },
+        "measure": {
+          "type": "object", "additionalProperties": false, "required": ["metric", "value", "unit"],
+          "properties": { "metric": { "type": "string" }, "value": { "type": "number" }, "unit": { "type": "string" }, "speedKph": { "type": "number" }, "vehicleClass": { "type": "string" }, "windowM": { "type": "number" }, "samples": { "type": "integer", "minimum": 1 } }
+        }
+      }
+    },
+    "claimRailsPresence": {
+      "type": "object", "additionalProperties": false,
+      "description": "Rails are infrastructure, NOT roughness. Attributes are independent; omit an attribute the source does not state.",
+      "properties": {
+        "presence": { "enum": ["present", "absent", "unknown"] },
+        "railType": { "enum": ["tram", "train", "metro", "unknown"] },
+        "sharing": { "enum": ["shared_carriageway", "own_right_of_way", "unknown"] },
+        "embedding": { "enum": ["flush", "protruding", "segregated", "unknown"] },
+        "service": { "enum": ["in_service", "no_scheduled_line", "disused", "unknown"] },
+        "alignment": { "enum": ["longitudinal", "crossing", "mixed", "unknown"] },
+        "trackCount": { "type": "integer", "minimum": 0 },
+        "railMetresAlong": { "type": "number", "minimum": 0 }
+      }
+    },
+    "claimRailCrossing": {
+      "type": "object", "required": ["atM", "crossingAngleDeg"], "additionalProperties": false,
+      "properties": { "atM": { "type": "number", "minimum": 0 }, "crossingAngleDeg": { "type": "number", "minimum": 0, "maximum": 90 }, "trackCount": { "type": "integer", "minimum": 1 } }
+    },
+    "claimDirection": {
+      "type": "object", "required": ["oneway"], "additionalProperties": false,
+      "properties": { "oneway": { "enum": ["forward", "backward", "both"] }, "basis": { "enum": ["tag", "implied_by_tag", "provider_graph", "topology"] } }
+    },
+    "claimTurnRestriction": {
+      "type": "object", "required": ["fromWayId", "viaNodeId", "toWayId", "type"], "additionalProperties": false,
+      "properties": { "fromWayId": { "$ref": "#/$defs/wayId" }, "viaNodeId": { "$ref": "#/$defs/nodeId" }, "toWayId": { "$ref": "#/$defs/wayId" }, "type": { "type": "string" } }
+    },
+
+    "evidence": {
+      "type": "object",
+      "required": ["id", "refs", "topic", "claim", "modes", "kind", "sourceId", "observedAt", "observedAtPrecision", "recordedAt", "spatialPrecisionM", "verification"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 3 },
+        "refs": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/segmentRef" } },
+        "topic": { "$ref": "#/$defs/topic" },
+        "claim": { "type": "object" },
+        "modes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/mode" }, "description": "Vehicle modes the claim applies to (a bicycle-lane tag does not describe the car lane)." },
+        "kind": { "$ref": "#/$defs/kind" },
+        "sourceId": { "type": "string" },
+        "sourceRef": { "type": "object", "description": "Source-native pointers: OSM way version, last-edit timestamp, changeset, declared source; image id and heading; DBT segment ids. Never an image, never a user identity." },
+        "observedAt": { "$ref": "#/$defs/nullableDate" },
+        "observedAtPrecision": { "enum": ["day", "month", "year", "unknown"] },
+        "observedAtBasis": { "type": "string" },
+        "recordedAt": { "$ref": "#/$defs/date" },
+        "spatialPrecisionM": { "type": "number", "minimum": 0 },
+        "verification": { "$ref": "#/$defs/verification" },
+        "verifierRole": { "$ref": "#/$defs/verifierRole" },
+        "verifiedAt": { "$ref": "#/$defs/nullableDate" },
+        "sourceConfidence": { "type": "object", "additionalProperties": false, "required": ["value", "scale"], "properties": { "value": { "type": ["number", "null"] }, "scale": { "type": "string" } }, "description": "Confidence exactly as the source states it (e.g. a model score). Never mixed with the resolver's band." },
+        "consent": { "type": "object", "additionalProperties": false, "required": ["version", "aggregated"], "properties": { "version": { "type": "string" }, "aggregated": { "type": "boolean" }, "contributors": { "type": "integer", "minimum": 1 } }, "description": "Required for reported/measured-by-users evidence." },
+        "notes": { "type": "string" }
+      },
+      "allOf": [
+        { "if": { "properties": { "topic": { "const": "surface_material" } } }, "then": { "properties": { "claim": { "$ref": "#/$defs/claimSurfaceMaterial" } } } },
+        { "if": { "properties": { "topic": { "const": "physical_roughness" } } }, "then": { "properties": { "claim": { "$ref": "#/$defs/claimPhysicalRoughness" } } } },
+        { "if": { "properties": { "topic": { "const": "rails_presence" } } }, "then": { "properties": { "claim": { "$ref": "#/$defs/claimRailsPresence" } } } },
+        { "if": { "properties": { "topic": { "const": "rail_crossing" } } }, "then": { "properties": { "claim": { "$ref": "#/$defs/claimRailCrossing" } } } },
+        { "if": { "properties": { "topic": { "const": "direction" } } }, "then": { "properties": { "claim": { "$ref": "#/$defs/claimDirection" } } } },
+        { "if": { "properties": { "topic": { "const": "turn_restriction" } } }, "then": { "properties": { "claim": { "$ref": "#/$defs/claimTurnRestriction" } } } },
+        { "if": { "properties": { "kind": { "const": "reported" } } }, "then": { "required": ["consent"] } }
+      ]
+    },
+
+    "ledger": {
+      "type": "object",
+      "required": ["schemaVersion", "area", "asOf", "sources", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "const": "0.1.0" },
+        "area": { "enum": ["milan", "roccella", "rome"] },
+        "asOf": { "$ref": "#/$defs/date" },
+        "description": { "type": "string" },
+        "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } }
+      }
+    },
+
+    "attributeView": {
+      "type": "object",
+      "required": ["state", "value", "candidates", "confidence", "freshness", "weakDissent", "reasons", "supportingIds", "dissentingIds", "ignored", "explanation"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "$ref": "#/$defs/state" },
+        "value": { "type": ["string", "number", "null"] },
+        "candidates": { "type": "array", "items": { "type": "object", "required": ["value", "level", "ids"], "additionalProperties": false, "properties": { "value": { "type": ["string", "number"] }, "level": { "enum": ["decisive", "supporting", "weak"] }, "ids": { "type": "array", "items": { "type": "string" } } } } },
+        "confidence": { "type": "object", "required": ["band", "basis", "value"], "additionalProperties": false, "properties": { "band": { "$ref": "#/$defs/confidenceBand" }, "basis": { "const": "rule_prior_v0" }, "value": { "type": "null" } } },
+        "freshness": { "type": "object", "required": ["state", "oldestObservedAt", "newestObservedAt"], "additionalProperties": false, "properties": { "state": { "$ref": "#/$defs/freshnessState" }, "oldestObservedAt": { "$ref": "#/$defs/nullableDate" }, "newestObservedAt": { "$ref": "#/$defs/nullableDate" } } },
+        "weakDissent": { "type": "boolean" },
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "supportingIds": { "type": "array", "items": { "type": "string" } },
+        "dissentingIds": { "type": "array", "items": { "type": "string" } },
+        "ignored": { "type": "array", "items": { "type": "object", "required": ["id", "reason"], "additionalProperties": false, "properties": { "id": { "type": "string" }, "reason": { "type": "string" } } } },
+        "reviewTasks": { "type": "array", "items": { "type": "object", "required": ["reason", "priority"], "additionalProperties": false, "properties": { "reason": { "type": "string" }, "priority": { "enum": ["P1", "P2", "P3"] } } } },
+        "explanation": { "type": "string" }
+      }
+    },
+    "resolvedView": {
+      "type": "object",
+      "required": ["ref", "topic", "mode", "attributes"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "object", "required": ["wayId", "fromM", "toM"], "additionalProperties": false, "properties": { "wayId": { "$ref": "#/$defs/wayId" }, "fromM": { "type": "number" }, "toM": { "type": "number" } } },
+        "topic": { "$ref": "#/$defs/topic" },
+        "mode": { "$ref": "#/$defs/mode" },
+        "attributes": { "type": "object", "additionalProperties": { "$ref": "#/$defs/attributeView" } }
+      }
+    },
+    "resolvedViews": {
+      "type": "object",
+      "required": ["schemaVersion", "resolverVersion", "policyVersion", "policyVariant", "asOf", "ledgerSha256", "views"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "const": "0.1.0" },
+        "resolverVersion": { "type": "string" },
+        "policyVersion": { "type": "string" },
+        "policyVariant": { "type": "string" },
+        "asOf": { "$ref": "#/$defs/date" },
+        "ledgerSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "views": { "type": "array", "items": { "$ref": "#/$defs/resolvedView" } }
+      }
+    },
+
+    "overlayEntry": {
+      "type": "array", "minItems": 5, "maxItems": 5, "prefixItems": [
+        { "type": "integer", "minimum": 0, "description": "tuple index in the base tile (derived join key; valid only while baseTileSha8 matches)" },
+        { "type": "integer", "minimum": 0, "maximum": 65535, "description": "flags (see manifest.flagBits)" },
+        { "type": "integer", "minimum": -1, "maximum": 4, "description": "surfaceCategory override as K_ENUM index, -1 = keep the base value" },
+        { "type": "number", "minimum": -1, "maximum": 1, "description": "roughnessWeight override, -1 = keep" },
+        { "type": "integer", "minimum": -1, "maximum": 63, "description": "mdBits override (existing modeDirections encoding), -1 = keep" }
+      ]
+    },
+    "overlayTile": {
+      "type": "object",
+      "required": ["v", "tile", "baseTileSha8", "mode", "entries"],
+      "additionalProperties": false,
+      "properties": {
+        "v": { "const": "sil-overlay-0.1.0" },
+        "tile": { "type": "string", "pattern": "^\\d+_\\d+$" },
+        "baseTileSha8": { "type": "string", "pattern": "^[0-9a-f]{8}$", "description": "First 8 hex chars of the SHA-256 of the base tile file this overlay was compiled against; on mismatch the overlay is ignored (fail-open to OSM-only)." },
+        "mode": { "enum": ["car"], "description": "v0: car and motorcycle share one overlay; bicycle views are resolved in the ledger but not compiled until the scorer reads mode-specific categories." },
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/overlayEntry" } }
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "required": ["schemaVersion", "datasetVersion", "area", "asOf", "baseTilesSha256", "ledgerSha256", "policyVersion", "resolverVersion", "overlayTiles", "flagBits", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "const": "0.1.0" },
+        "datasetVersion": { "type": "string", "pattern": "^sil-(milan|roccella|rome)-\\d{4}-\\d{2}-\\d{2}\\.\\d+$" },
+        "area": { "enum": ["milan", "roccella", "rome"] },
+        "asOf": { "$ref": "#/$defs/date" },
+        "mode": { "enum": ["off", "shadow", "on"] },
+        "baseTilesSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "osmBase": { "type": "array", "items": { "type": "string" } },
+        "ledgerSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "policyVersion": { "type": "string" },
+        "resolverVersion": { "type": "string" },
+        "previousDatasetVersion": { "type": ["string", "null"] },
+        "overlayTiles": { "type": "object", "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" } },
+        "flagBits": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0, "maximum": 15 } },
+        "sources": { "type": "array", "items": { "type": "object", "required": ["id", "licenceId", "attribution"], "additionalProperties": false, "properties": { "id": { "type": "string" }, "licenceId": { "$ref": "#/$defs/licenceId" }, "attribution": { "type": "string" } } } }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "purpose": "Verification of Cloudflare limits for the Phase 4.36 Surface Intelligence design (budget: 6 requests; used 4). Fetched through the WebFetch tool, which summarises the page with a small model: figures are VERIFIED as 'read from the official page via summarised fetch on 2026-11-14' and are cross-checked against the repo's own Phase 4.33 report where possible.",
+  "requests": [
+    { "n": 1, "utc": "2026-11-14", "url": "https://developers.cloudflare.com/workers/platform/limits/",
+      "result": "Free: CPU 10 ms/request; memory 128 MB/isolate; 50 external subrequests, 1,000 internal; Worker size 64 MiB uncompressed ('There is no compressed size limit. Only the uncompressed bundle size counts'); 100 Workers; startup 1 s; 6 simultaneous connections; 100,000 requests/day; static assets 20,000 files/version, 25 MiB per file. Paid: CPU 5 min (30 s default), 10,000 subrequests." },
+    { "n": 2, "utc": "2026-11-14", "url": "https://developers.cloudflare.com/d1/platform/limits/",
+      "result": "Free: 10 databases; 500 MB/database; 5 GB/account; 50 queries per Worker invocation (a db.batch() counts as one query); 100 bound parameters/query; 100 KB SQL statement; 30 s query; 2 MB row/string/BLOB; 50 MB result (from 2026-11-04). Paid: 1,000 queries/invocation, 10 GB/database." },
+    { "n": 3, "utc": "2026-11-14", "url": "https://developers.cloudflare.com/d1/platform/pricing/",
+      "result": "Free: 5 million rows read/day, 100,000 rows written/day, 5 GB storage; resets 00:00 UTC. Paid: 25 billion rows read and 50 million rows written per month included." },
+    { "n": 4, "utc": "2026-11-14", "url": "https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/",
+      "result": "Static asset requests are free and unlimited (not billed as Worker requests); no CPU statement on the page; numeric file limits are on the Workers limits page (request 1)." }
+  ],
+  "notEverified": ["D1 R*Tree / spatial-extension support (not checked)", "D1 per-query latency (not measured)", "Durable Object limits (taken from the repo's Phase 4.33 report, which cites the official page)"]
+}

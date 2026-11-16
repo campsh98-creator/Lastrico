@@ -1,0 +1,14 @@
+{
+ "candidates": 1498,
+ "mismatching": 0,
+ "maxAbsDifferenceMeters": {
+  "pave": 0,
+  "confirmed": 0,
+  "probable": 0,
+  "risk": 0,
+  "unknown": 0,
+  "smooth": 0
+ },
+ "seconds": 32,
+ "examples": []
+}

@@ -1,0 +1,210 @@
+{
+ "objectives6": [
+  "seconds",
+  "confirmed stone m",
+  "probable stone m",
+  "unknown m",
+  "maneuver count",
+  "U-turn count"
+ ],
+ "all": {
+  "n": 298,
+  "prodOn6": 298,
+  "prodOn3": 298,
+  "prodOn7": 298,
+  "prodDominated6": 0,
+  "multiOption": 266,
+  "uturnOnPareto6": 72,
+  "uturnProd": 37,
+  "dominatedByProdOnlyBy": {
+   "maneuvers": 0,
+   "uturns": 0
+  },
+  "shown": {
+   "1": 32,
+   "2": 75,
+   "3": 93,
+   "4+": 98
+  },
+  "meanPool": 4.27,
+  "meanDistinctPool": 4.26,
+  "meanSize6": 3.03,
+  "meanSize3": 2.41,
+  "examples": []
+ },
+ "CORRIDOR": {
+  "n": 54,
+  "prodOn6": 54,
+  "prodOn3": 54,
+  "prodOn7": 54,
+  "prodDominated6": 0,
+  "multiOption": 52,
+  "uturnOnPareto6": 16,
+  "uturnProd": 10,
+  "dominatedByProdOnlyBy": {
+   "maneuvers": 0,
+   "uturns": 0
+  },
+  "shown": {
+   "1": 2,
+   "2": 12,
+   "3": 20,
+   "4+": 20
+  },
+  "meanPool": 4.72,
+  "meanDistinctPool": 4.7,
+  "meanSize6": 3.28,
+  "meanSize3": 2.67,
+  "examples": []
+ },
+ "DEV": {
+  "n": 98,
+  "prodOn6": 98,
+  "prodOn3": 98,
+  "prodOn7": 98,
+  "prodDominated6": 0,
+  "multiOption": 84,
+  "uturnOnPareto6": 19,
+  "uturnProd": 9,
+  "dominatedByProdOnlyBy": {
+   "maneuvers": 0,
+   "uturns": 0
+  },
+  "shown": {
+   "1": 14,
+   "2": 24,
+   "3": 35,
+   "4+": 25
+  },
+  "meanPool": 4.21,
+  "meanDistinctPool": 4.2,
+  "meanSize6": 2.93,
+  "meanSize3": 2.37,
+  "examples": []
+ },
+ "HOLDOUT": {
+  "n": 111,
+  "prodOn6": 111,
+  "prodOn3": 111,
+  "prodOn7": 111,
+  "prodDominated6": 0,
+  "multiOption": 96,
+  "uturnOnPareto6": 22,
+  "uturnProd": 7,
+  "dominatedByProdOnlyBy": {
+   "maneuvers": 0,
+   "uturns": 0
+  },
+  "shown": {
+   "1": 15,
+   "2": 31,
+   "3": 31,
+   "4+": 34
+  },
+  "meanPool": 4.05,
+  "meanDistinctPool": 4.04,
+  "meanSize6": 2.86,
+  "meanSize3": 2.32,
+  "examples": []
+ },
+ "FIELD": {
+  "n": 35,
+  "prodOn6": 35,
+  "prodOn3": 35,
+  "prodOn7": 35,
+  "prodDominated6": 0,
+  "multiOption": 34,
+  "uturnOnPareto6": 15,
+  "uturnProd": 11,
+  "dominatedByProdOnlyBy": {
+   "maneuvers": 0,
+   "uturns": 0
+  },
+  "shown": {
+   "1": 1,
+   "2": 8,
+   "3": 7,
+   "4+": 19
+  },
+  "meanPool": 4.4,
+  "meanDistinctPool": 4.4,
+  "meanSize6": 3.46,
+  "meanSize3": 2.46,
+  "examples": []
+ },
+ "car": {
+  "n": 106,
+  "prodOn6": 106,
+  "prodOn3": 106,
+  "prodOn7": 106,
+  "prodDominated6": 0,
+  "multiOption": 95,
+  "uturnOnPareto6": 28,
+  "uturnProd": 16,
+  "dominatedByProdOnlyBy": {
+   "maneuvers": 0,
+   "uturns": 0
+  },
+  "shown": {
+   "1": 11,
+   "2": 26,
+   "3": 34,
+   "4+": 35
+  },
+  "meanPool": 4.16,
+  "meanDistinctPool": 4.14,
+  "meanSize6": 3.07,
+  "meanSize3": 2.46,
+  "examples": []
+ },
+ "motorcycle": {
+  "n": 102,
+  "prodOn6": 102,
+  "prodOn3": 102,
+  "prodOn7": 102,
+  "prodDominated6": 0,
+  "multiOption": 92,
+  "uturnOnPareto6": 33,
+  "uturnProd": 17,
+  "dominatedByProdOnlyBy": {
+   "maneuvers": 0,
+   "uturns": 0
+  },
+  "shown": {
+   "1": 10,
+   "2": 30,
+   "3": 28,
+   "4+": 34
+  },
+  "meanPool": 4.29,
+  "meanDistinctPool": 4.28,
+  "meanSize6": 3,
+  "meanSize3": 2.32,
+  "examples": []
+ },
+ "bicycle": {
+  "n": 90,
+  "prodOn6": 90,
+  "prodOn3": 90,
+  "prodOn7": 90,
+  "prodDominated6": 0,
+  "multiOption": 79,
+  "uturnOnPareto6": 11,
+  "uturnProd": 4,
+  "dominatedByProdOnlyBy": {
+   "maneuvers": 0,
+   "uturns": 0
+  },
+  "shown": {
+   "1": 11,
+   "2": 19,
+   "3": 31,
+   "4+": 29
+  },
+  "meanPool": 4.36,
+  "meanDistinctPool": 4.36,
+  "meanSize6": 3.02,
+  "meanSize3": 2.46,
+  "examples": []
+ }
+}

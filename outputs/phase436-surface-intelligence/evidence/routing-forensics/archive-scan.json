@@ -1,0 +1,3063 @@
+{
+ "files": 2160,
+ "valhalla": 2160,
+ "withUturn": 496,
+ "uturnManeuvers": 530,
+ "byKind": {
+  "penalised": {
+   "requests": 756,
+   "trips": 756,
+   "maneuvers": 12535,
+   "uturns": 111,
+   "tripsWithUturn": 106
+  },
+  "base-alternates": {
+   "requests": 650,
+   "trips": 1705,
+   "maneuvers": 23962,
+   "uturns": 162,
+   "tripsWithUturn": 159
+  },
+  "via-waypoint": {
+   "requests": 744,
+   "trips": 744,
+   "maneuvers": 14317,
+   "uturns": 255,
+   "tripsWithUturn": 229
+  },
+  "excluding": {
+   "requests": 10,
+   "trips": 10,
+   "maneuvers": 129,
+   "uturns": 2,
+   "tripsWithUturn": 2
+  }
+ },
+ "corridor": [
+  {
+   "file": "0004cf87ba60",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.26,
+   "min": 25.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "0047d49f82fd",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 3.13,
+   "min": 15.6,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria",
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    ""
+   ]
+  },
+  {
+   "file": "01bbdfaa8a4c",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 9.71,
+   "min": 34.2,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "01bbdfaa8a4c",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 10.03,
+   "min": 35.1,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "01bbdfaa8a4c",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 10.78,
+   "min": 36.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "02fec409a1f2",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 13.12,
+   "min": 45.6,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "04511cd980d9",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.3,
+   "min": 18.2,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "04c408cfa6dc",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.81,
+   "min": 17.2,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "0562580b28a8",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 4.57,
+   "min": 16.7,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "076aec540ab9",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 7.22,
+   "min": 21.4,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "076f06b7d966",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 5.81,
+   "min": 17.2,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "076f06b7d966",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 6.8,
+   "min": 20.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "08171e34b624",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.34,
+   "min": 19.4,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi",
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "0ec97c639f6d",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 2.77,
+   "min": 8,
+   "names": [
+    "Viale Isonzo",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "122c5c2ce990",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.81,
+   "min": 17.2,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "12f4f5746677",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 6.24,
+   "min": 21.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1618c2aafa3a",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 8.22,
+   "min": 24.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1632a74050c9",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.31,
+   "min": 12.3,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1632a74050c9",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 5.5,
+   "min": 14.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1632a74050c9",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 5.87,
+   "min": 16.7,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1785c4f8323d",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 12.41,
+   "min": 43.5,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "17a119842210",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.34,
+   "min": 19.4,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi",
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1aaf098be017",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.5,
+   "min": 14.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1c1006321b89",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.8,
+   "min": 21.2,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1e6faabe5070",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 6.44,
+   "min": 19,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "1f025bd8f463",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 11.94,
+   "min": 35.3,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "200840be5770",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.11,
+   "min": 24.5,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "204abc24a4ae",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 6.44,
+   "min": 19,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2192fff4a147",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.21,
+   "min": 20.7,
+   "names": [
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "22dc318b08e7",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 26.61,
+   "min": 26.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2544e3670984",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.26,
+   "min": 25.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2639e0ba2a8b",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 27.33,
+   "min": 28.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "28ad691f751a",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 3.74,
+   "min": 9,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "294d4326e95d",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 2.24,
+   "min": 8.3,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "294d4326e95d",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 2.45,
+   "min": 8.8,
+   "names": [
+    "Viale Umbria",
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "294d4326e95d",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 2.5,
+   "min": 9.1,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "294f44aa13d4",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 1.54,
+   "min": 3.4,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "294f44aa13d4",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 1.55,
+   "min": 4.7,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2ae4c03c4cfc",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 12.96,
+   "min": 38.9,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2b9de9f8418f",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 9.99,
+   "min": 35.1,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2b9de9f8418f",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 9.77,
+   "min": 34.5,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2c17fe689726",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.11,
+   "min": 24.5,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2c71d87a986e",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 7.15,
+   "min": 22.8,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2dc6d809a77f",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.48,
+   "min": 15.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    ""
+   ]
+  },
+  {
+   "file": "2e57e598846f",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.31,
+   "min": 12.3,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2e57e598846f",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 5.5,
+   "min": 14.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2e57e598846f",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 5.87,
+   "min": 16.7,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2ea0fa66e9f7",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 5,
+   "min": 17.4,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "2ea0fa66e9f7",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 5.52,
+   "min": 18.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "30442877eade",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 6.51,
+   "min": 20.9,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "3230761deb8d",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 11.4,
+   "min": 33.6,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "3268ddc57a53",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 12.41,
+   "min": 39.8,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "348717dd39fc",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 21.08,
+   "min": 37.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "3499d12fb308",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 7.04,
+   "min": 16.7,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "36d324ef6c6b",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 7.86,
+   "min": 23.9,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "378ffa07d6b3",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 21.08,
+   "min": 37.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "3ae0bb11b209",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 7.28,
+   "min": 26.2,
+   "names": [
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "3b8b4e05e7e0",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.28,
+   "min": 25.2,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "3b923d300c47",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 9.43,
+   "min": 14.8,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "3b923d300c47",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 4.76,
+   "min": 14.5,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "3b923d300c47",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 3.85,
+   "min": 13.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "411176d3c910",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.43,
+   "min": 16.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    ""
+   ]
+  },
+  {
+   "file": "41ebc31fc465",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 11.14,
+   "min": 36.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    ""
+   ]
+  },
+  {
+   "file": "44253e91a7ca",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 11.91,
+   "min": 32.5,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "4570d7e3e79b",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 6.56,
+   "min": 20.5,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "4c7e11973715",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.31,
+   "min": 12.3,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "4cbdc96e57a3",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.52,
+   "min": 18.7,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "4cc6c8c1f730",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 27.58,
+   "min": 29.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "4cdad57821c8",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.26,
+   "min": 25.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "4f148ce210b8",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 3.76,
+   "min": 9,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "527bc6b3a815",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 3.04,
+   "min": 11,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "5363d480f142",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.35,
+   "min": 20,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "54d540e7120a",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 4,
+   "min": 14.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi",
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "557336b64a53",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 4.41,
+   "min": 15.4,
+   "names": [
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "565e7482b655",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 2.46,
+   "min": 5.8,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "5765bf2be1d4",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 3.52,
+   "min": 10.4,
+   "names": [
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "599773a20737",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 14.31,
+   "min": 35.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "599773a20737",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 12.31,
+   "min": 35.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "5ab06a6212fd",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 6.44,
+   "min": 19,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "5cbf884cbb3f",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 3.19,
+   "min": 11.2,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "5cbf884cbb3f",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 3.42,
+   "min": 12.2,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "60f014d8c83a",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.28,
+   "min": 25.2,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "6153e91a93a5",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 21.52,
+   "min": 37.4,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "6178fd803717",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 9.42,
+   "min": 31.4,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "63b0510b67e0",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 6.46,
+   "min": 20.4,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "63b0510b67e0",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 7.05,
+   "min": 22.7,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "64329836c344",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 5.8,
+   "min": 17.1,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "64329836c344",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 6.79,
+   "min": 20.7,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "6793a3c56859",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.3,
+   "min": 18.2,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "67a372a33e02",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.35,
+   "min": 22.3,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "680040d99e96",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 3.82,
+   "min": 13.9,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "680040d99e96",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 3.76,
+   "min": 12.9,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "680040d99e96",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 4.88,
+   "min": 17.2,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "6961ad8a95ed",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 18.16,
+   "min": 44.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "69c1b60970be",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.55,
+   "min": 18.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "6a0371ef5e48",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 9.53,
+   "min": 29.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "6c722308257a",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 3.78,
+   "min": 11.8,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7033dc3d31ae",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.12,
+   "min": 16.5,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7033dc3d31ae",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 6.17,
+   "min": 20.1,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "70fb77603411",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.8,
+   "min": 17.1,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "728260e359bf",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.8,
+   "min": 17.1,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "74b0a140012e",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 9.99,
+   "min": 35.1,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "758213478265",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.54,
+   "min": 18.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "758c47c8de22",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.16,
+   "min": 20.1,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "75a35b9056bc",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 12.9,
+   "min": 36.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7630e9d16207",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 1.54,
+   "min": 3.4,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7630e9d16207",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 1.55,
+   "min": 4.7,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "771df9730eef",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.26,
+   "min": 25.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "789b6a74b12f",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.8,
+   "min": 19.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "7a9c602debb4",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 3.82,
+   "min": 13.9,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7bde7afff05f",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 9.44,
+   "min": 31.6,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7c5488b077a4",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 8.22,
+   "min": 24.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7dfa40c373f0",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 19.21,
+   "min": 32,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7dfa40c373f0",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 11.09,
+   "min": 33.3,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7ebd34666cac",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 12.28,
+   "min": 39.3,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "7f9a283182c5",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 12.41,
+   "min": 43.5,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "80af35287576",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 6.16,
+   "min": 21.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "80af35287576",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 6.46,
+   "min": 23.7,
+   "names": [
+    "Via Lazzaro Papi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "8244ff8b1c7b",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 4.76,
+   "min": 14.5,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "8244ff8b1c7b",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 3.85,
+   "min": 13.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "8244ff8b1c7b",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 4.85,
+   "min": 13.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "857104e6b0e6",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 7.28,
+   "min": 17.8,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    ""
+   ]
+  },
+  {
+   "file": "88c1ce8b14ae",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 17.28,
+   "min": 38.1,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "8ccd2e088f44",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 8.97,
+   "min": 28.4,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "8f928109d0e7",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 3.08,
+   "min": 11.3,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "8f928109d0e7",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 3.82,
+   "min": 14,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "8f928109d0e7",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 3.93,
+   "min": 14.1,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "915191b5a6b9",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.87,
+   "min": 20.8,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "9176252063d2",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 7.25,
+   "min": 21.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "961d207defb3",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 9.01,
+   "min": 30.3,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "98013c2e9773",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.28,
+   "min": 25.2,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "98368fd08a2d",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.28,
+   "min": 25.2,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "9a5000ff1ef2",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.24,
+   "min": 18.5,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "9e83236181cf",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 11.16,
+   "min": 36.2,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    ""
+   ]
+  },
+  {
+   "file": "a074d4d195eb",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 14.31,
+   "min": 35.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "a23dc18f6299",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 9.42,
+   "min": 31.4,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "a75649571f51",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.5,
+   "min": 14.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ab2f64d8b9f9",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 8.53,
+   "min": 27.3,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ab3077ba3b03",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.34,
+   "min": 19.4,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi",
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ab711099af8d",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.42,
+   "min": 16.5,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    ""
+   ]
+  },
+  {
+   "file": "ab7f141ff92e",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.5,
+   "min": 14.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ac57002da9cc",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 9.01,
+   "min": 30.3,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "acb53ee223c0",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 11.86,
+   "min": 34.6,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 2,
+   "uturnStreets": [
+    "<other street>",
+    "<other street>"
+   ]
+  },
+  {
+   "file": "ad253bd0b9bf",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 2.77,
+   "min": 8,
+   "names": [
+    "Viale Isonzo",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ad253bd0b9bf",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 4.1,
+   "min": 10.2,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "b2eeb6693850",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.37,
+   "min": 19.1,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "b2eeb6693850",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 7.18,
+   "min": 25.8,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "b435f3feff22",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 10.45,
+   "min": 34.5,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "b541dd2f5fc7",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 12.96,
+   "min": 38.9,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "b59403cb0ebb",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 12.62,
+   "min": 37.8,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "b669cb5c6921",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 3.77,
+   "min": 11.7,
+   "names": [
+    "Viale Isonzo"
+   ],
+   "uturns": 2,
+   "uturnStreets": [
+    "<other street>",
+    "<other street>"
+   ]
+  },
+  {
+   "file": "b7e241a61221",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 7.71,
+   "min": 27.5,
+   "names": [
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "b81dc357d46a",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 3.78,
+   "min": 11.8,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ba2008c34471",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 3.74,
+   "min": 9,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ba819d2629da",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.31,
+   "min": 12.3,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "bbd9ea2405bc",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.26,
+   "min": 25.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "bbd9ea2405bc",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 17.73,
+   "min": 30.3,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "bc8b04af1609",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.28,
+   "min": 17.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "bcb2aff521d2",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.25,
+   "min": 17.8,
+   "names": [
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "bd5a1b52e7a4",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 10.46,
+   "min": 34.6,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "bfd7c1da3983",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 7.86,
+   "min": 23.9,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "bfd7c1da3983",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 17.33,
+   "min": 29.2,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c0e1278033f1",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.5,
+   "min": 15.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    ""
+   ]
+  },
+  {
+   "file": "c1c554cbc8d6",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 7.47,
+   "min": 25.8,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 2,
+   "uturnStreets": [
+    "<other street>",
+    ""
+   ]
+  },
+  {
+   "file": "c4ad04c43235",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 2.77,
+   "min": 8,
+   "names": [
+    "Viale Isonzo",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c55f8d23e4bc",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 5.8,
+   "min": 17.1,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c55f8d23e4bc",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 6.79,
+   "min": 20.7,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c61f2d764596",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 4.41,
+   "min": 16.5,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c61f2d764596",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 5.32,
+   "min": 19.4,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi",
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c61f2d764596",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 5.42,
+   "min": 20.3,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c766c6ab8200",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 1.6,
+   "min": 5.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c766c6ab8200",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 1.62,
+   "min": 5.5,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "c766c6ab8200",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 2.23,
+   "min": 7.8,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ca7d55877f85",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 3.76,
+   "min": 9,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "cd78186498fd",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.26,
+   "min": 25.1,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "cdeeae81d8a3",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.28,
+   "min": 25.2,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d0f758a39fd2",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 14.98,
+   "min": 41.8,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d1ca48213b9a",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 12.62,
+   "min": 37.8,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d252c76a6048",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 10.76,
+   "min": 30.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d25f295d118f",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 6.44,
+   "min": 19,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d53d2585f340",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 2.5,
+   "min": 9,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d53d2585f340",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 2.53,
+   "min": 9,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d53d2585f340",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 3.05,
+   "min": 10.8,
+   "names": [
+    "Viale Isonzo",
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d5cf6a7bca91",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.86,
+   "min": 18.2,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d76502720ca9",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 22.92,
+   "min": 45,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d914481db117",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 13.28,
+   "min": 35.3,
+   "names": [
+    "Via Friuli",
+    "Viale Umbria",
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "d964ae89d476",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 10.98,
+   "min": 38.3,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "dd859bef45d3",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 5.81,
+   "min": 17.2,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "dd859bef45d3",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 6.8,
+   "min": 20.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "dfef54729bc9",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.31,
+   "min": 18.6,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "e2af3b39632a",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.34,
+   "min": 19.4,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi",
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "e4482e492dd2",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 12.62,
+   "min": 37.8,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "e4e2fb4da5f0",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 12.39,
+   "min": 39.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "e5079d4e89bf",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 5.52,
+   "min": 18.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "e830615d7285",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 12.41,
+   "min": 37.3,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "e8c050630915",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 1.6,
+   "min": 5.9,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ea0f14987885",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 7.17,
+   "min": 24.2,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "eac8a506a949",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 7.68,
+   "min": 27.4,
+   "names": [
+    "Via Lazzaro Papi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ebc483e3fb35",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 7.15,
+   "min": 24.2,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ee7386baf450",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.92,
+   "min": 20.9,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "eed9c7d21aa3",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 6.86,
+   "min": 20.6,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "ef8573cd7263",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 9.53,
+   "min": 29.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "efb4db357ec3",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 7.08,
+   "min": 25.3,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "f11b59e28bfb",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 2.77,
+   "min": 8,
+   "names": [
+    "Viale Isonzo",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "f11b59e28bfb",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 4.1,
+   "min": 10.2,
+   "names": [
+    "Corso Lodi",
+    "Piazzale Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "f2e8306fd094",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 10.76,
+   "min": 30.4,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "f2e8306fd094",
+   "kind": "base-alternates",
+   "trip": 1,
+   "locations": 2,
+   "km": 9.96,
+   "min": 28.1,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "f2e8306fd094",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 10.33,
+   "min": 30,
+   "names": [
+    "Piazzale Lodi",
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "f4b86231a0db",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 5.96,
+   "min": 19.7,
+   "names": [
+    "Viale Isonzo"
+   ],
+   "uturns": 1,
+   "uturnStreets": [
+    "<other street>"
+   ]
+  },
+  {
+   "file": "f4f8bc957f19",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 11.4,
+   "min": 33.6,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "f5a4afff1e02",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 8.28,
+   "min": 25.2,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "fa6714e6e1e5",
+   "kind": "base-alternates",
+   "trip": 2,
+   "locations": 2,
+   "km": 8.09,
+   "min": 28.4,
+   "names": [
+    "Viale Umbria"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "fe6a40c4c795",
+   "kind": "penalised",
+   "trip": 0,
+   "locations": 2,
+   "km": 11.39,
+   "min": 31.6,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  },
+  {
+   "file": "fe8a7d0fc97e",
+   "kind": "via-waypoint",
+   "trip": 0,
+   "locations": 3,
+   "km": 8.4,
+   "min": 26.4,
+   "names": [
+    "Piazzale Lodi",
+    "Viale Isonzo"
+   ],
+   "uturns": 2,
+   "uturnStreets": [
+    "<other street>",
+    ""
+   ]
+  },
+  {
+   "file": "ff226993114a",
+   "kind": "base-alternates",
+   "trip": 0,
+   "locations": 2,
+   "km": 2.41,
+   "min": 5.3,
+   "names": [
+    "Corso Lodi"
+   ],
+   "uturns": 0,
+   "uturnStreets": []
+  }
+ ]
+}

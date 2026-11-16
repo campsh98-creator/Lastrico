@@ -1,0 +1,42 @@
+{
+ "pooledCandidates": 1271,
+ "withUturn": 181,
+ "bySource": {
+  "base/alternate": {
+   "candidates": 766,
+   "withUturn": 65,
+   "pct": 8.5
+  },
+  "penalised-search": {
+   "candidates": 198,
+   "withUturn": 36,
+   "pct": 18.2
+  },
+  "via-waypoint-detour": {
+   "candidates": 307,
+   "withUturn": 80,
+   "pct": 26.1
+  }
+ },
+ "picks": {
+  "total": 298,
+  "withUturn": 37,
+  "fastWithUturn": 23,
+  "altWithUturn": 14,
+  "altPicks": 145,
+  "bySource": {
+   "base/alternate": 17,
+   "penalised-search": 19,
+   "via-waypoint-detour": 1
+  },
+  "midRoute": 24,
+  "nearStartOrEnd": 14,
+  "unnamedStreet": 1
+ },
+ "offeredAltAvoidingAUturnExistsInPool": 0,
+ "share": {
+  "poolPct": 14.2,
+  "picksPct": 12.4,
+  "altPicksPct": 9.7
+ }
+}

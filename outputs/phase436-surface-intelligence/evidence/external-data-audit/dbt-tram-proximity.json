@@ -1,0 +1,91 @@
+{
+ "note": "metres of DBT 2020 tram-element centreline (layer 19) within N m of the OSM ways of each landmark group; 2 m sampling",
+ "groups": [
+  {
+   "group": "Piazzale Lodi ring (12 ways)",
+   "ways": 12,
+   "minDistM": 18.3,
+   "tramWithin": {
+    "5": 0,
+    "10": 0,
+    "15": 0,
+    "30": 13
+   },
+   "sedeAtWithin15": {}
+  },
+  {
+   "group": "Piazzale Lodi ring way 287070936 (sett)",
+   "ways": 1,
+   "minDistM": 22,
+   "tramWithin": {
+    "5": 0,
+    "10": 0,
+    "15": 0,
+    "30": 9
+   },
+   "sedeAtWithin15": {}
+  },
+  {
+   "group": "ring way 111768010",
+   "ways": 1,
+   "minDistM": 18.3,
+   "tramWithin": {
+    "5": 0,
+    "10": 0,
+    "15": 0,
+    "30": 13
+   },
+   "sedeAtWithin15": {}
+  },
+  {
+   "group": "ring way 111767966",
+   "ways": 1,
+   "minDistM": 30.9,
+   "tramWithin": {
+    "5": 0,
+    "10": 0,
+    "15": 0,
+    "30": 0
+   },
+   "sedeAtWithin15": {}
+  },
+  {
+   "group": "Via Lazzaro Papi (4 ways)",
+   "ways": 4,
+   "minDistM": 15.3,
+   "tramWithin": {
+    "5": 0,
+    "10": 0,
+    "15": 0,
+    "30": 143
+   },
+   "sedeAtWithin15": {}
+  },
+  {
+   "group": "Corso Lodi NW of ring (<=1 km)",
+   "ways": 43,
+   "minDistM": 0,
+   "tramWithin": {
+    "5": 1265,
+    "10": 1265,
+    "15": 1265,
+    "30": 1265
+   },
+   "sedeAtWithin15": {
+    "in sede propria": 1265
+   }
+  },
+  {
+   "group": "Corso Lodi SE of ring (<=1 km)",
+   "ways": 28,
+   "minDistM": 92.1,
+   "tramWithin": {
+    "5": 0,
+    "10": 0,
+    "15": 0,
+    "30": 0
+   },
+   "sedeAtWithin15": {}
+  }
+ ]
+}

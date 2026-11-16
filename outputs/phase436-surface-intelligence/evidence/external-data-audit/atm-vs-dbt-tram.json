@@ -1,0 +1,543 @@
+{
+ "atmTramRoutes": [
+  {
+   "linea": "9",
+   "mezzo": "TRAM",
+   "percorso": "4538",
+   "verso": "As",
+   "nome": "Stz Genova - Stz Centrale",
+   "tipo_perc": "Canonico",
+   "lung_km": "7.53",
+   "num_ferm": "26"
+  },
+  {
+   "linea": "4",
+   "mezzo": "TRAM",
+   "percorso": "15299",
+   "verso": "As",
+   "nome": "P.le Lagosta - Maciachini M3 (LAVORI TESTI)",
+   "tipo_perc": "Barrato",
+   "lung_km": "4.72",
+   "num_ferm": "12"
+  },
+  {
+   "linea": "15",
+   "mezzo": "TRAM",
+   "percorso": "9904",
+   "verso": "As",
+   "nome": "Rozzano Via G. Rossa - Giambologna/Tabacchi",
+   "tipo_perc": "Barrato",
+   "lung_km": "9.69",
+   "num_ferm": "27"
+  },
+  {
+   "linea": "5",
+   "mezzo": "TRAM",
+   "percorso": "6774",
+   "verso": "As",
+   "nome": "Ortica - Ospedale Maggiore",
+   "tipo_perc": "Canonico",
+   "lung_km": "8.20",
+   "num_ferm": "30"
+  },
+  {
+   "linea": "24",
+   "mezzo": "TRAM",
+   "percorso": "13499",
+   "verso": "Di",
+   "nome": "Ungheria - Vigentino (LAV. MAZZINI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "12.09",
+   "num_ferm": "39"
+  },
+  {
+   "linea": "10",
+   "mezzo": "TRAM",
+   "percorso": "11790",
+   "verso": "Di",
+   "nome": "24 Maggio - Lunigiana",
+   "tipo_perc": "Canonico",
+   "lung_km": "9.19",
+   "num_ferm": "35"
+  },
+  {
+   "linea": "15",
+   "mezzo": "TRAM",
+   "percorso": "13209",
+   "verso": "Di",
+   "nome": "Fontana - Rozzano Via G. Rossa (LAV. MAZZINI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "12.05",
+   "num_ferm": "33"
+  },
+  {
+   "linea": "1",
+   "mezzo": "TRAM",
+   "percorso": "10737",
+   "verso": "Di",
+   "nome": "Certosa F.S. - Greco",
+   "tipo_perc": "Barrato",
+   "lung_km": "12.16",
+   "num_ferm": "43"
+  },
+  {
+   "linea": "24",
+   "mezzo": "TRAM",
+   "percorso": "11684",
+   "verso": "Di",
+   "nome": "Ripamonti/Bellezza - Vigentino",
+   "tipo_perc": "Barrato",
+   "lung_km": "3.33",
+   "num_ferm": "10"
+  },
+  {
+   "linea": "16",
+   "mezzo": "TRAM",
+   "percorso": "7793",
+   "verso": "As",
+   "nome": "De Angeli - S.Siro",
+   "tipo_perc": "Barrato",
+   "lung_km": "2.60",
+   "num_ferm": "10"
+  },
+  {
+   "linea": "14",
+   "mezzo": "TRAM",
+   "percorso": "15002",
+   "verso": "As",
+   "nome": "Cim. Maggiore - Cusani (LAV. BRAMANTE e TORINO)",
+   "tipo_perc": "Canonico",
+   "lung_km": "7.27",
+   "num_ferm": "22"
+  },
+  {
+   "linea": "19",
+   "mezzo": "TRAM",
+   "percorso": "15255",
+   "verso": "Di",
+   "nome": "Castelli - Cantu' (LAV MAZZINI-ALBRICCI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "6.15",
+   "num_ferm": "23"
+  },
+  {
+   "linea": "33",
+   "mezzo": "TRAM",
+   "percorso": "7693",
+   "verso": "Di",
+   "nome": "Lagosta - Rimembranze di Lambrate",
+   "tipo_perc": "Canonico",
+   "lung_km": "7.03",
+   "num_ferm": "25"
+  },
+  {
+   "linea": "5",
+   "mezzo": "TRAM",
+   "percorso": "6708",
+   "verso": "Di",
+   "nome": "Ospedale Maggiore - Ortica",
+   "tipo_perc": "Canonico",
+   "lung_km": "8.10",
+   "num_ferm": "29"
+  },
+  {
+   "linea": "3",
+   "mezzo": "TRAM",
+   "percorso": "12610",
+   "verso": "As",
+   "nome": "Gratosoglio - Lorenteggio (LAV. TORINO)",
+   "tipo_perc": "Canonico",
+   "lung_km": "11.83",
+   "num_ferm": "38"
+  },
+  {
+   "linea": "31",
+   "mezzo": "TRAM",
+   "percorso": "6778",
+   "verso": "As",
+   "nome": "Cinisello B. - Testi/S.Monica",
+   "tipo_perc": "Barrato",
+   "lung_km": "5.89",
+   "num_ferm": "16"
+  },
+  {
+   "linea": "1",
+   "mezzo": "TRAM",
+   "percorso": "10735",
+   "verso": "As",
+   "nome": "Greco - Certosa F.S.",
+   "tipo_perc": "Barrato",
+   "lung_km": "12.29",
+   "num_ferm": "43"
+  },
+  {
+   "linea": "12",
+   "mezzo": "TRAM",
+   "percorso": "15008",
+   "verso": "Di",
+   "nome": "Cusani - Roserio (LAV. BRAMANTE)",
+   "tipo_perc": "Canonico",
+   "lung_km": "8.89",
+   "num_ferm": "27"
+  },
+  {
+   "linea": "1",
+   "mezzo": "TRAM",
+   "percorso": "9457",
+   "verso": "As",
+   "nome": "Greco - Roserio",
+   "tipo_perc": "Canonico",
+   "lung_km": "13.97",
+   "num_ferm": "47"
+  },
+  {
+   "linea": "19",
+   "mezzo": "TRAM",
+   "percorso": "15300",
+   "verso": "As",
+   "nome": "Lambrate - M.te Velino (LAV MAZZINI-ALBRICCI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "10.15",
+   "num_ferm": "35"
+  },
+  {
+   "linea": "15",
+   "mezzo": "TRAM",
+   "percorso": "13208",
+   "verso": "As",
+   "nome": "Rozzano via G. Rossa - Fontana (LAV. MAZZINI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "11.81",
+   "num_ferm": "34"
+  },
+  {
+   "linea": "1",
+   "mezzo": "TRAM",
+   "percorso": "12560",
+   "verso": "Di",
+   "nome": "Roserio - Greco",
+   "tipo_perc": "Canonico",
+   "lung_km": "13.82",
+   "num_ferm": "48"
+  },
+  {
+   "linea": "31",
+   "mezzo": "TRAM",
+   "percorso": "6782",
+   "verso": "Di",
+   "nome": "Bicocca M5- Cinisello B.",
+   "tipo_perc": "Canonico",
+   "lung_km": "5.64",
+   "num_ferm": "15"
+  },
+  {
+   "linea": "2",
+   "mezzo": "TRAM",
+   "percorso": "15019",
+   "verso": "Di",
+   "nome": "Negrelli - Maciachini (LAV. BAUSAN e TORINO)",
+   "tipo_perc": "Canonico",
+   "lung_km": "10.17",
+   "num_ferm": "33"
+  },
+  {
+   "linea": "19",
+   "mezzo": "TRAM",
+   "percorso": "15301",
+   "verso": "Di",
+   "nome": "M.te Velino - Lambrate (LAV MAZZINI - ALBRICCI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "10.21",
+   "num_ferm": "36"
+  },
+  {
+   "linea": "7",
+   "mezzo": "TRAM",
+   "percorso": "14245",
+   "verso": "As",
+   "nome": "Precotto - Testi/S. Marcellina  (LAVORI PROL PER C.na GOBBA )",
+   "tipo_perc": "Barrato",
+   "lung_km": "3.84",
+   "num_ferm": "11"
+  },
+  {
+   "linea": "3",
+   "mezzo": "TRAM",
+   "percorso": "12633",
+   "verso": "Di",
+   "nome": "Lorenteggio - Gratosoglio (LAV. TORINO)",
+   "tipo_perc": "Canonico",
+   "lung_km": "11.44",
+   "num_ferm": "35"
+  },
+  {
+   "linea": "12",
+   "mezzo": "TRAM",
+   "percorso": "15007",
+   "verso": "As",
+   "nome": "Roserio - Cusani (LAV. BRAMANTE)",
+   "tipo_perc": "Canonico",
+   "lung_km": "8.76",
+   "num_ferm": "27"
+  },
+  {
+   "linea": "24",
+   "mezzo": "TRAM",
+   "percorso": "13498",
+   "verso": "As",
+   "nome": "Vigentino - Ungheria (LAV. MAZZINI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "12.02",
+   "num_ferm": "39"
+  },
+  {
+   "linea": "33",
+   "mezzo": "TRAM",
+   "percorso": "8260",
+   "verso": "As",
+   "nome": "Rimembranze di Lambrate - Lagosta",
+   "tipo_perc": "Canonico",
+   "lung_km": "7.01",
+   "num_ferm": "23"
+  },
+  {
+   "linea": "15",
+   "mezzo": "TRAM",
+   "percorso": "9902",
+   "verso": "Di",
+   "nome": "Porta Lodovica - Rozzano Via G. Rossa",
+   "tipo_perc": "Barrato",
+   "lung_km": "10.27",
+   "num_ferm": "28"
+  },
+  {
+   "linea": "16",
+   "mezzo": "TRAM",
+   "percorso": "13207",
+   "verso": "As",
+   "nome": "Cantu' - S. Siro (LAV. MAZZINI - ALBRICCI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "5.74",
+   "num_ferm": "19"
+  },
+  {
+   "linea": "31",
+   "mezzo": "TRAM",
+   "percorso": "4842",
+   "verso": "Di",
+   "nome": "F.Testi/Bignami - Cinisello B.",
+   "tipo_perc": "Barrato",
+   "lung_km": "4.32",
+   "num_ferm": "11"
+  },
+  {
+   "linea": "19",
+   "mezzo": "TRAM",
+   "percorso": "15259",
+   "verso": "As",
+   "nome": "Cantu' - Castelli (LAV MAZZINI-ALBRICCI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "5.97",
+   "num_ferm": "22"
+  },
+  {
+   "linea": "7",
+   "mezzo": "TRAM",
+   "percorso": "8223",
+   "verso": "Di",
+   "nome": "Testi/ S. Marcellina - Precotto  (LAVORI PROL PER C.na GOBBA )",
+   "tipo_perc": "Barrato",
+   "lung_km": "4.13",
+   "num_ferm": "10"
+  },
+  {
+   "linea": "14",
+   "mezzo": "TRAM",
+   "percorso": "15004",
+   "verso": "Di",
+   "nome": "Cusani - Cim. Maggiore (LAV. BRAMANTE e TORINO)",
+   "tipo_perc": "Canonico",
+   "lung_km": "7.42",
+   "num_ferm": "24"
+  },
+  {
+   "linea": "4",
+   "mezzo": "TRAM",
+   "percorso": "15298",
+   "verso": "Di",
+   "nome": "Maciachini M3 - P.le Lagosta (LAVORI TESTI)",
+   "tipo_perc": "Barrato",
+   "lung_km": "4.46",
+   "num_ferm": "14"
+  },
+  {
+   "linea": "4",
+   "mezzo": "TRAM",
+   "percorso": "15295",
+   "verso": "Di",
+   "nome": "P.za Castello - Lagosta (LAVORI TESTI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "8.13",
+   "num_ferm": "24"
+  },
+  {
+   "linea": "16",
+   "mezzo": "TRAM",
+   "percorso": "13206",
+   "verso": "Di",
+   "nome": "S.Siro - Cantu' (LAV. MAZZINI - ALBRICCI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "6.09",
+   "num_ferm": "21"
+  },
+  {
+   "linea": "10",
+   "mezzo": "TRAM",
+   "percorso": "11767",
+   "verso": "As",
+   "nome": "Lunigiana -24 Maggio",
+   "tipo_perc": "Canonico",
+   "lung_km": "9.22",
+   "num_ferm": "35"
+  },
+  {
+   "linea": "9",
+   "mezzo": "TRAM",
+   "percorso": "9962",
+   "verso": "Di",
+   "nome": "Stz Centrale - Stz Genova",
+   "tipo_perc": "Canonico",
+   "lung_km": "7.58",
+   "num_ferm": "26"
+  },
+  {
+   "linea": "2",
+   "mezzo": "TRAM",
+   "percorso": "15017",
+   "verso": "As",
+   "nome": "Maciachini - Negrelli (LAV. BAUSAN e TORINO)",
+   "tipo_perc": "Canonico",
+   "lung_km": "10.25",
+   "num_ferm": "35"
+  },
+  {
+   "linea": "4",
+   "mezzo": "TRAM",
+   "percorso": "15293",
+   "verso": "As",
+   "nome": "Lagosta - P.za Castello (LAVORI TESTI)",
+   "tipo_perc": "Canonico",
+   "lung_km": "7.99",
+   "num_ferm": "22"
+  },
+  {
+   "linea": "31",
+   "mezzo": "TRAM",
+   "percorso": "7214",
+   "verso": "As",
+   "nome": "Cinisello B. - Bicocca M5",
+   "tipo_perc": "Canonico",
+   "lung_km": "6.36",
+   "num_ferm": "18"
+  },
+  {
+   "linea": "16",
+   "mezzo": "TRAM",
+   "percorso": "7796",
+   "verso": "Di",
+   "nome": "S.Siro - De Angeli",
+   "tipo_perc": "Barrato",
+   "lung_km": "2.75",
+   "num_ferm": "10"
+  }
+ ],
+ "dbtTramByStreet": {
+  "PIAZZALE MEDAGLIE DORO": {
+   "m": 228,
+   "withinAtm15m": 180,
+   "atmLines": {
+    "9": 179.89665963150188
+   }
+  },
+  "(none)": {
+   "m": 2325,
+   "withinAtm15m": 1080,
+   "atmLines": {
+    "19": 1080.345206945478
+   }
+  },
+  "VIALE MONTE NERO": {
+   "m": 660,
+   "withinAtm15m": 660,
+   "atmLines": {
+    "9": 659.795023924472
+   }
+  },
+  "VIALE SABOTINO": {
+   "m": 86,
+   "withinAtm15m": 86,
+   "atmLines": {
+    "9": 85.51765948686494
+   }
+  },
+  "VIA TITO LIVIO": {
+   "m": 508,
+   "withinAtm15m": 508,
+   "atmLines": {
+    "19": 508.1263941068401
+   }
+  },
+  "VIA LATTANZIO": {
+   "m": 23,
+   "withinAtm15m": 23,
+   "atmLines": {
+    "19": 23.493934150323852
+   }
+  },
+  "VIA COMELICO": {
+   "m": 435,
+   "withinAtm15m": 435,
+   "atmLines": {
+    "19": 435.2996153778774
+   }
+  },
+  "VIALE UMBRIA": {
+   "m": 325,
+   "withinAtm15m": 325,
+   "atmLines": {
+    "19": 325.3860983523173
+   }
+  },
+  "VIA ANGELO MAJ": {
+   "m": 160,
+   "withinAtm15m": 160,
+   "atmLines": {
+    "19": 159.82825775125457
+   }
+  },
+  "VIA LUCANO": {
+   "m": 21,
+   "withinAtm15m": 21,
+   "atmLines": {
+    "19": 20.6398436761883
+   }
+  },
+  "VIA FRIULI": {
+   "m": 60,
+   "withinAtm15m": 60,
+   "atmLines": {
+    "19": 60.33584804959483
+   }
+  },
+  "CORSO LODI": {
+   "m": 1040,
+   "withinAtm15m": 0,
+   "atmLines": {}
+  },
+  "PIAZZA BRUNO BUOZZI": {
+   "m": 226,
+   "withinAtm15m": 0,
+   "atmLines": {}
+  }
+ }
+}

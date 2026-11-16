@@ -1,0 +1,429 @@
+{
+ "box": [
+  9.2025,
+  45.443,
+  9.2175,
+  45.455
+ ],
+ "tramElements": 36,
+ "tramMetres": 6097.1,
+ "pctWithin15mOfDbtStreet": 61.9,
+ "pctWithin15mOfOsmHighway": 64.4,
+ "byNearestOsmName": {
+  "Piazzale Medaglie d'Oro": 139,
+  "(unnamed)": 628,
+  "(none within 15 m)": 2170,
+  "Via Serviliano Lattuada": 21,
+  "Viale Monte Nero": 582,
+  "Porta Romana M3": 113,
+  "Viale Sabotino": 19,
+  "Viale Monte Nero - Via Pier Lombardo": 24,
+  "Via Tito Livio": 432,
+  "Via Lattanzio": 18,
+  "Via Comelico": 409,
+  "Viale Umbria": 57,
+  "Via Angelo Maj": 152,
+  "Via Cadore": 40,
+  "Via Lucano": 15,
+  "Via Friuli": 54,
+  "Corso Lodi": 1198,
+  "Piazza Bruno Buozzi": 19,
+  "Via Passo Buole": 7
+ },
+ "byNearestDbtNome": {
+  "PIAZZALE MEDAGLIE DORO": 222,
+  "(none within 15 m)": 2325,
+  "VIALE MONTE NERO": 660,
+  "VIALE SABOTINO": 91,
+  "VIA TITO LIVIO": 508,
+  "VIA LATTANZIO": 23,
+  "VIA COMELICO": 439,
+  "VIALE UMBRIA": 325,
+  "VIA ANGELO MAJ": 160,
+  "VIA LUCANO": 17,
+  "VIA FRIULI": 60,
+  "CORSO LODI": 1069,
+  "PIAZZA BRUNO BUOZZI": 197
+ },
+ "sedePolygons": 19,
+ "perFeature": [
+  {
+   "objectid": 1,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 655.2,
+   "nearestOsmNames": {
+    "Piazzale Medaglie d'Oro": 57,
+    "(unnamed)": 6.4,
+    "(none within 15 m)": 591.8
+   }
+  },
+  {
+   "objectid": 2,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 658.6,
+   "nearestOsmNames": {
+    "(none within 15 m)": 639,
+    "Piazzale Medaglie d'Oro": 19.6
+   }
+  },
+  {
+   "objectid": 272,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 0.9,
+   "nearestOsmNames": {
+    "Via Serviliano Lattuada": 0.9
+   }
+  },
+  {
+   "objectid": 273,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 173,
+   "nearestOsmNames": {
+    "Via Serviliano Lattuada": 4.6,
+    "Viale Monte Nero": 162.7,
+    "(unnamed)": 5.7
+   }
+  },
+  {
+   "objectid": 274,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 46.5,
+   "nearestOsmNames": {
+    "(unnamed)": 11.4,
+    "Viale Monte Nero": 6.1,
+    "Piazzale Medaglie d'Oro": 29
+   }
+  },
+  {
+   "objectid": 275,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 73.8,
+   "nearestOsmNames": {
+    "(unnamed)": 13.5,
+    "Porta Romana M3": 55.6,
+    "Viale Sabotino": 4.7
+   }
+  },
+  {
+   "objectid": 277,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 7.5,
+   "nearestOsmNames": {
+    "Via Serviliano Lattuada": 7.5
+   }
+  },
+  {
+   "objectid": 278,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 150.1,
+   "nearestOsmNames": {
+    "Viale Monte Nero": 130.1,
+    "(unnamed)": 20
+   }
+  },
+  {
+   "objectid": 413,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 74.4,
+   "nearestOsmNames": {
+    "Viale Sabotino": 13.8,
+    "Porta Romana M3": 57.3,
+    "(unnamed)": 3.3
+   }
+  },
+  {
+   "objectid": 414,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 46.8,
+   "nearestOsmNames": {
+    "(unnamed)": 13.2,
+    "Piazzale Medaglie d'Oro": 33.6
+   }
+  },
+  {
+   "objectid": 415,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 173.3,
+   "nearestOsmNames": {
+    "(unnamed)": 6.8,
+    "Viale Monte Nero": 166,
+    "Via Serviliano Lattuada": 0.5
+   }
+  },
+  {
+   "objectid": 416,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 7.9,
+   "nearestOsmNames": {
+    "Via Serviliano Lattuada": 7.9
+   }
+  },
+  {
+   "objectid": 417,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 150.3,
+   "nearestOsmNames": {
+    "Viale Monte Nero": 116.6,
+    "(unnamed)": 9.7,
+    "Viale Monte Nero - Via Pier Lombardo": 24
+   }
+  },
+  {
+   "objectid": 622,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 7.4,
+   "nearestOsmNames": {
+    "(unnamed)": 7.4
+   }
+  },
+  {
+   "objectid": 626,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 102.9,
+   "nearestOsmNames": {
+    "(unnamed)": 2,
+    "Via Tito Livio": 101
+   }
+  },
+  {
+   "objectid": 995,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 20.2,
+   "nearestOsmNames": {
+    "(unnamed)": 8.3,
+    "Via Lattanzio": 11.9
+   }
+  },
+  {
+   "objectid": 998,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 17.6,
+   "nearestOsmNames": {
+    "Via Comelico": 11.4,
+    "Viale Umbria": 3.2,
+    "(unnamed)": 3
+   }
+  },
+  {
+   "objectid": 999,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 126.4,
+   "nearestOsmNames": {
+    "(unnamed)": 126.4
+   }
+  },
+  {
+   "objectid": 1000,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 7.3,
+   "nearestOsmNames": {
+    "(unnamed)": 7.3
+   }
+  },
+  {
+   "objectid": 1344,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 20.3,
+   "nearestOsmNames": {
+    "(unnamed)": 8.6,
+    "Via Lattanzio": 6.3,
+    "Via Tito Livio": 5.4
+   }
+  },
+  {
+   "objectid": 1345,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 36,
+   "nearestOsmNames": {
+    "(unnamed)": 15.8,
+    "Viale Umbria": 16.4,
+    "Via Tito Livio": 3.8
+   }
+  },
+  {
+   "objectid": 1704,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 5.4,
+   "nearestOsmNames": {
+    "(unnamed)": 5.4
+   }
+  },
+  {
+   "objectid": 1708,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 0.3,
+   "nearestOsmNames": {
+    "(unnamed)": 0.3
+   }
+  },
+  {
+   "objectid": 1709,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 128.5,
+   "nearestOsmNames": {
+    "(unnamed)": 28.7,
+    "Via Tito Livio": 99.8
+   }
+  },
+  {
+   "objectid": 1862,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 54.7,
+   "nearestOsmNames": {
+    "Viale Umbria": 5.6,
+    "(unnamed)": 49.1
+   }
+  },
+  {
+   "objectid": 1863,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 19.7,
+   "nearestOsmNames": {
+    "Via Angelo Maj": 7.9,
+    "(unnamed)": 2.4,
+    "Viale Umbria": 9.3
+   }
+  },
+  {
+   "objectid": 2054,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 128.2,
+   "nearestOsmNames": {
+    "(unnamed)": 17.8,
+    "Via Tito Livio": 110.4
+   }
+  },
+  {
+   "objectid": 2395,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 103,
+   "nearestOsmNames": {
+    "(unnamed)": 0.4,
+    "Via Tito Livio": 102.5
+   }
+  },
+  {
+   "objectid": 2564,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 19.3,
+   "nearestOsmNames": {
+    "(unnamed)": 5.4,
+    "Viale Umbria": 5.3,
+    "Via Comelico": 8.7
+   }
+  },
+  {
+   "objectid": 2743,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 18.5,
+   "nearestOsmNames": {
+    "Via Angelo Maj": 11.8,
+    "(unnamed)": 0,
+    "Viale Umbria": 6.7
+   }
+  },
+  {
+   "objectid": 2746,
+   "sede": "in sede propria",
+   "pos": "a raso",
+   "lengthM": 56.6,
+   "nearestOsmNames": {
+    "Viale Umbria": 2.2,
+    "(unnamed)": 54.4
+   }
+  },
+  {
+   "objectid": 2894,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 31.1,
+   "nearestOsmNames": {
+    "(unnamed)": 13.9,
+    "Viale Umbria": 8.5,
+    "Via Tito Livio": 8.7
+   }
+  },
+  {
+   "objectid": 3079,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 828.7,
+   "nearestOsmNames": {
+    "(none within 15 m)": 469.8,
+    "Via Cadore": 20.2,
+    "(unnamed)": 61.7,
+    "Via Lucano": 5.6,
+    "Via Comelico": 271.4
+   }
+  },
+  {
+   "objectid": 3080,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 881.6,
+   "nearestOsmNames": {
+    "(none within 15 m)": 469.8,
+    "Via Cadore": 20.3,
+    "(unnamed)": 78.6,
+    "Via Lucano": 9.4,
+    "Via Comelico": 117.4,
+    "Via Friuli": 53.6,
+    "Via Angelo Maj": 132.6
+   }
+  },
+  {
+   "objectid": 3081,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 651.1,
+   "nearestOsmNames": {
+    "Corso Lodi": 633.3,
+    "(unnamed)": 10.8,
+    "Piazza Bruno Buozzi": 4.8,
+    "Via Passo Buole": 2.2
+   }
+  },
+  {
+   "objectid": 3082,
+   "sede": "in sede propria",
+   "pos": "su ponte/viadotto/cavalcavia",
+   "lengthM": 614.3,
+   "nearestOsmNames": {
+    "Corso Lodi": 564.5,
+    "(unnamed)": 30.8,
+    "Piazza Bruno Buozzi": 14.4,
+    "Via Passo Buole": 4.5
+   }
+  }
+ ]
+}

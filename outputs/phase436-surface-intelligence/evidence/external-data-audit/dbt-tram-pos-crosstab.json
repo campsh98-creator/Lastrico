@@ -1,0 +1,34 @@
+{
+ "pos=02 sed=01 | inVehicularPolygon=true inTramSedePolygon=false": {
+  "m": 2059,
+  "streets": {
+   "VIALE MONTE NERO": 16,
+   "PIAZZALE MEDAGLIE DORO": 89,
+   "VIA TITO LIVIO": 34,
+   "VIA LATTANZIO": 23,
+   "VIA COMELICO": 339,
+   "VIALE UMBRIA": 73,
+   "VIA ANGELO MAJ": 160,
+   "VIA FRIULI": 60,
+   "CORSO LODI": 1040,
+   "PIAZZA BRUNO BUOZZI": 226
+  }
+ },
+ "pos=01 sed=01 | inVehicularPolygon=false inTramSedePolygon=true": {
+  "m": 1435,
+  "streets": {
+   "VIALE MONTE NERO": 644,
+   "PIAZZALE MEDAGLIE DORO": 66,
+   "VIALE SABOTINO": 25,
+   "VIA TITO LIVIO": 463,
+   "VIALE UMBRIA": 238
+  }
+ },
+ "pos=02 sed=01 | inVehicularPolygon=false inTramSedePolygon=false": {
+  "m": 19,
+  "streets": {
+   "PIAZZALE MEDAGLIE DORO": 4,
+   "VIALE UMBRIA": 15
+  }
+ }
+}

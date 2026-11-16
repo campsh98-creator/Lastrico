@@ -1,0 +1,198 @@
+{
+ "scenario": "with-friuli-first",
+ "navigation": false,
+ "extraSecondsAssumed": 60,
+ "note": "Stub provider; route 0 is the plan's own route. Requests after the base call are answered 503 (logged).",
+ "route0Length": {
+  "traceKm": 4.703,
+  "geometryMeters": 4699
+ },
+ "providerRequestsInOrder": [
+  {
+   "n": 1,
+   "kind": "base",
+   "locations": [
+    "break",
+    "break"
+   ],
+   "alternates": 2,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false
+  },
+  {
+   "n": 2,
+   "kind": "via-waypoint-detour",
+   "locations": [
+    "break",
+    "through",
+    "break"
+   ],
+   "alternates": 0,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false,
+   "viaFromStartMeters": 736,
+   "viaFromRoute0Meters": 448
+  },
+  {
+   "n": 3,
+   "kind": "base",
+   "hasHeading": false
+  },
+  {
+   "n": 4,
+   "kind": "via-waypoint-detour",
+   "locations": [
+    "break",
+    "through",
+    "break"
+   ],
+   "alternates": 0,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false,
+   "viaFromStartMeters": 234,
+   "viaFromRoute0Meters": 234
+  },
+  {
+   "n": 5,
+   "kind": "base",
+   "hasHeading": false
+  },
+  {
+   "n": 6,
+   "kind": "via-waypoint-detour",
+   "locations": [
+    "break",
+    "through",
+    "break"
+   ],
+   "alternates": 0,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false,
+   "viaFromStartMeters": 994,
+   "viaFromRoute0Meters": 707
+  },
+  {
+   "n": 7,
+   "kind": "base",
+   "hasHeading": false
+  }
+ ],
+ "fast": {
+  "km": 4.703,
+  "min": 15.63,
+  "confirmedPave": 25,
+  "probablePave": 0,
+  "unknown": 285,
+  "rough": [
+   {
+    "at": 391,
+    "to": 416,
+    "name": "Piazzale Lodi",
+    "surface": "sett"
+   }
+  ]
+ },
+ "safe": {
+  "km": 4.46,
+  "min": 15.71,
+  "confirmedPave": 0,
+  "probablePave": 0,
+  "unknown": 285,
+  "rough": []
+ },
+ "hasDistinctAlternative": true,
+ "antiPave": {
+  "status": "alternative",
+  "standard": {
+   "source": "base-1",
+   "legal": true,
+   "seconds": 943,
+   "meters": 4460,
+   "paveMeters": 0,
+   "confirmedPaveMeters": 0
+  },
+  "avoidedVsStandardMeters": 0,
+  "search": {
+   "attempted": false,
+   "failed": false,
+   "generated": 0
+  }
+ },
+ "optimization": {
+  "strategy": "pareto-conservative-unknown",
+  "frontierSize": 2,
+  "unknownMeterPenalty": 1,
+  "directCandidateGenerated": false,
+  "directCandidates": 0
+ },
+ "alternativesAnalyzed": 2,
+ "dataNotice": "2 percorsi reali confrontati; 62 way OSM abbinate al percorso (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
+ "candidates": [
+  {
+   "source": "base-2",
+   "provider": "valhalla-fossgis",
+   "distance": 4703,
+   "seconds": 938,
+   "paveMeters": 25,
+   "weightedPaveMeters": 25,
+   "riskMeters": 25,
+   "unknownSurfaceMeters": 285,
+   "confirmedPaveMeters": 25,
+   "probablePaveMeters": 0,
+   "selectionVerdict": "fastest",
+   "selectionBurden": 25,
+   "selectionUtility": 25,
+   "paretoOptimal": true,
+   "distinctFromFast": false,
+   "eligibleModeAndAccess": true,
+   "confirmedRestrictionMeters": 0,
+   "blockingRestrictionMeters": 0,
+   "surfaceCoveragePercent": 93.9
+  },
+  {
+   "source": "base-1",
+   "provider": "valhalla-fossgis",
+   "distance": 4460,
+   "seconds": 943,
+   "paveMeters": 0,
+   "weightedPaveMeters": 0,
+   "riskMeters": 0,
+   "unknownSurfaceMeters": 285,
+   "confirmedPaveMeters": 0,
+   "probablePaveMeters": 0,
+   "selectionVerdict": "selected",
+   "selectionBurden": 0,
+   "selectionUtility": 4,
+   "paretoOptimal": true,
+   "distinctFromFast": true,
+   "eligibleModeAndAccess": true,
+   "confirmedRestrictionMeters": 0,
+   "blockingRestrictionMeters": 0,
+   "surfaceCoveragePercent": 93.6
+  }
+ ]
+}

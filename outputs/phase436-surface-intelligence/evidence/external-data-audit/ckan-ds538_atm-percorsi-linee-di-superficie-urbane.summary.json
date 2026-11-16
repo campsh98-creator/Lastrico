@@ -1,0 +1,47 @@
+{
+  "id": "ds538_atm-percorsi-linee-di-superficie-urbane",
+  "title": "ATM - Percorsi delle linee di superficie urbane",
+  "license_id": "cc-by",
+  "license_title": "Creative Commons Attribution",
+  "license_url": "http://www.opendefinition.org/licenses/cc-by",
+  "metadata_modified": "2026-07-24T13:50:36.478245",
+  "notes": "<p>ATM - Percorsi delle linee di superficie urbane</p>\r\n\r\n## Informazioni supplementari\r\n\r\n<p>No information provided</p>\r\n\r\n## Campi del dataset\r\n\r\n* linea (Linea): Numero della linea\r\n* mezzo (Mezzo): Mezzo\r\n    * BUS\r\n    * FILOBUS\r\n    * TRAM\r\n* percorso (Percorso): Codice numerico univoco del percorso\r\n* verso (Verso): Verso del percorso\r\n    * As: ascendente\r\n    * Di: discendente\r\n* nome (Nome): Nome del percorso\r\n* tipo_perc (Tipo): Tipo percorso\r\n    * Barrato\r\n    * Canonico\r\n* lung_km (Lunghezza Km): Lunghezza del percorso, in Km\r\n* num_ferm (Numero fermate): Numero di fermate\r\n* geom (Geometria): Geometria (Linestring)\r\n\r\nIl presente dataset è stato rilasciato dal comune di Milano.\r\n\r\n",
+  "resources": [
+    {
+      "id": "b5acc06f-65fb-4481-9428-347fd1c18096",
+      "name": "ds538_tpl_percorsi.geojson",
+      "format": "GeoJSON",
+      "url": "https://dati.comune.milano.it/dataset/8bfe2015-2669-4796-9940-36b3c155b258/resource/b5acc06f-65fb-4481-9428-347fd1c18096/download/tpl_percorsi.geojson",
+      "size": 7869615,
+      "mimetype": null,
+      "created": "2018-02-21T15:41:56.925711",
+      "last_modified": "2026-07-24T13:50:22.244975",
+      "datastore_active": false,
+      "description": "anteprima disponibile"
+    },
+    {
+      "id": "6d9005ff-49ca-4d23-8c3a-26a55fb95737",
+      "name": "ds538_tpl_percorsi.zip",
+      "format": "SHP",
+      "url": "https://dati.comune.milano.it/dataset/8bfe2015-2669-4796-9940-36b3c155b258/resource/6d9005ff-49ca-4d23-8c3a-26a55fb95737/download/tpl_percorsi_shp.zip",
+      "size": 1285691,
+      "mimetype": null,
+      "created": "2018-06-20T12:22:53.179358",
+      "last_modified": "2026-07-24T13:50:27.093168",
+      "datastore_active": false,
+      "description": "anteprima disponibile"
+    },
+    {
+      "id": "d4408a03-ef86-40df-a4a9-e738d05e03e4",
+      "name": "ds538_tpl_percorsi.csv",
+      "format": "CSV",
+      "url": "https://dati.comune.milano.it/dataset/8bfe2015-2669-4796-9940-36b3c155b258/resource/d4408a03-ef86-40df-a4a9-e738d05e03e4/download/tpl_percorsi.csv",
+      "size": 62446,
+      "mimetype": null,
+      "created": "2020-04-01T20:05:14.008563",
+      "last_modified": "2026-07-24T13:50:31.262108",
+      "datastore_active": true,
+      "description": "anteprima disponibile"
+    }
+  ]
+}

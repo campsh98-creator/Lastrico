@@ -1,0 +1,370 @@
+[
+ {
+  "key": "10018a7daffa",
+  "utc": "2026-11-14T14:00:29.898Z",
+  "trip": 0,
+  "km": 3.318,
+  "min": 9.92,
+  "engine": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 25,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 1,
+  "roughNames": [
+   "Piazzale Lodi:sett"
+  ]
+ },
+ {
+  "key": "23de0400781c",
+  "utc": "2026-11-14T13:59:31.643Z",
+  "trip": 0,
+  "km": 3.398,
+  "min": 10.51,
+  "engine": {
+   "confirmed": 50,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 50,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 1,
+  "roughSlicesAtMin15": 2,
+  "roughNames": [
+   "Piazzale Lodi:sett",
+   "Via Lazzaro Papi:sett"
+  ]
+ },
+ {
+  "key": "4771a9be4d8c",
+  "utc": "2026-11-14T13:58:09.168Z",
+  "trip": 0,
+  "km": 0.379,
+  "min": 1.56,
+  "engine": {
+   "confirmed": 0,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 0,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 0,
+  "roughNames": []
+ },
+ {
+  "key": "525a3db0bb1f",
+  "utc": "2026-11-14T14:00:27.582Z",
+  "trip": 0,
+  "km": 3.318,
+  "min": 9.92,
+  "engine": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 25,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 1,
+  "roughNames": [
+   "Piazzale Lodi:sett"
+  ]
+ },
+ {
+  "key": "535766c35111",
+  "utc": "2026-11-14T13:58:13.549Z",
+  "trip": 0,
+  "km": 3.314,
+  "min": 9.72,
+  "engine": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 25,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 1,
+  "roughNames": [
+   "Piazzale Lodi:sett"
+  ]
+ },
+ {
+  "key": "535766c35111",
+  "utc": "2026-11-14T13:58:13.549Z",
+  "trip": 1,
+  "km": 3.319,
+  "min": 11.24,
+  "engine": {
+   "confirmed": 400,
+   "probable": 0,
+   "unknown": 303,
+   "weighted": 400,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 2,
+  "roughSlicesAtMin15": 2,
+  "roughNames": [
+   "Corso Lodi:sett",
+   "<other street>:sett"
+  ]
+ },
+ {
+  "key": "535766c35111",
+  "utc": "2026-11-14T13:58:13.549Z",
+  "trip": 2,
+  "km": 3.965,
+  "min": 12.11,
+  "engine": {
+   "confirmed": 489,
+   "probable": 10,
+   "unknown": 0,
+   "weighted": 495,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 4,
+  "roughSlicesAtMin15": 4,
+  "roughNames": [
+   "Corso Lodi:sett",
+   "<other street>:sett",
+   "<other street>:paving_stones"
+  ]
+ },
+ {
+  "key": "6e246a1310d3",
+  "utc": "2026-11-14T13:58:10.325Z",
+  "trip": 0,
+  "km": 3.318,
+  "min": 9.92,
+  "engine": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 25,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 1,
+  "roughNames": [
+   "Piazzale Lodi:sett"
+  ]
+ },
+ {
+  "key": "6e246a1310d3",
+  "utc": "2026-11-14T13:58:10.325Z",
+  "trip": 1,
+  "km": 3.055,
+  "min": 10.47,
+  "engine": {
+   "confirmed": 197,
+   "probable": 0,
+   "unknown": 302,
+   "weighted": 197,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 2,
+  "roughSlicesAtMin15": 2,
+  "roughNames": [
+   "Corso Lodi:sett",
+   "<other street>:sett"
+  ]
+ },
+ {
+  "key": "6e246a1310d3",
+  "utc": "2026-11-14T13:58:10.325Z",
+  "trip": 2,
+  "km": 3.701,
+  "min": 11.36,
+  "engine": {
+   "confirmed": 286,
+   "probable": 10,
+   "unknown": 0,
+   "weighted": 292,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 4,
+  "roughSlicesAtMin15": 4,
+  "roughNames": [
+   "Corso Lodi:sett",
+   "<other street>:sett",
+   "<other street>:paving_stones"
+  ]
+ },
+ {
+  "key": "89ae04b4615b",
+  "utc": "2026-11-14T13:59:30.487Z",
+  "trip": 0,
+  "km": 2.841,
+  "min": 9.06,
+  "engine": {
+   "confirmed": 280,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 280,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 2,
+  "roughSlicesAtMin15": 3,
+  "roughNames": [
+   "<other street>:sett",
+   "Via Lazzaro Papi:sett"
+  ]
+ },
+ {
+  "key": "89ae04b4615b",
+  "utc": "2026-11-14T13:59:30.487Z",
+  "trip": 1,
+  "km": 3.537,
+  "min": 11.66,
+  "engine": {
+   "confirmed": 265,
+   "probable": 0,
+   "unknown": 138,
+   "weighted": 265,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 1,
+  "roughSlicesAtMin15": 2,
+  "roughNames": [
+   "<other street>:sett",
+   "Corso Lodi:sett",
+   "Via Lazzaro Papi:sett"
+  ]
+ },
+ {
+  "key": "b924e4f82cc1",
+  "utc": "2026-11-14T14:00:28.737Z",
+  "trip": 0,
+  "km": 3.318,
+  "min": 9.92,
+  "engine": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 25,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 1,
+  "roughNames": [
+   "Piazzale Lodi:sett"
+  ]
+ },
+ {
+  "key": "d73ad81f2452",
+  "utc": "2026-11-14T13:59:08.686Z",
+  "trip": 0,
+  "km": 3.318,
+  "min": 9.92,
+  "engine": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 25,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 1,
+  "roughNames": [
+   "Piazzale Lodi:sett"
+  ]
+ },
+ {
+  "key": "d73ad81f2452",
+  "utc": "2026-11-14T13:59:08.686Z",
+  "trip": 1,
+  "km": 2.855,
+  "min": 9.52,
+  "engine": {
+   "confirmed": 195,
+   "probable": 0,
+   "unknown": 302,
+   "weighted": 195,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 2,
+  "roughSlicesAtMin15": 2,
+  "roughNames": [
+   "Via Lazzaro Papi:sett",
+   "<other street>:sett"
+  ]
+ },
+ {
+  "key": "d73ad81f2452",
+  "utc": "2026-11-14T13:59:08.686Z",
+  "trip": 2,
+  "km": 3.236,
+  "min": 10.61,
+  "engine": {
+   "confirmed": 649,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 649,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 3,
+  "roughSlicesAtMin15": 4,
+  "roughNames": [
+   "Via Lazzaro Papi:sett",
+   "<other street>:sett",
+   "Corso Lodi:sett"
+  ]
+ },
+ {
+  "key": "e141b733e570",
+  "utc": "2026-11-14T14:05:11.245Z",
+  "trip": 0,
+  "km": 0.241,
+  "min": 0.82,
+  "engine": {
+   "confirmed": 25,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 25,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 1,
+  "roughNames": [
+   "Piazzale Lodi:sett"
+  ]
+ },
+ {
+  "key": "f7881d213e6d",
+  "utc": "2026-11-14T14:02:20.190Z",
+  "trip": 0,
+  "km": 3.813,
+  "min": 12.04,
+  "engine": {
+   "confirmed": 0,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 0,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 0,
+  "roughNames": []
+ },
+ {
+  "key": "ff5b25bfba40",
+  "utc": "2026-11-14T13:58:17.517Z",
+  "trip": 0,
+  "km": 3.076,
+  "min": 9.56,
+  "engine": {
+   "confirmed": 0,
+   "probable": 0,
+   "unknown": 0,
+   "weighted": 0,
+   "blockingRestriction": 0
+  },
+  "roughSlicesAtMin25": 0,
+  "roughSlicesAtMin15": 0,
+  "roughNames": []
+ }
+]

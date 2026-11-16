@@ -1,0 +1,1027 @@
+{
+ "source": "DBT_2020.zip entries (HTTP Range), see dbt2020-zip-listing.json",
+ "prj": "PROJCS[\"RDN2008_UTM_zone_32N\",GEOGCS[\"GCS_RDN2008\",DATUM[\"D_RDN2008\",SPHEROID[\"GRS_1980\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",9.0],PARAMETER[\"Scale_Factor\",0.9996],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0],AUTHORITY[\"EPSG\",\"7791\"]]\r\n",
+ "files": {
+  "AC_CIC.dbf": {
+   "records": 1478,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 1478,
+     "nonEmptyPct": 100,
+     "distinct": 1478
+    },
+    "AC_CIC_POS": {
+     "type": "C(80)",
+     "nonEmpty": 1478,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 1206,
+      "01": 272
+     }
+    },
+    "SCRIL": {
+     "type": "C(80)",
+     "nonEmpty": 1478,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "RC2": 1478
+     }
+    }
+   }
+  },
+  "AC_CIC_AC_CIC_SUP_SR.dbf": {
+   "records": 2798,
+   "ldid": 0,
+   "fields": {
+    "SUBREGID": {
+     "type": "C(70)",
+     "nonEmpty": 2798,
+     "nonEmptyPct": 100,
+     "distinct": 2798
+    },
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 2798,
+     "nonEmptyPct": 100,
+     "distinct": 1478
+    },
+    "AC_CIC_FON": {
+     "type": "C(80)",
+     "nonEmpty": 2798,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "01": 2798
+     }
+    },
+    "AC_CIC_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 2798,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 2750,
+      "01": 48
+     }
+    },
+    "AC_CIC_SED": {
+     "type": "C(80)",
+     "nonEmpty": 2798,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "01": 2732,
+      "02": 58,
+      "03": 8
+     }
+    }
+   }
+  },
+  "AC_VEI.dbf": {
+   "records": 10868,
+   "ldid": 0,
+   "fields": {
+    "NOME": {
+     "type": "C(100)",
+     "nonEmpty": 10868,
+     "nonEmptyPct": 100,
+     "distinct": 4362
+    },
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 10868,
+     "nonEmptyPct": 100,
+     "distinct": 10868
+    },
+    "SCRIL": {
+     "type": "C(80)",
+     "nonEmpty": 10868,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "RC2": 10868
+     }
+    }
+   }
+  },
+  "AC_VEI_AC_VEI_SUP_SR.dbf": {
+   "records": 37892,
+   "ldid": 0,
+   "fields": {
+    "NOME": {
+     "type": "C(100)",
+     "nonEmpty": 37892,
+     "nonEmptyPct": 100,
+     "distinct": 4364
+    },
+    "SUBREGID": {
+     "type": "C(70)",
+     "nonEmpty": 37892,
+     "nonEmptyPct": 100,
+     "distinct": 37892
+    },
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 37892,
+     "nonEmptyPct": 100,
+     "distinct": 10868
+    },
+    "AC_VEI_FON": {
+     "type": "C(80)",
+     "nonEmpty": 37892,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "01": 37892
+     }
+    },
+    "AC_VEI_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 37892,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 37294,
+      "01": 598
+     }
+    },
+    "AC_VEI_SED": {
+     "type": "C(80)",
+     "nonEmpty": 37892,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "01": 37266,
+      "02": 583,
+      "03": 43
+     }
+    },
+    "AC_VEI_ZON": {
+     "type": "C(80)",
+     "nonEmpty": 37892,
+     "nonEmptyPct": 100,
+     "distinct": 14,
+     "values": {
+      "01": 15961,
+      "04": 7748,
+      "0205": 7167,
+      "0301": 3429,
+      "03": 1929,
+      "0102": 484,
+      "0204": 381,
+      "0307": 324,
+      "0206": 262,
+      "07": 155,
+      "05": 33,
+      "0105": 9,
+      "0104": 7,
+      "06": 3
+     }
+    }
+   }
+  },
+  "AR_STR.dbf": {
+   "records": 5456,
+   "ldid": 0,
+   "fields": {
+    "NOME": {
+     "type": "C(100)",
+     "nonEmpty": 5456,
+     "nonEmptyPct": 100,
+     "distinct": 4359
+    },
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 5456,
+     "nonEmptyPct": 100,
+     "distinct": 5456
+    }
+   }
+  },
+  "AR_STR_AR_STR_SUP_SR.dbf": {
+   "records": 7015,
+   "ldid": 0,
+   "fields": {
+    "NOME": {
+     "type": "C(100)",
+     "nonEmpty": 7015,
+     "nonEmptyPct": 100,
+     "distinct": 4359
+    },
+    "SUBREGID": {
+     "type": "C(70)",
+     "nonEmpty": 7015,
+     "nonEmptyPct": 100,
+     "distinct": 7015
+    },
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 7015,
+     "nonEmptyPct": 100,
+     "distinct": 5456
+    },
+    "AR_STR_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 7015,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 6570,
+      "01": 445
+     }
+    },
+    "AR_STR_SED": {
+     "type": "C(80)",
+     "nonEmpty": 7015,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "01": 6633,
+      "02": 351,
+      "03": 31
+     }
+    },
+    "AR_STR_STA": {
+     "type": "C(80)",
+     "nonEmpty": 7015,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "01": 7013,
+      "02": 2
+     }
+    }
+   }
+  },
+  "AR_VMS.dbf": {
+   "records": 941,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 941,
+     "nonEmptyPct": 100,
+     "distinct": 941
+    },
+    "AR_VMS_TY": {
+     "type": "C(80)",
+     "nonEmpty": 941,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "05": 622,
+      "01": 319
+     }
+    },
+    "SCRIL": {
+     "type": "C(80)",
+     "nonEmpty": 941,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "RC2": 941
+     }
+    }
+   }
+  },
+  "AR_VMS_AR_VMS_SUP.dbf": {
+   "records": 310,
+   "ldid": 0,
+   "fields": {
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 310,
+     "nonEmptyPct": 100,
+     "distinct": 310
+    }
+   }
+  },
+  "AR_VMS_AR_VMS_SUP_L.dbf": {
+   "records": 615,
+   "ldid": 0,
+   "fields": {
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 615,
+     "nonEmptyPct": 100,
+     "distinct": 615
+    }
+   }
+  },
+  "AR_VMS_AR_VMS_SUP_SR.dbf": {
+   "records": 1212,
+   "ldid": 0,
+   "fields": {
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 1212,
+     "nonEmptyPct": 100,
+     "distinct": 310
+    },
+    "AR_VMS_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 1212,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 1172,
+      "01": 40
+     }
+    },
+    "AR_VMS_SED": {
+     "type": "C(80)",
+     "nonEmpty": 1212,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "04": 1054,
+      "02": 157,
+      "03": 1
+     }
+    },
+    "SUBREGID": {
+     "type": "C(70)",
+     "nonEmpty": 1212,
+     "nonEmptyPct": 100,
+     "distinct": 1212
+    }
+   }
+  },
+  "EL_CIC.dbf": {
+   "records": 1213,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 1213,
+     "nonEmptyPct": 100,
+     "distinct": 1213
+    },
+    "EL_CIC_POS": {
+     "type": "C(80)",
+     "nonEmpty": 1213,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 754,
+      "01": 459
+     }
+    }
+   }
+  },
+  "EL_CIC_EL_CIC_TRA_SG.dbf": {
+   "records": 2371,
+   "ldid": 0,
+   "fields": {
+    "SEGMENTID": {
+     "type": "C(70)",
+     "nonEmpty": 2371,
+     "nonEmptyPct": 100,
+     "distinct": 2371
+    },
+    "CLASSREF": {
+     "type": "C(80)",
+     "nonEmpty": 2371,
+     "nonEmptyPct": 100,
+     "distinct": 1213
+    },
+    "EL_CIC_FON": {
+     "type": "C(80)",
+     "nonEmpty": 2371,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "01": 2371
+     }
+    },
+    "EL_CIC_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 2371,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 2323,
+      "01": 48
+     }
+    },
+    "EL_CIC_SED": {
+     "type": "C(80)",
+     "nonEmpty": 2371,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "01": 2305,
+      "02": 58,
+      "03": 8
+     }
+    },
+    "EL_CIC_POS": {
+     "type": "C(80)",
+     "nonEmpty": 2371,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 1751,
+      "01": 620
+     }
+    }
+   }
+  },
+  "EL_FER.dbf": {
+   "records": 3162,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 3162,
+     "nonEmptyPct": 100,
+     "distinct": 3162
+    },
+    "EL_FER_ELE": {
+     "type": "C(80)",
+     "nonEmpty": 3162,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "01": 3162
+     }
+    },
+    "EL_FER_STA": {
+     "type": "C(80)",
+     "nonEmpty": 3162,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "01": 2910,
+      "03": 252
+     }
+    },
+    "EL_FER_TY": {
+     "type": "C(80)",
+     "nonEmpty": 3162,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "02": 3162
+     }
+    }
+   }
+  },
+  "EL_FER_EL_FER_TRA_SG.dbf": {
+   "records": 4549,
+   "ldid": 0,
+   "fields": {
+    "EL_FER_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 4549,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 4049,
+      "01": 500
+     }
+    },
+    "EL_FER_POS": {
+     "type": "C(80)",
+     "nonEmpty": 4549,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "01": 4538,
+      "02": 11
+     }
+    },
+    "EL_FER_SED": {
+     "type": "C(80)",
+     "nonEmpty": 4549,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "01": 4140,
+      "02": 366,
+      "03": 43
+     }
+    },
+    "EL_FER_NBI": {
+     "type": "N(9)",
+     "nonEmpty": 4549,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "2": 4549
+     }
+    },
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 4549,
+     "nonEmptyPct": 100,
+     "distinct": 3162
+    },
+    "SEGMENTID": {
+     "type": "C(70)",
+     "nonEmpty": 4549,
+     "nonEmptyPct": 100,
+     "distinct": 4549
+    }
+   }
+  },
+  "EL_STR.dbf": {
+   "records": 25586,
+   "ldid": 0,
+   "fields": {
+    "NOME": {
+     "type": "C(100)",
+     "nonEmpty": 25586,
+     "nonEmptyPct": 100,
+     "distinct": 4362
+    },
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 25586,
+     "nonEmptyPct": 100,
+     "distinct": 25586
+    }
+   }
+  },
+  "EL_STR_EL_STR_TRA_SG.dbf": {
+   "records": 55554,
+   "ldid": 0,
+   "fields": {
+    "NOME": {
+     "type": "C(100)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 4362
+    },
+    "SEGMENTID": {
+     "type": "C(70)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 55554
+    },
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 25586
+    },
+    "EL_STR_CF": {
+     "type": "C(80)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 6,
+     "values": {
+      "06": 40971,
+      "05": 8566,
+      "02": 2462,
+      "01": 1527,
+      "03": 1206,
+      "04": 822
+     }
+    },
+    "EL_STR_CL": {
+     "type": "C(80)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "03": 29539,
+      "02": 21070,
+      "01": 4945
+     }
+    },
+    "EL_STR_FON": {
+     "type": "C(80)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "01": 55554
+     }
+    },
+    "EL_STR_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 54969,
+      "01": 585
+     }
+    },
+    "EL_STR_SED": {
+     "type": "C(80)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "01": 55021,
+      "02": 489,
+      "03": 44
+     }
+    },
+    "EL_STR_STA": {
+     "type": "C(80)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "01": 55550,
+      "02": 4
+     }
+    },
+    "EL_STR_TY": {
+     "type": "C(80)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 8,
+     "values": {
+      "0206": 28925,
+      "01": 16198,
+      "0204": 5280,
+      "0205": 3092,
+      "0307": 1264,
+      "0102": 769,
+      "0105": 19,
+      "0104": 7
+     }
+    },
+    "VIA_ID": {
+     "type": "N(4)",
+     "nonEmpty": 55554,
+     "nonEmptyPct": 100,
+     "distinct": 3938
+    }
+   }
+  },
+  "EL_TRV.dbf": {
+   "records": 1522,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 1522,
+     "nonEmptyPct": 100,
+     "distinct": 1522
+    },
+    "EL_TRV_STA": {
+     "type": "C(80)",
+     "nonEmpty": 1522,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "01": 1520,
+      "03": 2
+     }
+    },
+    "SCRIL": {
+     "type": "C(80)",
+     "nonEmpty": 1522,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "RC2": 1522
+     }
+    }
+   }
+  },
+  "EL_TRV_EL_TRV_TRA_SG.dbf": {
+   "records": 3096,
+   "ldid": 0,
+   "fields": {
+    "EL_TRV_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 3096,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 3064,
+      "01": 32
+     }
+    },
+    "EL_TRV_POS": {
+     "type": "C(80)",
+     "nonEmpty": 3096,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 1779,
+      "01": 1317
+     }
+    },
+    "EL_TRV_SED": {
+     "type": "C(80)",
+     "nonEmpty": 3096,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "01": 3072,
+      "02": 18,
+      "03": 6
+     }
+    },
+    "SEGMENTID": {
+     "type": "C(70)",
+     "nonEmpty": 3096,
+     "nonEmptyPct": 100,
+     "distinct": 3096
+    },
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 3096,
+     "nonEmptyPct": 100,
+     "distinct": 1522
+    }
+   }
+  },
+  "EL_VMS.dbf": {
+   "records": 2174,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 2174,
+     "nonEmptyPct": 100,
+     "distinct": 2174
+    },
+    "EL_VMS_TY": {
+     "type": "C(80)",
+     "nonEmpty": 2174,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "01": 1567,
+      "05": 607
+     }
+    }
+   }
+  },
+  "EL_VMS_EL_VMS_TRA_SG.dbf": {
+   "records": 2594,
+   "ldid": 0,
+   "fields": {
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 2594,
+     "nonEmptyPct": 100,
+     "distinct": 2174
+    },
+    "EL_VMS_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 2594,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 2550,
+      "01": 44
+     }
+    },
+    "EL_VMS_SED": {
+     "type": "C(80)",
+     "nonEmpty": 2594,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "04": 2437,
+      "02": 156,
+      "03": 1
+     }
+    },
+    "SEGMENTID": {
+     "type": "C(70)",
+     "nonEmpty": 2594,
+     "nonEmptyPct": 100,
+     "distinct": 2594
+    }
+   }
+  },
+  "ES_AMM.dbf": {
+   "records": 4359,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 4359
+    },
+    "ES_AMM_CA": {
+     "type": "C(80)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "04": 4352,
+      "02": 7
+     }
+    },
+    "ES_AMM_PRO": {
+     "type": "C(80)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "04": 4352,
+      "02": 7
+     }
+    },
+    "ES_AMM_CF": {
+     "type": "C(80)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 6,
+     "values": {
+      "06": 4055,
+      "05": 244,
+      "02": 25,
+      "03": 15,
+      "04": 12,
+      "01": 8
+     }
+    },
+    "ES_AMM_EXT": {
+     "type": "C(50)",
+     "nonEmpty": 0,
+     "nonEmptyPct": 0,
+     "distinct": 1,
+     "values": {
+      "": 4359
+     }
+    },
+    "ES_AMM_CU": {
+     "type": "C(50)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 3939
+    }
+   }
+  },
+  "ES_AMM_ES_AMM_NOM_T.dbf": {
+   "records": 4359,
+   "ldid": 0,
+   "fields": {
+    "NOME": {
+     "type": "C(100)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 4359
+    },
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 4359
+    },
+    "LINGUA": {
+     "type": "C(80)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 1,
+     "values": {
+      "10": 4359
+     }
+    }
+   }
+  },
+  "ES_AMM_ES_AMM_PER.dbf": {
+   "records": 4359,
+   "ldid": 0,
+   "fields": {
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 4359
+    }
+   }
+  },
+  "ES_AMM_ES_AMM_TRA.dbf": {
+   "records": 4359,
+   "ldid": 0,
+   "fields": {
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 4359,
+     "nonEmptyPct": 100,
+     "distinct": 4359
+    }
+   }
+  },
+  "GZ_STR.dbf": {
+   "records": 17576,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 17576,
+     "nonEmptyPct": 100,
+     "distinct": 17576
+    },
+    "GZ_STR_TY": {
+     "type": "C(80)",
+     "nonEmpty": 17576,
+     "nonEmptyPct": 100,
+     "distinct": 5,
+     "values": {
+      "10": 80,
+      "01": 13348,
+      "05": 1958,
+      "03": 1705,
+      "06": 485
+     }
+    }
+   }
+  },
+  "GZ_STR_GZ_STR_TY.dbf": {
+   "records": 17576,
+   "ldid": 87,
+   "fields": {
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 17576,
+     "nonEmptyPct": 100,
+     "distinct": 17576
+    },
+    "GZ_STR_TY": {
+     "type": "C(80)",
+     "nonEmpty": 17576,
+     "nonEmptyPct": 100,
+     "distinct": 5,
+     "values": {
+      "10": 80,
+      "01": 13348,
+      "05": 1958,
+      "03": 1705,
+      "06": 485
+     }
+    }
+   }
+  },
+  "SD_FER.dbf": {
+   "records": 447,
+   "ldid": 0,
+   "fields": {
+    "CLASSID": {
+     "type": "C(70)",
+     "nonEmpty": 447,
+     "nonEmptyPct": 100,
+     "distinct": 447
+    },
+    "SD_FER_TY": {
+     "type": "C(80)",
+     "nonEmpty": 447,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "02": 384,
+      "01": 51,
+      "03": 12
+     }
+    }
+   }
+  },
+  "SD_FER_SD_FER_SUP_SR.dbf": {
+   "records": 915,
+   "ldid": 0,
+   "fields": {
+    "SD_FER_LIV": {
+     "type": "C(80)",
+     "nonEmpty": 915,
+     "nonEmptyPct": 100,
+     "distinct": 2,
+     "values": {
+      "02": 798,
+      "01": 117
+     }
+    },
+    "SD_FER_SED": {
+     "type": "C(80)",
+     "nonEmpty": 915,
+     "nonEmptyPct": 100,
+     "distinct": 3,
+     "values": {
+      "01": 789,
+      "02": 110,
+      "03": 16
+     }
+    },
+    "SUBREGID": {
+     "type": "C(70)",
+     "nonEmpty": 915,
+     "nonEmptyPct": 100,
+     "distinct": 915
+    },
+    "CLASSREF": {
+     "type": "C(70)",
+     "nonEmpty": 915,
+     "nonEmptyPct": 100,
+     "distinct": 447
+    }
+   }
+  }
+ }
+}

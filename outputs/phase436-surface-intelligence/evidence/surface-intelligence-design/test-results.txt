@@ -1,0 +1,49 @@
+PASS  fixture ledger validates against sil.schema.json
+PASS  resolved views (P-A car) validate
+PASS  overlay manifest and every overlay tile validate (P-A and P-B)
+PASS  schema rejects: missing verification
+PASS  schema rejects: unknown topic
+PASS  schema rejects: claim shape that does not belong to the topic (rails claim on surface_material)
+PASS  schema rejects: extra property
+PASS  schema rejects: malformed observedAt
+PASS  schema rejects: a 'reported' evidence without consent
+PASS  schema rejects: single numeric confidence on an evidence (no such field)
+PASS  schema rejects: overlay entry of wrong length and unknown datasetVersion form
+PASS  no tagged claim carries an observedAt unless the OSM history declared a survey (dates are never invented)
+PASS  sil-types.ts unions equal the schema enums (16 vocabularies)
+PASS  sil-types.ts is valid erasable TypeScript (Node strips it)
+PASS  MaterialValue equals lib/road-intelligence-types.ts SurfaceMaterial (read-only comparison)
+PASS  determinism: two resolutions are byte-identical
+PASS  order independence: shuffled evidence gives identical views
+PASS  unknown is first-class: untagged Via Fra Cristoforo ways are unknown, value null, band none
+PASS  DBT FON=01 'pavimentato' is ignored (non-discriminating) and never becomes smooth; inferred neighbour never votes
+PASS  no view anywhere maps an untagged/unknown way to asphalt or smooth
+PASS  topic isolation: dropping ALL rails evidence leaves every non-rails view identical
+PASS  topic isolation: dropping ALL surface/roughness evidence leaves every rails view identical
+PASS  rails are not roughness: Corso Lodi rails evidence adds no roughness/material candidate
+PASS  adjacent coverage never votes: removing the adjacent refs of the 2016 photo leaves ring #2 candidates and state unchanged
+PASS  mode applicability: bicycle-only evidence (surface_bike) never changes a car view, and contests the bicycle view of ring #2
+PASS  field case ring #2/#3 (car, P-A): tagged asphalt kept with weak dissent flagged, never silently resolved; photo kept as review trigger
+PASS  field case ring #2/#3 (car, P-B): the same evidence is contested
+PASS  field case ring #1: sett stays known and is corroborated by the report (band medium, 2023 survey date kept)
+PASS  not newest-wins: the 2016 photo is OLDER than the 2023 tag yet leaves a flag, and the newest evidence (the 2026 owner report) does not override a 2023 survey
+PASS  what the claim is about: rails PRESENCE stays known from DBT 2020 while SERVICE follows the fresher ATM file, dissent kept
+PASS  Papi rails: DBT absence (weak) vs coarse owner report (weak) is contested, not decided
+PASS  direction: provider-graph evidence sets oneway=forward for car; inferred topology is informational; bicycle stays unknown
+PASS  reconciliation with Agent 4's layer La: reading surface_bike for every mode makes ring #2 contested for the car under P-A (31.0 m probable, weighted 45.2 m)
+PASS  P-A is never more contested than P-B
+PASS  synthetic: an OLDER human-verified field observation beats a NEWER unverified report (decisive, dissent kept)
+PASS  synthetic: two field-verified observations that disagree are contested (no winner)
+PASS  staleness is a function of asOf only: ring #1 tag read in 2034 becomes stale and queues a P3 re-verification, value unchanged
+PASS  works/maintenance flags are review triggers only: the policy has no evidence kind or topic that can change a value from a works feed
+PASS  way identity: split re-anchors into two refs flagged for review
+PASS  way identity: merge keeps one ref with a recomputed interval; deletion orphans the record instead of dropping it
+PASS  overlay: tile hashes match the committed base tiles and every tuple index is valid for a fixture way
+PASS  overlay default (P-A) is shadow-safe: it overrides NO surface category or roughness weight; P-B overrides only contested stone-vs-smooth
+PASS  overlay compile is deterministic (report) and a known view never disagrees with the base category
+PASS  overlay manifest records dataset version, base-tile hash, ledger hash, policy and licences
+PASS  D1 DDL runs on SQLite; constraints reject raw/fine-grained or free-text style rows
+INFO  git status paths outside outputs/experiments phase436 (not necessarily mine; other agents run concurrently): none; rome paths: 0
+PASS  scope: nothing under rome is modified or untracked
+
+47/47 passed  (asOf 2026-11-14, policy sil-policy-0.1.0-experimental)

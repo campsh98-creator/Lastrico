@@ -1,0 +1,70 @@
+wayId,name,highway,surface,smoothness,surface_bike,oneway,version,rawWayLengthM,routeMetresIndependent,routeMetresLastrico,diffM,lastricoCategory,alongFirst,alongLast
+<redacted>,<origin street>,residential,asphalt,,,yes,7,121.8,54.6,54.6,0,confirmed_smooth,0,54.6
+<redacted>,<origin street>,residential,concrete:plates,,,yes,7,10.8,10.8,10.8,0,confirmed_smooth,54.6,65.4
+<redacted>,<origin street>,residential,concrete:plates,,,yes,10,9.9,9.9,9.9,0,confirmed_smooth,65.4,75.3
+<redacted>,<origin street>,residential,asphalt,,,yes,7,143.5,143.5,143.5,0,confirmed_smooth,75.3,218.7
+1448092811,Viale Umbria,primary,asphalt,,,yes,2,107.1,107.1,107.1,0,confirmed_smooth,218.7,325.8
+289749136,Viale Umbria,primary,asphalt,,,yes,14,64.2,64.2,64.2,0,confirmed_smooth,325.8,390
+287070936,Piazzale Lodi,primary,sett,bad,milanese_paving,yes,17,25,25,25,0,confirmed_rough,390,415
+111768010,Piazzale Lodi,primary,asphalt,excellent,milanese_paving,yes,19,31,31.1,31.1,0,confirmed_smooth,415,446.1
+111767966,Piazzale Lodi,primary,asphalt,good,,yes,17,13.1,13,13,0,confirmed_smooth,446.1,459.1
+288900525,Viale Isonzo,primary,asphalt,,,yes,10,207,207,207,0,confirmed_smooth,459.1,666.1
+288900524,Viale Isonzo,primary,asphalt,excellent,,yes,11,13.3,13.3,13.3,0,confirmed_smooth,666.1,679.4
+288900523,Viale Isonzo,primary,asphalt,excellent,,yes,12,205.4,205.4,205.4,0,confirmed_smooth,679.4,884.7
+23799891,Piazza Trento,primary,asphalt,excellent,,yes,16,223.4,223.3,223.3,0,confirmed_smooth,884.7,1108.1
+23799892,Viale Isonzo,primary,asphalt,,,yes,22,260.2,260.2,260.2,0,confirmed_smooth,1108.1,1368.2
+288900526,Viale Isonzo,primary,asphalt,,,yes,7,11.5,11.6,11.6,0,confirmed_smooth,1368.2,1379.8
+31003990,Viale Toscana,primary,asphalt,,,yes,26,11.9,11.9,11.9,0,confirmed_smooth,1379.8,1391.7
+289539272,Viale Toscana,primary,asphalt,excellent,,yes,11,138,138,138,0,confirmed_smooth,1391.7,1529.7
+289838483,Viale Toscana,primary,asphalt,excellent,,yes,11,118.5,118.5,118.5,0,confirmed_smooth,1529.7,1648.2
+289539271,Viale Toscana,primary,asphalt,,,yes,7,15.8,15.9,15.9,0,confirmed_smooth,1648.2,1664
+289539274,Viale Toscana,primary,asphalt,,,yes,10,102,101.9,101.9,0,confirmed_smooth,1664,1766
+1209118308,Viale Toscana,primary,asphalt,,,yes,3,73.5,73.5,73.5,0,confirmed_smooth,1766,1839.5
+1209118307,Viale Toscana,primary,asphalt,,,yes,3,72.4,72.3,72.3,0,confirmed_smooth,1839.5,1911.9
+289539268,Viale Toscana,primary,asphalt,,,yes,8,24.1,24.1,24.1,0,confirmed_smooth,1911.9,1936
+279396997,Viale Toscana,primary,asphalt,excellent,,yes,13,202.3,202.2,202.2,0,confirmed_smooth,1936,2138.2
+279396995,Viale Toscana,primary,asphalt,excellent,,yes,12,54,54,54,0,confirmed_smooth,2138.2,2192.1
+279395928,Viale Toscana,primary,asphalt,,,yes,6,26.8,26.8,26.8,0,confirmed_smooth,2192.1,2219
+32928085,Viale Tibaldi,primary,asphalt,excellent,,yes,39,84.9,84.8,84.8,0,confirmed_smooth,2219,2303.8
+279395924,Viale Tibaldi,primary,asphalt,excellent,,yes,10,79.8,79.8,79.8,0,confirmed_smooth,2303.8,2383.6
+279395921,Viale Tibaldi,primary,asphalt,,,yes,7,20.8,20.9,20.9,0,confirmed_smooth,2383.6,2404.5
+279393738,Viale Tibaldi,primary,asphalt,,,yes,10,31.4,31.4,31.4,0,confirmed_smooth,2404.5,2435.9
+279393747,Viale Tibaldi,primary,asphalt,excellent,,yes,16,41,41,41,0,confirmed_smooth,2435.9,2476.9
+1205441288,Viale Tibaldi,primary,asphalt,,,yes,2,9,9,9,0,confirmed_smooth,2476.9,2485.9
+1205441289,Viale Tibaldi,primary,asphalt,,,yes,1,7,6.9,6.9,0,confirmed_smooth,2485.9,2492.8
+1205441290,Viale Tibaldi,primary,asphalt,,,yes,2,24.4,24.5,24.5,0,confirmed_smooth,2492.8,2517.3
+279393748,Viale Tibaldi,primary,asphalt,,,yes,18,104.2,104.2,104.2,0,confirmed_smooth,2517.3,2621.5
+279393740,Viale Tibaldi,primary,asphalt,,,yes,11,26.2,26.1,26.1,0,confirmed_smooth,2621.5,2647.6
+1313299924,Viale Tibaldi,primary,asphalt,,,yes,3,58.2,58.3,58.3,0,confirmed_smooth,2647.6,2705.9
+279393743,Viale Tibaldi,primary,asphalt,,,yes,8,48.8,48.7,48.7,0,confirmed_smooth,2705.9,2754.6
+279393744,Viale Tibaldi,primary,asphalt,,,yes,8,76.7,76.7,76.7,0,confirmed_smooth,2754.6,2831.3
+273274802,Viale Tibaldi,primary,asphalt,,,yes,11,87.8,87.8,87.8,0,confirmed_smooth,2831.3,2919.1
+273274799,Viale Tibaldi,primary,asphalt,excellent,,yes,13,101,101.1,101.1,0,confirmed_smooth,2919.1,3020.2
+273274794,Viale Tibaldi,primary,asphalt,excellent,,yes,12,17.2,17.2,17.2,0,confirmed_smooth,3020.2,3037.4
+1148268249,Viale Tibaldi,primary,asphalt,excellent,,yes,6,84.3,84.3,84.3,0,confirmed_smooth,3037.4,3121.6
+1148266943,Viale Tibaldi,primary,asphalt,excellent,,yes,4,15.3,15.4,15.4,0,confirmed_smooth,3121.6,3137
+1065949258,Viale Tibaldi,primary,asphalt,,,yes,4,4.8,4.8,4.8,0,confirmed_smooth,3137,3141.8
+244619517,Viale Tibaldi,primary,asphalt,,,yes,15,16.7,16.7,16.7,0,confirmed_smooth,3141.8,3158.5
+1065949259,Viale Tibaldi,primary,asphalt,,,yes,4,5.9,5.9,5.9,0,confirmed_smooth,3158.5,3164.4
+27256416,Alzaia Naviglio Pavese,residential,asphalt,,,yes,14,10.5,10.5,10.5,0,confirmed_smooth,3164.4,3174.9
+273274804,Alzaia Naviglio Pavese,residential,asphalt,,,yes,12,11.9,11.9,11.9,0,confirmed_smooth,3174.9,3186.8
+1148266945,Alzaia Naviglio Pavese,residential,asphalt,,,yes,5,6.8,6.8,6.8,0,confirmed_smooth,3186.8,3193.6
+164212499,Alzaia Naviglio Pavese,residential,asphalt,,,yes,16,192.4,192.4,192.4,0,confirmed_smooth,3193.6,3386
+273274766,Alzaia Naviglio Pavese,residential,asphalt,excellent,,yes,12,121.7,121.6,121.6,0,confirmed_smooth,3386,3507.6
+152466113,Alzaia Naviglio Pavese,residential,asphalt,,,yes,17,325.1,325.2,325.2,0,confirmed_smooth,3507.6,3832.8
+1180933474,Alzaia Naviglio Pavese,residential,asphalt,,,no,5,17.5,17.6,17.6,0,confirmed_smooth,3832.8,3850.3
+164699431,Alzaia Naviglio Pavese,residential,asphalt,,,no,11,33.6,33.6,33.6,0,confirmed_smooth,3850.3,3883.9
+1180933467,Alzaia Naviglio Pavese,residential,asphalt,,,no,3,11.4,11.4,11.4,0,confirmed_smooth,3883.9,3895.3
+260957901,Alzaia Naviglio Pavese,residential,asphalt,,,no,8,93,93,93,0,confirmed_smooth,3895.3,3988.3
+137158656,Via Fra Cristoforo,unclassified,,,,yes,8,29.4,29.4,29.4,0,unknown,3988.3,4017.6
+1236292178,Via Fra Cristoforo,unclassified,,,,yes,1,7.5,7.6,7.6,0,unknown,4017.6,4025.2
+273258718,Via Fra Cristoforo,unclassified,,,,no,2,21.6,21.5,21.5,0,unknown,4025.2,4046.7
+273258717,Via Fra Cristoforo,unclassified,,,,no,4,84.1,84.2,84.2,0,unknown,4046.7,4130.8
+273258720,Via Fra Cristoforo,unclassified,asphalt,,,no,10,121.1,121.1,121.1,0,confirmed_smooth,4130.8,4252
+273258719,Via Fra Cristoforo,unclassified,,,,no,3,116.9,116.9,116.9,0,unknown,4252,4368.9
+271984055,Via Don Rodrigo,residential,asphalt,good,,no,6,83,83,83,0,confirmed_smooth,4368.9,4451.9
+1061069071,Via Don Rodrigo,residential,asphalt,good,,no,4,27.3,27.2,27.2,0,confirmed_smooth,4451.9,4479.1
+28965105,Via Don Rodrigo,residential,asphalt,,,no,21,34.2,34.2,34.2,0,confirmed_smooth,4479.1,4513.3
+1452931018,Alzaia Naviglio Pavese,residential,,,,yes,1,8.8,8.8,8.8,0,unknown,4513.3,4522.1
+273258716,Alzaia Naviglio Pavese,residential,asphalt,,,yes,8,154,154,154,0,confirmed_smooth,4522.1,4676.1
+<redacted>,<destination street>,service,,,,,1,16.7,16.7,16.7,0,unknown,4676.1,4692.9

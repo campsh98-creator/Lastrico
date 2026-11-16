@@ -1,0 +1,116 @@
+{
+ "scenario": "with-friuli-first",
+ "navigation": false,
+ "extraSecondsAssumed": 22,
+ "note": "Stub provider; route 0 is the plan's own route. Requests after the base call are answered 503 (logged).",
+ "route0Length": {
+  "traceKm": 4.703,
+  "geometryMeters": 4699
+ },
+ "providerRequestsInOrder": [
+  {
+   "n": 1,
+   "kind": "base",
+   "locations": [
+    "break",
+    "break"
+   ],
+   "alternates": 2,
+   "costing": "auto",
+   "costingOptions": {
+    "auto": {
+     "use_highways": 0.7,
+     "use_tolls": 0.2
+    }
+   },
+   "hasHeading": false
+  }
+ ],
+ "fast": {
+  "km": 4.46,
+  "min": 15.08,
+  "confirmedPave": 0,
+  "probablePave": 0,
+  "unknown": 285,
+  "rough": []
+ },
+ "safe": {
+  "km": 4.46,
+  "min": 15.08,
+  "confirmedPave": 0,
+  "probablePave": 0,
+  "unknown": 285,
+  "rough": []
+ },
+ "hasDistinctAlternative": false,
+ "antiPave": {
+  "status": "no-pave",
+  "standard": {
+   "source": "base-1",
+   "legal": true,
+   "seconds": 905,
+   "meters": 4460,
+   "paveMeters": 0,
+   "confirmedPaveMeters": 0
+  },
+  "avoidedVsStandardMeters": 0,
+  "search": {
+   "attempted": false,
+   "failed": false,
+   "generated": 0
+  }
+ },
+ "optimization": {
+  "strategy": "pareto-conservative-unknown",
+  "frontierSize": 1,
+  "unknownMeterPenalty": 1,
+  "directCandidateGenerated": false,
+  "directCandidates": 0
+ },
+ "alternativesAnalyzed": 2,
+ "dataNotice": "2 percorsi reali controllati: nessuna deviazione migliora il compromesso tra tempo, pavé noto e tratti sconosciuti (archivio OSM locale). I tratti senza classificazione restano sconosciuti: zero pavé noto non significa fondo liscio",
+ "candidates": [
+  {
+   "source": "base-1",
+   "provider": "valhalla-fossgis",
+   "distance": 4460,
+   "seconds": 905,
+   "paveMeters": 0,
+   "weightedPaveMeters": 0,
+   "riskMeters": 0,
+   "unknownSurfaceMeters": 285,
+   "confirmedPaveMeters": 0,
+   "probablePaveMeters": 0,
+   "selectionVerdict": "fastest",
+   "selectionBurden": 0,
+   "selectionUtility": 0,
+   "paretoOptimal": true,
+   "distinctFromFast": false,
+   "eligibleModeAndAccess": true,
+   "confirmedRestrictionMeters": 0,
+   "blockingRestrictionMeters": 0,
+   "surfaceCoveragePercent": 93.6
+  },
+  {
+   "source": "base-2",
+   "provider": "valhalla-fossgis",
+   "distance": 4703,
+   "seconds": 938,
+   "paveMeters": 25,
+   "weightedPaveMeters": 25,
+   "riskMeters": 25,
+   "unknownSurfaceMeters": 285,
+   "confirmedPaveMeters": 25,
+   "probablePaveMeters": 0,
+   "selectionVerdict": "dominated",
+   "selectionBurden": 25,
+   "selectionUtility": 52,
+   "paretoOptimal": false,
+   "distinctFromFast": true,
+   "eligibleModeAndAccess": true,
+   "confirmedRestrictionMeters": 0,
+   "blockingRestrictionMeters": 0,
+   "surfaceCoveragePercent": 93.9
+  }
+ ]
+}

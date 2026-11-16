@@ -1,0 +1,3326 @@
+{
+ "generatedBy": "exp-run-replicas.mjs",
+ "departure": "2026-11-09T12:00",
+ "pools": [
+  {
+   "pool": "replica-return-heading/G0",
+   "requestsToBuildPool": 4,
+   "fastest": "base-1",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "maneuvers": 5,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 25,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 25
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 69,
+      "risk": 69
+     },
+     "Lac": {
+      "confirmed": 25,
+      "probable": 52,
+      "risk": 54,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3317.8852514002115
+     },
+     "riskB": 29,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "maneuvers": 7,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 197,
+      "probable": 0,
+      "unknown": 302,
+      "risk": 197
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 197,
+      "risk": 197
+     },
+     "Lac": {
+      "confirmed": 197,
+      "probable": 75,
+      "risk": 212,
+      "unknown": 302
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3054.171404086093
+     },
+     "riskB": 194,
+     "expectedRoughInUnknown": {
+      "global": 24,
+      "zoned": 18
+     }
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "maneuvers": 10,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 286,
+      "probable": 10,
+      "unknown": 0,
+      "risk": 292
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 286,
+      "risk": 292
+     },
+     "Lac": {
+      "confirmed": 286,
+      "probable": 1375,
+      "risk": 672,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 28.02324823847742,
+      "none-in-covered-area": 1862.317245110665,
+      "unknown-outside-coverage": 1807.7430523239025
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "maneuvers": 8,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 50,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 50
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 94,
+      "risk": 94
+     },
+     "Lac": {
+      "confirmed": 50,
+      "probable": 127,
+      "risk": 102,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3734.368731959884
+     },
+     "riskB": 57,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "maneuvers": 19,
+     "uturns": 1,
+     "L0": {
+      "confirmed": 56,
+      "probable": 0,
+      "unknown": 40,
+      "risk": 56
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 100,
+      "risk": 100
+     },
+     "Lac": {
+      "confirmed": 56,
+      "probable": 52,
+      "risk": 90,
+      "unknown": 40
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 4566.877288605537
+     },
+     "riskB": 64,
+     "expectedRoughInUnknown": {
+      "global": 3,
+      "zoned": 1
+     }
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "maneuvers": 11,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 746,
+      "probable": 0,
+      "unknown": 5,
+      "risk": 746
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 834,
+      "risk": 834
+     },
+     "Lac": {
+      "confirmed": 746,
+      "probable": 146,
+      "risk": 812,
+      "unknown": 5
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 5609.1014697425
+     },
+     "riskB": 726,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    }
+   ],
+   "picks": {
+    "A@L0@L0": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "A@L0@Lb": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "A@L0@Lac": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "B@L0": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "B@Lb": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "B@Lac": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "C-global@L0": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "C-global@Lb": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "C-global@Lac": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "C-zoned@L0": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "C-zoned@Lb": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "C-zoned@Lac": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "D-regret@L0": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "D-regret@Lb": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "D-regret@Lac": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "D-maximin@L0": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "D-maximin@Lb": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "D-maximin@Lac": {
+     "pick": "base-1",
+     "distinct": false
+    },
+    "A@L0/balanced": {
+     "pick": "base-1"
+    },
+    "A@Lb/balanced": {
+     "pick": "base-1"
+    },
+    "A@L0/strong": {
+     "pick": "base-1"
+    },
+    "A@Lb/strong": {
+     "pick": "base-1"
+    },
+    "A@L0/maximum": {
+     "pick": "base-1"
+    },
+    "A@Lb/maximum": {
+     "pick": "base-1"
+    }
+   },
+   "breakEvenExchange": {
+    "L0": {
+     "cleanestCandidate": "base-1",
+     "cleanestRiskL0": 25,
+     "firstMultiplierPickingCleanest": 0.25,
+     "secondsPerMetreCarAtThatMultiplier": 0.3,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "base-1"
+      ],
+      [
+       0.75,
+       "base-1"
+      ],
+      [
+       1,
+       "base-1"
+      ],
+      [
+       1.25,
+       "base-1"
+      ],
+      [
+       1.5,
+       "base-1"
+      ],
+      [
+       1.75,
+       "base-1"
+      ],
+      [
+       2,
+       "base-1"
+      ],
+      [
+       2.5,
+       "base-1"
+      ],
+      [
+       3,
+       "base-1"
+      ],
+      [
+       4,
+       "base-1"
+      ],
+      [
+       6,
+       "base-1"
+      ],
+      [
+       8,
+       "base-1"
+      ],
+      [
+       12,
+       "base-1"
+      ],
+      [
+       16,
+       "base-1"
+      ]
+     ]
+    },
+    "Lb": {
+     "cleanestCandidate": "base-1",
+     "cleanestRiskL0": 69,
+     "firstMultiplierPickingCleanest": 0.25,
+     "secondsPerMetreCarAtThatMultiplier": 0.3,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "base-1"
+      ],
+      [
+       0.75,
+       "base-1"
+      ],
+      [
+       1,
+       "base-1"
+      ],
+      [
+       1.25,
+       "base-1"
+      ],
+      [
+       1.5,
+       "base-1"
+      ],
+      [
+       1.75,
+       "base-1"
+      ],
+      [
+       2,
+       "base-1"
+      ],
+      [
+       2.5,
+       "base-1"
+      ],
+      [
+       3,
+       "base-1"
+      ],
+      [
+       4,
+       "base-1"
+      ],
+      [
+       6,
+       "base-1"
+      ],
+      [
+       8,
+       "base-1"
+      ],
+      [
+       12,
+       "base-1"
+      ],
+      [
+       16,
+       "base-1"
+      ]
+     ]
+    }
+   },
+   "pareto6": [
+    "base-1"
+   ]
+  },
+  {
+   "pool": "replica-return-heading/G0+P1(shortest)",
+   "requestsToBuildPool": 5,
+   "fastest": "probe-shortest",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "maneuvers": 5,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 25,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 25
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 69,
+      "risk": 69
+     },
+     "Lac": {
+      "confirmed": 25,
+      "probable": 52,
+      "risk": 54,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3317.8852514002115
+     },
+     "riskB": 29,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "maneuvers": 7,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 197,
+      "probable": 0,
+      "unknown": 302,
+      "risk": 197
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 197,
+      "risk": 197
+     },
+     "Lac": {
+      "confirmed": 197,
+      "probable": 75,
+      "risk": 212,
+      "unknown": 302
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3054.171404086093
+     },
+     "riskB": 194,
+     "expectedRoughInUnknown": {
+      "global": 24,
+      "zoned": 18
+     }
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "maneuvers": 10,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 286,
+      "probable": 10,
+      "unknown": 0,
+      "risk": 292
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 286,
+      "risk": 292
+     },
+     "Lac": {
+      "confirmed": 286,
+      "probable": 1375,
+      "risk": 672,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 28.02324823847742,
+      "none-in-covered-area": 1862.317245110665,
+      "unknown-outside-coverage": 1807.7430523239025
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "maneuvers": 8,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 50,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 50
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 94,
+      "risk": 94
+     },
+     "Lac": {
+      "confirmed": 50,
+      "probable": 127,
+      "risk": 102,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3734.368731959884
+     },
+     "riskB": 57,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "maneuvers": 19,
+     "uturns": 1,
+     "L0": {
+      "confirmed": 56,
+      "probable": 0,
+      "unknown": 40,
+      "risk": 56
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 100,
+      "risk": 100
+     },
+     "Lac": {
+      "confirmed": 56,
+      "probable": 52,
+      "risk": 90,
+      "unknown": 40
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 4566.877288605537
+     },
+     "riskB": 64,
+     "expectedRoughInUnknown": {
+      "global": 3,
+      "zoned": 1
+     }
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "maneuvers": 11,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 746,
+      "probable": 0,
+      "unknown": 5,
+      "risk": 746
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 834,
+      "risk": 834
+     },
+     "Lac": {
+      "confirmed": 746,
+      "probable": 146,
+      "risk": 812,
+      "unknown": 5
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 5609.1014697425
+     },
+     "riskB": 726,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "probe-shortest",
+     "seconds": 593,
+     "meters": 2984,
+     "maneuvers": 9,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 259,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 259
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 259,
+      "risk": 259
+     },
+     "Lac": {
+      "confirmed": 259,
+      "probable": 214,
+      "risk": 365,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 2982.738470427468
+     },
+     "riskB": 255,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    }
+   ],
+   "picks": {
+    "A@L0@L0": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "A@L0@Lb": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "A@L0@Lac": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "B@L0": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "B@Lb": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "B@Lac": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "C-global@L0": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "C-global@Lb": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "C-global@Lac": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "C-zoned@L0": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "C-zoned@Lb": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "C-zoned@Lac": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "D-regret@L0": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "D-regret@Lb": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "D-regret@Lac": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "D-maximin@L0": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "D-maximin@Lb": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "D-maximin@Lac": {
+     "pick": "base-1",
+     "distinct": true
+    },
+    "A@L0/balanced": {
+     "pick": "base-1"
+    },
+    "A@Lb/balanced": {
+     "pick": "base-1"
+    },
+    "A@L0/strong": {
+     "pick": "base-1"
+    },
+    "A@Lb/strong": {
+     "pick": "base-1"
+    },
+    "A@L0/maximum": {
+     "pick": "base-1"
+    },
+    "A@Lb/maximum": {
+     "pick": "base-1"
+    }
+   },
+   "breakEvenExchange": {
+    "L0": {
+     "cleanestCandidate": "base-1",
+     "cleanestRiskL0": 25,
+     "firstMultiplierPickingCleanest": 0.25,
+     "secondsPerMetreCarAtThatMultiplier": 0.3,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "base-1"
+      ],
+      [
+       0.75,
+       "base-1"
+      ],
+      [
+       1,
+       "base-1"
+      ],
+      [
+       1.25,
+       "base-1"
+      ],
+      [
+       1.5,
+       "base-1"
+      ],
+      [
+       1.75,
+       "base-1"
+      ],
+      [
+       2,
+       "base-1"
+      ],
+      [
+       2.5,
+       "base-1"
+      ],
+      [
+       3,
+       "base-1"
+      ],
+      [
+       4,
+       "base-1"
+      ],
+      [
+       6,
+       "base-1"
+      ],
+      [
+       8,
+       "base-1"
+      ],
+      [
+       12,
+       "base-1"
+      ],
+      [
+       16,
+       "base-1"
+      ]
+     ]
+    },
+    "Lb": {
+     "cleanestCandidate": "base-1",
+     "cleanestRiskL0": 69,
+     "firstMultiplierPickingCleanest": 0.25,
+     "secondsPerMetreCarAtThatMultiplier": 0.3,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "base-1"
+      ],
+      [
+       0.75,
+       "base-1"
+      ],
+      [
+       1,
+       "base-1"
+      ],
+      [
+       1.25,
+       "base-1"
+      ],
+      [
+       1.5,
+       "base-1"
+      ],
+      [
+       1.75,
+       "base-1"
+      ],
+      [
+       2,
+       "base-1"
+      ],
+      [
+       2.5,
+       "base-1"
+      ],
+      [
+       3,
+       "base-1"
+      ],
+      [
+       4,
+       "base-1"
+      ],
+      [
+       6,
+       "base-1"
+      ],
+      [
+       8,
+       "base-1"
+      ],
+      [
+       12,
+       "base-1"
+      ],
+      [
+       16,
+       "base-1"
+      ]
+     ]
+    }
+   },
+   "pareto6": [
+    "base-1",
+    "probe-shortest"
+   ]
+  },
+  {
+   "pool": "replica-return-heading/G1",
+   "requestsToBuildPool": 5,
+   "fastest": "surface-aware-valhalla",
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 574,
+     "meters": 3076,
+     "maneuvers": 3,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 0,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 0
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 0,
+      "risk": 0
+     },
+     "Lac": {
+      "confirmed": 0,
+      "probable": 11,
+      "risk": 3,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3078.3765546276177
+     },
+     "riskB": 0,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "maneuvers": 5,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 25,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 25
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 69,
+      "risk": 69
+     },
+     "Lac": {
+      "confirmed": 25,
+      "probable": 52,
+      "risk": 54,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3317.8852514002115
+     },
+     "riskB": 29,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "maneuvers": 7,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 197,
+      "probable": 0,
+      "unknown": 302,
+      "risk": 197
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 197,
+      "risk": 197
+     },
+     "Lac": {
+      "confirmed": 197,
+      "probable": 75,
+      "risk": 212,
+      "unknown": 302
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3054.171404086093
+     },
+     "riskB": 194,
+     "expectedRoughInUnknown": {
+      "global": 24,
+      "zoned": 18
+     }
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "maneuvers": 10,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 286,
+      "probable": 10,
+      "unknown": 0,
+      "risk": 292
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 286,
+      "risk": 292
+     },
+     "Lac": {
+      "confirmed": 286,
+      "probable": 1375,
+      "risk": 672,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 28.02324823847742,
+      "none-in-covered-area": 1862.317245110665,
+      "unknown-outside-coverage": 1807.7430523239025
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "maneuvers": 8,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 50,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 50
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 94,
+      "risk": 94
+     },
+     "Lac": {
+      "confirmed": 50,
+      "probable": 127,
+      "risk": 102,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3734.368731959884
+     },
+     "riskB": 57,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "maneuvers": 19,
+     "uturns": 1,
+     "L0": {
+      "confirmed": 56,
+      "probable": 0,
+      "unknown": 40,
+      "risk": 56
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 100,
+      "risk": 100
+     },
+     "Lac": {
+      "confirmed": 56,
+      "probable": 52,
+      "risk": 90,
+      "unknown": 40
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 4566.877288605537
+     },
+     "riskB": 64,
+     "expectedRoughInUnknown": {
+      "global": 3,
+      "zoned": 1
+     }
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "maneuvers": 11,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 746,
+      "probable": 0,
+      "unknown": 5,
+      "risk": 746
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 834,
+      "risk": 834
+     },
+     "Lac": {
+      "confirmed": 746,
+      "probable": 146,
+      "risk": 812,
+      "unknown": 5
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 5609.1014697425
+     },
+     "riskB": 726,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    }
+   ],
+   "picks": {
+    "A@L0@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "A@L0@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "A@L0@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "B@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "B@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "B@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-global@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-global@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-global@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-zoned@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-zoned@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-zoned@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-regret@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-regret@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-regret@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-maximin@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-maximin@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-maximin@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "A@L0/balanced": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/balanced": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@L0/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@L0/maximum": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/maximum": {
+     "pick": "surface-aware-valhalla"
+    }
+   },
+   "breakEvenExchange": {
+    "L0": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 0,
+     "firstMultiplierPickingCleanest": 0.25,
+     "secondsPerMetreCarAtThatMultiplier": 0.3,
+     "sweep": [
+      [
+       0.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    },
+    "Lb": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 0,
+     "firstMultiplierPickingCleanest": 0.25,
+     "secondsPerMetreCarAtThatMultiplier": 0.3,
+     "sweep": [
+      [
+       0.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    }
+   },
+   "pareto6": [
+    "surface-aware-valhalla"
+   ]
+  },
+  {
+   "pool": "replica-return-heading/G6",
+   "requestsToBuildPool": 5,
+   "fastest": "surface-aware-valhalla",
+   "candidates": [
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 574,
+     "meters": 3076,
+     "maneuvers": 3,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 0,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 0
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 0,
+      "risk": 0
+     },
+     "Lac": {
+      "confirmed": 0,
+      "probable": 11,
+      "risk": 3,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3078.3765546276177
+     },
+     "riskB": 0,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-1",
+     "seconds": 595,
+     "meters": 3318,
+     "maneuvers": 5,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 25,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 25
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 69,
+      "risk": 69
+     },
+     "Lac": {
+      "confirmed": 25,
+      "probable": 52,
+      "risk": 54,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3317.8852514002115
+     },
+     "riskB": 29,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-2",
+     "seconds": 628,
+     "meters": 3055,
+     "maneuvers": 7,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 197,
+      "probable": 0,
+      "unknown": 302,
+      "risk": 197
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 197,
+      "risk": 197
+     },
+     "Lac": {
+      "confirmed": 197,
+      "probable": 75,
+      "risk": 212,
+      "unknown": 302
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3054.171404086093
+     },
+     "riskB": 194,
+     "expectedRoughInUnknown": {
+      "global": 24,
+      "zoned": 18
+     }
+    },
+    {
+     "source": "base-3",
+     "seconds": 682,
+     "meters": 3701,
+     "maneuvers": 10,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 286,
+      "probable": 10,
+      "unknown": 0,
+      "risk": 292
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 286,
+      "risk": 292
+     },
+     "Lac": {
+      "confirmed": 286,
+      "probable": 1375,
+      "risk": 672,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 28.02324823847742,
+      "none-in-covered-area": 1862.317245110665,
+      "unknown-outside-coverage": 1807.7430523239025
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "detour-2",
+     "seconds": 706,
+     "meters": 3737,
+     "maneuvers": 8,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 50,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 50
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 94,
+      "risk": 94
+     },
+     "Lac": {
+      "confirmed": 50,
+      "probable": 127,
+      "risk": 102,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3734.368731959884
+     },
+     "riskB": 57,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "detour-1",
+     "seconds": 985,
+     "meters": 4575,
+     "maneuvers": 19,
+     "uturns": 1,
+     "L0": {
+      "confirmed": 56,
+      "probable": 0,
+      "unknown": 40,
+      "risk": 56
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 100,
+      "risk": 100
+     },
+     "Lac": {
+      "confirmed": 56,
+      "probable": 52,
+      "risk": 90,
+      "unknown": 40
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 4566.877288605537
+     },
+     "riskB": 64,
+     "expectedRoughInUnknown": {
+      "global": 3,
+      "zoned": 1
+     }
+    },
+    {
+     "source": "detour-3",
+     "seconds": 996,
+     "meters": 5613,
+     "maneuvers": 11,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 746,
+      "probable": 0,
+      "unknown": 5,
+      "risk": 746
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 834,
+      "risk": 834
+     },
+     "Lac": {
+      "confirmed": 746,
+      "probable": 146,
+      "risk": 812,
+      "unknown": 5
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 5609.1014697425
+     },
+     "riskB": 726,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    }
+   ],
+   "picks": {
+    "A@L0@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "A@L0@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "A@L0@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "B@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "B@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "B@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-global@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-global@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-global@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-zoned@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-zoned@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "C-zoned@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-regret@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-regret@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-regret@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-maximin@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-maximin@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "D-maximin@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": false
+    },
+    "A@L0/balanced": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/balanced": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@L0/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@L0/maximum": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/maximum": {
+     "pick": "surface-aware-valhalla"
+    }
+   },
+   "breakEvenExchange": {
+    "L0": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 0,
+     "firstMultiplierPickingCleanest": 0.25,
+     "secondsPerMetreCarAtThatMultiplier": 0.3,
+     "sweep": [
+      [
+       0.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    },
+    "Lb": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 0,
+     "firstMultiplierPickingCleanest": 0.25,
+     "secondsPerMetreCarAtThatMultiplier": 0.3,
+     "sweep": [
+      [
+       0.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    }
+   },
+   "pareto6": [
+    "surface-aware-valhalla"
+   ]
+  },
+  {
+   "pool": "replica-outbound/G0",
+   "requestsToBuildPool": 2,
+   "fastest": "base-1",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 280,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 280
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 280,
+      "risk": 280
+     },
+     "Lac": {
+      "confirmed": 280,
+      "probable": 145,
+      "risk": 374,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 2840.0982994756428
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 50,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 50
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 50,
+      "risk": 50
+     },
+     "Lac": {
+      "confirmed": 50,
+      "probable": 328,
+      "risk": 194,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3396.4571509451143
+     },
+     "riskB": 57,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "maneuvers": 13,
+     "uturns": 1,
+     "L0": {
+      "confirmed": 265,
+      "probable": 0,
+      "unknown": 138,
+      "risk": 265
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 265,
+      "risk": 265
+     },
+     "Lac": {
+      "confirmed": 265,
+      "probable": 990,
+      "risk": 547,
+      "unknown": 138
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 15.580771030817223,
+      "none-in-covered-area": 1456.1007254548085,
+      "unknown-outside-coverage": 2053.6302896901616
+     },
+     "riskB": 258,
+     "expectedRoughInUnknown": {
+      "global": 9,
+      "zoned": 4
+     }
+    }
+   ],
+   "picks": {
+    "A@L0@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0/balanced": {
+     "pick": "base-1"
+    },
+    "A@Lb/balanced": {
+     "pick": "base-1"
+    },
+    "A@L0/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@L0/maximum": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/maximum": {
+     "pick": "surface-aware-valhalla"
+    }
+   },
+   "breakEvenExchange": {
+    "L0": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 50,
+     "firstMultiplierPickingCleanest": 0.5,
+     "secondsPerMetreCarAtThatMultiplier": 0.6,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    },
+    "Lb": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 50,
+     "firstMultiplierPickingCleanest": 0.5,
+     "secondsPerMetreCarAtThatMultiplier": 0.6,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    }
+   },
+   "pareto6": [
+    "base-1",
+    "surface-aware-valhalla"
+   ]
+  },
+  {
+   "pool": "replica-outbound/G0+P1(shortest)",
+   "requestsToBuildPool": 3,
+   "fastest": "base-1",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 280,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 280
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 280,
+      "risk": 280
+     },
+     "Lac": {
+      "confirmed": 280,
+      "probable": 145,
+      "risk": 374,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 2840.0982994756428
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 50,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 50
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 50,
+      "risk": 50
+     },
+     "Lac": {
+      "confirmed": 50,
+      "probable": 328,
+      "risk": 194,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3396.4571509451143
+     },
+     "riskB": 57,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "maneuvers": 13,
+     "uturns": 1,
+     "L0": {
+      "confirmed": 265,
+      "probable": 0,
+      "unknown": 138,
+      "risk": 265
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 265,
+      "risk": 265
+     },
+     "Lac": {
+      "confirmed": 265,
+      "probable": 990,
+      "risk": 547,
+      "unknown": 138
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 15.580771030817223,
+      "none-in-covered-area": 1456.1007254548085,
+      "unknown-outside-coverage": 2053.6302896901616
+     },
+     "riskB": 258,
+     "expectedRoughInUnknown": {
+      "global": 9,
+      "zoned": 4
+     }
+    },
+    {
+     "source": "probe-shortest",
+     "seconds": 544,
+     "meters": 2841,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 280,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 280
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 280,
+      "risk": 280
+     },
+     "Lac": {
+      "confirmed": 280,
+      "probable": 145,
+      "risk": 374,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 2840.0982994756428
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    }
+   ],
+   "picks": {
+    "A@L0@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0/balanced": {
+     "pick": "base-1"
+    },
+    "A@Lb/balanced": {
+     "pick": "base-1"
+    },
+    "A@L0/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@L0/maximum": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/maximum": {
+     "pick": "surface-aware-valhalla"
+    }
+   },
+   "breakEvenExchange": {
+    "L0": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 50,
+     "firstMultiplierPickingCleanest": 0.5,
+     "secondsPerMetreCarAtThatMultiplier": 0.6,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    },
+    "Lb": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 50,
+     "firstMultiplierPickingCleanest": 0.5,
+     "secondsPerMetreCarAtThatMultiplier": 0.6,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    }
+   },
+   "pareto6": [
+    "base-1",
+    "surface-aware-valhalla"
+   ]
+  },
+  {
+   "pool": "replica-outbound/G1",
+   "requestsToBuildPool": 2,
+   "fastest": "base-1",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 280,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 280
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 280,
+      "risk": 280
+     },
+     "Lac": {
+      "confirmed": 280,
+      "probable": 145,
+      "risk": 374,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 2840.0982994756428
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 50,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 50
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 50,
+      "risk": 50
+     },
+     "Lac": {
+      "confirmed": 50,
+      "probable": 328,
+      "risk": 194,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3396.4571509451143
+     },
+     "riskB": 57,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "maneuvers": 13,
+     "uturns": 1,
+     "L0": {
+      "confirmed": 265,
+      "probable": 0,
+      "unknown": 138,
+      "risk": 265
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 265,
+      "risk": 265
+     },
+     "Lac": {
+      "confirmed": 265,
+      "probable": 990,
+      "risk": 547,
+      "unknown": 138
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 15.580771030817223,
+      "none-in-covered-area": 1456.1007254548085,
+      "unknown-outside-coverage": 2053.6302896901616
+     },
+     "riskB": 258,
+     "expectedRoughInUnknown": {
+      "global": 9,
+      "zoned": 4
+     }
+    }
+   ],
+   "picks": {
+    "A@L0@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@Lac": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0/balanced": {
+     "pick": "base-1"
+    },
+    "A@Lb/balanced": {
+     "pick": "base-1"
+    },
+    "A@L0/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@L0/maximum": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/maximum": {
+     "pick": "surface-aware-valhalla"
+    }
+   },
+   "breakEvenExchange": {
+    "L0": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 50,
+     "firstMultiplierPickingCleanest": 0.5,
+     "secondsPerMetreCarAtThatMultiplier": 0.6,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    },
+    "Lb": {
+     "cleanestCandidate": "surface-aware-valhalla",
+     "cleanestRiskL0": 50,
+     "firstMultiplierPickingCleanest": 0.5,
+     "secondsPerMetreCarAtThatMultiplier": 0.6,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       2,
+       "surface-aware-valhalla"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       3,
+       "surface-aware-valhalla"
+      ],
+      [
+       4,
+       "surface-aware-valhalla"
+      ],
+      [
+       6,
+       "surface-aware-valhalla"
+      ],
+      [
+       8,
+       "surface-aware-valhalla"
+      ],
+      [
+       12,
+       "surface-aware-valhalla"
+      ],
+      [
+       16,
+       "surface-aware-valhalla"
+      ]
+     ]
+    }
+   },
+   "pareto6": [
+    "base-1",
+    "surface-aware-valhalla"
+   ]
+  },
+  {
+   "pool": "replica-outbound/G6",
+   "requestsToBuildPool": 3,
+   "fastest": "base-1",
+   "candidates": [
+    {
+     "source": "base-1",
+     "seconds": 544,
+     "meters": 2841,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 280,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 280
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 280,
+      "risk": 280
+     },
+     "Lac": {
+      "confirmed": 280,
+      "probable": 145,
+      "risk": 374,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 2840.0982994756428
+     },
+     "riskB": 280,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "surface-aware-valhalla",
+     "seconds": 631,
+     "meters": 3398,
+     "maneuvers": 6,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 50,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 50
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 50,
+      "risk": 50
+     },
+     "Lac": {
+      "confirmed": 50,
+      "probable": 328,
+      "risk": 194,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3396.4571509451143
+     },
+     "riskB": 57,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    },
+    {
+     "source": "base-2",
+     "seconds": 700,
+     "meters": 3537,
+     "maneuvers": 13,
+     "uturns": 1,
+     "L0": {
+      "confirmed": 265,
+      "probable": 0,
+      "unknown": 138,
+      "risk": 265
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 265,
+      "risk": 265
+     },
+     "Lac": {
+      "confirmed": 265,
+      "probable": 990,
+      "risk": 547,
+      "unknown": 138
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 15.580771030817223,
+      "none-in-covered-area": 1456.1007254548085,
+      "unknown-outside-coverage": 2053.6302896901616
+     },
+     "riskB": 258,
+     "expectedRoughInUnknown": {
+      "global": 9,
+      "zoned": 4
+     }
+    },
+    {
+     "source": "surface-aware-valhalla-2",
+     "seconds": 723,
+     "meters": 3813,
+     "maneuvers": 8,
+     "uturns": 0,
+     "L0": {
+      "confirmed": 0,
+      "probable": 0,
+      "unknown": 0,
+      "risk": 0
+     },
+     "Lb_counterfactualRingSett": {
+      "confirmed": 0,
+      "risk": 0
+     },
+     "Lac": {
+      "confirmed": 0,
+      "probable": 86,
+      "risk": 56,
+      "unknown": 0
+     },
+     "railMetres": {
+      "tagged": 0,
+      "mapped-adjacent": 0,
+      "none-in-covered-area": 0,
+      "unknown-outside-coverage": 3808.4568396207032
+     },
+     "riskB": 0,
+     "expectedRoughInUnknown": {
+      "global": 0,
+      "zoned": 0
+     }
+    }
+   ],
+   "picks": {
+    "A@L0@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "A@L0@Lac": {
+     "pick": "surface-aware-valhalla-2",
+     "distinct": true
+    },
+    "B@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "B@Lac": {
+     "pick": "surface-aware-valhalla-2",
+     "distinct": true
+    },
+    "C-global@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-global@Lac": {
+     "pick": "surface-aware-valhalla-2",
+     "distinct": true
+    },
+    "C-zoned@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "C-zoned@Lac": {
+     "pick": "surface-aware-valhalla-2",
+     "distinct": true
+    },
+    "D-regret@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-regret@Lac": {
+     "pick": "surface-aware-valhalla-2",
+     "distinct": true
+    },
+    "D-maximin@L0": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@Lb": {
+     "pick": "surface-aware-valhalla",
+     "distinct": true
+    },
+    "D-maximin@Lac": {
+     "pick": "surface-aware-valhalla-2",
+     "distinct": true
+    },
+    "A@L0/balanced": {
+     "pick": "base-1"
+    },
+    "A@Lb/balanced": {
+     "pick": "base-1"
+    },
+    "A@L0/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@Lb/strong": {
+     "pick": "surface-aware-valhalla"
+    },
+    "A@L0/maximum": {
+     "pick": "surface-aware-valhalla-2"
+    },
+    "A@Lb/maximum": {
+     "pick": "surface-aware-valhalla-2"
+    }
+   },
+   "breakEvenExchange": {
+    "L0": {
+     "cleanestCandidate": "surface-aware-valhalla-2",
+     "cleanestRiskL0": 0,
+     "firstMultiplierPickingCleanest": 1.75,
+     "secondsPerMetreCarAtThatMultiplier": 2.1,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       2,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       3,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       4,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       6,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       8,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       12,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       16,
+       "surface-aware-valhalla-2"
+      ]
+     ]
+    },
+    "Lb": {
+     "cleanestCandidate": "surface-aware-valhalla-2",
+     "cleanestRiskL0": 0,
+     "firstMultiplierPickingCleanest": 1.75,
+     "secondsPerMetreCarAtThatMultiplier": 2.1,
+     "sweep": [
+      [
+       0.25,
+       "base-1"
+      ],
+      [
+       0.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       0.75,
+       "surface-aware-valhalla"
+      ],
+      [
+       1,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.25,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.5,
+       "surface-aware-valhalla"
+      ],
+      [
+       1.75,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       2,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       2.5,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       3,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       4,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       6,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       8,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       12,
+       "surface-aware-valhalla-2"
+      ],
+      [
+       16,
+       "surface-aware-valhalla-2"
+      ]
+     ]
+    }
+   },
+   "pareto6": [
+    "base-1",
+    "surface-aware-valhalla",
+    "surface-aware-valhalla-2"
+   ]
+  }
+ ]
+}

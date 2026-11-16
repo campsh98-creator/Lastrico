@@ -1,0 +1,49 @@
+{
+ "trips": 3215,
+ "tally": {
+  "penalised": {
+   "trips": 756,
+   "tripsWithUturn": 106,
+   "uturns": 111,
+   "atStart150": 16,
+   "atEnd150": 36,
+   "atVia40": 0,
+   "elsewhere": 59,
+   "firstManeuverIsUturn": 0,
+   "shareTripsWithUturn": 0.14
+  },
+  "base-alternates": {
+   "trips": 1705,
+   "tripsWithUturn": 159,
+   "uturns": 162,
+   "atStart150": 17,
+   "atEnd150": 44,
+   "atVia40": 0,
+   "elsewhere": 101,
+   "firstManeuverIsUturn": 0,
+   "shareTripsWithUturn": 0.093
+  },
+  "via-waypoint": {
+   "trips": 744,
+   "tripsWithUturn": 229,
+   "uturns": 255,
+   "atStart150": 8,
+   "atEnd150": 36,
+   "atVia40": 76,
+   "elsewhere": 135,
+   "firstManeuverIsUturn": 0,
+   "shareTripsWithUturn": 0.308
+  },
+  "excluding": {
+   "trips": 10,
+   "tripsWithUturn": 2,
+   "uturns": 2,
+   "atStart150": 0,
+   "atEnd150": 0,
+   "atVia40": 0,
+   "elsewhere": 2,
+   "firstManeuverIsUturn": 0,
+   "shareTripsWithUturn": 0.2
+  }
+ }
+}

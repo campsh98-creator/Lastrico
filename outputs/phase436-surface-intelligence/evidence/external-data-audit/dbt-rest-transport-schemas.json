@@ -1,0 +1,1100 @@
+{
+ "retrievedUtc": "2026-11-14T14:08:11.195Z",
+ "service": "https://gisportal.comune.milano.it/federated/rest/services/DBGT/Milano_2020_DBGT/MapServer",
+ "layers": {
+  "1": {
+   "name": "Label strade (fino a 1:2000)",
+   "geometryType": "esriGeometryPolyline",
+   "description": "",
+   "count": 55554,
+   "fieldCount": 14,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "Shape",
+     "alias": "Shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "NOME",
+     "alias": "NOME",
+     "type": "esriFieldTypeString",
+     "length": 100,
+     "domain": null
+    },
+    {
+     "name": "SEGMENTID",
+     "alias": "SEGMENTID",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "CLASSREF",
+     "alias": "CLASSREF",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "EL_STR_CF",
+     "alias": "EL_STR_CF",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "EL_STR_CL",
+     "alias": "EL_STR_CL",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "EL_STR_FON",
+     "alias": "EL_STR_FON",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "EL_STR_LIV",
+     "alias": "EL_STR_LIV",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "EL_STR_SED",
+     "alias": "EL_STR_SED",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "EL_STR_STA",
+     "alias": "EL_STR_STA",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "EL_STR_TY",
+     "alias": "EL_STR_TY",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "VIA_ID",
+     "alias": "VIA_ID",
+     "type": "esriFieldTypeSmallInteger",
+     "domain": null
+    },
+    {
+     "name": "Shape_Length",
+     "alias": "Shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "19": {
+   "name": "010204 - Elemento tranviario",
+   "geometryType": "esriGeometryPolyline",
+   "description": "",
+   "count": 3094,
+   "fieldCount": 14,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "FID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "classref",
+     "alias": "classref",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "segmentid",
+     "alias": "segmentid",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "el_trv_liv",
+     "alias": "el_trv_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_trv_liv_d",
+     "alias": "el_trv_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "el_trv_pos",
+     "alias": "el_trv_pos",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_trv_pos_d",
+     "alias": "el_trv_pos_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "el_trv_sed",
+     "alias": "el_trv_sed",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_trv_sed_d",
+     "alias": "el_trv_sed_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "el_trv_sta",
+     "alias": "el_trv_sta",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_trv_sta_d",
+     "alias": "el_trv_sta_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "Shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "Shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "20": {
+   "name": "010206 - Tratti minimi dell'elemento di metropolitana",
+   "geometryType": "esriGeometryPolyline",
+   "description": "",
+   "count": 452,
+   "fieldCount": 10,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "segmentid",
+     "alias": "segmentid",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "classref",
+     "alias": "classref",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "el_met_liv",
+     "alias": "el_met_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_met_liv_d",
+     "alias": "el_met_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "el_met_sed",
+     "alias": "el_met_sed",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_met_sed_d",
+     "alias": "el_met_sed_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "34": {
+   "name": "020301 - Ponte/viadotto/cavalcavia",
+   "geometryType": "esriGeometryPolygon",
+   "description": "",
+   "count": 1638,
+   "fieldCount": 13,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "classid",
+     "alias": "classid",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "scril",
+     "alias": "scril",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ponte_liv",
+     "alias": "ponte_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ponte_liv_d",
+     "alias": "ponte_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ponte_stru",
+     "alias": "ponte_stru",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ponte_stru_d",
+     "alias": "ponte_stru_d",
+     "type": "esriFieldTypeString",
+     "length": 254,
+     "domain": null
+    },
+    {
+     "name": "ponte_ty",
+     "alias": "ponte_ty",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ponte_ty_d",
+     "alias": "ponte_ty_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    },
+    {
+     "name": "shape_Area",
+     "alias": "shape_Area",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "35": {
+   "name": "010202 - Tratti minimi dell'elemento ferroviario",
+   "geometryType": "esriGeometryPolyline",
+   "description": "",
+   "count": 4549,
+   "fieldCount": 13,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "segmentid",
+     "alias": "segmentid",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "classref",
+     "alias": "classref",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "el_fer_liv",
+     "alias": "el_fer_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_fer_liv_d",
+     "alias": "el_fer_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "el_fer_nbi",
+     "alias": "el_fer_nbi",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "el_fer_pos",
+     "alias": "el_fer_pos",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_fer_pos_d",
+     "alias": "el_fer_pos_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "el_fer_sed",
+     "alias": "el_fer_sed",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "el_fer_sed_d",
+     "alias": "el_fer_sed_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "37": {
+   "name": "010103 - Area di circolazione ciclabile",
+   "geometryType": "esriGeometryPolygon",
+   "description": "",
+   "count": 2798,
+   "fieldCount": 14,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "classref",
+     "alias": "classref",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "ac_cic_fon",
+     "alias": "ac_cic_fon",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ac_cic_fon_d",
+     "alias": "ac_cic_fon_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ac_cic_liv",
+     "alias": "ac_cic_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ac_cic_liv_d",
+     "alias": "ac_cic_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ac_cic_sed",
+     "alias": "ac_cic_sed",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ac_cic_sed_d",
+     "alias": "ac_cic_sed_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ac_cic_pos",
+     "alias": "ac_cic_pos",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ac_cic_pos_d",
+     "alias": "ac_cic_pos_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    },
+    {
+     "name": "shape_Area",
+     "alias": "shape_Area",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "38": {
+   "name": "010102 - Area di circolazione pedonale",
+   "geometryType": "esriGeometryPolygon",
+   "description": "",
+   "count": 71151,
+   "fieldCount": 14,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "classref",
+     "alias": "classref",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "ac_ped_fon",
+     "alias": "ac_ped_fon",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ac_ped_fon_d",
+     "alias": "ac_ped_fon_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ac_ped_liv",
+     "alias": "ac_ped_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ac_ped_liv_d",
+     "alias": "ac_ped_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ac_ped_sed",
+     "alias": "ac_ped_sed",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ac_ped_sed_d",
+     "alias": "ac_ped_sed_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ac_ped_zon",
+     "alias": "ac_ped_zon",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ac_ped_zon_d",
+     "alias": "ac_ped_zon_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    },
+    {
+     "name": "shape_Area",
+     "alias": "shape_Area",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "39": {
+   "name": "010101 - Area di circolazione veicolare",
+   "geometryType": "esriGeometryPolygon",
+   "description": "",
+   "count": 37892,
+   "fieldCount": 11,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "FID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "Shape",
+     "alias": "Shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "NOME",
+     "alias": "NOME",
+     "type": "esriFieldTypeString",
+     "length": 100,
+     "domain": null
+    },
+    {
+     "name": "SUBREGID",
+     "alias": "SUBREGID",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "CLASSREF",
+     "alias": "CLASSREF",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "AC_VEI_FON",
+     "alias": "AC_VEI_FON",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "AC_VEI_LIV",
+     "alias": "AC_VEI_LIV",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "AC_VEI_SED",
+     "alias": "AC_VEI_SED",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "AC_VEI_ZON",
+     "alias": "AC_VEI_ZON",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "Shape_Length",
+     "alias": "Shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    },
+    {
+     "name": "Shape_Area",
+     "alias": "Shape_Area",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "40": {
+   "name": "020205 - Manufatto infrastruttura trasporto (fino a 1:5000)",
+   "geometryType": "esriGeometryPolygon",
+   "description": "",
+   "count": 25741,
+   "fieldCount": 10,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "classid",
+     "alias": "classid",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "scril",
+     "alias": "scril",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "man_tr_liv",
+     "alias": "man_tr_liv",
+     "type": "esriFieldTypeSmallInteger",
+     "domain": null
+    },
+    {
+     "name": "man_tr_ty",
+     "alias": "man_tr_ty",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "man_tr_ty_d",
+     "alias": "man_tr_ty_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    },
+    {
+     "name": "shape_Area",
+     "alias": "shape_Area",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "41": {
+   "name": "010104 - Area stradale",
+   "geometryType": "esriGeometryPolygon",
+   "description": "",
+   "count": 7015,
+   "fieldCount": 12,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "classref",
+     "alias": "classref",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "ar_str_liv",
+     "alias": "ar_str_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ar_str_liv_d",
+     "alias": "ar_str_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ar_str_sed",
+     "alias": "ar_str_sed",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ar_str_sed_d",
+     "alias": "ar_str_sed_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ar_str_sta",
+     "alias": "ar_str_sta",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ar_str_sta_d",
+     "alias": "ar_str_sta_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    },
+    {
+     "name": "shape_Area",
+     "alias": "shape_Area",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "42": {
+   "name": "010105 - Viabilità mista secondaria",
+   "geometryType": "esriGeometryPolygon",
+   "description": "",
+   "count": 1212,
+   "fieldCount": 12,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "classref",
+     "alias": "classref",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "ar_vms_liv",
+     "alias": "ar_vms_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ar_vms_liv_d",
+     "alias": "ar_vms_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ar_vms_sed",
+     "alias": "ar_vms_sed",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ar_vms_sed_d",
+     "alias": "ar_vms_sed_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "ar_vms_ty",
+     "alias": "ar_vms_ty",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "ar_vms_ty_d",
+     "alias": "ar_vms_ty_d",
+     "type": "esriFieldTypeString",
+     "length": 254,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    },
+    {
+     "name": "shape_Area",
+     "alias": "shape_Area",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  },
+  "45": {
+   "name": "010201 - Sede di trasporto su ferro",
+   "geometryType": "esriGeometryPolygon",
+   "description": "",
+   "count": 915,
+   "fieldCount": 12,
+   "fields": [
+    {
+     "name": "OBJECTID",
+     "alias": "OBJECTID",
+     "type": "esriFieldTypeOID",
+     "domain": null
+    },
+    {
+     "name": "objectid_1",
+     "alias": "objectid_1",
+     "type": "esriFieldTypeInteger",
+     "domain": null
+    },
+    {
+     "name": "classref",
+     "alias": "classref",
+     "type": "esriFieldTypeString",
+     "length": 70,
+     "domain": null
+    },
+    {
+     "name": "sd_fer_liv",
+     "alias": "sd_fer_liv",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "sd_fer_liv_d",
+     "alias": "sd_fer_liv_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "sd_fer_sed",
+     "alias": "sd_fer_sed",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "sd_fer_sed_d",
+     "alias": "sd_fer_sed_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "sd_fer_ty",
+     "alias": "sd_fer_ty",
+     "type": "esriFieldTypeString",
+     "length": 80,
+     "domain": null
+    },
+    {
+     "name": "sd_fer_ty_d",
+     "alias": "sd_fer_ty_d",
+     "type": "esriFieldTypeString",
+     "length": 160,
+     "domain": null
+    },
+    {
+     "name": "shape",
+     "alias": "shape",
+     "type": "esriFieldTypeGeometry",
+     "domain": null
+    },
+    {
+     "name": "shape_Length",
+     "alias": "shape_Length",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    },
+    {
+     "name": "shape_Area",
+     "alias": "shape_Area",
+     "type": "esriFieldTypeDouble",
+     "domain": null
+    }
+   ]
+  }
+ }
+}

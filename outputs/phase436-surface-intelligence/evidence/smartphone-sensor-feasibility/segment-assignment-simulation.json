@@ -1,0 +1,1510 @@
+{
+ "alongTrackErrorQuantilesM": [
+  {
+   "calibrationK": 1,
+   "mixture": "all-951",
+   "p50": 5.1,
+   "p90": 21.1,
+   "p95": 37
+  },
+  {
+   "calibrationK": 2,
+   "mixture": "all-951",
+   "p50": 10.3,
+   "p90": 42,
+   "p95": 73.6
+  },
+  {
+   "calibrationK": 1,
+   "mixture": "app-accepted-930",
+   "p50": 5,
+   "p90": 19.1,
+   "p95": 29.7
+  },
+  {
+   "calibrationK": 2,
+   "mixture": "app-accepted-930",
+   "p50": 10.1,
+   "p90": 38.1,
+   "p95": 59.2
+  },
+  {
+   "calibrationK": 1,
+   "mixture": "gate-30m-856",
+   "p50": 4.6,
+   "p90": 14.6,
+   "p95": 19.4
+  },
+  {
+   "calibrationK": 2,
+   "mixture": "gate-30m-856",
+   "p50": 9.2,
+   "p90": 29.4,
+   "p95": 39
+  },
+  {
+   "calibrationK": 1,
+   "mixture": "fixed r68=5 m",
+   "p50": 2.2,
+   "p90": 5.4,
+   "p95": 6.5
+  },
+  {
+   "calibrationK": 1,
+   "mixture": "fixed r68=10 m",
+   "p50": 4.5,
+   "p90": 10.9,
+   "p95": 13
+  },
+  {
+   "calibrationK": 1,
+   "mixture": "fixed r68=20 m",
+   "p50": 8.9,
+   "p90": 21.8,
+   "p95": 26
+  },
+  {
+   "calibrationK": 1,
+   "mixture": "fixed r68=30 m",
+   "p50": 13.4,
+   "p90": 32.7,
+   "p95": 39
+  },
+  {
+   "calibrationK": 1,
+   "mixture": "fixed r68=50 m",
+   "p50": 22.3,
+   "p90": 54.5,
+   "p95": 64.9
+  }
+ ],
+ "asOf": "2026-11-14",
+ "assumptions": {
+  "accuracyBuckets": [
+   [
+    4.8,
+    10,
+    433
+   ],
+   [
+    10,
+    20,
+    328
+   ],
+   [
+    20,
+    30,
+    95
+   ],
+   [
+    30,
+    50,
+    28
+   ],
+   [
+    50,
+    100,
+    13
+   ],
+   [
+    100,
+    120,
+    33
+   ],
+   [
+    120,
+    148,
+    21
+   ]
+  ],
+  "alongTrackOnly": true,
+  "note": "optimistic: no cross-track confusion between adjacent ways, no map-matching error, no parallel carriageway, no roundabout geometry",
+  "perfectRoadGeometry": true,
+  "r68ToSigma": 1.5095921854516634,
+  "window": {
+   "T_HOP": 0.535,
+   "T_WIN": 1.07
+  }
+ },
+ "documentedWays": [
+  {
+   "appAccepted": 0.71,
+   "appAcceptedGe80": 0.5,
+   "appAcceptedK2": 0.52,
+   "gate30": 0.75,
+   "gate30Ge80": 0.53,
+   "lengthM": 25,
+   "way": "Piazzale Lodi ring 287070936 (sett)"
+  },
+  {
+   "appAccepted": 0.75,
+   "appAcceptedGe80": 0.58,
+   "appAcceptedK2": 0.58,
+   "gate30": 0.79,
+   "gate30Ge80": 0.62,
+   "lengthM": 31,
+   "way": "Piazzale Lodi ring 111768010"
+  },
+  {
+   "appAccepted": 0.53,
+   "appAcceptedGe80": 0.29,
+   "appAcceptedK2": 0.33,
+   "gate30": 0.57,
+   "gate30Ge80": 0.31,
+   "lengthM": 13.1,
+   "way": "Piazzale Lodi ring 111767966"
+  },
+  {
+   "appAccepted": 0.66,
+   "appAcceptedGe80": 0.43,
+   "appAcceptedK2": 0.46,
+   "gate30": 0.7,
+   "gate30Ge80": 0.46,
+   "lengthM": 20.5,
+   "way": "Via Lazzaro Papi 164940302 (sett)"
+  },
+  {
+   "appAccepted": 0.71,
+   "appAcceptedGe80": 0.5,
+   "appAcceptedK2": 0.52,
+   "gate30": 0.75,
+   "gate30Ge80": 0.53,
+   "lengthM": 25,
+   "way": "Via Lazzaro Papi 164940303 (sett)"
+  },
+  {
+   "appAccepted": 0.91,
+   "appAcceptedGe80": 0.9,
+   "appAcceptedK2": 0.83,
+   "gate30": 0.93,
+   "gate30Ge80": 0.95,
+   "lengthM": 97.1,
+   "way": "Via Lazzaro Papi 164940304"
+  },
+  {
+   "appAccepted": 0.93,
+   "appAcceptedGe80": 0.95,
+   "appAcceptedK2": 0.87,
+   "gate30": 0.95,
+   "gate30Ge80": 0.99,
+   "lengthM": 138.6,
+   "way": "Corso Lodi 36874245 (sett)"
+  },
+  {
+   "appAccepted": 0.87,
+   "appAcceptedGe80": 0.82,
+   "appAcceptedK2": 0.76,
+   "gate30": 0.9,
+   "gate30Ge80": 0.87,
+   "lengthM": 64.2,
+   "way": "Viale Umbria 289749136"
+  },
+  {
+   "appAccepted": 0.96,
+   "appAcceptedGe80": 0.97,
+   "appAcceptedK2": 0.91,
+   "gate30": 0.97,
+   "gate30Ge80": 1,
+   "lengthM": 207,
+   "way": "Viale Isonzo 288900525"
+  }
+ ],
+ "fixedAccuracy": [
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.736,
+     "event": 0.738,
+     "overlapGe50": 0.869,
+     "overlapGe80": 0.453
+    },
+    "25": {
+     "analytic": 0.894,
+     "event": 0.894,
+     "overlapGe50": 1,
+     "overlapGe80": 0.868
+    },
+    "31": {
+     "analytic": 0.915,
+     "event": 0.915,
+     "overlapGe50": 1,
+     "overlapGe80": 0.939
+    },
+    "47": {
+     "analytic": 0.944,
+     "event": 0.944,
+     "overlapGe50": 1,
+     "overlapGe80": 0.995
+    },
+    "60": {
+     "analytic": 0.956,
+     "event": 0.956,
+     "overlapGe50": 1,
+     "overlapGe80": 1
+    },
+    "100": {
+     "analytic": 0.974,
+     "event": 0.974,
+     "overlapGe50": 1,
+     "overlapGe80": 1
+    },
+    "200": {
+     "analytic": 0.987,
+     "event": 0.987,
+     "overlapGe50": 1,
+     "overlapGe80": 1
+    },
+    "13.1": {
+     "analytic": 0.798,
+     "event": 0.798,
+     "overlapGe50": 0.953,
+     "overlapGe80": 0.571
+    },
+    "20.5": {
+     "analytic": 0.871,
+     "event": 0.872,
+     "overlapGe50": 0.998,
+     "overlapGe80": 0.787
+    }
+   },
+   "r68M": 5,
+   "sigmaAlongM": 3.31
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.509,
+     "event": 0.508,
+     "overlapGe50": 0.55,
+     "overlapGe80": 0.24
+    },
+    "25": {
+     "analytic": 0.789,
+     "event": 0.79,
+     "overlapGe50": 0.941,
+     "overlapGe80": 0.549
+    },
+    "31": {
+     "analytic": 0.83,
+     "event": 0.828,
+     "overlapGe50": 0.98,
+     "overlapGe80": 0.652
+    },
+    "47": {
+     "analytic": 0.888,
+     "event": 0.888,
+     "overlapGe50": 1,
+     "overlapGe80": 0.844
+    },
+    "60": {
+     "analytic": 0.912,
+     "event": 0.912,
+     "overlapGe50": 1,
+     "overlapGe80": 0.929
+    },
+    "100": {
+     "analytic": 0.947,
+     "event": 0.947,
+     "overlapGe50": 1,
+     "overlapGe80": 0.997
+    },
+    "200": {
+     "analytic": 0.974,
+     "event": 0.974,
+     "overlapGe50": 1,
+     "overlapGe80": 1
+    },
+    "13.1": {
+     "analytic": 0.606,
+     "event": 0.607,
+     "overlapGe50": 0.677,
+     "overlapGe80": 0.307
+    },
+    "20.5": {
+     "analytic": 0.742,
+     "event": 0.741,
+     "overlapGe50": 0.879,
+     "overlapGe80": 0.463
+    }
+   },
+   "r68M": 10,
+   "sigmaAlongM": 6.62
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.288,
+     "event": 0.287,
+     "overlapGe50": 0.294,
+     "overlapGe80": 0.12
+    },
+    "25": {
+     "analytic": 0.589,
+     "event": 0.59,
+     "overlapGe50": 0.656,
+     "overlapGe80": 0.295
+    },
+    "31": {
+     "analytic": 0.662,
+     "event": 0.661,
+     "overlapGe50": 0.759,
+     "overlapGe80": 0.361
+    },
+    "47": {
+     "analytic": 0.775,
+     "event": 0.776,
+     "overlapGe50": 0.923,
+     "overlapGe80": 0.521
+    },
+    "60": {
+     "analytic": 0.824,
+     "event": 0.824,
+     "overlapGe50": 0.977,
+     "overlapGe80": 0.636
+    },
+    "100": {
+     "analytic": 0.894,
+     "event": 0.895,
+     "overlapGe50": 1,
+     "overlapGe80": 0.87
+    },
+    "200": {
+     "analytic": 0.947,
+     "event": 0.947,
+     "overlapGe50": 1,
+     "overlapGe80": 0.997
+    },
+    "13.1": {
+     "analytic": 0.365,
+     "event": 0.366,
+     "overlapGe50": 0.38,
+     "overlapGe80": 0.157
+    },
+    "20.5": {
+     "analytic": 0.518,
+     "event": 0.519,
+     "overlapGe50": 0.563,
+     "overlapGe80": 0.244
+    }
+   },
+   "r68M": 20,
+   "sigmaAlongM": 13.25
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.197,
+     "event": 0.197,
+     "overlapGe50": 0.199,
+     "overlapGe80": 0.079
+    },
+    "25": {
+     "analytic": 0.445,
+     "event": 0.446,
+     "overlapGe50": 0.471,
+     "overlapGe80": 0.198
+    },
+    "31": {
+     "analytic": 0.521,
+     "event": 0.523,
+     "overlapGe50": 0.563,
+     "overlapGe80": 0.243
+    },
+    "47": {
+     "analytic": 0.665,
+     "event": 0.666,
+     "overlapGe50": 0.764,
+     "overlapGe80": 0.365
+    },
+    "60": {
+     "analytic": 0.736,
+     "event": 0.736,
+     "overlapGe50": 0.868,
+     "overlapGe80": 0.454
+    },
+    "100": {
+     "analytic": 0.841,
+     "event": 0.842,
+     "overlapGe50": 0.989,
+     "overlapGe80": 0.685
+    },
+    "200": {
+     "analytic": 0.921,
+     "event": 0.92,
+     "overlapGe50": 1,
+     "overlapGe80": 0.955
+    },
+    "13.1": {
+     "analytic": 0.254,
+     "event": 0.255,
+     "overlapGe50": 0.259,
+     "overlapGe80": 0.106
+    },
+    "20.5": {
+     "analytic": 0.379,
+     "event": 0.379,
+     "overlapGe50": 0.395,
+     "overlapGe80": 0.164
+    }
+   },
+   "r68M": 30,
+   "sigmaAlongM": 19.87
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.12,
+     "event": 0.119,
+     "overlapGe50": 0.12,
+     "overlapGe80": 0.049
+    },
+    "25": {
+     "analytic": 0.288,
+     "event": 0.287,
+     "overlapGe50": 0.294,
+     "overlapGe80": 0.119
+    },
+    "31": {
+     "analytic": 0.348,
+     "event": 0.347,
+     "overlapGe50": 0.36,
+     "overlapGe80": 0.148
+    },
+    "47": {
+     "analytic": 0.487,
+     "event": 0.486,
+     "overlapGe50": 0.523,
+     "overlapGe80": 0.223
+    },
+    "60": {
+     "analytic": 0.575,
+     "event": 0.575,
+     "overlapGe50": 0.636,
+     "overlapGe80": 0.283
+    },
+    "100": {
+     "analytic": 0.736,
+     "event": 0.735,
+     "overlapGe50": 0.867,
+     "overlapGe80": 0.453
+    },
+    "200": {
+     "analytic": 0.868,
+     "event": 0.869,
+     "overlapGe50": 0.997,
+     "overlapGe80": 0.773
+    },
+    "13.1": {
+     "analytic": 0.156,
+     "event": 0.156,
+     "overlapGe50": 0.156,
+     "overlapGe80": 0.063
+    },
+    "20.5": {
+     "analytic": 0.239,
+     "event": 0.239,
+     "overlapGe50": 0.244,
+     "overlapGe80": 0.1
+    }
+   },
+   "r68M": 50,
+   "sigmaAlongM": 33.12
+  }
+ ],
+ "kind": "SIMULATION (deterministic Monte-Carlo, seed 436006, N=200000 per cell) + analytic cross-check; not a measurement",
+ "minimumLengthM": [
+  {
+   "L_event_ge_0p8": 44,
+   "L_event_ge_0p9": 102,
+   "L_passOverlapGe80_in_90pct_of_passes": 106,
+   "calibrationK": 1,
+   "mixture": "all-951"
+  },
+  {
+   "L_event_ge_0p8": 88,
+   "L_event_ge_0p9": 203,
+   "L_passOverlapGe80_in_90pct_of_passes": 212,
+   "calibrationK": 2,
+   "mixture": "all-951"
+  },
+  {
+   "L_event_ge_0p8": 41,
+   "L_event_ge_0p9": 90,
+   "L_passOverlapGe80_in_90pct_of_passes": 95,
+   "calibrationK": 1,
+   "mixture": "app-accepted-930"
+  },
+  {
+   "L_event_ge_0p8": 81,
+   "L_event_ge_0p9": 179,
+   "L_passOverlapGe80_in_90pct_of_passes": 190,
+   "calibrationK": 2,
+   "mixture": "app-accepted-930"
+  },
+  {
+   "L_event_ge_0p8": 33,
+   "L_event_ge_0p9": 65,
+   "L_passOverlapGe80_in_90pct_of_passes": 73,
+   "calibrationK": 1,
+   "mixture": "gate-30m-856"
+  },
+  {
+   "L_event_ge_0p8": 65,
+   "L_event_ge_0p9": 130,
+   "L_passOverlapGe80_in_90pct_of_passes": 146,
+   "calibrationK": 2,
+   "mixture": "gate-30m-856"
+  },
+  {
+   "L_event_ge_0p8": 14,
+   "L_event_ge_0p9": 27,
+   "L_passOverlapGe80_in_90pct_of_passes": 28,
+   "calibrationK": 1,
+   "mixture": "fixed r68=5 m"
+  },
+  {
+   "L_event_ge_0p8": 27,
+   "L_event_ge_0p9": 53,
+   "L_passOverlapGe80_in_90pct_of_passes": 55,
+   "calibrationK": 1,
+   "mixture": "fixed r68=10 m"
+  },
+  {
+   "L_event_ge_0p8": 53,
+   "L_event_ge_0p9": 106,
+   "L_passOverlapGe80_in_90pct_of_passes": 109,
+   "calibrationK": 1,
+   "mixture": "fixed r68=20 m"
+  },
+  {
+   "L_event_ge_0p8": 80,
+   "L_event_ge_0p9": 159,
+   "L_passOverlapGe80_in_90pct_of_passes": 164,
+   "calibrationK": 1,
+   "mixture": "fixed r68=30 m"
+  },
+  {
+   "L_event_ge_0p8": 133,
+   "L_event_ge_0p9": 265,
+   "L_passOverlapGe80_in_90pct_of_passes": 273,
+   "calibrationK": 1,
+   "mixture": "fixed r68=50 m"
+  }
+ ],
+ "mixtures": [
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.446,
+     "event": 0.447,
+     "overlapGe50": 0.49,
+     "overlapGe80": 0.219
+    },
+    "25": {
+     "analytic": 0.692,
+     "event": 0.693,
+     "overlapGe50": 0.797,
+     "overlapGe80": 0.488
+    },
+    "31": {
+     "analytic": 0.738,
+     "event": 0.738,
+     "overlapGe50": 0.847,
+     "overlapGe80": 0.569
+    },
+    "47": {
+     "analytic": 0.811,
+     "event": 0.81,
+     "overlapGe50": 0.913,
+     "overlapGe80": 0.717
+    },
+    "60": {
+     "analytic": 0.845,
+     "event": 0.845,
+     "overlapGe50": 0.936,
+     "overlapGe80": 0.787
+    },
+    "100": {
+     "analytic": 0.899,
+     "event": 0.899,
+     "overlapGe50": 0.963,
+     "overlapGe80": 0.891
+    },
+    "200": {
+     "analytic": 0.947,
+     "event": 0.946,
+     "overlapGe50": 0.987,
+     "overlapGe80": 0.954
+    },
+    "13.1": {
+     "analytic": 0.524,
+     "event": 0.524,
+     "overlapGe50": 0.589,
+     "overlapGe80": 0.281
+    },
+    "20.5": {
+     "analytic": 0.645,
+     "event": 0.644,
+     "overlapGe50": 0.741,
+     "overlapGe80": 0.419
+    }
+   },
+   "calibrationK": 1,
+   "mixture": "all-951"
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.262,
+     "event": 0.263,
+     "overlapGe50": 0.269,
+     "overlapGe80": 0.111
+    },
+    "25": {
+     "analytic": 0.51,
+     "event": 0.511,
+     "overlapGe50": 0.57,
+     "overlapGe80": 0.271
+    },
+    "31": {
+     "analytic": 0.571,
+     "event": 0.568,
+     "overlapGe50": 0.65,
+     "overlapGe80": 0.33
+    },
+    "47": {
+     "analytic": 0.678,
+     "event": 0.677,
+     "overlapGe50": 0.782,
+     "overlapGe80": 0.466
+    },
+    "60": {
+     "analytic": 0.732,
+     "event": 0.731,
+     "overlapGe50": 0.838,
+     "overlapGe80": 0.555
+    },
+    "100": {
+     "analytic": 0.82,
+     "event": 0.821,
+     "overlapGe50": 0.921,
+     "overlapGe80": 0.735
+    },
+    "200": {
+     "analytic": 0.899,
+     "event": 0.899,
+     "overlapGe50": 0.964,
+     "overlapGe80": 0.893
+    },
+    "13.1": {
+     "analytic": 0.328,
+     "event": 0.328,
+     "overlapGe50": 0.347,
+     "overlapGe80": 0.146
+    },
+    "20.5": {
+     "analytic": 0.453,
+     "event": 0.452,
+     "overlapGe50": 0.498,
+     "overlapGe80": 0.225
+    }
+   },
+   "calibrationK": 2,
+   "mixture": "all-951"
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.455,
+     "event": 0.454,
+     "overlapGe50": 0.496,
+     "overlapGe80": 0.224
+    },
+    "25": {
+     "analytic": 0.705,
+     "event": 0.705,
+     "overlapGe50": 0.814,
+     "overlapGe80": 0.5
+    },
+    "31": {
+     "analytic": 0.752,
+     "event": 0.75,
+     "overlapGe50": 0.863,
+     "overlapGe80": 0.581
+    },
+    "47": {
+     "analytic": 0.825,
+     "event": 0.824,
+     "overlapGe50": 0.929,
+     "overlapGe80": 0.73
+    },
+    "60": {
+     "analytic": 0.858,
+     "event": 0.858,
+     "overlapGe50": 0.952,
+     "overlapGe80": 0.803
+    },
+    "100": {
+     "analytic": 0.91,
+     "event": 0.911,
+     "overlapGe50": 0.976,
+     "overlapGe80": 0.909
+    },
+    "200": {
+     "analytic": 0.954,
+     "event": 0.954,
+     "overlapGe50": 0.993,
+     "overlapGe80": 0.968
+    },
+    "13.1": {
+     "analytic": 0.534,
+     "event": 0.536,
+     "overlapGe50": 0.6,
+     "overlapGe80": 0.289
+    },
+    "20.5": {
+     "analytic": 0.657,
+     "event": 0.658,
+     "overlapGe50": 0.757,
+     "overlapGe80": 0.429
+    }
+   },
+   "calibrationK": 1,
+   "mixture": "app-accepted-930"
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.267,
+     "event": 0.269,
+     "overlapGe50": 0.276,
+     "overlapGe80": 0.114
+    },
+    "25": {
+     "analytic": 0.52,
+     "event": 0.519,
+     "overlapGe50": 0.583,
+     "overlapGe80": 0.276
+    },
+    "31": {
+     "analytic": 0.582,
+     "event": 0.583,
+     "overlapGe50": 0.662,
+     "overlapGe80": 0.334
+    },
+    "47": {
+     "analytic": 0.691,
+     "event": 0.691,
+     "overlapGe50": 0.798,
+     "overlapGe80": 0.477
+    },
+    "60": {
+     "analytic": 0.745,
+     "event": 0.746,
+     "overlapGe50": 0.855,
+     "overlapGe80": 0.567
+    },
+    "100": {
+     "analytic": 0.834,
+     "event": 0.834,
+     "overlapGe50": 0.936,
+     "overlapGe80": 0.749
+    },
+    "200": {
+     "analytic": 0.91,
+     "event": 0.91,
+     "overlapGe50": 0.976,
+     "overlapGe80": 0.907
+    },
+    "13.1": {
+     "analytic": 0.335,
+     "event": 0.335,
+     "overlapGe50": 0.353,
+     "overlapGe80": 0.149
+    },
+    "20.5": {
+     "analytic": 0.462,
+     "event": 0.463,
+     "overlapGe50": 0.507,
+     "overlapGe80": 0.23
+    }
+   },
+   "calibrationK": 2,
+   "mixture": "app-accepted-930"
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.486,
+     "event": 0.484,
+     "overlapGe50": 0.533,
+     "overlapGe80": 0.24
+    },
+    "25": {
+     "analytic": 0.746,
+     "event": 0.747,
+     "overlapGe50": 0.863,
+     "overlapGe80": 0.536
+    },
+    "31": {
+     "analytic": 0.793,
+     "event": 0.793,
+     "overlapGe50": 0.912,
+     "overlapGe80": 0.62
+    },
+    "47": {
+     "analytic": 0.862,
+     "event": 0.861,
+     "overlapGe50": 0.973,
+     "overlapGe80": 0.777
+    },
+    "60": {
+     "analytic": 0.892,
+     "event": 0.893,
+     "overlapGe50": 0.99,
+     "overlapGe80": 0.851
+    },
+    "100": {
+     "analytic": 0.935,
+     "event": 0.935,
+     "overlapGe50": 1,
+     "overlapGe80": 0.955
+    },
+    "200": {
+     "analytic": 0.968,
+     "event": 0.967,
+     "overlapGe50": 1,
+     "overlapGe80": 0.998
+    },
+    "13.1": {
+     "analytic": 0.569,
+     "event": 0.571,
+     "overlapGe50": 0.639,
+     "overlapGe80": 0.309
+    },
+    "20.5": {
+     "analytic": 0.697,
+     "event": 0.697,
+     "overlapGe50": 0.804,
+     "overlapGe80": 0.457
+    }
+   },
+   "calibrationK": 1,
+   "mixture": "gate-30m-856"
+  },
+  {
+   "byLength": {
+    "10": {
+     "analytic": 0.286,
+     "event": 0.286,
+     "overlapGe50": 0.296,
+     "overlapGe80": 0.123
+    },
+    "25": {
+     "analytic": 0.555,
+     "event": 0.553,
+     "overlapGe50": 0.622,
+     "overlapGe80": 0.295
+    },
+    "31": {
+     "analytic": 0.62,
+     "event": 0.619,
+     "overlapGe50": 0.706,
+     "overlapGe80": 0.36
+    },
+    "47": {
+     "analytic": 0.732,
+     "event": 0.732,
+     "overlapGe50": 0.847,
+     "overlapGe80": 0.509
+    },
+    "60": {
+     "analytic": 0.786,
+     "event": 0.787,
+     "overlapGe50": 0.906,
+     "overlapGe80": 0.607
+    },
+    "100": {
+     "analytic": 0.87,
+     "event": 0.871,
+     "overlapGe50": 0.978,
+     "overlapGe80": 0.798
+    },
+    "200": {
+     "analytic": 0.935,
+     "event": 0.935,
+     "overlapGe50": 1,
+     "overlapGe80": 0.956
+    },
+    "13.1": {
+     "analytic": 0.358,
+     "event": 0.358,
+     "overlapGe50": 0.379,
+     "overlapGe80": 0.161
+    },
+    "20.5": {
+     "analytic": 0.493,
+     "event": 0.494,
+     "overlapGe50": 0.543,
+     "overlapGe80": 0.247
+    }
+   },
+   "calibrationK": 2,
+   "mixture": "gate-30m-856"
+  }
+ ],
+ "monteCarloVsAnalyticMaxAbsDiff": 0.0016,
+ "speedEffects": {
+  "lengthsM": [
+   25,
+   60,
+   100
+  ],
+  "rows": [
+   {
+    "biasM": 0,
+    "byLength": {
+     "25": {
+      "event": 0.746,
+      "overlapGe80": 0.533
+     },
+     "60": {
+      "event": 0.892,
+      "overlapGe80": 0.852
+     },
+     "100": {
+      "event": 0.935,
+      "overlapGe80": 0.955
+     }
+    },
+    "clockOffsetS": 0,
+    "kmh": 10
+   },
+   {
+    "biasM": 0.6,
+    "byLength": {
+     "25": {
+      "event": 0.746,
+      "overlapGe80": 0.532
+     },
+     "60": {
+      "event": 0.892,
+      "overlapGe80": 0.851
+     },
+     "100": {
+      "event": 0.935,
+      "overlapGe80": 0.955
+     }
+    },
+    "clockOffsetS": 0.2,
+    "kmh": 10
+   },
+   {
+    "biasM": 1.4,
+    "byLength": {
+     "25": {
+      "event": 0.742,
+      "overlapGe80": 0.521
+     },
+     "60": {
+      "event": 0.89,
+      "overlapGe80": 0.848
+     },
+     "100": {
+      "event": 0.934,
+      "overlapGe80": 0.954
+     }
+    },
+    "clockOffsetS": 0.5,
+    "kmh": 10
+   },
+   {
+    "biasM": 2.8,
+    "byLength": {
+     "25": {
+      "event": 0.728,
+      "overlapGe80": 0.487
+     },
+     "60": {
+      "event": 0.884,
+      "overlapGe80": 0.836
+     },
+     "100": {
+      "event": 0.931,
+      "overlapGe80": 0.951
+     }
+    },
+    "clockOffsetS": 1,
+    "kmh": 10
+   },
+   {
+    "biasM": 6.1,
+    "byLength": {
+     "25": {
+      "event": 0.666,
+      "overlapGe80": 0.347
+     },
+     "60": {
+      "event": 0.857,
+      "overlapGe80": 0.77
+     },
+     "100": {
+      "event": 0.914,
+      "overlapGe80": 0.935
+     }
+    },
+    "clockOffsetS": 2.2,
+    "kmh": 10
+   },
+   {
+    "biasM": 0,
+    "byLength": {
+     "25": {
+      "event": 0.746,
+      "overlapGe80": 0.533
+     },
+     "60": {
+      "event": 0.892,
+      "overlapGe80": 0.852
+     },
+     "100": {
+      "event": 0.935,
+      "overlapGe80": 0.955
+     }
+    },
+    "clockOffsetS": 0,
+    "kmh": 20
+   },
+   {
+    "biasM": 1.1,
+    "byLength": {
+     "25": {
+      "event": 0.743,
+      "overlapGe80": 0.526
+     },
+     "60": {
+      "event": 0.891,
+      "overlapGe80": 0.849
+     },
+     "100": {
+      "event": 0.934,
+      "overlapGe80": 0.954
+     }
+    },
+    "clockOffsetS": 0.2,
+    "kmh": 20
+   },
+   {
+    "biasM": 2.8,
+    "byLength": {
+     "25": {
+      "event": 0.728,
+      "overlapGe80": 0.487
+     },
+     "60": {
+      "event": 0.884,
+      "overlapGe80": 0.836
+     },
+     "100": {
+      "event": 0.931,
+      "overlapGe80": 0.951
+     }
+    },
+    "clockOffsetS": 0.5,
+    "kmh": 20
+   },
+   {
+    "biasM": 5.6,
+    "byLength": {
+     "25": {
+      "event": 0.679,
+      "overlapGe80": 0.373
+     },
+     "60": {
+      "event": 0.863,
+      "overlapGe80": 0.785
+     },
+     "100": {
+      "event": 0.918,
+      "overlapGe80": 0.939
+     }
+    },
+    "clockOffsetS": 1,
+    "kmh": 20
+   },
+   {
+    "biasM": 12.2,
+    "byLength": {
+     "25": {
+      "event": 0.491,
+      "overlapGe80": 0.126
+     },
+     "60": {
+      "event": 0.78,
+      "overlapGe80": 0.474
+     },
+     "100": {
+      "event": 0.868,
+      "overlapGe80": 0.851
+     }
+    },
+    "clockOffsetS": 2.2,
+    "kmh": 20
+   },
+   {
+    "biasM": 0,
+    "byLength": {
+     "25": {
+      "event": 0.746,
+      "overlapGe80": 0.533
+     },
+     "60": {
+      "event": 0.892,
+      "overlapGe80": 0.852
+     },
+     "100": {
+      "event": 0.935,
+      "overlapGe80": 0.955
+     }
+    },
+    "clockOffsetS": 0,
+    "kmh": 30
+   },
+   {
+    "biasM": 1.7,
+    "byLength": {
+     "25": {
+      "event": 0.74,
+      "overlapGe80": 0.516
+     },
+     "60": {
+      "event": 0.889,
+      "overlapGe80": 0.846
+     },
+     "100": {
+      "event": 0.933,
+      "overlapGe80": 0.954
+     }
+    },
+    "clockOffsetS": 0.2,
+    "kmh": 30
+   },
+   {
+    "biasM": 4.2,
+    "byLength": {
+     "25": {
+      "event": 0.707,
+      "overlapGe80": 0.435
+     },
+     "60": {
+      "event": 0.875,
+      "overlapGe80": 0.816
+     },
+     "100": {
+      "event": 0.925,
+      "overlapGe80": 0.946
+     }
+    },
+    "clockOffsetS": 0.5,
+    "kmh": 30
+   },
+   {
+    "biasM": 8.3,
+    "byLength": {
+     "25": {
+      "event": 0.608,
+      "overlapGe80": 0.248
+     },
+     "60": {
+      "event": 0.832,
+      "overlapGe80": 0.687
+     },
+     "100": {
+      "event": 0.899,
+      "overlapGe80": 0.915
+     }
+    },
+    "clockOffsetS": 1,
+    "kmh": 30
+   },
+   {
+    "biasM": 18.3,
+    "byLength": {
+     "25": {
+      "event": 0.296,
+      "overlapGe80": 0.047
+     },
+     "60": {
+      "event": 0.688,
+      "overlapGe80": 0.181
+     },
+     "100": {
+      "event": 0.813,
+      "overlapGe80": 0.6
+     }
+    },
+    "clockOffsetS": 2.2,
+    "kmh": 30
+   },
+   {
+    "biasM": 0,
+    "byLength": {
+     "25": {
+      "event": 0.746,
+      "overlapGe80": 0.533
+     },
+     "60": {
+      "event": 0.892,
+      "overlapGe80": 0.852
+     },
+     "100": {
+      "event": 0.935,
+      "overlapGe80": 0.955
+     }
+    },
+    "clockOffsetS": 0,
+    "kmh": 50
+   },
+   {
+    "biasM": 2.8,
+    "byLength": {
+     "25": {
+      "event": 0.728,
+      "overlapGe80": 0.487
+     },
+     "60": {
+      "event": 0.884,
+      "overlapGe80": 0.836
+     },
+     "100": {
+      "event": 0.931,
+      "overlapGe80": 0.951
+     }
+    },
+    "clockOffsetS": 0.2,
+    "kmh": 50
+   },
+   {
+    "biasM": 6.9,
+    "byLength": {
+     "25": {
+      "event": 0.646,
+      "overlapGe80": 0.308
+     },
+     "60": {
+      "event": 0.849,
+      "overlapGe80": 0.743
+     },
+     "100": {
+      "event": 0.909,
+      "overlapGe80": 0.929
+     }
+    },
+    "clockOffsetS": 0.5,
+    "kmh": 50
+   },
+   {
+    "biasM": 13.9,
+    "byLength": {
+     "25": {
+      "event": 0.437,
+      "overlapGe80": 0.095
+     },
+     "60": {
+      "event": 0.756,
+      "overlapGe80": 0.377
+     },
+     "100": {
+      "event": 0.854,
+      "overlapGe80": 0.804
+     }
+    },
+    "clockOffsetS": 1,
+    "kmh": 50
+   },
+   {
+    "biasM": 30.6,
+    "byLength": {
+     "25": {
+      "event": 0.051,
+      "overlapGe80": 0.008
+     },
+     "60": {
+      "event": 0.49,
+      "overlapGe80": 0.027
+     },
+     "100": {
+      "event": 0.694,
+      "overlapGe80": 0.093
+     }
+    },
+    "clockOffsetS": 2.2,
+    "kmh": 50
+   }
+  ]
+ },
+ "waysVersusUncertainty": {
+  "intervalWidth90M": 38.2,
+  "p90AlongTrackErrorM": 19.1,
+  "shorterThanP90IntervalWidth": [
+   "Piazzale Lodi ring 287070936 (sett)",
+   "Piazzale Lodi ring 111768010",
+   "Piazzale Lodi ring 111767966",
+   "Via Lazzaro Papi 164940302 (sett)",
+   "Via Lazzaro Papi 164940303 (sett)"
+  ],
+  "shorterThanP90Radius": [
+   "Piazzale Lodi ring 111767966"
+  ]
+ },
+ "windowYield": [
+  {
+   "byLength": {
+    "25": {
+     "effectiveWindowsPerPass": 11.2,
+     "passesFor20": 2,
+     "purity": 0.88,
+     "windowsFullyInside": 15
+    },
+    "31": {
+     "effectiveWindowsPerPass": 15.1,
+     "passesFor20": 2,
+     "purity": 0.9,
+     "windowsFullyInside": 19
+    },
+    "60": {
+     "effectiveWindowsPerPass": 34.8,
+     "passesFor20": 1,
+     "purity": 0.95,
+     "windowsFullyInside": 39
+    },
+    "100": {
+     "effectiveWindowsPerPass": 61.7,
+     "passesFor20": 1,
+     "purity": 0.97,
+     "windowsFullyInside": 66
+    },
+    "13.1": {
+     "effectiveWindowsPerPass": 4,
+     "passesFor20": 6,
+     "purity": 0.77,
+     "windowsFullyInside": 7
+    }
+   },
+   "hopM": 1.5,
+   "kmh": 10,
+   "windowLengthM": 3
+  },
+  {
+   "byLength": {
+    "25": {
+     "effectiveWindowsPerPass": 5.2,
+     "passesFor20": 4,
+     "purity": 0.76,
+     "windowsFullyInside": 7
+    },
+    "31": {
+     "effectiveWindowsPerPass": 7.1,
+     "passesFor20": 3,
+     "purity": 0.81,
+     "windowsFullyInside": 9
+    },
+    "60": {
+     "effectiveWindowsPerPass": 16.9,
+     "passesFor20": 2,
+     "purity": 0.9,
+     "windowsFullyInside": 19
+    },
+    "100": {
+     "effectiveWindowsPerPass": 29.9,
+     "passesFor20": 1,
+     "purity": 0.94,
+     "windowsFullyInside": 32
+    },
+    "13.1": {
+     "effectiveWindowsPerPass": 1.7,
+     "passesFor20": 12,
+     "purity": 0.55,
+     "windowsFullyInside": 3
+    }
+   },
+   "hopM": 3,
+   "kmh": 20,
+   "windowLengthM": 5.9
+  },
+  {
+   "byLength": {
+    "25": {
+     "effectiveWindowsPerPass": 3,
+     "passesFor20": 7,
+     "purity": 0.64,
+     "windowsFullyInside": 4
+    },
+    "31": {
+     "effectiveWindowsPerPass": 4,
+     "passesFor20": 6,
+     "purity": 0.71,
+     "windowsFullyInside": 5
+    },
+    "60": {
+     "effectiveWindowsPerPass": 10.7,
+     "passesFor20": 2,
+     "purity": 0.85,
+     "windowsFullyInside": 12
+    },
+    "100": {
+     "effectiveWindowsPerPass": 19.6,
+     "passesFor20": 2,
+     "purity": 0.91,
+     "windowsFullyInside": 21
+    },
+    "13.1": {
+     "effectiveWindowsPerPass": 0.6,
+     "passesFor20": 36,
+     "purity": 0.32,
+     "windowsFullyInside": 1
+    }
+   },
+   "hopM": 4.5,
+   "kmh": 30,
+   "windowLengthM": 8.9
+  },
+  {
+   "byLength": {
+    "25": {
+     "effectiveWindowsPerPass": 1.5,
+     "passesFor20": 14,
+     "purity": 0.41,
+     "windowsFullyInside": 2
+    },
+    "31": {
+     "effectiveWindowsPerPass": 2.4,
+     "passesFor20": 9,
+     "purity": 0.52,
+     "windowsFullyInside": 3
+    },
+    "60": {
+     "effectiveWindowsPerPass": 6.2,
+     "passesFor20": 4,
+     "purity": 0.75,
+     "windowsFullyInside": 7
+    },
+    "100": {
+     "effectiveWindowsPerPass": 11.2,
+     "passesFor20": 2,
+     "purity": 0.85,
+     "windowsFullyInside": 12
+    },
+    "13.1": {
+     "effectiveWindowsPerPass": 0,
+     "passesFor20": null,
+     "purity": 0,
+     "windowsFullyInside": 0
+    }
+   },
+   "hopM": 7.4,
+   "kmh": 50,
+   "windowLengthM": 14.9
+  }
+ ]
+}

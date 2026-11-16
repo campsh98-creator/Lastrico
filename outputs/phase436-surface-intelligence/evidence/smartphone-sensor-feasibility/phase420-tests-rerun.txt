@@ -1,0 +1,14 @@
+# Phase 4.20 roughness-sensors tests re-run on 2026-11-14 (read-only; no file in experiments/roughness-sensors was changed)
+# command: node --test "experiments/roughness-sensors/test/*.test.mjs"   (Node v26.13.0, Windows 11)
+ℹ tests 57
+ℹ pass 56
+ℹ fail 1
+ℹ skipped 0
+ℹ duration_ms 90239.0854
+# the single failure:
+✖ failing tests:
+
+test at experiments\roughness-sensors\test\prototype.test.mjs:55:1
+✖ path resolution only exposes prototype/ and src/ (104.6838ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+# cause: prototype.test.mjs:56 asserts resolvePath("/").endsWith("prototype/index.html"); on win32 the path uses backslashes. A Windows path-separator artefact of the static-server test, unrelated to the signal analysis. All analysis, synthetic-data, orientation and recorder tests passed (56/57).

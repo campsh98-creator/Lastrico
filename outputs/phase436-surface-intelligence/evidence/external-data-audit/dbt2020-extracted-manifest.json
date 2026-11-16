@@ -1,0 +1,470 @@
+[
+ {
+  "name": "DBT 2020 - SHAPE/AC_CIC.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AC_CIC.dbf",
+  "compressed": 5398,
+  "uncompressed": 341547,
+  "sha256": "9db5846c57e8e155b63fcdc19568f70c4867867a0bf7e58448e04e3b64e2c1f8",
+  "rangeBytesFetched": 5967,
+  "zipModified": "2022-08-08 11:54"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AC_CIC.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AC_CIC.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AC_CIC_AC_CIC_SUP_SR.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AC_CIC_AC_CIC_SUP_SR.dbf",
+  "compressed": 27148,
+  "uncompressed": 1066231,
+  "sha256": "14c90dae1557b5f7b51492010faf3b5185ef99919293f3076d3e0efe9c94a60a",
+  "rangeBytesFetched": 27731,
+  "zipModified": "2022-08-08 11:54"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AC_CIC_AC_CIC_SUP_SR.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AC_CIC_AC_CIC_SUP_SR.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AC_VEI.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AC_VEI.dbf",
+  "compressed": 85622,
+  "uncompressed": 2727997,
+  "sha256": "792d2611a115651bc3ade36fbc5bb12545f562176cc61c1ebdf322f8d09f84d1",
+  "rangeBytesFetched": 86191,
+  "zipModified": "2022-08-08 12:11"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AC_VEI.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AC_VEI.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AC_VEI_AC_VEI_SUP_SR.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AC_VEI_AC_VEI_SUP_SR.dbf",
+  "compressed": 644101,
+  "uncompressed": 21257669,
+  "sha256": "74b1558f7ae744eda563c709acca5d7d074b7181167bfd83df3b69ac880f78a0",
+  "rangeBytesFetched": 644684,
+  "zipModified": "2022-08-08 12:11"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AC_VEI_AC_VEI_SUP_SR.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AC_VEI_AC_VEI_SUP_SR.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_STR.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_STR.dbf",
+  "compressed": 64303,
+  "uncompressed": 933073,
+  "sha256": "1725a549b076b8df8b53b4238df4281e7a25657d890e1ef10e4c91a6f6a9bd6b",
+  "rangeBytesFetched": 64872,
+  "zipModified": "2022-08-09 09:54"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_STR.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_STR.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_STR_AR_STR_SUP_SR.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_STR_AR_STR_SUP_SR.dbf",
+  "compressed": 126752,
+  "uncompressed": 3374440,
+  "sha256": "fa827163c18dc941ba89a9336abc153978747e81bf409faca11b5167400ec857",
+  "rangeBytesFetched": 127335,
+  "zipModified": "2022-08-08 08:48"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_STR_AR_STR_SUP_SR.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_STR_AR_STR_SUP_SR.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_VMS.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_VMS.dbf",
+  "compressed": 3967,
+  "uncompressed": 217501,
+  "sha256": "952cda118d1051c403b30599ff5706fe3bea7f8d6439e80a021ab971eab230fb",
+  "rangeBytesFetched": 4536,
+  "zipModified": "2022-07-28 15:17"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_VMS_AR_VMS_SUP.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_VMS_AR_VMS_SUP.dbf",
+  "compressed": 1105,
+  "uncompressed": 22075,
+  "sha256": "f9fbf195044985b5a0508b5d9966491a912f20e82f3e3c22a15acb68f79ea748",
+  "rangeBytesFetched": 1685,
+  "zipModified": "2022-07-29 15:11"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_VMS_AR_VMS_SUP.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_VMS_AR_VMS_SUP.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 861,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_VMS_AR_VMS_SUP_L.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_VMS_AR_VMS_SUP_L.dbf",
+  "compressed": 2208,
+  "uncompressed": 43730,
+  "sha256": "6582764f5f35ee6b94d93f51478362f765f0494d79f87fd8a0f8ab9e7de3540c",
+  "rangeBytesFetched": 2790,
+  "zipModified": "2022-07-29 15:11"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_VMS_AR_VMS_SUP_L.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_VMS_AR_VMS_SUP_L.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 863,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_VMS_AR_VMS_SUP_SR.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_VMS_AR_VMS_SUP_SR.dbf",
+  "compressed": 10784,
+  "uncompressed": 364973,
+  "sha256": "fe76d3119ecbc73301dd59114bd7ec42c61fdd4dfaa9bcde2b8ccd2c6c809313",
+  "rangeBytesFetched": 11367,
+  "zipModified": "2022-08-08 10:32"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/AR_VMS_AR_VMS_SUP_SR.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/AR_VMS_AR_VMS_SUP_SR.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_CIC.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_CIC.dbf",
+  "compressed": 4638,
+  "uncompressed": 183260,
+  "sha256": "b14c1dc1344818fe40939cf8f82ea56af0abb5c553af427b678ec695cabe516b",
+  "rangeBytesFetched": 5207,
+  "zipModified": "2022-08-08 08:48"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_CIC.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_CIC.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_CIC_EL_CIC_TRA_SG.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_CIC_EL_CIC_TRA_SG.dbf",
+  "compressed": 28631,
+  "uncompressed": 1116966,
+  "sha256": "1ff2a5b704b74b5b65f0acc2036d09f11803af47668e5d4cece6e778f13478c9",
+  "rangeBytesFetched": 29214,
+  "zipModified": "2022-08-08 08:48"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_CIC_EL_CIC_TRA_SG.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_CIC_EL_CIC_TRA_SG.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_FER.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_FER.dbf",
+  "compressed": 16272,
+  "uncompressed": 983543,
+  "sha256": "7510aeea77a1e3c8c85ac8976b19d98eb6721ce56dbd7789efd4854aa611ff23",
+  "rangeBytesFetched": 16841,
+  "zipModified": "2022-08-03 11:04"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_FER.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_FER.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_FER_EL_FER_TRA_SG.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_FER_EL_FER_TRA_SG.dbf",
+  "compressed": 42259,
+  "uncompressed": 1774335,
+  "sha256": "a06a4383f2aa7969b1a7ae3456bc267a4faf8fb846a6faf209ebf78a01e5aca3",
+  "rangeBytesFetched": 42842,
+  "zipModified": "2022-08-03 11:04"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_FER_EL_FER_TRA_SG.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_FER_EL_FER_TRA_SG.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_STR.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_STR.dbf",
+  "compressed": 169165,
+  "uncompressed": 4375303,
+  "sha256": "30c73a8f7dd9a085701d51a352d901043b5d12792a8cd7d1627a353a70d08733",
+  "rangeBytesFetched": 169734,
+  "zipModified": "2022-08-08 10:30"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_STR.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_STR.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_STR_EL_STR_TRA_SG.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_STR_EL_STR_TRA_SG.dbf",
+  "compressed": 981690,
+  "uncompressed": 44721355,
+  "sha256": "29bc27c06b8f2d857d33bb57e91eb2260c457d2aa3b0cb062db162f9c64cdb98",
+  "rangeBytesFetched": 982273,
+  "zipModified": "2022-08-08 10:30"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_STR_EL_STR_TRA_SG.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_STR_EL_STR_TRA_SG.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_TRV.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_TRV.dbf",
+  "compressed": 6474,
+  "uncompressed": 351711,
+  "sha256": "20d71d3f6b1b18f1e4d693387c3c1bfec93baa30806d03ed53e8f9cb97b41727",
+  "rangeBytesFetched": 7043,
+  "zipModified": "2022-08-03 11:04"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_TRV.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_TRV.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_TRV_EL_TRV_TRA_SG.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_TRV_EL_TRV_TRA_SG.dbf",
+  "compressed": 37213,
+  "uncompressed": 1179769,
+  "sha256": "590f75a786567098921a3ec37c3777fd787d35b233324dc9881a12dca2cbb38d",
+  "rangeBytesFetched": 37796,
+  "zipModified": "2022-08-03 11:04"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_TRV_EL_TRV_TRA_SG.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_TRV_EL_TRV_TRA_SG.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_VMS.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_VMS.dbf",
+  "compressed": 10937,
+  "uncompressed": 328371,
+  "sha256": "7a8216fbc7fa7d4a72f4fd290173d769fc8242b840ff01b335638e3b521ae543",
+  "rangeBytesFetched": 11506,
+  "zipModified": "2022-07-29 12:39"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_VMS.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_VMS.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_VMS_EL_VMS_TRA_SG.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_VMS_EL_VMS_TRA_SG.dbf",
+  "compressed": 26618,
+  "uncompressed": 780955,
+  "sha256": "4ebd61c99afe551c58e5377d3810a47285ff3b0607175e097b7d2902512c0445",
+  "rangeBytesFetched": 27201,
+  "zipModified": "2022-07-29 12:39"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/EL_VMS_EL_VMS_TRA_SG.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/EL_VMS_EL_VMS_TRA_SG.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/ES_AMM.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/ES_AMM.dbf",
+  "compressed": 54619,
+  "uncompressed": 1791775,
+  "sha256": "0c12967ffc53f6030bb39bd904d2f23f77958495612bd4053e77a9c600d04cf5",
+  "rangeBytesFetched": 55188,
+  "zipModified": "2022-08-08 08:35"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/ES_AMM_ES_AMM_NOM_T.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/ES_AMM_ES_AMM_NOM_T.dbf",
+  "compressed": 58714,
+  "uncompressed": 1094239,
+  "sha256": "cae5627cc2729dbe787ae2356e61def4e8fc7a3138a57b179ac822cd803ddb0e",
+  "rangeBytesFetched": 59296,
+  "zipModified": "2022-08-08 08:36"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/ES_AMM_ES_AMM_PER.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/ES_AMM_ES_AMM_PER.dbf",
+  "compressed": 14476,
+  "uncompressed": 309554,
+  "sha256": "b6e480204dc2aa03ec72a9c8d9a5d76e3adb3a4c894dc0f17298637fe5ab6b54",
+  "rangeBytesFetched": 15056,
+  "zipModified": "2022-08-09 09:53"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/ES_AMM_ES_AMM_PER.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/ES_AMM_ES_AMM_PER.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 861,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/ES_AMM_ES_AMM_TRA.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/ES_AMM_ES_AMM_TRA.dbf",
+  "compressed": 14507,
+  "uncompressed": 309554,
+  "sha256": "9a781750d0802346b609924ab92b0dd10a50401927b59320fe4263fa2a3534f2",
+  "rangeBytesFetched": 15087,
+  "zipModified": "2022-08-08 08:48"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/ES_AMM_ES_AMM_TRA.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/ES_AMM_ES_AMM_TRA.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 861,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/GZ_STR.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/GZ_STR.dbf",
+  "compressed": 62453,
+  "uncompressed": 2654073,
+  "sha256": "6d85f68428f35a4016f0cf9d40e64a53e5568ce700217d5190ce55babcd814b7",
+  "rangeBytesFetched": 63022,
+  "zipModified": "2022-08-08 10:30"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/GZ_STR.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/GZ_STR.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/GZ_STR_GZ_STR_TY.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/GZ_STR_GZ_STR_TY.dbf",
+  "compressed": 62460,
+  "uncompressed": 2654074,
+  "sha256": "79cb824446cd33afc51f32f46cecfecfddd0768132f894ece93282ef6589ca80",
+  "rangeBytesFetched": 63039,
+  "zipModified": "2022-08-08 10:15"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/SD_FER.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/SD_FER.dbf",
+  "compressed": 1725,
+  "uncompressed": 67595,
+  "sha256": "eb9d19801a0c0b6fbdc357c0527a73af1e0f50796e7d9ce42fae8372655ecc0e",
+  "rangeBytesFetched": 2294,
+  "zipModified": "2022-08-03 15:15"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/SD_FER.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/SD_FER.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 850,
+  "zipModified": "2023-03-30 15:47"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/SD_FER_SD_FER_SUP_SR.dbf",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/SD_FER_SD_FER_SUP_SR.dbf",
+  "compressed": 7273,
+  "uncompressed": 275577,
+  "sha256": "3300628ef1722387d54bb9419c3a074021ae0e91a238d3ccc18c24d4560883fa",
+  "rangeBytesFetched": 7856,
+  "zipModified": "2022-08-03 15:01"
+ },
+ {
+  "name": "DBT 2020 - SHAPE/SD_FER_SD_FER_SUP_SR.prj",
+  "file": "experiments/phase436-surface-intelligence/data/external/dbt2020/SD_FER_SD_FER_SUP_SR.prj",
+  "compressed": 281,
+  "uncompressed": 424,
+  "sha256": "d8921ab0e084a3678495d202bfac6ad8f60342da1043577eee27c0fbfffa3886",
+  "rangeBytesFetched": 864,
+  "zipModified": "2023-03-30 15:47"
+ }
+]
