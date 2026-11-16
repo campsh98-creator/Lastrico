@@ -1,0 +1,218 @@
+# Isolated preview of Phase 4.37 (PR #16) for the real-iPhone validation. Manual only.
+#
+# Trust model
+#  - The commit that is built is FIXED in this file (APPROVED_SHA). There is no commit input.
+#  - `build` runs the code of that commit (npm ci, tests, build) and has NO Cloudflare credentials, no write permission.
+#  - `deploy` and `delete` receive the credentials, run only on `main` and never execute code of the commit:
+#    `deploy` takes the built files as an artifact and publishes them with a pinned Wrangler installed without
+#    install scripts; `delete` checks out nothing and runs in an empty folder.
+#  - The generated Worker configuration is checked against an allowlist (.github/scripts/preview-437-validate.mjs,
+#    read from the trusted checkout): only the RouteEngine Durable Object of the preview itself and the static assets.
+#  - `dry-run` needs no credentials and uploads nothing.
+# Required, only for deploy/delete: repository (or environment `preview-437`) secrets CLOUDFLARE_API_TOKEN
+# (Workers Scripts: Edit) and CLOUDFLARE_ACCOUNT_ID. See outputs/phase437-pilot-validation-plan.md, sections 4 and 5.
+name: Preview 4.37 (isolated)
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "dry-run builds and checks only (no credentials, uploads nothing); deploy publishes the preview; delete removes it"
+        type: choice
+        options: [dry-run, deploy, delete]
+        default: dry-run
+      confirm:
+        description: "Type the Worker name to confirm: lastrico-preview-437"
+        type: string
+        required: true
+
+permissions: {}
+
+concurrency:
+  group: preview-437
+  cancel-in-progress: false
+
+env:
+  APPROVED_SHA: 1a5d8e95066cb106283e169cc0b862a108e6f1be
+  PREVIEW_NAME: lastrico-preview-437
+  PILOT_NAME: lastrico-pilot
+  WRANGLER_VERSION: 4.92.0
+
+jobs:
+  guard:
+    name: Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check confirmation and branch
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+          ACTION: ${{ inputs.action }}
+          REF: ${{ github.ref }}
+        run: |
+          [ "$CONFIRM" = "$PREVIEW_NAME" ] || { echo "confirm must equal $PREVIEW_NAME"; exit 1; }
+          [ "$PREVIEW_NAME" != "$PILOT_NAME" ] || { echo "preview and pilot names must differ"; exit 1; }
+          if [ "$ACTION" != "dry-run" ] && [ "$REF" != "refs/heads/main" ]; then
+            echo "deploy and delete may only run from main (this run is on $REF); use dry-run elsewhere"; exit 1
+          fi
+
+  build:
+    name: Build and check (no credentials)
+    needs: guard
+    if: inputs.action != 'delete'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the trusted workflow files
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          path: trusted
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+      - name: Check out the approved commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ env.APPROVED_SHA }}
+          path: src
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify the commit and that no credentials are present
+        working-directory: src
+        run: |
+          [ "$(git rev-parse HEAD)" = "$APPROVED_SHA" ] || { echo "checked-out commit is not the approved one"; exit 1; }
+          [ -z "${CLOUDFLARE_API_TOKEN:-}" ] && [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ] || { echo "credentials must not exist in the build job"; exit 1; }
+          if [ -n "$(git status --porcelain --untracked-files=no)" ]; then echo "dirty tree"; exit 1; fi
+      - name: Use Node.js 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+      - name: Install locked dependencies
+        working-directory: src
+        run: npm ci
+      - name: Prepare the Milan-only release copy
+        working-directory: src
+        run: node scripts/prepare-milan-release.mjs "$RUNNER_TEMP/release"
+      - name: Test the release copy
+        working-directory: ${{ runner.temp }}/release
+        run: npm test
+      - name: Build and check the release copy (no upload)
+        working-directory: ${{ runner.temp }}/release
+        run: npm run deploy:pilot -- --dry-run
+      - name: No Rome in the build
+        working-directory: ${{ runner.temp }}/release
+        run: |
+          if grep -rIlE "rome-road-store|rome-tile|rome-tiles-packed|['\"]rome['\"]" app components lib worker data; then echo "Rome found"; exit 1; fi
+      - name: Rewrite the generated config for the isolated preview and check it
+        working-directory: ${{ runner.temp }}/release
+        run: node "$GITHUB_WORKSPACE/trusted/.github/scripts/preview-437-validate.mjs" --rewrite dist/server/wrangler.json
+      - name: Install the pinned Wrangler outside the project
+        run: |
+          mkdir -p "$RUNNER_TEMP/tool" && cd "$RUNNER_TEMP/tool" && npm init -y >/dev/null
+          npm install --ignore-scripts --no-audit --no-fund "wrangler@$WRANGLER_VERSION"
+      - name: Dry run of the preview upload (no credentials) and binding check
+        working-directory: ${{ runner.temp }}/release
+        env:
+          NO_COLOR: "1"
+          CI: "1"
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          "$RUNNER_TEMP/tool/node_modules/.bin/wrangler" deploy --dry-run --config dist/server/wrangler.json | tee "$RUNNER_TEMP/dry-run.txt"
+          grep -q "Dry run\|--dry-run: exiting now" "$RUNNER_TEMP/dry-run.txt"
+          if grep -E '^env\.' "$RUNNER_TEMP/dry-run.txt" | grep -vE '^env\.ROUTE_ENGINE \(RouteEngine\) +Durable Object *$'; then
+            echo "the Worker would have a binding other than its own RouteEngine"; exit 1
+          fi
+      - name: Keep only the built files
+        run: |
+          mkdir -p "$RUNNER_TEMP/artifact/dist"
+          cp -r "$RUNNER_TEMP/release/dist/server" "$RUNNER_TEMP/release/dist/client" "$RUNNER_TEMP/artifact/dist/"
+      - name: Upload the built files
+        if: inputs.action == 'deploy'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: preview-437-dist
+          path: ${{ runner.temp }}/artifact
+          retention-days: 1
+          if-no-files-found: error
+
+  deploy:
+    name: Publish the preview (credentials, no project code)
+    needs: build
+    if: inputs.action == 'deploy' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: preview-437
+    permissions: {}
+    steps:
+      - name: Check out the trusted workflow files
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+      - name: Download the built files
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: preview-437-dist
+          path: artifact
+      - name: Use Node.js 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+      - name: Install the pinned Wrangler without install scripts
+        run: |
+          mkdir -p "$RUNNER_TEMP/tool" && cd "$RUNNER_TEMP/tool" && npm init -y >/dev/null
+          npm install --ignore-scripts --no-audit --no-fund "wrangler@$WRANGLER_VERSION"
+      - name: Re-check the configuration to publish
+        run: node .github/scripts/preview-437-validate.mjs --check artifact/dist/server/wrangler.json
+      - name: Dry run (no credentials) and binding check
+        working-directory: artifact
+        env:
+          NO_COLOR: "1"
+          CI: "1"
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          "$RUNNER_TEMP/tool/node_modules/.bin/wrangler" deploy --dry-run --config dist/server/wrangler.json | tee "$RUNNER_TEMP/dry-run.txt"
+          if grep -E '^env\.' "$RUNNER_TEMP/dry-run.txt" | grep -vE '^env\.ROUTE_ENGINE \(RouteEngine\) +Durable Object *$'; then
+            echo "unexpected binding"; exit 1
+          fi
+      - name: Publish the preview
+        working-directory: artifact
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: "false"
+        run: |
+          "$RUNNER_TEMP/tool/node_modules/.bin/wrangler" deploy --config dist/server/wrangler.json
+          echo "Preview Worker $PREVIEW_NAME published. Delete it within 48 hours (action: delete)."
+
+  delete:
+    name: Delete the preview (credentials, nothing checked out)
+    needs: guard
+    if: inputs.action == 'delete' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: preview-437
+    permissions: {}
+    steps:
+      - name: Use Node.js 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+      - name: Install the pinned Wrangler without install scripts
+        run: |
+          mkdir -p "$RUNNER_TEMP/empty" && cd "$RUNNER_TEMP/empty" && npm init -y >/dev/null
+          npm install --ignore-scripts --no-audit --no-fund "wrangler@$WRANGLER_VERSION"
+      - name: Delete only the preview Worker
+        working-directory: ${{ runner.temp }}/empty
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: "false"
+          CI: "1"
+        run: |
+          [ "$PREVIEW_NAME" = "lastrico-preview-437" ] && [ "$PREVIEW_NAME" != "$PILOT_NAME" ] || { echo "refusing: unexpected Worker name"; exit 1; }
+          ./node_modules/.bin/wrangler delete "$PREVIEW_NAME" --dry-run
+          ./node_modules/.bin/wrangler delete "$PREVIEW_NAME" --force
