@@ -3,7 +3,7 @@
  * responses that are missing (serial queue, ≥1100 ms between starts: FOSSGIS policy).
  * Surface scoring always uses the local OSM archive in the working tree.
  *
- *   node scripts/benchmark-milan-routing.mjs --label=before [--live] [--only=id] [--no-stability]
+ *   node scripts/benchmark-milan-routing.mjs --label=before [--live [--max-live=25]] [--only=id] [--no-stability]
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -16,6 +16,10 @@ const arg = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slic
 const label = arg("label") ?? "run";
 const only = arg("only");
 const live = process.argv.includes("--live");
+// Phase 4.37: live capture is capped, so a changed behaviour cannot turn a benchmark into an unbounded burst on
+// the public provider (a run in which one request leads to others can grow). Raise it deliberately.
+const maxLive = Number(arg("max-live") ?? 25);
+let liveRequests = 0;
 const withStability = !process.argv.includes("--no-stability");
 // Phase 4.31: a fixed Milan departure time ("YYYY-MM-DDTHH:MM"), so time windows and ZTL rules are reproducible.
 const departure = arg("departure");
@@ -41,7 +45,12 @@ async function archivedFetch(url, init = {}) {
   try { entry = JSON.parse(await readFile(file, "utf8")); } catch (e) { if (e.code !== "ENOENT") throw e; }
   const cached = Boolean(entry);
   if (!entry && !live) { missing.push(key); throw new Error(`No archived response: ${key}`); }
+  if (!entry && liveRequests >= maxLive) {
+    missing.push(key);
+    throw new Error(`Live request budget exhausted (--max-live=${maxLive}); raise it deliberately to capture more`);
+  }
   if (!entry) {
+    liveRequests += 1;
     const pending = networkQueue.then(async () => {
       await sleep(Math.max(0, 1100 - (Date.now() - lastNetworkAt)));
       lastNetworkAt = Date.now();

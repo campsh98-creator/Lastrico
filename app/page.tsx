@@ -75,6 +75,8 @@ import {
   pruneExpiredGpsTraces,
   readGpsTrace,
   storedTraceBytes,
+  summarizeRouteGeneration,
+  type TraceGeneration,
   type TraceRecorderStatus,
   type TraceStorage,
   type TraceSummary,
@@ -255,8 +257,9 @@ const mapStyle = "https://tiles.openfreemap.org/styles/liberty";
 /**
  * Phase 4.34: what a field trace records about a route besides its geometry: the objective it was
  * chosen for and the pavé it was expected to have, so a road test can be compared with them.
+ * Phase 4.37: and, from the same response, how the routes were produced (omitted when unknown).
  */
-function traceRouteDetails(route: RouteResult, objective: "safe" | "fast") {
+function traceRouteDetails(route: RouteResult, objective: "safe" | "fast", generation?: TraceGeneration) {
   return {
     objective,
     pave: {
@@ -267,6 +270,7 @@ function traceRouteDetails(route: RouteResult, objective: "safe" | "fast") {
     roughSections: (route.roughSections ?? []).map(({ startMeters, endMeters, confirmedMeters, probableMeters, name, surface }) => ({
       startMeters, endMeters, confirmedMeters, probableMeters, ...(name ? { name } : {}), ...(surface ? { surface } : {}),
     })),
+    ...(generation ? { generation } : {}),
   };
 }
 
@@ -494,6 +498,8 @@ export default function Home() {
   const traceRecorderRef = useRef<ReturnType<typeof createGpsTraceRecorder> | null>(null);
   /** Phase 4.34: rough sections whose warning the current route's trace has already recorded. */
   const tracedPaveWarningsRef = useRef<Set<number>>(new Set());
+  /** Phase 4.37: how the routes now on screen were produced (from the last API response or stored plan). */
+  const routeGenerationRef = useRef<TraceGeneration | undefined>(undefined);
   const lastSpokenInstructionRef = useRef("");
   const journeyActiveRef = useRef(false);
   const selectedRouteRef = useRef<RouteResult | null>(null);
@@ -779,7 +785,7 @@ export default function Home() {
       distanceKm: nextSelectedRoute.distance,
       coordinates: nextSelectedRoute.coordinates,
       instructions: nextSelectedRoute.instructions ?? [],
-      ...traceRouteDetails(nextSelectedRoute, routeKind),
+      ...traceRouteDetails(nextSelectedRoute, routeKind, routeGenerationRef.current),
     });
     setActiveRoute(routeKind);
   }
@@ -2334,7 +2340,8 @@ export default function Home() {
           distanceKm: nextSelectedRoute.distance,
           coordinates: nextSelectedRoute.coordinates,
           instructions: nextSelectedRoute.instructions ?? [],
-          ...traceRouteDetails(nextSelectedRoute, nextRoute),
+          // applyRouteData has just recorded how this reroute's response was produced.
+          ...traceRouteDetails(nextSelectedRoute, nextRoute, routeGenerationRef.current),
         });
       } else {
         storePlan({
@@ -2434,6 +2441,7 @@ export default function Home() {
     setHasDistinctAlternative(data.hasDistinctAlternative);
     setRoutingProfile(data.routingProfile);
     setAntiPaveOutcome(data.antiPave ?? null);
+    routeGenerationRef.current = summarizeRouteGeneration(data);
     setDataNotice(data.dataNotice);
     setTransportMode(mode);
     transportModeRef.current = mode;
@@ -2949,7 +2957,7 @@ export default function Home() {
         distanceKm: routeForJourney.distance,
         coordinates: routeForJourney.coordinates,
         instructions: routeForJourney.instructions ?? [],
-        ...traceRouteDetails(routeForJourney, activeRouteRef.current),
+        ...traceRouteDetails(routeForJourney, activeRouteRef.current, routeGenerationRef.current),
       });
       traceRecorderRef.current = recorder;
       setTraceStatus(recorder.status);

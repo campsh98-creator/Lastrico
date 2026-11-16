@@ -1,0 +1,480 @@
+{
+ "note": "Phase 4.37 offline benchmark, same 264 Milan cases (88 journeys x car/motorcycle/bicycle, avoidance strong, departure Monday 2026-11-09 12:00). Before = 3e31da9 on the Phase 4.25-4.31 archive; after = the branch with the review corrections (guard on penalised routes that add confirmed stone, provider-request ceiling) on the archive plus 121 responses recorded on 2026-11-14 (a newer provider graph). Predicted effects on OSM data, not ground truth. Shown route = the anti-pave route when a distinct alternative is offered, else the fastest.",
+ "cases": 264,
+ "withoutRoutePayload": 1,
+ "identical": 246,
+ "changed": 17,
+ "totalShownConfirmedStoneM": {
+  "before": 50483,
+  "after": 47402
+ },
+ "totalShownMinutes": {
+  "before": 3694,
+  "after": 3692
+ },
+ "providerRequestsAnsweredFromArchive": {
+  "before": 817,
+  "after": 870
+ },
+ "changedCases": [
+  {
+   "case": "brera-darsena-bicycle",
+   "shownConfirmedStoneM": {
+    "before": 922,
+    "after": 192
+   },
+   "shownSeconds": {
+    "before": 781,
+    "after": 885
+   },
+   "fastConfirmedStoneM": {
+    "before": 1259,
+    "after": 1259
+   },
+   "fastSeconds": {
+    "before": 743,
+    "after": 743
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "cadorna-cinque-giornate-motorcycle",
+   "shownConfirmedStoneM": {
+    "before": 0,
+    "after": 2
+   },
+   "shownSeconds": {
+    "before": 1109,
+    "after": 840
+   },
+   "fastConfirmedStoneM": {
+    "before": 2,
+    "after": 2
+   },
+   "fastSeconds": {
+    "before": 840,
+    "after": 840
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": false
+   },
+   "status": {
+    "before": "alternative",
+    "after": "no-better-route"
+   }
+  },
+  {
+   "case": "cadorna-darsena-bicycle",
+   "shownConfirmedStoneM": {
+    "before": 475,
+    "after": 110
+   },
+   "shownSeconds": {
+    "before": 510,
+    "after": 586
+   },
+   "fastConfirmedStoneM": {
+    "before": 475,
+    "after": 475
+   },
+   "fastSeconds": {
+    "before": 508,
+    "after": 508
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "castello-porta-romana-bicycle",
+   "shownConfirmedStoneM": {
+    "before": 447,
+    "after": 0
+   },
+   "shownSeconds": {
+    "before": 870,
+    "after": 936
+   },
+   "fastConfirmedStoneM": {
+    "before": 875,
+    "after": 875
+   },
+   "fastSeconds": {
+    "before": 798,
+    "after": 798
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "centrale-piazza-fontana-bicycle",
+   "shownConfirmedStoneM": {
+    "before": 298,
+    "after": 225
+   },
+   "shownSeconds": {
+    "before": 727,
+    "after": 745
+   },
+   "fastConfirmedStoneM": {
+    "before": 731,
+    "after": 731
+   },
+   "fastSeconds": {
+    "before": 717,
+    "after": 717
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "colonne-porta-genova-motorcycle",
+   "shownConfirmedStoneM": {
+    "before": 85,
+    "after": 205
+   },
+   "shownSeconds": {
+    "before": 544,
+    "after": 410
+   },
+   "fastConfirmedStoneM": {
+    "before": 205,
+    "after": 205
+   },
+   "fastSeconds": {
+    "before": 410,
+    "after": 410
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": false
+   },
+   "status": {
+    "before": "alternative",
+    "after": "no-better-route"
+   }
+  },
+  {
+   "case": "conciliazione-piazza-fontana-motorcycle",
+   "shownConfirmedStoneM": {
+    "before": 303,
+    "after": 298
+   },
+   "shownSeconds": {
+    "before": 1115,
+    "after": 1029
+   },
+   "fastConfirmedStoneM": {
+    "before": 406,
+    "after": 406
+   },
+   "fastSeconds": {
+    "before": 899,
+    "after": 899
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "dergano-porta-garibaldi-bicycle",
+   "shownConfirmedStoneM": {
+    "before": 0,
+    "after": 0
+   },
+   "shownSeconds": {
+    "before": 654,
+    "after": 622
+   },
+   "fastConfirmedStoneM": {
+    "before": 0,
+    "after": 0
+   },
+   "fastSeconds": {
+    "before": 593,
+    "after": 593
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "duomo-isola-car",
+   "shownConfirmedStoneM": {
+    "before": 769,
+    "after": 169
+   },
+   "shownSeconds": {
+    "before": 893,
+    "after": 1007
+   },
+   "fastConfirmedStoneM": {
+    "before": 1126,
+    "after": 520
+   },
+   "fastSeconds": {
+    "before": 846,
+    "after": 828
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "duomo-isola-motorcycle",
+   "shownConfirmedStoneM": {
+    "before": 769,
+    "after": 520
+   },
+   "shownSeconds": {
+    "before": 893,
+    "after": 828
+   },
+   "fastConfirmedStoneM": {
+    "before": 1126,
+    "after": 520
+   },
+   "fastSeconds": {
+    "before": 846,
+    "after": 828
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": false
+   },
+   "status": {
+    "before": "alternative",
+    "after": "fastest-avoids-pave"
+   }
+  },
+  {
+   "case": "duomo-porta-garibaldi-bicycle",
+   "shownConfirmedStoneM": {
+    "before": 532,
+    "after": 380
+   },
+   "shownSeconds": {
+    "before": 599,
+    "after": 769
+   },
+   "fastConfirmedStoneM": {
+    "before": 532,
+    "after": 532
+   },
+   "fastSeconds": {
+    "before": 599,
+    "after": 599
+   },
+   "distinctAlternative": {
+    "before": false,
+    "after": true
+   },
+   "status": {
+    "before": "no-better-route",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "greco-lambrate-car",
+   "shownConfirmedStoneM": {
+    "before": 79,
+    "after": 16
+   },
+   "shownSeconds": {
+    "before": 990,
+    "after": 849
+   },
+   "fastConfirmedStoneM": {
+    "before": 248,
+    "after": 16
+   },
+   "fastSeconds": {
+    "before": 907,
+    "after": 849
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": false
+   },
+   "status": {
+    "before": "alternative",
+    "after": "fastest-avoids-pave"
+   }
+  },
+  {
+   "case": "greco-lambrate-motorcycle",
+   "shownConfirmedStoneM": {
+    "before": 79,
+    "after": 16
+   },
+   "shownSeconds": {
+    "before": 990,
+    "after": 820
+   },
+   "fastConfirmedStoneM": {
+    "before": 248,
+    "after": 16
+   },
+   "fastSeconds": {
+    "before": 907,
+    "after": 820
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": false
+   },
+   "status": {
+    "before": "alternative",
+    "after": "fastest-avoids-pave"
+   }
+  },
+  {
+   "case": "repubblica-santambrogio-car",
+   "shownConfirmedStoneM": {
+    "before": 599,
+    "after": 377
+   },
+   "shownSeconds": {
+    "before": 785,
+    "after": 882
+   },
+   "fastConfirmedStoneM": {
+    "before": 857,
+    "after": 857
+   },
+   "fastSeconds": {
+    "before": 696,
+    "after": 696
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "repubblica-santambrogio-motorcycle",
+   "shownConfirmedStoneM": {
+    "before": 599,
+    "after": 377
+   },
+   "shownSeconds": {
+    "before": 785,
+    "after": 882
+   },
+   "fastConfirmedStoneM": {
+    "before": 857,
+    "after": 857
+   },
+   "fastSeconds": {
+    "before": 696,
+    "after": 696
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "san-siro-citta-studi-bicycle",
+   "shownConfirmedStoneM": {
+    "before": 164,
+    "after": 170
+   },
+   "shownSeconds": {
+    "before": 1949,
+    "after": 1950
+   },
+   "fastConfirmedStoneM": {
+    "before": 1186,
+    "after": 1186
+   },
+   "fastSeconds": {
+    "before": 1884,
+    "after": 1884
+   },
+   "distinctAlternative": {
+    "before": true,
+    "after": true
+   },
+   "status": {
+    "before": "alternative",
+    "after": "alternative"
+   }
+  },
+  {
+   "case": "sempione-portello-motorcycle",
+   "shownConfirmedStoneM": {
+    "before": 18,
+    "after": 0
+   },
+   "shownSeconds": {
+    "before": 463,
+    "after": 503
+   },
+   "fastConfirmedStoneM": {
+    "before": 18,
+    "after": 18
+   },
+   "fastSeconds": {
+    "before": 463,
+    "after": 463
+   },
+   "distinctAlternative": {
+    "before": false,
+    "after": true
+   },
+   "status": {
+    "before": "no-better-route",
+    "after": "alternative"
+   }
+  }
+ ]
+}

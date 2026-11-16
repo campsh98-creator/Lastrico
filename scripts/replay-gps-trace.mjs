@@ -41,6 +41,17 @@ if (args.includes("--diagnose") || args.includes("--text")) {
       `Riproduzione: ${diagnosis.replay.reroutes} ricalcoli, ${diagnosis.replay.decisionDifferences} decisioni diverse, arrivo ${diagnosis.replay.arrived ? "sì" : "no"}`,
       "",
     ];
+    // Phase 4.37 (trace v3): how each route was produced; nothing is printed for v1 and v2 traces.
+    trace.routes.forEach((route, number) => {
+      const { generation } = route;
+      if (!generation) return;
+      const search = generation.searchAttempted ? (generation.searchFailed ? "fallita" : `eseguita, ${generation.searchGenerated} percorsi`) : "non eseguita";
+      lines.push(`Percorso ${number + 1} (dalla rilevazione ${route.atFix}) · esito anti-pavé ${generation.antiPave} · ricerca ${search} · ${generation.candidates.length} candidati${generation.omitted ? ` (+${generation.omitted} non registrati)` : ""}`);
+      for (const c of generation.candidates) {
+        lines.push(`  ${c.source} · ${c.seconds} s · ${c.meters} m · pavé pesato ${c.weightedPave} m · confermato ${c.confirmedPave} m · sconosciuto ${c.unknown} m · ${c.verdict} · ${c.legal ? "ammesso" : "non ammesso"}${c.uTurns === undefined ? "" : ` · inversioni ${c.uTurns}`}`);
+      }
+      lines.push("");
+    });
     for (const finding of diagnosis.findings) {
       const where = finding.coordinate ? ` [${finding.coordinate.join(", ")}]` : "";
       lines.push(`${finding.at ?? "-"} #${finding.fromFix}${finding.toFix !== finding.fromFix ? `–${finding.toFix}` : ""} · ${LABELS[finding.category]} · ${finding.certainty === "measured" ? "misurato" : "possibile"}${where}`);

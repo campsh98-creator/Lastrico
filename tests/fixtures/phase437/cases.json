@@ -1,0 +1,69 @@
+{
+  "note": "Phase 4.37 replicas on PUBLIC OSM junctions only (no coordinate from any private trace). Provider responses are real (FOSSGIS Valhalla, recorded 14 November 2026 from the live instance, graph tileset 2026-11-14T03:50Z, by scripts/record-phase437-fixtures.mjs); departure Monday 9 November 2026 12:00, avoidance strong, planner mode. 'before' is the Phase 4.35 handler at 3e31da9 on the same responses.",
+  "cases": [
+    {
+      "id": "piazzale-lodi-return-car",
+      "label": "Replica of the return decision: Via Lazzaro Papi north junction to an Alzaia Naviglio Pavese junction. The provider's alternates include a Corso Lodi / Via Lazzaro Papi route (195 m of stone) and the Piazzale Lodi route (25 m).",
+      "start": "9.2071562,45.4507078",
+      "end": "9.1759083,45.4437792",
+      "mode": "car",
+      "before": {
+        "antiPaveSearchAttempted": false,
+        "providerRequests": 1,
+        "fastConfirmedMeters": 195,
+        "safeConfirmedMeters": 25,
+        "why": "the Piazzale Lodi alternate improves cheaply (-170 m of stone for +24 s) so the early stop ended the search with 25 m of stone left"
+      },
+      "after": {
+        "antiPaveSearchAttempted": true,
+        "providerRequests": 2,
+        "stoneSlicesTargeted": 2,
+        "fastConfirmedMeters": 195,
+        "safeConfirmedMeters": 25
+      }
+    },
+    {
+      "id": "piazzale-lodi-outbound-car",
+      "label": "Outbound-like replica: an Alzaia Naviglio Pavese junction to the Via Lazzaro Papi north junction. The anti-pave route goes through Piazzale Lodi, Corso Lodi and Via Lazzaro Papi (50 m of mapped stone, +87 s).",
+      "start": "9.1759083,45.4437792",
+      "end": "9.2071562,45.4507078",
+      "mode": "car",
+      "before": {
+        "antiPaveSearchAttempted": true,
+        "providerRequests": 2,
+        "fastConfirmedMeters": 280,
+        "safeConfirmedMeters": 50
+      },
+      "after": {
+        "antiPaveSearchAttempted": true,
+        "providerRequests": 2,
+        "stoneSlicesTargeted": 3,
+        "fastConfirmedMeters": 280,
+        "safeConfirmedMeters": 50,
+        "why": "unchanged outcome: a 0 m route exists but stays behind the refinement gate, a product choice left out of this phase"
+      }
+    },
+    {
+      "id": "de-angeli-san-babila-motorcycle",
+      "label": "Benchmark journey De Angeli to San Babila by motorcycle (Phase 4.25, public landmarks). Phase 4.37 review: the penalised search finds a route 27 s faster than the provider's own fastest but with 511 m of confirmed stone instead of 85 m; it must not become the fastest card.",
+      "start": "9.1523352,45.4675986",
+      "end": "9.1981131,45.4667997",
+      "mode": "motorcycle",
+      "before": {
+        "fastConfirmedMeters": 85,
+        "fastSeconds": 1145,
+        "safeConfirmedMeters": 86,
+        "antiPaveSearchAttempted": false,
+        "providerRequests": 1
+      },
+      "after": {
+        "fastConfirmedMeters": 85,
+        "fastSeconds": 1145,
+        "safeConfirmedMeters": 86,
+        "antiPaveSearchAttempted": true,
+        "penalisedRoutesDiscarded": 1,
+        "why": "the penalised route is dropped (it adds 426 m of confirmed stone), the fastest card stays the provider's own route"
+      }
+    }
+  ]
+}

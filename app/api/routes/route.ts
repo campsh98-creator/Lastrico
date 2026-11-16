@@ -22,7 +22,9 @@ import {
   extractRoughSlices,
   buildLinearCostFactors,
   encodePolyline6,
+  penalisedSliceMinimumMeters,
   pointDistanceMeters,
+  stopsOnlyWhenClean,
 } from "@/lib/surface-aware-routing";
 import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding } from "@/lib/routing-providers";
 import { buildRoughSections } from "@/lib/rough-sections";
@@ -32,7 +34,15 @@ import { routesShareCorridor, deduplicateRoutes as uniqueRoutes } from "@/lib/ro
 import { roadFeaturesAlongRoute } from "@/lib/road-features";
 import { formatDeparture, parseLocalDeparture, romeDeparture, type DepartureTime } from "@/lib/access-conditions";
 import { MILAN_ZTL_AREAS } from "@/lib/ztl-access";
-import { fastestLegalCandidate, isLegalCandidate, selectOptimizedRoute } from "@/lib/route-optimization";
+import {
+  fastestLegalCandidate,
+  isLegalCandidate,
+  selectOptimizedRoute,
+  addsConfirmedPave,
+  uTurnCount,
+  U_TURN_PENALTY_SECONDS,
+  type OptimizationPolicy,
+} from "@/lib/route-optimization";
 
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
@@ -48,6 +58,12 @@ type ScoredRoute = {
 // Provisional until field data exists: below this gain a planner request keeps looking.
 const SUFFICIENT_PAVE_REDUCTION_METERS = 100;
 const SUFFICIENT_PAVE_REDUCTION_RATIO = 0.25;
+// Phase 4.37: hard ceiling on provider requests for one calculation. The per-isolate pacing (1.05 s), the
+// deadline and the timeouts already bound a burst and nothing retries; the ceiling makes the bound explicit.
+// Planner: base (1, or 2 when the OSRM fallback answered) + penalised search + refinement + three detours.
+// Navigation: base + penalised search + one detour.
+const MAX_PLANNER_PROVIDER_REQUESTS = 7;
+const MAX_NAVIGATION_PROVIDER_REQUESTS = 4;
 
 // Below this the two points are the same place, and there is nothing to navigate.
 const MINIMUM_ROUTE_METERS = 15;
@@ -75,6 +91,8 @@ type ModePolicy = {
   detourDistanceFactor: number;
   balancedPaveDivisor: number;
   minimumPaveReduction: number;
+  /** Phase 4.37: seconds a U-turn costs when comparing routes (Milan only). */
+  uTurnPenaltySeconds?: number;
   limits: Record<Avoidance, { factor: number; seconds: number }>;
 };
 
@@ -326,8 +344,9 @@ function selectSafeRoute(
   avoidance: Avoidance,
   mode: TransportMode,
   maximumExtraMinutes: number | null,
+  policy: OptimizationPolicy = MODE_POLICY[mode],
 ) {
-  return selectOptimizedRoute(scored, fast, mode, avoidance, maximumExtraMinutes, MODE_POLICY[mode],
+  return selectOptimizedRoute(scored, fast, mode, avoidance, maximumExtraMinutes, policy,
     (a, b) => routesAreEquivalent(a, b, mode)).safe;
 }
 
@@ -513,7 +532,10 @@ export async function GET(request: NextRequest) {
     );
   }
   const mode = requestedMode;
-  const policy = MODE_POLICY[mode];
+  // Phase 4.37: Milan compares U-turn routes with a time penalty; other areas are unchanged.
+  const policy: ModePolicy = area.id === "milan"
+    ? { ...MODE_POLICY[mode], uTurnPenaltySeconds: U_TURN_PENALTY_SECONDS }
+    : MODE_POLICY[mode];
   // ZTL areas and time windows are Milan data; Rome and Roccella keep their established checks.
   const departure: DepartureTime | undefined = area.id === "milan" ? parsedDeparture ?? romeDeparture(new Date()) : undefined;
   if (segmentLength(start, end) < MINIMUM_ROUTE_METERS) {
@@ -528,6 +550,9 @@ export async function GET(request: NextRequest) {
     const rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal);
     const baseRoutingReadyAt = performance.now();
     if (!rawBaseRoutes.length) throw new Error("Nessun percorso");
+    let providerRequestsUsed = rawBaseRoutes[0]?.provider === "osrm-public-fallback" ? 2 : 1;
+    const providerRequestBudgetLeft = () => providerRequestsUsed
+      < (navigationRequest ? MAX_NAVIGATION_PROVIDER_REQUESTS : MAX_PLANNER_PROVIDER_REQUESTS);
 
     // Prune provider alternate routes that exceed Lastrico policy or budget limits.
     // Such orbital detours (e.g. 26km highway loops for a 4km city trip) are never eligible under
@@ -634,6 +659,7 @@ export async function GET(request: NextRequest) {
       avoidance,
       mode,
       maximumExtraMinutes,
+      policy,
     );
     // A small gain must not end the search for a much better route, except in navigation,
     // where a reroute has to stay fast.
@@ -650,7 +676,10 @@ export async function GET(request: NextRequest) {
     // Filippetti (same stones avoided, about the same time) was never generated.
     const improvesCheaply = (candidate: ScoredRoute, fastest: ScoredRoute) => improvesEnough(candidate, fastest)
       && candidate.route.duration - fastest.route.duration <= Math.max(90, fastest.route.duration * 0.08);
-    const baseAlreadyImproves = improvesCheaply(preliminarySafe, preliminaryFast);
+    // Phase 4.37 (Milan planner): a cheap improvement ends the search only when it leaves almost no
+    // stone; otherwise the penalised search still runs (Phase 4.36, routing-forensics R3).
+    const baseAlreadyImproves = improvesCheaply(preliminarySafe, preliminaryFast)
+      && !(stopsOnlyWhenClean(area.id, navigationRequest) && preliminarySafe.riskMeters >= policy.minimumPaveReduction);
     const detourResponses: EngineRoute[][] = [];
     const surfaceAwareRoutes: EngineRoute[] = [];
     let pendingRefinement: { shape: string; factor: number }[] | null = null;
@@ -661,6 +690,12 @@ export async function GET(request: NextRequest) {
     let surfaceAwareFailed = false;
     // The stones were only in stretches too short to target (under 25 m): nothing to search for.
     let surfaceAwareNothingToTarget = false;
+    // Phase 4.37 (Milan): a penalised-search route that adds confirmed stone to the provider's fastest route is
+    // not an anti-pavé result, and must not become the fastest card (De Angeli → San Babila by motorcycle: +426 m of
+    // confirmed stone for 27 s). It is dropped from the pool with the same rule the selection applies.
+    let surfaceAwareDiscarded = 0;
+    const keepsPenalisedRoute = (candidate: ScoredRoute) => area.id !== "milan" || !addsConfirmedPave(candidate, preliminaryFast);
+    const sliceMinimumMeters = penalisedSliceMinimumMeters(area.id, policy.minimumPaveReduction);
 
     const canGenerate = !baseAlreadyImproves && maximumExtraMinutes !== 0
       && preliminaryFast.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction;
@@ -670,7 +705,7 @@ export async function GET(request: NextRequest) {
     // the provider's alternates and at most one detour waypoint.
     if (canGenerate
       && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
-      && deadline - Date.now() >= 4_000 && preliminaryFast.surfaceScore.paveMeters > 0) {
+      && deadline - Date.now() >= 4_000 && preliminaryFast.surfaceScore.paveMeters > 0 && providerRequestBudgetLeft()) {
       const fastRough = preliminaryFast.surfaceScore.roughSegmentIndices;
       const isSegmentRough = (prev: Coordinate, curr: Coordinate, idx: number) => {
         if (fastRough && fastRough.size > 0) {
@@ -685,7 +720,8 @@ export async function GET(request: NextRequest) {
         }
         return scoreRoadIntelligence([prev, end], scoped.surfaceIndex, policy.surfaceMatchMeters, mode, true).paveMeters > 0;
       };
-      const roughSlices = extractRoughSlices(fastestBase.coordinates, isSegmentRough, 25);
+      // Phase 4.37: Milan targets slices down to 15 m (24.99 m of Piazzale Lodi stone was under the old 25 m).
+      const roughSlices = extractRoughSlices(fastestBase.coordinates, isSegmentRough, sliceMinimumMeters);
       const { factors, totalPenalizedMeters } = buildLinearCostFactors(roughSlices, 15.0, 4);
       if (factors.length === 0) surfaceAwareNothingToTarget = true;
       if (factors.length > 0) {
@@ -693,8 +729,9 @@ export async function GET(request: NextRequest) {
           roughSlicesCount: factors.length,
           penalizedMeters: totalPenalizedMeters,
         };
-        // The established penalised search, unchanged: its candidate always stays in the pool.
+        // The established penalised search; in Milan its candidate stays in the pool unless it adds confirmed stone.
         surfaceAwareAttempted = true;
+        providerRequestsUsed += 1;
         const first = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
@@ -705,7 +742,6 @@ export async function GET(request: NextRequest) {
         if (!first) surfaceAwareFailed = true;
         if (first) {
           await ensureRouteCovered(first.coordinates);
-          surfaceAwareRoutes.push(first);
           // Phase 4.25: penalising only the fastest route's stones often moved the provider onto a
           // parallel stone street (Milan benchmark: the median penalised candidate kept all its
           // confirmed pavé). When it still keeps half the stone, a refinement also penalises the
@@ -713,6 +749,8 @@ export async function GET(request: NextRequest) {
           // established detours, and only if they too leave half the stone: it only adds a
           // candidate. Every shape is provider geometry, so Valhalla can walk it.
           const firstScored = scoredCandidate(first, "surface-aware-valhalla");
+          if (keepsPenalisedRoute(firstScored)) surfaceAwareRoutes.push(first);
+          else surfaceAwareDiscarded += 1;
           if (!isLegalCandidate(firstScored, mode) || firstScored.surfaceScore.weightedPaveMeters >= Math.max(
             policy.minimumPaveReduction, preliminaryFast.surfaceScore.weightedPaveMeters * 0.5)) {
             const penalised = roughSlices.filter((slice) => factors.some((factor) => factor.shape === encodePolyline6(slice)));
@@ -721,7 +759,7 @@ export async function GET(request: NextRequest) {
               .flatMap((candidate) => {
                 const indices = candidate.surfaceScore.roughSegmentIndices;
                 return indices && indices.size > 0
-                  ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), 25) : [];
+                  ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), sliceMinimumMeters) : [];
               })]
               .sort((a, b) => polylineLength(b) - polylineLength(a));
             for (const slice of seen) {
@@ -740,9 +778,13 @@ export async function GET(request: NextRequest) {
 
     const directScored = [...baseScored, ...surfaceAwareSourcesOf().map(({ route, source }) => scoredCandidate(route, source))];
     const directFast = fastestLegalCandidate(directScored, mode)!;
-    const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes);
+    const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes, policy);
+    // Phase 4.37 (Milan planner): a penalised route that leaves almost no stone makes the geometric
+    // via-point requests pointless (3 of 5 provider requests in the Phase 4.36 return replica).
+    const penalisedRouteIsClean = stopsOnlyWhenClean(area.id, navigationRequest)
+      && directSafe !== directFast && directSafe.riskMeters < policy.minimumPaveReduction;
     // Retain waypoint fallback if direct search fails to produce a sufficient distinct alternative.
-    if (canGenerate && !(directSafe !== directFast && improvesEnough(directSafe, directFast))) {
+    if (canGenerate && !penalisedRouteIsClean && !(directSafe !== directFast && improvesEnough(directSafe, directFast))) {
       const anchor = findDetourAnchor(
         fastestBase,
         preliminaryFast.surfaceScore.roughSegmentIndices,
@@ -761,7 +803,8 @@ export async function GET(request: NextRequest) {
       ].filter((point): point is Coordinate => Boolean(point && coordinateInArea(point, area)));
       for (const point of detourPoints.slice(0, navigationRequest ? 1 : 3)) {
         if (deadline - Date.now() < (navigationRequest ? 2_200 : 1_500)) break;
-        if (request.signal.aborted) break;
+        if (request.signal.aborted || !providerRequestBudgetLeft()) break;
+        providerRequestsUsed += 1;
         const routes = await fetchEngineRoutes(
           [start, point, end],
           mode,
@@ -785,18 +828,21 @@ export async function GET(request: NextRequest) {
           avoidance,
           mode,
           maximumExtraMinutes,
+          policy,
         );
         if (improvesEnough(provisionalSafe, provisionalFast)) break;
       }
     }
     // The refinement stays planner-only: a reroute has to answer within its latency budget.
-    if (pendingRefinement && (!navigationRequest || surfaceAwarePoc) && deadline - Date.now() >= 4_000 && !request.signal.aborted) {
+    if (pendingRefinement && (!navigationRequest || surfaceAwarePoc) && deadline - Date.now() >= 4_000 && !request.signal.aborted
+      && providerRequestBudgetLeft()) {
       const pool = [...baseRoutes, ...surfaceAwareRoutes, ...detourResponses.flat()]
         .map((route, index) => scoredCandidate(route, `refinement-check-${index + 1}`));
       const poolFast = fastestLegalCandidate(pool, mode)!;
-      const poolSafe = selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes);
+      const poolSafe = selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes, policy);
       if (poolSafe.surfaceScore.weightedPaveMeters >= Math.max(
         policy.minimumPaveReduction, poolFast.surfaceScore.weightedPaveMeters * 0.5)) {
+        providerRequestsUsed += 1;
         const refinedRoute = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
@@ -806,7 +852,8 @@ export async function GET(request: NextRequest) {
         );
         if (refinedRoute) {
           await ensureRouteCovered(refinedRoute.coordinates);
-          surfaceAwareRoutes.push(refinedRoute);
+          if (keepsPenalisedRoute(scoredCandidate(refinedRoute, "surface-aware-valhalla-refined"))) surfaceAwareRoutes.push(refinedRoute);
+          else surfaceAwareDiscarded += 1;
         }
       }
     }
@@ -938,7 +985,17 @@ export async function GET(request: NextRequest) {
           confirmedPaveMeters: standard.surfaceScore.confirmedMeters,
         } : null,
         avoidedVsStandardMeters: standard && standardLegal ? Math.max(0, standard.surfaceScore.paveMeters - safe.surfaceScore.paveMeters) : null,
-        search: { attempted: surfaceAwareAttempted, failed: surfaceAwareFailed, generated: surfaceAwareRoutes.length },
+        search: {
+          attempted: surfaceAwareAttempted,
+          failed: surfaceAwareFailed,
+          generated: surfaceAwareRoutes.length,
+          // Phase 4.37: how many stone slices were targeted, and whether none was long enough to target.
+          slices: surfaceAwareDirectMetrics?.roughSlicesCount ?? 0,
+          nothingToTarget: surfaceAwareNothingToTarget,
+          // Phase 4.37: penalised routes dropped for adding confirmed stone, and provider requests used.
+          discarded: surfaceAwareDiscarded,
+          providerRequests: providerRequestsUsed,
+        },
       },
       optimization: {
         strategy: "pareto-conservative-unknown",
@@ -983,6 +1040,8 @@ export async function GET(request: NextRequest) {
           ? Math.round(((candidate.route.duration / fast.route.duration) - 1) * 1_000) / 10
           : 0,
         distinctFromFast: !routesAreEquivalent(candidate.route, fast.route, mode),
+        // Phase 4.37: U-turn maneuvers in the candidate (a penalty in the selection, never a rejection).
+        uTurnCount: uTurnCount(candidate.route),
       })),
       ...(surfaceAwarePoc ? {
         surfaceAwarePoc: {

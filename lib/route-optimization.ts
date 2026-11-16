@@ -37,9 +37,37 @@ export const CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS = 10;
  */
 export const CONFIRMED_PAVE_SWAP_SHARE = 0.1;
 export const CONFIRMED_PAVE_SWAP_MAX_METERS = 50;
+/**
+ * Phase 4.37: seconds a U-turn maneuver costs when comparing routes. Milan only (the policy field
+ * is absent elsewhere). A penalty, never a rejection: Phase 4.36 measured that rejecting every
+ * U-turn candidate loses 12% of the avoided stone, while 60 s changes only 3 of 298 picks.
+ */
+export const U_TURN_PENALTY_SECONDS = 60;
+
+export function uTurnCount(route: EngineRoute): number {
+  return (route.instructions ?? []).filter((instruction) => instruction.direction === "uturn").length;
+}
+
+/**
+ * Phase 4.37: whether `candidate` adds confirmed stone to `reference` beyond the tolerance the selection uses
+ * (a small increase is accepted when it removes far more probable stone). Shared by the selection and by the
+ * guard on penalised-search candidates, so the two cannot drift apart.
+ */
+export function addsConfirmedPave(candidate: OptimizationCandidate, reference: OptimizationCandidate): boolean {
+  const confirmed = candidate.surfaceScore.confirmedMeters;
+  const referenceConfirmed = reference.surfaceScore.confirmedMeters;
+  if (confirmed === undefined || referenceConfirmed === undefined) return false;
+  const probableRemoved = Math.max(0, (reference.surfaceScore.probableMeters ?? 0) - (candidate.surfaceScore.probableMeters ?? 0));
+  const tolerance = Math.max(CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS,
+    Math.min(CONFIRMED_PAVE_SWAP_MAX_METERS, probableRemoved * CONFIRMED_PAVE_SWAP_SHARE));
+  return confirmed > referenceConfirmed + tolerance;
+}
+
 export type OptimizationPolicy = {
   minimumPaveReduction: number;
   balancedPaveDivisor: number;
+  /** Seconds added to a route's time per U-turn maneuver when comparing; 0 or absent: none. */
+  uTurnPenaltySeconds?: number;
   limits: Record<"balanced" | "strong" | "maximum", { factor: number; seconds: number }>;
 };
 
@@ -117,13 +145,10 @@ export function selectOptimizedRoute<T extends OptimizationCandidate>(
     return candidate.riskMeters + highRiskUnknown + discountedUnknown * 0.35 + excessUnknown * 1.0;
   };
   const secondsWeight = avoidance === "maximum" ? 0 : policy.balancedPaveDivisor / (avoidance === "balanced" ? 60 : 600);
-  const utility = (candidate: T) => burden(candidate) + (candidate.route.duration - fast.route.duration) * secondsWeight;
-  const confirmed = (candidate: T) => candidate.surfaceScore.confirmedMeters;
-  const probableRemoved = (candidate: T) => Math.max(0, (fast.surfaceScore.probableMeters ?? 0) - (candidate.surfaceScore.probableMeters ?? 0));
-  const confirmedTolerance = (candidate: T) => Math.max(CONFIRMED_PAVE_INCREASE_TOLERANCE_METERS,
-    Math.min(CONFIRMED_PAVE_SWAP_MAX_METERS, probableRemoved(candidate) * CONFIRMED_PAVE_SWAP_SHARE));
-  const addsConfirmed = (candidate: T) => confirmed(candidate) !== undefined && confirmed(fast) !== undefined
-    && confirmed(candidate)! > confirmed(fast)! + confirmedTolerance(candidate);
+  const uTurnSeconds = (candidate: T) => (policy.uTurnPenaltySeconds ?? 0) * uTurnCount(candidate.route);
+  const utility = (candidate: T) => burden(candidate)
+    + ((candidate.route.duration + uTurnSeconds(candidate)) - (fast.route.duration + uTurnSeconds(fast))) * secondsWeight;
+  const addsConfirmed = (candidate: T) => addsConfirmedPave(candidate, fast);
   const reducing = frontier.filter((candidate) => !equivalent(candidate.route, fast.route)
     && !addsConfirmed(candidate)
     && rawPave(candidate) <= rawPave(fast)

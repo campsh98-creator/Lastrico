@@ -33,6 +33,39 @@ test("a reroute without an alternative does not turn the next reroutes into fast
   assert.equal(rerouteDisplayKind("fast", true), "fast");
 });
 
+// Phase 4.37: a route with no known pavé must not be described as "no alternative with less pavé".
+test("status no-pave says the route has no known pavé, never that no alternative exists", () => {
+  const text = rerouteOutcomeNotice("safe", false, "no-pave");
+  assert.match(text, /nei dati disponibili/, "the claim is about the available data: unknown surface is not smooth surface");
+  assert.match(text, /nessun tratto significativo di pavé rilevato/);
+  assert.doesNotMatch(text, /nessuna alternativa/);
+  assert.doesNotMatch(text, /nessuna alternativa con meno pavé/);
+  assert.equal(text, "Nuovo percorso · nessun tratto significativo di pavé rilevato nei dati disponibili.");
+  // The objective and a real alternative still come first, exactly as before.
+  assert.equal(rerouteOutcomeNotice("fast", false, "no-pave"), "Nuovo percorso più rapido");
+  assert.equal(rerouteOutcomeNotice("safe", true, "no-pave"), "Nuovo percorso · anti-pavé mantenuto");
+});
+
+test("every other reroute notice keeps its exact text", () => {
+  const generic = "Nuovo percorso · da qui nessuna alternativa con meno pavé";
+  assert.equal(rerouteOutcomeNotice("fast", true), "Nuovo percorso più rapido");
+  assert.equal(rerouteOutcomeNotice("fast", false, "no-better-route"), "Nuovo percorso più rapido");
+  assert.equal(rerouteOutcomeNotice("safe", true), "Nuovo percorso · anti-pavé mantenuto");
+  assert.equal(rerouteOutcomeNotice("safe", true, "alternative"), "Nuovo percorso · anti-pavé mantenuto");
+  assert.equal(rerouteOutcomeNotice("safe", false, "fastest-avoids-pave"), "Nuovo percorso · anti-pavé mantenuto, ed è anche il più rapido");
+  for (const status of ["generation-failed", "generation-skipped"]) {
+    assert.equal(rerouteOutcomeNotice("safe", false, status), "Nuovo percorso più rapido · ricerca anti-pavé non riuscita, riprovo al prossimo ricalcolo");
+  }
+  for (const status of [undefined, "no-better-route", "over-extra-time", "access-restricted", "alternative"]) {
+    assert.equal(rerouteOutcomeNotice("safe", false, status), generic, String(status));
+  }
+});
+
+test("the page passes the server's anti-pavé status to the reroute notice", async () => {
+  const page = (await readFile(new URL("app/page.tsx", root), "utf8")).replace(/\r\n/g, "\n");
+  assert.match(page, /rerouteOutcomeNotice\(objective, data\.hasDistinctAlternative, data\.antiPave\?\.status\)/);
+});
+
 test("the page sends the journey objective, not the route shown, with every reroute", async () => {
   const page = await readFile(new URL("app/page.tsx", root), "utf8");
   assert.match(page, /preserveRoute: journeyObjectiveRef\.current/);

@@ -32,5 +32,8 @@ export function rerouteOutcomeNotice(objective: RouteKind, hasDistinctAlternativ
   if (antiPaveStatus === "generation-failed" || antiPaveStatus === "generation-skipped") {
     return "Nuovo percorso più rapido · ricerca anti-pavé non riuscita, riprovo al prossimo ricalcolo";
   }
+  // Phase 4.37: the route itself has (almost) no pavé, so there is nothing to avoid. Said as "known"
+  // pavé: unknown surface is not smooth surface. Never "no alternative with less pavé" here.
+  if (antiPaveStatus === "no-pave") return "Nuovo percorso · nessun tratto significativo di pavé rilevato nei dati disponibili.";
   return "Nuovo percorso · da qui nessuna alternativa con meno pavé";
 }
