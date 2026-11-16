@@ -30,7 +30,9 @@ export async function launchChrome({
   bypassServiceWorker = true,
 } = {}) {
   // A browser left on this port by a crashed run would be reused silently, with its old state.
-  const portInUse = await fetch(`http://127.0.0.1:${port}/json/version`).then(() => true, () => false);
+  // Every wait below is bounded: a Chrome that accepts the connection but never answers used to stall the whole test
+  // run silently (the CI job was only stopped by its 25-minute limit).
+  const portInUse = await fetch(`http://127.0.0.1:${port}/json/version`, { signal: AbortSignal.timeout(3000) }).then(() => true, () => false);
   if (portInUse) throw new Error(`Port ${port} already has a Chrome debugging session`);
   const profile = mkdtempSync(join(tmpdir(), "lastrico-chrome-"));
   const chrome = spawn(CHROME_PATH, [
@@ -48,20 +50,33 @@ export async function launchChrome({
   let target;
   for (let attempt = 0; attempt < 60 && !target; attempt += 1) {
     try {
-      const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
+      const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`, { signal: AbortSignal.timeout(3000) })).json();
       target = targets.find((item) => item.type === "page");
     } catch {
       // Chrome is still starting.
     }
     if (!target) await sleep(250);
   }
-  if (!target) throw new Error("Chrome did not expose a page target");
+  const abandonChrome = () => {
+    try { process.kill(-chrome.pid, "SIGKILL"); } catch { /* Already exited. */ }
+    try { rmSync(profile, { recursive: true, force: true }); } catch { /* Chrome may still hold files. */ }
+  };
+  if (!target) {
+    abandonChrome();
+    throw new Error("Chrome did not expose a page target");
+  }
 
   const socket = new WebSocket(target.webSocketDebuggerUrl);
-  await new Promise((resolve, reject) => {
-    socket.onopen = resolve;
-    socket.onerror = () => reject(new Error("CDP socket failed"));
-  });
+  try {
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error("CDP socket did not open within 10 s")), 10_000);
+      socket.onopen = () => { clearTimeout(timer); resolve(); };
+      socket.onerror = () => { clearTimeout(timer); reject(new Error("CDP socket failed")); };
+    });
+  } catch (error) {
+    abandonChrome();
+    throw error;
+  }
 
   let nextId = 1;
   const pending = new Map();
@@ -80,7 +95,11 @@ export async function launchChrome({
   const cdp = (method, params = {}) => new Promise((resolve, reject) => {
     const id = nextId;
     nextId += 1;
-    pending.set(id, { resolve, reject });
+    const timer = setTimeout(() => {
+      pending.delete(id);
+      reject(new Error(`Chrome did not answer ${method} within 30 s`));
+    }, 30_000);
+    pending.set(id, { resolve: (value) => { clearTimeout(timer); resolve(value); }, reject: (error) => { clearTimeout(timer); reject(error); } });
     socket.send(JSON.stringify({ id, method, params }));
   });
 

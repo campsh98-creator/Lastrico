@@ -13,11 +13,15 @@ const projectRoot = new URL("../", import.meta.url).pathname;
 // through the DevTools protocol, as in the browser acceptance suite.
 async function openAt(width, height) {
   const first = 9600 + Math.floor(Math.random() * 100);
+  let launchFailures = 0;
   for (let attempt = 0; attempt < 20; attempt += 1) {
     try {
       return await launchChrome({ port: 9600 + ((first - 9600 + attempt) % 100), width, height, mobile: width < 1000 });
     } catch (error) {
-      if (!/already has a Chrome debugging session/.test(error.message)) throw error;
+      if (/already has a Chrome debugging session/.test(error.message)) continue;
+      // A Chrome that never came up (every wait in launchChrome is bounded) is tried once more on a fresh port and profile.
+      launchFailures += 1;
+      if (launchFailures > 1) throw error;
     }
   }
   throw new Error("No free Chrome debugging port between 9600 and 9699");
