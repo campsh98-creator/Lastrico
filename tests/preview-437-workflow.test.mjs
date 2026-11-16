@@ -48,7 +48,7 @@ test("every binding, route or resource beyond the preview's own RouteEngine is r
 test("workflow: manual only, commit fixed, no commit input", () => {
   assert.match(workflow, /^on:\n {2}workflow_dispatch:/m);
   assert.doesNotMatch(workflow, /\n {2}(push|pull_request|pull_request_target|schedule|workflow_run):/);
-  assert.match(workflow, /APPROVED_SHA: 1a5d8e95066cb106283e169cc0b862a108e6f1be/);
+  assert.match(workflow, /APPROVED_SHA: ba65a5fe81c1e8088a0c29ed0e08f3743cb5be19/);
   assert.doesNotMatch(workflow, /inputs\.commit/);
   assert.match(workflow, /rev-parse HEAD\)" = "\$APPROVED_SHA"/);
   assert.match(workflow, /^permissions: \{\}/m);
