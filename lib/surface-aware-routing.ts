@@ -159,3 +159,15 @@ export function penalisedSliceMinimumMeters(areaId: string, minimumPaveReduction
 export function stopsOnlyWhenClean(areaId: string, navigationRequest: boolean): boolean {
   return areaId === "milan" && !navigationRequest;
 }
+
+/**
+ * Candidate-pool completeness for "maximum" avoidance (Phase 4.36 outbound replica): after the first
+ * penalised search the refinement ran only while the pool kept half of the fastest route's stone, so a
+ * pool that had gone from 280 m to 50 m never asked for the 0 m route that exists (+92 s). At "strong"
+ * that route would still lose the selection (it is chosen from 1.84 s per stone metre), so only
+ * "maximum" asks for it. Milan planner only; reroutes keep their latency budget. One extra provider
+ * request at most, inside the existing cap. Making this function return false restores 4.37.
+ */
+export function refinesWhileStoneLeft(areaId: string, navigationRequest: boolean, avoidance: string): boolean {
+  return areaId === "milan" && !navigationRequest && avoidance === "maximum";
+}
