@@ -126,9 +126,8 @@ export class ProviderStub {
   }
   install(label = "") {
     this.currentLabel = label;
-    const self = this;
     const make = () => async (url, init = {}) => {
-      try { return await self.handle(url, init); } finally { globalThis.fetch = make(); }
+      try { return await this.handle(url, init); } finally { globalThis.fetch = make(); }
     };
     globalThis.fetch = make();
   }
