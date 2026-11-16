@@ -24,6 +24,7 @@ import {
   encodePolyline6,
   penalisedSliceMinimumMeters,
   pointDistanceMeters,
+  refinesWhileStoneLeft,
   stopsOnlyWhenClean,
 } from "@/lib/surface-aware-routing";
 import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding } from "@/lib/routing-providers";
@@ -696,6 +697,11 @@ export async function GET(request: NextRequest) {
     let surfaceAwareDiscarded = 0;
     const keepsPenalisedRoute = (candidate: ScoredRoute) => area.id !== "milan" || !addsConfirmedPave(candidate, preliminaryFast);
     const sliceMinimumMeters = penalisedSliceMinimumMeters(area.id, policy.minimumPaveReduction);
+    // "Maximum" avoidance in the Milan planner keeps refining while any stone is left (not only while half is).
+    const refineWhileStoneLeft = refinesWhileStoneLeft(area.id, navigationRequest, avoidance);
+    const refinementStoneThreshold = (fastWeightedPave: number) => refineWhileStoneLeft
+      ? policy.minimumPaveReduction
+      : Math.max(policy.minimumPaveReduction, fastWeightedPave * 0.5);
 
     const canGenerate = !baseAlreadyImproves && maximumExtraMinutes !== 0
       && preliminaryFast.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction;
@@ -751,8 +757,8 @@ export async function GET(request: NextRequest) {
           const firstScored = scoredCandidate(first, "surface-aware-valhalla");
           if (keepsPenalisedRoute(firstScored)) surfaceAwareRoutes.push(first);
           else surfaceAwareDiscarded += 1;
-          if (!isLegalCandidate(firstScored, mode) || firstScored.surfaceScore.weightedPaveMeters >= Math.max(
-            policy.minimumPaveReduction, preliminaryFast.surfaceScore.weightedPaveMeters * 0.5)) {
+          if (!isLegalCandidate(firstScored, mode) || firstScored.surfaceScore.weightedPaveMeters
+            >= refinementStoneThreshold(preliminaryFast.surfaceScore.weightedPaveMeters)) {
             const penalised = roughSlices.filter((slice) => factors.some((factor) => factor.shape === encodePolyline6(slice)));
             const seen = [...roughSlices, ...[...baseScored.filter((candidate) => candidate !== preliminaryFast), firstScored]
               .filter((candidate) => isLegalCandidate(candidate, mode))
@@ -840,8 +846,7 @@ export async function GET(request: NextRequest) {
         .map((route, index) => scoredCandidate(route, `refinement-check-${index + 1}`));
       const poolFast = fastestLegalCandidate(pool, mode)!;
       const poolSafe = selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes, policy);
-      if (poolSafe.surfaceScore.weightedPaveMeters >= Math.max(
-        policy.minimumPaveReduction, poolFast.surfaceScore.weightedPaveMeters * 0.5)) {
+      if (poolSafe.surfaceScore.weightedPaveMeters >= refinementStoneThreshold(poolFast.surfaceScore.weightedPaveMeters)) {
         providerRequestsUsed += 1;
         const refinedRoute = await fetchValhallaCustomizedRoute(
           [start, end],
