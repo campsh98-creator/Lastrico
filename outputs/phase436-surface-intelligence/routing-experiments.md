@@ -310,7 +310,7 @@ CORRIDOR: A changes 4 (2 better âˆ’215 m, 1 worse +79 m); HOLDOUT: 5 (4 better â
 ## 12. Reproduction (repo root, Node 26, no installs; `data/archive/` extracted per Agent 1; `data/exp-live-cache/` holds the 21 live responses and is git-ignored because maneuvers name the origin street)
 
 ```
-S=experiments/phase436-surface-intelligence/scripts; TRACE="C:/Users/domenico.campanella/Downloads/lastrico-gps-trace-2026-11-13-18-26.json"
+S=experiments/phase436-surface-intelligence/scripts; TRACE="<local path>/lastrico-gps-trace-2026-11-13-18-26.json"
 node $S/exp-waytags.mjs; node $S/exp-archive-index.mjs
 node $S/exp-run-baseline.mjs; node $S/exp-run-field.mjs; node $S/exp-split.mjs          # cell 1 + corpus + fixed split
 node $S/exp-validate-features.mjs; node $S/exp-run-scoring.mjs                          # cells 2-4, sensitivity, stability, Pareto

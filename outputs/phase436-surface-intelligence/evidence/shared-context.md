@@ -2,7 +2,7 @@
 
 Phase 4.36 is **investigation and feasibility**, not implementation. The product is Lastrico, a Milan-first
 surface-aware navigation system (cars, motorcycles, bicycles). Baseline: `main` at `3e31da9` (Phase 4.35).
-Repository root: `C:\Users\domenico.campanella\Documents\Lastrico`. Read `AGENTS.md` and
+Repository root: `<repository root>`. Read `AGENTS.md` and
 `experiments/README.md` (research rules) once.
 
 ## Hard rules (violating any of them fails the phase)
@@ -32,7 +32,7 @@ Repository root: `C:\Users\domenico.campanella\Documents\Lastrico`. Read `AGENTS
 ## Privacy — the GPS trace
 
 The supplied trace (return journey, 2026-11-13) is at
-`C:\Users\domenico.campanella\Downloads\lastrico-gps-trace-2026-11-13-18-26.json` (317,624 bytes,
+`<local path>\lastrico-gps-trace-2026-11-13-18-26.json` (317,624 bytes,
 SHA-256 `2aa69324cfdb2247323917c8aebe5f99891ae98418a4776f71f57bff07e4bffa`). It is real location history.
 - Read it only locally. Never copy it into the repository, never paste raw coordinate lists, never include
   the origin or destination street/address in any report (call them "origin" and "destination", redacted).

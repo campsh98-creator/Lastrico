@@ -211,7 +211,7 @@ were sent. `/status`: version 3.9.1-8064c73, **tileset_last_modified 1794628228 
 `experiments/phase436-surface-intelligence/data/live-cache/` (git-ignored; maneuvers inside name the origin street, so do not publish that folder).
 
 ```
-TRACE="C:/Users/domenico.campanella/Downloads/lastrico-gps-trace-2026-11-13-18-26.json"   # local only
+TRACE="<local path>/lastrico-gps-trace-2026-11-13-18-26.json"   # local only
 S=experiments/phase436-surface-intelligence/scripts; E=outputs/phase436-surface-intelligence/evidence/routing-forensics
 node $S/routing-forensics-reroute.mjs "$TRACE" --out=$E/reroute-replay.json                       # Section 7
 node $S/routing-forensics-slice-check.mjs "$TRACE" --out=$E/slice-check.json                      # 24.99 m vs 25 m

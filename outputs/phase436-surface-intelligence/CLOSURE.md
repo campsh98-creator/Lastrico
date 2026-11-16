@@ -3,7 +3,7 @@
 - **Data di chiusura:** 15 novembre 2026.
 - **Stato:** **COMPLETATA — ricerca e fattibilità.** Nessuna nuova indagine è stata condotta per questa chiusura.
 - **Ramo e base:** `docs/phase436-closure`, creato da `b5ba991` (Fase 4.39b) in un worktree separato. Questo commit è solo documentale/archivistico: nessun file di `lib/`, `app/`, `components/`, `worker/`, `data/`, `tests/` o `package.json` è toccato.
-- **Originali:** i file in `outputs/phase436-surface-intelligence/` e `experiments/phase436-surface-intelligence/` della copia di lavoro principale **non sono stati modificati né eliminati**. Questo archivio contiene copie **identiche byte per byte** (218 file, verificate con SHA-256 prima del commit). Il `README.md` qui accanto è l'originale e dice ancora "nothing is committed": era vero alla fine della Fase 4.36; questo file (`CLOSURE.md`) è l'unica aggiunta, insieme a `MANIFEST.sha256`.
+- **Originali:** i file in `outputs/phase436-surface-intelligence/` e `experiments/phase436-surface-intelligence/` della copia di lavoro principale **non sono stati modificati né eliminati**. Questo archivio contiene copie di 218 file, **identiche byte per byte tranne tre documenti** (`evidence/shared-context.md`, `routing-experiments.md`, `routing-forensics.md`) in cui i percorsi personali del computer locale sono stati sostituiti da segnaposto (`<repository root>`, `<local path>`) prima della pubblicazione; per questi tre file `MANIFEST.sha256` riporta l'hash della versione ripulita. Verifica SHA-256 fatta prima del commit. Il `README.md` qui accanto è l'originale e dice ancora "nothing is committed": era vero alla fine della Fase 4.36; questo file (`CLOSURE.md`) è l'unica aggiunta, insieme a `MANIFEST.sha256`.
 
 ## 1. Che cosa è stato verificato
 
@@ -65,9 +65,9 @@ La Fase 4.36 ha consegnato diagnosi e raccomandazioni; non ha implementato nulla
 | P0-2 stop anticipato più prudente | 4.37, PR #16 | Implementata (stessa PR). |
 | P0-3 messaggio `no-pave` e traccia v3 | 4.37, PR #16 | Implementata (stessa PR). |
 | P0-4 penalità di 60 s per svolta a U (mai rifiuto) | 4.37, PR #16 | Implementata (stessa PR). |
-| P1-1 ri-estrazione OSM con provenienza; correzione `junction=circular` | 4.38 | Implementata, commit locale (`6fd4908`). |
-| P1-2 join DBT → binari e SIL in ombra, offline | 4.39 e 4.39b | Implementate, commit locali (`bca48c1`, `b5ba991`). Copertura DBT cittadina. |
-| P1-2 `diagnostics.sil` nel runtime, payload identici | **4.40** | Implementata in locale (ramo `feat/phase440-sil-runtime-shadow`, commit `ac17c0d` e `f66bd41`); test di accettazione superati il 15 novembre 2026 (264/264 casi identici). Validazione controllata in ombra, misure su Cloudflare e chiarimento delle licenze in attesa. |
+| P1-1 ri-estrazione OSM con provenienza; correzione `junction=circular` | 4.38 | Implementata in locale, non unita. |
+| P1-2 join DBT → binari e SIL in ombra, offline | 4.39 e 4.39b | Implementate in locale, non unite. Copertura DBT cittadina. |
+| P1-2 `diagnostics.sil` nel runtime, payload identici | **4.40** | Implementata in locale e validata tecnicamente il 15 novembre 2026 (264/264 casi identici); non unita, non pubblicata, non pronta per la produzione. Validazione controllata in ombra, misure su Cloudflare e chiarimento delle licenze in attesa. |
 | Decisione del proprietario sulla licenza mista | prima di qualsiasi distribuzione | **Aperta.** Nessun overlay combinato OSM/DBT/ATM va pubblicato. |
 | P2 verifiche sul campo (rotatoria 111768010 e 111767966, Corso Lodi, Via Fra Cristoforo) | squadra | **Non avviate.** Unica via per chiudere le domande dati-contro-realtà. |
 | P3 classifica in ombra con valore atteso; opzioni Pareto; prova sensori | dopo P0–P2 | **Non avviata.** Sensori: NO-GO per qualsiasi registratore nell'app; GO condizionato solo a una Fase 1 interna, in attesa della decisione del proprietario. |

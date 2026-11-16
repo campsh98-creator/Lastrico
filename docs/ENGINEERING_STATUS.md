@@ -8,16 +8,16 @@ the evidence in `outputs/`; the detailed phase reports there are in Italian.
 ## Phase tracker: routing forensics and Surface Intelligence (4.36 to 4.40)
 
 Updated on 15 November 2026. None of the phases below is on the pilot. Phases 4.38 to 4.40 exist only
-as local commits on separate branches: nothing is merged into `main`, pushed or deployed.
+as unpublished development work: nothing is merged into `main`, deployed or running on the pilot.
 
 | Phase | Status | What it is | Where |
 | --- | --- | --- | --- |
 | **4.36** | **COMPLETED: research and feasibility** | Forensic audit of the 13 November return trip, data and external-source audit, routing experiments, Surface Intelligence Layer (SIL) design, smartphone-sensing feasibility. No production code. Closed and archived on 15 November 2026. | `outputs/phase436-surface-intelligence/` (`CLOSURE.md`, `final-decision-report.md`); scripts in `experiments/phase436-surface-intelligence/scripts/` |
 | **4.37** | **IMPLEMENTED: PR #16, pilot validation pending** | Anti-pavé candidate generation fix (P0 of the 4.36 plan), U-turn cost, trace v3. PR #16 is open with CI green and is not merged; its files live on the PR branch only. | branch `fix/phase437-anti-pave-candidates`, `outputs/phase437-anti-pave-report.md` on that branch |
-| **4.38** | **IMPLEMENTED: OSM foundation, local commit** | Versioned OSM provenance, segment identities, circular-way direction fix. Commit `6fd4908`. | `outputs/phase438-osm-foundation-report.md` |
-| **4.39** | **IMPLEMENTED: offline SIL** | Evidence ledger, deterministic resolver, static rail overlay, coverage flags, offline shadow reader. Commit `bca48c1`. | `outputs/phase439-sil-shadow-report.md` |
-| **4.39b** | **IMPLEMENTED: citywide municipal DBT acquisition** | Comune di Milano DBT 2020 tram axes for the whole city, with explicit coverage. Commit `b5ba991`. Combined OSM/DBT/ATM data must not be distributed until the licences are settled. | `outputs/phase439b-dbt-citywide-report.md` |
-| **4.40** | **IMPLEMENTED: runtime shadow integration, local commit; controlled shadow validation pending** | Source-separated SIL layers (OSM, DBT, ATM, internal association) and a read-only shadow adapter that adds `diagnostics.sil` to Milan route responses. Off by default. Acceptance tests passed locally on 15 November 2026: 264 of 264 Milan cases identical in status, geometry, selection, surface, time, legality and provider requests; no external request. Not measured on Cloudflare, Linux CI not run, layers not distributable (licences open). Not for production. | branch `feat/phase440-sil-runtime-shadow` (commits `ac17c0d`, `f66bd41`), `outputs/phase440-sil-runtime-shadow-report.md` on that branch |
+| **4.38** | **IMPLEMENTED LOCALLY: OSM foundation, not merged** | Versioned OSM provenance, segment identities, circular-way direction fix. | Not published; report to follow with the implementation PR |
+| **4.39** | **IMPLEMENTED LOCALLY: offline SIL, not merged** | Evidence ledger, deterministic resolver, static rail overlay, coverage flags, offline shadow reader. | Not published; report to follow with the implementation PR |
+| **4.39b** | **IMPLEMENTED LOCALLY: citywide municipal DBT acquisition, not merged** | Comune di Milano DBT 2020 tram axes for the whole city, with explicit coverage. Combined OSM/DBT/ATM data must not be distributed until the licences are settled. | Not published; report to follow with the implementation PR |
+| **4.40** | **IMPLEMENTED LOCALLY AND TECHNICALLY VALIDATED: runtime shadow integration; not merged, not deployed, not production-ready** | Source-separated SIL layers (OSM, DBT, ATM, internal association) and a read-only shadow adapter that adds `diagnostics.sil` to Milan route responses. Off by default. Acceptance tests passed locally on 15 November 2026: 264 of 264 Milan cases identical in status, geometry, selection, surface, time, legality and provider requests; no external request. Not measured on Cloudflare, Linux CI not run, layers not distributable (licences open). Not for production. | Not published; report to follow with the implementation PR |
 
 **Handoff from 4.36.** Phase 4.36 recommended and did not implement: the candidate-generation fixes (now 4.37),
 OSM re-extraction with provenance (4.38), the rails layer and the SIL in shadow mode (4.39, 4.39b, 4.40), field
