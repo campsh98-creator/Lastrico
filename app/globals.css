@@ -1287,3 +1287,11 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .ztl-modes { display: flex; gap: var(--space-3); }
 .ztl-modes label { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); font-size: var(--t-sm); }
 .ztl-modes input { width: 20px; height: 20px; }
+
+/* Optional road-knowledge layers (Strati strada) */
+.road-layers { position: absolute; top: calc(var(--safe-top) + 160px); right: calc(var(--safe-right) + var(--space-3)); z-index: 3; max-width: min(300px, calc(100vw - 24px)); display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); }
+.road-layers-toggle { min-height: 40px; padding: 0 var(--space-3); border-radius: 999px; border: 1px solid rgba(0,0,0,.25); background: var(--surface); color: var(--ink); font: inherit; font-size: 0.85rem; box-shadow: 0 1px 6px rgba(0,0,0,.2); }
+.road-layers-panel { display: flex; flex-direction: column; gap: 6px; padding: var(--space-3); border-radius: 12px; background: var(--surface); color: var(--ink); box-shadow: 0 2px 10px rgba(0,0,0,.25); font-size: 0.85rem; }
+.road-layers-row { display: flex; align-items: center; gap: 8px; }
+.road-layers-row i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; }
+.road-layers-detail { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid rgba(0,0,0,.15); padding-top: 6px; }

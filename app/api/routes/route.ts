@@ -29,7 +29,7 @@ import {
   refinesWhileStoneLeft,
   stopsOnlyWhenClean,
 } from "@/lib/surface-aware-routing";
-import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding } from "@/lib/routing-providers";
+import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, type ProviderMeter } from "@/lib/routing-providers";
 import { buildRoughSections } from "@/lib/rough-sections";
 import { logRouteFailure } from "@/lib/server-log";
 
@@ -552,12 +552,16 @@ export async function GET(request: NextRequest) {
 
   try {
     const spatialRoadStore = await getSpatialRoadStore(area.id);
-    const rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal);
+    // Counts the provider requests really started (retry and fallback included) and refuses the
+    // one past the limit, so the cap holds even when a call is repeated inside the provider layer.
+    const meter: ProviderMeter = {
+      requests: 0,
+      limit: navigationRequest ? MAX_NAVIGATION_PROVIDER_REQUESTS : MAX_PLANNER_PROVIDER_REQUESTS,
+    };
+    const rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter);
     const baseRoutingReadyAt = performance.now();
     if (!rawBaseRoutes.length) throw new Error("Nessun percorso");
-    let providerRequestsUsed = rawBaseRoutes[0]?.provider === "osrm-public-fallback" ? 2 : 1;
-    const providerRequestBudgetLeft = () => providerRequestsUsed
-      < (navigationRequest ? MAX_NAVIGATION_PROVIDER_REQUESTS : MAX_PLANNER_PROVIDER_REQUESTS);
+    const providerRequestBudgetLeft = () => meter.requests < meter.limit;
 
     // Prune provider alternate routes that exceed Lastrico policy or budget limits.
     // Such orbital detours (e.g. 26km highway loops for a 4km city trip) are never eligible under
@@ -641,7 +645,7 @@ export async function GET(request: NextRequest) {
       const rings = blockedSlices.map((slice) => corridorRing(slice, 4, 6)).filter((ring): ring is Coordinate[] => ring !== null).slice(0, 8);
       if (rings.length > 0) {
         const avoiding = await fetchValhallaRouteExcluding([start, end], mode, rings,
-          Math.min(deadline - 1_000, Date.now() + 3_500), request.signal);
+          Math.min(deadline - 1_000, Date.now() + 3_500), request.signal, meter);
         if (avoiding) {
           await ensureRouteCovered(avoiding.coordinates);
           baseRoutes.push(avoiding);
@@ -741,13 +745,13 @@ export async function GET(request: NextRequest) {
         };
         // The established penalised search; in Milan its candidate stays in the pool unless it adds confirmed stone.
         surfaceAwareAttempted = true;
-        providerRequestsUsed += 1;
         const first = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
           factors,
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
+          meter,
         );
         if (!first) surfaceAwareFailed = true;
         if (first) {
@@ -797,8 +801,7 @@ export async function GET(request: NextRequest) {
           const stoneSlices = extractRoughSlices(fastestBase.coordinates, (_prev, _curr, idx) => Boolean(preliminaryFast.surfaceScore.roughSegmentIndices?.has(idx)), sliceMinimumMeters);
           const factors = [...buildLinearCostFactors(stoneSlices, 15.0, 4).factors, ...buildLinearCostFactors(railSlices, 8.0, 6).factors];
           railGeneration.attempted = true;
-          providerRequestsUsed += 1;
-          const railRoute = await fetchValhallaCustomizedRoute([start, end], mode, factors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal);
+            const railRoute = await fetchValhallaCustomizedRoute([start, end], mode, factors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter);
           if (!railRoute) railGeneration.reason = "provider-failed";
           else {
             await ensureRouteCovered(railRoute.coordinates);
@@ -841,13 +844,13 @@ export async function GET(request: NextRequest) {
       for (const point of detourPoints.slice(0, navigationRequest ? 1 : 3)) {
         if (deadline - Date.now() < (navigationRequest ? 2_200 : 1_500)) break;
         if (request.signal.aborted || !providerRequestBudgetLeft()) break;
-        providerRequestsUsed += 1;
         const routes = await fetchEngineRoutes(
           [start, point, end],
           mode,
           false,
           deadline,
           request.signal,
+          meter,
         );
         detourResponses.push(routes);
         await ensureRouteCovered(routes.flatMap((r) => r.coordinates));
@@ -878,13 +881,13 @@ export async function GET(request: NextRequest) {
       const poolFast = fastestLegalCandidate(pool, mode)!;
       const poolSafe = selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes, policy);
       if (poolSafe.surfaceScore.weightedPaveMeters >= refinementStoneThreshold(poolFast.surfaceScore.weightedPaveMeters)) {
-        providerRequestsUsed += 1;
         const refinedRoute = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
           pendingRefinement,
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
+          meter,
         );
         if (refinedRoute) {
           await ensureRouteCovered(refinedRoute.coordinates);
@@ -1057,7 +1060,7 @@ export async function GET(request: NextRequest) {
           nothingToTarget: surfaceAwareNothingToTarget,
           // Phase 4.37: penalised routes dropped for adding confirmed stone, and provider requests used.
           discarded: surfaceAwareDiscarded,
-          providerRequests: providerRequestsUsed,
+          providerRequests: meter.requests,
         },
       },
       optimization: {

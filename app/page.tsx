@@ -18,6 +18,7 @@ import {
 import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
 import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
+import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
 import "@/components/phase43/phase43.css";
 import {
   RouteComparisonPanel,
@@ -557,6 +558,10 @@ export default function Home() {
   const [transportMode, setTransportMode] = useState<TransportMode>("car");
   const [avoidance, setAvoidance] = useState<Avoidance>("strong");
   const [maxExtraMinutes, setMaxExtraMinutes] = useState<number | null>(null);
+  // Tram-track avoidance is its own preference, independent of the cobblestone level; it only applies where mapped rails exist.
+  const [avoidTram, setAvoidTram] = useState(false);
+  const avoidTramRef = useRef(false);
+  avoidTramRef.current = avoidTram;
   const [routePrompt, setRoutePrompt] = useState("");
   const [promptInterpretation, setPromptInterpretation] = useState<PromptRoutePreferenceResult | null>(null);
   const [fastRoute, setFastRoute] = useState<RouteResult>(emptyRoute);
@@ -596,6 +601,7 @@ export default function Home() {
   const [resumeOffer, setResumeOffer] = useState<JourneyMode | null>(null);
   const [startupNoticeVisible, setStartupNoticeVisible] = useState(false);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const railsAvailable = useRailsAvailable(preferencesOpen);
   // Phase 4.31: ZTL areas the person is authorised for, per mode; kept on this device only.
   const [ztlAuthorisations, setZtlAuthorisations] = useState<ZtlAuthorisations>({});
   const ztlAuthorisationsRef = useRef<ZtlAuthorisations>({});
@@ -1703,6 +1709,18 @@ export default function Home() {
     clearStoredPlan();
   }
 
+  function setManualTram(value: boolean) {
+    if (value === avoidTram) return;
+    const shouldRecalculate = isLiveResult && !isJourneyActive;
+    invalidateRouteIntent();
+    avoidTramRef.current = value;
+    setAvoidTram(value);
+    if (shouldRecalculate) {
+      setStatus("Preferenza aggiornata: ricalcolo le alternative…");
+      void calculateRoutes(undefined, { force: true });
+    }
+  }
+
   function setManualAvoidance(value: Avoidance) {
     if (value === avoidance && maxExtraMinutes === null) return;
     const nextPreferences: RoutePreferences = { avoidance: value, maxExtraMinutes: null };
@@ -2287,6 +2305,7 @@ export default function Home() {
       if (requestedPreferences.maxExtraMinutes !== null) {
         params.set("maxExtraMinutes", String(requestedPreferences.maxExtraMinutes));
       }
+      if (avoidTramRef.current && options.journeySession === undefined) params.set("tram", "avoid");
       // Phase 4.31: the person's ZTL authorisations for this mode, on every route and reroute.
       const authorisedZtl = authorisedZtlFor(ztlAuthorisationsRef.current, requestedMode);
       if (authorisedZtl.length) params.set("ztl", authorisedZtl.join(","));
@@ -3200,6 +3219,7 @@ export default function Home() {
     >
       <section className="map-stage" id="map-stage" aria-label="Mappa dei percorsi">
         <div ref={mapContainer} className="map" />
+        <RoadLayers map={mapReady ? mapRef.current : null} ready={mapReady} suspended={isJourneyActive || Boolean(picking)} />
         {mapLoadIssue && !isJourneyActive && (
           <p className="map-load-issue" role="status" data-testid="map-load-issue" data-map-overlay="top">
             La mappa non si carica: controlla la connessione. Percorsi e indicazioni funzionano lo stesso.
@@ -3410,6 +3430,28 @@ export default function Home() {
                         ))}
                       </div>
                       <small>Più forte può significare qualche minuto in più.</small>
+                    </div>
+
+                    <div className="preference-group" data-testid="tram-preference">
+                      <span className="preference-label">Binari del tram</span>
+                      <div className="segmented" role="group" aria-label="Evitare i binari del tram">
+                        <button type="button" className={!avoidTram ? "active" : ""} aria-pressed={!avoidTram} onClick={() => setManualTram(false)}>Indifferente</button>
+                        <button
+                          type="button"
+                          className={avoidTram ? "active" : ""}
+                          aria-pressed={avoidTram}
+                          disabled={railsAvailable !== true}
+                          onClick={() => setManualTram(true)}
+                          data-testid="tram-avoid"
+                        >
+                          Evita
+                        </button>
+                      </div>
+                      <small>
+                        {railsAvailable === true
+                          ? "Cerca un percorso con meno tratti su binari tram mappati, se il tempo extra è contenuto. Indipendente dal pavé."
+                          : "Non disponibile in questa versione: mancano i dati dei binari."}
+                      </small>
                     </div>
 
                     <div className="preference-group ztl-settings" data-testid="ztl-settings">
