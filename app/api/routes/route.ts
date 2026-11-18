@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSpatialRoadStore } from "@/lib/spatial-road-store";
 import { silShadowDiagnostics } from "@/lib/sil-shadow";
+import { chooseRailAware, silRailExperimentEnabled } from "@/lib/sil-rail-experiment";
 import { areaForCoordinate, coordinateInArea } from "@/lib/pilot-areas";
 import {
   isTransportMode,
@@ -884,7 +885,25 @@ export async function GET(request: NextRequest) {
     const hasDistinctAlternative = !routesAreEquivalent(fast.route, selection.safe.route, mode)
       && selection.safe.paveMeters < fast.paveMeters
       && selection.safe.riskMeters + policy.minimumPaveReduction <= fast.riskMeters;
-    const safe = hasDistinctAlternative ? selection.safe : fast;
+    let safe = hasDistinctAlternative ? selection.safe : fast;
+    // EXPERIMENT (off by default, local layers only): tram rails as a separate dimension for two-wheelers.
+    let railExperiment: unknown = null;
+    if (silRailExperimentEnabled() && area.id === "milan" && mode !== "car" && !navigationRequest) {
+      const legal = scored.filter((candidate) => isLegalCandidate(candidate, mode));
+      const evidence = await silShadowDiagnostics({
+        area: area.id, store: spatialRoadStore, loadedTileKeys, force: true,
+        routes: Object.fromEntries(legal.map((candidate, index) => [String(index), candidate.route.coordinates])),
+      });
+      if (evidence && evidence.status === "ok") {
+        const diagnosticsOf = (index: number) => { const entry = evidence.routes[String(index)]; return entry && !("sameAs" in entry) ? entry : evidence.routes[(entry as { sameAs: string }).sameAs] as never; };
+        const candidates = legal.map((candidate, index) => ({
+          id: index, seconds: candidate.route.duration, paveMeters: candidate.paveMeters, riskMeters: candidate.riskMeters, diagnostics: diagnosticsOf(index),
+        })).filter((candidate) => candidate.diagnostics && !("sameAs" in candidate.diagnostics));
+        const choice = chooseRailAware(candidates, legal.indexOf(safe), fast.route.duration, maximumExtraMinutes);
+        railExperiment = { ...choice, candidates: legal.length, processingMs: evidence.processingMs };
+        if (choice.replaced) safe = legal[choice.chosen];
+      } else railExperiment = { replaced: false, reason: evidence ? "layers-" + evidence.status : "layers-off" };
+    }
     // Phase 4.31 release gate: why the shown route is what it is, in terms the person can act on.
     const standard = baseScored[0];
     const standardLegal = Boolean(standard) && isLegalCandidate(standard, mode);
@@ -1067,7 +1086,7 @@ export async function GET(request: NextRequest) {
         },
       } : {}),
       ...(departure ? { accessContext: { departure: formatDeparture(departure), authorisedZtl: [...authorisedZtl].sort() } } : {}),
-      ...(silDiagnostics ? { diagnostics: { sil: silDiagnostics } } : {}),
+      ...(silDiagnostics || railExperiment ? { diagnostics: { ...(silDiagnostics ? { sil: silDiagnostics } : {}), ...(railExperiment ? { silRailExperiment: railExperiment } : {}) } } : {}),
       dataNotice: (
         fast.surfaceScore.matchedFeatures + safe.surfaceScore.matchedFeatures === 0
           ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"

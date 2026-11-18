@@ -507,8 +507,10 @@ export async function silShadowDiagnostics(input: {
   routes: Record<string, [number, number][]>;
   store: SilStoreLike;
   loadedTileKeys: readonly string[];
+  /** Local experiments read the layers without the shadow mode being on (never set in production). */
+  force?: boolean;
 }): Promise<SilDiagnostics | null> {
-  if (resolveSilMode() !== "shadow" || input.area !== "milan") return null;
+  if ((!input.force && resolveSilMode() !== "shadow") || input.area !== "milan") return null;
   const started = now();
   const before = { ...lookups };
   try {
