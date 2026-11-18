@@ -33,7 +33,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  APPROVED_SHA: 94650a2ea11dfc7a67b27e4ea0b3f635f75b7f50
+  APPROVED_SHA: 079d040ae989aba980022cb66450aee3e941dc87
   PREVIEW_NAME: lastrico-preview-437
   PILOT_NAME: lastrico-pilot
   WRANGLER_VERSION: 4.92.0
