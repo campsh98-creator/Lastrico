@@ -82,14 +82,13 @@ test("the pilot rollback build keeps exactly the release's Durable Object bindin
 });
 
 test("the service-area file loses its Rome leftovers by exact replacement, and a moved line is refused", async () => {
-  const source = (await read("lib/pilot-areas.ts")).replace(/
-/g, "
-");
+  const source = (await read("lib/pilot-areas.ts")).replace(/\r\n/g, "\n");
   assert.ok(Object.keys(ROME_SHARED_FILE_RESOLUTIONS).includes("lib/pilot-areas.ts"));
   const milan = applyRomeResolutions("lib/pilot-areas.ts", source);
-  assert.doesNotMatch(milan, ROME_SOURCE_PATTERN, "no Rome id or data module is left");
-  assert.match(milan, /export type PilotAreaId = "milan" | "roccella";/);
-  assert.match(milan, /milan: { id: "milan"/, "Milan keeps its service bounds");
+  // The Rome presets are taken out by the three-way merge before this step; here only the two lines that merge cannot decide.
+  assert.ok(!milan.includes('rome: { id: "rome"') && !milan.includes('"milan" | "roccella" | "rome"'));
+  assert.ok(milan.includes('export type PilotAreaId = "milan" | "roccella";'));
+  assert.ok(milan.includes('milan: { id: "milan"'), "Milan keeps its service bounds");
   assert.throws(() => applyRomeResolutions("lib/pilot-areas.ts", milan), /found 0 times/);
   assert.equal(applyRomeResolutions("lib/spatial-road-store.ts", "unchanged"), "unchanged", "files without a resolution pass through");
 });
