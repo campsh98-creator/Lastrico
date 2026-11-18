@@ -1,6 +1,7 @@
 "use client";
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 
@@ -69,7 +70,7 @@ export default function IntelligencePage() {
     <main style={{ position: "fixed", inset: 0, fontFamily: "system-ui, sans-serif" }}>
       <div ref={container} style={{ position: "absolute", inset: 0 }} />
       <section style={{ position: "absolute", top: 8, left: 8, right: 56, maxWidth: 360, background: "rgba(255,255,255,.95)", borderRadius: 10, padding: 10, fontSize: 13, boxShadow: "0 1px 6px rgba(0,0,0,.25)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}><strong>Conoscenza delle strade (sperimentale)</strong><a href="/" style={{ color: "#0b57d0" }}>← Navigatore</a></div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}><strong>Conoscenza delle strade (sperimentale)</strong><Link href="/" style={{ color: "#0b57d0" }}>← Navigatore</Link></div>
         <div style={{ display: "flex", gap: 6, margin: "8px 0" }}>
           {([["surface", "Fondo"], ["rails", "Binari"], ["conflicts", "Conflitti"]] as [View, string][]).map(([v, label]) => (
             <button key={v} onClick={() => setView(v)} aria-pressed={view === v} style={{ flex: 1, padding: "8px 4px", borderRadius: 8, border: "1px solid #888", background: view === v ? "#111" : "#fff", color: view === v ? "#fff" : "#111", minHeight: 40 }}>{label}</button>
