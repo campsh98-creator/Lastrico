@@ -1,8 +1,8 @@
 # Engineering status
 
-Status on 18 November 2026. `main` is at `8e408ca` (PRs #16 to #21 merged). **Two deployments are online** and
+Status on 18 November 2026. `main` is at `2cd1433` (PRs #16 to #24 merged). **Two deployments are online** and
 both stay online: the pilot `lastrico-pilot` (older code, built from `54bd605`, not touched) and the isolated preview
-`lastrico-preview-437` (built from `ba65a5f`: PR #16 and PR #20). This page separates what exists locally from what
+`lastrico-preview-437` (built from `94650a2`, version `55cdd422`, deploy run 44341295243: anti-pavé, Surface Intelligence code with the shadow off, regional navigation). This page separates what exists locally from what
 is online, and fixed defects from open problems. Every claim points to the evidence in `outputs/`; the detailed
 phase reports there are in Italian.
 
@@ -19,7 +19,7 @@ and every surface stays explicitly unknown. Details of the service area change: 
 | --- | --- | --- | --- |
 | **4.36** | **COMPLETED, archived in `main`** (PR #17) | Forensic audit of the 13 November return trip, data audit, routing experiments, SIL design, sensing feasibility. No production code. | `outputs/phase436-surface-intelligence/`, `experiments/phase436-surface-intelligence/` |
 | **4.37** | **MERGED (PR #16, PR #20), on the preview, not on the pilot** | Anti-pavé candidate generation (15 m slices, stricter early stop, U-turn cost, trace v3) and, at "Maximum" avoidance, refinement while stone is left. | `main`; `outputs/phase437-local-routing-validation.md` (local, untracked) |
-| **4.38 to 4.40** | **CONSOLIDATED on the local branch `integration/road-intelligence`; not pushed, not deployed** | OSM provenance and stable identities, offline SIL (evidence ledger, resolver, rails overlay), citywide DBT, source-separated layers and a read-only shadow adapter (`diagnostics.sil`, off by default) | the branch (unchanged history, merge commit on top of `main`); reports `outputs/phase438-*`, `phase439-*`, `phase439b-*`, `phase440-*` on it |
+| **4.38 to 4.40** | **MERGED into `main` (PR #22), on the preview with the shadow OFF; no layer active** | OSM provenance and stable identities, offline SIL (evidence ledger, resolver, rails overlay), citywide DBT, source-separated layers and a read-only shadow adapter (`diagnostics.sil`, off by default) | the branch (unchanged history, merge commit on top of `main`); reports `outputs/phase438-*`, `phase439-*`, `phase439b-*`, `phase440-*` on it |
 
 Measured on the preview against the pilot (18 November 2026, same provider, 8 public-landmark journeys, strict request
 budget): identical routes on 5 of them (no regression); Piazzale Lodi return at "Maximum" **0 m instead of 25 m of
@@ -40,7 +40,8 @@ does not say they are physically present or rough today, and the product must no
 | Code | in `integration/road-intelligence`: `lib/sil-layers.ts`, `lib/sil-shadow.ts`, `scripts/sil/*` (build, parity, runtime and bundle measurement, corridor report, **`sil-inspect.mjs` local map inspector**) |
 | Runtime | shadow only, **off by default** (`LASTRICO_SIL_MODE=shadow`); the layer index in Git is empty; layers are generated locally into a git-ignored folder |
 | Measured (4.40, Node on Windows, not Cloudflare) | 264 of 264 Milan cases identical with the shadow on; about 1.2 to 2 ms CPU per request warm; +6.1 % gzip on the bundle in the 4.40 build |
-| Not done | Cloudflare measurement (cold start, memory), Linux CI of the combined branch, any use of rails in ranking |
+| Online (18 Nov) | Linux CI green (PR #22); preview bundle 13413 KiB, gzip 3371 KiB (+0.3 %), Worker startup 15 ms. **Activated: nothing.** No layer is shipped or enabled, because the licence questions below are open |
+| Not done | Cloudflare CPU and memory per request (needs the dashboard, no credentials here), any use of rails in ranking |
 | Blocked | distribution of the layers and any combined OSM/DBT/ATM file until the licence questions in `outputs/phase440-sil-runtime-shadow-report.md` section 4 are settled; the DBT licence version conflict; the share-alike effect of ODbL on a combined database |
 
 The inspector (`node scripts/sil/sil-inspect.mjs --layers=<build>/layers`) writes one local HTML page into the ignored
@@ -60,14 +61,14 @@ requests used once): inside Milan 100 % surface coverage; Linate 46 %, Monza 21 
 Bergamo 7 %, Monza into Milan 42 %; every route complete with turn-by-turn instructions; 1 to 6 provider requests;
 the old city-only bounds dropped over 100 simulated fixes on the Malpensa route, the new ones none, arrival detected.
 Destination search keeps a place typed after the comma ("Via Roma, Como"), falls back to the text as typed, and lists
-Milan's own results first. **Not yet checked:** voice instructions across a whole route on a device; route calculation
+Milan's own results first. **Measured online on the preview (18 Nov, public providers, wall time):** Milan to Malpensa 62.9 km 6.3 s, Como 6.3 s, Monza 5.9 s, Bergamo 4.8 s, reroute 2.5 s, all with complete instructions; surface coverage 7 to 24 % outside the city; Paris refused (400); search for Aeroporto Malpensa 1.2 s, Via Roma Como found (one 503 under provider throttling, then 200 in 0.2 s); the pilot still answers 400 for Malpensa and was not touched. **Not yet checked:** CPU per request on Cloudflare; voice instructions across a whole route on a device; route calculation
 CPU and latency on Cloudflare (a 60 km route took 0.3 to 0.8 s of CPU on Node and about 5 s of wall time with the
 provider pacing); search availability under provider throttling (the public Nominatim and Photon timed out during
 repeated checks).
 
 ## Repository inventory and cleanup recommendation
 
-Nothing is deleted. Recommended only after you confirm, item by item.
+Nothing is deleted. `integration/road-intelligence` is merged (PR #22), so `feat/phase438` to `feat/phase440` and their worktrees can also go once you confirm. Recommended only after you confirm, item by item.
 
 | Item | State | Recommendation |
 | --- | --- | --- |
