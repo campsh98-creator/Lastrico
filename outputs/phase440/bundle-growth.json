@@ -1,0 +1,32 @@
+{
+ "A": {
+  "files": 172,
+  "rawBytes": 18881080,
+  "gzipBytes": 3954432,
+  "jsRawBytes": 18681708,
+  "jsGzipBytes": 3943889,
+  "silFiles": 0,
+  "silRawBytes": 0,
+  "silGzipBytes": 0,
+  "silChunks": [],
+  "buildSeconds": 20
+ },
+ "B": {
+  "files": 448,
+  "rawBytes": 19479837,
+  "gzipBytes": 4195616,
+  "jsRawBytes": 19208867,
+  "jsGzipBytes": 4179041,
+  "silFiles": 0,
+  "silRawBytes": 0,
+  "silGzipBytes": 0,
+  "silChunks": [],
+  "buildSeconds": 22
+ },
+ "growth": {
+  "rawBytes": 598757,
+  "gzipBytes": 241184,
+  "rawPercent": 3.17,
+  "gzipPercent": 6.1
+ }
+}

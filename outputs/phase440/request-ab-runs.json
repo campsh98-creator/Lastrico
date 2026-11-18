@@ -1,0 +1,70 @@
+{
+ "off": [
+  {
+   "cpuMean": 20.56,
+   "cpuP50": 16,
+   "cpuP95": 63,
+   "wallMean": 17.13,
+   "wallP50": 14,
+   "wallP95": 39
+  },
+  {
+   "cpuMean": 17.15,
+   "cpuP50": 16,
+   "cpuP95": 47,
+   "wallMean": 14.52,
+   "wallP50": 12,
+   "wallP95": 30
+  },
+  {
+   "cpuMean": 17.35,
+   "cpuP50": 16,
+   "cpuP95": 62,
+   "wallMean": 14.34,
+   "wallP50": 12,
+   "wallP95": 31
+  },
+  {
+   "cpuMean": 18.42,
+   "cpuP50": 15,
+   "cpuP95": 63,
+   "wallMean": 14.79,
+   "wallP50": 12,
+   "wallP95": 34
+  }
+ ],
+ "shadow": [
+  {
+   "cpuMean": 21.46,
+   "cpuP50": 16,
+   "cpuP95": 77,
+   "wallMean": 16.63,
+   "wallP50": 14,
+   "wallP95": 36
+  },
+  {
+   "cpuMean": 21.54,
+   "cpuP50": 16,
+   "cpuP95": 63,
+   "wallMean": 17.8,
+   "wallP50": 15,
+   "wallP95": 37
+  },
+  {
+   "cpuMean": 20.44,
+   "cpuP50": 16,
+   "cpuP95": 63,
+   "wallMean": 15.34,
+   "wallP50": 13,
+   "wallP95": 34
+  },
+  {
+   "cpuMean": 19.42,
+   "cpuP50": 16,
+   "cpuP95": 63,
+   "wallMean": 15.25,
+   "wallP50": 13,
+   "wallP95": 32
+  }
+ ]
+}

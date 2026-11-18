@@ -126,6 +126,45 @@ export function classifySurface(tags = {}, highwayClass = "unknown", legacySurfa
   return { rawSurface, material, surfaceCategory, roughnessWeight, state, authority, confidence, rule };
 }
 
+/** Directions relative to the emitted geometry, with inferred circular defaults marked by mode. */
+export function normalizeOsmDirection(tags, { topologyRules = "current" } = {}) {
+  // Circular junctions usually flow along the OSM node order. The provider uses that default,
+  // while explicit oneway=no (including modal exceptions) remains valid for circular junctions.
+  const inferCircular = topologyRules !== "legacy" && tags.junction === "circular" && !tags.oneway;
+  const onewayTag = (tags.oneway || (inferCircular || tags.junction === "roundabout" ? "yes" : "")).trim().toLowerCase();
+  const isOneway = ["yes", "1", "true", "-1"].includes(onewayTag);
+  const isReversed = onewayTag === "-1";
+  let inferredCircularOnewayModes = 0;
+
+  function relativeDirection(value) {
+    const normalized = String(value).trim().toLowerCase();
+    if (["no", "0", "false", ""].includes(normalized)) return "both";
+    if (normalized === "-1") return isReversed ? "forward" : "backward";
+    if (["yes", "1", "true"].includes(normalized)) return isReversed ? "backward" : "forward";
+    return "unknown";
+  }
+
+  function direction(keys, modeBit, contraflow = false) {
+    for (const key of keys) {
+      if (tags[`${key}:conditional`]) return "unknown";
+      if (tags[key] !== undefined) return relativeDirection(tags[key]);
+    }
+    if (tags["oneway:conditional"]) return "unknown";
+    if (contraflow) return "both";
+    if (inferCircular) inferredCircularOnewayModes |= modeBit;
+    return relativeDirection(onewayTag);
+  }
+
+  const oppositeCycleway = ["cycleway", "cycleway:left", "cycleway:right", "cycleway:both"]
+    .some((key) => ["opposite", "opposite_lane", "opposite_track"].includes(tags[key]));
+  const modeDirections = {
+    car: direction(["oneway:motorcar", "oneway:motor_vehicle", "oneway:vehicle"], 1),
+    motorcycle: direction(["oneway:motorcycle", "oneway:motor_vehicle", "oneway:vehicle"], 2),
+    bicycle: direction(["oneway:bicycle", "oneway:vehicle"], 4, oppositeCycleway),
+  };
+  return { isOneway, isReversed, modeDirections, inferredCircularOnewayModes };
+}
+
 export function normalizeOsmFeature(rawWay, options = {}) {
   const ingestedAt = options.ingestedAt || new Date().toISOString();
 
@@ -170,9 +209,7 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   };
 
   // 3. Directionality & Modal Access
-  const onewayTag = (tags.oneway || (tags.junction === "roundabout" ? "yes" : "")).trim().toLowerCase();
-  const isOneway = ["yes", "1", "true", "-1"].includes(onewayTag);
-  const isReversed = onewayTag === "-1";
+  const { isOneway, isReversed, modeDirections, inferredCircularOnewayModes } = normalizeOsmDirection(tags, options);
 
   // More specific modal tags override generic access. Unrecognised restrictions
   // remain unavailable for matching; this is not a replacement routing graph.
@@ -201,34 +238,6 @@ export function normalizeOsmFeature(rawWay, options = {}) {
   }
   const isMotorAllowed = modeAccess.car || modeAccess.motorcycle;
   const isBicycleAllowed = modeAccess.bicycle;
-
-  function direction(keys, fallback) {
-    for (const key of keys) {
-      if (tags[`${key}:conditional`]) return "unknown";
-      if (tags[key] !== undefined) {
-        const normalized = String(tags[key]).trim().toLowerCase();
-        let result = ["no", "0", "false", ""].includes(normalized) ? "both"
-          : normalized === "-1" ? "backward" : ["yes", "1", "true"].includes(normalized) ? "forward" : "unknown";
-        if (result === "unknown") return result;
-        if (isReversed && result !== "both") result = result === "forward" ? "backward" : "forward";
-        return result;
-      }
-    }
-    if (tags["oneway:conditional"]) return "unknown";
-    const normalized = String(fallback).trim().toLowerCase();
-    let result = ["no", "0", "false", ""].includes(normalized) ? "both"
-      : normalized === "-1" ? "backward" : ["yes", "1", "true"].includes(normalized) ? "forward" : "unknown";
-    if (result === "unknown") return result;
-    if (isReversed && result !== "both") result = result === "forward" ? "backward" : "forward";
-    return result;
-  }
-  const oppositeCycleway = ["cycleway", "cycleway:left", "cycleway:right", "cycleway:both"]
-    .some((key) => ["opposite", "opposite_lane", "opposite_track"].includes(tags[key]));
-  const modeDirections = {
-    car: direction(["oneway:motorcar", "oneway:motor_vehicle", "oneway:vehicle"], onewayTag),
-    motorcycle: direction(["oneway:motorcycle", "oneway:motor_vehicle", "oneway:vehicle"], onewayTag),
-    bicycle: direction(["oneway:bicycle", "oneway:vehicle"], oppositeCycleway ? "no" : onewayTag),
-  };
 
   // 5. Cycling Infrastructure
   const cyclewayValues = [tags.cycleway, tags["cycleway:right"], tags["cycleway:left"], tags["cycleway:both"]];
@@ -312,6 +321,7 @@ export function normalizeOsmFeature(rawWay, options = {}) {
       isBicycleAllowed,
       modeAccess,
       modeDirections,
+      ...(inferredCircularOnewayModes ? { inferredCircularOnewayModes } : {}),
       embeddedRails,
       surface: surfaceProvenance,
       smoothness: smoothnessProvenance,

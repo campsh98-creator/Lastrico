@@ -52,6 +52,11 @@ export async function generateChunks(areaName, compactJsonPath, outputDir, index
     await writeFile(tilePath, JSON.stringify(tilePayload), "utf8");
   }
 
+  if (!indexTsPath) {
+    console.log(`✓ ${areaName}: Generated ${tileKeys.length} tiles + metadata.`);
+    return;
+  }
+
   // Generate TypeScript index with explicit typed lazy loaders
   const relOutputDir = outputDir.replace(join(root, "lib/"), "").replace(join(root, "data/"), "../data/");
   const tsContent = [

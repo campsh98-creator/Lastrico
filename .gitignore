@@ -103,3 +103,7 @@ s_original.zip
 /data/surfaces/rome-compact-tiles.json
 /data/surfaces/rome-tiles/*.json
 !/data/surfaces/rome-tiles/metadata.json
+
+# Phase 4.40: source-separated SIL layers mix ODbL, CC BY 2.5 IT/4.0 and CC BY 4.0 data. Not cleared for distribution:
+# generated locally by scripts/sil/generate-sil-layer-index.mjs, never versioned.
+/data/surfaces/sil-layers/

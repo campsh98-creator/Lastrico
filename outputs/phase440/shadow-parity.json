@@ -1,0 +1,200 @@
+{
+ "runs": {
+  "a": "phase440-off",
+  "b": "phase440-shadow",
+  "handlerSha256": {
+   "a": "672c6e89f7d5e82924c0bb3223a4ceeacd9d9071412c67f739404db55332b61f",
+   "b": "672c6e89f7d5e82924c0bb3223a4ceeacd9d9071412c67f739404db55332b61f"
+  }
+ },
+ "invariants": {
+  "cases": 264,
+  "status": 264,
+  "geometry": 264,
+  "selectedRoute": 264,
+  "confirmed": 264,
+  "probable": 264,
+  "unknown": 264,
+  "durationDistance": 264,
+  "legality": 264,
+  "providerRequests": 264,
+  "onlyDiagnosticsAdded": 264,
+  "noDiagnosticsWhenNot200": 1,
+  "withDiagnostics": 263,
+  "unexpectedDifferences": []
+ },
+ "sil": {
+  "statuses": {
+   "ok": 260,
+   "partial": 3
+  },
+  "reasons": {
+   "tile-budget-exceeded": 3
+  },
+  "routes": 401,
+  "metres": {
+   "total": 1747857,
+   "matched": 1654724,
+   "unmatched": 93138,
+   "railsMapped": 255955,
+   "queriedNotMapped": 1398763,
+   "unknownCoverage": 0
+  },
+  "missingDataMetres": 0,
+  "bySource": {
+   "osmMapped": 125066,
+   "dbtMapped": 255424,
+   "both": 124531,
+   "osmOnly": 534,
+   "dbtOnly": 130892
+  },
+  "dbtClass": {
+   "sharedCarriageway": 236423,
+   "ownRightOfWay": 14141,
+   "classUnknown": 4865
+  },
+  "atmOnMapped": {
+   "scheduledLineNear": 175572,
+   "noScheduledLine": 80395
+  },
+  "disagreement": {
+   "dbtMappedOsmAskedNone": 27075,
+   "osmMappedDbtAskedNone": 534,
+   "contestedByResolver": 12
+  },
+  "ambiguity": {
+   "routeMatchMetres": 301280,
+   "railClassMetres": 10683,
+   "multiAxisMetres": 229595,
+   "nearMissMetres": 6166
+  },
+  "needsReviewMetres": 84243,
+  "routesWithMappedRails": 341,
+  "baseTiles": {
+   "checked": 1812,
+   "compatible": 1812,
+   "mismatched": 0,
+   "missing": 0
+  },
+  "lookups": {
+   "layerTilesRequested": 6028,
+   "providerLoads": 228,
+   "cacheHits": 5800,
+   "baseTilesRead": 1812
+  },
+  "processingMs": {
+   "n": 263,
+   "min": 0.1,
+   "median": 0.7,
+   "p95": 2.3,
+   "max": 38.4,
+   "mean": 1.08
+  },
+  "sharePercent": {
+   "railsMapped": 14.64,
+   "queriedNotMapped": 80.03,
+   "unknownCoverage": 0,
+   "unmatched": 5.33
+  },
+  "routeKm": 1747.9
+ },
+ "antiPaveVsFast": {
+  "distinctCases": 138,
+  "fewer": 102,
+  "more": 30,
+  "equal": 6
+ },
+ "oracleVs439bReplay": {
+  "note": "runtime (separated layers) minus offline replay (fused overlay), per shown route, in metres",
+  "mapped": {
+   "routes": 526,
+   "within1m": 522,
+   "within15m": 522,
+   "medianAbsM": 0,
+   "p95AbsM": 0,
+   "maxAbsM": 1575,
+   "sumM": -3993
+  },
+  "queriedNotMapped": {
+   "routes": 526,
+   "within1m": 520,
+   "within15m": 520,
+   "medianAbsM": 0,
+   "p95AbsM": 0,
+   "maxAbsM": 3023,
+   "sumM": -5751
+  },
+  "unmatched": {
+   "routes": 526,
+   "within1m": 520,
+   "within15m": 520,
+   "medianAbsM": 0,
+   "p95AbsM": 0,
+   "maxAbsM": 3613,
+   "sumM": 9747
+  }
+ },
+ "cost": {
+  "requests": 264,
+  "cpuMs": {
+   "a": {
+    "n": 264,
+    "min": 0,
+    "median": 16,
+    "p95": 62,
+    "max": 203,
+    "mean": 19.49
+   },
+   "b": {
+    "n": 264,
+    "min": 0,
+    "median": 16,
+    "p95": 63,
+    "max": 281,
+    "mean": 21.03
+   },
+   "totalA": 5145,
+   "totalB": 5553
+  },
+  "computeMs": {
+   "a": {
+    "n": 264,
+    "min": 1,
+    "median": 12,
+    "p95": 33,
+    "max": 111,
+    "mean": 14.9
+   },
+   "b": {
+    "n": 264,
+    "min": 2,
+    "median": 14,
+    "p95": 36,
+    "max": 139,
+    "mean": 15.84
+   }
+  },
+  "handlerTotalMs": {
+   "a": {
+    "n": 264,
+    "min": 0,
+    "median": 11,
+    "p95": 32,
+    "max": 96,
+    "mean": 13.85
+   },
+   "b": {
+    "n": 264,
+    "min": 0,
+    "median": 12,
+    "p95": 32,
+    "max": 89,
+    "mean": 13.66
+   }
+  },
+  "providerCalls": {
+   "a": 817,
+   "b": 817
+  }
+ }
+}

@@ -1,0 +1,401 @@
+{
+ "datasetVersion": "sil-layers-milan-2026-11-15.0",
+ "evidenceDates": {
+  "assoc": null,
+  "atm": "2026-07-24",
+  "dbt": "2020-03",
+  "osm": null
+ },
+ "streets": {
+  "Corso Lodi": {
+   "segments": 238,
+   "metres": 5100,
+   "uniqueSegments": {
+    "metres": {
+     "total": 5100,
+     "matched": 5100,
+     "unmatched": 0,
+     "railsMapped": 683,
+     "queriedNotMapped": 4417,
+     "unknownCoverage": 0
+    },
+    "missingDataMetres": 0,
+    "bySource": {
+     "osm": {
+      "consulted": true,
+      "mapped": 0,
+      "queriedNotMapped": 5100,
+      "unknown": 0,
+      "unavailable": 0
+     },
+     "dbt": {
+      "consulted": true,
+      "mapped": 683,
+      "queriedNotMapped": 4417,
+      "unknown": 0,
+      "unavailable": 0
+     },
+     "atm": {
+      "consulted": true,
+      "scheduledLineNear": 0,
+      "noScheduledLine": 5100,
+      "unavailable": 0
+     }
+    },
+    "railsMappedBy": {
+     "osmOnly": 0,
+     "dbtOnly": 683,
+     "both": 0
+    },
+    "dbtRailClass": {
+     "sharedCarriageway": 683,
+     "ownRightOfWay": 0,
+     "classUnknown": 0
+    },
+    "atmServiceOnMappedRails": {
+     "scheduledLineNear": 0,
+     "noScheduledLine": 683
+    },
+    "sourceDisagreement": {
+     "dbtMappedOsmAskedNone": 683,
+     "osmMappedDbtAskedNone": 0,
+     "contestedByResolver": 0
+    },
+    "ambiguity": {
+     "routeMatchMetres": 0,
+     "railClassMetres": 0,
+     "multiAxisMetres": 657,
+     "nearMissMetres": 0
+    },
+    "needsReviewMetres": 683,
+    "segmentsRailsMapped": 34,
+    "segmentsDbtMapped": 34,
+    "segmentsOsmMapped": 0,
+    "segmentsAskedNotMapped": 204,
+    "segmentsUnknownCoverage": 0,
+    "segmentsMappedWithoutScheduledLine": 34,
+    "fusedOverlaySegmentsMapped": 34
+   },
+   "asRoutes": {
+    "status": "ok",
+    "railsMappedMetres": 682,
+    "queriedNotMappedMetres": 4417,
+    "unknownCoverageMetres": 0,
+    "unmatchedMetres": 0,
+    "ambiguousRouteMatchMetres": 515
+   }
+  },
+  "Piazzale Lodi": {
+   "segments": 107,
+   "metres": 373,
+   "uniqueSegments": {
+    "metres": {
+     "total": 373,
+     "matched": 373,
+     "unmatched": 0,
+     "railsMapped": 0,
+     "queriedNotMapped": 373,
+     "unknownCoverage": 0
+    },
+    "missingDataMetres": 0,
+    "bySource": {
+     "osm": {
+      "consulted": true,
+      "mapped": 0,
+      "queriedNotMapped": 373,
+      "unknown": 0,
+      "unavailable": 0
+     },
+     "dbt": {
+      "consulted": true,
+      "mapped": 0,
+      "queriedNotMapped": 373,
+      "unknown": 0,
+      "unavailable": 0
+     },
+     "atm": {
+      "consulted": true,
+      "scheduledLineNear": 0,
+      "noScheduledLine": 373,
+      "unavailable": 0
+     }
+    },
+    "railsMappedBy": {
+     "osmOnly": 0,
+     "dbtOnly": 0,
+     "both": 0
+    },
+    "dbtRailClass": {
+     "sharedCarriageway": 0,
+     "ownRightOfWay": 0,
+     "classUnknown": 0
+    },
+    "atmServiceOnMappedRails": {
+     "scheduledLineNear": 0,
+     "noScheduledLine": 0
+    },
+    "sourceDisagreement": {
+     "dbtMappedOsmAskedNone": 0,
+     "osmMappedDbtAskedNone": 0,
+     "contestedByResolver": 0
+    },
+    "ambiguity": {
+     "routeMatchMetres": 0,
+     "railClassMetres": 0,
+     "multiAxisMetres": 0,
+     "nearMissMetres": 0
+    },
+    "needsReviewMetres": 0,
+    "segmentsRailsMapped": 0,
+    "segmentsDbtMapped": 0,
+    "segmentsOsmMapped": 0,
+    "segmentsAskedNotMapped": 107,
+    "segmentsUnknownCoverage": 0,
+    "segmentsMappedWithoutScheduledLine": 0,
+    "fusedOverlaySegmentsMapped": 0
+   },
+   "asRoutes": {
+    "status": "ok",
+    "railsMappedMetres": 0,
+    "queriedNotMappedMetres": 364,
+    "unknownCoverageMetres": 0,
+    "unmatchedMetres": 0,
+    "ambiguousRouteMatchMetres": 17
+   }
+  },
+  "Via Lazzaro Papi": {
+   "segments": 12,
+   "metres": 274,
+   "uniqueSegments": {
+    "metres": {
+     "total": 274,
+     "matched": 274,
+     "unmatched": 0,
+     "railsMapped": 0,
+     "queriedNotMapped": 274,
+     "unknownCoverage": 0
+    },
+    "missingDataMetres": 0,
+    "bySource": {
+     "osm": {
+      "consulted": true,
+      "mapped": 0,
+      "queriedNotMapped": 274,
+      "unknown": 0,
+      "unavailable": 0
+     },
+     "dbt": {
+      "consulted": true,
+      "mapped": 0,
+      "queriedNotMapped": 274,
+      "unknown": 0,
+      "unavailable": 0
+     },
+     "atm": {
+      "consulted": true,
+      "scheduledLineNear": 0,
+      "noScheduledLine": 274,
+      "unavailable": 0
+     }
+    },
+    "railsMappedBy": {
+     "osmOnly": 0,
+     "dbtOnly": 0,
+     "both": 0
+    },
+    "dbtRailClass": {
+     "sharedCarriageway": 0,
+     "ownRightOfWay": 0,
+     "classUnknown": 0
+    },
+    "atmServiceOnMappedRails": {
+     "scheduledLineNear": 0,
+     "noScheduledLine": 0
+    },
+    "sourceDisagreement": {
+     "dbtMappedOsmAskedNone": 0,
+     "osmMappedDbtAskedNone": 0,
+     "contestedByResolver": 0
+    },
+    "ambiguity": {
+     "routeMatchMetres": 0,
+     "railClassMetres": 0,
+     "multiAxisMetres": 0,
+     "nearMissMetres": 0
+    },
+    "needsReviewMetres": 0,
+    "segmentsRailsMapped": 0,
+    "segmentsDbtMapped": 0,
+    "segmentsOsmMapped": 0,
+    "segmentsAskedNotMapped": 12,
+    "segmentsUnknownCoverage": 0,
+    "segmentsMappedWithoutScheduledLine": 0,
+    "fusedOverlaySegmentsMapped": 0
+   },
+   "asRoutes": {
+    "status": "ok",
+    "railsMappedMetres": 0,
+    "queriedNotMappedMetres": 275,
+    "unknownCoverageMetres": 0,
+    "unmatchedMetres": 0,
+    "ambiguousRouteMatchMetres": 0
+   }
+  },
+  "Via Friuli": {
+   "segments": 38,
+   "metres": 1244,
+   "uniqueSegments": {
+    "metres": {
+     "total": 1244,
+     "matched": 1244,
+     "unmatched": 0,
+     "railsMapped": 72,
+     "queriedNotMapped": 1172,
+     "unknownCoverage": 0
+    },
+    "missingDataMetres": 0,
+    "bySource": {
+     "osm": {
+      "consulted": true,
+      "mapped": 0,
+      "queriedNotMapped": 20,
+      "unknown": 1225,
+      "unavailable": 0
+     },
+     "dbt": {
+      "consulted": true,
+      "mapped": 72,
+      "queriedNotMapped": 1172,
+      "unknown": 0,
+      "unavailable": 0
+     },
+     "atm": {
+      "consulted": true,
+      "scheduledLineNear": 86,
+      "noScheduledLine": 1159,
+      "unavailable": 0
+     }
+    },
+    "railsMappedBy": {
+     "osmOnly": 0,
+     "dbtOnly": 72,
+     "both": 0
+    },
+    "dbtRailClass": {
+     "sharedCarriageway": 72,
+     "ownRightOfWay": 0,
+     "classUnknown": 0
+    },
+    "atmServiceOnMappedRails": {
+     "scheduledLineNear": 72,
+     "noScheduledLine": 0
+    },
+    "sourceDisagreement": {
+     "dbtMappedOsmAskedNone": 0,
+     "osmMappedDbtAskedNone": 0,
+     "contestedByResolver": 0
+    },
+    "ambiguity": {
+     "routeMatchMetres": 0,
+     "railClassMetres": 0,
+     "multiAxisMetres": 0,
+     "nearMissMetres": 0
+    },
+    "needsReviewMetres": 0,
+    "segmentsRailsMapped": 3,
+    "segmentsDbtMapped": 3,
+    "segmentsOsmMapped": 0,
+    "segmentsAskedNotMapped": 35,
+    "segmentsUnknownCoverage": 0,
+    "segmentsMappedWithoutScheduledLine": 0,
+    "fusedOverlaySegmentsMapped": 3
+   },
+   "asRoutes": {
+    "status": "ok",
+    "railsMappedMetres": 72,
+    "queriedNotMappedMetres": 1173,
+    "unknownCoverageMetres": 0,
+    "unmatchedMetres": 0,
+    "ambiguousRouteMatchMetres": 81
+   }
+  },
+  "Viale Umbria": {
+   "segments": 182,
+   "metres": 4475,
+   "uniqueSegments": {
+    "metres": {
+     "total": 4475,
+     "matched": 4475,
+     "unmatched": 0,
+     "railsMapped": 340,
+     "queriedNotMapped": 4135,
+     "unknownCoverage": 0
+    },
+    "missingDataMetres": 0,
+    "bySource": {
+     "osm": {
+      "consulted": true,
+      "mapped": 0,
+      "queriedNotMapped": 197,
+      "unknown": 4278,
+      "unavailable": 0
+     },
+     "dbt": {
+      "consulted": true,
+      "mapped": 340,
+      "queriedNotMapped": 4135,
+      "unknown": 0,
+      "unavailable": 0
+     },
+     "atm": {
+      "consulted": true,
+      "scheduledLineNear": 250,
+      "noScheduledLine": 4225,
+      "unavailable": 0
+     }
+    },
+    "railsMappedBy": {
+     "osmOnly": 0,
+     "dbtOnly": 340,
+     "both": 0
+    },
+    "dbtRailClass": {
+     "sharedCarriageway": 17,
+     "ownRightOfWay": 323,
+     "classUnknown": 0
+    },
+    "atmServiceOnMappedRails": {
+     "scheduledLineNear": 29,
+     "noScheduledLine": 311
+    },
+    "sourceDisagreement": {
+     "dbtMappedOsmAskedNone": 0,
+     "osmMappedDbtAskedNone": 0,
+     "contestedByResolver": 0
+    },
+    "ambiguity": {
+     "routeMatchMetres": 0,
+     "railClassMetres": 14,
+     "multiAxisMetres": 340,
+     "nearMissMetres": 13
+    },
+    "needsReviewMetres": 323,
+    "segmentsRailsMapped": 17,
+    "segmentsDbtMapped": 17,
+    "segmentsOsmMapped": 0,
+    "segmentsAskedNotMapped": 165,
+    "segmentsUnknownCoverage": 0,
+    "segmentsMappedWithoutScheduledLine": 14,
+    "fusedOverlaySegmentsMapped": 17
+   },
+   "asRoutes": {
+    "status": "ok",
+    "railsMappedMetres": 340,
+    "queriedNotMappedMetres": 4138,
+    "unknownCoverageMetres": 0,
+    "unmatchedMetres": 0,
+    "ambiguousRouteMatchMetres": 1134
+   }
+  }
+ }
+}
