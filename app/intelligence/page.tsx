@@ -2,6 +2,7 @@
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import Link from "next/link";
+import { loadMapLibre } from "@/lib/maplibre-loader";
 import { useEffect, useRef, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 
@@ -22,7 +23,7 @@ export default function IntelligencePage() {
 
   useEffect(() => {
     let cancelled = false;
-    import("maplibre-gl").then(({ Map, NavigationControl }) => {
+    loadMapLibre().then(({ Map, NavigationControl }) => {
       if (cancelled || !container.current) return;
       const map = new Map({
         container: container.current, center: [9.19, 45.4642], zoom: 16,

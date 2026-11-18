@@ -146,6 +146,7 @@ import {
 import { Dialog } from "@/components/ui/Dialog";
 import { directionIcon, Icon, type IconName } from "@/components/ui/Icon";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { loadMapLibre } from "@/lib/maplibre-loader";
 
 type Coordinate = [number, number];
 type Avoidance = "balanced" | "strong" | "maximum";
@@ -823,7 +824,7 @@ export default function Home() {
 
   useEffect(() => {
     let cancelled = false;
-    import("maplibre-gl").then(({ Map, AttributionControl, NavigationControl, Marker }) => {
+    loadMapLibre().then(({ Map, AttributionControl, NavigationControl, Marker }) => {
       if (cancelled || !mapContainer.current || mapRef.current) return;
       const map = new Map({
         container: mapContainer.current,
