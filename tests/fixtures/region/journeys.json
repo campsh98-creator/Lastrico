@@ -1,0 +1,61 @@
+{
+  "note": "Public landmarks only (OSM / well-known places). Car, strong avoidance, planner mode, departure 9 November 2026 12:00 Milan time.",
+  "journeys": [
+    {
+      "id": "milan-inside",
+      "label": "Cordusio to Porta Romana (inside the enriched coverage)",
+      "start": "9.1858,45.4655",
+      "end": "9.201,45.452"
+    },
+    {
+      "id": "milan-malpensa",
+      "label": "Duomo to Malpensa Terminal 1",
+      "start": "9.1900,45.4642",
+      "end": "8.7281,45.6306"
+    },
+    {
+      "id": "milan-linate",
+      "label": "Duomo to Linate Airport",
+      "start": "9.1900,45.4642",
+      "end": "9.2767,45.4496"
+    },
+    {
+      "id": "milan-monza",
+      "label": "Duomo to Monza Cathedral",
+      "start": "9.1900,45.4642",
+      "end": "9.2745,45.5845"
+    },
+    {
+      "id": "milan-como",
+      "label": "Duomo to Como Cathedral",
+      "start": "9.1900,45.4642",
+      "end": "9.0852,45.8101"
+    },
+    {
+      "id": "milan-bergamo",
+      "label": "Duomo to Bergamo, Piazza Vecchia",
+      "start": "9.1900,45.4642",
+      "end": "9.6643,45.7036"
+    },
+    {
+      "id": "monza-into-milan",
+      "label": "Monza Cathedral into Brera (from outside into Milan)",
+      "start": "9.2745,45.5845",
+      "end": "9.1886,45.4721"
+    },
+    {
+      "id": "malpensa-reroute-outside",
+      "label": "Reroute from Fiera Milano Rho (outside the enriched coverage) to Malpensa Terminal 1, navigation request",
+      "start": "9.0810,45.5215",
+      "end": "8.7281,45.6306",
+      "navigation": true
+    },
+    {
+      "id": "como-reroute-mixed",
+      "label": "Reroute from Cordusio to Como Cathedral, navigation request (starts inside coverage, ends outside)",
+      "start": "9.1858,45.4655",
+      "end": "9.0852,45.8101",
+      "navigation": true
+    }
+  ]
+}
