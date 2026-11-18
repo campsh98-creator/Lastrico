@@ -508,7 +508,7 @@ test("runtime modules are Worker-compatible: no Node modules, no fetch, no stora
   assert.deepEqual(silLayerIndex.tiles, {});
 });
 
-test("only the route handler reads the shadow adapter, and nothing at runtime reads the fused 4.39 overlay", async () => {
+test("only the route handler and the read-only map view read the shadow adapter, and nothing at runtime reads the fused 4.39 overlay", async () => {
   const offenders = { shadow: [], fused: [] };
   const walk = async (dir) => {
     for (const entry of await readdir(url(dir), { withFileTypes: true })) {
@@ -522,7 +522,7 @@ test("only the route handler reads the shadow adapter, and nothing at runtime re
     }
   };
   for (const root of ["app", "components", "worker", "lib", "public"]) await walk(root);
-  assert.deepEqual(offenders.shadow, ["app/api/routes/route.ts"]);
+  assert.deepEqual(offenders.shadow, ["app/api/routes/route.ts", "lib/road-intelligence-view.ts"]);
   assert.deepEqual(offenders.fused, []);
 });
 

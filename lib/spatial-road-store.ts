@@ -779,6 +779,8 @@ export class SpatialRoadIntelligenceStore {
   }
 }
 
+/** The Milan tile metadata the store was built with (names, surface values, tag sets), for read-only views. */
+export const milanTileMetadata = milanMeta as unknown as CompactTileMetadata;
 export const spatialRoadStore = new SpatialRoadIntelligenceStore(milanMeta as unknown as CompactTileMetadata, milanTileLoaders, false);
 export const roccellaSpatialRoadStore = new SpatialRoadIntelligenceStore(roccellaMeta as unknown as CompactTileMetadata, roccellaTileLoaders, true);
 

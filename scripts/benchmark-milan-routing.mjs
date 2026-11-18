@@ -32,6 +32,11 @@ if (silLayers) {
   const { createFsLayerProvider } = await import("../tests/helpers/sil-fs-provider.mjs");
   configureSilShadow({ mode: "shadow", provider: createFsLayerProvider(resolve(silLayers)) });
 }
+// Local experiment: --sil-rails also lets the (off by default) rail-aware chooser pick among the candidates; needs --sil-layers.
+if (process.argv.includes("--sil-rails")) {
+  const { configureSilRailExperiment } = await import("../lib/sil-rail-experiment.ts");
+  configureSilRailExperiment(true);
+}
 const base = new URL("outputs/phase425-benchmark/", root);
 const archive = new URL("responses/", base);
 const out = new URL(`${label}/`, base);
