@@ -1,4 +1,5 @@
 import { PROVIDER_USER_AGENT } from "./provider-identity.ts";
+import { PILOT_AREAS } from "./pilot-areas.ts";
 
 function delay(milliseconds: number, signal: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
@@ -158,7 +159,7 @@ export type NominatimResult = {
 };
 
 export function validMilanGeocodeResult(value: unknown): value is NominatimResult {
-  return validAreaGeocodeResult(value, { west: 9.04, south: 45.38, east: 9.31, north: 45.55 });
+  return validAreaGeocodeResult(value, PILOT_AREAS.milan.bounds);
 }
 
 export function validAreaGeocodeResult(value: unknown, bounds: { west: number; south: number; east: number; north: number }): value is NominatimResult {

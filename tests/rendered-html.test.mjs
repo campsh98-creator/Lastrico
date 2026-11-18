@@ -50,8 +50,8 @@ test("returns multiple, deduplicated Milan address candidates", async () => {
   assert.match(geocode, /NOMINATIM_MIN_INTERVAL_MS = 1_050/);
   assert.match(geocode, /fetchNominatim/);
   assert.match(geocode, /set\("street", queryWithoutCity\)/);
-  assert.match(geocode, /set\("city", "Milano"\)/);
-  assert.match(geocode, /toLocaleLowerCase\("it"\)\.trim\(\) !== "milano"/);
+  assert.match(geocode, /set\("city", cityHint \?\? "Milano"\)/, "Milano is the default city; a place typed after the comma (Como, Monza...) is kept");
+  assert.match(geocode, /function milanFirst/, "the service area includes the surrounding municipalities; Milan's own results come first");
   assert.match(geocode, /const seen = new Set<string>\(\)/);
   assert.match(geocode, /primary,/);
   assert.match(geocode, /secondary,/);

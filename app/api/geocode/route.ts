@@ -84,10 +84,22 @@ async function fetchPhoton(query: string, pilot: PilotArea, callerSignal: AbortS
   }
 }
 
+/**
+ * The service area now covers Milan's surroundings, so the answers may name other municipalities (Como, Monza, Ferno...).
+ * The city itself keeps coming first: the people who type "Via Torino 20" mean Milan. The order is otherwise preserved.
+ */
+function milanFirst<T extends { secondary: string }>(items: T[]): T[] {
+  const inMilan = (item: T) => item.secondary.toLocaleLowerCase("it").trim().endsWith("milano") ? 0 : 1;
+  return items.map((item, index) => ({ item, index })).sort((a, b) => inMilan(a.item) - inMilan(b.item) || a.index - b.index).map(({ item }) => item);
+}
+
 async function fetchPhotonOnce(query: string, pilot: PilotArea, callerSignal: AbortSignal): Promise<GeocodeApiResponseItem[]> {
   const photonUrl = new URL("https://photon.komoot.io/api/");
   photonUrl.searchParams.set("q", query);
   photonUrl.searchParams.set("limit", "10");
+  // Results inside the whole service area, ranked around the area's centre so that city streets still come first.
+  photonUrl.searchParams.set("lon", String(pilot.center[0]));
+  photonUrl.searchParams.set("lat", String(pilot.center[1]));
   photonUrl.searchParams.set("bbox", `${pilot.bounds.west},${pilot.bounds.south},${pilot.bounds.east},${pilot.bounds.north}`);
 
   const timeout = new AbortController();
@@ -130,8 +142,6 @@ async function fetchPhotonOnce(query: string, pilot: PilotArea, callerSignal: Ab
         typeof props.town === "string" ? props.town : undefined,
       ) ?? pilot.name;
 
-      if (pilot.id === "milan" && city.toLocaleLowerCase("it").trim() !== "milano") continue;
-
       const road = nonEmpty(
         typeof props.street === "string" ? props.street : undefined,
         typeof props.name === "string" ? props.name : undefined,
@@ -166,7 +176,7 @@ async function fetchPhotonOnce(query: string, pilot: PilotArea, callerSignal: Ab
         type: typeof props.type === "string" ? props.type : (typeof props.osm_value === "string" ? props.osm_value : "place"),
       });
     }
-    return results;
+    return milanFirst(results);
   } finally {
     clearTimeout(timer);
   }
@@ -196,11 +206,18 @@ export async function GET(request: NextRequest) {
     ? `${commaParts[0]} ${commaParts[1]}`
     : (commaParts[0] ?? query.split(",")[0].trim());
 
+  // Milan's service area now reaches Malpensa, Como, Bergamo, Monza...: a place the person typed after the comma
+  // ("Via Roma, Como") is kept. District or postcode parts of the app's own labels (digits, "·", "Municipio") are not.
+  const placeCandidate = !secondIsHouseNumber ? commaParts[1] : undefined;
+  const cityHint = pilot.id === "milan" && placeCandidate && /^[\p{L}][\p{L}' .-]{2,}$/u.test(placeCandidate)
+    && !/^(municipio|nil|zona|quartiere)\b/i.test(placeCandidate) && placeCandidate.toLowerCase() !== pilot.name.toLowerCase()
+    ? placeCandidate : null;
+
   const purposeParam = request.nextUrl.searchParams.get("purpose");
   const purpose: SearchPurpose = purposeParam === "suggest" || purposeParam === "search" ? purposeParam : "legacy";
   // Typing answers come from Photon only, so they never stand in for a Nominatim answer; a
   // suggestion may reuse a full search answer, which is at least as good.
-  const searchKey = `${pilot.id}:${queryWithoutCity.toLowerCase().trim()}`;
+  const searchKey = `${pilot.id}:${queryWithoutCity.toLowerCase().trim()}${cityHint ? `|${cityHint.toLowerCase()}` : ""}`;
   const suggestKey = `${searchKey}#suggest`;
   const cached = freshCached(searchKey) ?? (purpose === "suggest" ? freshCached(suggestKey) : undefined);
   if (cached) {
@@ -212,7 +229,7 @@ export async function GET(request: NextRequest) {
 
   if (purpose === "suggest") {
     try {
-      const results = await fetchPhoton(queryWithoutCity, pilot, request.signal);
+      const results = await fetchPhoton(cityHint ? `${queryWithoutCity} ${cityHint}` : queryWithoutCity, pilot, request.signal);
       if (!results.length) return emptyAnswer();
       remember(cacheKey, results);
       return NextResponse.json({ results }, {
@@ -232,12 +249,12 @@ export async function GET(request: NextRequest) {
   if (useStructuredStreet) {
     url.searchParams.set("street", queryWithoutCity);
     if (pilot.id === "milan") {
-      url.searchParams.set("city", "Milano");
+      url.searchParams.set("city", cityHint ?? "Milano");
     } else {
       url.searchParams.set("city", pilot.name);
     }
   } else {
-    url.searchParams.set("q", queryWithoutCity.toLowerCase().includes(pilot.name.toLowerCase()) ? queryWithoutCity : `${queryWithoutCity}, ${pilot.name}`);
+    url.searchParams.set("q", cityHint ? `${queryWithoutCity}, ${cityHint}` : queryWithoutCity.toLowerCase().includes(pilot.name.toLowerCase()) ? queryWithoutCity : `${queryWithoutCity}, ${pilot.name}`);
   }
   url.searchParams.set("format", "jsonv2");
   url.searchParams.set("limit", "10");
@@ -249,7 +266,7 @@ export async function GET(request: NextRequest) {
 
   const mapResults = (data: unknown[]) => {
     const seen = new Set<string>();
-    return data.filter((item) => validAreaGeocodeResult(item, pilot.bounds)).flatMap((item) => {
+    return milanFirst(data.filter((item) => validAreaGeocodeResult(item, pilot.bounds)).flatMap((item) => {
       const address = item.address ?? {};
       const city = nonEmpty(
         address.city,
@@ -258,7 +275,6 @@ export async function GET(request: NextRequest) {
         address.village,
         address.hamlet,
       ) ?? (pilot.id === "milan" ? "" : pilot.name);
-      if (pilot.id === "milan" && city.toLocaleLowerCase("it").trim() !== "milano") return [];
       const road = nonEmpty(
         address.road,
         address.pedestrian,
@@ -299,7 +315,7 @@ export async function GET(request: NextRequest) {
         coordinate: [Number(item.lon), Number(item.lat)] as [number, number],
         type: item.addresstype ?? item.type ?? "place",
       }];
-    });
+    }));
   };
 
   try {
@@ -337,6 +353,12 @@ export async function GET(request: NextRequest) {
             mapped = mapResults(fallbackData);
           }
         }
+        if (mapped.length === 0 && pilot.id === "milan" && !cityHint && !useStructuredStreet && !signalNominatim.aborted) {
+          const plainUrl = new URL(url.toString());
+          plainUrl.searchParams.set("q", queryWithoutCity);
+          const plainData = await fetchNominatim(plainUrl, signalNominatim);
+          if (Array.isArray(plainData)) mapped = mapResults(plainData);
+        }
         nominatimBreaker.success();
         return mapped;
       } catch (err) {
@@ -351,7 +373,7 @@ export async function GET(request: NextRequest) {
 
     const runPhoton = async (): Promise<GeocodeApiResponseItem[]> => {
       try {
-        return await fetchPhoton(queryWithoutCity, pilot, signalPhoton);
+        return await fetchPhoton(cityHint ? `${queryWithoutCity} ${cityHint}` : queryWithoutCity, pilot, signalPhoton);
       } catch (err) {
         photonFailed = true;
         if (!signalPhoton.aborted) {
@@ -420,7 +442,9 @@ export async function GET(request: NextRequest) {
 
       // An explicit search gives Nominatim a fair chance before also asking Photon (hedge);
       // the pre-4.35 race at 250 ms stays for clients that send no purpose.
-      photonTimer = setTimeout(startPhoton, purpose === "search" ? 1_200 : 250);
+      // An explicit place ("Via Roma, Como") is Nominatim's to answer; Photon, biased to Milan, would race it with
+      // Milan streets. It still runs if Nominatim fails or finds nothing (the branches above).
+      if (!cityHint) photonTimer = setTimeout(startPhoton, purpose === "search" ? 1_200 : 250);
     });
 
     if (results.length === 0) {
