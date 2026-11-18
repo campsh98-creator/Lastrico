@@ -143,6 +143,8 @@ const A_ASSOC_SHIFT = 8;
 type TileIndex = { w: number; h: number; minX: number; minY: number; geom: Float64Array; codes: Uint16Array; start: Int32Array; items: Int32Array };
 type SilIndex = {
   tiles: TileIndex[];
+  /** State code per base tuple, by tile (the map view reads these instead of walking a route). */
+  codesByTile: Map<string, Uint16Array>;
   consulted: Record<SilLayerSourceId, boolean>;
   tilesChecked: number;
   tilesCompatible: number;
@@ -285,7 +287,7 @@ export function silStateCode(opened: OpenedTile, idx: number): number {
  */
 export async function buildSilIndex(provider: SilLayerProvider, manifest: SilLayersManifest, store: SilStoreLike, tileKeys: readonly string[]): Promise<SilIndex> {
   const consulted = { osm: !!manifest.sources.osm, dbt: !!manifest.sources.dbt, atm: !!manifest.sources.atm, assoc: !!manifest.sources.assoc };
-  const index: SilIndex = { tiles: [], consulted, tilesChecked: 0, tilesCompatible: 0, tilesMismatched: 0, tilesMissing: 0, problems: {}, layerTilesLoaded: 0 };
+  const index: SilIndex = { tiles: [], codesByTile: new Map(), consulted, tilesChecked: 0, tilesCompatible: 0, tilesMismatched: 0, tilesMissing: 0, problems: {}, layerTilesLoaded: 0 };
   // Phase 1: base tiles and their identity, then every layer tile in parallel (the lazy imports overlap).
   const tiles: { tileKey: string; tuples: ReadonlyArray<ReadonlyArray<unknown>>; opened: OpenedTile; mismatched: boolean; fp: string }[] = [];
   for (const tileKey of tileKeys) {
@@ -320,7 +322,9 @@ export async function buildSilIndex(provider: SilLayerProvider, manifest: SilLay
   // Phase 2: one cached segment index per tile (the states of a tile never change while its layers and base do not).
   for (const { tileKey, tuples, opened, mismatched, fp } of tiles) {
     if (mismatched) index.tilesMismatched++; else index.tilesCompatible++;
-    index.tiles.push(tileIndexFor(tileKey, tuples, opened, fp));
+    const tileIndex = tileIndexFor(tileKey, tuples, opened, fp);
+    index.tiles.push(tileIndex);
+    index.codesByTile.set(tileKey, tileIndex.codes);
   }
   return index;
 }
@@ -332,7 +336,7 @@ export async function buildSilIndex(provider: SilLayerProvider, manifest: SilLay
 export type SilRouteAccumulator = { byCode: Float64Array; unmatched: number; ambiguousRouteMatch: number; total: number };
 
 /** Metres per state code along one polyline [lon, lat][]. Each 10 m of route lands in exactly one code or in "unmatched". */
-export function walkSilRoute(index: SilIndex, coordinates: ReadonlyArray<readonly number[]>): SilRouteAccumulator {
+export function walkSilRoute(index: SilIndex, coordinates: ReadonlyArray<readonly number[]>, onStep?: (vertex: number, code: number) => void): SilRouteAccumulator {
   const acc: SilRouteAccumulator = { byCode: new Float64Array(1 << 13), unmatched: 0, ambiguousRouteMatch: 0, total: 0 };
   const { stepMetres: STEP, reachMetres: REACH, cosAligned: COS, cellMetres: CELL } = SIL_LIMITS;
   const REACH2 = REACH * REACH;
@@ -379,6 +383,7 @@ export function walkSilRoute(index: SilIndex, coordinates: ReadonlyArray<readonl
       if (bestCode < 0) acc.unmatched += share;
       else {
         acc.byCode[bestCode] += share;
+        onStep?.(i, bestCode);
         if (ambiguous) acc.ambiguousRouteMatch += share;
       }
     }
@@ -554,5 +559,59 @@ export async function silShadowDiagnostics(input: {
     };
   } catch {
     return unavailable("internal-error", started, before);
+  }
+}
+
+/** True when a state code says rails are mapped on a carriageway the road shares: OSM, or DBT of a shared or unknown class (not own right-of-way). */
+export function silCodeHasSharedRails(code: number): boolean {
+  const osm = code & 3, dbt = (code >> 2) & 3, cls = (code >> 4) & 3;
+  return osm === S_MAPPED || (dbt === S_MAPPED && cls !== 2);
+}
+
+/**
+ * Local experiment: the vertex indices (the index of the segment's end vertex, as extractRoughSlices reads them) of a
+ * route that run on mapped shared rails, for building a penalised search. Null when the layers are not readable.
+ */
+export async function silRailVertexIndices(input: { area: string; coordinates: [number, number][]; store: SilStoreLike; loadedTileKeys: readonly string[] }): Promise<Set<number> | null> {
+  if (input.area !== "milan") return null;
+  try {
+    const provider = config.provider === undefined ? providerFromIndex(silLayerIndex) : config.provider;
+    if (!provider) return null;
+    const manifestResult = await loadManifestOnce(provider);
+    if (!manifestResult.ok) return null;
+    const manifest = manifestResult.value;
+    if (manifest.base.sourceDatasetSha256 === null || manifest.base.sourceDatasetSha256 !== input.store.sourceSha256) return null;
+    const loaded = new Set(input.loadedTileKeys);
+    const wanted = new Set<string>();
+    for (const key of input.store.getTileKeysForCoordinates(input.coordinates, SIL_LIMITS.reachMetres)) if (loaded.has(key)) wanted.add(key);
+    const tileKeys = [...wanted].sort().slice(0, SIL_LIMITS.maxTiles);
+    if (!tileKeys.length) return null;
+    const index = await buildSilIndex(provider, manifest, input.store, tileKeys);
+    if (Object.keys(index.problems).length) return null;
+    const marked = new Set<number>();
+    walkSilRoute(index, input.coordinates, (vertex, code) => { if (silCodeHasSharedRails(code)) marked.add(vertex); });
+    return marked;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Local layers for a map view: the state code of every base tuple of the given tiles, or null when the layers are not
+ * readable (always the case in a deployment, where no layer set exists).
+ */
+export async function silTileCodes(input: { area: string; store: SilStoreLike; tileKeys: readonly string[] }): Promise<Map<string, Uint16Array> | null> {
+  if (input.area !== "milan") return null;
+  try {
+    const provider = config.provider === undefined ? providerFromIndex(silLayerIndex) : config.provider;
+    if (!provider) return null;
+    const manifestResult = await loadManifestOnce(provider);
+    if (!manifestResult.ok) return null;
+    const manifest = manifestResult.value;
+    if (manifest.base.sourceDatasetSha256 === null || manifest.base.sourceDatasetSha256 !== input.store.sourceSha256) return null;
+    const index = await buildSilIndex(provider, manifest, input.store, [...input.tileKeys].sort().slice(0, SIL_LIMITS.maxTiles));
+    return Object.keys(index.problems).length ? null : index.codesByTile;
+  } catch {
+    return null;
   }
 }

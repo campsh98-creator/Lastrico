@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSpatialRoadStore } from "@/lib/spatial-road-store";
-import { silShadowDiagnostics } from "@/lib/sil-shadow";
+import { silRailVertexIndices, silShadowDiagnostics } from "@/lib/sil-shadow";
 import { chooseRailAware, silRailExperimentEnabled } from "@/lib/sil-rail-experiment";
 import { areaForCoordinate, coordinateInArea } from "@/lib/pilot-areas";
 import {
@@ -511,6 +511,8 @@ export async function GET(request: NextRequest) {
   const area = start ? areaForCoordinate(start) : undefined;
   const requestedArea = request.nextUrl.searchParams.get("area");
   const avoidance = (request.nextUrl.searchParams.get("avoid") ?? "strong") as Avoidance;
+  // Independent tram-track preference (local layers only; without them it is reported as unavailable and changes nothing).
+  const tramPreference = request.nextUrl.searchParams.get("tram") === "avoid" || silRailExperimentEnabled();
   const maximumExtraMinutes = parseExtraMinutes(request.nextUrl.searchParams.get("maxExtraMinutes"));
   // Phase 4.31: departure time (Milan local, "YYYY-MM-DDTHH:MM"; now when absent) and the ZTL
   // areas the person is authorised for in this mode. Unknown area ids are ignored.
@@ -780,6 +782,33 @@ export async function GET(request: NextRequest) {
         }
       }
     }
+    // Tram-track avoidance: one more penalised search, built like the anti-pavé one from the slices of the fastest route that run
+    // on mapped shared rails (plus its stone, so comfort is optimised together). Planner only; counts against the request budget.
+    const railAwareRoutes: EngineRoute[] = [];
+    let railGeneration: { attempted: boolean; slices: number; generated: boolean; reason: string } = { attempted: false, slices: 0, generated: false, reason: tramPreference ? "not-run" : "off" };
+    if (tramPreference && area.id === "milan" && !navigationRequest && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
+      && deadline - Date.now() >= 4_000 && providerRequestBudgetLeft() && maximumExtraMinutes !== 0) {
+      const railVertices = await silRailVertexIndices({ area: area.id, coordinates: fastestBase.coordinates, store: spatialRoadStore, loadedTileKeys });
+      if (!railVertices) railGeneration.reason = "layers-unavailable";
+      else {
+        const railSlices = extractRoughSlices(fastestBase.coordinates, (_prev, _curr, idx) => railVertices.has(idx), 20, 30);
+        railGeneration = { ...railGeneration, slices: railSlices.length, reason: railSlices.length ? "searching" : "no-rails-on-fastest" };
+        if (railSlices.length) {
+          const stoneSlices = extractRoughSlices(fastestBase.coordinates, (_prev, _curr, idx) => Boolean(preliminaryFast.surfaceScore.roughSegmentIndices?.has(idx)), sliceMinimumMeters);
+          const factors = [...buildLinearCostFactors(stoneSlices, 15.0, 4).factors, ...buildLinearCostFactors(railSlices, 8.0, 6).factors];
+          railGeneration.attempted = true;
+          providerRequestsUsed += 1;
+          const railRoute = await fetchValhallaCustomizedRoute([start, end], mode, factors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal);
+          if (!railRoute) railGeneration.reason = "provider-failed";
+          else {
+            await ensureRouteCovered(railRoute.coordinates);
+            const railScored = scoredCandidate(railRoute, "rail-aware-valhalla");
+            if (keepsPenalisedRoute(railScored)) { railAwareRoutes.push(railRoute); railGeneration = { ...railGeneration, generated: true, reason: "generated" }; }
+            else railGeneration.reason = "adds-stone";
+          }
+        }
+      }
+    }
     const surfaceAwareSourcesOf = () => surfaceAwareRoutes.map((route, index) => ({
       route, source: index === 0 ? "surface-aware-valhalla" : `surface-aware-valhalla-${index + 1}`,
     }));
@@ -867,6 +896,7 @@ export async function GET(request: NextRequest) {
     const generated = [
       ...baseRoutes.map((route, index) => ({ route, source: `base-${index + 1}` })),
       ...surfaceAwareSourcesOf(),
+      ...railAwareRoutes.map((route) => ({ route, source: "rail-aware-valhalla" })),
       ...detourResponses.flatMap((routes, index) =>
         routes.map((route) => ({ route, source: `detour-${index + 1}` })),
       ),
@@ -888,7 +918,7 @@ export async function GET(request: NextRequest) {
     let safe = hasDistinctAlternative ? selection.safe : fast;
     // EXPERIMENT (off by default, local layers only): tram rails as a separate dimension for two-wheelers.
     let railExperiment: unknown = null;
-    if (silRailExperimentEnabled() && area.id === "milan" && mode !== "car" && !navigationRequest) {
+    if (tramPreference && area.id === "milan" && !navigationRequest) {
       const legal = scored.filter((candidate) => isLegalCandidate(candidate, mode));
       const evidence = await silShadowDiagnostics({
         area: area.id, store: spatialRoadStore, loadedTileKeys, force: true,
@@ -900,9 +930,9 @@ export async function GET(request: NextRequest) {
           id: index, seconds: candidate.route.duration, paveMeters: candidate.paveMeters, riskMeters: candidate.riskMeters, diagnostics: diagnosticsOf(index),
         })).filter((candidate) => candidate.diagnostics && !("sameAs" in candidate.diagnostics));
         const choice = chooseRailAware(candidates, legal.indexOf(safe), fast.route.duration, maximumExtraMinutes);
-        railExperiment = { ...choice, candidates: legal.length, processingMs: evidence.processingMs };
+        railExperiment = { ...choice, candidates: legal.length, processingMs: evidence.processingMs, generation: railGeneration };
         if (choice.replaced) safe = legal[choice.chosen];
-      } else railExperiment = { replaced: false, reason: evidence ? "layers-" + evidence.status : "layers-off" };
+      } else railExperiment = { replaced: false, reason: evidence ? "layers-" + evidence.status : "layers-off", generation: railGeneration };
     }
     // Phase 4.31 release gate: why the shown route is what it is, in terms the person can act on.
     const standard = baseScored[0];
