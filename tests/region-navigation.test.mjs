@@ -55,8 +55,7 @@ test("the service area reaches the surrounding municipalities, the enriched cove
   }
   assert.equal(coordinateInCoverage([8.7281, 45.6306], PILOT_AREAS.milan), false, "Malpensa has no enriched road data");
   assert.equal(coordinateInCoverage([9.19, 45.4642], PILOT_AREAS.milan), true);
-  // Other pilot areas and far-away places are untouched: no overlap, still rejected.
-  assert.equal(areaForCoordinate([12.4964, 41.9028])?.id, "rome");
+  // Roccella is untouched and far-away places are still rejected (Rome is not part of the Milan release).
   assert.equal(areaForCoordinate([16.4008, 38.3224])?.id, "roccella");
   assert.equal(areaForCoordinate([2.35, 48.85]), undefined, "Paris");
   assert.equal(areaForCoordinate([14.25, 40.85]), undefined, "Naples");

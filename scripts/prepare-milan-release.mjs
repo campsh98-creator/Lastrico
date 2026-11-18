@@ -13,7 +13,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, symlinkSync, 
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  ROME_COMMITS, ROME_SHARED_FILES, ROME_SOURCE_PATTERN, ROUTES_HANDLER, removeRomeBlocksFromRoutesHandler,
+  ROME_COMMITS, ROME_SHARED_FILES, ROME_SHARED_FILE_RESOLUTIONS, ROME_SOURCE_PATTERN, ROUTES_HANDLER, applyRomeResolutions, removeRomeBlocksFromRoutesHandler,
 } from "./milan-release.mjs";
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -55,7 +55,9 @@ for (const file of ROME_SHARED_FILES) {
   writeFileSync(base, git("show", `${ROME_COMMITS.last}:${file}`));
   writeFileSync(other, git("show", `${ROME_COMMITS.first}^:${file}`));
   try {
-    execFileSync("git", ["merge-file", "-q", join(target, file), base, other]);
+    const resolved = Object.hasOwn(ROME_SHARED_FILE_RESOLUTIONS, file);
+    execFileSync("git", ["merge-file", "-q", ...(resolved ? ["--ours"] : []), join(target, file), base, other]);
+    if (resolved) writeFileSync(join(target, file), applyRomeResolutions(file, readFileSync(join(target, file), "utf8")));
   } catch {
     throw new Error(`${file}: the Rome hunks no longer come out cleanly; resolve by hand and update scripts/milan-release.mjs`);
   }

@@ -32,6 +32,33 @@ export const ROME_SHARED_FILES = [
   "tests/pilot-areas.test.mjs",
 ];
 
+/**
+ * Shared files where a later Milan change sits next to a Rome hunk, so the three-way merge cannot decide alone
+ * (18 November 2026: the Milan service area in lib/pilot-areas.ts, the surrounding-municipality search in the
+ * geocoder). For these files the merge keeps the current text in the conflicting regions (`--ours`) and the Rome
+ * leftovers are then removed by exact replacement, refused if the text has moved. Every other shared file still has to
+ * merge cleanly.
+ */
+export const ROME_SHARED_FILE_RESOLUTIONS = {
+  "lib/pilot-areas.ts": [
+    { find: `export type PilotAreaId = "milan" | "roccella" | "rome";`, replace: `export type PilotAreaId = "milan" | "roccella";` },
+    { find: `  rome: { id: "rome", name: "Roma", bounds: { west: 12.40, south: 41.80, east: 12.60, north: 41.97 }, center: [12.4964, 41.9028] },
+`, replace: "" },
+  ],
+  "app/api/geocode/route.ts": [],
+};
+
+/** Applies the exact replacements of a resolved shared file; throws if one is missing or appears more than once. */
+export function applyRomeResolutions(file, source) {
+  let result = source;
+  for (const { find, replace } of ROME_SHARED_FILE_RESOLUTIONS[file] ?? []) {
+    const occurrences = result.split(find).length - 1;
+    if (occurrences !== 1) throw new Error(`${file}: Rome leftover found ${occurrences} times; update scripts/milan-release.mjs`);
+    result = result.replace(find, replace);
+  }
+  return result;
+}
+
 export const ROUTES_HANDLER = "app/api/routes/route.ts";
 
 /** The routes handler's Rome-only blocks and what replaces them (the pre-Rome text). */

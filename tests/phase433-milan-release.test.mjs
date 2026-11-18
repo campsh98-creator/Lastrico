@@ -5,7 +5,7 @@ import { readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
-  ROME_SOURCE_PATTERN, ROUTES_HANDLER, ROUTES_HANDLER_ROME_BLOCKS, findRomeInBuild, removeRomeBlocksFromRoutesHandler,
+  ROME_SHARED_FILE_RESOLUTIONS, ROME_SOURCE_PATTERN, ROUTES_HANDLER, ROUTES_HANDLER_ROME_BLOCKS, applyRomeResolutions, findRomeInBuild, removeRomeBlocksFromRoutesHandler,
 } from "../scripts/milan-release.mjs";
 
 /** Phase 4.33: the Milan and Roccella release leaves Rome out; the pilot deploy refuses a build with Rome. */
@@ -79,4 +79,24 @@ test("the pilot rollback build keeps exactly the release's Durable Object bindin
   assert.match(rollback, /export class RouteEngine/);
   assert.match(rollback, /commit: "69678e3"/, "the commit 03a6776e was built from");
   assert.match(rollback, /--commit=\$\{PILOT_0428\.commit\}/, "made by the release script, Rome excluded");
+});
+
+test("the service-area file loses its Rome leftovers by exact replacement, and a moved line is refused", () => {
+  // A self-contained sample: in the Rome-free release copy the real file has no Rome line left to remove.
+  const sample = [
+    'export type PilotAreaId = "milan" | "roccella" | "rome";',
+    "export const PILOT_AREAS = {",
+    '  milan: { id: "milan", name: "Milano", bounds: MILAN_SERVICE_BOUNDS },',
+    '  rome: { id: "rome", name: "Roma", bounds: { west: 12.40, south: 41.80, east: 12.60, north: 41.97 }, center: [12.4964, 41.9028] },',
+    '  roccella: { id: "roccella", name: "Roccella Ionica" },',
+    "};",
+    "",
+  ].join("\n");
+  assert.ok(Object.keys(ROME_SHARED_FILE_RESOLUTIONS).includes("lib/pilot-areas.ts"));
+  const milan = applyRomeResolutions("lib/pilot-areas.ts", sample);
+  assert.doesNotMatch(milan, ROME_SOURCE_PATTERN);
+  assert.ok(milan.includes('export type PilotAreaId = "milan" | "roccella";'));
+  assert.ok(milan.includes('milan: { id: "milan", name: "Milano", bounds: MILAN_SERVICE_BOUNDS }') && milan.includes("roccella:"), "Milan and Roccella are kept");
+  assert.throws(() => applyRomeResolutions("lib/pilot-areas.ts", milan), /found 0 times/, "a moved or already removed line is refused");
+  assert.equal(applyRomeResolutions("lib/spatial-road-store.ts", "unchanged"), "unchanged", "files without a resolution pass through");
 });
