@@ -81,14 +81,22 @@ test("the pilot rollback build keeps exactly the release's Durable Object bindin
   assert.match(rollback, /--commit=\$\{PILOT_0428\.commit\}/, "made by the release script, Rome excluded");
 });
 
-test("the service-area file loses its Rome leftovers by exact replacement, and a moved line is refused", async () => {
-  const source = (await read("lib/pilot-areas.ts")).replace(/\r\n/g, "\n");
+test("the service-area file loses its Rome leftovers by exact replacement, and a moved line is refused", () => {
+  // A self-contained sample: in the Rome-free release copy the real file has no Rome line left to remove.
+  const sample = [
+    'export type PilotAreaId = "milan" | "roccella" | "rome";',
+    "export const PILOT_AREAS = {",
+    '  milan: { id: "milan", name: "Milano", bounds: MILAN_SERVICE_BOUNDS },',
+    '  rome: { id: "rome", name: "Roma", bounds: { west: 12.40, south: 41.80, east: 12.60, north: 41.97 }, center: [12.4964, 41.9028] },',
+    '  roccella: { id: "roccella", name: "Roccella Ionica" },',
+    "};",
+    "",
+  ].join("\n");
   assert.ok(Object.keys(ROME_SHARED_FILE_RESOLUTIONS).includes("lib/pilot-areas.ts"));
-  const milan = applyRomeResolutions("lib/pilot-areas.ts", source);
-  // The Rome presets are taken out by the three-way merge before this step; here only the two lines that merge cannot decide.
-  assert.ok(!milan.includes('rome: { id: "rome"') && !milan.includes('"milan" | "roccella" | "rome"'));
+  const milan = applyRomeResolutions("lib/pilot-areas.ts", sample);
+  assert.doesNotMatch(milan, ROME_SOURCE_PATTERN);
   assert.ok(milan.includes('export type PilotAreaId = "milan" | "roccella";'));
-  assert.ok(milan.includes('milan: { id: "milan"'), "Milan keeps its service bounds");
-  assert.throws(() => applyRomeResolutions("lib/pilot-areas.ts", milan), /found 0 times/);
+  assert.ok(milan.includes('milan: { id: "milan", name: "Milano", bounds: MILAN_SERVICE_BOUNDS }') && milan.includes("roccella:"), "Milan and Roccella are kept");
+  assert.throws(() => applyRomeResolutions("lib/pilot-areas.ts", milan), /found 0 times/, "a moved or already removed line is refused");
   assert.equal(applyRomeResolutions("lib/spatial-road-store.ts", "unchanged"), "unchanged", "files without a resolution pass through");
 });
