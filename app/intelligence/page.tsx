@@ -17,14 +17,14 @@ export default function IntelligencePage() {
   const [railsAvailable, setRailsAvailable] = useState<boolean | null>(null);
   const [totals, setTotals] = useState<Totals | null>(null);
   const [selected, setSelected] = useState<Record<string, unknown> | null>(null);
-  const [status, setStatus] = useState("Avvicina la mappa (zoom 14 o più) per vedere i dati.");
+  const [status, setStatus] = useState("Avvicina la mappa (zoom 15 o più) per vedere i dati.");
 
   useEffect(() => {
     let cancelled = false;
     import("maplibre-gl").then(({ Map, NavigationControl }) => {
       if (cancelled || !container.current) return;
       const map = new Map({
-        container: container.current, center: [9.19, 45.4642], zoom: 14.5,
+        container: container.current, center: [9.19, 45.4642], zoom: 16,
         style: { version: 8, sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, attribution: "© OpenStreetMap contributors" } }, layers: [{ id: "bg", type: "raster", source: "osm", paint: { "raster-opacity": 0.45 } }] },
       });
       mapRef.current = map;
@@ -35,7 +35,7 @@ export default function IntelligencePage() {
         map.on("click", "roads", (event) => setSelected(event.features?.[0]?.properties ?? null));
         map.on("click", (event) => { if (!map.queryRenderedFeatures(event.point, { layers: ["roads"] }).length) setSelected(null); });
         const load = async () => {
-          if (map.getZoom() < 14) { setStatus("Avvicina la mappa (zoom 14 o più) per vedere i dati."); return; }
+          if (map.getZoom() < 15) { setStatus("Avvicina la mappa (zoom 15 o più) per vedere i dati."); return; }
           const b = map.getBounds();
           const w = Math.min(b.getEast(), b.getWest() + 0.029), n = Math.min(b.getNorth(), b.getSouth() + 0.029);
           setStatus("Carico…");
