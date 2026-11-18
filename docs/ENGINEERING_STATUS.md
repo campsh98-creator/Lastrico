@@ -1,33 +1,82 @@
 # Engineering status
 
-Status on 13 November 2026, `main` at `df9def9` (Phase 4.35, PR #14). The pilot runs the same code,
-built from commit `54bd605`. This page separates what exists locally from
-what is online, and fixed defects from open problems. Every claim points to
-the evidence in `outputs/`; the detailed phase reports there are in Italian.
+Status on 18 November 2026. `main` is at `8e408ca` (PRs #16 to #21 merged). **Two deployments are online** and
+both stay online: the pilot `lastrico-pilot` (older code, built from `54bd605`, not touched) and the isolated preview
+`lastrico-preview-437` (built from `ba65a5f`: PR #16 and PR #20). This page separates what exists locally from what
+is online, and fixed defects from open problems. Every claim points to the evidence in `outputs/`; the detailed
+phase reports there are in Italian.
+
+## Product direction (18 November 2026)
+
+Lastrico is a **general-purpose navigator** with an extra, own **road intelligence layer**. Focus is Milan, its
+metropolitan area and the surrounding municipalities; Rome and Roccella stay in the code and data but get no new work.
+Navigation never depends on the enriched coverage: outside it a route is calculated and followed like any navigator's
+and every surface stays explicitly unknown. Details of the service area change: section "Regional navigation" below.
 
 ## Phase tracker: routing forensics and Surface Intelligence (4.36 to 4.40)
 
-Updated on 15 November 2026. None of the phases below is on the pilot. Phases 4.38 to 4.40 exist only
-as unpublished development work: nothing is merged into `main`, deployed or running on the pilot.
-
 | Phase | Status | What it is | Where |
 | --- | --- | --- | --- |
-| **4.36** | **COMPLETED: research and feasibility** | Forensic audit of the 13 November return trip, data and external-source audit, routing experiments, Surface Intelligence Layer (SIL) design, smartphone-sensing feasibility. No production code. Closed and archived on 15 November 2026. | `outputs/phase436-surface-intelligence/` (`CLOSURE.md`, `final-decision-report.md`); scripts in `experiments/phase436-surface-intelligence/scripts/` |
-| **4.37** | **IMPLEMENTED: PR #16, pilot validation pending** | Anti-pavé candidate generation fix (P0 of the 4.36 plan), U-turn cost, trace v3. PR #16 is open with CI green and is not merged; its files live on the PR branch only. | branch `fix/phase437-anti-pave-candidates`, `outputs/phase437-anti-pave-report.md` on that branch |
-| **4.38** | **IMPLEMENTED LOCALLY: OSM foundation, not merged** | Versioned OSM provenance, segment identities, circular-way direction fix. | Not published; report to follow with the implementation PR |
-| **4.39** | **IMPLEMENTED LOCALLY: offline SIL, not merged** | Evidence ledger, deterministic resolver, static rail overlay, coverage flags, offline shadow reader. | Not published; report to follow with the implementation PR |
-| **4.39b** | **IMPLEMENTED LOCALLY: citywide municipal DBT acquisition, not merged** | Comune di Milano DBT 2020 tram axes for the whole city, with explicit coverage. Combined OSM/DBT/ATM data must not be distributed until the licences are settled. | Not published; report to follow with the implementation PR |
-| **4.40** | **IMPLEMENTED LOCALLY AND TECHNICALLY VALIDATED: runtime shadow integration; not merged, not deployed, not production-ready** | Source-separated SIL layers (OSM, DBT, ATM, internal association) and a read-only shadow adapter that adds `diagnostics.sil` to Milan route responses. Off by default. Acceptance tests passed locally on 15 November 2026: 264 of 264 Milan cases identical in status, geometry, selection, surface, time, legality and provider requests; no external request. Not measured on Cloudflare, Linux CI not run, layers not distributable (licences open). Not for production. | Not published; report to follow with the implementation PR |
+| **4.36** | **COMPLETED, archived in `main`** (PR #17) | Forensic audit of the 13 November return trip, data audit, routing experiments, SIL design, sensing feasibility. No production code. | `outputs/phase436-surface-intelligence/`, `experiments/phase436-surface-intelligence/` |
+| **4.37** | **MERGED (PR #16, PR #20), on the preview, not on the pilot** | Anti-pavé candidate generation (15 m slices, stricter early stop, U-turn cost, trace v3) and, at "Maximum" avoidance, refinement while stone is left. | `main`; `outputs/phase437-local-routing-validation.md` (local, untracked) |
+| **4.38 to 4.40** | **CONSOLIDATED on the local branch `integration/road-intelligence`; not pushed, not deployed** | OSM provenance and stable identities, offline SIL (evidence ledger, resolver, rails overlay), citywide DBT, source-separated layers and a read-only shadow adapter (`diagnostics.sil`, off by default) | the branch (unchanged history, merge commit on top of `main`); reports `outputs/phase438-*`, `phase439-*`, `phase439b-*`, `phase440-*` on it |
 
-**Handoff from 4.36.** Phase 4.36 recommended and did not implement: the candidate-generation fixes (now 4.37),
-OSM re-extraction with provenance (4.38), the rails layer and the SIL in shadow mode (4.39, 4.39b, 4.40), field
-surveys of the disputed sections, and a shadow ranking. Still open from that list: the owner's decision on mixed
-licences, the field surveys, the shadow ranking, and any sensing work (an in-app recorder is a no-go). The
-research is not reopened because integration is unfinished. The mapping of every recommendation to its phase is
-in `outputs/phase436-surface-intelligence/CLOSURE.md`.
+Measured on the preview against the pilot (18 November 2026, same provider, 8 public-landmark journeys, strict request
+budget): identical routes on 5 of them (no regression); Piazzale Lodi return at "Maximum" **0 m instead of 25 m of
+confirmed stone, passes Via Friuli, 22 s faster**; Piazzale Lodi outbound at "Maximum" 0 m instead of 50 m (+415 m);
+Brera to Darsena by bicycle 192 m instead of 922 m of confirmed stone (+1.7 min). At "Strong" the two Lodi replicas are
+identical (50 m and 25 m): the shortcut of the real plan was proven live in Phase 4.37 only. Provider requests per
+calculation: 1 to 6 (cap 7). These are measured on the routing engine and a public provider, **not** on a physical road
+or an iPhone.
 
 **Rail data is evidence, not measurement.** The DBT layer says where the Comune mapped tram rails in 2020. It
 does not say they are physically present or rough today, and the product must not claim otherwise.
+
+## Road intelligence layer (own enriched road data)
+
+| Part | State |
+| --- | --- |
+| Sources | OSM (ODbL 1.0), Comune di Milano DBT 2020 (CC BY; version 2.5 IT or 4.0, conflicting in its own metadata), ATM scheduled lines (CC BY 4.0), derived association metadata (internal) |
+| Code | in `integration/road-intelligence`: `lib/sil-layers.ts`, `lib/sil-shadow.ts`, `scripts/sil/*` (build, parity, runtime and bundle measurement, corridor report, **`sil-inspect.mjs` local map inspector**) |
+| Runtime | shadow only, **off by default** (`LASTRICO_SIL_MODE=shadow`); the layer index in Git is empty; layers are generated locally into a git-ignored folder |
+| Measured (4.40, Node on Windows, not Cloudflare) | 264 of 264 Milan cases identical with the shadow on; about 1.2 to 2 ms CPU per request warm; +6.1 % gzip on the bundle in the 4.40 build |
+| Not done | Cloudflare measurement (cold start, memory), Linux CI of the combined branch, any use of rails in ranking |
+| Blocked | distribution of the layers and any combined OSM/DBT/ATM file until the licence questions in `outputs/phase440-sil-runtime-shadow-report.md` section 4 are settled; the DBT licence version conflict; the share-alike effect of ODbL on a combined database |
+
+The inspector (`node scripts/sil/sil-inspect.mjs --layers=<build>/layers`) writes one local HTML page into the ignored
+`work/` folder: a segment map coloured by mapped rails, surface material, coverage state or ATM service, with source,
+date and licence per source. It never colours rails as roughness. Its output mixes licences and must not be published.
+
+## Regional navigation (Milan, metropolitan area, surrounding municipalities)
+
+Before 18 November a journey was refused unless **both** points were inside the Milan city box (9.04 to 9.31 E, 45.38 to
+45.55 N): Malpensa, Monza, Como and Bergamo could not be calculated, and the GPS processor dropped every fix outside the
+box. Now `PILOT_AREAS.milan.bounds` is the **service area** (8.55 to 9.85 E, 45.10 to 45.95 N) and the enriched data has
+its own `coverageBounds` (the old city box). Search, route calculation, GPS tracking, reroutes, arrival and community
+reports use the service area; the surface layer returns "unknown" wherever no compiled tile exists.
+
+Verified with recorded provider answers (`tests/region-navigation.test.mjs`, `tests/fixtures/region/`, 40 live provider
+requests used once): inside Milan 100 % surface coverage; Linate 46 %, Monza 21 %, Como 7 %, Malpensa 9 %,
+Bergamo 7 %, Monza into Milan 42 %; every route complete with turn-by-turn instructions; 1 to 6 provider requests;
+the old city-only bounds dropped over 100 simulated fixes on the Malpensa route, the new ones none, arrival detected.
+Destination search keeps a place typed after the comma ("Via Roma, Como"), falls back to the text as typed, and lists
+Milan's own results first. **Not yet checked:** voice instructions across a whole route on a device; route calculation
+CPU and latency on Cloudflare (a 60 km route took 0.3 to 0.8 s of CPU on Node and about 5 s of wall time with the
+provider pacing); search availability under provider throttling (the public Nominatim and Photon timed out during
+repeated checks).
+
+## Repository inventory and cleanup recommendation
+
+Nothing is deleted. Recommended only after you confirm, item by item.
+
+| Item | State | Recommendation |
+| --- | --- | --- |
+| Branches `fix/phase437-anti-pave-candidates`, `fix/milan-refine-while-stone-left`, `fix/ci-chrome-session-timeouts`, `ci/phase437-preview-workflow`, `ci/preview-437-pin-ba65a5f`, `docs/phase436-archive-clean` | merged into `main` | safe to delete (local and remote) |
+| Worktrees `wt-cihang`, `wt-preview437`, `wt-pin`, `wt-refine`, `wt-val437-base`, `wt-val437-cand`, the two `Lastrico-phase436-*` worktrees | their branches are merged, or detached validation copies | safe to remove once their logs are not needed |
+| Branches `feat/phase438`, `feat/phase439`, `feat/phase439b`, `feat/phase440` and their worktrees | **unpublished**, contained in `integration/road-intelligence` | keep until the integration branch is pushed and merged |
+| Untracked `experiments/phase436-surface-intelligence/` and `outputs/phase436-*` in the main worktree | local evidence and caches larger than what PR #17 archived | keep; do not publish (mixed licences, private route context) |
+| `outputs/phase437-local-routing-validation.md` and its helper folder | local report on the 264 cases | commit to `main` as documentation when you decide |
+| `docs/BUG_AUDIT*.md`, older `outputs/phase*` reports | historical | keep, no migration |
 
 ## 1. Where each feature stands
 

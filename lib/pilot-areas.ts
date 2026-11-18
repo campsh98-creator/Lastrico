@@ -1,12 +1,23 @@
 export type PilotAreaId = "milan" | "roccella" | "rome";
+export type Bounds = { west: number; south: number; east: number; north: number };
 export type PilotArea = {
   id: PilotAreaId;
   name: string;
-  bounds: { west: number; south: number; east: number; north: number };
+  /**
+   * SERVICE bounds: where a journey may start, end, be searched and be tracked by GPS. Navigation is general-purpose
+   * inside them; enriched road intelligence (see `coverageBounds`) is an extra layer, never a condition to navigate.
+   */
+  bounds: Bounds;
+  /** Where Lastrico's own enriched road data (compiled OSM tiles, DBT, ATM) exists. Outside it surfaces stay "unknown". */
+  coverageBounds?: Bounds;
   center: [number, number];
 };
+/** The compiled Milan road tiles cover the city only (0.01-degree tiles inside this box). */
+export const MILAN_COVERAGE_BOUNDS: Bounds = { west: 9.04, south: 45.38, east: 9.31, north: 45.55 };
+/** Milan, its metropolitan area and the surrounding municipalities: Malpensa, Como, Bergamo, Monza, Linate, Lodi, Pavia, Varese. */
+export const MILAN_SERVICE_BOUNDS: Bounds = { west: 8.55, south: 45.10, east: 9.85, north: 45.95 };
 export const PILOT_AREAS: Record<PilotAreaId, PilotArea> = {
-  milan: { id: "milan", name: "Milano", bounds: { west: 9.04, south: 45.38, east: 9.31, north: 45.55 }, center: [9.19, 45.464] },
+  milan: { id: "milan", name: "Milano", bounds: MILAN_SERVICE_BOUNDS, coverageBounds: MILAN_COVERAGE_BOUNDS, center: [9.19, 45.464] },
   rome: { id: "rome", name: "Roma", bounds: { west: 12.40, south: 41.80, east: 12.60, north: 41.97 }, center: [12.4964, 41.9028] },
   roccella: { id: "roccella", name: "Roccella Ionica", bounds: { west: 16.36, south: 38.29, east: 16.44, north: 38.35 }, center: [16.4008, 38.3224] },
 };
@@ -16,6 +27,12 @@ export function isPilotAreaId(value: string): value is PilotAreaId {
 export function coordinateInArea(coordinate: [number, number], area: PilotArea) {
   const [lon, lat] = coordinate;
   const b = area.bounds;
+  return Number.isFinite(lon) && Number.isFinite(lat) && lon >= b.west && lon <= b.east && lat >= b.south && lat <= b.north;
+}
+/** True where Lastrico's own enriched road data may exist (never a condition to calculate or follow a route). */
+export function coordinateInCoverage(coordinate: [number, number], area: PilotArea) {
+  const [lon, lat] = coordinate;
+  const b = area.coverageBounds ?? area.bounds;
   return Number.isFinite(lon) && Number.isFinite(lat) && lon >= b.west && lon <= b.east && lat >= b.south && lat <= b.north;
 }
 export function areaForCoordinate(coordinate: [number, number]): PilotArea | undefined {

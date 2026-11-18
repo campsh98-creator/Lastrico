@@ -1,0 +1,260 @@
+{
+ "host": {
+  "node": "v26.13.0",
+  "platform": "win32",
+  "note": "local Node measurement, not workerd and not Cloudflare"
+ },
+ "cases": 263,
+ "cold": {
+  "label": "cold: caches empty, every layer tile read and parsed once",
+  "requests": 263,
+  "cpuMs": {
+   "n": 263,
+   "min": 0,
+   "median": 0,
+   "p95": 16,
+   "max": 125,
+   "mean": 4.4
+  },
+  "processingMs": {
+   "n": 263,
+   "min": 0.3,
+   "median": 2,
+   "p95": 5.6,
+   "max": 138.7,
+   "mean": 3.13
+  },
+  "totalWallMs": 839,
+  "lookups": {
+   "layerTilesRequested": 6028,
+   "providerLoads": 228,
+   "cacheHits": 5800,
+   "baseTilesRead": 1812
+  },
+  "lookupsPerRequest": {
+   "layerTilesRequested": 22.9,
+   "providerLoads": 0.9,
+   "cacheHits": 22.1,
+   "baseTilesRead": 6.9
+  },
+  "statuses": {
+   "ok": 260,
+   "partial": 3
+  }
+ },
+ "repeat": {
+  "label": "repeat: caches as left by the cold pass (bounded, so partly warm)",
+  "requests": 263,
+  "cpuMs": {
+   "n": 263,
+   "min": 0,
+   "median": 0,
+   "p95": 16,
+   "max": 32,
+   "mean": 2.26
+  },
+  "processingMs": {
+   "n": 263,
+   "min": 0.2,
+   "median": 2,
+   "p95": 4.2,
+   "max": 7.7,
+   "mean": 2.2
+  },
+  "totalWallMs": 593,
+  "lookups": {
+   "layerTilesRequested": 6028,
+   "providerLoads": 0,
+   "cacheHits": 6028,
+   "baseTilesRead": 1812
+  },
+  "lookupsPerRequest": {
+   "layerTilesRequested": 22.9,
+   "providerLoads": 0,
+   "cacheHits": 22.9,
+   "baseTilesRead": 6.9
+  },
+  "statuses": {
+   "ok": 260,
+   "partial": 3
+  }
+ },
+ "hot": {
+  "label": "hot: the 40 most common-tile routes repeated",
+  "requests": 40,
+  "cpuMs": {
+   "n": 40,
+   "min": 0,
+   "median": 0,
+   "p95": 16,
+   "max": 16,
+   "mean": 2.33
+  },
+  "processingMs": {
+   "n": 40,
+   "min": 0.3,
+   "median": 2.1,
+   "p95": 5.7,
+   "max": 6.1,
+   "mean": 2.15
+  },
+  "totalWallMs": 88,
+  "lookups": {
+   "layerTilesRequested": 869,
+   "providerLoads": 0,
+   "cacheHits": 869,
+   "baseTilesRead": 279
+  },
+  "lookupsPerRequest": {
+   "layerTilesRequested": 21.7,
+   "providerLoads": 0,
+   "cacheHits": 21.7,
+   "baseTilesRead": 7
+  },
+  "statuses": {
+   "ok": 40
+  }
+ },
+ "memory": {
+  "gcExposed": true,
+  "heapBaseMiB": 41.86,
+  "heapAfterColdMiB": 42.8,
+  "silShareAfterColdMiB": 0.94,
+  "heapAfterRepeatMiB": 42.88,
+  "longRun": [
+   {
+    "requestsSoFar": 100,
+    "heapUsedMiB": 42.88,
+    "cache": {
+     "cachedLayerTiles": 228,
+     "cachedTileIndexes": 83,
+     "layerTilesRequested": 15314,
+     "providerLoads": 228,
+     "cacheHits": 15086,
+     "baseTilesRead": 4619
+    }
+   },
+   {
+    "requestsSoFar": 200,
+    "heapUsedMiB": 42.88,
+    "cache": {
+     "cachedLayerTiles": 228,
+     "cachedTileIndexes": 83,
+     "layerTilesRequested": 17493,
+     "providerLoads": 228,
+     "cacheHits": 17265,
+     "baseTilesRead": 5278
+    }
+   },
+   {
+    "requestsSoFar": 300,
+    "heapUsedMiB": 42.88,
+    "cache": {
+     "cachedLayerTiles": 228,
+     "cachedTileIndexes": 83,
+     "layerTilesRequested": 19802,
+     "providerLoads": 228,
+     "cacheHits": 19574,
+     "baseTilesRead": 5980
+    }
+   },
+   {
+    "requestsSoFar": 400,
+    "heapUsedMiB": 42.88,
+    "cache": {
+     "cachedLayerTiles": 228,
+     "cachedTileIndexes": 83,
+     "layerTilesRequested": 22073,
+     "providerLoads": 228,
+     "cacheHits": 21845,
+     "baseTilesRead": 6661
+    }
+   },
+   {
+    "requestsSoFar": 500,
+    "heapUsedMiB": 42.88,
+    "cache": {
+     "cachedLayerTiles": 228,
+     "cachedTileIndexes": 83,
+     "layerTilesRequested": 24389,
+     "providerLoads": 228,
+     "cacheHits": 24161,
+     "baseTilesRead": 7351
+    }
+   },
+   {
+    "requestsSoFar": 600,
+    "heapUsedMiB": 42.88,
+    "cache": {
+     "cachedLayerTiles": 228,
+     "cachedTileIndexes": 83,
+     "layerTilesRequested": 26652,
+     "providerLoads": 228,
+     "cacheHits": 26424,
+     "baseTilesRead": 8030
+    }
+   },
+   {
+    "requestsSoFar": 700,
+    "heapUsedMiB": 42.89,
+    "cache": {
+     "cachedLayerTiles": 228,
+     "cachedTileIndexes": 83,
+     "layerTilesRequested": 28795,
+     "providerLoads": 228,
+     "cacheHits": 28567,
+     "baseTilesRead": 8676
+    }
+   },
+   {
+    "requestsSoFar": 800,
+    "heapUsedMiB": 42.89,
+    "cache": {
+     "cachedLayerTiles": 228,
+     "cachedTileIndexes": 83,
+     "layerTilesRequested": 31139,
+     "providerLoads": 228,
+     "cacheHits": 30911,
+     "baseTilesRead": 9385
+    }
+   }
+  ],
+  "cacheLimits": {
+   "layerTiles": 160,
+   "tileIndexes": 24
+  }
+ },
+ "externalRequests": {
+  "fetchCallsDuringAllPasses": 0
+ },
+ "layerSizes": {
+  "osm": {
+   "files": 25,
+   "rawBytes": 65302,
+   "gzipBytes": 25186
+  },
+  "dbt": {
+   "files": 117,
+   "rawBytes": 133021,
+   "gzipBytes": 71716
+  },
+  "atm": {
+   "files": 66,
+   "rawBytes": 141464,
+   "gzipBytes": 52438
+  },
+  "assoc": {
+   "files": 67,
+   "rawBytes": 76310,
+   "gzipBytes": 37573
+  },
+  "manifest": {
+   "rawBytes": 24777,
+   "gzipBytes": 11870
+  },
+  "total": {
+   "rawBytes": 440874,
+   "gzipBytes": 198783
+  }
+ }
+}

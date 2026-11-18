@@ -894,7 +894,7 @@ export default function Home() {
           Number(event.lngLat.lat.toFixed(6)),
         ];
         if (!coordinateInArea(coordinate, PILOT_AREAS[areaIdRef.current])) {
-          setStatus(`Scegli un punto nell’area pilota di ${PILOT_AREAS[areaIdRef.current].name}.`);
+          setStatus(`Scegli un punto a ${PILOT_AREAS[areaIdRef.current].name} o nei dintorni (area di servizio).`);
           return;
         }
         const label = `Punto scelto · ${coordinate[1].toFixed(4)}, ${coordinate[0].toFixed(4)}`;
@@ -2622,7 +2622,7 @@ export default function Home() {
         const coordinate: Coordinate = [coords.longitude, coords.latitude];
         if (requestedArea !== areaIdRef.current || requestedRevision !== plannerRevisionRef.current) return;
         if (!coordinateInArea(coordinate, PILOT_AREAS[requestedArea])) {
-          setPlanError(`La tua posizione è fuori dall’area di ${PILOT_AREAS[requestedArea].name}. Cambia città se necessario.`);
+          setPlanError(`La tua posizione è fuori dall’area di servizio di ${PILOT_AREAS[requestedArea].name} e dintorni.`);
           return;
         }
         const location = { label: CURRENT_POSITION_LABEL, coordinate };

@@ -58,7 +58,7 @@ export async function runIngestion(options = {}) {
     const countBefore = allSegments.length;
     for (let i = 1; i < coords.length; i++) {
       const edge = clipEdge(coords[i - 1], coords[i], provenance.bounds);
-      if (edge) allSegments.push(...normalizeOsmFeature({ ...rawWay, coordinates: edge }, { ingestedAt, pilotArea }).segments);
+      if (edge) allSegments.push(...normalizeOsmFeature({ ...rawWay, coordinates: edge }, { ingestedAt, pilotArea, topologyRules: options.topologyRules ?? "legacy" }).segments);
     }
     if (allSegments.length > countBefore) validWays++;
   }

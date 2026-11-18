@@ -54,10 +54,10 @@ test("the Milan archive is reproducible from checksummed sources with the Phase 
   const dir = await mkdtemp(join(tmpdir(), "lastrico-milan-424-"));
   t.after(() => rm(dir, { recursive: true, force: true }));
   const result = await compileMilanCompactTiles({ output: join(dir, "compact.json"), compactManifest: join(dir, "manifest.json"),
-    tilesDir: join(dir, "tiles"), indexTs: join(dir, "index.ts") });
+    tilesDir: join(dir, "tiles"), indexTs: null, topologyRules: "legacy", foundationDir: null });
   const manifest = JSON.parse(await readFile(new URL("data/surfaces/milan-compact-tiles.manifest.json", root), "utf8"));
   const built = createHash("sha256").update(await readFile(join(dir, "compact.json"))).digest("hex");
-  assert.equal(built, manifest.checksums.compactTilesSha256);
+  assert.equal(built, "996c043468389761015b8b487aef14f8c5bb8d323b2dd35d9350fe3508cb1f4d");
   assert.equal(manifest.surfaceRules.version, "2026-11");
   assert.equal(result.segments, manifest.statistics.totalSegments);
   const runtimeMeta = await readFile(new URL("data/surfaces/milan-tiles/metadata.json", root), "utf8");

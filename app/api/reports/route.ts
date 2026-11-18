@@ -1,10 +1,11 @@
 import { and, desc, eq, ne, sql } from "drizzle-orm";
 import { getDb } from "../../../db";
+import { PILOT_AREAS } from "../../../lib/pilot-areas";
 import { roadReports } from "../../../db/schema";
 import { createReportQuota, readReportJson, ReportInputError, validateReportShape } from "../../../lib/report-request";
 
 const kinds = ["pave", "rough_cobblestone", "recently_asphalted", "wrong_data"] as const;
-const MILAN = { west: 9.04, south: 45.38, east: 9.31, north: 45.55 };
+const MILAN = PILOT_AREAS.milan.bounds;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REPORTS = 5;
 const MAX_BODY_BYTES = 8_000;

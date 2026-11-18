@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSpatialRoadStore } from "@/lib/spatial-road-store";
+import { silShadowDiagnostics } from "@/lib/sil-shadow";
 import { areaForCoordinate, coordinateInArea } from "@/lib/pilot-areas";
 import {
   isTransportMode,
@@ -951,6 +952,14 @@ export async function GET(request: NextRequest) {
       ? `. ${walkRoute}${walkRoute ? "p" : "P"}artenza o arrivo su una via pedonale chiusa alle bici secondo OpenStreetMap: per circa ${Math.max(fastWalk, safeWalk)} m scendi e prosegui a piedi`
       : "";
     const calculationCompletedAt = performance.now();
+    // Phase 4.40: read-only SIL shadow diagnostics, computed after everything above is decided. Null (and the response
+    // unchanged) unless the mode is "shadow" and the area is Milan. It never throws and never feeds back into routing.
+    const silDiagnostics = await silShadowDiagnostics({
+      area: area.id,
+      store: spatialRoadStore,
+      loadedTileKeys,
+      routes: { fast: fast.route.coordinates, safe: safe.route.coordinates },
+    });
 
     return NextResponse.json({
       area: area.id,
@@ -1058,6 +1067,7 @@ export async function GET(request: NextRequest) {
         },
       } : {}),
       ...(departure ? { accessContext: { departure: formatDeparture(departure), authorisedZtl: [...authorisedZtl].sort() } } : {}),
+      ...(silDiagnostics ? { diagnostics: { sil: silDiagnostics } } : {}),
       dataNotice: (
         fast.surfaceScore.matchedFeatures + safe.surfaceScore.matchedFeatures === 0
           ? "Dati sul pavé non disponibili: mostro soltanto il percorso rapido"

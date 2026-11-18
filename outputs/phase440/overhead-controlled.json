@@ -1,0 +1,82 @@
+{
+ "host": {
+  "node": "v26.13.0",
+  "platform": "win32",
+  "note": "local Node, not workerd"
+ },
+ "requests": 263,
+ "rounds": 7,
+ "handler": {
+  "note": "recorded in the benchmark, handlerTotalMs excludes the SIL",
+  "totalMs": {
+   "n": 263,
+   "p50": 21,
+   "p95": 58,
+   "max": 177,
+   "mean": 26.354
+  }
+ },
+ "disabled": {
+  "wallMs": {
+   "n": 1841,
+   "p50": 0.0003000000000383807,
+   "p95": 0.001199999999926149,
+   "max": 0.030200000000149885,
+   "mean": 0.001
+  },
+  "cpuMsPerRequestByRound": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "shadowWarm": {
+  "wallMs": {
+   "n": 1841,
+   "p50": 0.7665000000001783,
+   "p95": 2.5086999999998625,
+   "max": 15.755100000000311,
+   "mean": 1.037
+  },
+  "cpuMsPerRequestByRound": [
+   1.186,
+   1.601,
+   1.487,
+   1.662,
+   1.186,
+   1.958,
+   1.426
+  ]
+ },
+ "shadowCold": {
+  "wallMs": {
+   "n": 1841,
+   "p50": 0.7876999999999725,
+   "p95": 2.3610000000001037,
+   "max": 15.457700000000159,
+   "mean": 1.052
+  },
+  "cpuMsPerRequestByRound": [
+   1.422,
+   1.426,
+   1.243,
+   1.365,
+   1.308,
+   1.722,
+   1.901
+  ]
+ },
+ "disabledPathNanosecondsPerCall": 89,
+ "overheadVsHandler": {
+  "warmP50PercentOfHandlerP50": 3.7,
+  "warmMeanPercentOfHandlerMean": 3.9,
+  "coldMeanPercentOfHandlerMean": 4,
+  "warmCpuMedianMs": 1.487,
+  "coldCpuMedianMs": 1.422,
+  "disabledCpuMedianMs": 0
+ }
+}

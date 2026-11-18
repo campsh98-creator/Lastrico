@@ -17,14 +17,36 @@ test("geocoding keeps valid Milan results and filters invalid, outside-area and 
   t.mock.method(Date, "now", () => now);
   const valid = { place_id: 1, display_name: "Piazza test", lat: "45.46", lon: "9.19", address: { city: "Milano", road: "Piazza test" } };
   t.mock.method(globalThis, "fetch", async () => Response.json([
-    valid, valid, null, { ...valid, lon: "12.49" }, { ...valid, lat: "NaN" }, { ...valid, address: { city: "Roma" } },
+    // A municipality around Milan comes first in the answer list: the service area includes it, but it is listed after Milan.
+    { ...valid, place_id: 2, lat: "45.58", lon: "9.27", address: { city: "Monza", road: "Piazza test" } },
+    valid, valid, null, { ...valid, lon: "12.49" }, { ...valid, lat: "NaN" }, { ...valid, lon: "2.35", lat: "48.85", address: { city: "Paris" } },
   ]));
   const response = await GET(request("Piazza test"));
   assert.equal(response.status, 200);
   const { results } = await response.json();
-  assert.equal(results.length, 1);
-  assert.deepEqual(results[0].coordinate, [9.19, 45.46]);
+  assert.equal(results.length, 2, "Rome and Paris coordinates are outside the service area and invalid rows are dropped");
+  assert.deepEqual(results[0].coordinate, [9.19, 45.46], "Milan first");
   assert.equal(results[0].primary, "Piazza test");
+  assert.deepEqual(results[1].coordinate, [9.27, 45.58], "then the surrounding municipality");
+  assert.match(results[1].secondary, /Monza$/);
+});
+
+test("a place typed after the comma is searched as typed, and Milan stays the default city", async (t) => {
+  now += 100_000;
+  t.mock.method(Date, "now", () => now);
+  const urls = [];
+  t.mock.method(globalThis, "fetch", async (url) => {
+    urls.push(new URL(String(url)));
+    return Response.json([{ place_id: 7, display_name: "Via Roma, Como", lat: "45.81", lon: "9.085", address: { city: "Como", road: "Via Roma" } }]);
+  });
+  const como = await GET(request("Via Roma, Como"));
+  assert.equal(como.status, 200);
+  assert.equal((await como.json()).results[0].secondary, "Como");
+  assert.equal(urls.find((u) => u.hostname === "nominatim.openstreetmap.org")?.searchParams.get("q"), "Via Roma, Como");
+  urls.length = 0;
+  now += 100_000;
+  await GET(request("Via Torino"));
+  assert.equal(urls.find((u) => u.hostname === "nominatim.openstreetmap.org")?.searchParams.get("q"), "Via Torino, Milano");
 });
 
 test("malformed upstream geocoding response returns the documented service error", async (t) => {
