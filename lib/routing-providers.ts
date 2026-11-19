@@ -347,6 +347,19 @@ async function abortableDelay(milliseconds: number, signal: AbortSignal) {
   }
 }
 
+/**
+ * Counts the provider requests one calculation really starts (retries and the OSRM fallback
+ * included) and refuses to start another one once the limit is reached.
+ */
+export type ProviderMeter = { requests: number; limit: number };
+
+function takeProviderRequest(meter?: ProviderMeter) {
+  if (!meter) return true;
+  if (meter.requests >= meter.limit) return false;
+  meter.requests += 1;
+  return true;
+}
+
 async function runValhallaLimited<T>(
   deadline: number,
   signal: AbortSignal,
@@ -380,14 +393,17 @@ async function fetchValhallaRoutes(
   signal: AbortSignal = new AbortController().signal,
   linearCostFactors?: { shape: string; factor: number }[],
   excludePolygons?: Coordinate[][],
+  meter?: ProviderMeter,
 ): Promise<EngineRoute[]> {
   const profile = ROUTING_PROFILES[mode];
+  if (meter && meter.requests >= meter.limit) return [];
   try {
     const response = await runValhallaLimited(
       deadline,
       signal,
       mode === "car" ? 1_500 : 0,
       (timeoutMs) => withProviderTimeout(signal, timeoutMs, async (callSignal) => {
+        if (!takeProviderRequest(meter)) return { status: 429 };
         const response = await fetch(VALHALLA_ENDPOINT, {
           method: "POST",
           headers: {
@@ -439,8 +455,9 @@ export async function fetchValhallaCustomizedRoutes(
   alternatives = false,
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
+  meter?: ProviderMeter,
 ): Promise<EngineRoute[]> {
-  return fetchValhallaRoutes(points, mode, alternatives, deadline, signal, linearCostFactors);
+  return fetchValhallaRoutes(points, mode, alternatives, deadline, signal, linearCostFactors, undefined, meter);
 }
 
 /**
@@ -454,8 +471,9 @@ export async function fetchValhallaRouteExcluding(
   excludePolygons: Coordinate[][],
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
+  meter?: ProviderMeter,
 ): Promise<EngineRoute | null> {
-  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, undefined, excludePolygons);
+  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, undefined, excludePolygons, meter);
   return routes[0] ?? null;
 }
 
@@ -465,8 +483,9 @@ export async function fetchValhallaCustomizedRoute(
   linearCostFactors: { shape: string; factor: number }[],
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
+  meter?: ProviderMeter,
 ): Promise<EngineRoute | null> {
-  const routes = await fetchValhallaCustomizedRoutes(points, mode, linearCostFactors, false, deadline, signal);
+  const routes = await fetchValhallaCustomizedRoutes(points, mode, linearCostFactors, false, deadline, signal, meter);
   return routes[0] ?? null;
 }
 
@@ -547,6 +566,7 @@ async function fetchOsrmCarRoutes(
   alternatives = false,
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
+  meter?: ProviderMeter,
 ): Promise<EngineRoute[]> {
   const path = points.map(([lng, lat]) => `${lng},${lat}`).join(";");
   const url = new URL(`https://router.project-osrm.org/route/v1/driving/${path}`);
@@ -557,7 +577,7 @@ async function fetchOsrmCarRoutes(
   url.searchParams.set("continue_straight", "false");
   try {
     const timeoutMs = Math.min(OSRM_TIMEOUT_MS, deadline - Date.now());
-    if (timeoutMs < 500) return [];
+    if (timeoutMs < 500 || !takeProviderRequest(meter)) return [];
     const response = await withProviderTimeout(signal, timeoutMs, async (callSignal) => {
       const response = await fetch(url, {
         headers: {
@@ -585,13 +605,14 @@ export async function fetchEngineRoutes(
   alternatives = false,
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
+  meter?: ProviderMeter,
 ) {
   if (signal.aborted || Date.now() >= deadline) return [];
-  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline, signal);
+  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline, signal, undefined, undefined, meter);
   if (valhallaRoutes.length) return valhallaRoutes;
   // A generic driving graph is a valid degraded car route, but would be unsafe and
   // misleading for bicycle or motorcycle mode. Those modes fail explicitly.
   if (signal.aborted) return [];
-  return mode === "car" ? fetchOsrmCarRoutes(points, alternatives, deadline, signal) : [];
+  return mode === "car" ? fetchOsrmCarRoutes(points, alternatives, deadline, signal, meter) : [];
 }
 
