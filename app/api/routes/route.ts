@@ -29,7 +29,9 @@ import {
   refinesWhileStoneLeft,
   stopsOnlyWhenClean,
 } from "@/lib/surface-aware-routing";
-import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, type ProviderMeter } from "@/lib/routing-providers";
+import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, withProviderTimeout, type ProviderMeter } from "@/lib/routing-providers";
+import { TrafficSession } from "@/lib/traffic/session";
+import type { RouteTraffic } from "@/lib/traffic/flow";
 import { buildRoughSections } from "@/lib/rough-sections";
 import { logRouteFailure } from "@/lib/server-log";
 
@@ -67,6 +69,9 @@ const SUFFICIENT_PAVE_REDUCTION_RATIO = 0.25;
 // Navigation: base + penalised search + one detour.
 const MAX_PLANNER_PROVIDER_REQUESTS = 7;
 const MAX_NAVIGATION_PROVIDER_REQUESTS = 4;
+// Linear cost factor for a congested stretch in the penalised search (stone uses 15, tram rails 8). Provisional until
+// field data exists; the penalised route is only used if it wins the traffic-adjusted comparison.
+const TRAFFIC_COST_FACTOR = 6;
 
 // Below this the two points are the same place, and there is nothing to navigate.
 const MINIMUM_ROUTE_METERS = 15;
@@ -353,13 +358,28 @@ function selectSafeRoute(
     (a, b) => routesAreEquivalent(a, b, mode)).safe;
 }
 
+/** What the live-traffic layer says about one route; present only when traffic was requested and received. */
+type RouteTrafficPayload = {
+  freeMinutes: number;
+  delaySeconds: number;
+  coveragePercent: number;
+  /** Slowest covered stretch as a percentage of free-flow speed. */
+  slowestSpeedPercent: number | null;
+  congestedMeters: number;
+  closedMeters: number;
+  delayShare: number;
+  incidents: { category: string; magnitude: number; delaySeconds: number | null; description: string; position: Coordinate; lengthMeters: number | null }[];
+};
+
 function routePayload(
   route: EngineRoute,
   surfaceScore: SurfaceScore,
   problemSegments: Coordinate[][] = [],
   areaId = "",
+  traffic?: RouteTrafficPayload,
 ) {
   return {
+    ...(traffic ? { traffic } : {}),
     coordinates: route.coordinates,
     distance: route.distance / 1_000,
     minutes: route.duration / 60,
@@ -513,6 +533,8 @@ export async function GET(request: NextRequest) {
   const avoidance = (request.nextUrl.searchParams.get("avoid") ?? "strong") as Avoidance;
   // Independent tram-track preference (local layers only; without them it is reported as unavailable and changes nothing).
   const tramPreference = request.nextUrl.searchParams.get("tram") === "avoid" || silRailExperimentEnabled();
+  // Optional live traffic (provider tiles through the quota ledger, lib/traffic). Not requested: nothing below changes.
+  const trafficRequested = request.nextUrl.searchParams.get("traffic") === "live";
   const maximumExtraMinutes = parseExtraMinutes(request.nextUrl.searchParams.get("maxExtraMinutes"));
   // Phase 4.31: departure time (Milan local, "YYYY-MM-DDTHH:MM"; now when absent) and the ZTL
   // areas the person is authorised for in this mode. Unknown area ids are ignored.
@@ -579,10 +601,32 @@ export async function GET(request: NextRequest) {
       return true;
     });
 
+    // Live traffic: the flow and incident tiles of the base routes are fetched while the road tiles load below.
+    // Any failure leaves the session unavailable and every route keeps the provider's own time.
+    const traffic = trafficRequested ? new TrafficSession(mode, { signal: request.signal }) : null;
+    const trafficTimeoutMs = navigationRequest ? 1_200 : 2_500;
+    const loadTraffic = (routes: Coordinate[][]) => traffic
+      ? withProviderTimeout(request.signal, trafficTimeoutMs, (signal) => traffic.ensure(routes, signal)).catch(() => undefined)
+      : Promise.resolve();
+    const trafficLoading = loadTraffic(baseRoutes.map((r) => r.coordinates));
+    const staticSeconds = new WeakMap<EngineRoute, number>();
+    const trafficOf = new WeakMap<EngineRoute, RouteTraffic>();
+    // Replaces a route's duration with the live-traffic one, once. Identity is kept (the selection compares routes by
+    // reference); the provider's own time stays in `staticSeconds`.
+    const applyTraffic = (route: EngineRoute) => {
+      if (!traffic?.available || trafficOf.has(route)) return;
+      const live = traffic.forRoute(route.coordinates, route.duration);
+      staticSeconds.set(route, route.duration);
+      trafficOf.set(route, live);
+      route.duration = live.trafficSeconds;
+    };
+
     const corridorCoords: Coordinate[] = baseRoutes.flatMap((r) => r.coordinates);
     const loadedTileKeys = spatialRoadStore.getTileKeysForCoordinates(corridorCoords, 50);
     // Preload only the tiles intersecting the initial base route corridors
     await spatialRoadStore.preloadTiles(loadedTileKeys);
+    await trafficLoading;
+    for (const route of baseRoutes) applyTraffic(route);
     const scoped = spatialRoadStore.getScopedIntelligence(corridorCoords, 50);
 
     const ensureRouteCovered = async (routeCoordinates: Coordinate[]) => {
@@ -597,6 +641,13 @@ export async function GET(request: NextRequest) {
         }
       }
       return scoped.surfaceIndex;
+    };
+
+    // Live traffic for a route that appeared after the base routes: loads the few tiles it needs, then applies its time.
+    const adoptTraffic = async (...routes: EngineRoute[]) => {
+      if (!traffic?.available || !routes.length) return;
+      await loadTraffic(routes.map((route) => route.coordinates));
+      for (const route of routes) applyTraffic(route);
     };
 
     const scoreCache = new Map<EngineRoute, SurfaceScore>();
@@ -648,6 +699,7 @@ export async function GET(request: NextRequest) {
           Math.min(deadline - 1_000, Date.now() + 3_500), request.signal, meter);
         if (avoiding) {
           await ensureRouteCovered(avoiding.coordinates);
+          await adoptTraffic(avoiding);
           baseRoutes.push(avoiding);
           baseScored.push(scoredCandidate(avoiding, "access-aware-valhalla"));
         }
@@ -670,6 +722,11 @@ export async function GET(request: NextRequest) {
       maximumExtraMinutes,
       policy,
     );
+    // Live traffic: stretches of the fastest route below 60 % of free flow (150 m or more) are penalised in the same
+    // provider request as stone and rails, so traffic, pavé and tram exposure are optimised together. Bicycles do not
+    // feel the queue (delay share 0), so nothing is penalised for them.
+    const congestionSlices = traffic?.available ? trafficOf.get(fastestBase)?.congestedSlices ?? [] : [];
+    const trafficFactors = mode === "bicycle" ? [] : buildLinearCostFactors(congestionSlices, TRAFFIC_COST_FACTOR, 4).factors;
     // A small gain must not end the search for a much better route, except in navigation,
     // where a reroute has to stay fast.
     const improvesEnough = (candidate: ScoredRoute, fastest: ScoredRoute) =>
@@ -748,7 +805,7 @@ export async function GET(request: NextRequest) {
         const first = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
-          factors,
+          [...factors, ...trafficFactors],
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
           meter,
@@ -756,6 +813,7 @@ export async function GET(request: NextRequest) {
         if (!first) surfaceAwareFailed = true;
         if (first) {
           await ensureRouteCovered(first.coordinates);
+          await adoptTraffic(first);
           // Phase 4.25: penalising only the fastest route's stones often moved the provider onto a
           // parallel stone street (Milan benchmark: the median penalised candidate kept all its
           // confirmed pavé). When it still keeps half the stone, a refinement also penalises the
@@ -799,17 +857,32 @@ export async function GET(request: NextRequest) {
         railGeneration = { ...railGeneration, slices: railSlices.length, reason: railSlices.length ? "searching" : "no-rails-on-fastest" };
         if (railSlices.length) {
           const stoneSlices = extractRoughSlices(fastestBase.coordinates, (_prev, _curr, idx) => Boolean(preliminaryFast.surfaceScore.roughSegmentIndices?.has(idx)), sliceMinimumMeters);
-          const factors = [...buildLinearCostFactors(stoneSlices, 15.0, 4).factors, ...buildLinearCostFactors(railSlices, 8.0, 6).factors];
+          const factors = [...buildLinearCostFactors(stoneSlices, 15.0, 4).factors, ...buildLinearCostFactors(railSlices, 8.0, 6).factors, ...trafficFactors];
           railGeneration.attempted = true;
             const railRoute = await fetchValhallaCustomizedRoute([start, end], mode, factors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter);
           if (!railRoute) railGeneration.reason = "provider-failed";
           else {
             await ensureRouteCovered(railRoute.coordinates);
+            await adoptTraffic(railRoute);
             const railScored = scoredCandidate(railRoute, "rail-aware-valhalla");
             if (keepsPenalisedRoute(railScored)) { railAwareRoutes.push(railRoute); railGeneration = { ...railGeneration, generated: true, reason: "generated" }; }
             else railGeneration.reason = "adds-stone";
           }
         }
+      }
+    }
+    // Traffic-only search: the fastest route runs into congestion, and no stone or rail search took the request already.
+    const trafficAwareRoutes: EngineRoute[] = [];
+    const trafficSearch = { attempted: false, generated: false, slices: trafficFactors.length };
+    if (trafficFactors.length > 0 && !surfaceAwareAttempted && !railGeneration.attempted && maximumExtraMinutes !== 0
+      && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
+      && deadline - Date.now() >= 4_000 && providerRequestBudgetLeft()) {
+      trafficSearch.attempted = true;
+      const route = await fetchValhallaCustomizedRoute([start, end], mode, trafficFactors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter);
+      if (route) {
+        await ensureRouteCovered(route.coordinates);
+        await adoptTraffic(route);
+        if (keepsPenalisedRoute(scoredCandidate(route, "traffic-aware-valhalla"))) { trafficAwareRoutes.push(route); trafficSearch.generated = true; }
       }
     }
     const surfaceAwareSourcesOf = () => surfaceAwareRoutes.map((route, index) => ({
@@ -854,6 +927,7 @@ export async function GET(request: NextRequest) {
         );
         detourResponses.push(routes);
         await ensureRouteCovered(routes.flatMap((r) => r.coordinates));
+        await adoptTraffic(...routes);
         const provisionalRoutes = [
           ...baseRoutes,
           ...surfaceAwareRoutes,
@@ -884,13 +958,14 @@ export async function GET(request: NextRequest) {
         const refinedRoute = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
-          pendingRefinement,
+          [...pendingRefinement, ...trafficFactors],
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
           meter,
         );
         if (refinedRoute) {
           await ensureRouteCovered(refinedRoute.coordinates);
+          await adoptTraffic(refinedRoute);
           if (keepsPenalisedRoute(scoredCandidate(refinedRoute, "surface-aware-valhalla-refined"))) surfaceAwareRoutes.push(refinedRoute);
           else surfaceAwareDiscarded += 1;
         }
@@ -900,6 +975,7 @@ export async function GET(request: NextRequest) {
       ...baseRoutes.map((route, index) => ({ route, source: `base-${index + 1}` })),
       ...surfaceAwareSourcesOf(),
       ...railAwareRoutes.map((route) => ({ route, source: "rail-aware-valhalla" })),
+      ...trafficAwareRoutes.map((route) => ({ route, source: "traffic-aware-valhalla" })),
       ...detourResponses.flatMap((routes, index) =>
         routes.map((route) => ({ route, source: `detour-${index + 1}` })),
       ),
@@ -1003,6 +1079,44 @@ export async function GET(request: NextRequest) {
     const terminalWalkNotice = fastWalk > 0 || safeWalk > 0
       ? `. ${walkRoute}${walkRoute ? "p" : "P"}artenza o arrivo su una via pedonale chiusa alle bici secondo OpenStreetMap: per circa ${Math.max(fastWalk, safeWalk)} m scendi e prosegui a piedi`
       : "";
+    // Live traffic, as received: per-route numbers and incidents only from routes the tiles were matched to.
+    const trafficPayloadFor = (route: EngineRoute): RouteTrafficPayload | undefined => {
+      const live = trafficOf.get(route);
+      if (!traffic?.available || !live) return undefined;
+      return {
+        freeMinutes: (staticSeconds.get(route) ?? route.duration) / 60,
+        delaySeconds: Math.round(live.delaySeconds),
+        coveragePercent: live.coveragePercent,
+        slowestSpeedPercent: live.minRatio === null ? null : Math.round(live.minRatio * 100),
+        congestedMeters: live.congestedMeters,
+        closedMeters: live.closedMeters,
+        delayShare: live.delayShare,
+        incidents: traffic.incidentsFor(route.coordinates).slice(0, 8),
+      };
+    };
+    const trafficBlock = !trafficRequested ? undefined : traffic?.available ? {
+      status: "live" as const,
+      provider: "TomTom" as const,
+      mode,
+      delayShare: trafficOf.get(fast.route)?.delayShare ?? null,
+      fetchedAt: traffic.meta().oldestTileAt === null ? null : new Date(traffic.meta().oldestTileAt as number).toISOString(),
+      ageSeconds: traffic.meta().oldestTileAt === null ? null : Math.max(0, Math.round((Date.now() - (traffic.meta().oldestTileAt as number)) / 1_000)),
+      tileRequests: traffic.meta().tileRequests,
+      cachedTiles: traffic.meta().cachedTiles,
+      flowZoom: traffic.meta().flowZoom,
+      // Seconds the shown fastest route saves against the provider's standard route, with the same live traffic on both.
+      savedVsStandardSeconds: standard && standard.route !== fast.route ? Math.round(standard.route.duration - fast.route.duration) : 0,
+      search: trafficSearch,
+      note: mode === "bicycle"
+        ? "Il traffico dei veicoli non cambia il tempo in bici; sono mostrati solo incidenti e chiusure."
+        : mode === "motorcycle"
+          ? "Per la moto è contata metà del ritardo misurato sulle auto (stima)."
+          : "Tempo con il traffico di ora; i tratti senza dato mantengono il tempo senza traffico.",
+    } : {
+      status: "unavailable" as const,
+      provider: "TomTom" as const,
+      reason: traffic?.unavailableReason ?? "unavailable",
+    };
     const calculationCompletedAt = performance.now();
     // Phase 4.40: read-only SIL shadow diagnostics, computed after everything above is decided. Null (and the response
     // unchanged) unless the mode is "shadow" and the area is Milan. It never throws and never feeds back into routing.
@@ -1015,8 +1129,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       area: area.id,
-      fast: routePayload(fast.route, fast.surfaceScore, fastProblemSegments, area.id),
-      safe: routePayload(safe.route, safe.surfaceScore, safeProblemSegments, area.id),
+      fast: routePayload(fast.route, fast.surfaceScore, fastProblemSegments, area.id, trafficPayloadFor(fast.route)),
+      safe: routePayload(safe.route, safe.surfaceScore, safeProblemSegments, area.id, trafficPayloadFor(safe.route)),
+      ...(trafficBlock ? { traffic: trafficBlock } : {}),
       problemSegments: safe.route === fast.route
         ? fastProblemSegments
         : [...fastProblemSegments, ...safeProblemSegments],

@@ -19,6 +19,7 @@ import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
 import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
+import { TrafficNotice, trafficUnavailableText, useTrafficStatus, type RouteTrafficInfo, type TrafficInfo } from "@/components/TrafficPanel";
 import "@/components/phase43/phase43.css";
 import {
   RouteComparisonPanel,
@@ -165,6 +166,8 @@ type RouteResult = {
   coordinates: Coordinate[];
   distance: number;
   minutes: number;
+  /** Live traffic for this route, present only when it was requested and the provider answered. */
+  traffic?: RouteTrafficInfo;
   paveMeters: number;
   pavePercent?: number;
   smoothSurfaceMeters?: number;
@@ -213,6 +216,8 @@ type GeocodeResult = LocationChoice & {
 
 type RouteApiResponse = {
   area?: PilotAreaId;
+  /** Live traffic outcome, present only when it was requested. */
+  traffic?: TrafficInfo;
   /** Phase 4.31: why the response has (or has no) anti-pavé alternative. */
   antiPave?: AntiPaveOutcome;
   fast: RouteResult;
@@ -562,6 +567,11 @@ export default function Home() {
   const [avoidTram, setAvoidTram] = useState(false);
   const avoidTramRef = useRef(false);
   avoidTramRef.current = avoidTram;
+  // Optional live traffic (planner and reroutes): off by default, offered only when the server says it can answer.
+  const [liveTraffic, setLiveTraffic] = useState(false);
+  const liveTrafficRef = useRef(false);
+  liveTrafficRef.current = liveTraffic;
+  const [trafficInfo, setTrafficInfo] = useState<TrafficInfo | null>(null);
   const [routePrompt, setRoutePrompt] = useState("");
   const [promptInterpretation, setPromptInterpretation] = useState<PromptRoutePreferenceResult | null>(null);
   const [fastRoute, setFastRoute] = useState<RouteResult>(emptyRoute);
@@ -602,6 +612,7 @@ export default function Home() {
   const [startupNoticeVisible, setStartupNoticeVisible] = useState(false);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   const railsAvailable = useRailsAvailable(preferencesOpen);
+  const trafficStatus = useTrafficStatus(preferencesOpen);
   // Phase 4.31: ZTL areas the person is authorised for, per mode; kept on this device only.
   const [ztlAuthorisations, setZtlAuthorisations] = useState<ZtlAuthorisations>({});
   const ztlAuthorisationsRef = useRef<ZtlAuthorisations>({});
@@ -1721,6 +1732,19 @@ export default function Home() {
     }
   }
 
+  function setManualTraffic(value: boolean) {
+    if (value === liveTraffic) return;
+    const shouldRecalculate = isLiveResult && !isJourneyActive;
+    invalidateRouteIntent();
+    liveTrafficRef.current = value;
+    setLiveTraffic(value);
+    if (!value) setTrafficInfo(null);
+    if (shouldRecalculate) {
+      setStatus(value ? "Traffico live attivato: ricalcolo i tempi…" : "Traffico live spento: ricalcolo i tempi…");
+      void calculateRoutes(undefined, { force: true });
+    }
+  }
+
   function setManualAvoidance(value: Avoidance) {
     if (value === avoidance && maxExtraMinutes === null) return;
     const nextPreferences: RoutePreferences = { avoidance: value, maxExtraMinutes: null };
@@ -2306,6 +2330,8 @@ export default function Home() {
         params.set("maxExtraMinutes", String(requestedPreferences.maxExtraMinutes));
       }
       if (avoidTramRef.current && options.journeySession === undefined) params.set("tram", "avoid");
+      // Live traffic applies to the planner and to reroutes alike; the server answers "unavailable" with a reason when it cannot.
+      if (liveTrafficRef.current) params.set("traffic", "live");
       // Phase 4.31: the person's ZTL authorisations for this mode, on every route and reroute.
       const authorisedZtl = authorisedZtlFor(ztlAuthorisationsRef.current, requestedMode);
       if (authorisedZtl.length) params.set("ztl", authorisedZtl.join(","));
@@ -2461,6 +2487,7 @@ export default function Home() {
     setHasDistinctAlternative(data.hasDistinctAlternative);
     setRoutingProfile(data.routingProfile);
     setAntiPaveOutcome(data.antiPave ?? null);
+    setTrafficInfo(data.traffic ?? null);
     routeGenerationRef.current = summarizeRouteGeneration(data);
     setDataNotice(data.dataNotice);
     setTransportMode(mode);
@@ -3454,6 +3481,28 @@ export default function Home() {
                       </small>
                     </div>
 
+                    <div className="preference-group" data-testid="traffic-preference">
+                      <span className="preference-label">Traffico live</span>
+                      <div className="segmented" role="group" aria-label="Usare il traffico in tempo reale">
+                        <button type="button" className={!liveTraffic ? "active" : ""} aria-pressed={!liveTraffic} onClick={() => setManualTraffic(false)}>No</button>
+                        <button
+                          type="button"
+                          className={liveTraffic ? "active" : ""}
+                          aria-pressed={liveTraffic}
+                          disabled={trafficStatus?.available !== true}
+                          onClick={() => setManualTraffic(true)}
+                          data-testid="traffic-live"
+                        >
+                          Sì
+                        </button>
+                      </div>
+                      <small>
+                        {trafficStatus?.available === true
+                          ? "Tempi con il traffico di ora e percorsi che evitano le code quando conviene. Per le bici il tempo non cambia."
+                          : trafficStatus ? trafficUnavailableText(trafficStatus.reason) : "Verifico se il traffico live è disponibile…"}
+                      </small>
+                    </div>
+
                     <div className="preference-group ztl-settings" data-testid="ztl-settings">
                       <span className="preference-label">Accessi ZTL autorizzati</span>
                       <small>Senza autorizzazione Lastrico evita queste ZTL quando sono attive. Spunta solo quelle in cui puoi entrare davvero.</small>
@@ -3628,6 +3677,8 @@ export default function Home() {
                   antiPave={antiPaveOutcome}
                 />
 
+                <TrafficNotice requested={liveTraffic} info={trafficInfo} route={selectedRoute} mode={transportMode} />
+
                 {transportMode === "bicycle" && (selectedRoute?.terminalWalkMeters ?? 0) > 0 && (
                   <div className="plan-alert info" role="note" data-testid="walk-bike-notice">
                     <Icon name="info" />
@@ -3654,7 +3705,7 @@ export default function Home() {
                       activeRoute={activeRoute}
                       transportMode={transportMode}
                     />
-                    <p className="profile-note">{dataNotice ? `${dataNotice}. ` : ""}{routingProfile.notice} Tempi senza traffico in tempo reale.</p>
+                    <p className="profile-note">{dataNotice ? `${dataNotice}. ` : ""}{routingProfile.notice} {liveTraffic && trafficInfo?.status === "live" ? "Tempi con il traffico di ora, dove il dato esiste." : "Tempi senza traffico in tempo reale."}</p>
                     <div className="route-actions">
                       <button type="button" className="secondary-action" onClick={() => startNavigation("simulation")} disabled={!routeReady || isLoading} data-testid="start-simulation">
                         <Icon name="play" size={18} />Simula il percorso

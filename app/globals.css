@@ -1295,3 +1295,9 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .road-layers-row { display: flex; align-items: center; gap: 8px; }
 .road-layers-row i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; }
 .road-layers-detail { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid rgba(0,0,0,.15); padding-top: 6px; }
+.road-layers-switch { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.road-layers-switch button { min-height: 40px; padding: 0 var(--space-3); border-radius: 999px; border: 1px solid rgba(0,0,0,.25); background: var(--surface); color: var(--ink); font: inherit; font-size: 0.85rem; }
+.road-layers-switch button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.traffic-notice { display: flex; flex-direction: column; gap: 4px; margin: var(--space-2) 0; padding: var(--space-3); border-radius: 12px; border: 1px solid rgba(0,0,0,.15); font-size: 0.85rem; }
+.traffic-notice .traffic-stale, .traffic-notice .traffic-warning { font-weight: 600; }
+.traffic-incidents { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 2px; }

@@ -56,5 +56,7 @@ test('authentic Rome store is isolated and real handler keeps mode, evidence and
       assert.match(body.dataNotice,mode==='bicycle'?/segnaletica/:/Tridente.*moto/);
     }
   }
-  assert.deepEqual(costing,['auto','auto','motorcycle','motorcycle','bicycle','bicycle']);
+  // One provider request per mode: the navigation request for the same journey reuses the answer the planner just got
+  // (the provider's graph is static, see the memo in lib/routing-providers.ts), and still passes every check above.
+  assert.deepEqual(costing,['auto','motorcycle','bicycle']);
 });

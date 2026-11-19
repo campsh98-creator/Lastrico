@@ -87,7 +87,9 @@ test("real Roccella archive is selected for planner/navigation and never leaks M
       assert.ok(payload.fast.coordinates.every((point) => coordinateInArea(point, PILOT_AREAS.roccella)));
     }
   }
-  assert.deepEqual(modes, ["auto", "auto", "motorcycle", "motorcycle", "bicycle", "bicycle"]);
+  // One provider request per mode: the navigation request for the same journey reuses the answer the planner just got
+  // (the provider's graph is static, see the memo in lib/routing-providers.ts), and still passes every check above.
+  assert.deepEqual(modes, ["auto", "motorcycle", "bicycle"]);
 });
 
 test("geocoding sends selected-area viewbox and excludes responses from the other pilot", async (t) => {

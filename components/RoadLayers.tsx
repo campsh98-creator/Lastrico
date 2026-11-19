@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
+import { trafficUnavailableText, useTrafficStatus } from "@/components/TrafficPanel";
 
 /**
  * Optional road-knowledge layers drawn under the routes: the surface OpenStreetMap tags (asphalt,
@@ -20,6 +21,18 @@ const RAILS: [string, string, string][] = [
   ["none-mapped", "#1b9e77", "Cercati, nessuno mappato"],
   ["unknown", "#9e9e9e", "Non verificato"],
 ];
+const TRAFFIC: [string, string][] = [
+  ["#7f0000", "Quasi fermo"],
+  ["#d7301f", "Molto lento"],
+  ["#fc8d59", "Lento"],
+  ["#fdbb84", "Rallentato"],
+];
+const FLOW_SOURCE = "traffic-flow";
+const INCIDENT_SOURCE = "traffic-incidents";
+const FLOW_LAYER = "traffic-flow-line";
+const INCIDENT_LAYER = "traffic-incident-dot";
+/** A fingertip, not a pixel: a tap within this many pixels of a drawn road selects it. */
+const TAP_RADIUS = 14;
 const SOURCE = "road-intel";
 const LAYER = "road-intel-line";
 const PROBE = "9.1895,45.4638,9.1905,45.4645";
@@ -48,6 +61,56 @@ export function RoadLayers({ map, ready, suspended }: { map: MapLibreMap | null;
   const [status, setStatus] = useState("");
   const [selected, setSelected] = useState<Record<string, unknown> | null>(null);
   const active = view !== "off" && !suspended;
+  const trafficStatus = useTrafficStatus(open);
+  const [trafficOn, setTrafficOn] = useState(false);
+  const [trafficMessage, setTrafficMessage] = useState("");
+  const [incident, setIncident] = useState<Record<string, unknown> | null>(null);
+  const trafficActive = trafficOn && !suspended;
+
+  // Live traffic overlay (TomTom flow and incidents through the server's quota ledger). Slow traffic only; hidden while navigating.
+  useEffect(() => {
+    if (!map || !ready) return;
+    if (!trafficActive) {
+      for (const id of [INCIDENT_LAYER, FLOW_LAYER]) if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", "none");
+      return;
+    }
+    if (!map.getSource(FLOW_SOURCE)) {
+      const tiles = (kind: string) => [`${window.location.origin}/api/traffic/tile?kind=${kind}&z={z}&x={x}&y={y}`];
+      map.addSource(FLOW_SOURCE, { type: "vector", tiles: tiles("flow"), minzoom: 10, maxzoom: 14, attribution: "Traffico © TomTom" });
+      map.addSource(INCIDENT_SOURCE, { type: "vector", tiles: tiles("incidents"), minzoom: 10, maxzoom: 12, attribution: "© TomTom" });
+      const before = map.getLayer("fast-outline") ? "fast-outline" : undefined;
+      map.addLayer({
+        id: FLOW_LAYER, type: "line", source: FLOW_SOURCE, "source-layer": "Traffic flow", minzoom: 11,
+        layout: { "line-cap": "round", "line-join": "round" },
+        paint: {
+          "line-width": ["interpolate", ["linear"], ["zoom"], 11, 1.5, 16, 5],
+          "line-opacity": 0.9,
+          "line-color": ["case", ["has", "road_closure"], "#111111",
+            ["step", ["coalesce", ["to-number", ["get", "traffic_level"]], 1], "#7f0000", 0.3, "#d7301f", 0.5, "#fc8d59", 0.7, "#fdbb84", 0.85, "rgba(0,0,0,0)"]],
+        },
+      }, before);
+      map.addLayer({
+        id: INCIDENT_LAYER, type: "circle", source: INCIDENT_SOURCE, "source-layer": "Traffic incidents POI",
+        paint: {
+          "circle-radius": 7,
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#ffffff",
+          "circle-color": ["match", ["get", "icon_category"], 8, "#111111", 1, "#d7301f", 6, "#fc8d59", 9, "#fdae61", "#756bb1"],
+        },
+      }, before);
+    }
+    for (const id of [FLOW_LAYER, INCIDENT_LAYER]) map.setLayoutProperty(id, "visibility", "visible");
+    const onError = (event: { sourceId?: string }) => {
+      if (event.sourceId === FLOW_SOURCE || event.sourceId === INCIDENT_SOURCE) setTrafficMessage("Il traffico non è disponibile ora (quota o servizio).");
+    };
+    const onTap = (event: { point: { x: number; y: number } }) => {
+      const box: [[number, number], [number, number]] = [[event.point.x - TAP_RADIUS, event.point.y - TAP_RADIUS], [event.point.x + TAP_RADIUS, event.point.y + TAP_RADIUS]];
+      setIncident(map.queryRenderedFeatures(box, { layers: [INCIDENT_LAYER] })[0]?.properties ?? null);
+    };
+    map.on("error", onError);
+    map.on("click", onTap);
+    return () => { map.off("error", onError); map.off("click", onTap); };
+  }, [map, ready, trafficActive]);
 
   useEffect(() => {
     if (!map || !ready) return;
@@ -86,15 +149,18 @@ export function RoadLayers({ map, ready, suspended }: { map: MapLibreMap | null;
       }
     };
     const onMove = () => { window.clearTimeout(timer); timer = window.setTimeout(() => void load(), 250); };
-    const onClick = (event: { features?: { properties?: Record<string, unknown> }[] }) => setSelected(event.features?.[0]?.properties ?? null);
+    const onClick = (event: { point: { x: number; y: number } }) => {
+      const box: [[number, number], [number, number]] = [[event.point.x - TAP_RADIUS, event.point.y - TAP_RADIUS], [event.point.x + TAP_RADIUS, event.point.y + TAP_RADIUS]];
+      setSelected(map.queryRenderedFeatures(box, { layers: [LAYER] })[0]?.properties ?? null);
+    };
     map.on("moveend", onMove);
-    map.on("click", LAYER, onClick);
+    map.on("click", onClick);
     void load();
     return () => {
       window.clearTimeout(timer);
       controller?.abort();
       map.off("moveend", onMove);
-      map.off("click", LAYER, onClick);
+      map.off("click", onClick);
     };
   }, [map, ready, active]);
 
@@ -126,6 +192,32 @@ export function RoadLayers({ map, ready, suspended }: { map: MapLibreMap | null;
           ))}
           {view !== "off" && <small>Il fondo sconosciuto non è asfalto: significa solo che nessuna fonte lo indica.</small>}
           {status && <small role="status">{status}</small>}
+          <div className="road-layers-switch" data-testid="traffic-overlay">
+            <button
+              type="button"
+              aria-pressed={trafficOn}
+              disabled={trafficStatus?.available !== true}
+              onClick={() => { setTrafficOn((value) => !value); setIncident(null); setTrafficMessage(""); }}
+              data-testid="traffic-overlay-toggle"
+            >
+              Traffico live
+            </button>
+          </div>
+          {trafficStatus?.available !== true && <small>{trafficStatus ? trafficUnavailableText(trafficStatus.reason) : "Verifico se il traffico live è disponibile…"}</small>}
+          {trafficOn && !suspended && (
+            <>
+              {TRAFFIC.map(([colour, label]) => <div className="road-layers-row" key={label}><i style={{ background: colour }} />{label}</div>)}
+              <small>Dati TomTom, aggiornati ogni minuto circa. I tratti scorrevoli non sono colorati; zoom 11 o più.</small>
+              {trafficMessage && <small role="status">{trafficMessage}</small>}
+              {incident && (
+                <div className="road-layers-detail" data-testid="traffic-incident-detail">
+                  <b>{String(incident.description || "Segnalazione di traffico")}</b>
+                  {typeof incident.delay === "number" && incident.delay > 0 ? <span>Ritardo stimato: {Math.max(1, Math.round(incident.delay / 60))} min</span> : null}
+                  <small>Fonte: TomTom.</small>
+                </div>
+              )}
+            </>
+          )}
           {selected && (
             <div className="road-layers-detail" data-testid="road-layers-detail">
               <b>{String(selected.name || "Strada senza nome")}</b>
