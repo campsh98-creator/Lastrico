@@ -1,10 +1,28 @@
 # Engineering status
 
-Status on 18 November 2026. `main` is at `2cd1433` (PRs #16 to #24 merged). **Two deployments are online** and
+Status on 19 November 2026. `main` is at `9cd25b2` (PRs #16 to #32 merged). **Two deployments are online** and
 both stay online: the pilot `lastrico-pilot` (older code, built from `54bd605`, not touched) and the isolated preview
-`lastrico-preview-437` (built from `94650a2`, version `55cdd422`, deploy run 44341295243: anti-pavé, Surface Intelligence code with the shadow off, regional navigation). This page separates what exists locally from what
-is online, and fixed defects from open problems. Every claim points to the evidence in `outputs/`; the detailed
-phase reports there are in Italian.
+`lastrico-preview-437` (built from `49fea24` by deploy run 44477600454 on 19 November: anti-pavé, regional navigation, road layers,
+independent tram preference, exact provider cap; Surface Intelligence code with the shadow off). This page separates what exists
+locally from what is online, and fixed defects from open problems. Every claim points to the evidence in `outputs/`; the
+detailed phase reports there are in Italian.
+
+## Navigator intelligence (19 November 2026)
+
+"Implemented" is code on a branch, "tested" is automated tests, "deployed" is on the preview. Nothing here is on the pilot.
+
+| Feature | Implemented | Tested | Deployed (preview) | Limits |
+| --- | :---: | :---: | :---: | --- |
+| Road layers panel (surface; rails where a local layer set exists), hidden while navigating (PR #31) | ✅ | ✅ | ✅ `49fea24` | No rail data is shipped, so the rails view says "non disponibili in questa versione" |
+| Independent tram preference, rail-aware candidate generation (PRs #27, #31) | ✅ | ✅ | ✅ `49fea24`, disabled without layers | Combined stone + tram gain not measured on this machine: it needs the local layer build |
+| Provider-request cap counted per real request, retries and OSRM fallback included (PR #31) | ✅ | ✅ | ✅ `49fea24` | 7 per planner calculation, 4 per reroute |
+| Optional live traffic: ETA, selection, congestion penalised with stone and rails, incidents, map overlay, hard quotas (PR #33, `outputs/traffic-provider-decision.md`) | ✅ | ✅ unit and handler tests on tile fixtures | ❌ | **Not checked against the live TomTom API: no key yet.** Off without a key, and says so |
+| Provider-answer memo and journey-sticky Durable Object shard (PR #33) | ✅ | ✅ | ❌ | Latency gain not yet measured on Cloudflare |
+| Tap within 14 px selects the road under a fingertip in the layers panel (PR #33) | ✅ | ❌ no automated test | ❌ | To be checked on a phone-sized viewport after deployment |
+| Road-observation prototype: provenance, confidence, validation, corroboration; evidence can only add caution (PR #33) | ✅ | ✅ unit | ❌ not wired to any API | Prototype |
+| Street-level imagery: free-source coverage and classifier quality (`outputs/street-imagery-evaluation.md`) | desk study | — | — | NO-GO for automatic classification; imagery stays a review channel |
+| OSM, DBT, ATM evidence reconciliation | ❌ not changed | — | — | Needs the local layer build (mixed licences, kept local); the layer folders on this machine are empty |
+| GPS, voice, reroute and arrival validation | — | ✅ emulated suites in CI only | — | No physical device was used |
 
 ## Product direction (18 November 2026)
 
