@@ -51,4 +51,10 @@ interface DurableObjectNamespace {
 
 interface DurableObjectState {
   waitUntil(promise: Promise<unknown>): void;
+  /** SQLite-backed Durable Objects only (the RouteEngine class is one). Used by the traffic ledger. */
+  storage: {
+    sql: {
+      exec(query: string, ...bindings: unknown[]): { toArray(): Record<string, unknown>[] };
+    };
+  };
 }

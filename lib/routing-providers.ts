@@ -87,6 +87,36 @@ const VALHALLA_MIN_INTERVAL_MS = 1_050;
 let nextValhallaSlotAt = 0;
 let lastValhallaFetch: typeof fetch | null = null;
 
+// Short-lived memo of provider answers, keyed by the exact request. The routing graph is static (no live traffic in
+// Valhalla or OSRM), so the same request a few minutes later has the same answer: a recalculation with another avoidance
+// level or time limit then costs no provider request and no 1.05 s pacing slot. It holds the answer's text, never route
+// objects (the traffic layer changes durations in place), and is dropped when the global `fetch` is replaced (tests).
+const MEMO_TTL_MS = 4 * 60_000;
+const MEMO_MAX_ENTRIES = 24;
+const memo = new Map<string, { at: number; text: string }>();
+let memoFetch: typeof fetch | null = null;
+
+function memoRead(key: string): string | null {
+  if (memoFetch !== globalThis.fetch) { memo.clear(); memoFetch = globalThis.fetch; }
+  const entry = memo.get(key);
+  if (!entry) return null;
+  if (Date.now() - entry.at > MEMO_TTL_MS) { memo.delete(key); return null; }
+  memo.delete(key);
+  memo.set(key, entry);
+  return entry.text;
+}
+
+function memoWrite(key: string, text: string) {
+  if (memoFetch !== globalThis.fetch) { memo.clear(); memoFetch = globalThis.fetch; }
+  memo.delete(key);
+  memo.set(key, { at: Date.now(), text });
+  while (memo.size > MEMO_MAX_ENTRIES) memo.delete(memo.keys().next().value as string);
+}
+
+export function providerMemoSize() {
+  return memo.size;
+}
+
 export const ROUTING_PROFILES = { car: "auto", motorcycle: "motorcycle", bicycle: "bicycle" } as const;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -396,6 +426,28 @@ async function fetchValhallaRoutes(
   meter?: ProviderMeter,
 ): Promise<EngineRoute[]> {
   const profile = ROUTING_PROFILES[mode];
+  const requestBody = JSON.stringify({
+    locations: points.map(([lon, lat], index) => ({
+      lon,
+      lat,
+      type: index === 0 || index === points.length - 1 ? "break" : "through",
+    })),
+    costing: profile,
+    costing_options: valhallaCostingOptions(mode),
+    ...(linearCostFactors && linearCostFactors.length > 0
+      ? { linear_cost_factors: linearCostFactors }
+      : {}),
+    // Phase 4.31: stretches that are illegal at the departure time (ZTL, timed closure).
+    ...(excludePolygons && excludePolygons.length > 0
+      ? { exclude_polygons: excludePolygons }
+      : {}),
+    units: "kilometers",
+    directions_options: { units: "kilometers", language: "it-IT" },
+    alternates: alternatives ? 2 : 0,
+  });
+  // The same request a moment ago: the provider's answer is a static graph, so it is reused (no request, no pacing slot).
+  const remembered = memoRead(`valhalla\n${requestBody}`);
+  if (remembered !== null) return normalizeValhallaResponse(JSON.parse(remembered), mode);
   if (meter && meter.requests >= meter.limit) return [];
   try {
     const response = await runValhallaLimited(
@@ -412,36 +464,24 @@ async function fetchValhallaRoutes(
             "X-Client-Id": "lastrico-milano",
             "User-Agent": PROVIDER_USER_AGENT,
           },
-          body: JSON.stringify({
-            locations: points.map(([lon, lat], index) => ({
-              lon,
-              lat,
-              type: index === 0 || index === points.length - 1 ? "break" : "through",
-            })),
-            costing: profile,
-            costing_options: valhallaCostingOptions(mode),
-            ...(linearCostFactors && linearCostFactors.length > 0
-              ? { linear_cost_factors: linearCostFactors }
-              : {}),
-            // Phase 4.31: stretches that are illegal at the departure time (ZTL, timed closure).
-            ...(excludePolygons && excludePolygons.length > 0
-              ? { exclude_polygons: excludePolygons }
-              : {}),
-            units: "kilometers",
-            directions_options: { units: "kilometers", language: "it-IT" },
-            alternates: alternatives ? 2 : 0,
-          }),
+          body: requestBody,
           cache: "no-store",
           signal: callSignal,
         });
-        return response.ok ? { status: response.status, body: await response.json() as unknown } : { status: response.status };
+        if (!response.ok) return { status: response.status };
+        // The body is read with json() inside the deadline, as before; the memo keeps its serialised form.
+        const body = await response.json() as unknown;
+        const routes = normalizeValhallaResponse(body, mode);
+        // Only an answer that normalises to at least one route is worth remembering.
+        if (routes.length) memoWrite(`valhalla\n${requestBody}`, JSON.stringify(body));
+        return { status: response.status, routes };
       }),
     );
-    if (!("body" in response)) {
+    if (!("routes" in response)) {
       logProviderFailure("valhalla", mode, { status: response.status });
       return [];
     }
-    return normalizeValhallaResponse(response.body, mode);
+    return (response as { routes: EngineRoute[] }).routes;
   } catch (error) {
     logProviderFailure("valhalla", mode, { error });
     return [];
@@ -575,6 +615,8 @@ async function fetchOsrmCarRoutes(
   url.searchParams.set("alternatives", alternatives ? "3" : "false");
   url.searchParams.set("steps", "true");
   url.searchParams.set("continue_straight", "false");
+  const remembered = memoRead(`osrm\n${url}`);
+  if (remembered !== null) return normalizeOsrmResponse(JSON.parse(remembered));
   try {
     const timeoutMs = Math.min(OSRM_TIMEOUT_MS, deadline - Date.now());
     if (timeoutMs < 500 || !takeProviderRequest(meter)) return [];
@@ -586,13 +628,17 @@ async function fetchOsrmCarRoutes(
         cache: "no-store",
         signal: callSignal,
       });
-      return response.ok ? { status: response.status, body: await response.json() as unknown } : { status: response.status };
+      if (!response.ok) return { status: response.status };
+      const body = await response.json() as unknown;
+      const routes = normalizeOsrmResponse(body);
+      if (routes.length) memoWrite(`osrm\n${url}`, JSON.stringify(body));
+      return { status: response.status, routes };
     });
-    if (!("body" in response)) {
+    if (!("routes" in response)) {
       logProviderFailure("osrm", "car", { status: response.status });
       return [];
     }
-    return normalizeOsrmResponse(response.body);
+    return (response as { routes: EngineRoute[] }).routes;
   } catch (error) {
     logProviderFailure("osrm", "car", { error });
     return [];

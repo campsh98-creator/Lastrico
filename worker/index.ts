@@ -1,7 +1,9 @@
 /** Cloudflare Worker entry point for the vinext-starter template. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
-import { tagRouteEngineResponse, viaRouteEngine } from "./route-engine";
+import { journeyRandom, tagRouteEngineResponse, viaRouteEngine } from "./route-engine";
+import { SqlLedgerStorage, TRAFFIC_HUB_HOST, TrafficHub } from "./traffic-hub";
+import { registerTrafficNamespace } from "../lib/traffic/client";
 
 interface Env {
   ASSETS: Fetcher;
@@ -11,6 +13,8 @@ interface Env {
    * Durable Objects lack it; then routes are computed in this Worker.
    */
   ROUTE_ENGINE?: DurableObjectNamespace;
+  /** Optional secret: the live-traffic provider key (TomTom, free plan). Absent: live traffic is off and says so. */
+  TOMTOM_API_KEY?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -38,6 +42,7 @@ interface ExecutionContext {
 export class RouteEngine {
   private readonly state: DurableObjectState;
   private readonly env: Env;
+  private hub?: TrafficHub;
 
   constructor(state: DurableObjectState, env: Env) {
     this.state = state;
@@ -45,6 +50,16 @@ export class RouteEngine {
   }
 
   async fetch(request: Request): Promise<Response> {
+    registerTrafficNamespace(this.env.ROUTE_ENGINE);
+    // The "traffic-ledger" instance is the only one that talks to the traffic provider (see traffic-hub.ts).
+    if (new URL(request.url).hostname === TRAFFIC_HUB_HOST) {
+      this.hub ??= new TrafficHub({
+        storage: new SqlLedgerStorage(this.state.storage.sql),
+        key: this.env.TOMTOM_API_KEY,
+        fetch: (input, init) => fetch(input, init),
+      });
+      return this.hub.handle(request);
+    }
     const response = await handler.fetch(request, this.env, {
       waitUntil: (promise: Promise<unknown>) => this.state.waitUntil(promise),
       passThroughOnException() {},
@@ -56,10 +71,11 @@ export class RouteEngine {
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+    registerTrafficNamespace(env.ROUTE_ENGINE);
 
     // Phase 4.33: route planning and reroutes are computed in a Durable Object, never here when the
     // binding exists; a failure is an explicit 503 (see route-engine.ts).
-    const routed = await viaRouteEngine(request, env.ROUTE_ENGINE);
+    const routed = await viaRouteEngine(request, env.ROUTE_ENGINE, journeyRandom(request));
     if (routed) return routed;
 
     if (url.pathname === "/_vinext/image") {

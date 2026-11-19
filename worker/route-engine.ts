@@ -28,6 +28,21 @@ export function isRouteComputation(request: Request): boolean {
   return request.method === "GET" && new URL(request.url).pathname === "/api/routes";
 }
 
+/**
+ * A stable pseudo-random number in [0, 1) for one journey: the same start, end and mode always give the same value.
+ * Passed to `viaRouteEngine` as its random source, it sends every recalculation of a journey (another avoidance level,
+ * another extra-time limit, tram or traffic switched on) to the same shard, where the provider-answer memo of
+ * lib/routing-providers.ts lives. Different journeys still spread over all shards. Preferences are not part of the key.
+ */
+export function journeyRandom(request: Request): () => number {
+  const params = new URL(request.url).searchParams;
+  const round = (value: string | null) => (value ?? "").split(",").map((part) => Number(part).toFixed(5)).join(",");
+  const key = round(params.get("start")) + "|" + round(params.get("end")) + "|" + (params.get("mode") ?? "car");
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < key.length; i += 1) hash = Math.imul(hash ^ key.charCodeAt(i), 0x01000193) >>> 0;
+  return () => hash / 2 ** 32;
+}
+
 /** Cloudflare's advice for Durable Object errors: retry when retryable, but not when overloaded. */
 function retryable(error: unknown): boolean {
   const flags = error as { retryable?: unknown; overloaded?: unknown } | null;
