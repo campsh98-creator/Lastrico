@@ -176,7 +176,8 @@ test("separates real GPS navigation from the automatic route simulation", async 
   ]);
 
   const fixProcessor = await readFile(fixProcessorUrl, "utf8");
-  assert.match(page, /navigator\.geolocation\.watchPosition/);
+  assert.match(page, /new ForegroundGps/);
+  assert.match(await readFile(new URL("../lib/foreground-gps.ts", import.meta.url), "utf8"), /geo\.watchPosition/);
   assert.match(page, /calculateRouteProgress/);
   // Phase 4.29: accuracy-weighted fusion replaced the fixed-weight smoothing.
   assert.match(fixProcessor, /fuseGpsPosition/);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { ForegroundGps, GPS_STOP_PREFERENCE, type ForegroundGpsStatus } from "@/lib/foreground-gps";
 import type { Map as MapLibreMap, Marker as MapLibreMarker, GeoJSONSource } from "maplibre-gl";
 import {
   createNavigationDiagnostics,
@@ -473,6 +474,8 @@ function formatArrivalTime(remainingMinutes: number) {
 const GPS_REARM_INTERVAL_MS = 20_000;
 const MAP_LOAD_PATIENCE_MS = 12_000;
 
+/* Pre-existing 4k-line Home component uses ref syncing and hoisted helpers not compiled by React Compiler. */
+/* eslint-disable react-hooks/refs, react-hooks/preserve-manual-memoization, react-hooks/immutability, react-hooks/purity */
 export default function Home() {
   const [areaId, setAreaId] = useState<PilotAreaId>("milan");
   const area = PILOT_AREAS[areaId];
@@ -493,7 +496,12 @@ export default function Home() {
   const announcedPaveRef = useRef<AnnouncedSection[]>([]);
   const pickingRef = useRef<PickingMode | null>(null);
   const directionsTriggerRef = useRef<HTMLButtonElement>(null);
-  const journeyWatchRef = useRef<number | null>(null);
+  const foregroundGpsRef = useRef<ForegroundGps | null>(null);
+  const foregroundFixRef = useRef<GpsFix | null>(null);
+  const foregroundFollowRef = useRef(true);
+  const locationRequestRef = useRef<{ area: PilotAreaId; revision: number } | null>(null);
+  const gpsPositionHandlerRef = useRef<(position: GeolocationPosition) => void>(() => undefined);
+  const gpsErrorHandlerRef = useRef<(error: GeolocationPositionError) => void>(() => undefined);
   const simulationTimerRef = useRef<number | null>(null);
   const navigationSessionRef = useRef(0);
   const journeyModeRef = useRef<JourneyMode | null>(null);
@@ -595,6 +603,9 @@ export default function Home() {
   const [journeyHeading, setJourneyHeading] = useState(0);
   const [journeyAccuracy, setJourneyAccuracy] = useState<number | null>(null);
   const [followVehicle, setFollowVehicle] = useState(true);
+  const [foregroundPosition, setForegroundPosition] = useState<GpsFix | null>(null);
+  const [foregroundGpsStatus, setForegroundGpsStatus] = useState<ForegroundGpsStatus>("idle");
+  const [foregroundGpsActive, setForegroundGpsActive] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [voiceAvailable, setVoiceAvailable] = useState(false);
   const [gpsState, setGpsState] = useState<GpsState>("idle");
@@ -901,9 +912,13 @@ export default function Home() {
       pointMarkersRef.current.vehicle = new Marker({ element: vehicleElement, rotationAlignment: "map" })
         .setLngLat(startLocation.coordinate)
         .addTo(map);
-      map.on("dragstart", () => {
-        if (journeyActiveRef.current) setFollowVehicle(false);
-      });
+      const exploreMap = () => {
+        foregroundFollowRef.current = false;
+        setFollowVehicle(false);
+      };
+      map.on("dragstart", exploreMap);
+      map.on("zoomstart", (event) => { if (event.originalEvent) exploreMap(); });
+      map.on("rotatestart", (event) => { if (event.originalEvent) exploreMap(); });
       map.on("click", (event) => {
         const target = pickingRef.current;
         if (!target) return;
@@ -1160,13 +1175,25 @@ export default function Home() {
   }, [isLoading]);
 
   useEffect(() => {
+    if (isJourneyActive || !mapReady) return;
     const marker = pointMarkersRef.current.vehicle;
     const element = marker?.getElement();
     if (!marker || !element) return;
-    if (!journeyPosition || !isJourneyActive) {
-      element.style.display = "none";
-      return;
-    }
+    if (!foregroundPosition) { element.style.display = "none"; return; }
+    element.style.display = "grid";
+    element.style.setProperty("--accuracy", `${Math.min(90, Math.max(24, foregroundPosition.accuracy))}px`);
+    marker.setLngLat(foregroundPosition.coordinate);
+    if (vehicleArrowRef.current) vehicleArrowRef.current.style.transform = "rotate(0deg)";
+    if (foregroundFollowRef.current) mapRef.current?.easeTo({ center: foregroundPosition.coordinate,
+      zoom: 15.5, pitch: 0, bearing: 0, duration: 400 });
+  }, [foregroundPosition, mapReady, isJourneyActive]);
+
+  useEffect(() => {
+    const marker = pointMarkersRef.current.vehicle;
+    const element = marker?.getElement();
+    if (!marker || !element) return;
+    if (!isJourneyActive) return;
+    if (!journeyPosition) { element.style.display = "none"; return; }
     element.style.display = "grid";
     element.style.setProperty("--accuracy", `${Math.min(90, Math.max(24, journeyAccuracy ?? 24))}px`);
     const now = performance.now();
@@ -1277,6 +1304,7 @@ export default function Home() {
     const allCoordinates = [...fastRoute.coordinates, ...safeRoute.coordinates];
     const lngs = allCoordinates.map(([lng]) => lng);
     const lats = allCoordinates.map(([, lat]) => lat);
+    foregroundFollowRef.current = false;
     map.fitBounds([[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]], {
       padding: visibleMapPadding(map.getContainer()),
       maxZoom: 14.7,
@@ -1555,6 +1583,7 @@ export default function Home() {
         return;
       }
       // iOS can silently stop a watch, and only a new one resumes the updates.
+      if (document.visibilityState !== "visible" || foregroundGpsRef.current?.isStopped) return;
       rearmGpsWatch();
       if (!gpsStallReportedRef.current && !recalculatingRef.current) {
         gpsStallReportedRef.current = true;
@@ -1574,14 +1603,12 @@ export default function Home() {
         void requestWakeLock();
         if (journeyModeRef.current === "gps") {
           recordDiagnostic({ type: "foreground-resume" });
-          rearmGpsWatch();
         }
       }
     };
     document.addEventListener("visibilitychange", reacquireWakeLock);
     return () => {
       document.removeEventListener("visibilitychange", reacquireWakeLock);
-      if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
       if (simulationTimerRef.current !== null) window.clearInterval(simulationTimerRef.current);
       routeRequestRef.current?.controller.abort();
       addressRequestRef.current?.abort();
@@ -1618,6 +1645,7 @@ export default function Home() {
 
   function changeArea(nextAreaId: PilotAreaId) {
     if (nextAreaId === areaIdRef.current || journeyActiveRef.current) return;
+    if (mapRef.current) foregroundFollowRef.current = false;
     finishNavigation();
     invalidateRouteIntent();
     cancelAddressSearch();
@@ -2656,39 +2684,39 @@ export default function Home() {
     }
   }
 
-  function useCurrentLocation() {
-    if (!navigator.geolocation) {
-      setStatus("La posizione non è disponibile su questo dispositivo.");
+  function applyCurrentLocation(fix: GpsFix, request: { area: PilotAreaId; revision: number }) {
+    locationRequestRef.current = null;
+    if (request.area !== areaIdRef.current || request.revision !== plannerRevisionRef.current) return;
+    if (!coordinateInArea(fix.coordinate, PILOT_AREAS[request.area])) {
+      setPlanError(`La tua posizione e fuori dall'area di servizio di ${PILOT_AREAS[request.area].name} e dintorni.`);
       return;
     }
-    const requestedArea = areaIdRef.current;
-    const requestedRevision = plannerRevisionRef.current;
-    setStatus("Sto rilevando la tua posizione…");
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        const coordinate: Coordinate = [coords.longitude, coords.latitude];
-        if (requestedArea !== areaIdRef.current || requestedRevision !== plannerRevisionRef.current) return;
-        if (!coordinateInArea(coordinate, PILOT_AREAS[requestedArea])) {
-          setPlanError(`La tua posizione è fuori dall’area di servizio di ${PILOT_AREAS[requestedArea].name} e dintorni.`);
-          return;
-        }
-        const location = { label: CURRENT_POSITION_LABEL, coordinate };
-        discardPlannedRoute();
-        cancelAddressSearch();
-        startLocationRef.current = location;
-        resolvedStartRef.current = location;
-        startTextRef.current = location.label;
-        setStartLocation(location);
-        setStartText(location.label);
-        setStatus("Posizione impostata come partenza.");
-      },
-      () => {
-        if (requestedArea === areaIdRef.current && requestedRevision === plannerRevisionRef.current) {
-          setPlanError("Non ho potuto accedere alla posizione. Controlla i permessi di localizzazione o scrivi un indirizzo.");
-        }
-      },
-      { enableHighAccuracy: true, timeout: 8000 },
-    );
+    const location = { label: CURRENT_POSITION_LABEL, coordinate: fix.coordinate };
+    discardPlannedRoute();
+    cancelAddressSearch();
+    startLocationRef.current = location;
+    resolvedStartRef.current = location;
+    startTextRef.current = location.label;
+    setStartLocation(location);
+    setStartText(location.label);
+    setStatus("Posizione impostata come partenza.");
+  }
+
+  function useCurrentLocation() {
+    const request = { area: areaIdRef.current, revision: plannerRevisionRef.current };
+    locationRequestRef.current = request;
+    setStatus("Sto rilevando la tua posizione...");
+    foregroundGpsRef.current?.startFromGesture();
+    const fix = foregroundFixRef.current;
+    if (fix && Date.now() - fix.timestamp <= 15000) applyCurrentLocation(fix, request);
+  }
+
+  function stopGpsTracking() {
+    if (journeyActiveRef.current && journeyModeRef.current === "gps") finishNavigation();
+    else foregroundGpsRef.current?.stop();
+    locationRequestRef.current = null;
+    foregroundFixRef.current = null;
+    setForegroundPosition(null);
   }
 
   async function requestWakeLock(session = navigationSessionRef.current) {
@@ -2716,15 +2744,20 @@ export default function Home() {
     }
   }
 
-  function finishNavigation(hasArrived = false) {
+  function finishNavigation(hasArrived = false, explicitStop = !hasArrived) {
+    const wasGps = journeyModeRef.current === "gps";
+    if (explicitStop && wasGps) {
+      foregroundGpsRef.current?.stop();
+      foregroundFixRef.current = null;
+      setForegroundPosition(null);
+      locationRequestRef.current = null;
+    }
     journeyActiveRef.current = false;
     recalculatingRef.current = false;
     navigationSessionRef.current += 1;
     journeyModeRef.current = null;
-    if (journeyWatchRef.current !== null) {
-      navigator.geolocation.clearWatch(journeyWatchRef.current);
-      journeyWatchRef.current = null;
-    }
+    foregroundGpsRef.current?.setNavigation(false);
+    foregroundGpsRef.current?.setVisible(document.visibilityState === "visible");
     if (simulationTimerRef.current !== null) {
       window.clearInterval(simulationTimerRef.current);
       simulationTimerRef.current = null;
@@ -2975,6 +3008,7 @@ export default function Home() {
       : `Navigazione Lastrico in ${currentTransport.label.toLowerCase()} avviata`);
 
     if (mode === "simulation") {
+      foregroundGpsRef.current?.setVisible(false);
       setGpsState("idle");
       const coordinates = routeForJourney.coordinates;
       setJourneyPosition(coordinates[0]);
@@ -2984,7 +3018,7 @@ export default function Home() {
       return;
     }
     if (!navigator.geolocation) {
-      finishNavigation();
+      finishNavigation(false, false);
       setGpsState("unavailable");
       setPlanError("Il GPS non è disponibile su questo dispositivo. Puoi usare la simulazione.");
       return;
@@ -3015,39 +3049,100 @@ export default function Home() {
   }
 
   function armGpsWatch(session: number) {
-    if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
+    if (session !== navigationSessionRef.current) return;
     lastWatchArmedAtRef.current = Date.now();
-    journeyWatchRef.current = navigator.geolocation.watchPosition(
-      ({ coords, timestamp }) => handleGpsFix({
-        coordinate: [coords.longitude, coords.latitude],
-        accuracy: coords.accuracy,
-        timestamp,
-        heading: coords.heading,
-        speed: coords.speed,
-      }, session),
-      (error) => {
-        if (session !== navigationSessionRef.current) return;
-        if (error.code === error.PERMISSION_DENIED) {
-          finishNavigation();
-          recordDiagnostic({ type: "permission-denied" });
-          setGpsState("unavailable");
-          setPlanError("Permesso di posizione negato. Attivalo nelle impostazioni del browser e riprova, oppure usa la simulazione.");
-          return;
-        }
-        recordDiagnostic({ type: "signal-loss" });
-        setGpsState("temporarily-unavailable");
-      },
-      { enableHighAccuracy: true, maximumAge: 1500, timeout: 12000 },
-    );
+    const gps = foregroundGpsRef.current;
+    gps?.setNavigation(true);
+    gps?.setVisible(document.visibilityState === "visible");
+    gps?.startFromGesture();
   }
 
   function rearmGpsWatch(force = false) {
-    if (!journeyActiveRef.current || journeyModeRef.current !== "gps" || !navigator.geolocation) return;
+    if (!journeyActiveRef.current || journeyModeRef.current !== "gps" || document.visibilityState !== "visible" || foregroundGpsRef.current?.isStopped) return;
     if (!force && Date.now() - lastWatchArmedAtRef.current < GPS_REARM_INTERVAL_MS) return;
     // Phase 4.31: a field trace shows when updates stalled and the watch was renewed.
     if (!force) traceRecorderRef.current?.recordEvent("gps-rearm", "stall");
-    armGpsWatch(navigationSessionRef.current);
+    lastWatchArmedAtRef.current = Date.now();
+    if (force) foregroundGpsRef.current?.restartFromGesture();
+    else void foregroundGpsRef.current?.refresh(true);
   }
+
+  useEffect(() => {
+    gpsPositionHandlerRef.current = (position) => {
+      const { coords, timestamp } = position;
+      const fix: GpsFix = { coordinate: [coords.longitude, coords.latitude], accuracy: coords.accuracy,
+        timestamp, heading: coords.heading, speed: coords.speed };
+      if (Number.isFinite(coords.longitude) && Math.abs(coords.longitude) <= 180
+        && Number.isFinite(coords.latitude) && Math.abs(coords.latitude) <= 90
+        && Number.isFinite(coords.accuracy) && coords.accuracy > 0 && coords.accuracy <= 1000
+        && Date.now() - timestamp <= 15000 && timestamp <= Date.now() + 5000) {
+        foregroundFixRef.current = fix;
+        setForegroundPosition(fix);
+        const request = locationRequestRef.current;
+        if (request) applyCurrentLocation(fix, request);
+      }
+      if (journeyActiveRef.current && journeyModeRef.current === "gps") handleGpsFix(fix, navigationSessionRef.current);
+    };
+    gpsErrorHandlerRef.current = (error) => {
+      locationRequestRef.current = null;
+      if (journeyActiveRef.current && journeyModeRef.current === "gps") {
+        if (error.code === 1) {
+          finishNavigation(false, false);
+          recordDiagnostic({ type: "permission-denied" });
+          setGpsState("unavailable");
+          setPlanError("Permesso di posizione negato. Attivalo nelle impostazioni del browser e riprova, oppure usa la simulazione.");
+        } else {
+          recordDiagnostic({ type: "signal-loss" });
+          setGpsState("temporarily-unavailable");
+        }
+      } else setStatus(error.code === 1
+        ? "Posizione negata. Puoi consentirla nelle impostazioni del browser o scrivere un indirizzo."
+        : "Posizione momentaneamente non disponibile. Puoi scrivere un indirizzo o riprovare dal GPS.");
+    };
+  });
+
+  useEffect(() => {
+    const gps = new ForegroundGps({
+      geolocation: navigator.geolocation,
+      queryPermission: navigator.permissions?.query
+        ? () => navigator.permissions.query({ name: "geolocation" }) : undefined,
+      readStopped: () => window.localStorage.getItem(GPS_STOP_PREFERENCE) === "1",
+      writeStopped: (stopped) => window.localStorage.setItem(GPS_STOP_PREFERENCE, stopped ? "1" : "0"),
+      onPosition: (position) => gpsPositionHandlerRef.current(position),
+      onStatus: (state, active) => {
+        setForegroundGpsStatus(state);
+        setForegroundGpsActive(active);
+        if (state === "denied") {
+          foregroundFixRef.current = null;
+          setForegroundPosition(null);
+          gpsErrorHandlerRef.current({ code: 1, message: "", PERMISSION_DENIED: 1, POSITION_UNAVAILABLE: 2, TIMEOUT: 3 });
+        }
+      },
+      onError: (error) => { if (error.code !== 1) gpsErrorHandlerRef.current(error); },
+    });
+    foregroundGpsRef.current = gps;
+    if (document.visibilityState !== "visible") gps.setVisible(false);
+    void gps.connect();
+    const updateVisibility = () => {
+      const visible = document.visibilityState === "visible";
+      gps.setVisible(visible && journeyModeRef.current !== "simulation");
+    };
+    const pageHide = () => gps.setVisible(false);
+    const pageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) gps.setVisible(false); // Discard a watch frozen in the iOS back/forward cache.
+      updateVisibility();
+    };
+    document.addEventListener("visibilitychange", updateVisibility);
+    window.addEventListener("pagehide", pageHide);
+    window.addEventListener("pageshow", pageShow);
+    return () => {
+      document.removeEventListener("visibilitychange", updateVisibility);
+      window.removeEventListener("pagehide", pageHide);
+      window.removeEventListener("pageshow", pageShow);
+      gps.dispose();
+      if (foregroundGpsRef.current === gps) foregroundGpsRef.current = null;
+    };
+  }, []);
 
   /** JSON is what replay reads; GPX (Phase 4.34) opens in map tools. Neither leaves the device unless shared. */
   async function exportGpsTrace(id: string, format: "json" | "gpx" = "json") {
@@ -3089,7 +3184,14 @@ export default function Home() {
   }
 
   function recenterNavigation() {
+    foregroundFollowRef.current = true;
     setFollowVehicle(true);
+    if (!journeyActiveRef.current) {
+      foregroundGpsRef.current?.startFromGesture();
+      const fix = foregroundFixRef.current;
+      if (fix) mapRef.current?.easeTo({ center: fix.coordinate, zoom: 15.5, pitch: 0, bearing: 0, duration: 400 });
+      return;
+    }
     // Phase 4.31 (field case C): the recentre control never had a reroute of its own. iOS can stop
     // delivering fixes without an error, and a reroute then waits for the next fix. When the last
     // fix is stale, this tap also asks for a fresh GPS watch, and the trace records it.
@@ -3288,6 +3390,9 @@ export default function Home() {
             <span>lastrico</span>
           </button>
           <span className="top-bar-spacer" />
+          <button type="button" className="icon-button" onClick={recenterNavigation}
+            aria-label={foregroundGpsStatus === "stopped" || foregroundGpsStatus === "gesture-required" || foregroundGpsStatus === "denied" ? "Attiva GPS e centra la mappa" : "Ricentra la mappa sulla mia posizione"}
+            data-testid="gps-recenter" title="La mia posizione"><Icon name="recenter" /></button>
           <div className="city-select">
             <label htmlFor="pilot-area" className="visually-hidden">Area pilota</label>
             <select
@@ -3969,7 +4074,12 @@ export default function Home() {
         <Dialog labelledBy="app-menu-title" onClose={() => setMenuOpen(false)} className="menu-sheet" testId="app-menu">
           <button type="button" className="modal-close" onClick={() => setMenuOpen(false)} aria-label="Chiudi"><Icon name="close" /></button>
           <h2 id="app-menu-title">Menu</h2>
+          <p role="status" data-testid="gps-tracking-status">{foregroundGpsStatus === "live" ? "GPS attivo in primo piano." : foregroundGpsStatus === "requesting" ? "Ricerca della posizione..." : foregroundGpsStatus === "denied" ? "Posizione negata: controlla i permessi del browser." : foregroundGpsStatus === "unavailable" ? "GPS non disponibile: puoi riprovare o scrivere un indirizzo." : foregroundGpsStatus === "stopped" ? "GPS disattivato da te." : "Tocca Attiva GPS per usare la tua posizione."}</p>
           <div className="menu-list">
+            <button type="button" data-testid="gps-tracking-toggle" onClick={() => {
+              if (foregroundGpsActive) stopGpsTracking();
+              else foregroundGpsRef.current?.startFromGesture();
+            }}><Icon name="recenter" /><span>{foregroundGpsActive ? "Interrompi GPS" : "Attiva GPS"}</span></button>
             <button type="button" onClick={cycleTheme} data-testid="menu-theme">
               <Icon name={themeMode === "auto" ? "auto" : themeMode === "light" ? "sun" : "moon"} />
               <span>Tema: {themeMode === "auto" ? "automatico" : themeMode === "light" ? "chiaro" : "scuro"}</span>
