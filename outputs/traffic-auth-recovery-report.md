@@ -1,0 +1,29 @@
+# Traffic authentication recovery — release evidence
+
+## Diagnosis
+The preview status read on 20 November 2026 returned configured=true, available=false, reason=key-rejected, remainingToday=3998, remainingThisMonth=59998. This is evidence of a persisted rejection, not evidence that the replacement credential has been tested. Old code stores a key-independent six-hour 401/403 breaker. Secret replacement does not reset it. The ledger has no historical credential digest, so the identity of the rejected credential cannot be reconstructed safely.
+
+Wrangler whoami on this machine currently reports not authenticated. The reported SELF_SIGNED_CERT_IN_CHAIN was not reproduced by that read-only check. No TLS setting, corporate trust store, security agent, or authentication configuration was changed. Existing manual Linux preview workflow separates build from Cloudflare credentials; its approved source remains c42822926fbbad92d052cbb5b502daf232b2052e and must not be dispatched to deploy this PR without a separately reviewed pin update.
+
+## Change and safety properties
+Private persistent breaker metadata stores domain-separated SHA-256 fingerprints and observed identity history. Only a previously unseen credential different from a known rejected fingerprint can authorize one probe. Legacy identity-less rejection remains closed; no reset endpoint or fabricated baseline exists. Usage counters and normal rollover rules remain intact. Daily/monthly caps apply; the fixed authentication request has route purpose, so it does not consume the overlay allowance. Ordinary overlay requests retain their share limit.
+
+The operator action POST /api/traffic/auth-probe is enabled only with TOMTOM_AUTH_PROBE_ONLY=1, a bound ledger and a separate TOMTOM_AUTH_PROBE_TOKEN secret of at least 32 characters in a Bearer header. Comparison uses SHA-256 and timingSafeEqual. The action requests one fixed central-Milan flow tile through the ledger. Public routing, overlay, and status cannot authorize recovery. The preview probe-only gate refuses ordinary cache misses. Claim is persisted before network I/O, survives restarts, and holds all future misses after success or failure. A failure also restores at least six hours of protective lockout. Claim and quota are synchronous writes before fetch; a crash may conservatively consume quota or authorization without a provider request, never duplicate one. Provider requests refuse redirects and preserve TLS verification.
+
+No automatic resume mechanism is included: a successful probe remains held until a separately reviewed release. Cached provider data remains available until its existing TTL, and is not presented as proof of authentication. The probe bypasses cache specifically to test the configured credential. The fixed flow request cannot verify incident-specific permissions or live incident parsing; a second provider request is forbidden for this mission.
+
+## Official API contract
+- Flow: https://docs.tomtom.com/traffic-api/documentation/tomtom-maps/v1/traffic-flow/vector-flow-tiles
+- Incidents: https://docs.tomtom.com/traffic-api/documentation/tomtom-maps/v1/traffic-incidents/vector-incident-tiles
+- Product/domain restrictions: https://docs.tomtom.com/platform/documentation/api-best-practices/api-key-management-best-practices
+
+Existing URLs use official api.tomtom.com Traffic map v4 PBF flow relative and incidents t=-1 endpoints. The key must be valid for the requested Traffic service and any product/domain restrictions must permit the server-side request. A 403 does not distinguish invalid key from missing service entitlement/restriction. Account-specific permissions have not been verified; no provider call was used to inspect them. Do not migrate to Orbis or change products to bypass an entitlement problem.
+
+## Release conditions and usage
+Provider requests made in this task: ZERO. Existing preview counters imply two historical requests in the current UTC day/month. No controlled reset, ledger migration, secret replacement, deployment or pilot change was executed. Do not run scripts/traffic-live-check.mjs: it makes two direct requests outside the ledger.
+
+Deploy only after Linux CI passes and explicit user approval. Before publishing, review an immutable source pin and a trusted preview config that requires TOMTOM_AUTH_PROBE_ONLY=1; the current strict validator intentionally rejects nonempty variables, so it needs a narrow reviewed change before this new setting can be deployed. Keep existing SQLite Durable Object identity/bindings; never delete/recreate it. Supply the separate operator token as a Cloudflare secret through an approved channel, never in code, arguments, logs or chat.
+
+Current legacy blocker: this PR cannot safely perform an early reset of the existing unidentified rejected key. Natural expiry alone does not permit a recovery probe under probe-only mode. Establishing an identity through a normal request would consume a real request and requires a separately reviewed one-request plan; alternatively obtain an independently verified historical digest without exposing the old key. Do not enable ordinary traffic merely to populate the fingerprint. Decision: NO-GO for deployment/live recovery until these prerequisites are resolved.
+
+Validation results and CI/commit references are recorded in the PR and final handoff. Windows full suite initially: 664 tests, 630 passed, 22 failed, 12 skipped (including source checksums/Windows path assumptions). No unrelated data/test expectations were rewritten to hide failures.

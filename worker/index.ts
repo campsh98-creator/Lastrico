@@ -4,6 +4,7 @@ import handler from "vinext/server/app-router-entry";
 import { journeyRandom, tagRouteEngineResponse, viaRouteEngine } from "./route-engine";
 import { SqlLedgerStorage, TRAFFIC_HUB_HOST, TrafficHub } from "./traffic-hub";
 import { registerTrafficNamespace } from "../lib/traffic/client";
+import { authorizeTrafficProbe } from "./traffic-auth.ts";
 
 interface Env {
   ASSETS: Fetcher;
@@ -15,6 +16,9 @@ interface Env {
   ROUTE_ENGINE?: DurableObjectNamespace;
   /** Optional secret: the live-traffic provider key (TomTom, free plan). Absent: live traffic is off and says so. */
   TOMTOM_API_KEY?: string;
+  /** Preview recovery: refuse ordinary provider traffic; only a proven rotation may probe once. */
+  TOMTOM_AUTH_PROBE_ONLY?: string;
+  TOMTOM_AUTH_PROBE_TOKEN?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -56,6 +60,7 @@ export class RouteEngine {
       this.hub ??= new TrafficHub({
         storage: new SqlLedgerStorage(this.state.storage.sql),
         key: this.env.TOMTOM_API_KEY,
+        probeOnly: this.env.TOMTOM_AUTH_PROBE_ONLY === "1",
         fetch: (input, init) => fetch(input, init),
       });
       return this.hub.handle(request);
@@ -72,6 +77,15 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     registerTrafficNamespace(env.ROUTE_ENGINE);
+    if (url.pathname === "/api/traffic/auth-probe") {
+      if (request.method !== "POST") return new Response(null, { status: 405 });
+      if (env.TOMTOM_AUTH_PROBE_ONLY !== "1" || !env.ROUTE_ENGINE
+        || !await authorizeTrafficProbe(request, env.TOMTOM_AUTH_PROBE_TOKEN)) {
+        return new Response(null, { status: 403, headers: { "cache-control": "no-store" } });
+      }
+      const ledger = env.ROUTE_ENGINE.get(env.ROUTE_ENGINE.idFromName("traffic-ledger"));
+      return ledger.fetch(new Request(`https://${TRAFFIC_HUB_HOST}/auth-probe`, { method: "POST" }));
+    }
 
     // Phase 4.33: route planning and reroutes are computed in a Durable Object, never here when the
     // binding exists; a failure is an explicit 503 (see route-engine.ts).

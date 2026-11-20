@@ -1,4 +1,5 @@
 import { PROVIDER_USER_AGENT } from "../lib/provider-identity.ts";
+import { tileForCoordinate } from "../lib/traffic/tiles.ts";
 import {
   breakerAfterFailure,
   breakerAfterSuccess,
@@ -32,6 +33,12 @@ const MAX_TILE_BYTES = 512 * 1024;
 const PROVIDER_TIMEOUT_MS = 4_000;
 const MIN_ZOOM = 10;
 const MAX_ZOOM = 14;
+
+/** Domain separation prevents reuse as a fingerprint for another service. Never return this digest over HTTP. */
+export async function credentialFingerprint(key: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`lastrico:tomtom:v1\0${key}`));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
 
 export type TrafficKind = "flow" | "incidents";
 
@@ -67,12 +74,16 @@ export function tileUrl(kind: TrafficKind, z: number, x: number, y: number, key:
 
 export class TrafficHub {
   private readonly inflight = new Map<string, Promise<TileResult>>();
+  // Serialize distinct tiles too: a late success must never erase a newer rejection.
+  private queue: Promise<unknown> = Promise.resolve();
+  private fingerprint?: Promise<string>;
   private readonly deps: {
     storage: LedgerStorage;
     key: string | undefined;
     fetch: typeof fetch;
     now?: () => number;
     caps?: TrafficCaps;
+    probeOnly?: boolean;
   };
 
   constructor(deps: {
@@ -81,6 +92,7 @@ export class TrafficHub {
     fetch: typeof fetch;
     now?: () => number;
     caps?: TrafficCaps;
+    probeOnly?: boolean;
   }) {
     this.deps = deps;
   }
@@ -100,6 +112,8 @@ export class TrafficHub {
     const remainingToday = Math.max(0, this.caps.dailyTiles - current.dayUsed);
     const remainingThisMonth = Math.max(0, this.caps.monthlyTiles - current.monthUsed);
     const reason: HubStatus["reason"] = !this.deps.key ? "no-key"
+      : breaker.recovery ? "auth-recovery-hold"
+        : this.deps.probeOnly ? "auth-recovery-hold"
       : breakerOpen(breaker, now) ? (breaker.reason ?? "provider-failing")
         : remainingThisMonth === 0 ? "quota-monthly"
           : remainingToday === 0 ? "quota-daily" : "ok";
@@ -122,25 +136,50 @@ export class TrafficHub {
     // Two callers asking for the same tile at once share one provider call and one quota unit.
     const pending = this.inflight.get(key);
     if (pending) return pending;
-    const work = this.load(kind, z, x, y, key, purpose).finally(() => this.inflight.delete(key));
+    const work = this.queue.then(() => this.load(kind, z, x, y, key, purpose)).finally(() => this.inflight.delete(key));
+    this.queue = work.catch(() => undefined);
     this.inflight.set(key, work);
     return work;
   }
 
-  private async load(kind: TrafficKind, z: number, x: number, y: number, key: string, purpose: TrafficPurpose): Promise<TileResult> {
+  /** Operator action only, never called by routing, overlay, or status. One fixed Milan flow tile. */
+  probe(): Promise<TileResult> {
+    const { z, x, y } = tileForCoordinate([9.1919, 45.4641], 14);
+    const work = this.queue.then(() => this.load("flow", z, x, y, `flow/${z}/${x}/${y}`, "route", true));
+    this.queue = work.catch(() => undefined);
+    return work;
+  }
+
+  private async load(kind: TrafficKind, z: number, x: number, y: number, key: string, purpose: TrafficPurpose, recoveryRequest = false): Promise<TileResult> {
     const apiKey = this.deps.key;
     if (!apiKey) return { ok: false, reason: "no-key" };
+    const fingerprint = await (this.fingerprint ??= credentialFingerprint(apiKey));
     const now = this.now;
     const ttl = kind === "flow" ? FLOW_TTL_MS : INCIDENT_TTL_MS;
     const cached = this.deps.storage.readTile(key);
-    if (cached && now - cached.fetchedAt < ttl && cached.fetchedAt <= now) return { ok: true, bytes: cached.bytes, fetchedAt: cached.fetchedAt, cached: true };
+    if (!recoveryRequest && cached && now - cached.fetchedAt < ttl && cached.fetchedAt <= now) return { ok: true, bytes: cached.bytes, fetchedAt: cached.fetchedAt, cached: true };
 
     const state = this.deps.storage.readState();
-    if (breakerOpen(state.breaker, now)) return { ok: false, reason: state.breaker.reason ?? "provider-failing" };
+    const old = state.breaker;
+    // Legacy rejected states have no proven identity. Never infer it from the current secret.
+    const newCredential = old.fingerprint !== undefined && old.fingerprint !== fingerprint;
+    const probe = recoveryRequest && !old.recovery && old.reason === "key-rejected" && newCredential
+      && !(old.seenFingerprints ?? []).includes(fingerprint);
+    if (old.recovery) return { ok: false, reason: "auth-recovery-hold" };
+    if (recoveryRequest && !probe) return { ok: false, reason: "auth-recovery-hold" };
+    if (this.deps.probeOnly && !probe) return { ok: false, reason: "auth-recovery-hold" };
+    if (breakerOpen(old, now) && !probe) return { ok: false, reason: old.reason ?? "provider-failing" };
     // Synchronous read-modify-write: nothing else runs between the check and the spend.
     const spend = reserve(state.usage, now, 1, purpose, this.caps);
     if (!spend.ok) return { ok: false, reason: denialReason(spend.reason) };
     this.deps.storage.writeUsage(spend.usage);
+    // Claim before I/O; a crash may burn authorization, but cannot duplicate the request.
+    const identity = {
+      fingerprint,
+      seenFingerprints: [...new Set([...(old.seenFingerprints ?? []), ...(old.fingerprint ? [old.fingerprint] : []), fingerprint])],
+      ...(probe ? { recovery: "pending" as const } : {}),
+    };
+    this.deps.storage.writeBreaker({ ...old, ...identity });
 
     let status: number | null = null;
     try {
@@ -151,6 +190,7 @@ export class TrafficHub {
         const response = await this.deps.fetch(tileUrl(kind, z, x, y, apiKey), {
           headers: { "User-Agent": PROVIDER_USER_AGENT, Accept: "application/x-protobuf" },
           cache: "no-store",
+          redirect: "error",
           signal: controller.signal,
         });
         status = response.status;
@@ -159,7 +199,7 @@ export class TrafficHub {
           if (bytes.length > MAX_TILE_BYTES) throw new Error("tile too large");
           const fetchedAt = this.now;
           this.deps.storage.writeTile(key, fetchedAt, bytes);
-          this.deps.storage.writeBreaker(breakerAfterSuccess());
+          this.deps.storage.writeBreaker({ ...breakerAfterSuccess(), ...identity, ...(probe ? { recovery: "verified" } : {}) });
           if (Math.random() < 0.02) this.deps.storage.pruneTiles(fetchedAt - 10 * 60_000);
           return { ok: true, bytes, fetchedAt, cached: false };
         }
@@ -171,10 +211,14 @@ export class TrafficHub {
       status = null;
     }
     // A 4xx other than key and limit errors is about this tile, not the provider: it does not count against the circuit.
-    if (status !== null && status >= 400 && status < 500 && status !== 401 && status !== 403 && status !== 429) {
+    if (!probe && status !== null && status >= 400 && status < 500 && status !== 401 && status !== 403 && status !== 429) {
       return { ok: false, reason: "bad-request" };
     }
-    const next = breakerAfterFailure(this.deps.storage.readState().breaker, this.now, status);
+    const failed = breakerAfterFailure(this.deps.storage.readState().breaker, this.now, status);
+    const next = { ...failed, ...identity, ...(probe ? {
+      recovery: "failed" as const,
+      openUntil: Math.max(old.openUntil, failed.openUntil, this.now + 6 * 60 * 60_000),
+    } : {}) };
     this.deps.storage.writeBreaker(next);
     return { ok: false, reason: next.reason ?? "provider-failing" };
   }
@@ -183,6 +227,14 @@ export class TrafficHub {
   async handle(request: Request): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/status") return Response.json(this.status(), { headers: { "cache-control": "no-store" } });
+    if (url.pathname === "/auth-probe") {
+      if (request.method !== "POST") return new Response(null, { status: 405 });
+      const result = await this.probe();
+      // Return no provider bytes: cached flow may be inspected separately after a successful probe.
+      return Response.json(result.ok ? { ok: true, cached: result.cached } : result, {
+        status: result.ok ? 200 : 503, headers: { "cache-control": "no-store" },
+      });
+    }
     if (url.pathname !== "/tile") return new Response("not found", { status: 404 });
     const kind = url.searchParams.get("kind");
     const purpose = url.searchParams.get("purpose");
