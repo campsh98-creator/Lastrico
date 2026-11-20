@@ -16,9 +16,29 @@ const generated = () => ({
   assets: { directory: "../client" }, observability: { enabled: true },
 });
 
-test("the preview configuration is accepted only after renaming and dropping D1", () => {
+test("the preview configuration is accepted only after renaming, dropping D1 and enabling the probe-only hold", () => {
   assert.notDeepEqual(previewConfigProblems(generated()), []);
-  assert.deepEqual(previewConfigProblems(rewriteForPreview(generated())), []);
+  const preview = rewriteForPreview(generated());
+  assert.deepEqual(previewConfigProblems(preview), []);
+  assert.deepEqual(preview.vars, { TOMTOM_AUTH_PROBE_ONLY: "1" });
+  const withSecrets = { ...generated(), vars: { TOMTOM_API_KEY: "synthetic-key", TOMTOM_AUTH_PROBE_TOKEN: "synthetic-token" } };
+  assert.deepEqual(rewriteForPreview(withSecrets).vars, { TOMTOM_AUTH_PROBE_ONLY: "1" }, "plaintext credentials cannot survive the rewrite");
+});
+
+test("preview vars require the exact probe-only hold and reject missing, disabled or additional variables", () => {
+  const preview = rewriteForPreview(generated());
+  const missing = { ...preview };
+  delete missing.vars;
+  assert.notDeepEqual(previewConfigProblems(missing), []);
+  for (const vars of [
+    undefined, null, {}, [], { TOMTOM_AUTH_PROBE_ONLY: "0" }, { TOMTOM_AUTH_PROBE_ONLY: 1 },
+    { TOMTOM_AUTH_PROBE_ONLY: true }, { TOMTOM_AUTH_PROBE_ONLY: "" },
+    { TOMTOM_AUTH_PROBE_ONLY: "1", TOMTOM_API_KEY: "synthetic-key" },
+    { TOMTOM_AUTH_PROBE_ONLY: "1", TOMTOM_AUTH_PROBE_TOKEN: "synthetic-token" },
+    { TOMTOM_AUTH_PROBE_ONLY: "1", UNEXPECTED: "" },
+  ]) {
+    assert.notDeepEqual(previewConfigProblems({ ...preview, vars }), [], `unsafe vars ${JSON.stringify(vars)} must be rejected`);
+  }
 });
 
 test("every binding, route or resource beyond the preview's own RouteEngine is rejected", () => {

@@ -18,7 +18,7 @@ export const PILOT_NAME = "lastrico-pilot";
 const ALLOWED_NON_EMPTY = new Set([
   "topLevelName", "name", "main", "compatibility_date", "compatibility_flags", "legacy_env", "no_bundle",
   "durable_objects", "migrations", "assets", "observability", "rules", "build", "dev",
-  "jsx_factory", "jsx_fragment", "python_modules",
+  "jsx_factory", "jsx_fragment", "python_modules", "vars",
 ]);
 
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
@@ -39,6 +39,9 @@ export function previewConfigProblems(config) {
     if (!ALLOWED_NON_EMPTY.has(key) && !isEmpty(value)) problems.push(`unexpected non-empty key: ${key}`);
   }
   if (!isEmpty(config.d1_databases)) problems.push("D1 binding present");
+  if (!same(config.vars, { TOMTOM_AUTH_PROBE_ONLY: "1" })) {
+    problems.push("vars must be exactly TOMTOM_AUTH_PROBE_ONLY=1; credentials belong in Worker secrets");
+  }
   if (!same(config.durable_objects, { bindings: [{ name: "ROUTE_ENGINE", class_name: "RouteEngine" }] })) {
     problems.push("durable_objects must be exactly ROUTE_ENGINE -> RouteEngine of this Worker (no script_name, no other class)");
   }
@@ -55,7 +58,7 @@ export function previewConfigProblems(config) {
 }
 
 export function rewriteForPreview(config) {
-  return { ...config, name: PREVIEW_NAME, topLevelName: PREVIEW_NAME, d1_databases: [] };
+  return { ...config, name: PREVIEW_NAME, topLevelName: PREVIEW_NAME, d1_databases: [], vars: { TOMTOM_AUTH_PROBE_ONLY: "1" } };
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {

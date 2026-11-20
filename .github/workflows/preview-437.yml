@@ -122,7 +122,7 @@ jobs:
         run: |
           "$RUNNER_TEMP/tool/node_modules/.bin/wrangler" deploy --dry-run --config dist/server/wrangler.json | tee "$RUNNER_TEMP/dry-run.txt"
           grep -q "Dry run\|--dry-run: exiting now" "$RUNNER_TEMP/dry-run.txt"
-          if grep -E '^env\.' "$RUNNER_TEMP/dry-run.txt" | grep -vE '^env\.ROUTE_ENGINE \(RouteEngine\) +Durable Object *$'; then
+          if grep -E '^env\.' "$RUNNER_TEMP/dry-run.txt" | grep -vE '^env\.ROUTE_ENGINE \(RouteEngine\) +Durable Object *$|^env\.TOMTOM_AUTH_PROBE_ONLY \("1"\) +Environment Variable *$'; then
             echo "the Worker would have a binding other than its own RouteEngine"; exit 1
           fi
       - name: Keep only the built files
@@ -175,7 +175,7 @@ jobs:
           WRANGLER_SEND_METRICS: "false"
         run: |
           "$RUNNER_TEMP/tool/node_modules/.bin/wrangler" deploy --dry-run --config dist/server/wrangler.json | tee "$RUNNER_TEMP/dry-run.txt"
-          if grep -E '^env\.' "$RUNNER_TEMP/dry-run.txt" | grep -vE '^env\.ROUTE_ENGINE \(RouteEngine\) +Durable Object *$'; then
+          if grep -E '^env\.' "$RUNNER_TEMP/dry-run.txt" | grep -vE '^env\.ROUTE_ENGINE \(RouteEngine\) +Durable Object *$|^env\.TOMTOM_AUTH_PROBE_ONLY \("1"\) +Environment Variable *$'; then
             echo "unexpected binding"; exit 1
           fi
       - name: Publish the preview
