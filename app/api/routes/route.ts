@@ -536,6 +536,10 @@ export async function GET(request: NextRequest) {
   // Optional live traffic (provider tiles through the quota ledger, lib/traffic). Not requested: nothing below changes.
   const trafficRequested = request.nextUrl.searchParams.get("traffic") === "live";
   const maximumExtraMinutes = parseExtraMinutes(request.nextUrl.searchParams.get("maxExtraMinutes"));
+  const headingParam = request.nextUrl.searchParams.get("heading");
+  const heading = headingParam !== null && Number.isFinite(Number(headingParam))
+    ? ((Number(headingParam) % 360) + 360) % 360
+    : undefined;
   // Phase 4.31: departure time (Milan local, "YYYY-MM-DDTHH:MM"; now when absent) and the ZTL
   // areas the person is authorised for in this mode. Unknown area ids are ignored.
   const departureParam = request.nextUrl.searchParams.get("departure");
@@ -580,7 +584,7 @@ export async function GET(request: NextRequest) {
       requests: 0,
       limit: navigationRequest ? MAX_NAVIGATION_PROVIDER_REQUESTS : MAX_PLANNER_PROVIDER_REQUESTS,
     };
-    const rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter);
+    const rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter, heading);
     const baseRoutingReadyAt = performance.now();
     if (!rawBaseRoutes.length) throw new Error("Nessun percorso");
     const providerRequestBudgetLeft = () => meter.requests < meter.limit;
@@ -696,7 +700,7 @@ export async function GET(request: NextRequest) {
       const rings = blockedSlices.map((slice) => corridorRing(slice, 4, 6)).filter((ring): ring is Coordinate[] => ring !== null).slice(0, 8);
       if (rings.length > 0) {
         const avoiding = await fetchValhallaRouteExcluding([start, end], mode, rings,
-          Math.min(deadline - 1_000, Date.now() + 3_500), request.signal, meter);
+          Math.min(deadline - 1_000, Date.now() + 3_500), request.signal, meter, heading);
         if (avoiding) {
           await ensureRouteCovered(avoiding.coordinates);
           await adoptTraffic(avoiding);
@@ -809,6 +813,7 @@ export async function GET(request: NextRequest) {
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
           meter,
+          heading,
         );
         if (!first) surfaceAwareFailed = true;
         if (first) {
@@ -859,7 +864,7 @@ export async function GET(request: NextRequest) {
           const stoneSlices = extractRoughSlices(fastestBase.coordinates, (_prev, _curr, idx) => Boolean(preliminaryFast.surfaceScore.roughSegmentIndices?.has(idx)), sliceMinimumMeters);
           const factors = [...buildLinearCostFactors(stoneSlices, 15.0, 4).factors, ...buildLinearCostFactors(railSlices, 8.0, 6).factors, ...trafficFactors];
           railGeneration.attempted = true;
-            const railRoute = await fetchValhallaCustomizedRoute([start, end], mode, factors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter);
+            const railRoute = await fetchValhallaCustomizedRoute([start, end], mode, factors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter, heading);
           if (!railRoute) railGeneration.reason = "provider-failed";
           else {
             await ensureRouteCovered(railRoute.coordinates);
@@ -924,6 +929,7 @@ export async function GET(request: NextRequest) {
           deadline,
           request.signal,
           meter,
+          heading,
         );
         detourResponses.push(routes);
         await ensureRouteCovered(routes.flatMap((r) => r.coordinates));
@@ -962,6 +968,7 @@ export async function GET(request: NextRequest) {
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
           meter,
+          heading,
         );
         if (refinedRoute) {
           await ensureRouteCovered(refinedRoute.coordinates);

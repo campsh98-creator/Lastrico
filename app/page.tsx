@@ -2213,6 +2213,7 @@ export default function Home() {
       journeySession?: number;
       preferences?: RoutePreferences;
       endOverride?: LocationChoice;
+      heading?: number | null;
     } = {},
   ) {
     const isReroute = options.journeySession !== undefined;
@@ -2336,6 +2337,9 @@ export default function Home() {
       const authorisedZtl = authorisedZtlFor(ztlAuthorisationsRef.current, requestedMode);
       if (authorisedZtl.length) params.set("ztl", authorisedZtl.join(","));
       if (options.journeySession !== undefined) params.set("navigation", "1");
+      if (typeof options.heading === "number" && Number.isFinite(options.heading)) {
+        params.set("heading", String(Math.round(((options.heading % 360) + 360) % 360)));
+      }
       window.clearTimeout(requestTimeout);
       requestTimeout = window.setTimeout(abortWithTimeout, isReroute ? REROUTE_TIMEOUT_MS : ROUTE_TIMEOUT_MS);
       const response = await fetch(`/api/routes?${params}`, { signal: controller.signal });
@@ -2355,8 +2359,9 @@ export default function Home() {
         !isNavigableRouteGeometry(data.fast.coordinates)
         || !isNavigableRouteGeometry(data.safe.coordinates)
       ) throw new PlannerMessage("Il percorso ricevuto non è navigabile. Riprova.");
+      const objective = options.preserveRoute ?? "safe";
       const nextRoute = isReroute
-        ? rerouteDisplayKind(options.preserveRoute ?? "safe", data.hasDistinctAlternative)
+        ? rerouteDisplayKind(objective, data.hasDistinctAlternative)
         : selectRouteKind(options.preserveRoute, data.hasDistinctAlternative);
       applyRouteData(data, nextRoute, requestedMode);
       const nextSelectedRoute = nextRoute === "safe" ? data.safe : data.fast;
@@ -2897,6 +2902,7 @@ export default function Home() {
           force: true,
           journeySession: session,
           preferences: navigationPreferencesRef.current,
+          heading: decision.display.heading ?? decision.heading ?? null,
         },
       );
       return;

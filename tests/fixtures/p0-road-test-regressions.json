@@ -1,0 +1,105 @@
+{
+  "title": "Lastrico P0 Road-Test Regression Test Fixtures (20 November 2026)",
+  "note": "Deterministic regression fixtures for the 5 confirmed field corridors. All coordinates are public OpenStreetMap junctions and road midpoints. No raw GPS or private location history.",
+  "cases": [
+    {
+      "id": "piazzale-lodi-corso-lodi",
+      "name": "Corso Lodi / Piazzale Lodi",
+      "corridor": "Corso Lodi and Piazzale Lodi roundabout",
+      "start": "9.2071562,45.4507078",
+      "end": "9.1759083,45.4437792",
+      "mode": "car",
+      "departure": "2026-11-09T12:00",
+      "avoid": "strong",
+      "checks": {
+        "isLegal": true,
+        "maxTravelSeconds": 700,
+        "fastConfirmedStoneMeters": 195,
+        "safeConfirmedStoneMeters": 25,
+        "safeRoundaboutWayId": 287070936,
+        "roundaboutSurface": "sett",
+        "unknownNotMarkedSmooth": true,
+        "candidateGenerationRan": true,
+        "preservesObjectiveOnReroute": true
+      }
+    },
+    {
+      "id": "via-carlo-vittadini",
+      "name": "Via Carlo Vittadini and feasible alternatives",
+      "corridor": "Viale Beatrice d'Este to Via Carlo Vittadini / Via Carlo Patellani",
+      "start": "9.2025,45.4625",
+      "end": "9.1734728,45.4349746",
+      "mode": "car",
+      "departure": "2026-11-09T12:00",
+      "avoid": "strong",
+      "checks": {
+        "isLegal": true,
+        "maxTravelSeconds": 800,
+        "vittadiniWayId": 264776934,
+        "surfaceCategory": "confirmed_smooth",
+        "surfaceMaterial": "asphalt",
+        "unknownNotMarkedSmooth": true,
+        "noHardcodedCobblestone": true,
+        "preservesObjectiveOnReroute": true
+      }
+    },
+    {
+      "id": "via-giuseppe-ripamonti",
+      "name": "Via Giuseppe Ripamonti",
+      "corridor": "Viale Sabotino / Viale Bligny south on Via Giuseppe Ripamonti",
+      "start": "9.2006,45.4510",
+      "end": "9.1975,45.4420",
+      "mode": "motorcycle",
+      "departure": "2026-11-09T12:00",
+      "avoid": "strong",
+      "checks": {
+        "isLegal": true,
+        "maxTravelSeconds": 450,
+        "tramTrackSeparation": true,
+        "unknownNotMarkedSmooth": true,
+        "noHardcodedCobblestone": true,
+        "preservesObjectiveOnReroute": true
+      }
+    },
+    {
+      "id": "corso-di-porta-romana",
+      "name": "Corso di Porta Romana",
+      "corridor": "Corso di Porta Romana southeast corridor with tram tracks",
+      "start": "9.1975,45.4550",
+      "end": "9.2025,45.4515",
+      "mode": "car",
+      "heading": 140,
+      "departure": "2026-11-09T12:00",
+      "avoid": "strong",
+      "checks": {
+        "isLegal": true,
+        "maxTravelSeconds": 300,
+        "headingTolerance": 60,
+        "expectedUTurnsWithHeading": 0,
+        "rerouteLoggingCorrect": true,
+        "unknownNotMarkedSmooth": true,
+        "preservesObjectiveOnReroute": true
+      }
+    },
+    {
+      "id": "via-francesco-sforza-mascagni",
+      "name": "Via Francesco Sforza / Via Pietro Mascagni",
+      "corridor": "Cerchia dei Navigli: Via Mascagni through Via Francesco Sforza",
+      "start": "9.2010,45.4670",
+      "end": "9.1950,45.4580",
+      "mode": "car",
+      "departure": "2026-11-09T12:00",
+      "avoid": "strong",
+      "checks": {
+        "isLegal": true,
+        "maxTravelSeconds": 500,
+        "sforzaSurface": "asphalt",
+        "mascagniSurface": "asphalt",
+        "surfaceCategory": "confirmed_smooth",
+        "unknownNotMarkedSmooth": true,
+        "noHardcodedCobblestone": true,
+        "preservesObjectiveOnReroute": true
+      }
+    }
+  ]
+}

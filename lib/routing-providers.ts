@@ -424,14 +424,22 @@ async function fetchValhallaRoutes(
   linearCostFactors?: { shape: string; factor: number }[],
   excludePolygons?: Coordinate[][],
   meter?: ProviderMeter,
+  initialHeading?: number,
 ): Promise<EngineRoute[]> {
   const profile = ROUTING_PROFILES[mode];
   const requestBody = JSON.stringify({
-    locations: points.map(([lon, lat], index) => ({
-      lon,
-      lat,
-      type: index === 0 || index === points.length - 1 ? "break" : "through",
-    })),
+    locations: points.map(([lon, lat], index) => {
+      const isStart = index === 0;
+      const isEnd = index === points.length - 1;
+      return {
+        lon,
+        lat,
+        type: isStart || isEnd ? "break" : "through",
+        ...(isStart && initialHeading !== undefined
+          ? { heading: Math.round(initialHeading), heading_tolerance: 60 }
+          : {}),
+      };
+    }),
     costing: profile,
     costing_options: valhallaCostingOptions(mode),
     ...(linearCostFactors && linearCostFactors.length > 0
@@ -496,8 +504,9 @@ export async function fetchValhallaCustomizedRoutes(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   meter?: ProviderMeter,
+  initialHeading?: number,
 ): Promise<EngineRoute[]> {
-  return fetchValhallaRoutes(points, mode, alternatives, deadline, signal, linearCostFactors, undefined, meter);
+  return fetchValhallaRoutes(points, mode, alternatives, deadline, signal, linearCostFactors, undefined, meter, initialHeading);
 }
 
 /**
@@ -512,8 +521,9 @@ export async function fetchValhallaRouteExcluding(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   meter?: ProviderMeter,
+  initialHeading?: number,
 ): Promise<EngineRoute | null> {
-  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, undefined, excludePolygons, meter);
+  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, undefined, excludePolygons, meter, initialHeading);
   return routes[0] ?? null;
 }
 
@@ -524,8 +534,9 @@ export async function fetchValhallaCustomizedRoute(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   meter?: ProviderMeter,
+  initialHeading?: number,
 ): Promise<EngineRoute | null> {
-  const routes = await fetchValhallaCustomizedRoutes(points, mode, linearCostFactors, false, deadline, signal, meter);
+  const routes = await fetchValhallaCustomizedRoutes(points, mode, linearCostFactors, false, deadline, signal, meter, initialHeading);
   return routes[0] ?? null;
 }
 
@@ -652,9 +663,10 @@ export async function fetchEngineRoutes(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   meter?: ProviderMeter,
+  initialHeading?: number,
 ) {
   if (signal.aborted || Date.now() >= deadline) return [];
-  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline, signal, undefined, undefined, meter);
+  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline, signal, undefined, undefined, meter, initialHeading);
   if (valhallaRoutes.length) return valhallaRoutes;
   // A generic driving graph is a valid degraded car route, but would be unsafe and
   // misleading for bicycle or motorcycle mode. Those modes fail explicitly.
