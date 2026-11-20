@@ -5,13 +5,17 @@ import { DatabaseSync } from "node:sqlite";
 import { credentialFingerprint, MemoryLedgerStorage, SqlLedgerStorage, TrafficHub } from "../worker/traffic-hub.ts";
 import { DEFAULT_TRAFFIC_CAPS, emptyUsage } from "../lib/traffic/quota.ts";
 import { authorizeTrafficProbe } from "../worker/traffic-auth.ts";
+import { encodeMvt } from "./helpers/traffic-fixtures.mjs";
 
 // Synthetic credentials only. Every provider interaction in this file is a local mock.
 const OLD = "synthetic-previous-credential";
 const NEW = "synthetic-replacement-credential";
 const NOW = Date.UTC(2026, 10, 20, 10);
 const SIX_HOURS = 6 * 60 * 60_000;
-const bytes = () => new Response(Uint8Array.of(1, 2, 3));
+const flowBytes = (level = 0.5, name = "Traffic flow") => encodeMvt({ layers: [{ name, features: [
+  { type: 2, parts: [[[0, 0], [100, 100]]], properties: { traffic_level: level } },
+] }] });
+const bytes = () => new Response(flowBytes(), { headers: { "content-type": "image/pbf" } });
 const tile = (hub, x = 1, purpose = "route") => hub.tile("flow", 14, x, 1, purpose);
 
 function setup(storage = new MemoryLedgerStorage(), options = {}) {
@@ -256,3 +260,94 @@ test("status is read-only; SQL stores digests only and responses/logs disclose n
     sql.db.close();
   }
 });
+
+for (const legacy of [false, true]) {
+  for (const status of [404, 500]) {
+    test(`${legacy ? "legacy" : "known"} expired rejection is not attributed to a replacement after HTTP ${status}`, async () => {
+      const storage = await rejected(undefined, { openUntil: NOW - 1,
+        ...(legacy ? { fingerprint: undefined, seenFingerprints: undefined } : {}) });
+      const previousFingerprint = storage.readState().breaker.fingerprint;
+      const { hub, calls } = setup(storage, { fetch: async (...args) => {
+        calls.push(args);
+        return new Response(null, { status });
+      } });
+      assert.equal((await tile(hub)).ok, false);
+      assert.equal(calls.length, 1, "ordinary traffic may retry after natural expiry");
+      assert.equal(storage.readState().breaker.fingerprint, previousFingerprint,
+        "a tile error or provider failure cannot identify a rejected credential");
+      assert.ok(storage.readState().breaker.seenFingerprints.includes(await credentialFingerprint(NEW)));
+      assert.equal((await hub.probe()).ok, false, "an observed replacement cannot gain a recovery authorization");
+      const third = setup(storage, { key: "third-synthetic-credential" });
+      if (legacy) {
+        assert.equal((await third.hub.probe()).ok, false, "legacy rejection still has no proven identity");
+        assert.equal(third.calls.length, 0);
+      }
+    });
+  }
+}
+
+for (const status of [401, 403]) {
+  test(`ordinary expired-lockout HTTP ${status} identifies the actual rejected replacement`, async () => {
+    const storage = await rejected(undefined, { openUntil: NOW - 1 });
+    const { hub } = setup(storage, { fetch: async () => new Response(null, { status }) });
+    assert.equal((await tile(hub)).ok, false);
+    assert.equal(storage.readState().breaker.reason, "key-rejected");
+    assert.equal(storage.readState().breaker.fingerprint, await credentialFingerprint(NEW));
+  });
+}
+
+test("natural expiry permits ordinary use without recovery metadata while probe-only remains closed", async () => {
+  for (const probeOnly of [false, true]) {
+    const storage = await rejected(undefined, { openUntil: NOW - 1, fingerprint: undefined, seenFingerprints: undefined });
+    const { hub, calls } = setup(storage, { probeOnly });
+    const result = await tile(hub);
+    assert.equal(result.ok, !probeOnly);
+    assert.equal(calls.length, probeOnly ? 0 : 1);
+    assert.equal(storage.readState().breaker.recovery, undefined);
+    if (!probeOnly) {
+      assert.equal(storage.readState().breaker.reason, null);
+      assert.equal(storage.readState().breaker.fingerprint, await credentialFingerprint(NEW));
+      assert.equal(storage.readState().usage.dayUsed, 38);
+    }
+  }
+});
+
+for (const [name, response] of [
+  ["JSON HTTP 200", () => Response.json({ error: "synthetic denial" })],
+  ["valid PBF with wrong MIME", () => new Response(flowBytes(), { headers: { "content-type": "text/html" } })],
+  ["valid PBF without MIME", () => new Response(flowBytes())],
+  ["malformed PBF", () => new Response(Uint8Array.of(255), { headers: { "content-type": "image/pbf" } })],
+  ["HTTP 204", () => new Response(null, { status: 204 })],
+  ["wrong flow layer", () => new Response(flowBytes(0.5, "Unrelated layer"), { headers: { "content-type": "image/pbf" } })],
+  ["missing flow layer", () => new Response(encodeMvt({ layers: [] }), { headers: { "content-type": "image/pbf" } })],
+  ["empty flow layer", () => new Response(encodeMvt({ layers: [{ name: "Traffic flow", features: [] }] }), { headers: { "content-type": "image/pbf" } })],
+  ...[-0.1, 1.1, "0.5", true].map((level) => [`invalid traffic level ${String(level)}`, () => new Response(flowBytes(level), { headers: { "content-type": "image/pbf" } })]),
+]) {
+  test(`recovery rejects ${name} without caching or permitting another request`, async () => {
+    const storage = await rejected();
+    let calls = 0;
+    const { hub } = setup(storage, { probeOnly: true, fetch: async () => { calls += 1; return response(); } });
+    assert.equal((await hub.probe()).ok, false);
+    assert.equal(storage.readState().breaker.recovery, "failed");
+    assert.ok(storage.readState().breaker.openUntil >= NOW + SIX_HOURS);
+    assert.equal(storage.tiles.size, 0);
+    assert.equal(storage.readState().usage.dayUsed, 38);
+    assert.equal(storage.readState().usage.monthUsed, 124);
+    assert.equal((await hub.probe()).reason, "auth-recovery-hold");
+    assert.equal((await tile(hub, 2)).reason, "auth-recovery-hold");
+    assert.equal(calls, 1);
+  });
+}
+
+for (const contentType of ["image/pbf", "application/x-protobuf", "application/vnd.mapbox-vector-tile", "application/octet-stream"]) {
+  test(`recovery verifies a valid flow response with MIME ${contentType}`, async () => {
+    const { hub, calls, storage } = setup(await rejected(), { fetch: async (...args) => {
+      calls.push(args);
+      return new Response(flowBytes(), { headers: { "content-type": contentType } });
+    } });
+    assert.equal((await hub.probe()).ok, true);
+    assert.equal(calls.length, 1);
+    assert.equal(storage.readState().breaker.recovery, "verified");
+    assert.equal(storage.tiles.size, 1);
+  });
+}

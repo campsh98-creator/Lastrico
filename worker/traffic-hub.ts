@@ -1,5 +1,6 @@
 import { PROVIDER_USER_AGENT } from "../lib/provider-identity.ts";
 import { tileForCoordinate } from "../lib/traffic/tiles.ts";
+import { decodeMvt } from "../lib/traffic/mvt.ts";
 import {
   breakerAfterFailure,
   breakerAfterSuccess,
@@ -175,13 +176,13 @@ export class TrafficHub {
     this.deps.storage.writeUsage(spend.usage);
     // Claim before I/O; a crash may burn authorization, but cannot duplicate the request.
     const identity = {
-      fingerprint,
       seenFingerprints: [...new Set([...(old.seenFingerprints ?? []), ...(old.fingerprint ? [old.fingerprint] : []), fingerprint])],
       ...(probe ? { recovery: "pending" as const } : {}),
     };
     this.deps.storage.writeBreaker({ ...old, ...identity });
 
     let status: number | null = null;
+    let unreadableProbe = false;
     try {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), PROVIDER_TIMEOUT_MS);
@@ -197,9 +198,26 @@ export class TrafficHub {
         if (response.status === 200 || response.status === 204) {
           const bytes = new Uint8Array(await response.arrayBuffer());
           if (bytes.length > MAX_TILE_BYTES) throw new Error("tile too large");
+          if (probe) {
+            try {
+              const contentType = response.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase();
+              if (status !== 200 || !contentType || !["image/pbf", "application/x-protobuf", "application/vnd.mapbox-vector-tile", "application/octet-stream"].includes(contentType)) {
+                throw new Error("unexpected probe format");
+              }
+              const layer = decodeMvt(bytes).layers["Traffic flow"];
+              const levels = layer?.features.map((feature) => feature.properties.traffic_level) ?? [];
+              if (!levels.some((level) => typeof level === "number" && Number.isFinite(level) && level >= 0 && level <= 1)
+                || levels.some((level) => typeof level === "number" && (!Number.isFinite(level) || level < 0 || level > 1))) {
+                throw new Error("unverified flow tile");
+              }
+            } catch {
+              unreadableProbe = true;
+              throw new Error("unreadable probe tile");
+            }
+          }
           const fetchedAt = this.now;
           this.deps.storage.writeTile(key, fetchedAt, bytes);
-          this.deps.storage.writeBreaker({ ...breakerAfterSuccess(), ...identity, ...(probe ? { recovery: "verified" } : {}) });
+          this.deps.storage.writeBreaker({ ...breakerAfterSuccess(), ...identity, fingerprint, ...(probe ? { recovery: "verified" } : {}) });
           if (Math.random() < 0.02) this.deps.storage.pruneTiles(fetchedAt - 10 * 60_000);
           return { ok: true, bytes, fetchedAt, cached: false };
         }
@@ -215,12 +233,12 @@ export class TrafficHub {
       return { ok: false, reason: "bad-request" };
     }
     const failed = breakerAfterFailure(this.deps.storage.readState().breaker, this.now, status);
-    const next = { ...failed, ...identity, ...(probe ? {
+    const next = { ...old, ...failed, ...identity, ...((status === 401 || status === 403) ? { fingerprint } : {}), ...(probe ? {
       recovery: "failed" as const,
       openUntil: Math.max(old.openUntil, failed.openUntil, this.now + 6 * 60 * 60_000),
     } : {}) };
     this.deps.storage.writeBreaker(next);
-    return { ok: false, reason: next.reason ?? "provider-failing" };
+    return { ok: false, reason: unreadableProbe ? "tile-unreadable" : next.reason ?? "provider-failing" };
   }
 
   /** The Durable Object entry point: `/status` and `/tile?kind=&z=&x=&y=&purpose=`. */
