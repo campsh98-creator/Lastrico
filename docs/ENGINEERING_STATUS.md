@@ -1,9 +1,9 @@
 # Engineering status
 
-Status on 19 November 2026. `main` is at `9cd25b2` (PRs #16 to #32 merged). **Two deployments are online** and
+Status on 20 November 2026. `main` is at `8dccb10` (PRs #16 to #34 merged). **Two deployments are online** and
 both stay online: the pilot `lastrico-pilot` (older code, built from `54bd605`, not touched) and the isolated preview
-`lastrico-preview-437` (built from `49fea24` by deploy run 44477600454 on 19 November: anti-pavé, regional navigation, road layers,
-independent tram preference, exact provider cap; Surface Intelligence code with the shadow off). This page separates what exists
+`lastrico-preview-437` (built from `c428229` by deploy run 44568733325 on 19 November: everything in `49fea24` plus optional live
+traffic, the provider-answer memo and the journey-sticky shard; Surface Intelligence code with the shadow off). This page separates what exists
 locally from what is online, and fixed defects from open problems. Every claim points to the evidence in `outputs/`; the
 detailed phase reports there are in Italian.
 
@@ -16,13 +16,37 @@ detailed phase reports there are in Italian.
 | Road layers panel (surface; rails where a local layer set exists), hidden while navigating (PR #31) | ✅ | ✅ | ✅ `49fea24` | No rail data is shipped, so the rails view says "non disponibili in questa versione" |
 | Independent tram preference, rail-aware candidate generation (PRs #27, #31) | ✅ | ✅ | ✅ `49fea24`, disabled without layers | Combined stone + tram gain not measured on this machine: it needs the local layer build |
 | Provider-request cap counted per real request, retries and OSRM fallback included (PR #31) | ✅ | ✅ | ✅ `49fea24` | 7 per planner calculation, 4 per reroute |
-| Optional live traffic: ETA, selection, congestion penalised with stone and rails, incidents, map overlay, hard quotas (PR #33, `outputs/traffic-provider-decision.md`) | ✅ | ✅ unit and handler tests on tile fixtures | ❌ | **Not checked against the live TomTom API: no key yet.** Off without a key, and says so |
-| Provider-answer memo and journey-sticky Durable Object shard (PR #33) | ✅ | ✅ | ❌ | Latency gain not yet measured on Cloudflare |
-| Tap within 14 px selects the road under a fingertip in the layers panel (PR #33) | ✅ | ❌ no automated test | ❌ | To be checked on a phone-sized viewport after deployment |
+| Optional live traffic: ETA, selection, congestion penalised with stone and rails, incidents, map overlay, hard quotas (PR #33, `outputs/traffic-provider-decision.md`) | ✅ | ✅ unit and handler tests on tile fixtures | ✅ `c428229`, **live data not working** | **The TomTom key is configured but the provider answers 401/403 ("key-rejected"); 2 real provider requests were spent in total (20 November), the circuit then holds for 6 h.** Tile parsing, ETA and the overlay have never run on real tiles. With the key rejected the app falls back correctly: no `traffic` block without the request, an "unavailable" block with the reason when `traffic=live` is asked, routes identical |
+| Provider-answer memo and journey-sticky Durable Object shard (PR #33) | ✅ | ✅ | ✅ `c428229` | Measured on the preview: same journey 1.0–1.8 s cold, 0.17–0.29 s warm (see "Field-test readiness") |
+| Tap within 14 px selects the road under a fingertip in the layers panel (PR #33) | ✅ | ❌ no automated test | ✅ `c428229` | Panel opens at 375×812; the tap itself was not exercised with a finger |
 | Road-observation prototype: provenance, confidence, validation, corroboration; evidence can only add caution (PR #33) | ✅ | ✅ unit | ❌ not wired to any API | Prototype |
 | Street-level imagery: free-source coverage and classifier quality (`outputs/street-imagery-evaluation.md`) | desk study | — | — | NO-GO for automatic classification; imagery stays a review channel |
 | OSM, DBT, ATM evidence reconciliation | ❌ not changed | — | — | Needs the local layer build (mixed licences, kept local); the layer folders on this machine are empty |
 | GPS, voice, reroute and arrival validation | — | ✅ emulated suites in CI only | — | No physical device was used |
+
+## Field-test readiness (20 November 2026)
+
+Measured on `lastrico-preview-437` (commit `c428229`) from a desktop browser over the public network, not from a phone.
+Latencies are single runs: indicative, not a benchmark. No earlier baseline exists, so no before/after is claimed.
+
+| Measure | Result |
+| --- | --- |
+| Planner, cold, Milan journeys of 5–8 km (strong avoidance) | car 1.77 s (2 provider requests), bicycle 1.35 s (2), motorcycle 0.76 s (1) |
+| Same journey again (answer memo) | 0.18–0.29 s, no provider request |
+| Same journey with `navigation=1` right after the planner | 0.15–0.30 s, no provider request |
+| Reroute-like request (new start, `navigation=1`), two runs per mode | bicycle 0.79–1.01 s (1 request), car 1.29–1.71 s (2), motorcycle 2.35–2.48 s (3); cap is 4 |
+| `tram=avoid` with no rail layers shipped | answered in 0.15–0.20 s, route unchanged (as documented) |
+| `traffic=live` with the key rejected | 200, `traffic: {status: "unavailable", reason: "key-rejected"}`, same route, minutes and pavé share for the three modes |
+| Layout at 320×568, 375×812, 390×844 and 844×390 | no horizontal overflow, the main action stays visible; the swap-address button overlaps the edge of the destination field by 33×13 px (it sits in the gap between the two fields) |
+| CI on `8dccb10` (Linux: lint, tests, build) | green; lint has only unused-variable warnings in `experiments/` scripts |
+
+Not verified: GPS acquisition, heading, smoothing, off-route detection, voice, arrival and background recovery on a real iPhone
+(code and emulated suites exist: stall re-arm every 3 s, re-arm on foreground, wake lock, reroute cooldown with back-off, preferences
+kept on reroute, offline message). Known limits: a reroute ignores the tram preference (documented, tested), tram rails are not
+shipped so tram exposure is not measured, voice is Safari speech synthesis (may stay silent with the silent switch on or after a long
+background period), live traffic is not working until the TomTom key is accepted.
+
+The field protocol is `outputs/iphone-field-test-protocol.md`.
 
 ## Product direction (18 November 2026)
 
