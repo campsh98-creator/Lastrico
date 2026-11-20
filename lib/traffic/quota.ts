@@ -77,6 +77,10 @@ export function reserve(
 
 export type BreakerReason = "key-rejected" | "provider-limit" | "provider-failing";
 export type BreakerState = {
+  /** Private ledger metadata only: SHA-256 digests, never credentials. */
+  fingerprint?: string;
+  seenFingerprints?: string[];
+  recovery?: "pending" | "verified" | "failed";
   failures: number;
   /** Provider calls are refused until this time (ms since epoch); 0 when closed. */
   openUntil: number;
@@ -109,7 +113,7 @@ export function breakerAfterSuccess(): BreakerState {
 
 export type TrafficUnavailableReason =
   | "no-key" | "key-rejected" | "provider-limit" | "provider-failing" | "quota-daily" | "quota-monthly" | "quota-overlay"
-  | "timeout" | "no-binding" | "tile-unreadable" | "calculation-cap" | "outside-service-area";
+  | "timeout" | "no-binding" | "tile-unreadable" | "calculation-cap" | "outside-service-area" | "auth-recovery-hold";
 
 export function denialReason(denial: QuotaDenial): TrafficUnavailableReason {
   return denial === "monthly" ? "quota-monthly" : denial === "overlay" ? "quota-overlay" : "quota-daily";

@@ -62,6 +62,8 @@ export function trafficUnavailableText(reason: string) {
       return "La quota gratuita mensile del traffico è esaurita.";
     case "calculation-cap":
       return "Il tragitto è troppo lungo per il traffico live.";
+    case "auth-recovery-hold":
+      return "Il traffico live è sospeso durante la verifica del servizio.";
     default:
       return "Il servizio di traffico non risponde in questo momento.";
   }
