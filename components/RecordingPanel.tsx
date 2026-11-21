@@ -201,7 +201,7 @@ export function RecordingPanel({ recording }: { recording: FreeRecording }) {
   return (
     <div className="preference-group recording-panel" data-testid="recording-panel">
       <span className="preference-label">Registra un percorso</span>
-      <small>Registra la tua traccia GPS senza scegliere una destinazione. Funziona solo con la pagina aperta e lo schermo acceso: se iPhone sospende la pagina, il buco resta segnato e non viene unito con una linea. È un buco una pausa, la pagina nascosta o più di {GAP_SECONDS} s senza segnale.</small>
+      <small>Registra la tua traccia GPS senza scegliere una destinazione. Funziona solo con la pagina aperta e lo schermo acceso: se iPhone sospende la pagina, il buco resta segnato e non viene unito con una linea. Il buco compare dopo una pausa, con la pagina nascosta o con più di {GAP_SECONDS} s senza segnale.</small>
       <div className="recording-status" role="status" data-testid="recording-status">
         <b>{label}</b>
         {view ? <span> · {view.points} punti{view.gaps > 0 ? ` · ${view.gaps} ${view.gaps === 1 ? "buco" : "buchi"} (${minutes(view.gapSeconds)} senza dati)` : ""}{view.lastAccuracy !== null && view.state === "recording" ? ` · ±${Math.round(view.lastAccuracy)} m` : ""}</span> : null}
