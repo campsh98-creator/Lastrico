@@ -150,7 +150,7 @@ test("P0-3: Via Giuseppe Ripamonti — motorcycle routing, tram rail separation,
   );
 });
 
-test("P0-4: Corso di Porta Romana NW — real handler proves heading=311 eliminates Piazzale Medaglie d'Oro U-turns and page preserves objective", async () => {
+test("P0-4: Corso di Porta Romana NW — real handler proves heading=311 eliminates Piazzale Medaglie d'Oro U-turns and page preserves objective", async (t) => {
   const c = regressions.cases.find((x) => x.id === "corso-di-porta-romana");
   assert.ok(c, "Case corso-di-porta-romana must exist");
 
@@ -184,6 +184,11 @@ test("P0-4: Corso di Porta Romana NW — real handler proves heading=311 elimina
     heading: String(c.heading),
   });
   assert.equal(withHeading.status, 200);
+  const shown = ({ payload, requests }) => ({
+    requests: requests.length, safeMinutes: Math.round(payload.safe.minutes * 10) / 10, safeKm: Math.round(payload.safe.distance * 100) / 100,
+    safeConfirmedStoneMeters: payload.safe.confirmedPaveMeters, uTurns: (payload.safe.instructions ?? []).filter((i) => i.direction === "uturn").length,
+  });
+  t.diagnostic(`without course ${JSON.stringify(shown(withoutHeading))}; with course ${JSON.stringify(shown(withHeading))}`);
   const uturnsWithHeading = (withHeading.payload.safe.instructions ?? []).filter((i) => i.direction === "uturn");
   assert.equal(uturnsWithHeading.length, c.checks.expectedUTurnsWithHeading,
     "heading=311 eliminates Piazzale Medaglie d'Oro U-turn on Corso di Porta Romana NW");

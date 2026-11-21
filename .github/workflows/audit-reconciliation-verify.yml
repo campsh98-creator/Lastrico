@@ -1,0 +1,57 @@
+# TEMPORARY (audit reconciliation, 21 November 2026): runs only on pushes to the reconciliation branch and is removed before merge.
+# Linux evidence the Windows development machine must not produce (build, local Worker, headless Chrome): the mobile (390x844)
+# acceptance suite with mocked providers, and the browser GPS journey through the real geolocation API. It deploys nothing and
+# has no credentials. The GPS journey script calls the public routing provider a few times, at the app's own pace.
+name: Audit reconciliation verification (temporary)
+
+on:
+  push:
+    branches:
+      - claude/audit-reconciliation
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-e2e:
+    name: Production build and mobile browser checks (390x844)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      FORCE_COLOR: "0"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Type-check
+        run: npx tsc --noEmit
+      - name: Production build
+        run: npm run build
+      - name: Start the local Worker from the build
+        run: |
+          WRANGLER_SEND_METRICS=false WRANGLER_LOG_PATH=.wrangler/wrangler.log nohup npx wrangler dev --config dist/server/wrangler.json --port 8799 --local --show-interactive-dev-session=false > "$RUNNER_TEMP/wrangler.log" 2>&1 &
+          for i in $(seq 1 90); do curl -sf -o /dev/null http://127.0.0.1:8799/manifest.webmanifest && break; sleep 2; done
+          curl -s -o /dev/null -w "worker status %{http_code}\n" http://127.0.0.1:8799/manifest.webmanifest
+      - name: Mobile acceptance suite, mocked providers (390x844, simulated GPS)
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node tests/e2e/acceptance.mjs --mock-only 2>&1 | tee "$RUNNER_TEMP/e2e-mock.txt" | tail -120
+      - name: Mobile Chrome GPS journey through the browser geolocation API
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: |
+          sudo mkdir -p "/Applications/Google Chrome.app/Contents/MacOS"
+          sudo ln -sf /usr/bin/google-chrome "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+          node scripts/e2e-mobile-chrome.mjs http://localhost:8799 2>&1 | tee "$RUNNER_TEMP/e2e-mobile.txt" | tail -80
+      - name: Summary
+        if: always()
+        run: |
+          for f in e2e-mock e2e-mobile; do
+            echo "== $f: $(grep -cE '^(PASS|✔)' "$RUNNER_TEMP/$f.txt" 2>/dev/null || echo 0) pass lines, $(grep -cE '^(FAIL|✖)' "$RUNNER_TEMP/$f.txt" 2>/dev/null || echo 0) fail lines"
+          done
