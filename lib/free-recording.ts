@@ -25,7 +25,7 @@ export type Recording = {
   version: number;
   id: string;
   startedAt: number;
-  source: "device" | "import";
+  source: "device" | "imported";
   state: RecordingState;
   points: RecordedPoint[];
   /** Timestamp the current pause or hidden period began, or null. Stored so a reload can still classify the gap. */
@@ -34,8 +34,8 @@ export type Recording = {
   gapReasons: { index: number; reason: GapReason }[];
 };
 
-export function createRecording(id: string, now: number, source: "device" | "import" = "device"): Recording {
-  return { schema: RECORDING_SCHEMA, version: RECORDING_VERSION, id, startedAt: now, source, state: source === "import" ? "stopped" : "recording", points: [], silentSince: null, gapReasons: [] };
+export function createRecording(id: string, now: number, source: "device" | "imported" = "device"): Recording {
+  return { schema: RECORDING_SCHEMA, version: RECORDING_VERSION, id, startedAt: now, source, state: source === "imported" ? "stopped" : "recording", points: [], silentSince: null, gapReasons: [] };
 }
 
 export function validPoint(lon: number, lat: number) {
@@ -79,7 +79,7 @@ export function gapsOf(rec: Recording): RecordingGap[] {
     const seconds = (rec.points[i][0] - rec.points[i - 1][0]) / 1000;
     if (seconds <= GAP_SECONDS) continue;
     const explicit = rec.gapReasons.find((entry) => entry.index === i);
-    gaps.push({ fromIndex: i - 1, toIndex: i, seconds: Math.round(seconds), reason: explicit ? explicit.reason : rec.source === "import" ? "imported" : "signal" });
+    gaps.push({ fromIndex: i - 1, toIndex: i, seconds: Math.round(seconds), reason: explicit ? explicit.reason : rec.source === "imported" ? "imported" : "signal" });
   }
   return gaps;
 }
@@ -136,7 +136,7 @@ export class ImportError extends Error {}
  */
 export function importTrack(text: string, id: string, now: number): Recording {
   if (text.length > 20_000_000) throw new ImportError("file too large");
-  const rec = createRecording(id, now, "import");
+  const rec = createRecording(id, now, "imported");
   const trimmed = text.trimStart();
   if (trimmed.startsWith("{")) {
     let json: { type?: string; features?: unknown[]; geometry?: unknown; coordinates?: unknown };

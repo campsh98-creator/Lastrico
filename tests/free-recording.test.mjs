@@ -66,7 +66,7 @@ test("GPX exported by the recorder can be imported again, gap included", () => {
   const rec = createRecording("r", T0);
   addPoint(rec, fix(0, 0)); addPoint(rec, fix(5, 1)); addPoint(rec, fix(200, 2)); addPoint(rec, fix(205, 3));
   const back = importTrack(recordingToGpx(rec), "i1", T0);
-  assert.equal(back.source, "import");
+  assert.equal(back.source, "imported");
   assert.equal(back.state, "stopped");
   assert.equal(back.points.length, 4);
   assert.deepEqual(gapsOf(back).map((g) => [g.reason, g.seconds]), [["imported", 195]]);
