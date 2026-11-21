@@ -163,7 +163,7 @@ function minutes(seconds: number) { return seconds >= 120 ? `${Math.round(second
 export function RecordingPanel({ recording }: { recording: FreeRecording }) {
   const { view, message, recoverable } = recording;
   const label = !view ? "Nessuna registrazione"
-    : view.source === "import" ? "Traccia importata"
+    : view.source !== "device" ? "Traccia importata"
       : view.state === "recording" ? "Registrazione in corso" : view.state === "paused" ? "In pausa" : "Registrazione terminata";
   return (
     <div className="preference-group recording-panel" data-testid="recording-panel">
@@ -175,7 +175,7 @@ export function RecordingPanel({ recording }: { recording: FreeRecording }) {
       </div>
       {recoverable ? <small data-testid="recording-recovered">Ho ritrovato una registrazione interrotta. Il tempo da quando l’app si è fermata è segnato come buco: riprendila o terminala.</small> : null}
       <div className="segmented recording-actions" role="group" aria-label="Registrazione GPS">
-        {!view || view.source === "import" || view.state === "stopped"
+        {!view || view.source !== "device" || view.state === "stopped"
           ? <button type="button" onClick={recording.start} data-testid="recording-start">Avvia</button> : null}
         {view?.state === "recording" && view.source === "device" ? <button type="button" onClick={recording.pause} data-testid="recording-pause">Pausa</button> : null}
         {view?.state === "paused" && view.source === "device" ? <button type="button" onClick={recording.resume} data-testid="recording-resume">Riprendi</button> : null}
