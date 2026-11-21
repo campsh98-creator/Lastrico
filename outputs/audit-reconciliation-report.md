@@ -112,10 +112,27 @@ Pull request: https://github.com/campsh98-creator/Lastrico/pull/49 (against `mai
 | Deterministic routing regressions (Corso Lodi return/outbound replicas at Strong and Maximum, reroute caps, heading, OSRM reserve) | Linux CI | pass (each fixed behaviour has a test that fails on `main` and passes here) |
 | GPS: hub, recorder, state transitions, import/export, privacy | Linux CI | pass (the GPS merge adds 40 tests to the suite) |
 | TomTom offline (decoding, ranking, closures, ZTL, Maximum interaction, fallback) | Linux CI | pass; real saved tiles are an opt-in local check |
-| Mobile browser, 390x844, simulated GPS and browser geolocation | temporary verification workflow | MOBILE_PENDING |
+| Mobile browser acceptance suite (headless Chrome, release build, local Worker, mocked providers, simulated GPS), 390x844 and the other viewports of the suite | temporary verification workflow, Linux | **67 pass, 9 fail**; the 9 are the same failures that `main` has (below), none is caused by this branch |
+| New mobile scenarios for the free recorder: E10 (start with no route, pause cuts the line, GPX with 2 segments and GeoJSON with 2 lines valid, import refused while recording, export -> import round trip, 0 uploads, exactly one location watch) and E11 (recording keeps running through navigation on a single `watchPosition` call, 0 watches left) | same | **pass** |
+| Existing GPS scenarios B1, B2 (no leaked watch), E6 (navigation trace export), D2 | same | pass |
 
-Run links: CI `https://github.com/campsh98-creator/Lastrico/actions/runs/44941739078`, verification
-`https://github.com/campsh98-creator/Lastrico/actions/runs/44941687726`.
+Failures of the mobile suite, compared on identical Linux runs of `main` and of `main` before the recorder (#46):
+
+| Failing check | `main` | `main` before #46 | This branch | Reading |
+| --- | --- | --- | --- | --- |
+| D1 layout audit, 320x568 / 375x667 / 428x926, light and dark (6): the floating road-layers control (`road-layers-toggle`) is covered by the planner or a sheet | fails | fails | fails | **pre-existing**, not from the recorder and not from this work (needs a layout decision) |
+| D1 layout audit, 390x844, light and dark (2): free map share 0.545 | fails | fails | fails | pre-existing (documented already for phase 4.37) |
+| F1 arrow glide between fixes | fails | fails | fails in 3 of 5 runs, passes in 2 | timing-sensitive, unrelated |
+| D2 dark map overlay | passes | passes | failed twice, then passes | the test read the overlay at the first instant; it now waits up to 10 s (the overlay is there: opacity 0.66, above the buildings) |
+| `scripts/e2e-mobile-chrome.mjs` "timeout waiting for planner" | fails | n/a | fails | stale script, identical on `main`; the supported mobile evidence is the suite above |
+
+Notes: the temporary workflow's steps end "success" even when the suite prints failures (the script exit code is hidden by the
+pipe), so the failure lines were read from the logs; its summary now lists them. A first pre-recorder run also lost three
+scenarios to "Chrome did not expose a page target" (CI browser start-up), which is not a product signal.
+
+Run links: CI `https://github.com/campsh98-creator/Lastrico/actions/runs/44947827704` (final code, success), verification
+`https://github.com/campsh98-creator/Lastrico/actions/runs/44947822180`, baselines `.../runs/44943598918` (main) and
+`.../runs/44944523059` (before #46).
 
 ## 8. Residual issues and GO / NO-GO
 
@@ -130,10 +147,14 @@ Run links: CI `https://github.com/campsh98-creator/Lastrico/actions/runs/4494173
 | Mapillary: current API terms, share-alike against ODbL, provenance and accuracy on setts are open | blocking for any import | nothing Mapillary-derived enters road data until answered |
 | Preview deploy of `e0d8680` (recorder #46) waits for the `preview-437` environment approval | process | approved by the owner, not by this work |
 | The 22 Windows-only test failures | low | the suite passes on Linux; a CRLF-tolerant check would fix the local run |
+| Mobile suite: 8 layout-audit failures (D1) and an unstable F1, present on `main` and before the recorder; the road-layers floating control is covered by sheets on small screens, and the free map share at 390x844 is 0.545 | medium | a separate layout fix; not mixed into this reconciliation |
+| `scripts/e2e-mobile-chrome.mjs` is stale (it waits for a planner state that no longer appears) | low | rewrite it or remove it; the acceptance suite is the supported check |
+| Release gate: the e2e suite is not part of `npm test`, so layout regressions are not stopped by CI | medium | run the acceptance suite in CI with a recorded known-failure list |
 
 ### Housekeeping before merge
 
-- Remove `.github/workflows/audit-reconciliation-verify.yml` (temporary): done in the final commit of the branch.
+- Remove `.github/workflows/audit-reconciliation-verify.yml` (temporary): done in the final commit of the branch. The two throw-away
+  baseline branches (`claude/audit-baseline-verify`, `claude/audit-baseline-pre46`) are deleted.
 - Close or supersede #37, #38, #42 and #48 after this PR is reviewed; their branches and the `recover/*` branches are kept.
 - PR #36 stays unmerged; #41 is superseded by #46.
 
@@ -143,4 +164,5 @@ Run links: CI `https://github.com/campsh98-creator/Lastrico/actions/runs/4494173
 - GPS (one watcher, one recorder, one key; recording starts without a route; start / pause / resume / stop and import / export tested): **GO** for the logic; **CONDITIONAL** for a real iPhone.
 - TomTom: **GO** for the verified behaviour, **CONDITIONAL** for closure policy and incidents.
 - Mapillary: **NO-GO** for any production use.
-- Overall: **GO to review and merge PR #49, after the mobile browser result below is green and the temporary workflow is removed.** Not merged, not deployed by this work.
+- Overall: **GO to review and merge PR #49**: Linux CI green, no regression against `main` in the mobile suite (same 8 layout failures
+  and the unstable F1 as `main`), the recorder scenarios pass. The pre-existing layout failures are a separate item. Not merged, not deployed by this work.
