@@ -186,7 +186,12 @@ export async function appState(session) {
       navNotice: text(".hud-notice"),
       hudRoute: text(".hud-badge.subtle"),
       instruction: text("[data-testid=directions-trigger] .maneuver-copy b"),
-      gps: window.__gps ? { watches: window.__gps.watches, active: window.__gps.active } : null,
+      gps: window.__gps ? {
+        watches: window.__gps.watches,
+        active: window.__gps.active,
+        maxActive: window.__gps.maxActive,
+        options: window.__gps.options,
+      } : null,
     };
   })()`);
 }

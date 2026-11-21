@@ -28,6 +28,7 @@ import {
   fieldValue,
   freeMapShare,
   isFullyVisible,
+  mapCenter,
   mapLineStart,
   mapThemeOverlay,
   offset,
@@ -500,7 +501,8 @@ scenario("B2", "Stop returns to the route and starting again works, with no leak
     assert.equal(state.hud, false);
   }
   const state = await appState(session);
-  assert.equal(state.gps.watches, 3);
+  assert.equal(state.gps.watches, 4, "initial foreground watch plus one accurate watch per navigation");
+  assert.equal(state.gps.maxActive, 1);
   note("3 start/stop cycles, 0 active watches left");
 });
 
@@ -568,10 +570,11 @@ scenario("B5", "Reaching the destination ends navigation with a clear arrival", 
   await session.waitFor(`Boolean(document.querySelector("[data-testid=arrival-banner]"))`, 5_000, "arrival banner");
   const state = await appState(session);
   assert.equal(state.hud, false);
-  assert.equal(state.gps.active, 0);
+  assert.equal(state.gps.active, 1, "arrival returns to foreground location tracking");
+  assert.equal(state.gps.maxActive, 1);
   assert.ok(state.startEnabled, "can start the route again");
   await session.screenshot(new URL("arrival-light-390x844.png", AFTER).pathname);
-  note("Arrival banner, watch released");
+  note("Arrival banner, navigation watch replaced by foreground tracking");
 });
 
 scenario("B6", "Arrival still fires with ±35 m accuracy", async (session, note) => {
@@ -768,7 +771,8 @@ scenario("B16", "Simulation is labelled as such, follows the route and arrives",
   const state = await appState(session);
   assert.equal(state.navMode, "SIMULAZIONE");
   assert.match(state.navNotice, /GPS non usato/);
-  assert.equal(state.gps.watches, 0, "GPS not used");
+  assert.equal(state.gps.active, 0, "GPS is paused throughout simulation");
+  assert.equal(state.gps.options.at(-1).enableHighAccuracy, false, "simulation never arms a navigation GPS watch");
   await session.waitFor(`Boolean(document.querySelector("[data-testid=arrival-banner]"))`, 90_000, "simulation arrival");
   note(state.navNotice);
 }, { slow: true });
@@ -1757,6 +1761,148 @@ scenario("E9", "Panels open and close without losing the route", async (session,
   const after = await appState(session);
   assert.equal(after.safeLine, before.safeLine, "line kept while looking at the plan");
   note("Details, diagnostics and plan panels all opened and closed with the route intact");
+});
+
+/* ---------- I. Default foreground GPS lifecycle ---------- */
+
+async function dragMap(session, dx = 120, dy = 80) {
+  const x = 195;
+  const y = 300;
+  await session.cdp("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", buttons: 1, clickCount: 1 });
+  for (let step = 1; step <= 5; step += 1) {
+    await session.cdp("Input.dispatchMouseEvent", {
+      type: "mouseMoved",
+      x: x + (dx * step) / 5,
+      y: y + (dy * step) / 5,
+      button: "left",
+      buttons: 1,
+    });
+    await sleep(30);
+  }
+  await session.cdp("Input.dispatchMouseEvent", { type: "mouseReleased", x: x + dx, y: y + dy, button: "left", buttons: 0, clickCount: 1 });
+  await waitForMapIdle(session);
+}
+
+scenario("I1", "Granted permission starts one low-accuracy foreground watch, centers once, and never alters planner origin or starts navigation", async (session, note) => {
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "foreground GPS watch");
+  const initial = await appState(session);
+  assert.equal(initial.gps.watches, 1, "one watch on launch");
+  assert.equal(initial.gps.active, 1, "watch active");
+  assert.equal(initial.gps.maxActive, 1, "never more than one concurrent watch");
+  assert.equal(initial.gps.options[0]?.enableHighAccuracy, false, "lower-power settings outside navigation");
+  assert.equal(initial.hud, false, "navigation not started automatically");
+  assert.equal(initial.startValue, "", "origin not set automatically");
+  assert.equal(initial.endValue, "", "destination not set automatically");
+
+  const fix = PLACES.cadorna.coordinate;
+  await session.feedFix(fix, { accuracy: 12 });
+  await sleep(150);
+  await waitForMapIdle(session);
+  const center = await mapCenter(session);
+  const offsetMeters = distanceBetween(center, fix);
+  assert.ok(offsetMeters < 150, `map should center on first fix (offset ${Math.round(offsetMeters)} m)`);
+
+  const after = await appState(session);
+  assert.equal(after.startValue, "", "first fix never overwrites planner origin");
+  assert.equal(after.hud, false, "first fix never starts navigation");
+  note(`auto-started 1 low-accuracy watch, centered within ${Math.round(offsetMeters)} m, origin untouched`);
+});
+
+scenario("I2", "Prompt or unknown permission never starts geolocation automatically until a user gesture", async (session, note) => {
+  await sleep(400);
+  const before = await appState(session);
+  assert.equal(before.gps.watches, 0, "no automatic watchPosition when permission is prompt");
+  assert.equal(before.gps.active, 0, "no active watch");
+  await session.tap("[data-testid=gps-recenter]");
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "gesture-activated GPS watch");
+  const after = await appState(session);
+  assert.equal(after.gps.watches, 1, "user gesture arms one watch");
+  assert.equal(after.gps.maxActive, 1);
+  await session.feedFix(PLACES.cadorna.coordinate, { accuracy: 10 });
+  await sleep(150);
+  await waitForMapIdle(session);
+  assert.ok(distanceBetween(await mapCenter(session), PLACES.cadorna.coordinate) < 150, "recenters after gesture");
+  note("0 automatic watches on prompt; recenter gesture armed 1 watch and centered");
+}, {
+  setup: async (session) => {
+    await session.cdp("Page.addScriptToEvaluateOnNewDocument", {
+      source: `(() => {
+        Object.defineProperty(navigator, "permissions", {
+          configurable: true,
+          value: {
+            query: async () => ({ state: "prompt", addEventListener() {}, removeEventListener() {} }),
+          },
+        });
+      })()`,
+    });
+  },
+});
+
+scenario("I3", "Manual map exploration before or after the first fix suspends follow until recenter", async (session, note) => {
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "foreground GPS watch");
+  await dragMap(session, 140, 100);
+  const exploredBefore = await mapCenter(session);
+  const firstFix = PLACES.cadorna.coordinate;
+  await session.feedFix(firstFix, { accuracy: 10 });
+  await sleep(600);
+  const afterFirstFix = await mapCenter(session);
+  assert.ok(distanceBetween(afterFirstFix, exploredBefore) < 50, "manual exploration before first fix is not overridden");
+
+  await session.tap("[data-testid=gps-recenter]");
+  await sleep(150);
+  await waitForMapIdle(session);
+  assert.ok(distanceBetween(await mapCenter(session), firstFix) < 150, "recenter jumps back to user position");
+
+  await dragMap(session, -140, -100);
+  const exploredAfter = await mapCenter(session);
+  const secondFix = [9.1815, 45.4712];
+  await session.feedFix(secondFix, { accuracy: 10 });
+  await sleep(600);
+  assert.ok(distanceBetween(await mapCenter(session), exploredAfter) < 50, "manual exploration after first fix is preserved");
+
+  await session.tap("[data-testid=gps-recenter]");
+  await sleep(150);
+  await waitForMapIdle(session);
+  assert.ok(distanceBetween(await mapCenter(session), secondFix) < 150, "second recenter follows latest position");
+  note("pan before and after fix suspended follow; recenter restored follow both times");
+});
+
+scenario("I4", "Explicit GPS stop persists across reload until the user explicitly re-enables it", async (session, note) => {
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "initial foreground GPS watch");
+  await session.tap("[data-testid=app-menu-button]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=gps-tracking-toggle]"))`, 5_000, "GPS toggle in menu");
+  await session.tap("[data-testid=gps-tracking-toggle]");
+  await session.waitFor(`window.__gps?.active === 0`, 5_000, "GPS watch stopped");
+  const statusText = await session.evaluate(`document.querySelector("[data-testid=gps-tracking-status]")?.innerText ?? ""`);
+  assert.match(statusText, /disattivato/i, "menu confirms explicit stop");
+
+  await session.goto(`${BASE}/`);
+  await waitForPlanner(session);
+  await sleep(400);
+  const reloaded = await appState(session);
+  assert.equal(reloaded.gps.watches, 0, "persisted stop prevents auto-start on reload");
+  assert.equal(reloaded.gps.active, 0);
+
+  await session.tap("[data-testid=app-menu-button]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=gps-tracking-toggle]"))`, 5_000, "GPS toggle after reload");
+  await session.tap("[data-testid=gps-tracking-toggle]");
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "GPS watch re-enabled");
+  const resumed = await appState(session);
+  assert.equal(resumed.gps.watches, 1, "explicit toggle starts one watch");
+  assert.equal(resumed.gps.maxActive, 1);
+  note("explicit stop survived reload with 0 watches and resumed cleanly on tap");
+});
+
+scenario("I5", "Hiding and returning to foreground clears and restores one watch without duplicates", async (session, note) => {
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "initial foreground GPS watch");
+  await session.evaluate(`window.dispatchEvent(new PageTransitionEvent("pagehide"))`);
+  await session.waitFor(`window.__gps?.active === 0`, 5_000, "watch cleared on pagehide");
+  await session.evaluate(`window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true }))`);
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "watch restored on pageshow");
+  const state = await appState(session);
+  assert.equal(state.gps.active, 1);
+  assert.equal(state.gps.maxActive, 1, "no duplicate watchers across hide/show");
+  note("pagehide cleared watch, persisted pageshow restored 1 watch (maxActive=1)");
 });
 
 /* ---------- Runner ---------- */

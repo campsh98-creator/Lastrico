@@ -15,6 +15,8 @@ const CHROME_CANDIDATES = [
   "/usr/bin/google-chrome-stable",
   "/usr/bin/chromium",
   "/usr/bin/chromium-browser",
+  "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
 ];
 export const CHROME_PATH = process.env.CHROME_PATH
   ?? CHROME_CANDIDATES.find((candidate) => existsSync(candidate))
@@ -37,7 +39,6 @@ export async function launchChrome({
   const profile = mkdtempSync(join(tmpdir(), "lastrico-chrome-"));
   const chrome = spawn(CHROME_PATH, [
     "--headless=new",
-    "--no-sandbox",
     "--disable-gpu",
     `--remote-debugging-port=${port}`,
     `--user-data-dir=${profile}`,
@@ -45,7 +46,7 @@ export async function launchChrome({
     "--no-default-browser-check",
     "--enable-unsafe-swiftshader",
     "about:blank",
-  ], { stdio: "ignore", detached: true });
+  ], { stdio: "ignore", detached: process.platform !== "win32", windowsHide: true });
 
   let target;
   for (let attempt = 0; attempt < 60 && !target; attempt += 1) {
@@ -58,7 +59,10 @@ export async function launchChrome({
     if (!target) await sleep(250);
   }
   const abandonChrome = () => {
-    try { process.kill(-chrome.pid, "SIGKILL"); } catch { /* Already exited. */ }
+    try {
+      if (process.platform === "win32") chrome.kill("SIGKILL");
+      else process.kill(-chrome.pid, "SIGKILL");
+    } catch { /* Already exited. */ }
     try { rmSync(profile, { recursive: true, force: true }); } catch { /* Chrome may still hold files. */ }
   };
   if (!target) {
@@ -254,7 +258,8 @@ export async function launchChrome({
     },
     async screenshot(path) {
       const { data } = await cdp("Page.captureScreenshot", { format: "png" });
-      writeFileSync(path, Buffer.from(data, "base64"));
+      const filePath = process.platform === "win32" && /^\/[A-Za-z]:/.test(path) ? path.slice(1) : path;
+      writeFileSync(filePath, Buffer.from(data, "base64"));
     },
     async grantGeolocation(origin) {
       await cdp("Browser.grantPermissions", { origin, permissions: ["geolocation"] });
@@ -277,12 +282,14 @@ export async function launchChrome({
           const geolocation = navigator.geolocation;
           if (!geolocation) return;
           const originalClear = geolocation.clearWatch.bind(geolocation);
-          window.__gps = { success: null, failure: null, watches: 0, active: 0, cleared: 0 };
-          geolocation.watchPosition = (success, failure) => {
+          window.__gps = { success: null, failure: null, watches: 0, active: 0, maxActive: 0, cleared: 0, options: [] };
+          geolocation.watchPosition = (success, failure, options) => {
             window.__gps.success = success;
             window.__gps.failure = failure;
             window.__gps.watches += 1;
             window.__gps.active += 1;
+            window.__gps.maxActive = Math.max(window.__gps.maxActive, window.__gps.active);
+            window.__gps.options.push(options);
             return 900000 + window.__gps.watches;
           };
           geolocation.clearWatch = (id) => {
@@ -318,7 +325,10 @@ export async function launchChrome({
     },
     async close() {
       try { socket.close(); } catch { /* Already closed. */ }
-      try { process.kill(-chrome.pid, "SIGTERM"); } catch { /* Already exited. */ }
+      try {
+        if (process.platform === "win32") chrome.kill("SIGTERM");
+        else process.kill(-chrome.pid, "SIGTERM");
+      } catch { /* Already exited. */ }
       await sleep(300);
       try { rmSync(profile, { recursive: true, force: true }); } catch { /* Chrome may still hold files. */ }
     },
