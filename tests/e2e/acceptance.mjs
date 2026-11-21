@@ -1430,6 +1430,9 @@ scenario("E11", "Recording keeps running through navigation on the same single l
   await waitForPhase(session, "route-ready", 5_000);
   assert.equal((await gps()).active, 1, "stopping navigation does not stop the recording's watch");
 
+  // With a route on screen the planner form is behind "Modifica il percorso"; opening it discards nothing.
+  await session.tap("[data-testid=edit-route]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=preferences-toggle]"))`, 3_000, "planner form back");
   await session.tap("[data-testid=preferences-toggle]");
   await session.waitFor(`Boolean(document.querySelector("[data-testid=recording-status]"))`, 3_000, "recorder panel after navigation");
   assert.match(await session.evaluate(`document.querySelector("[data-testid=recording-status]").innerText`), /Registrazione in corso/);
