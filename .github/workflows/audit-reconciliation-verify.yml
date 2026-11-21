@@ -54,4 +54,5 @@ jobs:
         run: |
           for f in e2e-mock e2e-mobile; do
             echo "== $f: $(grep -cE '^(PASS|✔)' "$RUNNER_TEMP/$f.txt" 2>/dev/null || echo 0) pass lines, $(grep -cE '^(FAIL|✖)' "$RUNNER_TEMP/$f.txt" 2>/dev/null || echo 0) fail lines"
+            grep -E '^(FAIL|✖)' "$RUNNER_TEMP/$f.txt" 2>/dev/null | cut -c1-200 || true
           done

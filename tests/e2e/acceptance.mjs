@@ -1007,8 +1007,15 @@ for (const [width, height] of VIEWPORTS) {
 }
 
 scenario("D2", "Dark theme dims the whole map, buildings included", async (session, note) => {
-  const overlay = await mapThemeOverlay(session);
-  assert.ok(overlay.opacity > .5, "overlay active");
+  // The overlay is added when the map style has loaded, which can come after the planner is on screen: wait up to 10 s for it
+  // instead of reading it at the first instant. If the app never adds it, this still fails, and says what it found.
+  let overlay = { opacity: 0, aboveBuildings: false };
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    overlay = await mapThemeOverlay(session).catch(() => overlay);
+    if (overlay.opacity > .5) break;
+    await sleep(250);
+  }
+  assert.ok(overlay.opacity > .5, `overlay active (opacity ${overlay.opacity})`);
   assert.ok(overlay.aboveBuildings, "overlay above the building layer");
   await session.tap("[data-testid=app-menu-button]");
   await session.tap("[data-testid=menu-theme]");
