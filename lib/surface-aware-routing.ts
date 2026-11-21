@@ -152,12 +152,26 @@ export function penalisedSliceMinimumMeters(areaId: string, minimumPaveReduction
 }
 
 /**
- * Phase 4.37: whether a cheap improvement may end the planner's search only when it leaves almost
- * no stone, and a clean penalised route makes the geometric detours unnecessary. Reroutes in
- * navigation keep their fast gate; only Milan planner requests use the stricter rule.
+ * Phase 4.37 / P0 road-test fix: a cheap improvement may end the Milan search only when it leaves
+ * almost no stone, both in the planner and on navigation reroutes (within navigation's 4-request
+ * budget). Other areas keep their legacy gate.
  */
-export function stopsOnlyWhenClean(areaId: string, navigationRequest: boolean): boolean {
-  return areaId === "milan" && !navigationRequest;
+export function stopsOnlyWhenClean(areaId: string, _navigationRequest: boolean): boolean {
+  return areaId === "milan";
+}
+
+/**
+ * When the first penalised search merely reproduces a base route that still keeps >= minimum stone
+ * (because only the fastest route's stones were penalised), request a refinement covering all seen
+ * base slices so the residual stone slice (e.g. Piazzale Lodi ring 24.99 m) is also targeted.
+ */
+export function shouldRefineDuplicateWithStone(
+  areaId: string,
+  matchedExistingBase: boolean,
+  remainingWeightedPave: number,
+  minimumPaveReduction: number,
+): boolean {
+  return areaId === "milan" && matchedExistingBase && remainingWeightedPave >= minimumPaveReduction;
 }
 
 /**

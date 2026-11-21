@@ -417,8 +417,8 @@ test("the page records the generation with the initial plan, every reroute and e
   assert.match(page, /summarizeRouteGeneration,/, "imported");
   assert.match(page, /routeGenerationRef\.current = summarizeRouteGeneration\(data\);/, "set for every response and restored plan");
   assert.match(page, /\.\.\.traceRouteDetails\(nextSelectedRoute, routeKind, routeGenerationRef\.current\)/, "route switch");
-  assert.match(page, /\.\.\.traceRouteDetails\(nextSelectedRoute, nextRoute, routeGenerationRef\.current\)/, "reroute");
-  assert.match(page, /\.\.\.traceRouteDetails\(routeForJourney, activeRouteRef\.current, routeGenerationRef\.current\)/, "initial plan");
+  assert.match(page, /\.\.\.traceRouteDetails\(nextSelectedRoute, objective, routeGenerationRef\.current\)/, "reroute");
+  assert.match(page, /\.\.\.traceRouteDetails\(routeForJourney, journeyObjectiveRef\.current, routeGenerationRef\.current\)/, "initial plan");
   assert.equal([...page.matchAll(/\.\.\.traceRouteDetails\(/g)].length, 3, "every addRoute call carries it");
   const trace = lf(await read("lib/gps-trace.ts"));
   assert.doesNotMatch(trace, /\bfetch\(|sendBeacon|XMLHttpRequest|WebSocket/, "still no network code");

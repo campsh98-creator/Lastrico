@@ -2360,8 +2360,9 @@ export default function Home() {
         !isNavigableRouteGeometry(data.fast.coordinates)
         || !isNavigableRouteGeometry(data.safe.coordinates)
       ) throw new PlannerMessage("Il percorso ricevuto non è navigabile. Riprova.");
+      const objective = options.preserveRoute ?? "safe";
       const nextRoute = isReroute
-        ? rerouteDisplayKind(options.preserveRoute ?? "safe", data.hasDistinctAlternative)
+        ? rerouteDisplayKind(objective, data.hasDistinctAlternative)
         : selectRouteKind(options.preserveRoute, data.hasDistinctAlternative);
       applyRouteData(data, nextRoute, requestedMode);
       const nextSelectedRoute = nextRoute === "safe" ? data.safe : data.fast;
@@ -2392,7 +2393,8 @@ export default function Home() {
           coordinates: nextSelectedRoute.coordinates,
           instructions: nextSelectedRoute.instructions ?? [],
           // applyRouteData has just recorded how this reroute's response was produced.
-          ...traceRouteDetails(nextSelectedRoute, nextRoute, routeGenerationRef.current),
+          // Record the user's preserved journey objective rather than UI tab fallback.
+          ...traceRouteDetails(nextSelectedRoute, objective, routeGenerationRef.current),
         });
       } else {
         storePlan({
@@ -3011,7 +3013,7 @@ export default function Home() {
         distanceKm: routeForJourney.distance,
         coordinates: routeForJourney.coordinates,
         instructions: routeForJourney.instructions ?? [],
-        ...traceRouteDetails(routeForJourney, activeRouteRef.current, routeGenerationRef.current),
+        ...traceRouteDetails(routeForJourney, journeyObjectiveRef.current, routeGenerationRef.current),
       });
       traceRecorderRef.current = recorder;
       setTraceStatus(recorder.status);

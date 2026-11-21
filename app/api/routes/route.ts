@@ -27,6 +27,7 @@ import {
   penalisedSliceMinimumMeters,
   pointDistanceMeters,
   refinesWhileStoneLeft,
+  shouldRefineDuplicateWithStone,
   stopsOnlyWhenClean,
 } from "@/lib/surface-aware-routing";
 import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, normalizedHeading, withProviderTimeout, type ProviderMeter } from "@/lib/routing-providers";
@@ -763,6 +764,7 @@ export async function GET(request: NextRequest) {
     const detourResponses: EngineRoute[][] = [];
     const surfaceAwareRoutes: EngineRoute[] = [];
     let pendingRefinement: { shape: string; factor: number }[] | null = null;
+    let refineDuplicateBaseWithStone = false;
     let surfaceAwareDirectMetrics: { roughSlicesCount: number; penalizedMeters: number } | null = null;
     // Phase 4.31: whether the anti-pavé search really ran, so "no alternative" is never confused
     // with a search that failed or did not run.
@@ -837,8 +839,17 @@ export async function GET(request: NextRequest) {
           const firstScored = scoredCandidate(first, "surface-aware-valhalla");
           if (keepsPenalisedRoute(firstScored)) surfaceAwareRoutes.push(first);
           else surfaceAwareDiscarded += 1;
-          if (!isLegalCandidate(firstScored, mode) || firstScored.surfaceScore.weightedPaveMeters
-            >= refinementStoneThreshold(preliminaryFast.surfaceScore.weightedPaveMeters)) {
+          const firstMatchedExistingBase = baseScored.some((candidate) =>
+            routesAreEquivalent(candidate.route, firstScored.route, mode));
+          refineDuplicateBaseWithStone = shouldRefineDuplicateWithStone(
+            area.id,
+            firstMatchedExistingBase,
+            firstScored.surfaceScore.weightedPaveMeters,
+            policy.minimumPaveReduction,
+          );
+          if (!isLegalCandidate(firstScored, mode)
+            || refineDuplicateBaseWithStone
+            || firstScored.surfaceScore.weightedPaveMeters >= refinementStoneThreshold(preliminaryFast.surfaceScore.weightedPaveMeters)) {
             const penalised = roughSlices.filter((slice) => factors.some((factor) => factor.shape === encodePolyline6(slice)));
             const seen = [...roughSlices, ...[...baseScored.filter((candidate) => candidate !== preliminaryFast), firstScored]
               .filter((candidate) => isLegalCandidate(candidate, mode))
@@ -906,12 +917,13 @@ export async function GET(request: NextRequest) {
     const directScored = [...baseScored, ...surfaceAwareSourcesOf().map(({ route, source }) => scoredCandidate(route, source))];
     const directFast = fastestLegalCandidate(directScored, mode)!;
     const directSafe = selectSafeRoute(directScored, directFast, avoidance, mode, maximumExtraMinutes, policy);
-    // Phase 4.37 (Milan planner): a penalised route that leaves almost no stone makes the geometric
+    // Phase 4.37 (Milan): a penalised route that leaves almost no stone makes the geometric
     // via-point requests pointless (3 of 5 provider requests in the Phase 4.36 return replica).
     const penalisedRouteIsClean = stopsOnlyWhenClean(area.id, navigationRequest)
-      && directSafe !== directFast && directSafe.riskMeters < policy.minimumPaveReduction;
+      && directSafe.riskMeters < policy.minimumPaveReduction;
+    const directFastImprovesBase = directFast !== preliminaryFast && improvesEnough(directFast, preliminaryFast);
     // Retain waypoint fallback if direct search fails to produce a sufficient distinct alternative.
-    if (canGenerate && !penalisedRouteIsClean && !(directSafe !== directFast && improvesEnough(directSafe, directFast))) {
+    if (canGenerate && !penalisedRouteIsClean && !(directSafe !== directFast && improvesEnough(directSafe, directFast)) && !directFastImprovesBase) {
       const anchor = findDetourAnchor(
         fastestBase,
         preliminaryFast.surfaceScore.roughSegmentIndices,
@@ -961,19 +973,21 @@ export async function GET(request: NextRequest) {
         if (improvesEnough(provisionalSafe, provisionalFast)) break;
       }
     }
-    // The refinement stays planner-only: a reroute has to answer within its latency budget.
-    if (pendingRefinement && (!navigationRequest || surfaceAwarePoc) && deadline - Date.now() >= 4_000 && !request.signal.aborted
+    // Refinement stays planner-only unless the first penalised route duplicated a base route that still keeps stone.
+    if (pendingRefinement && (!navigationRequest || surfaceAwarePoc || refineDuplicateBaseWithStone)
+      && deadline - Date.now() >= (navigationRequest ? 2_500 : 4_000) && !request.signal.aborted
       && providerRequestBudgetLeft()) {
       const pool = [...baseRoutes, ...surfaceAwareRoutes, ...detourResponses.flat()]
         .map((route, index) => scoredCandidate(route, `refinement-check-${index + 1}`));
       const poolFast = fastestLegalCandidate(pool, mode)!;
       const poolSafe = selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes, policy);
-      if (poolSafe.surfaceScore.weightedPaveMeters >= refinementStoneThreshold(poolFast.surfaceScore.weightedPaveMeters)) {
+      if (poolSafe.surfaceScore.weightedPaveMeters >= refinementStoneThreshold(poolFast.surfaceScore.weightedPaveMeters)
+        || shouldRefineDuplicateWithStone(area.id, refineDuplicateBaseWithStone, poolSafe.surfaceScore.weightedPaveMeters, policy.minimumPaveReduction)) {
         const refinedRoute = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
           [...pendingRefinement, ...trafficFactors],
-          Math.min(deadline - 2_000, Date.now() + 3_500),
+          Math.min(deadline - (navigationRequest ? 500 : 2_000), Date.now() + (navigationRequest ? 2_500 : 3_500)),
           request.signal,
           meter,
         );

@@ -31,9 +31,9 @@ test("Milan targets stone slices down to the mode's minimum reduction, capped at
   assert.equal(PENALISED_SLICE_MINIMUM_METERS, 25);
 });
 
-test("the stricter early stop is Milan planner only: navigation reroutes and other areas keep their gate", () => {
+test("the stricter early stop applies to Milan planner and navigation reroutes, while other areas keep their gate", () => {
   assert.equal(stopsOnlyWhenClean("milan", false), true);
-  assert.equal(stopsOnlyWhenClean("milan", true), false, "a reroute stays fast");
+  assert.equal(stopsOnlyWhenClean("milan", true), true, "Milan navigation keeps searching when stone remains");
   assert.equal(stopsOnlyWhenClean("roccella", false), false);
   assert.equal(stopsOnlyWhenClean("rome", false), false);
 });
@@ -136,18 +136,25 @@ async function run(id, { navigation = false, answerEverythingWith = null } = {})
   }
 }
 
-test("Piazzale Lodi, return replica: a cheap improvement with stone left no longer ends the planner's search", async () => {
+test("Piazzale Lodi, return replica: duplicate-base refinement eliminates the remaining 25 m of confirmed stone in planner and navigation", async () => {
   const { c, status, payload, requests } = await run("piazzale-lodi-return-car");
   assert.equal(status, 200);
-  // Before (3e31da9): search.attempted false, one provider request, the 25 m Piazzale Lodi alternate accepted.
+  // Before (3e31da9 / ae1a88d): selected safe route stopped at base-1 (25 m confirmed stone, 595 s).
   assert.equal(c.before.antiPaveSearchAttempted, false);
   assert.equal(payload.antiPave.search.attempted, true, "the penalised search runs because 25 m of stone is left");
   assert.equal(payload.antiPave.search.slices, c.after.stoneSlicesTargeted);
-  assert.equal(requests.length, c.after.providerRequests, "one extra provider request");
-  assert.equal(requests.filter((r) => String(r.body).includes("linear_cost_factors")).length, 1);
+  assert.equal(requests.length, c.after.providerRequests, "base + penalised + refined duplicate-base search");
+  assert.equal(requests.filter((r) => String(r.body).includes("linear_cost_factors")).length, 2);
   assert.equal(payload.fast.confirmedPaveMeters, c.after.fastConfirmedMeters);
-  assert.equal(payload.safe.confirmedPaveMeters, c.after.safeConfirmedMeters, "never more stone than before");
+  assert.equal(payload.safe.confirmedPaveMeters, c.after.safeConfirmedMeters, "selected safe route reduces Piazzale Lodi stone to 0 m");
+  assert.ok(payload.safe.confirmedPaveMeters < c.before.safeConfirmedMeters, "improves selected route over 25 m baseline");
   assert.ok(payload.candidateDiagnostics.every((d) => Number.isInteger(d.uTurnCount)), "every candidate reports its U-turns");
+
+  // Navigation mode also clears the remaining 25 m confirmed stone within the 4-request navigation cap.
+  const nav = await run("piazzale-lodi-return-car", { navigation: true });
+  assert.equal(nav.status, 200);
+  assert.ok(nav.requests.length <= 4, `navigation stayed within 4-request cap (got ${nav.requests.length})`);
+  assert.equal(nav.payload.safe.confirmedPaveMeters, 0, "navigation selected route also eliminates the 25 m stone");
 });
 
 test("Piazzale Lodi, outbound-like replica: the outcome is unchanged and no request is added", async () => {

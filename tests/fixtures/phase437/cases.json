@@ -16,10 +16,10 @@
       },
       "after": {
         "antiPaveSearchAttempted": true,
-        "providerRequests": 2,
+        "providerRequests": 3,
         "stoneSlicesTargeted": 2,
         "fastConfirmedMeters": 195,
-        "safeConfirmedMeters": 25
+        "safeConfirmedMeters": 0
       }
     },
     {

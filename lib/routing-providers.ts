@@ -471,10 +471,11 @@ async function fetchValhallaRoutes(
   if (remembered !== null) return normalizeValhallaResponse(JSON.parse(remembered), mode);
   if (meter && meter.requests >= meter.limit) return [];
   try {
+    const osrmReserveMs = mode === "car" && !linearCostFactors?.length && !excludePolygons?.length ? 1_500 : 0;
     const response = await runValhallaLimited(
       deadline,
       signal,
-      mode === "car" ? 1_500 : 0,
+      osrmReserveMs,
       (timeoutMs) => withProviderTimeout(signal, timeoutMs, async (callSignal) => {
         if (!takeProviderRequest(meter)) return { status: 429 };
         const response = await fetch(VALHALLA_ENDPOINT, {
