@@ -111,8 +111,13 @@ export type TraceRoute<T extends ProgressInstruction = ProgressInstruction> = {
   distanceKm: number;
   coordinates: [number, number][];
   instructions: T[];
-  /** v2: the objective the route was selected for ("fast" or "safe", the anti-pavé route). */
+  /** v2: the kind of route that was shown ("fast" or "safe", the anti-pavé route). */
   objective?: "fast" | "safe";
+  /**
+   * What the journey asked for. It stays "safe" when the fastest route is shown because no cleaner one exists, so a trace tells
+   * "the safe objective had no alternative" from "the person chose the fastest route". Optional: older traces do not have it.
+   */
+  journeyObjective?: "fast" | "safe";
   /** v2: the pavé the route was expected to have. */
   pave?: TracePaveExposure;
   /** v2: the rough sections the app could warn about on this route. */
@@ -484,6 +489,9 @@ export function parseGpsTrace(input: string | unknown): GpsTrace {
     if (!candidate || !finite(candidate.atFix) || !finite(candidate.progressMeters) || !Array.isArray(candidate.coordinates)
       || !Array.isArray(candidate.instructions) || candidate.coordinates.some((point) => !Array.isArray(point) || !finite(point[0]) || !finite(point[1]))) {
       throw new Error(`Malformed route ${index}`);
+    }
+    if (candidate.journeyObjective !== undefined && candidate.journeyObjective !== "fast" && candidate.journeyObjective !== "safe") {
+      throw new Error(`Malformed route ${index}: journeyObjective`);
     }
     // Phase 4.37: the generation summary is checked whenever present, whatever the trace version says.
     const generationProblem = candidate.generation === undefined ? null : validateTraceGeneration(candidate.generation);

@@ -171,3 +171,21 @@ export function stopsOnlyWhenClean(areaId: string, navigationRequest: boolean): 
 export function refinesWhileStoneLeft(areaId: string, navigationRequest: boolean, avoidance: string): boolean {
   return areaId === "milan" && !navigationRequest && avoidance === "maximum";
 }
+
+/**
+ * Candidate-pool completeness at any avoidance level (Piazzale Lodi, return replica): the first penalised search only targets the
+ * stone of the fastest route, so it can hand back a route the provider had already offered (a base alternative) that still keeps
+ * stone, and the refinement gate (half of the fastest route's stone) then never opens. In that case, and only then, the refinement
+ * also penalises the stone of the other routes seen. It adds a candidate and nothing else: the selection rules are unchanged, so
+ * the new route wins only when it earns it (on the recorded replica it is cleaner and faster, 25 m / 595 s become 0 m / 574 s).
+ * Milan planner only: a reroute keeps its latency budget. One extra provider request at most, inside the existing cap.
+ */
+export function shouldRefineDuplicateWithStone(
+  areaId: string,
+  navigationRequest: boolean,
+  matchedExistingBase: boolean,
+  remainingWeightedPaveMeters: number,
+  minimumPaveReduction: number,
+): boolean {
+  return areaId === "milan" && !navigationRequest && matchedExistingBase && remainingWeightedPaveMeters >= minimumPaveReduction;
+}
