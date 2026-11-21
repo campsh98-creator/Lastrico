@@ -19,6 +19,7 @@ import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
 import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
+import { RecordingPanel, useFreeRecording } from "@/components/RecordingPanel";
 import { TrafficNotice, trafficUnavailableText, useTrafficStatus, type RouteTrafficInfo, type TrafficInfo } from "@/components/TrafficPanel";
 import "@/components/phase43/phase43.css";
 import {
@@ -613,6 +614,8 @@ export default function Home() {
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   const railsAvailable = useRailsAvailable(preferencesOpen);
   const trafficStatus = useTrafficStatus(preferencesOpen);
+  // Independent recording: lives here, not in the panel, so it keeps running when the preferences are folded away.
+  const freeRecording = useFreeRecording();
   // Phase 4.31: ZTL areas the person is authorised for, per mode; kept on this device only.
   const [ztlAuthorisations, setZtlAuthorisations] = useState<ZtlAuthorisations>({});
   const ztlAuthorisationsRef = useRef<ZtlAuthorisations>({});
@@ -3487,6 +3490,8 @@ export default function Home() {
                           : "Non disponibile in questa versione: mancano i dati dei binari."}
                       </small>
                     </div>
+
+                    <RecordingPanel recording={freeRecording} />
 
                     <div className="preference-group" data-testid="traffic-preference">
                       <span className="preference-label">Traffico live</span>
