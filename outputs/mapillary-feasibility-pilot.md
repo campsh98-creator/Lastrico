@@ -1,126 +1,62 @@
-# Lastrico — Progetto Pilota di Fattibilità Mapillary: Copertura, Analisi Immagini e Licenze (Fase C)
+# Mapillary Feasibility Pilot — Independent Verification & Audit Report
 
-- **Data:** 20 novembre 2026
-- **Repository:** `campsh98-creator/Lastrico`
-- **Ambito:** Studio di fattibilità per l'integrazione di immagini a livello strada (Mapillary API v4) per la validazione delle superfici stradali sui 5 corridoi critici di Milano.
-- **Principio guida:** Solo API documentate e gratuite, nessun download massivo, zero costi, nessuna inferenza pesante superflua, nessun inserimento di dati derivati nel database di produzione senza verifica di compatibilità giuridica.
+**Status:** **NO-GO** (blocked on token, zero mapped corridor coverage in local OSM snapshot, licensing review provisional)  
+**Target Corridors Audited:** Piazzale Lodi / Corso Lodi, Via Carlo Vittadini / Via Giovanni Bellezza, Via Giuseppe Ripamonti, Corso di Porta Romana, Via Francesco Sforza / Via Pietro Mascagni
 
 ---
 
-## 1. Architettura API e Termini di Licenza Mapillary
+## 1. Mandatory Retraction of Previously Misattributed Image IDs
 
-### 1.1 API Documentata (Mapillary Graph API v4)
-- **Endpoint principale:** `https://graph.mapillary.com/images`
-- **Autenticazione:** Richiede un token client gratuito generato tramite account Mapillary Developer Dashboard (`Authorization: OAuth <client_token>` o `?access_token=<client_token>`).
-- **Limiti di utilizzo (Rate Limiting):** Fino a 50.000 richieste al minuto per chiamate di lettura di metadati, ampiamente capiente per interrogazioni mirate e verifiche on-demand.
-- **Campi rilevanti per il pilot:**
-  - `id`: identificativo univoco dell'immagine.
-  - `computed_geometry`: coordinate geografiche stimate (WGS84 lon, lat).
-  - `compass_angle`: direzione di ripresa della fotocamera (gradi 0–360°).
-  - `captured_at`: timestamp UTC dell'acquisizione.
-  - `thumb_1024_url`: URL del thumbnail a 1024 px, ideale per l'analisi visiva delle trame stradali senza sovraccaricare la banda.
-  - `detections`: oggetti segmentati automaticamente dalla piattaforma Mapillary (es. cartelli stradali, rotaie, veicoli).
+An earlier draft of this document cited five `mapillary=*` image IDs (`289695999502304`, `1727829098000501`, `1115524933470479`, `1350794389226681`, `960692972703801`) and attributed them to the five Milan road-test corridors above.
 
-### 1.2 Quadro Giuridico e Compatibilità delle Licenze
-- **Licenza delle Immagini Utente:** Creative Commons Attribuzione - Condividi allo stesso modo 4.0 Internazionale (**CC BY-SA 4.0**).
-  - È consentito l'uso anche commerciale, a condizione di citare l'autore (`user_name`) e la fonte (`Mapillary`), e di rilasciare le eventuali opere derivate sotto licenza compatibile CC BY-SA 4.0.
-- **Clausole di Salvaguardia della Piattaforma Meta / Mapillary:**
-  - Divieto di rimozione o inversione delle offuscazioni di volti e targhe automobilistiche.
-  - Divieto di download massivo indiscriminato (scraping non autorizzato) e redistribuzione delle immagini grezze non elaborate.
-- **Incompatibilità Copyleft con OpenStreetMap (ODbL 1.0):**
-  - Il database stradale di Lastrico deriva da OpenStreetMap, regolato dalla **ODbL 1.0** (Open Database License).
-  - Sia la ODbL sia la CC BY-SA 4.0 contengono clausole di *ShareAlike* (condivisione con la stessa licenza per le opere derivate).
-  - Unire direttamente attributi derivati da immagini CC BY-SA in un database ODbL crea un conflitto di licenze ("copyleft clash"), poiché ODbL richiede che il database derivato rimanga ODbL, mentre CC BY-SA impone che l'adattamento rimanga CC BY-SA.
-  - Sebbene Mapillary abbia concesso una deroga per consentire ai singoli mappatori OSM di usare le immagini come riferimento visivo manuale per modificare OSM, l'ingestione automatizzata di dati derivati da Mapillary nel database di produzione Lastrico **è bloccata da questa release gate** fino a parere legale definitivo o isolamento in layer secondario con licenza separata.
+**Independent verification of `data/surfaces/milan-central.json` proved this attribution false:**
+- Across the entire bundled Milan OSM extract, only **33 road segments** (`8` unique `mapillary=*` image IDs, all 5 cited IDs included) carry a `mapillary` tag.
+- **All 33 tagged segments sit at Piazza Guglielmo Oberdan / Porta Venezia (`lon 9.2048–9.2058`, `lat 45.4705–45.4748`), 1.1 km to 3.0 km north-east of the five test corridors.**
+- **Zero (0) road ways** in any of the five P0 test corridors carry `mapillary=*` tags in `data/surfaces/milan-central.json`.
+
+Those five IDs and all surface/tram-rail classifications previously inferred from them are formally **retracted**.
 
 ---
 
-## 2. Ispezione della Copertura nei 5 Corridoi Critici
+## 2. Live Mapillary Graph API Audit Status (Blocked Without Token)
 
-È stata verificata la presenza di sequenze fotografiche Mapillary lungo i 5 corridoi oggetto delle prove su strada del 20 novembre 2026.
+Per the documented Meta / Mapillary Graph API v4 specification (`https://graph.mapillary.com`), programmatic image search, capture date (`captured_at`), computed camera geometry (`computed_geometry`), compass bearing (`compass_angle`), and image thumbnails require an authenticated OAuth/Client Access Token (`MLY|...`).
 
-### 2.1 Corridoio 1: Piazzale Lodi / Corso Lodi
-- **Tratto esaminato:** Asse Corso Lodi tra via Lazzaro Papi e l'imbocco della rotatoria di Piazzale Lodi (`[9.2071, 45.4507]` → `[9.2105, 45.4475]`).
-- **Copertura Mapillary:** Molto elevata (sequenze recenti 2022–2024 da auto e bicicletta).
-- **Immagine di riferimento utile:**
-  - **ID:** `1185496631886929` (associata a sequenza su nodo Piazzale Oberdan / asse Lodi)
-  - **Coordinate:** `9.21045, 45.44754`
-  - **Direzione ripresa:** `315°` (verso nord-ovest, in direzione della rotatoria)
-  - **Fondo visibile:** Transizione nitida tra il manto in asfalto continuo delle corsie di marcia di Corso Lodi e la pavimentazione in cubetti di porfido/sett sulla corona della rotatoria di Piazzale Lodi (way OSM `287070936`).
-  - **Binari tranviari:** Tracce di vecchi binari annegati nell'asfalto in prossimità dell'intersezione con Viale Isonzo.
-  - **Confidenza classificazione:** Alta (0,93).
+- **Environment status:** No `MAPILLARY_*` / `MLY|...` credential exists in the development workspace.
+- **Compliance decision:** No unauthenticated scraping, private endpoints, or guesses were attempted. Consequently, live imagery counts, capture dates, viewing angles, tram-rail visibility, and road-carriageway confidence across the five corridors are **BLOCKED / UNVERIFIED** and are intentionally not fabricated here.
 
-### 2.2 Corridoio 2: Via Carlo Vittadini e Alternative
-- **Tratto esaminato:** Diramazione da Viale Beatrice d'Este verso sud lungo Via Carlo Vittadini e Via Carlo Patellani (`[9.1943, 45.4487]`).
-- **Copertura Mapillary:** Completa lungo l'intera via fino a Viale Toscana.
-- **Immagine di riferimento utile:**
-  - **ID:** `988198369069061`
-  - **Coordinate:** `9.19435, 45.44870`
-  - **Direzione ripresa:** `185°` (sud)
-  - **Fondo visibile:** Asfalto omogeneo con segnaletica orizzontale chiara; assenza totale di cubetti di porfido o lastricato sulla carreggiata carrabile.
-  - **Binari tranviari:** Assenti su Via Vittadini (la linea tranviaria scorre ortogonale su Viale Bligny/Sabotino).
-  - **Confidenza classificazione:** Altissima (0,96). Conferma che Via Vittadini è una valida alternativa asfaltata (`confirmed_smooth`).
-
-### 2.3 Corridoio 3: Via Giuseppe Ripamonti
-- **Tratto esaminato:** Da Viale Sabotino verso sud lungo Via Giuseppe Ripamonti fino alla circonvallazione filoviaria (`[9.2006, 45.4510]` → `[9.1975, 45.4420]`).
-- **Copertura Mapillary:** Copertura continua lungo la direttrice tranviaria 24.
-- **Immagine di riferimento utile:**
-  - **ID:** `1310370612932596`
-  - **Coordinate:** `9.19712, 45.45025`
-  - **Direzione ripresa:** `175°` (sud verso la periferia)
-  - **Fondo visibile:** Corsie veicolari in asfalto affiancate dalla sede centrale dei binari tranviari della linea 24. All'incrocio con Viale Sabotino e Viale Bligny, la pavimentazione attorno agli scambi è in masselli di pietra (`sett`).
-  - **Separazione carreggiata/tram:** I binari sono annegati a raso nella pavimentazione ma delimitati da segnaletica gialla di corsia riservata.
-  - **Confidenza classificazione:** Alta (0,91).
-
-### 2.4 Corridoio 4: Corso di Porta Romana
-- **Tratto esaminato:** Da Piazza Missori all'Arco di Porta Romana (`[9.1975, 45.4550]` → `[9.2025, 45.4515]`).
-- **Copertura Mapillary:** Sequenze dense bidirezionali.
-- **Immagine di riferimento utile:**
-  - **ID:** `2700341373438867`
-  - **Coordinate:** `9.19902, 45.45381`
-  - **Direzione ripresa:** `140°` (sud-est in direzione dell'Arco)
-  - **Fondo visibile:** Carreggiata a doppia corsia asfaltata con asse tranviario centrale. Cordoli in pietra alle fermate e brevi tratti di cubetti storici in corrispondenza degli attraversamenti pedonali.
-  - **Allineamento di marcia:** L'orientamento a 140° evidenzia chiaramente il senso unico di marcia della corsia veicolare destra verso sud-est, confermando l'importanza del vincolo di `heading` (140° ± 60°) per evitare agganci alla corsia nord-ovest o ai binari opposti.
-  - **Confidenza classificazione:** Altissima (0,94).
-
-### 2.5 Corridoio 5: Via Francesco Sforza / Via Pietro Mascagni
-- **Tratto esaminato:** Cerchia dei Navigli tra Piazza San Babila e il Policlinico (`[9.2010, 45.4670]` → `[9.1950, 45.4580]`).
-- **Copertura Mapillary:** Sequenze storiche e recenti influenzate dai cantieri della linea M4.
-- **Immagine di riferimento utile:**
-  - **ID:** `193388113734454`
-  - **Coordinate:** `9.19780, 45.46180`
-  - **Direzione ripresa:** `210°` (sud-ovest verso Corso di Porta Romana / Policlinico)
-  - **Fondo visibile:** Manto stradale in asfalto, con tratti riasfaltati a seguito dei ripristini della linea metropolitana M4; marciapiedi storici in lastre di granito (basole) non intersecanti la traiettoria carrabile.
-  - **Confidenza classificazione:** Buona (0,89).
+| Corridor | Local OSM `mapillary=*` Ways | Live Graph API Coverage | Surface / Tram-Rail Classification |
+| --- | --- | --- | --- |
+| Piazzale Lodi / Corso Lodi | `0` | **Blocked** (requires `MLY\|...` token) | **Unverified from Mapillary** (rely on verified OSM `sett` / `asphalt` tags + field GPS trace) |
+| Via Carlo Vittadini / Via Giovanni Bellezza | `0` | **Blocked** | **Unverified from Mapillary** (OSM: Vittadini `asphalt`, Bellezza `way 286609081` `unknown`) |
+| Via Giuseppe Ripamonti | `0` | **Blocked** | **Unverified from Mapillary** |
+| Corso di Porta Romana | `0` | **Blocked** | **Unverified from Mapillary** (OSM: `1618 m sett`, `62 m asphalt`) |
+| Via Francesco Sforza / Via Pietro Mascagni | `0` | **Blocked** | **Unverified from Mapillary** (OSM: Sforza `833 m asphalt`, Mascagni `427 m asphalt`) |
 
 ---
 
-## 3. Valutazione della Capacità di Discriminazione Visiva
+## 3. Licensing & Data-Derivation Conclusions (PROVISIONAL)
 
-| Tipologia Fondo | Segnale Visivo Distintivo | Riconoscibilità su Immagine Frontale (0–15 m) | Riconoscibilità a Distanza (> 20 m) | Confidenza Complessiva |
-|---|---|---|---|---|
-| **Asfalto (smooth)** | Superficie continua, grigio scuro/medio, assenza di giunti ripetitivi | Immediata e netta | Buona | **0,96** |
-| **Cubetti di porfido / Sett** | Reticolo geometrico regolare di piccoli elementi (8–12 cm) con fughe sabbiate | Netta, texture superficiale ben visibile | Media (lo schiacciamento prospettico attenua i giunti) | **0,91** |
-| **Lastre di pietra / Paving stones** | Grandi lastroni rettangolari (30–60 cm) con linee di giunzione continue | Molto netta | Buona | **0,93** |
-| **Rotaie tranviarie (embedded rails)** | Linee metalliche parallele riflettenti annegate nel manto | Molto netta | Buona | **0,94** |
+Previous licensing claims are downgraded to **PROVISIONAL** pending legal sign-off against the live Meta / Mapillary Terms of Service and Graph API Documentation:
 
-### Limiti tecnici evidenziati:
-1. **Effetto Prospettico (Foreshortening):** Oltre i 20 metri dall'obiettivo, l'angolo radente della fotocamera fonde visivamente i giunti del pavé, rendendo un cubetto usurato difficile da distinguere da un asfalto drenante ad aggregati grossolani.
-2. **Condizioni Meteo e Bagnato:** L'asfalto bagnato o le pozzanghere generano riflessi speculari che possono mascherare la trama del fondo; l'analisi visiva deve privilegiare immagini con cielo sereno o fondo asciutto.
-3. **Ombre Portate degli Edifici:** Nelle vie strette del centro di Milano, le ombre nette tra palazzi alti riducono il contrasto dinamico del fondo stradale.
+1. **Mapillary Imagery & Derived Features (`CC BY-SA 4.0` vs Meta Mapillary Terms):** While Mapillary user imagery has historically used `CC BY-SA 4.0` alongside special OSM tracing permissions for OpenStreetMap contributors editing OSM directly, programmatic extraction of road attributes from Mapillary API responses or computer-vision detections (`mapillary` detections / AI classifications) into a **separate commercial or standalone production routing database** requires explicit verification of:
+   - ODbL (`OpenStreetMap`) vs `CC BY-SA 4.0` compatibility when mixing Mapillary-derived surface attributes with OSM ways without contributing edits upstream to OSM;
+   - API rate limits, caching rules, and non-attribution/redistribution clauses in the current Meta Platform Terms for Mapillary Graph API v4.
+2. **Production import restriction:** Derived Mapillary classifications **must NOT be imported** into `data/surfaces/` or any production routing table until: (a) a valid project `MLY|...` token runs an audited read-only sample over the 5 exact GPS corridors, (b) visual accuracy against ground truth (`asphalt` vs `sett` vs `paving_stones` vs embedded tram rails under wet/shadow conditions) is measured, and (c) legal compatibility is formally approved.
 
 ---
 
-## 4. Confronto con Dati OSM ed Evidenze Private dei Conducenti
+## 4. Comparison With Legally Reusable Alternatives
 
-1. **Piazzale Lodi:** I dati OSM riportano `surface=sett` sulla way `287070936` (24,99 m). Le osservazioni sul campo del 20 novembre confermano che la rotatoria presenta pavé, mentre Corso Lodi è prevalentemente in asfalto. Le immagini Mapillary confermano esattamente questa transizione metrica: l'asfalto cessa all'ingresso dell'anello rotatorio.
-2. **Via Carlo Vittadini:** Alcune segnalazioni ipotizzavano la presenza di lastricato. I dati OSM la classificano come `surface=asphalt` (`confirmed_smooth`). Le immagini Mapillary confermano in modo inequivocabile che l'intera Via Vittadini è asfaltata e priva di pavé. Nessuna strada deve essere marcata come pietra per errore deduttivo.
-3. **Tratti Sconosciuti (Unknown):** Circa il 15–20% delle vie secondarie non ha tag `surface` in OSM. Le immagini Mapillary permettono di verificare puntualmente questi tratti, ma la politica del motore Lastrico rimane confermata: **il fondo sconosciuto non viene mai considerato liscio (smooth)** nei calcoli del rischio.
+| Data Source | Current Milan Status | Cost & Access | Legal Clarity for Lastrico | Recommendation |
+| --- | --- | --- | --- | --- |
+| **OpenStreetMap (`osm_curated`)** | Already bundled (`milan-central.json`), high coverage on primary arteries, conservative `unknown` on gaps | Free, offline, zero runtime calls | High — standard ODbL attribution (already compliant in repo) | **Primary baseline.** Contribute verified street edits directly to OSM rather than proprietary overlays. |
+| **Private Driver GPS + Field Observations** | High signal on real routes; zero license ambiguity inside private diagnostics | First-party | Full control (must stay local / redacted outside Git) | **Use for regression triage & OSM survey prioritization**, never blind auto-hardcoding. |
+| **Mapillary Graph API v4** | **0 local corridor tags**; live API blocked on missing `MLY\|...` token | Free tier subject to Meta developer app & quota | **PROVISIONAL** (requires Terms + CC BY-SA/ODbL review before DB import) | **NO-GO** for production import or v0.5 integration. |
+| **KartaView / Panoramax** | Not yet sampled in Milan | Open APIs; Panoramax (`Etalab / IGN / OSM France`) uses open licenses without Meta platform lock-in | Stronger open-data alignment (verify per-instance license: Etalab-2.0 / CC BY-SA) | Worth evaluating only if human survey or upstream OSM mapping requires street imagery. |
 
 ---
 
-## 5. Raccomandazioni Operative e Conclusioni
+## 5. Final Verdict
 
-1. **Nessun Inserimento Diretto nel DB di Produzione:** A causa dell'incompatibilità tra copyleft CC BY-SA 4.0 e ODbL 1.0, nessun dato derivato da Mapillary deve essere riversato nel database principale `milan-tiles` o `milan-compact-tiles.json`.
-2. **Uso Raccomandato:** Mapillary deve essere utilizzato esclusivamente come strumento di supporto all'ispezione visiva umana (audit offline) e per la verifica di casi controversi segnalati dai tester.
-3. **Verifica Superata:** Il pilot dimostra che la copertura Mapillary a Milano sui corridoi pilota è eccellente e consente di discriminare in modo affidabile asfalto, cubetti di porfido, lastricato e binari tranviari.
+- **Mapillary Feasibility Pilot:** **NO-GO** for automated surface derivation or production database import. Proceed only if a dedicated Meta/Mapillary developer token is provisioned for a bounded, read-only ground-truth audit **and** legal compatibility is confirmed, with verified fixes upstreamed to OpenStreetMap first.

@@ -63,6 +63,7 @@ next-env.d.ts
 
 # Real GPS traces reveal where a person was and must never be committed.
 /outputs/field-traces/
+/private/gps-traces/
 
 # Research: regenerable Phase 4.17 outputs (python experiments/surface-ml/run.py --output <tmp>, then copy back)
 /outputs/phase417/map.html

@@ -1,199 +1,99 @@
-# Lastrico — Rapporto di Causa Radice: Prove su Strada P0, Regressioni Anti-Pavé e Logging
+# LASTRICO P0 Road-Test Forensics, Root Causes, Routing Fixes & TomTom Audit Report
 
-- **Data:** 20 novembre 2026
-- **Repository:** `campsh98-creator/Lastrico`
-- **Autore:** Squadra di Sviluppo Lastrico (Release Owner)
-- **Stato:** Analisi completata prima di qualsiasi modifica al codice di routing (Fase A)
+**Repository:** `campsh98-creator/Lastrico`  
+**Branch / PR:** `fix/p0-anti-pave-fixes` (PR #38)  
+**Baseline preview pin:** `c428229` vs `origin/main` (`ab6eafb`)  
+**Evidence sources:** Three original private driving traces recorded November 20, 2026 (`private/gps-traces/`, never committed), historic Nov 13 baseline trace, OSM tile store (`data/surfaces/milan-central.json`), deterministic FOSSGIS Valhalla fixture replays, and offline TomTom MVT audit tests.
 
----
-
-## 1. Ispezione del Codice Preview Distribuito (`c428229`) rispetto a `main` (`ab6eafb`)
-
-È stata eseguita una comparazione approfondita tra il commit distribuito in preview (`c428229`, PR #33) e la punta attuale di `origin/main` (`ab6eafb`, PR #35).
-
-### Esito dell'ispezione:
-- **Codice applicativo identico:** Nessuna differenza presente nelle directory `app/`, `lib/`, `worker/`, `components/`.
-- Le uniche differenze tra i commit riguardano la configurazione del workflow CI GitHub Actions (`.github/workflows/ci.yml`) e la documentazione di rilascio.
-- **Conclusione:** Il comportamento osservato sul campo (ritenzione dei 25 m di pavé a Piazzale Lodi, svolte a U a Corso di Porta Romana, incongruenza nei log di ricalcolo) non è una regressione recente di preview rispetto a main, ma è una combinazione di difetti algoritmici e di tracciamento strutturalmente presenti su entrambi i rami.
+> Privacy guarantee: No private home street names, addresses, or raw private coordinates appear in this report or in any committed fixture. All regression fixtures use public OpenStreetMap junctions.
 
 ---
 
-## 2. Revisione Storica della Fase 4.37 (commit `da647c580`, PR #16)
+## 1. Complete Redacted Inventory of the November 20, 2026 Road Tests
 
-La Fase 4.37 aveva introdotto una serie di modifiche per limitare le chiamate al provider pubblico Valhalla e affinare la ricerca anti-pavé su Milano:
-1. **Abbassamento della soglia minima del tratto:** da 25 m a `min(minimumPaveReduction, 15 m)` (per l'auto: 15 m). La giustificazione storica era che il tratto di pavé della rotatoria di Piazzale Lodi misura esattamente 24,99 m nei dati OSM, e con la precedente soglia di 25 m non veniva nemmeno estratto come "rough slice".
-2. **Introduzione di `stopsOnlyWhenClean`:**
-   ```ts
-   // lib/surface-aware-routing.ts
-   export function stopsOnlyWhenClean(areaId: string, navigationRequest: boolean): boolean {
-     return areaId === "milan" && !navigationRequest;
-   }
-   ```
-   Questa funzione è stata abilitata **soltanto** per il pianificatore (`!navigationRequest`), escludendo esplicitamente le richieste di navigazione (`navigation=1`).
-3. **Guardia `baseAlreadyImproves`:**
-   ```ts
-   // app/api/routes/route.ts
-   const baseAlreadyImproves = improvesCheaply(preliminarySafe, preliminaryFast)
-     && !(stopsOnlyWhenClean(area.id, navigationRequest) && preliminarySafe.riskMeters >= policy.minimumPaveReduction);
-   ```
-4. **Guardia sulle deviazioni geometriche via waypoint:**
-   ```ts
-   const penalisedRouteIsClean = stopsOnlyWhenClean(area.id, navigationRequest)
-     && directSafe !== directFast && directSafe.riskMeters < policy.minimumPaveReduction;
-   if (canGenerate && !penalisedRouteIsClean && !(directSafe !== directFast && improvesEnough(directSafe, directFast))) { ... }
-   ```
-5. **Penalità sulle svolte a U:** aggiunta di `U_TURN_PENALTY_SECONDS = 60` nel calcolo dell'utilità in `lib/route-optimization.ts`, ma **nessun passaggio del parametro `heading` a Valhalla**.
-6. **Tetti alle richieste provider:** 7 per il pianificatore, 4 per la navigazione.
+| Journey | Private Trace File (excluded from Git) | Mode / Fixes / Duration | Observed Route / Events | Confirmed Failures Reproduced |
+| --- | --- | --- | --- | --- |
+| **1 — Piazzale Lodi / Corso Lodi (Return)** | `lastrico-gps-trace-2026-11-20-15-39.json` (sha `eae4d15da45437f6`, v3) | `car`, `709` fixes, `835 s`, `0` replay diffs | Route 0 (`atFix 0`, `obj: "safe"`, `3.995 km`, `12.29 min`, `pave: {25, 0, 53}`, `searchAttempted: true, searchGenerated: 0`). Route 1 (`atFix 418`, `obj: "safe"`, `2.079 km`, `7.19 min`, `pave: {25, 0, 0}`, `searchAttempted: false, searchGenerated: 0`). Route 2 (`atFix 460`, logged `obj: "fast"` despite `safe:no-alternative`, `pave: {128, 0, 366}`). Route 3 (`atFix 512`, `obj: "fast"`, `pave: {280, 0, 0}`). Two background gaps at fix 507 (`112 s`) and fix 609 (`17 s`). Driven corridor avoided Piazzale Lodi via Via Pompeo Leoni → Via Boselli → Via Soave → Via Carlo Vittadini (`confirmed_smooth` asphalt) → Via Giovanni Bellezza (`unknown` + `asphalt`) → Via Crema → Via Trebbia → Via Adige (`sett`). | 25 m confirmed `sett` retained; Phase 4.37 failed to prevent recurrence; navigation skipped penalised search; reroute logged `obj: "fast"` during `safe:no-alternative`; background iOS GPS gaps. |
+| **2 — Porta Romana → San Babila** | `lastrico-gps-trace-2026-11-20-17-19.json` (sha `c9ece89b787de047`, v3) | `car`, `1022` fixes, `1023 s`, `0` gaps, `8` reroutes, `0` replay diffs | Routes 2–6 (`atFix 265, 280, 295, 310, 326`): vehicle moved NW on Corso di Porta Romana at `hdg = 310.6°–311.4°` (`4.0–5.8 m/s`, `acc 8–9 m`); Valhalla snapped origin to SE (`131°`) and returned 5 consecutive `"Fai un'inversione di marcia a sinistra su Piazzale Medaglie d'Oro"`. Despite 60 s U-turn penalty in `selectOptimizedRoute`, `base-2` (`563–590 s`, 1 U-turn, `249–420 m` `sett`) still outranked `base-1` (`439–488 s`, 0 U-turns, `556–825 m` `sett`) on weighted pavé. Routes 7 & 8 (`atFix 343, 986`) logged `obj: "fast"` during `safe:no-alternative`. | Missing `heading` on Valhalla origin allowed opposite-carriageway snap & repeated U-turns; objective logging mismatch (`fast` vs `safe`); localized stone sensation on smooth Via Francesco Sforza (`833 m asphalt`, `3 m unknown`, `2 m sett`) & Via Pietro Mascagni (`427 m asphalt`, `0 m` stone). |
+| **3 — San Babila → home corridor** | `lastrico-gps-trace-2026-11-20-19-09.json` (sha `a3f81c3c396478fd`, v3) | `car`, `12` fixes, `11 s`, `0` replay diffs | Route 0 (`atFix 0`): `6.674 km`, `21.50 min` (`1290 s`), `confirmed: 69 m` (Viale Beatrice d'Este `32 m` + Piazzale di Porta Lodovica `38 m`), `probable: 10 m`, `unknown: 294 m`, `antiPave: "fastest-avoids-pave"`, logged `obj: "fast"` on initial plan (`activeRouteRef.current` instead of `journeyObjectiveRef.current`), and wasted 3 geometric detours (`detour-1..3`, one with a U-turn) even though `surface-aware-valhalla` was already the fastest candidate (`1290 s` vs `1330 s`). Trace stopped at fix 12 (`page-hidden`) when user switched to Waze. | Initial-plan trace objective logged `"fast"` instead of `"safe"`; wasted `detour-1..3` requests after `surface-aware-valhalla` already improved `preliminaryFast`; iOS Safari/PWA suspends background JS & geolocation upon app switch (unrecorded Waze leg is not reconstructed). |
 
 ---
 
-## 3. Ricostruzione dell'Incidente di Corso Lodi / Piazzale Lodi
+## 2. Confirmed Root Causes vs Hypotheses
 
-Nel test su strada del 20 novembre lungo il corridoio Corso Lodi / Piazzale Lodi:
-- Il percorso sicuro selezionato ha mantenuto circa **25 m di pavé confermato** (`sett` sulla rotatoria di Piazzale Lodi, way OSM `287070936`).
-- Il motore ha riportato `generated: 0` alternative dedicate (o nessuna nuova alternativa oltre a quella di base).
+### Confirmed Root Causes (verified in code and replay)
 
-### Causa radice esatta:
+1. **Corso Lodi / Piazzale Lodi — Duplicate-base refinement gate (`lib/surface-aware-routing.ts`, `app/api/routes/route.ts`)**:
+   - On `piazzale-lodi-return-car`, Valhalla's base response returned `base-2` (`571 s`, `195 m sett`, 2 slices) as `preliminaryFast` and `base-1` (`595 s`, `25 m sett` on Piazzale Lodi roundabout way `287070936`) as `preliminarySafe`.
+   - Phase 4.37 (`ae1a88d`) lowered slice minimum to `15 m` in Milan planner, targeting `base-2`'s 2 stone slices in the first penalised search, which returned a duplicate of `base-1` (`25 m`). Because `25 < max(20, 195 * 0.5) = 97.5`, refinement did not run unless explicit "maximum" mode was chosen, leaving the `25 m` route selected.
+   - **Fix:** Added `shouldRefineDuplicateWithStone` (`lib/surface-aware-routing.ts:154-173`) and wired `refineDuplicateBaseWithStone` (`app/api/routes/route.ts:835-843, 977`) so whenever the first penalised route matches an existing base candidate and still retains `>= minimumPaveReduction` weighted pavé, all distinct rough slices from existing base alternatives and the first penalised route are combined in one bounded refinement call (`pendingRefinement`).
 
-#### Caso Navigazione (`navigation=1`, ricalcolo durante la guida):
-1. In navigazione, `navigationRequest === true`.
-2. Di conseguenza, `stopsOnlyWhenClean("milan", true)` restituisce **`false`**.
-3. Nella valutazione di `baseAlreadyImproves`:
-   ```ts
-   !(stopsOnlyWhenClean(...) && ...) === !(false && ...) === true
-   ```
-4. Tra i percorsi di base restituiti da Valhalla:
-   - `base-2` (percorso standard lungo Corso Lodi): 195 m di pavé, 571 s.
-   - `base-1` (alternativa del provider attraverso la rotatoria): 25 m di pavé, 595 s (+24 s).
-5. `improvesCheaply(preliminarySafe, preliminaryFast)` controlla se `preliminarySafe` riduce sufficientemente il pavé rispetto a `preliminaryFast` (risparmia 170 m su 195 m) con un aumento di tempo <= 90 s. **Questo controllo è risultato VERO.**
-6. Poiché `improvesCheaply` è vero e la guardia `stopsOnlyWhenClean` è disattivata in navigazione, **`baseAlreadyImproves` è risultato VERO**.
-7. Di conseguenza:
-   ```ts
-   const canGenerate = !baseAlreadyImproves && ...; // DIVENTA FALSE!
-   ```
-8. **La ricerca dedicata non è nemmeno partita** (`surfaceAwareAttempted = false`, `generated = 0`, `providerRequests = 1`).
-9. Il sistema ha considerato l'alternativa di base con 25 m di pavé come "sufficientemente migliorativa", impedendo la generazione di qualsiasi alternativa completamente pulita (es. via Friuli, 0 m di pavé).
+2. **Corso Lodi / Navigation Early-Stop & Car OSRM-Reserve Bug (`lib/surface-aware-routing.ts`, `lib/routing-providers.ts:461-465`)**:
+   - Even after unifying `stopsOnlyWhenClean(areaId, navigationRequest)` to return `areaId === "milan"` (`lib/surface-aware-routing.ts:154`), offline replay of `navigation=1` showed the refined 3rd request still aborted before calling `fetch`!
+   - **Root cause found:** In `lib/routing-providers.ts:464`, `runValhallaLimited` subtracted `1_500 ms` `osrmReserveMs` on **every** `mode === "car"` call — including `fetchValhallaCustomizedRoutes` and `fetchValhallaRouteExcluding`, which never fall back to OSRM. In navigation mode (`NAVIGATION_ROUTE_BUDGET_MS = 5_500 ms`, refinement budget `Date.now() + 2_500`), waiting `1_050 ms` for the Valhalla rate slot left `2500 - 1050 - 1500 = -50 < 500 ms`, mathematically throwing `"Budget routing esaurito"`!
+   - **Fix:** Restricted `osrmReserveMs = 1_500` to un-customized base requests (`mode === "car" && !linearCostFactors?.length && !excludePolygons?.length ? 1_500 : 0`), preserving OSRM fallback while enabling navigation refinement inside the `<= 4` request cap.
 
-#### Caso Pianificatore (`navigation=0`):
-1. In pianificazione, `stopsOnlyWhenClean` restituisce `true`. Poiché 25 m >= 20 m (`policy.minimumPaveReduction`), `baseAlreadyImproves` è `false` e `canGenerate` è `true`.
-2. Viene eseguita la richiesta penalizzata (`linear_cost_factors` di fattore 15 sulle fette di Corso Lodi).
-3. Tuttavia, Valhalla, penalizzando Corso Lodi, devia esattamente su Piazzale Lodi (`base-1`), che ha 25 m di pavé.
-4. Viene controllato se avviare il raffinamento (`pendingRefinement`):
-   ```ts
-   firstScored.surfaceScore.weightedPaveMeters >= Math.max(policy.minimumPaveReduction, preliminaryFast.surfaceScore.weightedPaveMeters * 0.5)
-   ```
-   Poiché `25 m < 97.5 m` (50% di 195 m), il raffinamento **non viene preparato**.
-5. Si passa al blocco delle deviazioni geometriche (linea 787):
-   ```ts
-   if (canGenerate && !penalisedRouteIsClean && !(directSafe !== directFast && improvesEnough(directSafe, directFast)))
-   ```
-   Poiché `directSafe` ha 25 m e `directFast` ha 195 m, `improvesEnough` (170 m >= 80 m) è **VERO**.
-   La condizione `!(improvesEnough)` diventa **FALSA**.
-6. **Le deviazioni geometriche (es. via Friuli) vengono saltate.**
-7. In deduplicazione, il percorso penalizzato coincide con `base-1` e viene deduplicato. Il percorso finale resta quello con 25 m di pavé.
+3. **Corso di Porta Romana — Opposite-carriageway Valhalla snap & repeated U-turns (`lib/routing-providers.ts`, `app/api/routes/route.ts`)**:
+   - Navigation reroutes did not forward driver compass/GPS course (`heading`) to Valhalla's origin `locations[0]`, allowing Valhalla to snap onto the SE carriageway (`131°`) while driving NW (`310.6°–311.4°`) and issue 5 consecutive Piazzale Medaglie d'Oro U-turn instructions.
+   - **Fix:** Forward `heading` (`heading_tolerance: 60`) on `locations[0]` only when finite, verified across both `/api/routes` and `fetchEngineRoutes`.
+
+4. **Objective logging mismatch in GPS traces (`app/page.tsx`)**:
+   - Two distinct call sites passed visual card state instead of user intent to `traceRouteDetails`:
+     * **Reroute (`app/page.tsx:2395`):** passed `nextRoute` (`"fast"` fallback display card) instead of `objective`, writing `obj: "fast"` when `event` recorded `safe:no-alternative`.
+     * **Initial plan (`startNavigation`, `app/page.tsx:3013`):** passed `activeRouteRef.current` instead of `journeyObjectiveRef.current`, explaining Journey 3 Route 0 logging `obj: "fast"` despite `antiPave: "fastest-avoids-pave"`.
+   - **Fix:** Updated both `traceRouteDetails` calls to record `objective` and `journeyObjectiveRef.current`.
+
+5. **Wasted geometric detours after `surface-aware-valhalla` already improves `preliminaryFast` (`app/api/routes/route.ts:915-917`)**:
+   - Added `directFastImprovesBase = directFast !== preliminaryFast && improvesEnough(directFast, preliminaryFast)` so `detour-1..3` do not run pointlessly when the penalised search already found a faster low-stone route (tested against Phase 4.31 & 4.37 gates).
+
+### Hypotheses & Explicit Non-Changes
+- **Via Francesco Sforza / Via Pietro Mascagni & Via Carlo Vittadini / Via Giovanni Bellezza:** Hypothesis that smooth streets were hardcoded as stone or unknown streets marked smooth was **refuted** by spatial tile inspection. `Via Carlo Vittadini` (way `264776934`), `Via Francesco Sforza` (`833 m` asphalt vs `2 m` sett / `3 m` unknown crossing), and `Via Pietro Mascagni` (`427 m` asphalt) retain `confirmed_smooth`, while untagged `Via Giovanni Bellezza` (way `286609081`) remains `unknown` (`confidence: 0`). No street-level hardcoding was added.
+- **Unrecorded Journey 3 Waze detour:** Cannot be reconstructed empirically because Safari/PWA background suspension terminated trace capture after `11 s` (`12` fixes). Addressed structurally via interruption detection and honest iOS background limitation UX in the separate GPS Recording PR.
 
 ---
 
-## 4. Analisi della Pipeline di Routing e Tracciamento dei Limiti
+## 3. Verified Before / After Routing Metrics (Real Handler + Recorded FOSSGIS Fixtures)
 
-Il flusso analitico completo evidenzia:
-- **Soglie di pavé (`minimumPaveReduction`):** Auto 20 m, Moto 15 m, Bici 12 m.
-- **Definizione di miglioramento sufficiente (`improvesEnough`):** Richiede una riduzione di almeno `max(minimumPaveReduction, 80m, 30% del pavé iniziale)`. Questa metrica è pensata per evitare deviazioni minime, ma viene usata erroneamente come condizione di arresto totale della ricerca di percorsi a pavé zero.
-- **Asimmetria tra Pianificatore e Navigazione:** La scelta in Fase 4.37 di disabilitare `stopsOnlyWhenClean` in navigazione è stata motivata dal voler risparmiare latenza, ma ha causato l'effetto collaterale critico di accettare pavé residuo significativo (25 m) senza verificare se esistesse una deviazione legale a 0 m.
+### Case A — Piazzale Lodi / Corso Lodi Return (`piazzale-lodi-return-car`, public OSM junctions)
 
----
+| Metric | Before (`3e31da9` / `ae1a88d`) | After (Planner, `navigation=0`) | After (Navigation, `navigation=1`) |
+| --- | --- | --- | --- |
+| **Selected Safe Route Source** | `base-1` (Piazzale Lodi) | `surface-aware-valhalla-refined` | `surface-aware-valhalla-refined` |
+| **Distance** | `3.318 km` | `3.076 km` (`-242 m`) | `3.076 km` (`-242 m`) |
+| **Travel Time (ETA)** | `595 s` (`9.92 min`) | `574 s` (`9.56 min`, `-21 s`) | `574 s` (`9.56 min`, `-21 s`) |
+| **Confirmed Pavé (`sett`)** | **`25 m`** | **`0 m` (`-100%`)** | **`0 m` (`-100%`)** |
+| **Probable Pavé / Unpaved** | `0 m` | `0 m` | `0 m` |
+| **Unknown Surface** | `0 m` | `0 m` | `0 m` |
+| **U-Turns** | `0` | `0` | `0` |
+| **Route Legality (ZTL / Mode)** | Legal | Legal | Legal |
+| **Provider Requests / Cap** | `1` (prev) / `2` (`ae1a88d`) | `3` (cap `<= 7`) | `3` (cap `<= 4`) |
 
-## 5. Incongruenza nei Log di Ricalcolo: `objective=fast` vs `safe:no-alternative`
+### Case B — Corso di Porta Romana NW (`9.2015,45.4525 -> 9.1981,45.4668`, `navigation=1`, public OSM junctions)
 
-Nel log di navigazione e nei dati di traccia è stato riscontrato che:
-- `trace.routes[k].objective` riporta `"fast"`.
-- L'evento `reroute-success` registra contestualmente `safe:no-alternative`.
-
-### Causa radice nel codice:
-In `app/page.tsx` (linee 2312-2345):
-```ts
-const nextRoute = isReroute
-  ? rerouteDisplayKind(options.preserveRoute ?? "safe", data.hasDistinctAlternative)
-  : selectRouteKind(options.preserveRoute, data.hasDistinctAlternative);
-applyRouteData(data, nextRoute, requestedMode);
-const nextSelectedRoute = nextRoute === "safe" ? data.safe : data.fast;
-...
-if (isReroute) {
-  traceRecorderRef.current?.addRoute({
-    ...
-    // ERRORE: passa nextRoute (che vale "fast" per la sola interfaccia utente)
-    // invece di objective (options.preserveRoute ?? "safe")
-    ...traceRouteDetails(nextSelectedRoute, nextRoute, routeGenerationRef.current),
-  });
-}
-```
-In `lib/reroute-objective.ts`:
-```ts
-export function rerouteDisplayKind(objective: RouteKind, hasDistinctAlternative: boolean): RouteKind {
-  return objective === "safe" && hasDistinctAlternative ? "safe" : "fast";
-}
-```
-- Quando `hasDistinctAlternative` è `false`, `rerouteDisplayKind("safe", false)` restituisce `"fast"`. Questo serve unicamente all'interfaccia utente per selezionare quale scheda mostrare (poiché in assenza di alternative entrambe le schede contengono il percorso più rapido).
-- Tuttavia, la funzione `traceRouteDetails` accetta come secondo parametro il campo denominato `objective: "safe" | "fast"`.
-- Passando `nextRoute` (`"fast"`), l'oggetto memorizzato nella traccia riceve `route.objective = "fast"`.
-- Pochi millisecondi dopo (linea 2363), il gestore registra l'evento analitico:
-  ```ts
-  const objective = options.preserveRoute ?? "safe";
-  traceRecorderRef.current?.recordEvent("reroute-success", `${objective}:${data.hasDistinctAlternative ? "alternative" : "no-alternative"}`);
-  ```
-- **Conclusione:** Non c'è stata una scelta volontaria dell'utente di passare a "fast", né un degrado permanente dell'obiettivo. L'utente ha mantenuto l'obiettivo "safe", ma un bug di cablaggio in `app/page.tsx` ha passato la variabile di visualizzazione UI (`nextRoute`) al recorder di traccia anziché il reale obiettivo di navigazione (`objective`).
+| Metric | Without `heading` (Pre-fix) | With `heading=311` (`heading_tolerance: 60`) |
+| --- | --- | --- |
+| **Selected Safe Route Distance / Time** | `2.598 km` / `505 s` (`8.42 min`) | `2.887 km` / `562 s` (`9.36 min`) |
+| **Fast Confirmed Pavé** | `848 m` | `848 m` |
+| **Safe Confirmed Pavé / Unknown** | `247 m` / `1 m` | `307 m` / `11 m` |
+| **U-Turn Count & Instruction** | **`1`** (`"Fai un'inversione di marcia a sinistra su Piazzale Medaglie d'Oro verso Piazzale Medaglie d'Oro."`) | **`0` (`-100%`)** |
+| **Route Legality & Budget** | Legal, `2` requests (cap `<= 4`) | Legal, `2` requests (cap `<= 4`) |
 
 ---
 
-## 6. Svolte a U Ripetute su Corso di Porta Romana
+## 4. Independent Offline TomTom Traffic Validation Summary
 
-Nel corso del test lungo Corso di Porta Romana, l'applicazione ha ripetutamente suggerito manovre di inversione a U ("Fai inversione a U").
+**Strict network discipline:** **0 live TomTom requests** were issued during this audit. All functional checks ran offline via deterministic synthetic Mapbox Vector Tiles (`tests/traffic-validation-audit.test.mjs` alongside existing `tests/traffic-{core,hub,route}.test.mjs`).
 
-### Causa radice esatta:
-1. Corso di Porta Romana è un'arteria complessa con corsie separate, binari tranviari centrali e tratti a senso unico o con corsie riservate contigue.
-2. In `app/page.tsx`, quando viene rilevata una deviazione e scatta il ricalcolo:
-   ```ts
-   void calculateRoutes(
-     { label: "Posizione GPS live", coordinate: decision.position },
-     { mode, preserveRoute: journeyObjectiveRef.current, ... }
-   );
-   ```
-   Viene inviata una richiesta a `/api/routes` contenente solo `start: lon,lat` e `end: lon,lat`.
-3. In `app/api/routes/route.ts` e in `lib/routing-providers.ts` (`fetchValhallaRoutes`), le coordinate vengono inviate a Valhalla come:
-   ```ts
-   locations: points.map(([lon, lat], index) => ({
-     lon,
-     lat,
-     type: index === 0 || index === points.length - 1 ? "break" : "through",
-   }))
-   ```
-4. **`heading` e `heading_tolerance` non vengono MAI passati a Valhalla.**
-5. In assenza di direzione, Valhalla aggancia la coordinata di partenza all'arco OpenStreetMap geometricamente più vicino in termini di pura distanza euclidea.
-6. A causa della normale tolleranza GPS (5–10 metri di errore laterale), il punto di partenza viene agganciato alla carreggiata opposta o al binario tranviario con direzione contraria.
-7. Valhalla è quindi costretto a calcolare un percorso che inizia orientato verso nord (direzione errata) e impone una manovra immediata di inversione a U (manovre tipo 12 `kUturnRight` o 13 `kUturnLeft`).
-8. La penalità `U_TURN_PENALTY_SECONDS = 60` in `lib/route-optimization.ts` non può rimediare a questo problema se il provider restituisce percorsi che nascono già orientati in senso opposto.
-9. **Soluzione tecnica:** Passare `heading` (derivato dal fix GPS e dal filtro di navigazione) con `heading_tolerance` (45°–60°) nella prima posizione (`locations[0]`) della richiesta Valhalla in navigazione, vincolando l'aggancio del grafo alla direzione effettiva di marcia.
+**User-observed live preview telemetry (recorded out-of-band before audit):** `configured: true`, `available: true`, `reason: ok`, `remainingToday: 3999`, `remainingThisMonth: 59997`, with a downloaded Traffic Flow PBF tile confirming upstream TomTom connectivity on the preview proxy.
 
----
+### Verified Offline Capabilities
+1. **Traffic Flow MVT decoding & geometry matching (`lib/traffic/mvt.ts`, `lib/traffic/flow.ts`):** Matches flow linework within `15 m` and `>= 0.6` directional alignment (`minAlignment`), correctly ignoring opposing-carriageway flow; scales delay share by mode (`car: 1.0`, `motorcycle: 0.5`, `bicycle: 0.0`).
+2. **ETA inflation & route ranking (`GET /api/routes?traffic=live`):** Under free flow (`1.0`) and light congestion (`0.90`), statically faster `routeA` (`600 s`) retains `fast`. Under heavy congestion (`0.25`), `routeA` ETA inflates sharply, **flipping route ranking** so uncongested `routeB` (`700 s`) becomes `fast` while triggering congested slices (`traffic.search.slices >= 1`).
+3. **Flow closures vs Incident-tile closures (`lib/traffic/flow.ts`, `lib/traffic/incidents.ts`):**
+   - **Traffic Flow** `road_closure: true` adds `CLOSURE_PENALTY_SECONDS` (`900 s`) and feeds congested slices into route scoring and ranking.
+   - **Traffic Incidents** `category: 8` (`road-closed`) parses and attaches informational alerts near the route (`incidentsNearRoute`) with **zero ETA penalty and zero ranking effect** (UI-only advisory). This distinction is intentional and explicitly documented.
+4. **ZTL legality invariance & anti-pavé interaction:** Active Monday 12:00 ZTL/access restrictions remain strictly excluded even when the legal detour carries heavy congestion (`0.25`). Combined stone + traffic cost factors stay inside planner (`<= 7`) and navigation (`<= 4`) request caps, and upstream failures fall back cleanly to static Valhalla ETAs (`HTTP 200`, `traffic.status: "unavailable"`).
+5. **Quota ledger, SQL persistence & circuit breakers (`worker/traffic-hub.ts`):** Cache hits within `FLOW_TTL_MS` (`90 s`) spend 0 quota; overlay/daily/monthly caps enforce deterministically and survive `TrafficHub` restarts via `SqlLedgerStorage`; circuit breakers open on `401/403` (`key-rejected`, 6 h), `429` (`provider-limit`, 15 m), and `3x 5xx` (`provider-failing`, 5 m), persist across restarts, and recover cleanly after cooldown + upstream `200`.
 
-## 7. Classificazione Spaziale: Carreggiata vs Binari Tranviari
-
-Sul corridoio di Corso Lodi e Corso di Porta Romana, i binari tranviari e la carreggiata stradale scorrono affiancati a una distanza tra 3 e 10 metri.
-
-### Analisi dell'aggancio geometrico:
-- `lib/road-intelligence-scoring.ts` utilizza `policy.surfaceMatchMeters` (12 m per auto, 11 m per moto, 9 m per bici).
-- La funzione `matchSample` seleziona i segmenti nel raggio di tolleranza e verifica l'allineamento angolare tramite `headingsAlign`.
-- Se la traiettoria GPS presenta una deriva laterale verso il centro strada (frequente tra palazzi alti per effetto multipath), i punti campionati possono cadere più vicini all'asse del binario tranviario rispetto alla mezzeria della corsia veicolare.
-- Se l'asse tranviario è classificato in OSM con `surface=sett` o tag affini mentre la carreggiata veicolare è asfalto (`surface=asphalt`), il punteggio di superficie può associare erroneamente il pavé del binario alla traiettoria del veicolo, oppure viceversa non riconoscere il pavé della corsia se viene agganciato un binario dismesso.
-- Il controllo `candidate.modeAccess?.[mode] ?? candidate.isMotorAllowed` garantisce che non vengano agganciati elementi riservati esclusivamente al tram quando i tag OSM sono corretti, ma per evitare ambiguità l'allineamento direzionale stretto e il rispetto della corsia di marcia sono indispensabili.
-
----
-
-## 8. Piano di Intervento e Condizioni di Rilascio (Fase B e C)
-
-Prima di effettuare modifiche al codice di instradamento, vengono definiti i seguenti interventi mirati:
-1. **Correzione del Logging:** Ripristinare il corretto passaggio di `objective` (`options.preserveRoute ?? "safe"`) in `traceRouteDetails` in `app/page.tsx`.
-2. **Supporto `heading` in Navigazione:** Accettare il parametro `heading` in `/api/routes` e inoltrarlo a Valhalla in `locations[0]` con `heading_tolerance` per eliminare le inversioni a U spurie su Corso di Porta Romana e doppie carreggiate.
-3. **Ottimizzazione Ricerca Anti-Pavé a Piazzale Lodi:** Permettere alla ricerca in navigazione e al generatore di detours di non arrestarsi prematuramente quando resta pavé confermato eliminabile legalmente, garantendo la generazione dell'alternativa pulita via Friuli.
-4. **Creazione Fixture di Regressione Deterministiche:** Coprire i 5 corridoi con test permanenti.
-5. **Studio di Fattibilità Mapillary (Fase C):** Valutare la copertura fotografica libera e i termini di licenza per i 5 corridoi.
+### Boundary Between Offline Proof and Live Runtime
+Live TomTom Traffic Incidents availability on Milan tiles and live peak-hour Flow density in `lastrico-pilot` were **not** re-queried in this session (no live API quota spent). Traffic Flow is **GO** subject to normal quota limits; Traffic Incidents is **CONDITIONAL / INFORMATIONAL-ONLY** (must not be presented as closure-avoidance routing).

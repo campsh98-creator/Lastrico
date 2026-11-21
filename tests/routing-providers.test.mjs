@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { setImmediate as nextTurn } from "node:timers/promises";
-import { fetchEngineRoutes, normalizeOsrmResponse, normalizeValhallaResponse } from "../lib/routing-providers.ts";
+import { fetchEngineRoutes, fetchValhallaCustomizedRoute, normalizeOsrmResponse, normalizeValhallaResponse } from "../lib/routing-providers.ts";
 
 const coordinates = [[9.18, 45.46], [9.181, 45.461]];
 function encode(points) {
@@ -320,4 +320,52 @@ test("a caller's cancellation still reaches an in-flight provider call and clear
   assert.equal(reason?.name, "AbortError");
   assert.deepEqual(timers.created, [8_000]);
   assert.equal(timers.live.size, 0, "cleared on cancellation too");
+});
+
+test("forwards initialHeading only on the origin location when finite", async (t) => {
+  skipInterval(t);
+  const requests = [];
+  t.mock.method(globalThis, "fetch", async (_url, init) => {
+    requests.push(JSON.parse(init.body));
+    return json({ trip: trip() });
+  });
+  await fetchEngineRoutes(coordinates, "car", false, fakeNow + 18_000, new AbortController().signal, undefined, 140.4);
+  assert.equal(requests[0].locations[0].heading, 140);
+  assert.equal(requests[0].locations[0].heading_tolerance, 60);
+  assert.equal("heading" in requests[0].locations[1], false);
+  assert.equal("heading_tolerance" in requests[0].locations[1], false);
+
+  fakeNow += 100_000;
+  await fetchEngineRoutes(coordinates, "car", false, fakeNow + 18_000, new AbortController().signal);
+  assert.equal("heading" in requests[1].locations[0], false);
+  assert.equal("heading_tolerance" in requests[1].locations[0], false);
+});
+
+test("customized car Valhalla calls do not subtract the 1.5 s OSRM reserve, while base fetchEngineRoutes preserves OSRM fallback", { timeout: 5000 }, async (t) => {
+  skipInterval(t);
+  const urls = [];
+  t.mock.method(globalThis, "fetch", async (url) => {
+    urls.push(String(url));
+    if (String(url).includes("osrm")) return json({ code: "Ok", routes: [osrmRoute()] });
+    return json({ trip: trip() });
+  });
+  await fetchEngineRoutes(coordinates, "car", false, fakeNow + 18_000, new AbortController().signal);
+  // Immediately after a base Valhalla call (next slot ~1.05 s away), customized car search with a
+  // 2.5 s navigation refinement budget must not subtract 1.5 s OSRM reserve and still succeeds.
+  const customized = await fetchValhallaCustomizedRoute(
+    coordinates,
+    "car",
+    [{ shape: encode(coordinates), factor: 15 }],
+    fakeNow + 2_500,
+    new AbortController().signal,
+  );
+  assert.ok(customized, "customized car Valhalla call succeeds inside 2.5 s deadline");
+  assert.ok(urls[1].includes("valhalla"));
+
+  // Base car fetchEngineRoutes (with un-memoized alternatives=true) with a 1.9 s deadline still reserves 1.5 s for OSRM and falls back.
+  skipInterval(t);
+  const fallback = await fetchEngineRoutes(coordinates, "car", true, fakeNow + 1_900, new AbortController().signal);
+  assert.equal(fallback.length, 1);
+  assert.equal(fallback[0].provider, "osrm-public-fallback");
+  assert.ok(urls[2].includes("osrm"));
 });
