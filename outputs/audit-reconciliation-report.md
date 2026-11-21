@@ -100,8 +100,47 @@ Detail and test names: `outputs/audit-reconciliation-tomtom-mapillary.md`.
 
 ## 7. Regression and CI results
 
-RESULTS_PENDING
+Pull request: https://github.com/campsh98-creator/Lastrico/pull/49 (against `main`, not merged, nothing deployed).
+
+| Gate | Where | Result |
+| --- | --- | --- |
+| Type-check (`tsc --noEmit`) | local + Linux CI | exit 0 / success |
+| ESLint | local + Linux CI | 0 errors; warnings only (4 in the project paths I linted locally, 53 in the whole-repository run of CI) |
+| Production build (`npm run build`) | Linux CI (inside `npm test`) and the temporary verification job | success |
+| Full test suite (`node --test tests/*.test.mjs`) | **Linux CI, commit `11750fd`** | **746 tests, 733 pass, 0 fail, 13 skipped** |
+| Same suite on the Windows development machine | local | 746 tests, 710 pass, 22 fail, 14 skipped: CRLF line endings in source-text regexes, `C:\C:\` URL paths and data checksums of a CRLF checkout. All 22 pass on Linux, so they are environment-only |
+| Deterministic routing regressions (Corso Lodi return/outbound replicas at Strong and Maximum, reroute caps, heading, OSRM reserve) | Linux CI | pass (each fixed behaviour has a test that fails on `main` and passes here) |
+| GPS: hub, recorder, state transitions, import/export, privacy | Linux CI | pass (the GPS merge adds 40 tests to the suite) |
+| TomTom offline (decoding, ranking, closures, ZTL, Maximum interaction, fallback) | Linux CI | pass; real saved tiles are an opt-in local check |
+| Mobile browser, 390x844, simulated GPS and browser geolocation | temporary verification workflow | MOBILE_PENDING |
+
+Run links: CI `https://github.com/campsh98-creator/Lastrico/actions/runs/44941739078`, verification
+`https://github.com/campsh98-creator/Lastrico/actions/runs/44941687726`.
 
 ## 8. Residual issues and GO / NO-GO
 
-RESIDUAL_PENDING
+### Residual issues
+
+| Issue | Severity | Next step |
+| --- | --- | --- |
+| Real iPhone not tested; a web page is suspended in the background, so recording shows a gap there (stated in the panel) | medium | one field run on a device, with the screen on, then the screen off |
+| Unnecessary geometric detours (trace C: three dominated detours) not reproduced by a public replica | low | record a public replica first, then a failing-before test, then a decision |
+| Strong avoidance is a product choice (stone against minutes): the Strong planner now spends one more request in Milan | low | confirm with field data |
+| TomTom: the 900 s flow-closure penalty cannot tell a standing closure from a fresh one; incidents are informational only; live peak-hour density unverified | medium | decide the standing-closure policy; no live request without explicit approval |
+| Mapillary: current API terms, share-alike against ODbL, provenance and accuracy on setts are open | blocking for any import | nothing Mapillary-derived enters road data until answered |
+| Preview deploy of `e0d8680` (recorder #46) waits for the `preview-437` environment approval | process | approved by the owner, not by this work |
+| The 22 Windows-only test failures | low | the suite passes on Linux; a CRLF-tolerant check would fix the local run |
+
+### Housekeeping before merge
+
+- Remove `.github/workflows/audit-reconciliation-verify.yml` (temporary): done in the final commit of the branch.
+- Close or supersede #37, #38, #42 and #48 after this PR is reviewed; their branches and the `recover/*` branches are kept.
+- PR #36 stays unmerged; #41 is superseded by #46.
+
+### GO / NO-GO
+
+- Routing (Corso Lodi at Maximum stays 0 m; the reroute no longer starts against the course; one more request only at the Strong planner in Milan): **GO**.
+- GPS (one watcher, one recorder, one key; recording starts without a route; start / pause / resume / stop and import / export tested): **GO** for the logic; **CONDITIONAL** for a real iPhone.
+- TomTom: **GO** for the verified behaviour, **CONDITIONAL** for closure policy and incidents.
+- Mapillary: **NO-GO** for any production use.
+- Overall: **GO to review and merge PR #49, after the mobile browser result below is green and the temporary workflow is removed.** Not merged, not deployed by this work.
