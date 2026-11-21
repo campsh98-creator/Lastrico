@@ -72,6 +72,8 @@ const MAX_NAVIGATION_PROVIDER_REQUESTS = 4;
 // Linear cost factor for a congested stretch in the penalised search (stone uses 15, tram rails 8). Provisional until
 // field data exists; the penalised route is only used if it wins the traffic-adjusted comparison.
 const TRAFFIC_COST_FACTOR = 6;
+/** FOSSGIS Valhalla answers 400 (error 176) above 100 vertices of exclude_polygons in one request; stay under it. */
+const MAX_EXCLUSION_VERTICES = 90;
 
 // Below this the two points are the same place, and there is nothing to navigate.
 const MINIMUM_ROUTE_METERS = 15;
@@ -997,8 +999,26 @@ export async function GET(request: NextRequest) {
       const residualIndices = poolSafe?.surfaceScore.roughSegmentIndices;
       if (poolSafe && residualIndices && residualIndices.size > 0
         && poolSafe.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction) {
+        // The stone left on the selected route first, then the stone of every other legal candidate: excluding only the former
+        // hands back the provider's fastest route (the stone-heavy one the pool already holds), which the pool drops as a duplicate.
         const residualSlices = extractRoughSlices(poolSafe.route.coordinates, (_prev, _curr, idx) => residualIndices.has(idx), sliceMinimumMeters);
-        const residualRings = residualSlices.map((slice) => corridorRing(slice, 4, 3)).filter((ring): ring is Coordinate[] => ring !== null).slice(0, 8);
+        const otherSlices = pool.filter((candidate) => candidate !== poolSafe && isLegalCandidate(candidate, mode))
+          .flatMap((candidate) => {
+            const indices = candidate.surfaceScore.roughSegmentIndices;
+            return indices && indices.size > 0 ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), sliceMinimumMeters) : [];
+          })
+          .sort((a, b) => polylineLength(b) - polylineLength(a));
+        const wanted = [...residualSlices];
+        for (const slice of otherSlices) if (!sliceAlreadyPenalised(slice, wanted)) wanted.push(slice);
+        // The provider refuses more than 100 vertices of exclusion polygons: keep rings in priority order while they fit.
+        const residualRings: Coordinate[][] = [];
+        let vertices = 0;
+        for (const slice of wanted) {
+          const ring = corridorRing(slice, 4, 3);
+          if (!ring || residualRings.length >= 8 || vertices + ring.length > MAX_EXCLUSION_VERTICES) continue;
+          residualRings.push(ring);
+          vertices += ring.length;
+        }
         residualExclusion.slices = residualRings.length;
         if (residualRings.length > 0) {
           residualExclusion.attempted = true;
