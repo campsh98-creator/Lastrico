@@ -35,7 +35,7 @@ export function useFreeRecording() {
   const save = useCallback((force = false) => {
     const rec = recRef.current;
     const store = storage();
-    if (!rec || !store || rec.source === "import") return;
+    if (!rec || !store || rec.source !== "device") return;
     if (!force && Date.now() - lastSaveRef.current < SAVE_EVERY_MS) return;
     lastSaveRef.current = Date.now();
     if (!saveActiveRecording(store, rec)) setMessage("Il telefono non ha spazio per salvare la registrazione: esportala appena puoi.");
