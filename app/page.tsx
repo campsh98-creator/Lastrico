@@ -20,6 +20,7 @@ import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
 import { RecordingPanel, useFreeRecording } from "@/components/RecordingPanel";
+import { gpsWatchHub } from "@/lib/gps-watch-hub";
 import { TrafficNotice, trafficUnavailableText, useTrafficStatus, type RouteTrafficInfo, type TrafficInfo } from "@/components/TrafficPanel";
 import "@/components/phase43/phase43.css";
 import {
@@ -497,7 +498,8 @@ export default function Home() {
   const announcedPaveRef = useRef<AnnouncedSection[]>([]);
   const pickingRef = useRef<PickingMode | null>(null);
   const directionsTriggerRef = useRef<HTMLButtonElement>(null);
-  const journeyWatchRef = useRef<number | null>(null);
+  /** Leaves the shared geolocation watch (see armGpsWatch). */
+  const journeyWatchRef = useRef<(() => void) | null>(null);
   const simulationTimerRef = useRef<number | null>(null);
   const navigationSessionRef = useRef(0);
   const journeyModeRef = useRef<JourneyMode | null>(null);
@@ -1587,7 +1589,7 @@ export default function Home() {
     document.addEventListener("visibilitychange", reacquireWakeLock);
     return () => {
       document.removeEventListener("visibilitychange", reacquireWakeLock);
-      if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
+      journeyWatchRef.current?.();
       if (simulationTimerRef.current !== null) window.clearInterval(simulationTimerRef.current);
       routeRequestRef.current?.controller.abort();
       addressRequestRef.current?.abort();
@@ -2732,8 +2734,8 @@ export default function Home() {
     recalculatingRef.current = false;
     navigationSessionRef.current += 1;
     journeyModeRef.current = null;
-    if (journeyWatchRef.current !== null) {
-      navigator.geolocation.clearWatch(journeyWatchRef.current);
+    if (journeyWatchRef.current) {
+      journeyWatchRef.current();
       journeyWatchRef.current = null;
     }
     if (simulationTimerRef.current !== null) {
@@ -3027,18 +3029,23 @@ export default function Home() {
     armGpsWatch(session);
   }
 
+  /**
+   * Navigation listens to the page's single geolocation watch (lib/gps-watch-hub.ts), shared with the independent recorder. A
+   * re-arm (iOS stalled the watch, or the person retried) replaces that one watch for everybody.
+   */
   function armGpsWatch(session: number) {
-    if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
     lastWatchArmedAtRef.current = Date.now();
-    journeyWatchRef.current = navigator.geolocation.watchPosition(
-      ({ coords, timestamp }) => handleGpsFix({
+    const previous = journeyWatchRef.current;
+    journeyWatchRef.current = gpsWatchHub.subscribe({
+      highAccuracy: true,
+      onFix: ({ coords, timestamp }) => handleGpsFix({
         coordinate: [coords.longitude, coords.latitude],
         accuracy: coords.accuracy,
         timestamp,
         heading: coords.heading,
         speed: coords.speed,
       }, session),
-      (error) => {
+      onError: (error) => {
         if (session !== navigationSessionRef.current) return;
         if (error.code === error.PERMISSION_DENIED) {
           finishNavigation();
@@ -3050,8 +3057,11 @@ export default function Home() {
         recordDiagnostic({ type: "signal-loss" });
         setGpsState("temporarily-unavailable");
       },
-      { enableHighAccuracy: true, maximumAge: 1500, timeout: 12000 },
-    );
+    });
+    if (previous) {
+      previous();
+      gpsWatchHub.renew();
+    }
   }
 
   function rearmGpsWatch(force = false) {

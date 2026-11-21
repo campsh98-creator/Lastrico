@@ -176,7 +176,10 @@ test("separates real GPS navigation from the automatic route simulation", async 
   ]);
 
   const fixProcessor = await readFile(fixProcessorUrl, "utf8");
-  assert.match(page, /navigator\.geolocation\.watchPosition/);
+  // Real navigation listens to the page's single geolocation watch (lib/gps-watch-hub.ts, shared with the recorder); the hub is the
+  // only caller of navigator.geolocation.watchPosition (tests/gps-watch-hub.test.mjs).
+  assert.match(page, /gpsWatchHub\.subscribe\(\{\s+highAccuracy: true,/);
+  assert.match(await readFile(new URL("../lib/gps-watch-hub.ts", import.meta.url), "utf8"), /geolocation\.watchPosition\(/);
   assert.match(page, /calculateRouteProgress/);
   // Phase 4.29: accuracy-weighted fusion replaced the fixed-weight smoothing.
   assert.match(fixProcessor, /fuseGpsPosition/);

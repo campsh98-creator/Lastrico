@@ -46,7 +46,8 @@ test("a hidden page (iOS suspension) leaves a 'page-hidden' gap, a plain silence
   markPageHidden(rec, T0 + 40_000);
   addPoint(rec, fix(400, 2));
   addPoint(rec, fix(500, 3)); // no marker: the receiver just went quiet
-  assert.deepEqual(gapsOf(rec).map((g) => [g.reason, g.seconds]), [["page-hidden", 371], ["signal", 100]]);
+  // The literal 371 only followed from the old 30 s threshold (the previous point sits at GAP_SECONDS - 1); the behaviour is unchanged.
+  assert.deepEqual(gapsOf(rec).map((g) => [g.reason, g.seconds]), [["page-hidden", 400 - (GAP_SECONDS - 1)], ["signal", 100]]);
 });
 
 test("GPX and GeoJSON never join the two sides of a gap with a line", () => {

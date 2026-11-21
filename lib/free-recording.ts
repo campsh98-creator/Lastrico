@@ -9,8 +9,15 @@
 export const RECORDING_SCHEMA = "lastrico-recording";
 export const RECORDING_VERSION = 1;
 export const RECORDING_STORAGE_KEY = "lastrico-recording-active";
-/** A silence longer than this between two points is a gap. */
-export const GAP_SECONDS = 30;
+/**
+ * A silence longer than this between two points is a gap when nothing explains it (the receiver went quiet: tunnel, bad signal).
+ * 15 s is a few hundred metres at city speed, too much to join with a straight line.
+ */
+export const GAP_SECONDS = 15;
+/** The page was hidden or the app closed for at least this long: the hole is named and the track is cut there (field trace of 20 November: 112 s and 17 s). */
+export const HIDDEN_GAP_SECONDS = 10;
+/** Recording and visible, but no usable fix for this long: the person is told, because nothing is being recorded. */
+export const STALL_SECONDS = 20;
 export const MAX_POINTS = 50_000;
 /** A fix worse than this says nothing useful about where the vehicle is. */
 export const MAX_ACCURACY_METERS = 200;
@@ -73,15 +80,49 @@ export function markPageHidden(rec: Recording, now: number) {
   if (rec.state === "recording" && !rec.silentSince) rec.silentSince = { at: now, reason: "page-hidden" };
 }
 
+/**
+ * Seconds without a usable fix since the last point (or since recording was armed), only while recording. The caller decides what to
+ * show; STALL_SECONDS is where "no GPS signal" becomes worth saying. `armedAt` is when the watch was last started (start or resume).
+ */
+export function silenceSeconds(rec: Recording, now: number, armedAt: number = rec.startedAt): number | null {
+  if (rec.state !== "recording") return null;
+  const last = rec.points[rec.points.length - 1];
+  const since = Math.max(armedAt, last ? last[0] : 0);
+  return Math.max(0, Math.round((now - since) / 1000));
+}
+
+/** How long a silence has to be to cut the track there, by what explains it. A pause or an imported segment is always a cut. */
+function gapThresholdSeconds(reason: GapReason | undefined): number {
+  if (reason === "paused" || reason === "imported") return 0;
+  if (reason === "page-hidden" || reason === "app-closed") return HIDDEN_GAP_SECONDS;
+  return GAP_SECONDS;
+}
+
 export function gapsOf(rec: Recording): RecordingGap[] {
   const gaps: RecordingGap[] = [];
+  const reasons = new Map(rec.gapReasons.map((entry) => [entry.index, entry.reason] as const));
   for (let i = 1; i < rec.points.length; i += 1) {
     const seconds = (rec.points[i][0] - rec.points[i - 1][0]) / 1000;
-    if (seconds <= GAP_SECONDS) continue;
-    const explicit = rec.gapReasons.find((entry) => entry.index === i);
-    gaps.push({ fromIndex: i - 1, toIndex: i, seconds: Math.round(seconds), reason: explicit ? explicit.reason : rec.source === "imported" ? "imported" : "signal" });
+    const explicit = reasons.get(i);
+    if (seconds <= gapThresholdSeconds(explicit)) continue;
+    gaps.push({ fromIndex: i - 1, toIndex: i, seconds: Math.round(seconds), reason: explicit ?? (rec.source === "imported" ? "imported" : "signal") });
   }
   return gaps;
+}
+
+/**
+ * Importing replaces the track on screen, so it must not happen while a device recording is running or paused: that track would be
+ * dropped without a word. The person ends or discards it first.
+ */
+export function importBlockedMessage(current: Recording | null): string | null {
+  return startBlocked(current)
+    ? "C’è una registrazione in corso: terminala o eliminala prima di importare una traccia."
+    : null;
+}
+
+/** A device recording that is running or paused is never replaced silently (by an import, or by starting another). */
+export function startBlocked(current: Recording | null): boolean {
+  return Boolean(current && current.source === "device" && (current.state === "recording" || current.state === "paused"));
 }
 
 /** Continuous pieces of the track: a gap ends one piece and starts the next, so nothing is drawn across missing data. */
@@ -115,15 +156,18 @@ export function recordingToGpx(rec: Recording): string {
 }
 
 export function recordingToGeoJson(rec: Recording) {
+  // RFC 7946 §3.1.4: a LineString has two or more positions. A lone fix between two gaps cannot be one, so it stays out of the
+  // geometry (the GPX export keeps it as a one-point segment).
+  const lines = segmentsOf(rec).filter((segment) => segment.length >= 2);
   return {
     type: "FeatureCollection" as const,
     features: [{
       type: "Feature" as const,
       properties: {
         name: "Registrazione GPS", startedAt: new Date(rec.startedAt).toISOString(), source: rec.source, points: rec.points.length,
-        gaps: gapsOf(rec), times: segmentsOf(rec).map((segment) => segment.map((p) => new Date(p[0]).toISOString())),
+        gaps: gapsOf(rec), times: lines.map((segment) => segment.map((p) => new Date(p[0]).toISOString())),
       },
-      geometry: { type: "MultiLineString" as const, coordinates: segmentsOf(rec).map((segment) => segment.map((p) => [Number(deg(p[1])), Number(deg(p[2]))])) },
+      geometry: { type: "MultiLineString" as const, coordinates: lines.map((segment) => segment.map((p) => [Number(deg(p[1])), Number(deg(p[2]))])) },
     }],
   };
 }
@@ -156,7 +200,10 @@ export function importTrack(text: string, id: string, now: number): Recording {
       for (const c of line ?? []) {
         if (!Array.isArray(c) || !validPoint(Number(c[0]), Number(c[1]))) throw new ImportError("invalid coordinate");
         if (rec.points.length >= MAX_POINTS) throw new ImportError("too many points");
-        if (first && rec.points.length > 0) t += (GAP_SECONDS + 1) * 1000;
+        if (first && rec.points.length > 0) {
+          t += (GAP_SECONDS + 1) * 1000;
+          rec.gapReasons.push({ index: rec.points.length, reason: "imported" });
+        }
         first = false;
         t += 1000;
         rec.points.push([t, Number(c[0]), Number(c[1]), null, null, null]);
@@ -164,19 +211,28 @@ export function importTrack(text: string, id: string, now: number): Recording {
     }
   } else {
     if (!/<gpx[\s>]/.test(text)) throw new ImportError("not a GPX or GeoJSON track");
-    const pattern = /<trkpt\b([^>]*)>([\s\S]*?)<\/trkpt>/g;
-    let match: RegExpExecArray | null;
-    while ((match = pattern.exec(text)) !== null) {
-      const lat = /\blat="([^"]+)"/.exec(match[1]);
-      const lon = /\blon="([^"]+)"/.exec(match[1]);
-      const time = /<time>([^<]+)<\/time>/.exec(match[2]);
-      if (!lat || !lon || !time) throw new ImportError("a track point has no position or time");
-      const at = Date.parse(time[1]);
-      if (!validPoint(Number(lon[1]), Number(lat[1])) || !Number.isFinite(at)) throw new ImportError("invalid track point");
-      if (rec.points.length >= MAX_POINTS) throw new ImportError("too many points");
-      const last = rec.points[rec.points.length - 1];
-      if (last && at <= last[0]) throw new ImportError("track points are not in time order");
-      rec.points.push([at, Number(lon[1]), Number(lat[1]), null, null, null]);
+    // Each <trkseg> is a separate piece of track: the cut between two of them is kept even when the clock says only a few seconds
+    // passed (a GPX with no <trkseg> at all is one piece).
+    const segments = [...text.matchAll(/<trkseg\b[^>]*>([\s\S]*?)<\/trkseg>/g)].map((segment) => segment[1]);
+    for (const body of segments.length > 0 ? segments : [text]) {
+      const firstOfSegment = rec.points.length;
+      const pattern = /<trkpt\b([^>]*)>([\s\S]*?)<\/trkpt>/g;
+      let match: RegExpExecArray | null;
+      while ((match = pattern.exec(body)) !== null) {
+        // `<trkpt lat=".." lon=".."/>` has no body and therefore no time: never let it swallow the next point.
+        if (/\/\s*$/.test(match[1]) || /<trkpt\b/.test(match[2])) throw new ImportError("a track point has no position or time");
+        const lat = /\blat\s*=\s*["']([^"']+)["']/.exec(match[1]);
+        const lon = /\blon\s*=\s*["']([^"']+)["']/.exec(match[1]);
+        const time = /<time>([^<]+)<\/time>/.exec(match[2]);
+        if (!lat || !lon || !time) throw new ImportError("a track point has no position or time");
+        const at = Date.parse(time[1]);
+        if (!validPoint(Number(lon[1]), Number(lat[1])) || !Number.isFinite(at)) throw new ImportError("invalid track point");
+        if (rec.points.length >= MAX_POINTS) throw new ImportError("too many points");
+        const last = rec.points[rec.points.length - 1];
+        if (last && at <= last[0]) throw new ImportError("track points are not in time order");
+        if (rec.points.length === firstOfSegment && firstOfSegment > 0) rec.gapReasons.push({ index: firstOfSegment, reason: "imported" });
+        rec.points.push([at, Number(lon[1]), Number(lat[1]), null, null, null]);
+      }
     }
   }
   if (rec.points.length < 2) throw new ImportError("a track needs at least two points");
@@ -202,11 +258,15 @@ export function recoverActiveRecording(storage: RecordingStorage, now: number): 
   if (!raw) return null;
   let rec: Recording;
   try { rec = JSON.parse(raw) as Recording; } catch { return null; }
+  if (!rec || typeof rec !== "object") return null;
   if (rec.schema !== RECORDING_SCHEMA || rec.version !== RECORDING_VERSION || !Array.isArray(rec.points) || rec.points.length === 0) return null;
   if (!rec.points.every((p) => Array.isArray(p) && p.length === 6 && validPoint(p[1], p[2]) && Number.isFinite(p[0]))) return null;
+  // A record without a usable gap list is still a recording: the gaps are then only the ones the clock shows.
+  rec.gapReasons = Array.isArray(rec.gapReasons)
+    ? rec.gapReasons.filter((entry) => entry && Number.isInteger(entry.index) && entry.index < rec.points.length)
+    : [];
   if (rec.state === "stopped") return rec;
   rec.state = "paused";
-  rec.gapReasons = rec.gapReasons.filter((entry) => entry.index < rec.points.length);
   // The next point after resuming follows a closed app, not a plain pause; the silence starts at the last point that was saved.
   rec.silentSince = { at: Math.min(now, rec.points[rec.points.length - 1][0]), reason: "app-closed" };
   return rec;
