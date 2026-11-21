@@ -289,6 +289,13 @@ export type NavigationFixDecision<T extends ProgressInstruction> =
       position: Coordinate;
       markerMoved: boolean;
       heading: number;
+      /**
+       * The direction the vehicle is really travelling, in degrees: the device's own course when it reports one while
+       * moving, else the course of the smoothed fixes while moving, else null (stationary, where any heading is stale).
+       * Unlike `heading` and `display.heading`, it is never taken from the route the vehicle is matched to, so it stays
+       * correct on the wrong carriageway, which is exactly when a reroute needs it.
+       */
+      travelCourse: number | null;
       elapsedSeconds: number;
       /** What the app should draw: on the road when the match is confident, else the fused fix. */
       display: { position: Coordinate; heading: number; snapped: boolean; progressMeters?: number };
@@ -424,7 +431,8 @@ export function processGpsFix<T extends ProgressInstruction>(
       : current.travelledMeters,
   };
   const unsnapped = { position: markerMoved ? position : previous ?? position, heading, snapped: false };
-  const accepted = { outcome: "accepted" as const, position, markerMoved, heading, elapsedSeconds, quality };
+  const travelCourseNow = movingWithReportedHeading ? reportedHeading! : moving ? heading : null;
+  const accepted = { outcome: "accepted" as const, position, markerMoved, heading, travelCourse: travelCourseNow, elapsedSeconds, quality };
 
   if (!context.route) {
     next.displayHeading = heading;

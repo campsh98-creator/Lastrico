@@ -322,14 +322,18 @@ test("a caller's cancellation still reaches an in-flight provider call and clear
   assert.equal(timers.live.size, 0, "cleared on cancellation too");
 });
 
-test("forwards initialHeading only on the origin location when finite", async (t) => {
+test("forwards startHeading from ProviderMeter only on the origin location when finite", async (t) => {
   skipInterval(t);
   const requests = [];
   t.mock.method(globalThis, "fetch", async (_url, init) => {
     requests.push(JSON.parse(init.body));
     return json({ trip: trip() });
   });
-  await fetchEngineRoutes(coordinates, "car", false, fakeNow + 18_000, new AbortController().signal, undefined, 140.4);
+  await fetchEngineRoutes(coordinates, "car", false, fakeNow + 18_000, new AbortController().signal, {
+    requests: 0,
+    limit: 4,
+    startHeading: 140.4,
+  });
   assert.equal(requests[0].locations[0].heading, 140);
   assert.equal(requests[0].locations[0].heading_tolerance, 60);
   assert.equal("heading" in requests[0].locations[1], false);

@@ -66,7 +66,7 @@ test("actively builds and scores genuine anti-pave alternatives", async () => {
   const paveData = JSON.parse(paveDataText);
 
   assert.ok(paveData.length > 0, "the bundled road-intelligence dataset must not be empty");
-  assert.match(routing, /fetchEngineRoutes\(\[start, end\], mode, true, deadline, request\.signal, meter, heading\)/);
+  assert.match(routing, /fetchEngineRoutes\(\[start, end\], mode, true, deadline, request\.signal, meter\)/);
   assert.match(routing, /navigationRequest \? NAVIGATION_ROUTE_BUDGET_MS : ROUTE_BUDGET_MS/);
   assert.match(routing, /navigationRequest \? 1 : 3/);
   assert.match(providers, /fetchValhallaRoutes/);

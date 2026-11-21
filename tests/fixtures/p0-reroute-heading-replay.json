@@ -1,0 +1,13 @@
+{
+  "source": "Real field trace of 20 November 2026 (car, Milan, Piazzale Lodi to San Babila), reduced to numbers. No coordinates, timestamps or file names are kept.",
+  "reroutes": [
+    { "speedMetersPerSecond": 5.8, "courseDegrees": 294, "newRouteStartBearingDegrees": 6 },
+    { "speedMetersPerSecond": 5.1, "courseDegrees": 311, "newRouteStartBearingDegrees": 131 },
+    { "speedMetersPerSecond": 5.8, "courseDegrees": 311, "newRouteStartBearingDegrees": 131 },
+    { "speedMetersPerSecond": 4.7, "courseDegrees": 311, "newRouteStartBearingDegrees": 131 },
+    { "speedMetersPerSecond": 4.7, "courseDegrees": 311, "newRouteStartBearingDegrees": 131 },
+    { "speedMetersPerSecond": 4.0, "courseDegrees": 311, "newRouteStartBearingDegrees": 131 },
+    { "speedMetersPerSecond": 3.9, "courseDegrees": 311, "newRouteStartBearingDegrees": 311 }
+  ],
+  "note": "The first reroute turned the car's course by 72 degrees (a real turn). Reroutes 2 to 6 started 180 degrees against the course and asked for a U-turn 93 to 365 m ahead; the seventh started the right way."
+}

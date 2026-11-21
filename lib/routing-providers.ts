@@ -381,7 +381,25 @@ async function abortableDelay(milliseconds: number, signal: AbortSignal) {
  * Counts the provider requests one calculation really starts (retries and the OSRM fallback
  * included) and refuses to start another one once the limit is reached.
  */
-export type ProviderMeter = { requests: number; limit: number };
+export type ProviderMeter = {
+  requests: number;
+  limit: number;
+  /**
+   * Direction of travel in degrees (0-359) of a moving vehicle at the first point. When present, every Valhalla request of the
+   * calculation (base, penalised, refined, detour, rail and traffic searches alike) asks for the road edge whose direction is
+   * within `START_HEADING_TOLERANCE_DEGREES` of it, so a reroute cannot start on the opposite carriageway of a two-way street
+   * and then ask for an immediate U-turn. The OSRM fallback has no such option and ignores it.
+   */
+  startHeading?: number;
+};
+
+export const START_HEADING_TOLERANCE_DEGREES = 60;
+
+/** A heading is only meaningful as a finite number; anything else is dropped rather than sent to the provider. */
+export function normalizedHeading(value: number | null | undefined): number | undefined {
+  if (typeof value !== "number" || !Number.isFinite(value)) return undefined;
+  return Math.round(((value % 360) + 360) % 360) % 360;
+}
 
 function takeProviderRequest(meter?: ProviderMeter) {
   if (!meter) return true;
@@ -424,22 +442,17 @@ async function fetchValhallaRoutes(
   linearCostFactors?: { shape: string; factor: number }[],
   excludePolygons?: Coordinate[][],
   meter?: ProviderMeter,
-  initialHeading?: number,
 ): Promise<EngineRoute[]> {
   const profile = ROUTING_PROFILES[mode];
   const requestBody = JSON.stringify({
-    locations: points.map(([lon, lat], index) => {
-      const isStart = index === 0;
-      const isEnd = index === points.length - 1;
-      return {
-        lon,
-        lat,
-        type: isStart || isEnd ? "break" : "through",
-        ...(isStart && initialHeading !== undefined
-          ? { heading: Math.round(initialHeading), heading_tolerance: 60 }
-          : {}),
-      };
-    }),
+    locations: points.map(([lon, lat], index) => ({
+      lon,
+      lat,
+      type: index === 0 || index === points.length - 1 ? "break" : "through",
+      ...(index === 0 && normalizedHeading(meter?.startHeading) !== undefined
+        ? { heading: normalizedHeading(meter?.startHeading), heading_tolerance: START_HEADING_TOLERANCE_DEGREES }
+        : {}),
+    })),
     costing: profile,
     costing_options: valhallaCostingOptions(mode),
     ...(linearCostFactors && linearCostFactors.length > 0
@@ -505,9 +518,8 @@ export async function fetchValhallaCustomizedRoutes(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   meter?: ProviderMeter,
-  initialHeading?: number,
 ): Promise<EngineRoute[]> {
-  return fetchValhallaRoutes(points, mode, alternatives, deadline, signal, linearCostFactors, undefined, meter, initialHeading);
+  return fetchValhallaRoutes(points, mode, alternatives, deadline, signal, linearCostFactors, undefined, meter);
 }
 
 /**
@@ -522,9 +534,8 @@ export async function fetchValhallaRouteExcluding(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   meter?: ProviderMeter,
-  initialHeading?: number,
 ): Promise<EngineRoute | null> {
-  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, undefined, excludePolygons, meter, initialHeading);
+  const routes = await fetchValhallaRoutes(points, mode, false, deadline, signal, undefined, excludePolygons, meter);
   return routes[0] ?? null;
 }
 
@@ -535,9 +546,8 @@ export async function fetchValhallaCustomizedRoute(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   meter?: ProviderMeter,
-  initialHeading?: number,
 ): Promise<EngineRoute | null> {
-  const routes = await fetchValhallaCustomizedRoutes(points, mode, linearCostFactors, false, deadline, signal, meter, initialHeading);
+  const routes = await fetchValhallaCustomizedRoutes(points, mode, linearCostFactors, false, deadline, signal, meter);
   return routes[0] ?? null;
 }
 
@@ -664,10 +674,9 @@ export async function fetchEngineRoutes(
   deadline = Date.now() + ROUTE_BUDGET_MS,
   signal: AbortSignal = new AbortController().signal,
   meter?: ProviderMeter,
-  initialHeading?: number,
 ) {
   if (signal.aborted || Date.now() >= deadline) return [];
-  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline, signal, undefined, undefined, meter, initialHeading);
+  const valhallaRoutes = await fetchValhallaRoutes(points, mode, alternatives, deadline, signal, undefined, undefined, meter);
   if (valhallaRoutes.length) return valhallaRoutes;
   // A generic driving graph is a valid degraded car route, but would be unsafe and
   // misleading for bicycle or motorcycle mode. Those modes fail explicitly.

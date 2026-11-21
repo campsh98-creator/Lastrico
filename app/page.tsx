@@ -2213,6 +2213,7 @@ export default function Home() {
       journeySession?: number;
       preferences?: RoutePreferences;
       endOverride?: LocationChoice;
+      /** Reroutes only: the direction the vehicle is travelling (degrees), so the new route cannot start the other way. */
       heading?: number | null;
     } = {},
   ) {
@@ -2337,8 +2338,8 @@ export default function Home() {
       const authorisedZtl = authorisedZtlFor(ztlAuthorisationsRef.current, requestedMode);
       if (authorisedZtl.length) params.set("ztl", authorisedZtl.join(","));
       if (options.journeySession !== undefined) params.set("navigation", "1");
-      if (typeof options.heading === "number" && Number.isFinite(options.heading)) {
-        params.set("heading", String(Math.round(((options.heading % 360) + 360) % 360)));
+      if (options.journeySession !== undefined && typeof options.heading === "number" && Number.isFinite(options.heading)) {
+        params.set("heading", String(Math.round(((options.heading % 360) + 360) % 360) % 360));
       }
       window.clearTimeout(requestTimeout);
       requestTimeout = window.setTimeout(abortWithTimeout, isReroute ? REROUTE_TIMEOUT_MS : ROUTE_TIMEOUT_MS);
@@ -2903,7 +2904,8 @@ export default function Home() {
           force: true,
           journeySession: session,
           preferences: navigationPreferencesRef.current,
-          heading: decision.display.heading ?? decision.heading ?? null,
+          // The vehicle's own course while it moves, never the matched route's bearing and never a stale value at a standstill.
+          heading: decision.travelCourse,
         },
       );
       return;

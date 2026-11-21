@@ -30,7 +30,7 @@ import {
   shouldRefineDuplicateWithStone,
   stopsOnlyWhenClean,
 } from "@/lib/surface-aware-routing";
-import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, withProviderTimeout, type ProviderMeter } from "@/lib/routing-providers";
+import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, normalizedHeading, withProviderTimeout, type ProviderMeter } from "@/lib/routing-providers";
 import { TrafficSession } from "@/lib/traffic/session";
 import type { RouteTraffic } from "@/lib/traffic/flow";
 import { buildRoughSections } from "@/lib/rough-sections";
@@ -73,6 +73,8 @@ const MAX_NAVIGATION_PROVIDER_REQUESTS = 4;
 // Linear cost factor for a congested stretch in the penalised search (stone uses 15, tram rails 8). Provisional until
 // field data exists; the penalised route is only used if it wins the traffic-adjusted comparison.
 const TRAFFIC_COST_FACTOR = 6;
+/** FOSSGIS Valhalla answers 400 (error 176) above 100 vertices of exclude_polygons in one request; stay under it. */
+const MAX_EXCLUSION_VERTICES = 90;
 
 // Below this the two points are the same place, and there is nothing to navigate.
 const MINIMUM_ROUTE_METERS = 15;
@@ -537,10 +539,9 @@ export async function GET(request: NextRequest) {
   // Optional live traffic (provider tiles through the quota ledger, lib/traffic). Not requested: nothing below changes.
   const trafficRequested = request.nextUrl.searchParams.get("traffic") === "live";
   const maximumExtraMinutes = parseExtraMinutes(request.nextUrl.searchParams.get("maxExtraMinutes"));
+  // Direction of travel (degrees) of a vehicle that is rerouting; anything that is not a finite number is ignored.
   const headingParam = request.nextUrl.searchParams.get("heading");
-  const heading = headingParam !== null && Number.isFinite(Number(headingParam))
-    ? ((Number(headingParam) % 360) + 360) % 360
-    : undefined;
+  const parsedHeading = headingParam !== null && headingParam.trim() !== "" ? normalizedHeading(Number(headingParam)) : undefined;
   // Phase 4.31: departure time (Milan local, "YYYY-MM-DDTHH:MM"; now when absent) and the ZTL
   // areas the person is authorised for in this mode. Unknown area ids are ignored.
   const departureParam = request.nextUrl.searchParams.get("departure");
@@ -584,8 +585,17 @@ export async function GET(request: NextRequest) {
     const meter: ProviderMeter = {
       requests: 0,
       limit: navigationRequest ? MAX_NAVIGATION_PROVIDER_REQUESTS : MAX_PLANNER_PROVIDER_REQUESTS,
+      // A reroute starts where a moving vehicle is, facing a direction: every provider request of the calculation carries it.
+      // The planner's start is an address, which has no heading, so the parameter is ignored there.
+      startHeading: navigationRequest ? parsedHeading : undefined,
     };
-    const rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter, heading);
+    let rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter);
+    // A heading no road edge near the vehicle satisfies must cost a request, not the reroute: ask once more without it
+    // (counted by the meter like any other request) and keep the rest of the calculation heading-free.
+    if (!rawBaseRoutes.length && meter.startHeading !== undefined && meter.requests < meter.limit) {
+      meter.startHeading = undefined;
+      rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter);
+    }
     const baseRoutingReadyAt = performance.now();
     if (!rawBaseRoutes.length) throw new Error("Nessun percorso");
     const providerRequestBudgetLeft = () => meter.requests < meter.limit;
@@ -701,7 +711,7 @@ export async function GET(request: NextRequest) {
       const rings = blockedSlices.map((slice) => corridorRing(slice, 4, 6)).filter((ring): ring is Coordinate[] => ring !== null).slice(0, 8);
       if (rings.length > 0) {
         const avoiding = await fetchValhallaRouteExcluding([start, end], mode, rings,
-          Math.min(deadline - 1_000, Date.now() + 3_500), request.signal, meter, heading);
+          Math.min(deadline - 1_000, Date.now() + 3_500), request.signal, meter);
         if (avoiding) {
           await ensureRouteCovered(avoiding.coordinates);
           await adoptTraffic(avoiding);
@@ -815,7 +825,6 @@ export async function GET(request: NextRequest) {
           Math.min(deadline - 2_000, Date.now() + 3_500),
           request.signal,
           meter,
-          heading,
         );
         if (!first) surfaceAwareFailed = true;
         if (first) {
@@ -875,7 +884,7 @@ export async function GET(request: NextRequest) {
           const stoneSlices = extractRoughSlices(fastestBase.coordinates, (_prev, _curr, idx) => Boolean(preliminaryFast.surfaceScore.roughSegmentIndices?.has(idx)), sliceMinimumMeters);
           const factors = [...buildLinearCostFactors(stoneSlices, 15.0, 4).factors, ...buildLinearCostFactors(railSlices, 8.0, 6).factors, ...trafficFactors];
           railGeneration.attempted = true;
-            const railRoute = await fetchValhallaCustomizedRoute([start, end], mode, factors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter, heading);
+            const railRoute = await fetchValhallaCustomizedRoute([start, end], mode, factors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter);
           if (!railRoute) railGeneration.reason = "provider-failed";
           else {
             await ensureRouteCovered(railRoute.coordinates);
@@ -894,7 +903,7 @@ export async function GET(request: NextRequest) {
       && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
       && deadline - Date.now() >= 4_000 && providerRequestBudgetLeft()) {
       trafficSearch.attempted = true;
-      const route = await fetchValhallaCustomizedRoute([start, end], mode, trafficFactors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter, heading);
+      const route = await fetchValhallaCustomizedRoute([start, end], mode, trafficFactors, Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter);
       if (route) {
         await ensureRouteCovered(route.coordinates);
         await adoptTraffic(route);
@@ -941,7 +950,6 @@ export async function GET(request: NextRequest) {
           deadline,
           request.signal,
           meter,
-          heading,
         );
         detourResponses.push(routes);
         await ensureRouteCovered(routes.flatMap((r) => r.coordinates));
@@ -982,13 +990,62 @@ export async function GET(request: NextRequest) {
           Math.min(deadline - (navigationRequest ? 500 : 2_000), Date.now() + (navigationRequest ? 2_500 : 3_500)),
           request.signal,
           meter,
-          heading,
         );
         if (refinedRoute) {
           await ensureRouteCovered(refinedRoute.coordinates);
           await adoptTraffic(refinedRoute);
           if (keepsPenalisedRoute(scoredCandidate(refinedRoute, "surface-aware-valhalla-refined"))) surfaceAwareRoutes.push(refinedRoute);
           else surfaceAwareDiscarded += 1;
+        }
+      }
+    }
+    // Residual stone at "maximum" avoidance (Milan planner). A multiplicative penalty on a short slice is worth only a few seconds
+    // (25 m of stone at 15x is about the same as a 250 m detour), so the penalised searches above hand back the same stone-bearing
+    // route when a clean one costs a little more. One exclusion search around what is left asks for the route that really avoids it;
+    // the selection then decides on time as usual. One provider request at most, inside the existing cap.
+    const residualExclusion = { attempted: false, slices: 0, generated: false };
+    if (refineWhileStoneLeft && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
+      && deadline - Date.now() >= 4_000 && providerRequestBudgetLeft()) {
+      const pool = [...baseRoutes, ...surfaceAwareRoutes, ...detourResponses.flat()]
+        .map((route, index) => scoredCandidate(route, `residual-check-${index + 1}`));
+      const poolFast = fastestLegalCandidate(pool, mode);
+      const poolSafe = poolFast ? selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes, policy) : null;
+      const residualIndices = poolSafe?.surfaceScore.roughSegmentIndices;
+      if (poolSafe && residualIndices && residualIndices.size > 0
+        && poolSafe.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction) {
+        // The stone left on the selected route first, then the stone of every other legal candidate: excluding only the former
+        // hands back the provider's fastest route (the stone-heavy one the pool already holds), which the pool drops as a duplicate.
+        const residualSlices = extractRoughSlices(poolSafe.route.coordinates, (_prev, _curr, idx) => residualIndices.has(idx), sliceMinimumMeters);
+        const otherSlices = pool.filter((candidate) => candidate !== poolSafe && isLegalCandidate(candidate, mode))
+          .flatMap((candidate) => {
+            const indices = candidate.surfaceScore.roughSegmentIndices;
+            return indices && indices.size > 0 ? extractRoughSlices(candidate.route.coordinates, (_prev, _curr, idx) => indices.has(idx), sliceMinimumMeters) : [];
+          })
+          .sort((a, b) => polylineLength(b) - polylineLength(a));
+        const wanted = [...residualSlices];
+        for (const slice of otherSlices) if (!sliceAlreadyPenalised(slice, wanted)) wanted.push(slice);
+        // The provider refuses more than 100 vertices of exclusion polygons: keep rings in priority order while they fit.
+        const residualRings: Coordinate[][] = [];
+        let vertices = 0;
+        for (const slice of wanted) {
+          const ring = corridorRing(slice, 4, 3);
+          if (!ring || residualRings.length >= 8 || vertices + ring.length > MAX_EXCLUSION_VERTICES) continue;
+          residualRings.push(ring);
+          vertices += ring.length;
+        }
+        residualExclusion.slices = residualRings.length;
+        if (residualRings.length > 0) {
+          residualExclusion.attempted = true;
+          const clean = await fetchValhallaRouteExcluding([start, end], mode, residualRings,
+            Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter);
+          if (clean) {
+            await ensureRouteCovered(clean.coordinates);
+            await adoptTraffic(clean);
+            if (keepsPenalisedRoute(scoredCandidate(clean, "surface-aware-valhalla-residual"))) {
+              surfaceAwareRoutes.push(clean);
+              residualExclusion.generated = true;
+            } else surfaceAwareDiscarded += 1;
+          }
         }
       }
     }
@@ -1197,6 +1254,8 @@ export async function GET(request: NextRequest) {
           // Phase 4.37: penalised routes dropped for adding confirmed stone, and provider requests used.
           discarded: surfaceAwareDiscarded,
           providerRequests: meter.requests,
+          // Exclusion search around the stone the penalised searches left ("maximum" only): whether it ran and gave a route.
+          residualExclusion,
         },
       },
       optimization: {
