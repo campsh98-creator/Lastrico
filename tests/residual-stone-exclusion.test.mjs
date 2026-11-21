@@ -59,7 +59,7 @@ test("maximum avoidance: stone left after the penalised searches triggers one ex
   const { status, payload, requests } = await run({ avoid: "maximum", exclusion: "zero-stone" });
   assert.equal(status, 200);
   const exclusions = exclusionRequests(requests);
-  assert.equal(exclusions.length, 1, "one exclusion request");
+  assert.equal(exclusions.length, 1, "one exclusion request: " + JSON.stringify({ search: payload.antiPave.search, status: payload.antiPave.status, cands: payload.candidateDiagnostics.map((d) => [d.source, d.seconds, d.confirmedPaveMeters, d.selectionVerdict]), requests: requests.map((r) => [r.method, String(r.body).length, String(r.body).includes("linear_cost_factors")]) }));
   const polygons = JSON.parse(exclusions[0].body).exclude_polygons;
   assert.ok(polygons.length >= 1 && polygons.length <= 8);
   for (const ring of polygons) {
