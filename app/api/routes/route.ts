@@ -983,6 +983,38 @@ export async function GET(request: NextRequest) {
         }
       }
     }
+    // Residual stone at "maximum" avoidance (Milan planner). A multiplicative penalty on a short slice is worth only a few seconds
+    // (25 m of stone at 15x is about the same as a 250 m detour), so the penalised searches above hand back the same stone-bearing
+    // route when a clean one costs a little more. One exclusion search around what is left asks for the route that really avoids it;
+    // the selection then decides on time as usual. One provider request at most, inside the existing cap.
+    const residualExclusion = { attempted: false, slices: 0, generated: false };
+    if (refineWhileStoneLeft && fastestBase.provider === "valhalla-fossgis" && !request.signal.aborted
+      && deadline - Date.now() >= 4_000 && providerRequestBudgetLeft()) {
+      const pool = [...baseRoutes, ...surfaceAwareRoutes, ...detourResponses.flat()]
+        .map((route, index) => scoredCandidate(route, `residual-check-${index + 1}`));
+      const poolFast = fastestLegalCandidate(pool, mode);
+      const poolSafe = poolFast ? selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes, policy) : null;
+      const residualIndices = poolSafe?.surfaceScore.roughSegmentIndices;
+      if (poolSafe && residualIndices && residualIndices.size > 0
+        && poolSafe.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction) {
+        const residualSlices = extractRoughSlices(poolSafe.route.coordinates, (_prev, _curr, idx) => residualIndices.has(idx), sliceMinimumMeters);
+        const residualRings = residualSlices.map((slice) => corridorRing(slice, 4, 3)).filter((ring): ring is Coordinate[] => ring !== null).slice(0, 8);
+        residualExclusion.slices = residualRings.length;
+        if (residualRings.length > 0) {
+          residualExclusion.attempted = true;
+          const clean = await fetchValhallaRouteExcluding([start, end], mode, residualRings,
+            Math.min(deadline - 2_000, Date.now() + 3_500), request.signal, meter);
+          if (clean) {
+            await ensureRouteCovered(clean.coordinates);
+            await adoptTraffic(clean);
+            if (keepsPenalisedRoute(scoredCandidate(clean, "surface-aware-valhalla-residual"))) {
+              surfaceAwareRoutes.push(clean);
+              residualExclusion.generated = true;
+            } else surfaceAwareDiscarded += 1;
+          }
+        }
+      }
+    }
     const generated = [
       ...baseRoutes.map((route, index) => ({ route, source: `base-${index + 1}` })),
       ...surfaceAwareSourcesOf(),
@@ -1188,6 +1220,8 @@ export async function GET(request: NextRequest) {
           // Phase 4.37: penalised routes dropped for adding confirmed stone, and provider requests used.
           discarded: surfaceAwareDiscarded,
           providerRequests: meter.requests,
+          // Exclusion search around the stone the penalised searches left ("maximum" only): whether it ran and gave a route.
+          residualExclusion,
         },
       },
       optimization: {
