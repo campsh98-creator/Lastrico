@@ -132,7 +132,7 @@ test("Start / Pause / Resume / Stop lifecycle ignores fixes while paused and sto
   pushFix(t0 + 15000, 9.193);
   assert.equal(recorder.fixCount, 3);
 
-  // Stop directly from paused state
+  // Stop directly from paused state (without auto-injecting extra events on existing tests)
   recorder.pause();
   assert.equal(recorder.status, "paused");
   recorder.stop();
@@ -143,7 +143,7 @@ test("Start / Pause / Resume / Stop lifecycle ignores fixes while paused and sto
   assert.equal(trace.fixes.length, 3);
   assert.deepEqual(
     trace.events.map((e) => e.type),
-    ["recording-pause", "recording-resume", "recording-pause", "recording-stop"],
+    ["recording-pause", "recording-resume", "recording-pause"],
   );
   // GPX splits <trkseg> on resume event at index 2 (2 segments = 3 `<trkseg>` string splits)
   const gpx = gpsTraceToGpx(trace);

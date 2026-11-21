@@ -3365,6 +3365,7 @@ export default function Home() {
 
   function stopStandaloneRecording() {
     const recorder = traceRecorderRef.current;
+    if (recorder && recorder.status === "recording") recorder.recordEvent("recording-stop");
     recorder?.stop();
     traceRecorderRef.current = null;
     standaloneRecordingRef.current = false;

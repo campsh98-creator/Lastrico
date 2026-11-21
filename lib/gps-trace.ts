@@ -820,7 +820,6 @@ export function createGpsTraceRecorder(
     stop() {
       if (status === "paused" && summary) status = "recording";
       if (status === "recording" && summary) {
-        pendingEvents.push({ atFix: summary.fixes, type: "recording-stop" });
         recorder.flush();
       }
       pendingFixes = [];
