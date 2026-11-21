@@ -63,7 +63,10 @@ test("maximum avoidance: stone left after the penalised searches triggers one ex
   const exclusions = exclusionRequests(requests);
   assert.equal(exclusions.length, 1, "one exclusion request: " + JSON.stringify({ search: payload.antiPave.search, status: payload.antiPave.status, cands: payload.candidateDiagnostics.map((d) => [d.source, d.seconds, d.confirmedPaveMeters, d.selectionVerdict]), requests: requests.map((r) => [r.method, String(r.body).length, String(r.body).includes("linear_cost_factors")]) }));
   const polygons = JSON.parse(exclusions[0].body).exclude_polygons;
-  assert.ok(polygons.length >= 1 && polygons.length <= 8);
+  // The stone of the fastest route (280 m) as well as the 50 m left: excluding only the latter returns the fastest route, which the
+  // pool drops as a duplicate (seen on the preview: the exclusion route was generated and never competed).
+  assert.ok(polygons.length >= 2 && polygons.length <= 8, `${polygons.length} rings`);
+  assert.ok(polygons.reduce((sum, ring) => sum + ring.length, 0) <= 100, "the provider refuses more than 100 exclusion vertices");
   for (const ring of polygons) {
     assert.deepEqual(ring[0], ring.at(-1), "closed ring");
     const [startLon, startLat] = outbound.start.split(",").map(Number);
