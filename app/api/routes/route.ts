@@ -29,7 +29,7 @@ import {
   refinesWhileStoneLeft,
   stopsOnlyWhenClean,
 } from "@/lib/surface-aware-routing";
-import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, withProviderTimeout, type ProviderMeter } from "@/lib/routing-providers";
+import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, normalizedHeading, withProviderTimeout, type ProviderMeter } from "@/lib/routing-providers";
 import { TrafficSession } from "@/lib/traffic/session";
 import type { RouteTraffic } from "@/lib/traffic/flow";
 import { buildRoughSections } from "@/lib/rough-sections";
@@ -536,6 +536,9 @@ export async function GET(request: NextRequest) {
   // Optional live traffic (provider tiles through the quota ledger, lib/traffic). Not requested: nothing below changes.
   const trafficRequested = request.nextUrl.searchParams.get("traffic") === "live";
   const maximumExtraMinutes = parseExtraMinutes(request.nextUrl.searchParams.get("maxExtraMinutes"));
+  // Direction of travel (degrees) of a vehicle that is rerouting; anything that is not a finite number is ignored.
+  const headingParam = request.nextUrl.searchParams.get("heading");
+  const parsedHeading = headingParam !== null && headingParam.trim() !== "" ? normalizedHeading(Number(headingParam)) : undefined;
   // Phase 4.31: departure time (Milan local, "YYYY-MM-DDTHH:MM"; now when absent) and the ZTL
   // areas the person is authorised for in this mode. Unknown area ids are ignored.
   const departureParam = request.nextUrl.searchParams.get("departure");
@@ -579,8 +582,17 @@ export async function GET(request: NextRequest) {
     const meter: ProviderMeter = {
       requests: 0,
       limit: navigationRequest ? MAX_NAVIGATION_PROVIDER_REQUESTS : MAX_PLANNER_PROVIDER_REQUESTS,
+      // A reroute starts where a moving vehicle is, facing a direction: every provider request of the calculation carries it.
+      // The planner's start is an address, which has no heading, so the parameter is ignored there.
+      startHeading: navigationRequest ? parsedHeading : undefined,
     };
-    const rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter);
+    let rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter);
+    // A heading no road edge near the vehicle satisfies must cost a request, not the reroute: ask once more without it
+    // (counted by the meter like any other request) and keep the rest of the calculation heading-free.
+    if (!rawBaseRoutes.length && meter.startHeading !== undefined && meter.requests < meter.limit) {
+      meter.startHeading = undefined;
+      rawBaseRoutes = await fetchEngineRoutes([start, end], mode, true, deadline, request.signal, meter);
+    }
     const baseRoutingReadyAt = performance.now();
     if (!rawBaseRoutes.length) throw new Error("Nessun percorso");
     const providerRequestBudgetLeft = () => meter.requests < meter.limit;

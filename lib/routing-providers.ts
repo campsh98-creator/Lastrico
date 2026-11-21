@@ -381,7 +381,25 @@ async function abortableDelay(milliseconds: number, signal: AbortSignal) {
  * Counts the provider requests one calculation really starts (retries and the OSRM fallback
  * included) and refuses to start another one once the limit is reached.
  */
-export type ProviderMeter = { requests: number; limit: number };
+export type ProviderMeter = {
+  requests: number;
+  limit: number;
+  /**
+   * Direction of travel in degrees (0-359) of a moving vehicle at the first point. When present, every Valhalla request of the
+   * calculation (base, penalised, refined, detour, rail and traffic searches alike) asks for the road edge whose direction is
+   * within `START_HEADING_TOLERANCE_DEGREES` of it, so a reroute cannot start on the opposite carriageway of a two-way street
+   * and then ask for an immediate U-turn. The OSRM fallback has no such option and ignores it.
+   */
+  startHeading?: number;
+};
+
+export const START_HEADING_TOLERANCE_DEGREES = 60;
+
+/** A heading is only meaningful as a finite number; anything else is dropped rather than sent to the provider. */
+export function normalizedHeading(value: number | null | undefined): number | undefined {
+  if (typeof value !== "number" || !Number.isFinite(value)) return undefined;
+  return Math.round(((value % 360) + 360) % 360) % 360;
+}
 
 function takeProviderRequest(meter?: ProviderMeter) {
   if (!meter) return true;
@@ -431,6 +449,9 @@ async function fetchValhallaRoutes(
       lon,
       lat,
       type: index === 0 || index === points.length - 1 ? "break" : "through",
+      ...(index === 0 && normalizedHeading(meter?.startHeading) !== undefined
+        ? { heading: normalizedHeading(meter?.startHeading), heading_tolerance: START_HEADING_TOLERANCE_DEGREES }
+        : {}),
     })),
     costing: profile,
     costing_options: valhallaCostingOptions(mode),
