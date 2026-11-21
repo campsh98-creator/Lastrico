@@ -114,8 +114,8 @@ export type TraceRoute<T extends ProgressInstruction = ProgressInstruction> = {
   /** v2: the kind of route that was shown ("fast" or "safe", the anti-pavé route). */
   objective?: "fast" | "safe";
   /**
-   * What the journey asked for. It stays "safe" when the fastest route is shown because no cleaner one exists, so a trace tells
-   * "the safe objective had no alternative" from "the person chose the fastest route". Optional: older traces do not have it.
+   * What the journey asked for. It stays "safe" when the fastest route is shown because no cleaner one exists, so a trace can
+   * tell a safe objective without an alternative apart from a person who chose the fastest route. Optional: older traces lack it.
    */
   journeyObjective?: "fast" | "safe";
   /** v2: the pavé the route was expected to have. */
