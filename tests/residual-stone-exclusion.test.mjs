@@ -66,7 +66,12 @@ test("maximum avoidance: stone left after the penalised searches triggers one ex
   assert.ok(polygons.length >= 1 && polygons.length <= 8);
   for (const ring of polygons) {
     assert.deepEqual(ring[0], ring.at(-1), "closed ring");
-    for (const [lon, lat] of ring) assert.ok(lon > 9.17 && lon < 9.21 && lat > 45.44 && lat < 45.46, "around stone on the journey");
+    const [startLon, startLat] = outbound.start.split(",").map(Number);
+    const [endLon, endLat] = outbound.end.split(",").map(Number);
+    for (const [lon, lat] of ring) {
+      assert.ok(lon > Math.min(startLon, endLon) - 0.005 && lon < Math.max(startLon, endLon) + 0.005
+        && lat > Math.min(startLat, endLat) - 0.005 && lat < Math.max(startLat, endLat) + 0.005, `ring vertex ${lon},${lat} is outside the journey`);
+    }
   }
   assert.equal(payload.antiPave.search.residualExclusion.attempted, true);
   assert.equal(payload.antiPave.search.residualExclusion.generated, true);
