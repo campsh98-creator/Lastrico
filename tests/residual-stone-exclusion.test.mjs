@@ -39,7 +39,7 @@ async function run({ avoid, navigation = false, exclusion, stuck = false }) {
       return new Response("{}", { status: 500 });
     }
     try {
-      const entry = await readFixture(sha256(JSON.stringify(request)));
+      const entry = await readFixture(stuck && requests.length === 3 ? STUCK_KEY : sha256(JSON.stringify(request)));
       return new Response(entry.body, { status: entry.status, headers: { "Content-Type": "application/json" } });
     } catch {
       return new Response("{}", { status: 500 }); // a request nobody recorded: the provider has nothing for it
