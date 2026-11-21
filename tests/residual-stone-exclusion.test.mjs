@@ -58,7 +58,7 @@ async function run({ avoid, navigation = false, exclusion, stuck = false }) {
 const exclusionRequests = (requests) => requests.filter((r) => String(r.body).includes("exclude_polygons"));
 
 test("maximum avoidance: stone left after the penalised searches triggers one exclusion search and the clean route is chosen", async () => {
-  const { status, payload, requests } = await run({ avoid: "maximum", exclusion: "zero-stone" });
+  const { status, payload, requests } = await run({ avoid: "maximum", exclusion: "zero-stone", stuck: true });
   assert.equal(status, 200);
   const exclusions = exclusionRequests(requests);
   assert.equal(exclusions.length, 1, "one exclusion request: " + JSON.stringify({ search: payload.antiPave.search, status: payload.antiPave.status, cands: payload.candidateDiagnostics.map((d) => [d.source, d.seconds, d.confirmedPaveMeters, d.selectionVerdict]), requests: requests.map((r) => [r.method, String(r.body).length, String(r.body).includes("linear_cost_factors")]) }));
