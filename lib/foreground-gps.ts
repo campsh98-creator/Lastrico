@@ -25,11 +25,13 @@ export class ForegroundGps {
   private visible = true;
   private stopped = false;
   private navigation = false;
+  private recording = false;
   private disposed = false;
   private readonly deps: Dependencies;
   constructor(deps: Dependencies) { this.deps = deps; }
   get active() { return this.watch !== null; }
   get isStopped() { return this.stopped; }
+  private get highAccuracy() { return this.navigation || this.recording; }
 
   async connect() {
     try { this.stopped = this.deps.readStopped?.() ?? false; } catch { /* Preference storage may be blocked. */ }
@@ -94,7 +96,7 @@ export class ForegroundGps {
         if (error.code === 1) { this.clear(); this.emit("denied", false); }
         else this.emit("unavailable", true);
         this.deps.onError?.(error);
-      }, this.navigation
+      }, this.highAccuracy
         ? { enableHighAccuracy: true, maximumAge: 1500, timeout: 12000 }
         : { enableHighAccuracy: false, maximumAge: 5000, timeout: 15000 });
       // Browsers deliver asynchronously; also handle synchronous test/polyfill callbacks safely.
@@ -107,8 +109,15 @@ export class ForegroundGps {
   }
   setNavigation(active: boolean) {
     if (active === this.navigation) return;
+    const prevHigh = this.highAccuracy;
     this.navigation = active;
-    if (this.active) { this.clear(); this.ensureWatch(); }
+    if (this.active && prevHigh !== this.highAccuracy) { this.clear(); this.ensureWatch(); }
+  }
+  setRecording(active: boolean) {
+    if (active === this.recording) return;
+    const prevHigh = this.highAccuracy;
+    this.recording = active;
+    if (this.active && prevHigh !== this.highAccuracy) { this.clear(); this.ensureWatch(); }
   }
   setVisible(visible: boolean) {
     if (this.disposed) return;

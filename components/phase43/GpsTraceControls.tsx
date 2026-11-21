@@ -7,7 +7,7 @@ export type GpsTraceControlsProps = {
   traces: TraceSummary[];
   journeyActive: boolean;
   onToggle: (enabled: boolean) => void;
-  onExport: (id: string, format: "json" | "gpx") => void;
+  onExport: (id: string, format: "json" | "gpx" | "geojson") => void;
   onDelete: (id: string) => void;
   /** Phase 4.34: approximate bytes a stored trace occupies on the device. */
   sizeOf?: (id: string) => number;
@@ -15,6 +15,7 @@ export type GpsTraceControlsProps = {
 
 function statusText(status: TraceRecorderStatus) {
   if (status === "recording") return "Registrazione in corso su questo dispositivo.";
+  if (status === "paused") return "Registrazione in pausa su questo dispositivo.";
   if (status === "full") return "Limite raggiunto: la registrazione si è fermata, la traccia salvata è disponibile.";
   if (status === "suspended") return "Registrazione sospesa: lo spazio del browser non è disponibile.";
   return null;

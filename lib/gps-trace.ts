@@ -169,7 +169,7 @@ export type TraceSummary = {
   chunks: number;
 };
 
-export type TraceRecorderStatus = "idle" | "recording" | "suspended" | "full";
+export type TraceRecorderStatus = "idle" | "recording" | "paused" | "suspended" | "full";
 
 export const READINGS_CLEARED_EVENT = "readings-cleared";
 
@@ -184,11 +184,15 @@ export const READINGS_CLEARED_EVENT = "readings-cleared";
  *   route-switch (the person chose the other route), field-note (the note's kind).
  * - Phase 4.37 (trace v3): no new event type. Each route entry may instead carry a `generation`
  *   summary (see TraceGeneration), recorded with the initial plan, every reroute and every switch.
+ * - Route-independent recording: recording-start, recording-pause, recording-resume, recording-stop,
+ *   recording-recovered, background-gap, fix-gap, gps-stall, navigation-ended.
  */
 export const TRACE_EVENT_TYPES = [
   "reroute-start", "reroute-success", "reroute-failure", "voice-spoken", "pave-warning-spoken",
   "pave-warning-shown", "gps-rearm", "signal-loss", "foreground-resume", "off-route", "wake-lock",
   "permission-denied", "page-hidden", "page-visible", "route-switch", "field-note", READINGS_CLEARED_EVENT,
+  "recording-start", "recording-pause", "recording-resume", "recording-stop", "recording-recovered",
+  "background-gap", "fix-gap", "gps-stall", "navigation-ended",
 ] as const;
 
 const rounded = (value: number) => Math.round(value * 10) / 10;
@@ -322,15 +326,105 @@ export function gpsTraceToGpx(trace: GpsTrace): string {
     for (const [lon, lat] of route.coordinates) lines.push(`    <rtept lat="${coordinateText(lat)}" lon="${coordinateText(lon)}"/>`);
     lines.push("  </rte>");
   });
+  const splitFixes = new Set(
+    trace.events
+      .filter((event) =>
+        (event.type === "recording-resume"
+          || event.type === "background-gap"
+          || event.type === "fix-gap"
+          || event.type === "recording-recovered")
+        && event.atFix > 0
+        && event.atFix < trace.fixes.length)
+      .map((event) => event.atFix),
+  );
   lines.push(`  <trk><name>${xml("Rilevazioni GPS")}</name><trkseg>`);
-  for (const [timestamp, lon, lat, accuracy, heading, speed] of trace.fixes) {
+  trace.fixes.forEach(([timestamp, lon, lat, accuracy, heading, speed], index) => {
+    if (splitFixes.has(index)) lines.push("  </trkseg><trkseg>");
     const extensions = [`<lastrico:accuracy>${xml(rounded(accuracy))}</lastrico:accuracy>`];
     if (heading !== null) extensions.push(`<lastrico:heading>${xml(rounded(heading))}</lastrico:heading>`);
     if (speed !== null) extensions.push(`<lastrico:speed>${xml(rounded(speed))}</lastrico:speed>`);
     lines.push(`    <trkpt lat="${coordinateText(lat)}" lon="${coordinateText(lon)}"><time>${new Date(timestamp).toISOString()}</time><extensions>${extensions.join("")}</extensions></trkpt>`);
-  }
+  });
   lines.push("  </trkseg></trk>", "</gpx>");
   return lines.join("\n") + "\n";
+}
+
+const SAVE_CHUNK_FIXES = 200;
+
+/** Saves a complete validated trace (recovered checkpoint or imported GPX/GeoJSON) into device storage. */
+export function saveGpsTrace(
+  trace: GpsTrace,
+  storage: TraceStorage | null,
+  { budgetBytes = MAX_TRACE_STORAGE_BYTES }: { budgetBytes?: number } = {},
+): boolean {
+  if (!storage) return false;
+  const validated = parseGpsTrace(trace);
+  const existing = readIndex(storage).filter((item) => item.id !== validated.id);
+  for (const old of existing.slice(0, Math.max(0, existing.length - (MAX_STORED_TRACES - 1)))) {
+    deleteGpsTrace(storage, old.id);
+  }
+  const summary: TraceSummary = {
+    id: validated.id,
+    startedAt: validated.startedAt,
+    area: validated.area,
+    mode: validated.mode,
+    fixes: validated.fixes.length,
+    routes: validated.routes.length,
+    chunks: 0,
+  };
+  const entries: Array<{ key: string; value: string }> = [];
+  const metaValue = JSON.stringify({
+    schema: validated.schema,
+    version: validated.version,
+    appVersion: validated.appVersion,
+    id: validated.id,
+    startedAt: validated.startedAt,
+    area: validated.area,
+    mode: validated.mode,
+    ...(validated.synthetic ? { synthetic: validated.synthetic } : {}),
+  });
+  entries.push({ key: metaKey(validated.id), value: metaValue });
+  validated.routes.forEach((route, index) => {
+    entries.push({ key: routeKey(validated.id, index), value: JSON.stringify(route) });
+  });
+  const totalFixes = validated.fixes.length;
+  const chunkCount = Math.max(totalFixes > 0 || validated.events.length > 0 ? 1 : 0, Math.ceil(totalFixes / SAVE_CHUNK_FIXES));
+  for (let c = 0; c < chunkCount; c += 1) {
+    const startIdx = c * SAVE_CHUNK_FIXES;
+    const endIdx = Math.min(totalFixes, startIdx + SAVE_CHUNK_FIXES);
+    const isLast = c === chunkCount - 1;
+    const chunkEvents = validated.events.filter((event) =>
+      event.atFix >= startIdx && (isLast ? event.atFix <= endIdx : event.atFix < endIdx));
+    entries.push({
+      key: chunkKey(validated.id, c),
+      value: JSON.stringify({
+        fixes: validated.fixes.slice(startIdx, endIdx),
+        decisions: validated.decisions.slice(startIdx, endIdx),
+        events: chunkEvents,
+      }),
+    });
+  }
+  summary.chunks = chunkCount;
+  const totalBytes = entries.reduce((sum, entry) => sum + (entry.key.length + entry.value.length) * 2, 0);
+  let otherBytes = readIndex(storage)
+    .filter((item) => item.id !== validated.id)
+    .reduce((sum, item) => sum + storedTraceBytes(storage, item.id), 0);
+  while (otherBytes + totalBytes > budgetBytes) {
+    const oldest = readIndex(storage).find((item) => item.id !== validated.id);
+    if (!oldest) return false;
+    otherBytes = Math.max(0, otherBytes - storedTraceBytes(storage, oldest.id));
+    deleteGpsTrace(storage, oldest.id);
+  }
+  try {
+    deleteGpsTrace(storage, validated.id);
+    for (const entry of entries) storage.setItem(entry.key, entry.value);
+    const others = readIndex(storage).filter((item) => item.id !== validated.id);
+    storage.setItem(INDEX_KEY, JSON.stringify([...others, summary]));
+    return true;
+  } catch {
+    deleteGpsTrace(storage, validated.id);
+    return false;
+  }
 }
 
 const TRACE_FIELDS = new Set(["schema", "version", "appVersion", "id", "startedAt", "area", "mode", "synthetic", "routes", "fixes", "decisions", "events"]);
@@ -567,6 +661,32 @@ export function createGpsTraceRecorder(
   const recorder = {
     get status() { return status; },
     get id() { return summary?.id ?? null; },
+    get fixCount() { return summary?.fixes ?? 0; },
+
+    getTraceSnapshot(): GpsTrace | null {
+      if (!summary) return null;
+      const stored = storage ? readGpsTrace(storage, summary.id) : null;
+      const base: GpsTrace = stored ?? {
+        schema: GPS_TRACE_SCHEMA,
+        version: GPS_TRACE_VERSION,
+        appVersion: GPS_TRACE_APP_VERSION,
+        id: summary.id,
+        startedAt: summary.startedAt,
+        area: summary.area,
+        mode: summary.mode,
+        routes: [],
+        fixes: [],
+        decisions: [],
+        events: [],
+      };
+      return {
+        ...base,
+        routes: [...base.routes],
+        fixes: [...base.fixes, ...pendingFixes],
+        decisions: [...base.decisions, ...pendingDecisions],
+        events: [...base.events, ...pendingEvents],
+      };
+    },
 
     start(meta: { area: PilotAreaId; mode: NavigationTransportMode; startedAt: string; id: string }) {
       pendingFixes = [];
@@ -595,9 +715,25 @@ export function createGpsTraceRecorder(
       status = saved && writeIndex() ? "recording" : "suspended";
     },
 
-    addRoute(route: Omit<TraceRoute, "atFix">) {
+    pause() {
       if (status !== "recording" || !summary) return;
+      pendingEvents.push({ atFix: summary.fixes, type: "recording-pause" });
+      recorder.flush();
+      if ((status as TraceRecorderStatus) === "recording") status = "paused";
+    },
+
+    resume() {
+      if (status !== "paused" || !summary) return;
+      status = "recording";
+      pendingEvents.push({ atFix: summary.fixes, type: "recording-resume" });
+      recorder.flush();
+    },
+
+    addRoute(route: Omit<TraceRoute, "atFix">) {
+      if ((status !== "recording" && status !== "paused") || !summary) return;
       // Everything recorded so far belongs to the previous route.
+      const prevStatus = status;
+      if (status === "paused") status = "recording";
       recorder.flush();
       if ((status as TraceRecorderStatus) !== "recording") return;
       const key = routeKey(summary.id, summary.routes);
@@ -621,6 +757,7 @@ export function createGpsTraceRecorder(
       currentBytes += bytes;
       summary.routes += 1;
       if (!writeIndex()) suspend();
+      else if (prevStatus === "paused") status = "paused";
     },
 
     recordFix<T extends ProgressInstruction & { id?: string }>(
@@ -681,7 +818,14 @@ export function createGpsTraceRecorder(
     },
 
     stop() {
-      recorder.flush();
+      if (status === "paused" && summary) status = "recording";
+      if (status === "recording" && summary) {
+        pendingEvents.push({ atFix: summary.fixes, type: "recording-stop" });
+        recorder.flush();
+      }
+      pendingFixes = [];
+      pendingDecisions = [];
+      pendingEvents = [];
       status = "idle";
       summary = null;
     },
@@ -729,6 +873,7 @@ export function replayGpsTrace(trace: GpsTrace): TraceReplayReport {
   let active: { route: TraceRoute; model: ReturnType<typeof buildRouteProgressModel<ProgressInstruction & { id?: string }>> } | null = null;
   let nextRoute = 0;
   const clearedAt = new Set(trace.events.filter((event) => event.type === READINGS_CLEARED_EVENT).map((event) => event.atFix));
+  const navEndedAt = new Set(trace.events.filter((event) => event.type === "navigation-ended").map((event) => event.atFix));
 
   trace.fixes.forEach((fix, index) => {
     if (clearedAt.has(index)) state = withClearedReadings(state);
@@ -737,6 +882,10 @@ export function replayGpsTrace(trace: GpsTrace): TraceReplayReport {
       active = { route, model: buildRouteProgressModel(route.coordinates, route.instructions, distanceMeters) };
       state = withReplacementRoute(state, route.progressMeters);
       nextRoute += 1;
+    }
+    if (navEndedAt.has(index)) {
+      active = null;
+      state = createNavigationFixState();
     }
     const [timestamp, lon, lat, accuracy, heading, speed, now, lastCalculationAt, calculating, cooldownMs] = fix;
     const previousProgress = state.progressMeters;

@@ -1084,3 +1084,79 @@
 
 .p43-trace-controls label { min-height: var(--tap, 44px); display: flex; align-items: center; gap: var(--space-2, 8px); }
 .p43-trace-controls input[type="checkbox"] { width: 20px; height: 20px; flex: none; accent-color: var(--accent-fill, #16886e); }
+
+/* Route-independent GPS recording panel */
+.p43-recording-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #e2ded9);
+  border-radius: 12px;
+  background: var(--p43-notice-surface);
+  color: var(--ink, #122023);
+}
+.p43-recording-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+.p43-recording-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border, #e2ded9);
+  color: var(--muted);
+}
+.p43-recording-pill.is-live {
+  background: rgba(22, 136, 110, 0.14);
+  border-color: var(--green, #16886e);
+  color: var(--green, #16886e);
+}
+.p43-recording-pill.is-paused {
+  background: rgba(217, 119, 6, 0.14);
+  color: var(--coral);
+}
+.p43-recording-copy {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--p43-card-detail);
+}
+.p43-recording-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.p43-rec-btn,
+.p43-rec-import-btn {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border, #e2ded9);
+  background: var(--white, #ffffff);
+  color: var(--ink, #122023);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.p43-rec-btn.p43-rec-primary {
+  background: var(--accent-fill, #16886e);
+  border-color: var(--accent-fill, #16886e);
+  color: #ffffff;
+}
+.p43-rec-import-btn input[type="file"] {
+  display: none;
+}
+.p43-recording-metrics {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink, #122023);
+}

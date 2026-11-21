@@ -27,6 +27,7 @@ import {
   LocalFieldFeedback,
   NavigationDiagnosticsCard,
   GpsTraceControls,
+  GpsRecordingPanel,
 } from "@/components/phase43";
 import {
   PILOT_AREAS,
@@ -77,6 +78,7 @@ import {
   listGpsTraces,
   pruneExpiredGpsTraces,
   readGpsTrace,
+  saveGpsTrace,
   storedTraceBytes,
   summarizeRouteGeneration,
   type TraceGeneration,
@@ -84,6 +86,18 @@ import {
   type TraceStorage,
   type TraceSummary,
 } from "@/lib/gps-trace";
+import {
+  clearRecordingCheckpoint,
+  detectBackgroundGap,
+  detectFixGap,
+  detectGpsStall,
+  gpsTraceToGeoJson,
+  importTraceFileContent,
+  recoverInterruptedRecording,
+  saveRecordingCheckpoint,
+  summarizeTraceMetrics,
+  type TraceMetricsSummary,
+} from "@/lib/gps-recording";
 import {
   bearingBetween,
   createNavigationFixState,
@@ -511,6 +525,11 @@ export default function Home() {
   const lastJourneyCalculationRef = useRef(0);
   const navigationFixStateRef = useRef(createNavigationFixState());
   const traceRecorderRef = useRef<ReturnType<typeof createGpsTraceRecorder> | null>(null);
+  const standaloneRecordingRef = useRef(false);
+  const standaloneNavStateRef = useRef(createNavigationFixState());
+  const lastRecordingFixAtRef = useRef<number | null>(null);
+  const hiddenRecordingAtRef = useRef<number | null>(null);
+  const stallRecordingLoggedRef = useRef(false);
   /** Phase 4.34: rough sections whose warning the current route's trace has already recorded. */
   const tracedPaveWarningsRef = useRef<Set<number>>(new Set());
   /** Phase 4.37: how the routes now on screen were produced (from the last API response or stored plan). */
@@ -664,6 +683,11 @@ export default function Home() {
   const [traceEnabled, setTraceEnabled] = useState(false);
   const [traceStatus, setTraceStatus] = useState<TraceRecorderStatus>("idle");
   const [traces, setTraces] = useState<TraceSummary[]>([]);
+  const [recordingMetrics, setRecordingMetrics] = useState<TraceMetricsSummary | null>(null);
+  const [recordingInterruptionNotice, setRecordingInterruptionNotice] = useState<string | null>(null);
+  const [recoveredRecordingNotice, setRecoveredRecordingNotice] = useState<string | null>(null);
+  const [importTraceNotice, setImportTraceNotice] = useState<string | null>(null);
+  const [importTraceError, setImportTraceError] = useState<string | null>(null);
   const [navigationDiagnostics, setNavigationDiagnostics] = useState<NavigationDiagnostics>(() => createNavigationDiagnostics());
   const recordDiagnostic = useCallback((event: NavigationDiagnosticEvent) => {
     setNavigationDiagnostics((current) => recordNavigationDiagnosticEvent(current, event));
@@ -1456,8 +1480,13 @@ export default function Home() {
   useEffect(() => {
     window.queueMicrotask(() => {
       // Phase 4.34: traces are kept on the device for at most a week.
-      pruneExpiredGpsTraces(traceStorage());
-      setTraces(listGpsTraces(traceStorage()));
+      const storage = traceStorage();
+      pruneExpiredGpsTraces(storage);
+      const recovered = recoverInterruptedRecording(storage);
+      if (recovered) {
+        setRecoveredRecordingNotice(`Sessione interrotta recuperata (${recovered.fixes.length} rilevazioni salvate in locale).`);
+      }
+      setTraces(listGpsTraces(storage));
     });
     // iOS does not reliably fire pagehide, so a hidden page also saves what is buffered.
     // Phase 4.34: the trace records when the page was hidden and shown again, so a gap in the
@@ -1465,11 +1494,30 @@ export default function Home() {
     let hidden = document.visibilityState !== "visible";
     const saveTrace = () => {
       const nowHidden = document.visibilityState !== "visible";
+      const recorder = traceRecorderRef.current;
+      const nowMs = Date.now();
       if (nowHidden !== hidden) {
         hidden = nowHidden;
-        traceRecorderRef.current?.recordEvent(nowHidden ? "page-hidden" : "page-visible");
+        recorder?.recordEvent(nowHidden ? "page-hidden" : "page-visible");
+        if (nowHidden) {
+          hiddenRecordingAtRef.current = nowMs;
+        } else {
+          const gap = detectBackgroundGap(hiddenRecordingAtRef.current, nowMs);
+          hiddenRecordingAtRef.current = null;
+          if (gap.interrupted && recorder && (recorder.status === "recording" || recorder.status === "paused")) {
+            recorder.recordEvent("background-gap", String(gap.gapSeconds));
+            setRecordingInterruptionNotice(`Possibile interruzione GPS in background (~${gap.gapSeconds} s).`);
+          }
+        }
       }
-      if (nowHidden) traceRecorderRef.current?.flush();
+      if (recorder && (recorder.status === "recording" || recorder.status === "paused")) {
+        recorder.flush();
+        const snap = recorder.getTraceSnapshot();
+        if (snap) {
+          setRecordingMetrics(summarizeTraceMetrics(snap));
+          saveRecordingCheckpoint(snap, traceStorage(), recorder.status === "paused", nowMs);
+        }
+      }
     };
     window.addEventListener("pagehide", saveTrace);
     document.addEventListener("visibilitychange", saveTrace);
@@ -1479,6 +1527,25 @@ export default function Home() {
       traceRecorderRef.current?.flush();
     };
   }, []);
+
+  useEffect(() => {
+    if (traceStatus !== "recording") return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      const recorder = traceRecorderRef.current;
+      if (!recorder || recorder.status !== "recording") return;
+      const stall = detectGpsStall(lastRecordingFixAtRef.current, Date.now());
+      if (stall.stalled && !stallRecordingLoggedRef.current) {
+        stallRecordingLoggedRef.current = true;
+        recorder.recordEvent("gps-stall", String(stall.stallSeconds));
+        recorder.flush();
+        setRecordingInterruptionNotice(`Segnale GPS assente da ~${stall.stallSeconds} s: tieni Lastrico in primo piano.`);
+        const snap = recorder.getTraceSnapshot();
+        if (snap) setRecordingMetrics(summarizeTraceMetrics(snap));
+      }
+    }, 5_000);
+    return () => window.clearInterval(timer);
+  }, [traceStatus]);
 
   useEffect(() => {
     const updateNetworkState = () => setIsOnline(navigator.onLine);
@@ -2792,9 +2859,18 @@ export default function Home() {
     lastJourneyOriginRef.current = null;
     navigationFixStateRef.current = createNavigationFixState();
     setGpsProgress(null);
-    traceRecorderRef.current?.stop();
-    traceRecorderRef.current = null;
-    setTraceStatus("idle");
+    if (standaloneRecordingRef.current && traceRecorderRef.current && traceRecorderRef.current.status !== "idle") {
+      traceRecorderRef.current.recordEvent("navigation-ended");
+      standaloneNavStateRef.current = createNavigationFixState();
+      setTraceStatus(traceRecorderRef.current.status);
+      syncRecordingUi(traceRecorderRef.current);
+    } else {
+      traceRecorderRef.current?.stop();
+      traceRecorderRef.current = null;
+      setTraceStatus("idle");
+      clearRecordingCheckpoint(traceStorage());
+      setRecordingMetrics(null);
+    }
     setTraces(listGpsTraces(traceStorage()));
     navigationStartedAtRef.current = 0;
     lastValidGpsFixAtRef.current = null;
@@ -2844,8 +2920,16 @@ export default function Home() {
     navigationFixStateRef.current = decision.state;
     const recorder = traceRecorderRef.current;
     if (recorder) {
+      const gap = detectFixGap(lastRecordingFixAtRef.current, fix.timestamp);
+      if (gap.interrupted && (recorder.status === "recording" || recorder.status === "paused")) {
+        recorder.recordEvent("fix-gap", String(gap.gapSeconds));
+        setRecordingInterruptionNotice(`Interruzione rilevazioni GPS (~${gap.gapSeconds} s).`);
+      }
+      lastRecordingFixAtRef.current = fix.timestamp;
+      stallRecordingLoggedRef.current = false;
       recorder.recordFix(fix, context, decision);
       setTraceStatus(recorder.status);
+      if (recorder.fixCount % 5 === 1 || recorder.status !== "recording") syncRecordingUi(recorder);
     }
 
     if (decision.outcome === "outside") {
@@ -3023,7 +3107,23 @@ export default function Home() {
       setPlanError("Il GPS non è disponibile su questo dispositivo. Puoi usare la simulazione.");
       return;
     }
-    if (traceEnabled) {
+    if (traceRecorderRef.current && traceRecorderRef.current.status !== "idle") {
+      tracedPaveWarningsRef.current = new Set();
+      const standaloneDetails = traceRouteDetails(routeForJourney, journeyObjectiveRef.current, routeGenerationRef.current);
+      traceRecorderRef.current.addRoute({
+        progressMeters: 0,
+        minutes: routeForJourney.minutes,
+        distanceKm: routeForJourney.distance,
+        coordinates: routeForJourney.coordinates,
+        instructions: routeForJourney.instructions ?? [],
+        objective: standaloneDetails.objective,
+        pave: standaloneDetails.pave,
+        roughSections: standaloneDetails.roughSections,
+        generation: standaloneDetails.generation,
+      });
+      setTraceStatus(traceRecorderRef.current.status);
+      syncRecordingUi(traceRecorderRef.current);
+    } else if (traceEnabled) {
       const recorder = createGpsTraceRecorder(traceStorage());
       recorder.start({
         id: crypto.randomUUID(),
@@ -3081,7 +3181,40 @@ export default function Home() {
         const request = locationRequestRef.current;
         if (request) applyCurrentLocation(fix, request);
       }
-      if (journeyActiveRef.current && journeyModeRef.current === "gps") handleGpsFix(fix, navigationSessionRef.current);
+      if (journeyActiveRef.current && journeyModeRef.current === "gps") {
+        handleGpsFix(fix, navigationSessionRef.current);
+      } else if (
+        Number.isFinite(coords.longitude) && Math.abs(coords.longitude) <= 180
+        && Number.isFinite(coords.latitude) && Math.abs(coords.latitude) <= 90
+        && Number.isFinite(coords.accuracy) && coords.accuracy > 0 && coords.accuracy <= 1000
+      ) {
+        const recorder = traceRecorderRef.current;
+        if (recorder && recorder.status === "recording") {
+          const gap = detectFixGap(lastRecordingFixAtRef.current, fix.timestamp);
+          if (gap.interrupted) {
+            recorder.recordEvent("fix-gap", String(gap.gapSeconds));
+            setRecordingInterruptionNotice(`Interruzione rilevazioni GPS (~${gap.gapSeconds} s).`);
+          }
+          lastRecordingFixAtRef.current = fix.timestamp;
+          stallRecordingLoggedRef.current = false;
+          const now = Date.now();
+          const mode = transportModeRef.current;
+          const context = {
+            now,
+            mode,
+            rerouteCooldownMs: rerouteCooldownMs(0),
+            bounds: PILOT_AREAS[areaIdRef.current].bounds,
+            route: null,
+            lastCalculationAt: 0,
+            calculationInProgress: false,
+          };
+          const decision = processGpsFix(standaloneNavStateRef.current, fix, context);
+          standaloneNavStateRef.current = decision.state;
+          recorder.recordFix(fix, context, decision);
+          setTraceStatus(recorder.status);
+          if (recorder.fixCount % 3 === 1 || recorder.status !== "recording") syncRecordingUi(recorder);
+        }
+      }
     };
     gpsErrorHandlerRef.current = (error) => {
       locationRequestRef.current = null;
@@ -3144,8 +3277,127 @@ export default function Home() {
     };
   }, []);
 
-  /** JSON is what replay reads; GPX (Phase 4.34) opens in map tools. Neither leaves the device unless shared. */
-  async function exportGpsTrace(id: string, format: "json" | "gpx" = "json") {
+  function syncRecordingUi(recorder: ReturnType<typeof createGpsTraceRecorder> | null) {
+    if (!recorder) {
+      setRecordingMetrics(null);
+      return;
+    }
+    const snap = recorder.getTraceSnapshot();
+    setRecordingMetrics(snap ? summarizeTraceMetrics(snap) : null);
+    if (snap && (recorder.status === "recording" || recorder.status === "paused")) {
+      saveRecordingCheckpoint(snap, traceStorage(), recorder.status === "paused");
+    }
+  }
+
+  function startStandaloneRecording() {
+    const existing = traceRecorderRef.current;
+    if (existing && existing.status === "paused") {
+      resumeStandaloneRecording();
+      return;
+    }
+    if (existing && existing.status === "recording") return;
+    if (existing && (existing.status === "full" || existing.status === "suspended")) {
+      existing.stop();
+    }
+    const recorder = createGpsTraceRecorder(traceStorage());
+    recorder.start({
+      id: crypto.randomUUID(),
+      startedAt: new Date().toISOString(),
+      area: areaIdRef.current,
+      mode: transportModeRef.current,
+    });
+    recorder.recordEvent("recording-start");
+    standaloneNavStateRef.current = createNavigationFixState();
+    lastRecordingFixAtRef.current = null;
+    stallRecordingLoggedRef.current = false;
+    setRecordingInterruptionNotice(null);
+    setRecoveredRecordingNotice(null);
+    standaloneRecordingRef.current = true;
+    traceRecorderRef.current = recorder;
+    tracedPaveWarningsRef.current = new Set();
+
+    if (journeyActiveRef.current && selectedRouteRef.current) {
+      const currentRoute = selectedRouteRef.current;
+      const details = traceRouteDetails(currentRoute, journeyObjectiveRef.current, routeGenerationRef.current);
+      recorder.addRoute({
+        progressMeters: navigationFixStateRef.current.progressMeters,
+        minutes: currentRoute.minutes,
+        distanceKm: currentRoute.distance,
+        coordinates: currentRoute.coordinates,
+        instructions: currentRoute.instructions ?? [],
+        objective: details.objective,
+        pave: details.pave,
+        roughSections: details.roughSections,
+        generation: details.generation,
+      });
+    }
+
+    setTraceStatus(recorder.status);
+    syncRecordingUi(recorder);
+    foregroundGpsRef.current?.setRecording(recorder.status === "recording");
+    foregroundGpsRef.current?.setVisible(document.visibilityState === "visible" && journeyModeRef.current !== "simulation");
+    if (recorder.status === "recording") foregroundGpsRef.current?.startFromGesture();
+    setStatus("Registrazione traccia GPS avviata su questo dispositivo.");
+  }
+
+  function pauseStandaloneRecording() {
+    const recorder = traceRecorderRef.current;
+    if (!recorder || recorder.status !== "recording") return;
+    recorder.pause();
+    setTraceStatus(recorder.status);
+    foregroundGpsRef.current?.setRecording(false);
+    syncRecordingUi(recorder);
+    setStatus("Registrazione traccia GPS in pausa.");
+  }
+
+  function resumeStandaloneRecording() {
+    const recorder = traceRecorderRef.current;
+    if (!recorder || recorder.status !== "paused") return;
+    recorder.resume();
+    stallRecordingLoggedRef.current = false;
+    const resumedStatus = recorder.status as TraceRecorderStatus;
+    setTraceStatus(resumedStatus);
+    foregroundGpsRef.current?.setRecording(resumedStatus === "recording");
+    foregroundGpsRef.current?.startFromGesture();
+    syncRecordingUi(recorder);
+    setStatus("Registrazione traccia GPS ripresa.");
+  }
+
+  function stopStandaloneRecording() {
+    const recorder = traceRecorderRef.current;
+    recorder?.stop();
+    traceRecorderRef.current = null;
+    standaloneRecordingRef.current = false;
+    lastRecordingFixAtRef.current = null;
+    stallRecordingLoggedRef.current = false;
+    clearRecordingCheckpoint(traceStorage());
+    foregroundGpsRef.current?.setRecording(false);
+    setTraceStatus("idle");
+    setRecordingMetrics(null);
+    setTraces(listGpsTraces(traceStorage()));
+    setStatus("Registrazione traccia GPS fermata e salvata su questo dispositivo.");
+  }
+
+  async function importGpsTraceFile(file: File) {
+    setImportTraceError(null);
+    setImportTraceNotice(null);
+    try {
+      const content = await file.text();
+      const imported = importTraceFileContent(content, file.name);
+      const storage = traceStorage();
+      if (!saveGpsTrace(imported, storage)) {
+        setImportTraceError("Spazio locale del browser non disponibile per salvare la traccia importata.");
+        return;
+      }
+      setTraces(listGpsTraces(storage));
+      setImportTraceNotice(`Traccia importata in locale (${imported.fixes.length} rilevazioni).`);
+    } catch (error) {
+      setImportTraceError(error instanceof Error ? error.message : "File traccia non valido.");
+    }
+  }
+
+  /** JSON is what replay reads; GPX (Phase 4.34) opens in map tools; GeoJSON supports GIS tools. Nothing leaves unless shared. */
+  async function exportGpsTrace(id: string, format: "json" | "gpx" | "geojson" = "json") {
     traceRecorderRef.current?.flush();
     const storage = traceStorage();
     const trace = storage && readGpsTrace(storage, id);
@@ -3156,7 +3408,9 @@ export default function Home() {
     const name = `lastrico-gps-trace-${trace.startedAt.slice(0, 16).replace(/[:T]/g, "-")}.${format}`;
     const file = format === "gpx"
       ? new File([gpsTraceToGpx(trace)], name, { type: "application/gpx+xml" })
-      : new File([JSON.stringify(trace)], name, { type: "application/json" });
+      : format === "geojson"
+        ? new File([JSON.stringify(gpsTraceToGeoJson(trace), null, 2)], name, { type: "application/geo+json" })
+        : new File([JSON.stringify(trace)], name, { type: "application/json" });
     if (navigator.canShare?.({ files: [file] })) {
       try {
         await navigator.share({ files: [file], title: "Traccia GPS Lastrico" });
@@ -3390,6 +3644,17 @@ export default function Home() {
             <span>lastrico</span>
           </button>
           <span className="top-bar-spacer" />
+          {(traceStatus === "recording" || traceStatus === "paused" || traceStatus === "suspended" || traceStatus === "full") && (
+            <button
+              type="button"
+              className={`hud-badge ${traceStatus === "recording" ? "subtle" : "warning"}`}
+              onClick={() => setMenuOpen(true)}
+              data-testid="topbar-gps-recording-pill"
+              title="Stato registrazione GPS"
+            >
+              {traceStatus === "recording" ? "REC" : traceStatus === "paused" ? "PAUSA" : traceStatus === "suspended" ? "REC sospesa" : "REC piena"}
+            </button>
+          )}
           <button type="button" className="icon-button" onClick={recenterNavigation}
             aria-label={foregroundGpsStatus === "stopped" || foregroundGpsStatus === "gesture-required" || foregroundGpsStatus === "denied" ? "Attiva GPS e centra la mappa" : "Ricentra la mappa sulla mia posizione"}
             data-testid="gps-recenter" title="La mia posizione"><Icon name="recenter" /></button>
@@ -3635,6 +3900,30 @@ export default function Home() {
                         ))}
                       </ul>
                       <small>Non gestiti: Area C (a pagamento), ZTL senza regole in OpenStreetMap, giorni festivi ed eccezioni (residenti, disabili, carico e scarico). In bici queste ZTL non limitano l’accesso secondo OSM. Vale sempre la segnaletica.</small>
+                    </div>
+
+                    <div className="preference-group">
+                      <GpsRecordingPanel
+                        variant="plan"
+                        testId="plan-gps-recording"
+                        status={traceStatus}
+                        traces={traces}
+                        metrics={recordingMetrics}
+                        interruptionNotice={recordingInterruptionNotice}
+                        recoveredNotice={recoveredRecordingNotice}
+                        importNotice={importTraceNotice}
+                        importError={importTraceError}
+                        journeyActive={isJourneyActive}
+                        gpsStatus={foregroundGpsStatus}
+                        onStart={startStandaloneRecording}
+                        onPause={pauseStandaloneRecording}
+                        onResume={resumeStandaloneRecording}
+                        onStop={stopStandaloneRecording}
+                        onExport={(id, format) => void exportGpsTrace(id, format)}
+                        onDelete={removeGpsTrace}
+                        onImportFile={(file) => void importGpsTraceFile(file)}
+                        sizeOf={(id) => storedTraceBytes(traceStorage(), id)}
+                      />
                     </div>
 
                     <div className="preference-group">
@@ -3958,6 +4247,7 @@ export default function Home() {
               <span className="hud-badge" data-testid="navigation-mode">{navigationModeLabel}</span>
               <span className="hud-badge subtle">{activeRoute === "safe" ? "Anti-pavé" : antiPaveOutcome?.status === "fastest-avoids-pave" ? "Più rapido e anti-pavé" : "Più rapido"}</span>
               {traceStatus === "recording" && <span className="hud-badge subtle" data-testid="gps-trace-indicator">REC</span>}
+              {traceStatus === "paused" && <span className="hud-badge warning" data-testid="gps-trace-indicator">PAUSA</span>}
               {traceStatus === "suspended" && <span className="hud-badge warning" data-testid="gps-trace-indicator">REC sospesa</span>}
               {traceStatus === "full" && <span className="hud-badge warning" data-testid="gps-trace-indicator">REC piena</span>}
             </div>
@@ -4080,6 +4370,29 @@ export default function Home() {
               if (foregroundGpsActive) stopGpsTracking();
               else foregroundGpsRef.current?.startFromGesture();
             }}><Icon name="recenter" /><span>{foregroundGpsActive ? "Interrompi GPS" : "Attiva GPS"}</span></button>
+          </div>
+          <GpsRecordingPanel
+            variant="menu"
+            testId="menu-gps-recording"
+            status={traceStatus}
+            traces={traces}
+            metrics={recordingMetrics}
+            interruptionNotice={recordingInterruptionNotice}
+            recoveredNotice={recoveredRecordingNotice}
+            importNotice={importTraceNotice}
+            importError={importTraceError}
+            journeyActive={isJourneyActive}
+            gpsStatus={foregroundGpsStatus}
+            onStart={startStandaloneRecording}
+            onPause={pauseStandaloneRecording}
+            onResume={resumeStandaloneRecording}
+            onStop={stopStandaloneRecording}
+            onExport={(id, format) => void exportGpsTrace(id, format)}
+            onDelete={removeGpsTrace}
+            onImportFile={(file) => void importGpsTraceFile(file)}
+            sizeOf={(id) => storedTraceBytes(traceStorage(), id)}
+          />
+          <div className="menu-list">
             <button type="button" onClick={cycleTheme} data-testid="menu-theme">
               <Icon name={themeMode === "auto" ? "auto" : themeMode === "light" ? "sun" : "moon"} />
               <span>Tema: {themeMode === "auto" ? "automatico" : themeMode === "light" ? "chiaro" : "scuro"}</span>
