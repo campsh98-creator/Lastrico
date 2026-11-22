@@ -253,6 +253,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .top-bar > * { pointer-events: auto; }
 .top-bar-spacer { flex: 1; pointer-events: none; }
 .top-bar .icon-button { box-shadow: var(--shadow-float); }
+/* Four controls share the bar (brand, city, centre on me, menu): the city selector gives way instead of pushing the menu off screen. */
+.top-bar .city-select { min-width: 0; flex-shrink: 1; }
+.top-bar .city-select select { min-width: 0; width: 100%; }
+.top-bar .icon-button { flex-shrink: 0; }
 .brand {
   height: var(--tap);
   display: inline-flex;
