@@ -253,6 +253,10 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .top-bar > * { pointer-events: auto; }
 .top-bar-spacer { flex: 1; pointer-events: none; }
 .top-bar .icon-button { box-shadow: var(--shadow-float); }
+/* Four controls share the bar (brand, city, centre on me, menu): the city selector gives way instead of pushing the menu off screen. */
+.top-bar .city-select { min-width: 0; flex-shrink: 1; }
+.top-bar .city-select select { min-width: 0; width: 100%; }
+.top-bar .icon-button { flex-shrink: 0; }
 .brand {
   height: var(--tap);
   display: inline-flex;
@@ -1291,6 +1295,18 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .ztl-modes { display: flex; gap: var(--space-3); }
 .ztl-modes label { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); font-size: var(--t-sm); }
 .ztl-modes input { width: 20px; height: 20px; }
+
+/* The person's own position outside navigation (foreground location follow), and the control that centres the map on it */
+.user-position { position: relative; width: 44px; height: 44px; display: grid; place-items: center; pointer-events: none; }
+.user-position i {
+  position: absolute;
+  width: var(--accuracy, 24px);
+  height: var(--accuracy, 24px);
+  border-radius: 50%;
+  background: rgba(26, 115, 232, .16);
+  border: 1px solid rgba(26, 115, 232, .35);
+}
+.user-position span { position: relative; width: 18px; height: 18px; border: 3px solid #ffffff; border-radius: 50%; background: #1a73e8; box-shadow: 0 1px 6px rgba(16, 33, 36, .4); }
 
 /* Optional road-knowledge layers (Strati strada) */
 .road-layers { position: absolute; top: calc(var(--safe-top) + 160px); right: calc(var(--safe-right) + var(--space-3)); z-index: 3; max-width: min(300px, calc(100vw - 24px)); display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); }

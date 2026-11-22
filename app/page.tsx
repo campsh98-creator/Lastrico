@@ -21,6 +21,7 @@ import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
 import { RecordingPanel, useFreeRecording } from "@/components/RecordingPanel";
 import { gpsWatchHub } from "@/lib/gps-watch-hub";
+import { FOLLOW_OFF_PREFERENCE, ForegroundFollow, type FollowStatus } from "@/lib/foreground-follow";
 import { TrafficNotice, trafficUnavailableText, useTrafficStatus, type RouteTrafficInfo, type TrafficInfo } from "@/components/TrafficPanel";
 import "@/components/phase43/phase43.css";
 import {
@@ -485,7 +486,13 @@ export default function Home() {
   const addressRequestRef = useRef<AbortController | null>(null);
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker; vehicle?: MapLibreMarker }>({});
+  const pointMarkersRef = useRef<{ start?: MapLibreMarker; end?: MapLibreMarker; vehicle?: MapLibreMarker; user?: MapLibreMarker }>({});
+  // Foreground location follow (lib/foreground-follow.ts): the person's own position on the map outside navigation.
+  const followRef = useRef<ForegroundFollow | null>(null);
+  const followFixRef = useRef<GpsFix | null>(null);
+  /** Whether the camera follows the foreground position. A manual pan, zoom or rotate, a route on screen or a city change end it. */
+  const followCameraRef = useRef(true);
+  const followCenteredOnceRef = useRef(false);
   const vehicleArrowRef = useRef<HTMLSpanElement | null>(null);
   // Phase 4.29: the marker is animated between GPS updates instead of teleporting on each one.
   const markerMotionRef = useRef<{ plan: MarkerMotionPlan; fromProgress: number | null; toProgress: number | null } | null>(null);
@@ -601,6 +608,9 @@ export default function Home() {
   const [journeyHeading, setJourneyHeading] = useState(0);
   const [journeyAccuracy, setJourneyAccuracy] = useState<number | null>(null);
   const [followVehicle, setFollowVehicle] = useState(true);
+  const [followPosition, setFollowPosition] = useState<GpsFix | null>(null);
+  const [followStatus, setFollowStatus] = useState<FollowStatus>("idle");
+  const [followCentered, setFollowCentered] = useState(true);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [voiceAvailable, setVoiceAvailable] = useState(false);
   const [gpsState, setGpsState] = useState<GpsState>("idle");
@@ -872,11 +882,15 @@ export default function Home() {
       map.once("load", collapseAttribution);
       map.once("idle", collapseAttribution);
       map.once("movestart", collapseAttribution);
-      map.on("styleimagemissing", ({ id }) => {
-        if (!map.hasImage(id)) {
-          map.addImage(id, { width: 1, height: 1, data: new Uint8Array([0, 0, 0, 0]) });
-        }
-      });
+      // A sprite image the style asks for and the sprite sheet lacks gets a transparent pixel instead of a console error.
+      // MapLibre 6 supplies missing images through a resolver (its `styleimagemissing` event only notifies); MapLibre 5 only has
+      // the event, so use whichever the installed version offers.
+      const addBlankImage = (id: string) => {
+        if (!map.hasImage(id)) map.addImage(id, { width: 1, height: 1, data: new Uint8Array([0, 0, 0, 0]) });
+      };
+      const resolverMap = map as unknown as { setMissingStyleImageResolver?: (resolver: (id: string) => void) => unknown };
+      if (typeof resolverMap.setMissingStyleImageResolver === "function") resolverMap.setMissingStyleImageResolver(addBlankImage);
+      else map.on("styleimagemissing", ({ id }) => addBlankImage(id));
       map.once("error", () => {
         if (!cancelled) setStatus("La mappa non è disponibile. Il percorso resta consultabile nei dettagli.");
       });
@@ -909,9 +923,27 @@ export default function Home() {
       pointMarkersRef.current.vehicle = new Marker({ element: vehicleElement, rotationAlignment: "map" })
         .setLngLat(startLocation.coordinate)
         .addTo(map);
+      // The person's own position, outside navigation: a dot with an accuracy halo, hidden until a foreground fix arrives.
+      const userElement = document.createElement("div");
+      userElement.className = "user-position";
+      userElement.setAttribute("aria-label", "La tua posizione");
+      userElement.dataset.testid = "user-position";
+      userElement.style.display = "none";
+      userElement.append(document.createElement("i"), document.createElement("span"));
+      pointMarkersRef.current.user = new Marker({ element: userElement })
+        .setLngLat(startLocation.coordinate)
+        .addTo(map);
+      // Only the person's own gestures end the camera follow: an `originalEvent` is what the code's own moves never carry.
+      const suspendFollow = () => {
+        followCameraRef.current = false;
+        setFollowCentered(false);
+      };
       map.on("dragstart", () => {
+        suspendFollow();
         if (journeyActiveRef.current) setFollowVehicle(false);
       });
+      map.on("zoomstart", (event) => { if (event.originalEvent) suspendFollow(); });
+      map.on("rotatestart", (event) => { if (event.originalEvent) suspendFollow(); });
       map.on("click", (event) => {
         const target = pickingRef.current;
         if (!target) return;
@@ -1167,6 +1199,77 @@ export default function Home() {
     loadingRef.current = isLoading;
   }, [isLoading]);
 
+  // Foreground location follow: one more subscriber of the page's single watch, started by itself only when the browser already
+  // granted the permission (never on prompt or denied) and released whenever the page is hidden.
+  useEffect(() => {
+    const follow = new ForegroundFollow({
+      hub: gpsWatchHub,
+      queryPermission: async () => (navigator.permissions ? navigator.permissions.query({ name: "geolocation" }) : null),
+      readOff: () => window.localStorage.getItem(FOLLOW_OFF_PREFERENCE) === "1",
+      writeOff: (off) => {
+        if (off) window.localStorage.setItem(FOLLOW_OFF_PREFERENCE, "1");
+        else window.localStorage.removeItem(FOLLOW_OFF_PREFERENCE);
+      },
+      onStatus: (status) => {
+        setFollowStatus(status);
+        if (status === "off" || status === "denied" || status === "gesture-required") {
+          followFixRef.current = null;
+          setFollowPosition(null);
+        }
+      },
+      onFix: ({ coords, timestamp }) => {
+        const valid = Number.isFinite(coords.longitude) && Math.abs(coords.longitude) <= 180
+          && Number.isFinite(coords.latitude) && Math.abs(coords.latitude) <= 90
+          && Number.isFinite(coords.accuracy) && coords.accuracy > 0 && coords.accuracy <= 1000
+          && Math.abs(Date.now() - timestamp) <= 15_000;
+        if (!valid) return;
+        const fix: GpsFix = { coordinate: [coords.longitude, coords.latitude], accuracy: coords.accuracy, timestamp, heading: coords.heading, speed: coords.speed };
+        followFixRef.current = fix;
+        setFollowPosition(fix);
+      },
+    });
+    followRef.current = follow;
+    void follow.connect();
+    // iOS suspends a hidden page: release the watch then and restore exactly one on return (including a restore from the back-forward cache).
+    const syncVisibility = () => follow.setVisible(document.visibilityState === "visible");
+    const hide = () => follow.setVisible(false);
+    document.addEventListener("visibilitychange", syncVisibility);
+    window.addEventListener("pagehide", hide);
+    window.addEventListener("pageshow", syncVisibility);
+    return () => {
+      document.removeEventListener("visibilitychange", syncVisibility);
+      window.removeEventListener("pagehide", hide);
+      window.removeEventListener("pageshow", syncVisibility);
+      follow.dispose();
+      if (followRef.current === follow) followRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const marker = pointMarkersRef.current.user;
+    const element = marker?.getElement();
+    if (!mapReady || !marker || !element) return;
+    if (isJourneyActive || !followPosition) {
+      element.style.display = "none";
+      return;
+    }
+    element.style.display = "grid";
+    element.style.setProperty("--accuracy", `${Math.min(90, Math.max(24, followPosition.accuracy))}px`);
+    marker.setLngLat(followPosition.coordinate);
+    const map = mapRef.current;
+    // Centre only while the person has not moved the map, and only inside the service area: a position far away must not
+    // throw the city view off.
+    if (!map || !followCameraRef.current || !coordinateInArea(followPosition.coordinate, PILOT_AREAS[areaIdRef.current])) return;
+    const first = !followCenteredOnceRef.current;
+    followCenteredOnceRef.current = true;
+    map.easeTo({
+      center: followPosition.coordinate,
+      zoom: first ? Math.max(map.getZoom(), 15.5) : map.getZoom(),
+      padding: visibleMapPadding(map.getContainer()),
+      duration: 400,
+    });
+  }, [followPosition, mapReady, isJourneyActive]);
+
   useEffect(() => {
     const marker = pointMarkersRef.current.vehicle;
     const element = marker?.getElement();
@@ -1272,19 +1375,22 @@ export default function Home() {
     const activePaint = routePaint("active");
     const alternativePaint = routePaint("alternative");
     Object.entries(activePaint.line).forEach(([property, value]) =>
-      map.setPaintProperty(selectedLine, property, value));
+      map.setPaintProperty(selectedLine, property as never, value as never));
     Object.entries(activePaint.outline).forEach(([property, value]) =>
-      map.setPaintProperty(selectedOutline, property, value));
+      map.setPaintProperty(selectedOutline, property as never, value as never));
     Object.entries(alternativePaint.line).forEach(([property, value]) =>
-      map.setPaintProperty(secondaryLine, property, value));
+      map.setPaintProperty(secondaryLine, property as never, value as never));
     Object.entries(alternativePaint.outline).forEach(([property, value]) =>
-      map.setPaintProperty(secondaryOutline, property, value));
+      map.setPaintProperty(secondaryOutline, property as never, value as never));
     map.moveLayer(selectedOutline, "problem-line");
     map.moveLayer(selectedLine, "problem-line");
     if (!shouldBeginNavigation(journeyActiveRef.current)) return;
     const allCoordinates = [...fastRoute.coordinates, ...safeRoute.coordinates];
     const lngs = allCoordinates.map(([lng]) => lng);
     const lats = allCoordinates.map(([, lat]) => lat);
+    // The route now owns the camera: the position follow resumes only when the person taps "centre on me".
+    followCameraRef.current = false;
+    setFollowCentered(false);
     map.fitBounds([[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]], {
       padding: visibleMapPadding(map.getContainer()),
       maxZoom: 14.7,
@@ -1626,6 +1732,9 @@ export default function Home() {
 
   function changeArea(nextAreaId: PilotAreaId) {
     if (nextAreaId === areaIdRef.current || journeyActiveRef.current) return;
+    // Another city: the camera goes to its centre, not to the person's position.
+    followCameraRef.current = false;
+    setFollowCentered(false);
     finishNavigation();
     invalidateRouteIntent();
     cancelAddressSearch();
@@ -2676,25 +2785,31 @@ export default function Home() {
     }
     const requestedArea = areaIdRef.current;
     const requestedRevision = plannerRevisionRef.current;
+    const acceptLocation = (coordinate: Coordinate) => {
+      if (requestedArea !== areaIdRef.current || requestedRevision !== plannerRevisionRef.current) return;
+      if (!coordinateInArea(coordinate, PILOT_AREAS[requestedArea])) {
+        setPlanError(`La tua posizione è fuori dall’area di servizio di ${PILOT_AREAS[requestedArea].name} e dintorni.`);
+        return;
+      }
+      const location = { label: CURRENT_POSITION_LABEL, coordinate };
+      discardPlannedRoute();
+      cancelAddressSearch();
+      startLocationRef.current = location;
+      resolvedStartRef.current = location;
+      startTextRef.current = location.label;
+      setStartLocation(location);
+      setStartText(location.label);
+      setStatus("Posizione impostata come partenza.");
+    };
+    // The position the follow already has (a few seconds old, usable accuracy) answers at once, without asking the device again.
+    const known = followFixRef.current;
+    if (known && Date.now() - known.timestamp <= 10_000 && known.accuracy <= 100) {
+      acceptLocation(known.coordinate);
+      return;
+    }
     setStatus("Sto rilevando la tua posizione…");
     navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        const coordinate: Coordinate = [coords.longitude, coords.latitude];
-        if (requestedArea !== areaIdRef.current || requestedRevision !== plannerRevisionRef.current) return;
-        if (!coordinateInArea(coordinate, PILOT_AREAS[requestedArea])) {
-          setPlanError(`La tua posizione è fuori dall’area di servizio di ${PILOT_AREAS[requestedArea].name} e dintorni.`);
-          return;
-        }
-        const location = { label: CURRENT_POSITION_LABEL, coordinate };
-        discardPlannedRoute();
-        cancelAddressSearch();
-        startLocationRef.current = location;
-        resolvedStartRef.current = location;
-        startTextRef.current = location.label;
-        setStartLocation(location);
-        setStartText(location.label);
-        setStatus("Posizione impostata come partenza.");
-      },
+      ({ coords }) => acceptLocation([coords.longitude, coords.latitude]),
       () => {
         if (requestedArea === areaIdRef.current && requestedRevision === plannerRevisionRef.current) {
           setPlanError("Non ho potuto accedere alla posizione. Controlla i permessi di localizzazione o scrivi un indirizzo.");
@@ -2930,6 +3045,9 @@ export default function Home() {
       return;
     }
     if (journeyActiveRef.current) return;
+    // The vehicle owns the camera now; the position follow does not pull it back when navigation ends.
+    followCameraRef.current = false;
+    setFollowCentered(false);
     setPlanError(null);
     setResumeOffer(null);
     setRerouteIssue(false);
@@ -3109,6 +3227,48 @@ export default function Home() {
     deleteGpsTrace(storage, id);
     setTraces(listGpsTraces(storage));
     setStatus("Traccia GPS eliminata dal dispositivo.");
+  }
+
+  /** "Centre on me": a tap is a gesture, so it also starts the follow when the permission was not granted yet or it was switched off. */
+  function locateMe() {
+    const follow = followRef.current;
+    followCameraRef.current = true;
+    setFollowCentered(true);
+    if (follow && (!follow.subscribed || follow.isOff)) follow.startFromGesture();
+    const fix = followFixRef.current;
+    const map = mapRef.current;
+    if (!fix || !map) {
+      setStatus(followStatus === "denied"
+        ? "Non ho potuto accedere alla posizione. Controlla i permessi di localizzazione del browser."
+        : "Cerco la tua posizione…");
+      return;
+    }
+    if (!coordinateInArea(fix.coordinate, PILOT_AREAS[areaIdRef.current])) {
+      setStatus(`La tua posizione è fuori dall’area di servizio di ${PILOT_AREAS[areaIdRef.current].name} e dintorni.`);
+      return;
+    }
+    followCenteredOnceRef.current = true;
+    map.easeTo({
+      center: fix.coordinate,
+      zoom: Math.max(map.getZoom(), 15.5),
+      padding: visibleMapPadding(map.getContainer()),
+      duration: 400,
+    });
+  }
+
+  /** The menu switch: on starts the follow (a gesture), off stops it and is remembered until switched on again. */
+  function toggleLocationFollow() {
+    const follow = followRef.current;
+    if (!follow) return;
+    if (follow.subscribed && !follow.isOff) {
+      follow.switchOff();
+      setStatus("Posizione sulla mappa disattivata.");
+    } else {
+      followCameraRef.current = true;
+      setFollowCentered(true);
+      follow.startFromGesture();
+      setStatus("Cerco la tua posizione…");
+    }
   }
 
   function recenterNavigation() {
@@ -3326,6 +3486,18 @@ export default function Home() {
             </select>
             <Icon name="chevronDown" size={16} />
           </div>
+          {/* In the top bar, which no sheet can cover: "centre on me" resumes the follow and starts it from a tap when needed. */}
+          <button
+            type="button"
+            className={`icon-button ${followCentered && followPosition ? "active" : ""}`}
+            onClick={locateMe}
+            aria-label="Centra la mappa su di me"
+            aria-pressed={followCentered && followPosition !== null}
+            title="Centra su di me"
+            data-testid="locate-me"
+          >
+            <Icon name="recenter" />
+          </button>
           <button
             type="button"
             className="icon-button"
@@ -3998,6 +4170,23 @@ export default function Home() {
             <button type="button" onClick={cycleTheme} data-testid="menu-theme">
               <Icon name={themeMode === "auto" ? "auto" : themeMode === "light" ? "sun" : "moon"} />
               <span>Tema: {themeMode === "auto" ? "automatico" : themeMode === "light" ? "chiaro" : "scuro"}</span>
+            </button>
+            <button
+              type="button"
+              onClick={toggleLocationFollow}
+              aria-pressed={followStatus !== "off" && followStatus !== "gesture-required" && followStatus !== "denied"}
+              data-testid="gps-tracking-toggle"
+            >
+              <Icon name="recenter" />
+              <span>
+                Posizione sulla mappa:{" "}
+                <span data-testid="gps-tracking-status">
+                  {followStatus === "off" ? "disattivata"
+                    : followStatus === "gesture-required" ? "da attivare"
+                      : followStatus === "denied" ? "negata dal browser"
+                        : followStatus === "idle" ? "in verifica" : "attiva"}
+                </span>
+              </span>
             </button>
             <button type="button" onClick={() => { setMenuOpen(false); setActivePanel("community"); }} data-testid="menu-community">
               <Icon name="community" /><span>Comunità</span>

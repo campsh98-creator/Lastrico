@@ -62,7 +62,8 @@ export default function IntelligencePage() {
     const map = mapRef.current;
     if (!map || !map.getLayer("roads")) return;
     const match = (prop: string, colours: [string, string, string][]) => ["match", ["get", prop], ...colours.flatMap(([k, c]) => [k, c]), "#9e9e9e"];
-    map.setPaintProperty("roads", "line-color", view === "surface" ? match("surface", SURFACE_COLOURS) : view === "rails" ? match("rails", RAIL_COLOURS) : ["case", ["==", ["get", "conflict"], true], "#e41a1c", "#cfcfcf"]);
+    // `never`: the colour is a style expression, which MapLibre 5 and 6 type differently; both accept it at run time.
+    map.setPaintProperty("roads", "line-color", (view === "surface" ? match("surface", SURFACE_COLOURS) : view === "rails" ? match("rails", RAIL_COLOURS) : ["case", ["==", ["get", "conflict"], true], "#e41a1c", "#cfcfcf"]) as never);
   }, [view, totals]);
 
   const legend = view === "surface" ? SURFACE_COLOURS : view === "rails" ? RAIL_COLOURS : [["x", "#e41a1c", "Le fonti non concordano sui binari"], ["y", "#cfcfcf", "Nessun conflitto noto"]] as [string, string, string][];

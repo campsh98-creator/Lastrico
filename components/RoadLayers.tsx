@@ -107,9 +107,10 @@ export function RoadLayers({ map, ready, suspended }: { map: MapLibreMap | null;
       const box: [[number, number], [number, number]] = [[event.point.x - TAP_RADIUS, event.point.y - TAP_RADIUS], [event.point.x + TAP_RADIUS, event.point.y + TAP_RADIUS]];
       setIncident(map.queryRenderedFeatures(box, { layers: [INCIDENT_LAYER] })[0]?.properties ?? null);
     };
-    map.on("error", onError);
+    // `never`: the error event's type differs between MapLibre 5 and 6; `sourceId` is read defensively above.
+    map.on("error", onError as never);
     map.on("click", onTap);
-    return () => { map.off("error", onError); map.off("click", onTap); };
+    return () => { map.off("error", onError as never); map.off("click", onTap); };
   }, [map, ready, trafficActive]);
 
   useEffect(() => {

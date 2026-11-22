@@ -20,11 +20,20 @@ updates:
           - "next"
           - "eslint-config-next"
       # Minor and patch updates of the other development tools; each major version arrives as its own pull request.
+      # The two families above are excluded here: a development group that also bumped react-server-dom-webpack or
+      # eslint-config-next (#60) could not install on its own (npm ERESOLVE) and duplicated the family pull requests.
       development-dependencies:
         dependency-type: development
         update-types:
           - minor
           - patch
+        exclude-patterns:
+          - "react"
+          - "react-*"
+          - "@types/react"
+          - "@types/react-*"
+          - "next"
+          - "eslint-config-next"
   - package-ecosystem: github-actions
     directory: /
     schedule:

@@ -44,8 +44,9 @@ export function applyMapTheme(map: MapLibreMap, theme: "light" | "dark") {
     originalTextPaint.set(map, originals);
   }
   for (const [id, paint] of originals) {
-    map.setPaintProperty(id, "text-color", theme === "dark" ? "#d5e1de" : paint.color);
-    map.setPaintProperty(id, "text-halo-color", theme === "dark" ? "#0b1315" : paint.halo);
+    // `never`: the original paint is read back as `unknown`, which MapLibre 6's stricter setter types refuse.
+    map.setPaintProperty(id, "text-color", (theme === "dark" ? "#d5e1de" : paint.color) as never);
+    map.setPaintProperty(id, "text-halo-color", (theme === "dark" ? "#0b1315" : paint.halo) as never);
   }
 }
 

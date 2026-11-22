@@ -714,7 +714,11 @@ export type TraceReplayReport = {
 const SKIPPED_INSTRUCTION_ADVANCE_METERS = 150;
 
 /** Re-runs the app's per-fix logic over a trace; differences reveal changed behaviour. */
-export function replayGpsTrace(trace: GpsTrace): TraceReplayReport {
+export function replayGpsTrace(
+  trace: GpsTrace,
+  /** Sees every decision as it is replayed (tests read the travel course the app would send at a reroute); changes nothing. */
+  observe?: (atFix: number, decision: ReturnType<typeof processGpsFix>) => void,
+): TraceReplayReport {
   if (trace.schema !== GPS_TRACE_SCHEMA || !SUPPORTED_TRACE_VERSIONS.includes(trace.version)) {
     throw new Error(`Unsupported trace format: ${trace.schema} v${trace.version}`);
   }
@@ -761,6 +765,7 @@ export function replayGpsTrace(trace: GpsTrace): TraceReplayReport {
       rerouteCooldownMs: cooldownMs,
     });
     state = decision.state;
+    observe?.(index, decision);
 
     if (decision.outcome === "outside") report.outside += 1;
     else if (decision.outcome === "rejected") {

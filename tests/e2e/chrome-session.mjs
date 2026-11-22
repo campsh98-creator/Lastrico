@@ -277,12 +277,14 @@ export async function launchChrome({
           const geolocation = navigator.geolocation;
           if (!geolocation) return;
           const originalClear = geolocation.clearWatch.bind(geolocation);
-          window.__gps = { success: null, failure: null, watches: 0, active: 0, cleared: 0 };
-          geolocation.watchPosition = (success, failure) => {
+          window.__gps = { success: null, failure: null, watches: 0, active: 0, maxActive: 0, cleared: 0, options: [] };
+          geolocation.watchPosition = (success, failure, options) => {
             window.__gps.success = success;
             window.__gps.failure = failure;
             window.__gps.watches += 1;
             window.__gps.active += 1;
+            window.__gps.maxActive = Math.max(window.__gps.maxActive, window.__gps.active);
+            window.__gps.options.push(options ?? null);
             return 900000 + window.__gps.watches;
           };
           geolocation.clearWatch = (id) => {
