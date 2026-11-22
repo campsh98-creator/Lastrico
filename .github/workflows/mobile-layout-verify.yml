@@ -38,7 +38,15 @@ jobs:
       - name: Mobile acceptance suite, mocked providers (390x844, simulated GPS)
         env:
           CHROME_PATH: /usr/bin/google-chrome
+          LASTRICO_E2E_OUTPUT: ${{ runner.temp }}/shots
         run: node tests/e2e/acceptance.mjs --mock-only --only=D1-390x844 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
+      - name: Keep the screenshots for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-screenshots
+          path: ${{ runner.temp }}/shots/after/*.png
+          retention-days: 3
       - name: Summary
         if: always()
         run: |

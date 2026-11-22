@@ -3,7 +3,7 @@
 .p43-comparison-panel {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   background: transparent;
   border: 0;
   border-radius: 12px;
@@ -115,7 +115,7 @@
 .p43-route-cards {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .p43-route-card {
@@ -123,9 +123,10 @@
   min-height: 48px;
   display: flex;
   flex-direction: column;
-  /* 6px/2px keeps the routes sheet at about 38% of a 390×844 screen; 8px/4px left the map under 55%. */
-  gap: 2px;
-  padding: 6px 12px;
+  /* Tight on purpose: at 390×844 the routes sheet must leave the map at least 55% of the screen
+     (the mobile layout audit measures it); 8px/4px left it under, and the rationale wraps to two lines. */
+  gap: 1px;
+  padding: 5px 12px;
   background: var(--white);
   border: 1.5px solid var(--border);
   border-radius: 12px;
@@ -878,7 +879,7 @@
   background: var(--p43-notice-surface);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 4px 12px;
+  padding: 3px 12px;
   display: block;
   min-width: 0;
 }
@@ -912,11 +913,11 @@
 
 .p43-breakdown-item {
   font-size: 12px;
-  padding: 2px 7px;
+  padding: 1px 7px;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.04);
   color: var(--ink, #122023);
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .p43-breakdown-item b {
