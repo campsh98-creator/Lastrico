@@ -27,6 +27,7 @@ import {
   enterAddresses,
   fieldValue,
   freeMapShare,
+  GEOJSON_OF,
   mapCoverage,
   isFullyVisible,
   mapCenter,
@@ -1703,7 +1704,7 @@ scenario("G3", "OSM traffic signals appear on the selected route, with their dat
   await planCadornaDarsena(session);
   const state = await session.evaluate(`(() => {
     const map = ${MAP_LOOKUP};
-    const data = map.getSource("road-features").serialize().data;
+    const data = ${GEOJSON_OF}(map, "road-features");
     return { features: data.features.map((f) => f.properties.icon), note: document.querySelector("[data-testid=road-features-note]")?.innerText ?? null, layer: Boolean(map.getLayer("road-features")) };
   })()`);
   assert.deepEqual(state.features, ["lastrico-signal", "lastrico-give-way"]);

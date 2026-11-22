@@ -27,6 +27,20 @@ export const MAP_LOOKUP = `(() => {
   return null;
 })()`;
 
+/**
+ * The data of a GeoJSON source, whichever MapLibre is installed: version 5 has `serialize()`, version 6 dropped it and keeps the
+ * data in `_data` (private, which is acceptable in a test harness that reads what the page holds).
+ */
+export const GEOJSON_OF = `((map, id) => {
+  const source = map.getSource(id);
+  if (!source) return null;
+  if (typeof source.serialize === "function") return source.serialize().data;
+  const held = source._data;
+  if (held?.geojson) return held.geojson;
+  if (held?.updateable) return { type: "FeatureCollection", features: [...held.updateable.values()] };
+  return null;
+})`;
+
 export async function openApp({
   port,
   width = 390,
@@ -84,7 +98,7 @@ export const waitForMapIdle = (session, timeoutMs = 8_000) => session.waitFor(
 export async function routeScreenBounds(session) {
   return session.evaluate(`(() => {
     const map = ${MAP_LOOKUP};
-    const data = map.getSource("safe-route").serialize().data;
+    const data = ${GEOJSON_OF}(map, "safe-route") ?? {};
     const coordinates = data.features?.[0]?.geometry?.coordinates ?? [];
     const points = coordinates.map((coordinate) => map.project(coordinate));
     if (!points.length) return null;
@@ -112,7 +126,7 @@ export async function selectedLineWidth(session) {
 export async function mapLineStart(session, source = "safe-route") {
   return session.evaluate(`(() => {
     const map = ${MAP_LOOKUP};
-    return map.getSource(${JSON.stringify(source)}).serialize().data.features?.[0]?.geometry?.coordinates?.[0] ?? null;
+    return (${GEOJSON_OF}(map, ${JSON.stringify(source)}) ?? {}).features?.[0]?.geometry?.coordinates?.[0] ?? null;
   })()`);
 }
 
@@ -162,7 +176,7 @@ export async function appState(session) {
     const map = ${MAP_LOOKUP};
     const coords = (id) => {
       try {
-        const data = map.getSource(id).serialize().data;
+        const data = ${GEOJSON_OF}(map, id) ?? {};
         return data.features?.[0]?.geometry?.coordinates?.length ?? 0;
       } catch { return 0; }
     };
