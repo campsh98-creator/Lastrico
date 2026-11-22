@@ -29,6 +29,7 @@ import {
   freeMapShare,
   mapCoverage,
   isFullyVisible,
+  mapCenter,
   mapLineStart,
   mapThemeOverlay,
   offset,
@@ -1907,6 +1908,191 @@ scenario("E9", "Panels open and close without losing the route", async (session,
   note("Details, diagnostics and plan panels all opened and closed with the route intact");
 });
 
+/* ---------- I. Foreground location follow (lib/foreground-follow.ts) ---------- */
+/* Simulated GPS in headless Chrome at an iPhone size, and the iOS lifecycle events by hand: this is not a physical iPhone. */
+
+async function dragMap(session, dx = 120, dy = 80) {
+  const x = 195;
+  const y = 300;
+  await session.cdp("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", buttons: 1, clickCount: 1 });
+  for (let step = 1; step <= 5; step += 1) {
+    await session.cdp("Input.dispatchMouseEvent", { type: "mouseMoved", x: x + (dx * step) / 5, y: y + (dy * step) / 5, button: "left", buttons: 1 });
+    await sleep(30);
+  }
+  await session.cdp("Input.dispatchMouseEvent", { type: "mouseReleased", x: x + dx, y: y + dy, button: "left", buttons: 0, clickCount: 1 });
+  await waitForMapIdle(session);
+}
+const userDotShown = (session) => session.evaluate(`(() => {
+  const dot = document.querySelector("[data-testid=user-position]");
+  return Boolean(dot) && getComputedStyle(dot).display !== "none";
+})()`);
+
+scenario("I1", "A granted permission starts one low-accuracy watch by itself, centres once, and never touches the planner or navigation", async (session, note) => {
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "the follow's watch");
+  const initial = await appState(session);
+  assert.equal(initial.gps.watches, 1, "one watch on launch");
+  assert.equal(initial.gps.maxActive, 1);
+  assert.equal(initial.gps.options[0]?.enableHighAccuracy, false, "low power outside navigation");
+  assert.equal(initial.hud, false, "navigation is not started by itself");
+  assert.equal(initial.startValue, "", "the origin is not set by itself");
+  assert.equal(await userDotShown(session), false, "no dot before the first fix");
+
+  await session.feedFix(PLACES.cadorna.coordinate, { accuracy: 12 });
+  await session.waitFor(`document.querySelector("[data-testid=user-position]") && getComputedStyle(document.querySelector("[data-testid=user-position]")).display !== "none"`, 3_000, "position dot");
+  await waitForMapIdle(session);
+  const offsetMeters = distanceBetween(await mapCenter(session), PLACES.cadorna.coordinate);
+  assert.ok(offsetMeters < 150, `the map centres on the first fix (${Math.round(offsetMeters)} m off)`);
+  const after = await appState(session);
+  assert.equal(after.startValue, "", "a fix never overwrites the origin");
+  assert.equal(after.hud, false, "a fix never starts navigation");
+  assert.equal(after.gps.watches, 1, "still the same single watch");
+  note(`1 low-accuracy watch, centred within ${Math.round(offsetMeters)} m, origin and navigation untouched`);
+}, { follow: true });
+
+scenario("I2", "A prompt or unknown permission never starts geolocation by itself; a tap on the locate control does", async (session, note) => {
+  await sleep(500);
+  const before = await appState(session);
+  assert.equal(before.gps.watches, 0, "no watchPosition, so no prompt raised by the page");
+  await session.tap("[data-testid=app-menu-button]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=gps-tracking-status]"))`, 3_000, "menu status");
+  assert.match(await session.evaluate(`document.querySelector("[data-testid=gps-tracking-status]").innerText`), /da attivare/);
+  await session.tap("[data-testid=app-menu] .modal-close");
+  await session.tap("[data-testid=locate-me]");
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "the tap starts one watch");
+  await session.feedFix(PLACES.cadorna.coordinate, { accuracy: 10 });
+  await waitForMapIdle(session);
+  assert.ok(distanceBetween(await mapCenter(session), PLACES.cadorna.coordinate) < 150, "centres after the tap");
+  const after = await appState(session);
+  assert.equal(after.gps.watches, 1);
+  assert.equal(after.gps.maxActive, 1);
+  note("0 watches on prompt; the locate tap started 1 and centred the map");
+}, {
+  follow: true,
+  setup: (session) => session.cdp("Page.addScriptToEvaluateOnNewDocument", {
+    source: `Object.defineProperty(navigator, "permissions", { configurable: true, value: { query: async () => ({ state: "prompt", addEventListener() {}, removeEventListener() {} }) } });`,
+  }),
+});
+
+scenario("I3", "A manual pan before or after the first fix suspends the follow until the locate control is tapped", async (session, note) => {
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "the follow's watch");
+  await dragMap(session, 140, 100);
+  const explored = await mapCenter(session);
+  const firstFix = PLACES.cadorna.coordinate;
+  await session.feedFix(firstFix, { accuracy: 10 });
+  await sleep(600);
+  assert.ok(distanceBetween(await mapCenter(session), explored) < 50, "exploring before the first fix is not overridden");
+  await session.tap("[data-testid=locate-me]");
+  await waitForMapIdle(session);
+  assert.ok(distanceBetween(await mapCenter(session), firstFix) < 150, "the locate tap jumps back to the position");
+
+  await dragMap(session, -140, -100);
+  const exploredAgain = await mapCenter(session);
+  await session.feedFix([9.1815, 45.4712], { accuracy: 10 });
+  await sleep(600);
+  assert.ok(distanceBetween(await mapCenter(session), exploredAgain) < 50, "exploring after a fix is preserved");
+  await session.tap("[data-testid=locate-me]");
+  await waitForMapIdle(session);
+  assert.ok(distanceBetween(await mapCenter(session), [9.1815, 45.4712]) < 150, "a second tap follows the latest position");
+  note("a pan before and after the first fix suspended the follow; each locate tap resumed it");
+}, { follow: true });
+
+scenario("I4", "Switching the position off in the menu is remembered across a reload until it is switched on again", async (session, note) => {
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "the follow's watch");
+  await session.tap("[data-testid=app-menu-button]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=gps-tracking-toggle]"))`, 3_000, "menu switch");
+  assert.match(await session.evaluate(`document.querySelector("[data-testid=gps-tracking-status]").innerText`), /attiva/);
+  await session.tap("[data-testid=gps-tracking-toggle]");
+  await session.waitFor(`window.__gps?.active === 0`, 3_000, "the watch is released");
+  assert.match(await session.evaluate(`document.querySelector("[data-testid=gps-tracking-status]").innerText`), /disattivata/);
+
+  await session.goto(`${BASE}/`);
+  await waitForPlanner(session);
+  await sleep(500);
+  const reloaded = await appState(session);
+  assert.equal(reloaded.gps.watches, 0, "the remembered off prevents the automatic start");
+  await session.tap("[data-testid=app-menu-button]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=gps-tracking-toggle]"))`, 3_000, "menu switch after the reload");
+  await session.tap("[data-testid=gps-tracking-toggle]");
+  await session.waitFor(`window.__gps?.active === 1`, 3_000, "switched on again");
+  const resumed = await appState(session);
+  assert.equal(resumed.gps.watches, 1);
+  assert.equal(resumed.gps.maxActive, 1);
+  note("off survived the reload with 0 watches, and one tap resumed exactly one");
+}, { follow: true });
+
+scenario("I5", "A hidden page releases the watch and a visible one restores exactly one, with the iOS lifecycle events", async (session, note) => {
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "the follow's watch");
+  const visibility = (state) => session.evaluate(`(() => {
+    Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "${state}" });
+    document.dispatchEvent(new Event("visibilitychange"));
+  })()`);
+  await visibility("hidden");
+  await session.waitFor(`window.__gps?.active === 0`, 3_000, "released while hidden");
+  await visibility("hidden");
+  await visibility("visible");
+  await session.waitFor(`window.__gps?.active === 1`, 3_000, "restored on return");
+  await session.evaluate(`window.dispatchEvent(new PageTransitionEvent("pagehide"))`);
+  await session.waitFor(`window.__gps?.active === 0`, 3_000, "released on pagehide");
+  await session.evaluate(`window.dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true }))`);
+  await session.waitFor(`window.__gps?.active === 1`, 3_000, "restored on a back-forward cache restore");
+  const state = await appState(session);
+  assert.equal(state.gps.active, 1);
+  assert.equal(state.gps.maxActive, 1, "never two watches across hide and show");
+  note("visibilitychange and pagehide/pageshow released and restored one watch each time (maxActive 1)");
+}, { follow: true });
+
+scenario("I6", "Following, recording and navigation share one watch, and the accuracy falls back when the demanding ones leave", async (session, note) => {
+  await mockBackend(session);
+  const data = fixture("milan-car");
+  const along = (meters) => pointAt(data.safe.coordinates, meters).coordinate;
+  const gps = () => session.evaluate(`({ active: window.__gps.active, maxActive: window.__gps.maxActive, high: window.__gps.options.at(-1)?.enableHighAccuracy })`);
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "the follow's watch");
+  assert.equal((await gps()).high, false, "following alone is low power");
+
+  await session.tap("[data-testid=preferences-toggle]");
+  await session.tap("[data-testid=recording-start]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("Registrazione in corso")`, 3_000, "recording");
+  assert.deepEqual([(await gps()).active, (await gps()).high], [1, true], "recording joins the follow's watch and asks for high accuracy");
+  await session.tap("[data-testid=preferences-toggle]");
+
+  await planCadornaDarsena(session);
+  await session.tap("[data-testid=start-navigation]");
+  await waitForPhase(session, "starting", 5_000);
+  await session.feedFix(along(0), { accuracy: 8 });
+  await sleep(600);
+  await session.feedFix(along(40), { accuracy: 8 });
+  await waitForPhase(session, "navigating", 5_000);
+  assert.equal((await gps()).active, 1, "navigation joins the same watch");
+  await session.tap(".stop-navigation");
+  await waitForPhase(session, "route-ready", 5_000);
+  assert.deepEqual([(await gps()).active, (await gps()).high], [1, true], "the recording still needs high accuracy after navigation");
+
+  await session.tap("[data-testid=edit-route]");
+  await session.tap("[data-testid=preferences-toggle]");
+  await session.tap("[data-testid=recording-stop]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("Registrazione terminata")`, 3_000, "stopped");
+  const afterRecording = await gps();
+  assert.deepEqual([afterRecording.active, afterRecording.high], [1, false], "the follow keeps one low-power watch");
+  assert.equal(afterRecording.maxActive, 1, "never two watches in the whole sequence");
+  note("follow + recording + navigation: maxActive 1, high accuracy only while needed, one low-power watch left");
+}, { follow: true });
+
+scenario("I7", "'Use my position' takes the position the follow already has, and the origin follows only that tap", async (session, note) => {
+  const backend = await mockBackend(session);
+  await session.waitFor(`window.__gps?.active === 1`, 5_000, "the follow's watch");
+  await session.feedFix(PLACES.cadorna.coordinate, { accuracy: 8 });
+  await sleep(300);
+  assert.equal((await appState(session)).startValue, "", "a fix alone does not set the origin");
+  await session.tap('[aria-label="Usa posizione GPS"]');
+  await session.waitFor(`document.querySelector("#start-search").value === "La mia posizione"`, 5_000, "origin set from the tap");
+  await session.typeInto("#end-search", "Darsena");
+  await calculate(session);
+  await waitForPhase(session, "route-ready");
+  assert.equal(backend.routeCalls.at(-1).start, "9.1765,45.4682", "the planned route starts at the known position");
+  assert.equal((await appState(session)).gps.maxActive, 1);
+  note("the tap used the follow's position (no second request); the route started there");
+}, { follow: true });
+
 /* ---------- Runner ---------- */
 
 const selected = scenarios.filter((item) => {
@@ -1925,7 +2111,7 @@ async function runScenario(item) {
   let session = null;
   try {
     if (!item.options.noBrowser) {
-      const { setup: optionSetup, width, height, theme, mobile, bypassServiceWorker, gpsFeed, waitForMap, noInitialGoto } = item.options;
+      const { setup: optionSetup, width, height, theme, mobile, bypassServiceWorker, gpsFeed, waitForMap, noInitialGoto, follow } = item.options;
       session = await openApp({
         port,
         width,
@@ -1934,6 +2120,7 @@ async function runScenario(item) {
         mobile,
         bypassServiceWorker,
         gpsFeed,
+        follow,
         waitForMap,
         path: noInitialGoto ? "/favicon.svg" : "/",
         setup: optionSetup,

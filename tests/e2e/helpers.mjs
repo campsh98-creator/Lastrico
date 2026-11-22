@@ -38,10 +38,19 @@ export async function openApp({
   bypassServiceWorker = true,
   setup = null,
   waitForMap = true,
+  follow = false,
 } = {}) {
   const session = await launchChrome({ port, width, height, mobile, bypassServiceWorker });
   try {
     await session.grantGeolocation(BASE).catch(() => {});
+    // Chrome reports the permission as granted after the line above, so the foreground location follow would start in every
+    // scenario. The scenarios about navigation and the recorder count watches exactly, so they start with the follow switched
+    // off (the person's own "off" preference); the `follow: true` scenarios leave it to the app.
+    if (!follow) {
+      await session.cdp("Page.addScriptToEvaluateOnNewDocument", {
+        source: `try { localStorage.setItem("lastrico-location-follow-off", "1"); } catch {}`,
+      });
+    }
     if (theme) {
       await session.cdp("Page.addScriptToEvaluateOnNewDocument", {
         source: `try { localStorage.setItem("lastrico-theme", ${JSON.stringify(theme)}); } catch {}`,
@@ -186,7 +195,12 @@ export async function appState(session) {
       navNotice: text(".hud-notice"),
       hudRoute: text(".hud-badge.subtle"),
       instruction: text("[data-testid=directions-trigger] .maneuver-copy b"),
-      gps: window.__gps ? { watches: window.__gps.watches, active: window.__gps.active } : null,
+      gps: window.__gps ? {
+        watches: window.__gps.watches,
+        active: window.__gps.active,
+        maxActive: window.__gps.maxActive,
+        options: window.__gps.options,
+      } : null,
     };
   })()`);
 }

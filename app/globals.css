@@ -1119,6 +1119,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
   .sheet-expanded .map-stage .maplibregl-ctrl-top-right,
   .sheet-expanded .map-stage .maplibregl-ctrl-bottom-left,
   .sheet-expanded .road-layers,
+  .sheet-expanded .locate-me,
   .sheet-expanded .map-key { display: none; }
   /* The 44 px buttons stay; the two address fields lose 2 px of padding around them (54 to 50 px each),
      so the planner sheet leaves the map at least 55% of a 390x844 screen. */
@@ -1291,6 +1292,34 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 .ztl-modes { display: flex; gap: var(--space-3); }
 .ztl-modes label { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); font-size: var(--t-sm); }
 .ztl-modes input { width: 20px; height: 20px; }
+
+/* The person's own position outside navigation (foreground location follow), and the control that centres the map on it */
+.user-position { position: relative; width: 44px; height: 44px; display: grid; place-items: center; pointer-events: none; }
+.user-position i {
+  position: absolute;
+  width: var(--accuracy, 24px);
+  height: var(--accuracy, 24px);
+  border-radius: 50%;
+  background: rgba(26, 115, 232, .16);
+  border: 1px solid rgba(26, 115, 232, .35);
+}
+.user-position span { position: relative; width: 18px; height: 18px; border: 3px solid #ffffff; border-radius: 50%; background: #1a73e8; box-shadow: 0 1px 6px rgba(16, 33, 36, .4); }
+.locate-me {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--safe-top) + 208px);
+  right: calc(var(--safe-right) + var(--space-3));
+  width: var(--tap);
+  height: var(--tap);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, .25);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+}
+.locate-me.active { color: #1a73e8; border-color: #1a73e8; }
 
 /* Optional road-knowledge layers (Strati strada) */
 .road-layers { position: absolute; top: calc(var(--safe-top) + 160px); right: calc(var(--safe-right) + var(--space-3)); z-index: 3; max-width: min(300px, calc(100vw - 24px)); display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-2); }
