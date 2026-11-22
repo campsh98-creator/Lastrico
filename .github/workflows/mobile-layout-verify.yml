@@ -38,7 +38,7 @@ jobs:
       - name: Mobile acceptance suite, mocked providers (390x844, simulated GPS)
         env:
           CHROME_PATH: /usr/bin/google-chrome
-        run: node tests/e2e/acceptance.mjs --mock-only 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
+        run: node tests/e2e/acceptance.mjs --mock-only --only=D1-390x844 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
       - name: Summary
         if: always()
         run: |

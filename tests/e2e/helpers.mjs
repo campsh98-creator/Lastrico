@@ -369,6 +369,8 @@ export async function mapCoverage(session) {
       box("fields", ".control-panel .route-fields"), box("field", ".control-panel .route-field"), box("prefs", "[data-testid=preferences-toggle]"),
       box("footer", ".control-panel .sheet-footer"), box("layers", ".road-layers-toggle"), box("zoom", ".maplibregl-ctrl-top-right"),
       box("attribution", ".maplibregl-ctrl-attrib"),
+      "children " + [...(document.querySelector(".control-panel .sheet-body")?.children ?? [])]
+        .map((child) => (child.dataset?.testid || String(child.className).split(" ")[0] || child.tagName) + " " + Math.round(child.getBoundingClientRect().height)).join(", "),
     ].join("; ");
     return geometry + " | covered % of screen " + JSON.stringify(taken);
   })()`);
