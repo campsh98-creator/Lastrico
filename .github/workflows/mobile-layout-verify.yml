@@ -35,10 +35,10 @@ jobs:
           WRANGLER_SEND_METRICS=false WRANGLER_LOG_PATH=.wrangler/wrangler.log nohup npx wrangler dev --config dist/server/wrangler.json --port 8799 --local --show-interactive-dev-session=false > "$RUNNER_TEMP/wrangler.log" 2>&1 &
           for i in $(seq 1 90); do curl -sf -o /dev/null http://127.0.0.1:8799/manifest.webmanifest && break; sleep 2; done
           curl -s -o /dev/null -w "worker status %{http_code}\n" http://127.0.0.1:8799/manifest.webmanifest
-      - name: Layout audit (all sizes and themes)
+      - name: Mobile acceptance suite, mocked providers (390x844, simulated GPS)
         env:
           CHROME_PATH: /usr/bin/google-chrome
-        run: node tests/e2e/acceptance.mjs --mock-only --only=D1-390x844 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
+        run: node tests/e2e/acceptance.mjs --mock-only 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
       - name: Summary
         if: always()
         run: |
