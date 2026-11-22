@@ -10,6 +10,7 @@ import {
   penalisedSliceMinimumMeters,
   PENALISED_SLICE_MINIMUM_METERS,
   pointDistanceMeters,
+  shouldRefineDuplicateWithStone,
   stopsOnlyWhenClean,
 } from "../lib/surface-aware-routing.ts";
 import { addsConfirmedPave, isLegalCandidate, selectOptimizedRoute, U_TURN_PENALTY_SECONDS, uTurnCount } from "../lib/route-optimization.ts";
@@ -36,6 +37,15 @@ test("the stricter early stop is Milan planner only: navigation reroutes and oth
   assert.equal(stopsOnlyWhenClean("milan", true), false, "a reroute stays fast");
   assert.equal(stopsOnlyWhenClean("roccella", false), false);
   assert.equal(stopsOnlyWhenClean("rome", false), false);
+});
+
+test("the duplicate-base refinement needs all of: Milan, the planner, a route the provider already offered, and stone left", () => {
+  assert.equal(shouldRefineDuplicateWithStone("milan", false, true, 25, 20), true);
+  assert.equal(shouldRefineDuplicateWithStone("milan", false, true, 20, 20), true, "exactly the minimum reduction still counts");
+  assert.equal(shouldRefineDuplicateWithStone("milan", false, true, 19, 20), false, "less than the minimum reduction is not worth a request");
+  assert.equal(shouldRefineDuplicateWithStone("milan", false, false, 25, 20), false, "a new route is judged by the established gate");
+  assert.equal(shouldRefineDuplicateWithStone("milan", true, true, 25, 20), false, "a reroute keeps its latency budget");
+  for (const area of ["roccella", "rome", "unknown-area"]) assert.equal(shouldRefineDuplicateWithStone(area, false, true, 25, 20), false, area);
 });
 
 /** A straight line at Milan's latitude with one stone stretch of exactly `stoneMeters` (vertices at its ends). */
@@ -136,18 +146,29 @@ async function run(id, { navigation = false, answerEverythingWith = null } = {})
   }
 }
 
-test("Piazzale Lodi, return replica: a cheap improvement with stone left no longer ends the planner's search", async () => {
+test("Piazzale Lodi, return replica: a cheap improvement with stone left no longer ends the planner's search, and a duplicated base route is refined", async () => {
   const { c, status, payload, requests } = await run("piazzale-lodi-return-car");
   assert.equal(status, 200);
   // Before (3e31da9): search.attempted false, one provider request, the 25 m Piazzale Lodi alternate accepted.
   assert.equal(c.before.antiPaveSearchAttempted, false);
   assert.equal(payload.antiPave.search.attempted, true, "the penalised search runs because 25 m of stone is left");
   assert.equal(payload.antiPave.search.slices, c.after.stoneSlicesTargeted);
-  assert.equal(requests.length, c.after.providerRequests, "one extra provider request");
-  assert.equal(requests.filter((r) => String(r.body).includes("linear_cost_factors")).length, 1);
+  // Phase 4.37 stopped here (2 requests, 25 m): the first penalised route was the Piazzale Lodi alternate again, so the refinement gate stayed shut.
+  assert.equal(requests.length, c.afterReconciliation.providerRequests, "base + penalised + one refinement of the duplicated route");
+  assert.equal(requests.filter((r) => String(r.body).includes("linear_cost_factors")).length, 2);
   assert.equal(payload.fast.confirmedPaveMeters, c.after.fastConfirmedMeters);
-  assert.equal(payload.safe.confirmedPaveMeters, c.after.safeConfirmedMeters, "never more stone than before");
+  assert.equal(payload.safe.confirmedPaveMeters, c.afterReconciliation.safeConfirmedMeters, "the refined route has no stone");
+  assert.ok(payload.safe.confirmedPaveMeters < c.after.safeConfirmedMeters);
+  assert.ok(payload.safe.minutes * 60 <= c.afterReconciliation.duplicatedBaseSeconds, "and it is not slower than the 25 m route it replaces: nothing was traded");
+  assert.equal(payload.antiPave.search.providerRequests, requests.length, "the counter matches the real requests");
   assert.ok(payload.candidateDiagnostics.every((d) => Number.isInteger(d.uTurnCount)), "every candidate reports its U-turns");
+});
+
+test("Piazzale Lodi, return replica: a reroute keeps its latency budget (one request, no refinement)", async () => {
+  const { c, status, payload, requests } = await run("piazzale-lodi-return-car", { navigation: true });
+  assert.equal(status, 200);
+  assert.equal(requests.length, c.before.providerRequests, "a reroute stops at the provider's alternates, as before");
+  assert.equal(payload.safe.confirmedPaveMeters, c.before.safeConfirmedMeters);
 });
 
 test("Piazzale Lodi, outbound-like replica: the outcome is unchanged and no request is added", async () => {

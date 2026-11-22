@@ -416,9 +416,10 @@ test("the page records the generation with the initial plan, every reroute and e
   const page = lf(await read("app/page.tsx"));
   assert.match(page, /summarizeRouteGeneration,/, "imported");
   assert.match(page, /routeGenerationRef\.current = summarizeRouteGeneration\(data\);/, "set for every response and restored plan");
-  assert.match(page, /\.\.\.traceRouteDetails\(nextSelectedRoute, routeKind, routeGenerationRef\.current\)/, "route switch");
-  assert.match(page, /\.\.\.traceRouteDetails\(nextSelectedRoute, nextRoute, routeGenerationRef\.current\)/, "reroute");
-  assert.match(page, /\.\.\.traceRouteDetails\(routeForJourney, activeRouteRef\.current, routeGenerationRef\.current\)/, "initial plan");
+  // Audit reconciliation: each call also says what the journey asked for (journeyObjective), next to the kind of route shown.
+  assert.match(page, /\.\.\.traceRouteDetails\(nextSelectedRoute, routeKind, journeyObjectiveRef\.current, routeGenerationRef\.current\)/, "route switch");
+  assert.match(page, /\.\.\.traceRouteDetails\(nextSelectedRoute, nextRoute, options\.preserveRoute \?\? "safe", routeGenerationRef\.current\)/, "reroute");
+  assert.match(page, /\.\.\.traceRouteDetails\(routeForJourney, activeRouteRef\.current, journeyObjectiveRef\.current, routeGenerationRef\.current\)/, "initial plan");
   assert.equal([...page.matchAll(/\.\.\.traceRouteDetails\(/g)].length, 3, "every addRoute call carries it");
   const trace = lf(await read("lib/gps-trace.ts"));
   assert.doesNotMatch(trace, /\bfetch\(|sendBeacon|XMLHttpRequest|WebSocket/, "still no network code");

@@ -24,6 +24,8 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Type-check
+        run: npx tsc --noEmit
       - name: Lint
         run: npm run lint
       - name: Test

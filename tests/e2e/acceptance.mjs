@@ -1007,8 +1007,15 @@ for (const [width, height] of VIEWPORTS) {
 }
 
 scenario("D2", "Dark theme dims the whole map, buildings included", async (session, note) => {
-  const overlay = await mapThemeOverlay(session);
-  assert.ok(overlay.opacity > .5, "overlay active");
+  // The overlay is added when the map style has loaded, which can come after the planner is on screen: wait up to 10 s for it
+  // instead of reading it at the first instant. If the app never adds it, this still fails, and says what it found.
+  let overlay = { opacity: 0, aboveBuildings: false };
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    overlay = await mapThemeOverlay(session).catch(() => overlay);
+    if (overlay.opacity > .5) break;
+    await sleep(250);
+  }
+  assert.ok(overlay.opacity > .5, `overlay active (opacity ${overlay.opacity})`);
   assert.ok(overlay.aboveBuildings, "overlay above the building layer");
   await session.tap("[data-testid=app-menu-button]");
   await session.tap("[data-testid=menu-theme]");
@@ -1297,6 +1304,143 @@ scenario("E6", "GPS recording is opt-in, local, and exports what was recorded", 
   await session.tap("[data-testid=gps-trace-delete]");
   await session.waitFor(`!document.querySelector("[data-testid=gps-trace-item]")`, 3_000, "trace deleted");
   note(`${trace.fixes.length} fixes recorded, exported as JSON v3 and GPX, 0 uploads, then deleted`);
+});
+
+// Audit reconciliation: the independent recorder (PR #46) on a phone-sized screen, before any route exists.
+scenario("E10", "Free recording: starts with no route, a pause cuts the line, export and import are valid, one location watch", async (session, note) => {
+  await session.evaluate(`(() => {
+    window.__exports = [];
+    const original = URL.createObjectURL.bind(URL);
+    URL.createObjectURL = (blob) => {
+      blob.text().then((text) => window.__exports.push(text));
+      return original(blob);
+    };
+    HTMLAnchorElement.prototype.click = function click() {};
+    navigator.canShare = () => false;
+  })()`);
+  await mockBackend(session);
+  const data = fixture("milan-car");
+  const along = (meters) => pointAt(data.safe.coordinates, meters).coordinate;
+  const status = () => session.evaluate(`document.querySelector("[data-testid=recording-status]")?.innerText ?? ""`);
+  const message = () => session.evaluate(`document.querySelector("[data-testid=recording-message]")?.innerText ?? ""`);
+  const activeWatches = () => session.evaluate(`window.__gps ? window.__gps.active : -1`);
+  const feed = async (from, count) => {
+    for (let index = 0; index < count; index += 1) {
+      await session.feedFix(along(from + index * 30), { accuracy: 8 });
+      await sleep(150);
+    }
+  };
+  const importText = (text, name) => session.evaluate(`(() => {
+    const input = document.querySelector("[data-testid=recording-import]");
+    const transfer = new DataTransfer();
+    transfer.items.add(new File([${JSON.stringify(text)}], ${JSON.stringify(name)}));
+    input.files = transfer.files;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  })()`);
+
+  // No destination, no route, no navigation: the recorder is in the preferences of the planner.
+  await session.tap("[data-testid=preferences-toggle]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=recording-start]"))`, 3_000, "recorder offered before any route");
+  assert.equal(await activeWatches(), 0, "no watch before recording starts");
+  await session.tap("[data-testid=recording-start]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("Registrazione in corso")`, 3_000, "recording");
+  assert.equal(await activeWatches(), 1, "exactly one location watch");
+  await feed(0, 4);
+  await session.waitFor(`/4 punti/.test(document.querySelector("[data-testid=recording-status]")?.innerText ?? "")`, 3_000, "4 points");
+
+  // A running recording is never replaced by an import.
+  await importText("<gpx></gpx>", "other.gpx");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=recording-message]"))`, 3_000, "import refused while recording");
+  assert.match(await message(), /registrazione in corso/);
+  assert.match(await status(), /Registrazione in corso.*4 punti/s, "the running recording is untouched");
+
+  await session.tap("[data-testid=recording-pause]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("In pausa")`, 3_000, "paused");
+  assert.equal(await activeWatches(), 0, "the watch is released while paused");
+  await session.tap("[data-testid=recording-resume]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("Registrazione in corso")`, 3_000, "resumed");
+  assert.equal(await activeWatches(), 1, "still one watch after resuming");
+  await feed(150, 3);
+  await session.waitFor(`/7 punti/.test(document.querySelector("[data-testid=recording-status]")?.innerText ?? "")`, 3_000, "7 points");
+  assert.match(await status(), /1 buco/, "the pause is shown as a gap");
+  await session.tap("[data-testid=recording-stop]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("Registrazione terminata")`, 3_000, "stopped");
+  assert.equal(await activeWatches(), 0, "no watch left after stopping");
+
+  const requestsBefore = session.requests.length;
+  await session.tap("[data-testid=recording-export-gpx]");
+  await session.waitFor(`window.__exports.length === 1`, 3_000, "GPX export");
+  const gpx = await session.evaluate(`window.__exports[0]`);
+  assert.match(gpx, /^<\?xml[^>]*>\n<gpx version="1\.1"/);
+  assert.equal((gpx.match(/<trkpt /g) ?? []).length, 7, "every fix in the GPX");
+  assert.equal((gpx.match(/<trkseg>/g) ?? []).length, 2, "the pause is a cut between two segments");
+  await session.tap("[data-testid=recording-export-geojson]");
+  await session.waitFor(`window.__exports.length === 2`, 3_000, "GeoJSON export");
+  const geojson = JSON.parse(await session.evaluate(`window.__exports[1]`));
+  assert.equal(geojson.type, "FeatureCollection");
+  assert.equal(geojson.features[0].geometry.type, "MultiLineString");
+  assert.equal(geojson.features[0].geometry.coordinates.length, 2, "two lines, nothing drawn across the pause");
+  for (const line of geojson.features[0].geometry.coordinates) {
+    assert.ok(line.length >= 2, "a LineString has two or more positions");
+    for (const [lon, lat] of line) assert.ok(lon >= 8 && lon <= 10 && lat >= 45 && lat <= 46, "positions are [lon, lat] in Milan");
+  }
+  const posted = session.requests.slice(requestsBefore).filter((request) => request.url.startsWith(BASE) && request.method !== "GET");
+  assert.equal(posted.length, 0, "recording and exporting upload nothing");
+
+  // What was exported can be imported again, and a file that is not a track is refused without touching the screen.
+  await session.tap("[data-testid=recording-discard]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("Nessuna registrazione")`, 3_000, "discarded");
+  await importText("this is not a track", "bad.gpx");
+  await session.waitFor(`/Non riesco a leggere il file/.test(document.querySelector("[data-testid=recording-message]")?.innerText ?? "")`, 3_000, "bad file refused");
+  assert.match(await status(), /Nessuna registrazione/);
+  await importText(gpx, "again.gpx");
+  await session.waitFor(`/Traccia importata: 7 punti/.test(document.querySelector("[data-testid=recording-message]")?.innerText ?? "")`, 3_000, "import");
+  assert.match(await status(), /Traccia importata.*7 punti.*1 buco/s, "imported with its cut kept");
+  note(`7 fixes, 1 pause cut, GPX (2 segments) and GeoJSON (2 lines) valid, import refused while recording, round trip ok, 1 watch, 0 uploads`);
+});
+
+scenario("E11", "Recording keeps running through navigation on the same single location watch", async (session, note) => {
+  await mockBackend(session);
+  const data = fixture("milan-car");
+  const along = (meters) => pointAt(data.safe.coordinates, meters).coordinate;
+  const pointsRecorded = () => session.evaluate(`Number(/(\\d+) punti/.exec(document.querySelector("[data-testid=recording-status]")?.innerText ?? "")?.[1] ?? 0)`);
+  const gps = () => session.evaluate(`window.__gps ? { active: window.__gps.active, watches: window.__gps.watches } : null`);
+
+  await session.tap("[data-testid=preferences-toggle]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=recording-start]"))`, 3_000, "recorder offered before any route");
+  await session.tap("[data-testid=recording-start]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("Registrazione in corso")`, 3_000, "recording");
+  await session.feedFix(along(0), { accuracy: 8 });
+  await sleep(150);
+  await session.feedFix(along(20), { accuracy: 8 });
+  await session.waitFor(`/2 punti/.test(document.querySelector("[data-testid=recording-status]")?.innerText ?? "")`, 3_000, "2 points");
+  assert.equal((await gps()).active, 1, "one watch for the recorder");
+  await session.tap("[data-testid=preferences-toggle]");
+
+  await planCadornaDarsena(session);
+  await session.tap("[data-testid=start-navigation]");
+  await waitForPhase(session, "starting", 5_000);
+  assert.equal((await gps()).active, 1, "navigation joins the recorder's watch instead of opening a second one");
+  await session.feedFix(along(40), { accuracy: 8 });
+  await sleep(600);
+  await session.feedFix(along(60), { accuracy: 8 });
+  await waitForPhase(session, "navigating", 5_000);
+  assert.equal((await gps()).active, 1, "still one watch while navigating");
+  await session.tap(".stop-navigation");
+  await waitForPhase(session, "route-ready", 5_000);
+  assert.equal((await gps()).active, 1, "stopping navigation does not stop the recording's watch");
+
+  // With a route on screen the planner form is behind "Modifica il percorso"; opening it discards nothing.
+  await session.tap("[data-testid=edit-route]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=preferences-toggle]"))`, 3_000, "planner form back");
+  await session.tap("[data-testid=preferences-toggle]");
+  await session.waitFor(`Boolean(document.querySelector("[data-testid=recording-status]"))`, 3_000, "recorder panel after navigation");
+  assert.match(await session.evaluate(`document.querySelector("[data-testid=recording-status]").innerText`), /Registrazione in corso/);
+  assert.ok(await pointsRecorded() >= 4, "the fixes that navigation also used were recorded");
+  await session.tap("[data-testid=recording-stop]");
+  await session.waitFor(`document.querySelector("[data-testid=recording-status]")?.innerText.includes("Registrazione terminata")`, 3_000, "stopped");
+  assert.equal((await gps()).active, 0, "no watch left once recording and navigation are both over");
+  note(`recorder + navigation: ${(await gps()).watches} watch call(s), ${await pointsRecorded()} points, 0 watches left`);
 });
 
 scenario("E7", "The voice switch really controls speech", async (session, note) => {

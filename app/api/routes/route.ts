@@ -27,6 +27,7 @@ import {
   penalisedSliceMinimumMeters,
   pointDistanceMeters,
   refinesWhileStoneLeft,
+  shouldRefineDuplicateWithStone,
   stopsOnlyWhenClean,
 } from "@/lib/surface-aware-routing";
 import { fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, normalizedHeading, withProviderTimeout, type ProviderMeter } from "@/lib/routing-providers";
@@ -763,6 +764,8 @@ export async function GET(request: NextRequest) {
     const detourResponses: EngineRoute[][] = [];
     const surfaceAwareRoutes: EngineRoute[] = [];
     let pendingRefinement: { shape: string; factor: number }[] | null = null;
+    // The first penalised route reproduced a route the provider had already offered, and it still keeps stone.
+    let firstDuplicatesBaseWithStone = false;
     let surfaceAwareDirectMetrics: { roughSlicesCount: number; penalizedMeters: number } | null = null;
     // Phase 4.31: whether the anti-pavé search really ran, so "no alternative" is never confused
     // with a search that failed or did not run.
@@ -837,7 +840,14 @@ export async function GET(request: NextRequest) {
           const firstScored = scoredCandidate(first, "surface-aware-valhalla");
           if (keepsPenalisedRoute(firstScored)) surfaceAwareRoutes.push(first);
           else surfaceAwareDiscarded += 1;
-          if (!isLegalCandidate(firstScored, mode) || firstScored.surfaceScore.weightedPaveMeters
+          firstDuplicatesBaseWithStone = shouldRefineDuplicateWithStone(
+            area.id,
+            navigationRequest,
+            baseScored.some((candidate) => routesAreEquivalent(candidate.route, firstScored.route, mode)),
+            firstScored.surfaceScore.weightedPaveMeters,
+            policy.minimumPaveReduction,
+          );
+          if (!isLegalCandidate(firstScored, mode) || firstDuplicatesBaseWithStone || firstScored.surfaceScore.weightedPaveMeters
             >= refinementStoneThreshold(preliminaryFast.surfaceScore.weightedPaveMeters)) {
             const penalised = roughSlices.filter((slice) => factors.some((factor) => factor.shape === encodePolyline6(slice)));
             const seen = [...roughSlices, ...[...baseScored.filter((candidate) => candidate !== preliminaryFast), firstScored]
@@ -968,7 +978,8 @@ export async function GET(request: NextRequest) {
         .map((route, index) => scoredCandidate(route, `refinement-check-${index + 1}`));
       const poolFast = fastestLegalCandidate(pool, mode)!;
       const poolSafe = selectSafeRoute(pool, poolFast, avoidance, mode, maximumExtraMinutes, policy);
-      if (poolSafe.surfaceScore.weightedPaveMeters >= refinementStoneThreshold(poolFast.surfaceScore.weightedPaveMeters)) {
+      if (poolSafe.surfaceScore.weightedPaveMeters >= refinementStoneThreshold(poolFast.surfaceScore.weightedPaveMeters)
+        || (firstDuplicatesBaseWithStone && poolSafe.surfaceScore.weightedPaveMeters >= policy.minimumPaveReduction)) {
         const refinedRoute = await fetchValhallaCustomizedRoute(
           [start, end],
           mode,
