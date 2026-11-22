@@ -339,6 +339,31 @@ export async function freeMapShare(session) {
   })()`);
 }
 
+/**
+ * What takes the screen away from the map: the share of the same grid points answered by each
+ * element that is not the map, so a map-share failure names its cause instead of only a number.
+ */
+export async function mapCoverage(session) {
+  return session.evaluate(`(() => {
+    const columns = 26;
+    const rows = 40;
+    const taken = {};
+    for (let row = 0; row < rows; row += 1) {
+      for (let column = 0; column < columns; column += 1) {
+        const x = (column + .5) * window.innerWidth / columns;
+        const y = (row + .5) * window.innerHeight / rows;
+        const hit = document.elementFromPoint(x, y);
+        if (!hit || hit.closest(".maplibregl-canvas-container") || hit.classList.contains("maplibregl-canvas")) continue;
+        const owner = hit.closest("[data-testid], [class]") ?? hit;
+        const name = owner.dataset?.testid || String(owner.className || owner.tagName).split(" ")[0];
+        taken[name] = (taken[name] ?? 0) + 1;
+      }
+    }
+    for (const name of Object.keys(taken)) taken[name] = Math.round(taken[name] / (columns * rows) * 1000) / 10;
+    return taken;
+  })()`);
+}
+
 /** WCAG contrast of text against the first opaque background behind it. */
 export async function contrastProblems(session, selectors, minimum = 4.5) {
   return session.evaluate(`(() => {

@@ -27,6 +27,7 @@ import {
   enterAddresses,
   fieldValue,
   freeMapShare,
+  mapCoverage,
   isFullyVisible,
   mapLineStart,
   mapThemeOverlay,
@@ -909,9 +910,11 @@ for (const [width, height] of VIEWPORTS) {
         if (SAVED_SHOTS.has(size)) await session.screenshot(new URL(`${screen}-${theme}-${size}.png`, AFTER).pathname);
       };
       const free = {};
+      const coverage = {};
 
       await check("planner");
       free.planner = await freeMapShare(session);
+      coverage.planner = await mapCoverage(session);
       assert.ok(await isFullyVisible(session, "[data-testid=calculate-routes]"), "calculate on screen");
 
       await calculate(session);
@@ -927,6 +930,7 @@ for (const [width, height] of VIEWPORTS) {
       await planCadornaDarsena(session);
       await check("routes");
       free.routes = await freeMapShare(session);
+      coverage.routes = await mapCoverage(session);
       assert.ok(await isFullyVisible(session, "[data-testid=start-navigation]"), "Start on screen");
 
       await session.tap("[data-testid=route-details-toggle]");
@@ -996,8 +1000,8 @@ for (const [width, height] of VIEWPORTS) {
       }
 
       if (size === "390x844") {
-        assert.ok(free.planner >= .55, `planner map share ${free.planner}`);
-        assert.ok(free.routes >= .55, `routes map share ${free.routes}`);
+        assert.ok(free.planner >= .55, `planner map share ${free.planner} (covered, % of screen: ${JSON.stringify(coverage.planner)})`);
+        assert.ok(free.routes >= .55, `routes map share ${free.routes} (covered, % of screen: ${JSON.stringify(coverage.routes)})`);
         assert.ok(free.navigation >= .70, `navigation map share ${free.navigation}`);
       }
       assert.deepEqual(problems, []);
