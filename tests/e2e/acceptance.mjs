@@ -1927,6 +1927,18 @@ const userDotShown = (session) => session.evaluate(`(() => {
   const dot = document.querySelector("[data-testid=user-position]");
   return Boolean(dot) && getComputedStyle(dot).display !== "none";
 })()`);
+/** Waits for the camera to reach a point: an animated move may not have started yet when a single read happens. */
+async function centerNear(session, coordinate, meters = 150, timeoutMs = 6_000) {
+  const deadline = Date.now() + timeoutMs;
+  let off = Infinity;
+  while (Date.now() < deadline) {
+    await waitForMapIdle(session);
+    off = distanceBetween(await mapCenter(session), coordinate);
+    if (off < meters) return off;
+    await sleep(200);
+  }
+  return off;
+}
 
 scenario("I1", "A granted permission starts one low-accuracy watch by itself, centres once, and never touches the planner or navigation", async (session, note) => {
   await session.waitFor(`window.__gps?.active === 1`, 5_000, "the follow's watch");
@@ -1940,8 +1952,7 @@ scenario("I1", "A granted permission starts one low-accuracy watch by itself, ce
 
   await session.feedFix(PLACES.cadorna.coordinate, { accuracy: 12 });
   await session.waitFor(`document.querySelector("[data-testid=user-position]") && getComputedStyle(document.querySelector("[data-testid=user-position]")).display !== "none"`, 3_000, "position dot");
-  await waitForMapIdle(session);
-  const offsetMeters = distanceBetween(await mapCenter(session), PLACES.cadorna.coordinate);
+  const offsetMeters = await centerNear(session, PLACES.cadorna.coordinate);
   assert.ok(offsetMeters < 150, `the map centres on the first fix (${Math.round(offsetMeters)} m off)`);
   const after = await appState(session);
   assert.equal(after.startValue, "", "a fix never overwrites the origin");
@@ -1961,8 +1972,7 @@ scenario("I2", "A prompt or unknown permission never starts geolocation by itsel
   await session.tap("[data-testid=locate-me]");
   await session.waitFor(`window.__gps?.active === 1`, 5_000, "the tap starts one watch");
   await session.feedFix(PLACES.cadorna.coordinate, { accuracy: 10 });
-  await waitForMapIdle(session);
-  assert.ok(distanceBetween(await mapCenter(session), PLACES.cadorna.coordinate) < 150, "centres after the tap");
+  assert.ok(await centerNear(session, PLACES.cadorna.coordinate) < 150, "centres after the tap");
   const after = await appState(session);
   assert.equal(after.gps.watches, 1);
   assert.equal(after.gps.maxActive, 1);
@@ -1983,8 +1993,7 @@ scenario("I3", "A manual pan before or after the first fix suspends the follow u
   await sleep(600);
   assert.ok(distanceBetween(await mapCenter(session), explored) < 50, "exploring before the first fix is not overridden");
   await session.tap("[data-testid=locate-me]");
-  await waitForMapIdle(session);
-  assert.ok(distanceBetween(await mapCenter(session), firstFix) < 150, "the locate tap jumps back to the position");
+  assert.ok(await centerNear(session, firstFix) < 150, "the locate tap jumps back to the position");
 
   await dragMap(session, -140, -100);
   const exploredAgain = await mapCenter(session);
@@ -1992,8 +2001,7 @@ scenario("I3", "A manual pan before or after the first fix suspends the follow u
   await sleep(600);
   assert.ok(distanceBetween(await mapCenter(session), exploredAgain) < 50, "exploring after a fix is preserved");
   await session.tap("[data-testid=locate-me]");
-  await waitForMapIdle(session);
-  assert.ok(distanceBetween(await mapCenter(session), [9.1815, 45.4712]) < 150, "a second tap follows the latest position");
+  assert.ok(await centerNear(session, [9.1815, 45.4712]) < 150, "a second tap follows the latest position");
   note("a pan before and after the first fix suspended the follow; each locate tap resumed it");
 }, { follow: true });
 
