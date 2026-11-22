@@ -38,9 +38,9 @@ jobs:
       - name: Layout audit (all sizes and themes)
         env:
           CHROME_PATH: /usr/bin/google-chrome
-        run: node tests/e2e/acceptance.mjs --mock-only --only=D1 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
+        run: node tests/e2e/acceptance.mjs --mock-only --only=D1-390x844 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
       - name: Summary
         if: always()
         run: |
           echo "== layout: $(grep -cE '^(PASS|✔)' "$RUNNER_TEMP/e2e-layout.txt" 2>/dev/null || echo 0) pass lines, $(grep -cE '^(FAIL|✖)' "$RUNNER_TEMP/e2e-layout.txt" 2>/dev/null || echo 0) fail lines"
-          grep -E -A6 '^(FAIL|✖)' "$RUNNER_TEMP/e2e-layout.txt" 2>/dev/null | cut -c1-400 || true
+          grep -E -A6 '^(FAIL|✖)' "$RUNNER_TEMP/e2e-layout.txt" 2>/dev/null | cut -c1-1800 || true

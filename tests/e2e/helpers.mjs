@@ -360,6 +360,17 @@ export async function mapCoverage(session) {
       }
     }
     for (const name of Object.keys(taken)) taken[name] = Math.round(taken[name] / (columns * rows) * 1000) / 10;
+    const box = (selector) => {
+      const rect = document.querySelector(selector)?.getBoundingClientRect();
+      return rect ? [Math.round(rect.left), Math.round(rect.top), Math.round(rect.width), Math.round(rect.height)] : null;
+    };
+    taken["boxes [left, top, width, height]"] = {
+      sheet: box(".control-panel"),
+      layersToggle: box(".road-layers-toggle"),
+      zoom: box(".maplibregl-ctrl-top-right"),
+      attribution: box(".maplibregl-ctrl-attrib"),
+      topBar: box(".top-bar"),
+    };
     return taken;
   })()`);
 }
