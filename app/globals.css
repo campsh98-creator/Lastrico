@@ -1127,6 +1127,8 @@ button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visi
 }
 @media (max-width: 767px) and (min-height: 501px) and (max-height: 700px) {
   .map-stage .maplibregl-ctrl-top-right { display: none; }
+  /* The zoom buttons are hidden here, so the locate control takes their place, above the sheet even when it grows with an error. */
+  .locate-me { top: calc(var(--safe-top) + 108px); }
   .control-panel { max-height: calc(100dvh - var(--keyboard-inset) - var(--safe-top) - 60px); }
 }
 

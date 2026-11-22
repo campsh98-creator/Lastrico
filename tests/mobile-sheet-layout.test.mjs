@@ -32,6 +32,14 @@ test('an open tall sheet hides "Strati strada" like the other map controls it wo
   assert.match(hidden, /\.sheet-expanded \.map-key\b/);
 });
 
+test('the "centre on me" control hides under an open tall sheet and moves up where the zoom buttons are hidden', () => {
+  const hidden = portraitPhone.match(/([^{}]*)\{\s*display:\s*none;\s*\}/)?.[1] ?? "";
+  assert.match(hidden, /\.sheet-expanded \.locate-me\b/);
+  const shortPhone = mediaBlock("(max-width: 767px) and (min-height: 501px) and (max-height: 700px)");
+  assert.match(shortPhone, /\.maplibregl-ctrl-top-right\s*\{\s*display:\s*none;\s*\}/);
+  assert.match(shortPhone, /\.locate-me\s*\{\s*top:\s*calc\(var\(--safe-top\) \+ 108px\);\s*\}/);
+});
+
 test("the address fields keep their 44 px buttons but are tight enough for the planner map share", () => {
   const rule = portraitPhone.match(/\.route-field\s*\{([^}]*)\}/)?.[1] ?? "";
   assert.match(rule, /min-height:\s*48px/);
