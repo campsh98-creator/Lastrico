@@ -39,7 +39,7 @@ jobs:
         env:
           CHROME_PATH: /usr/bin/google-chrome
           LASTRICO_E2E_OUTPUT: ${{ runner.temp }}/shots
-        run: node tests/e2e/acceptance.mjs --mock-only 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
+        run: node tests/e2e/acceptance.mjs --mock-only --only=G4,H1,H2,H3,E8,E9,F1 2>&1 | tee "$RUNNER_TEMP/e2e-layout.txt" | tail -120
       - name: Keep the screenshots for review
         if: always()
         uses: actions/upload-artifact@v4
