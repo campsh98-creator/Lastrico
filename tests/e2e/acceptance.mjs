@@ -2141,9 +2141,11 @@ async function runScenario(item) {
     console.log(`PASS ${item.id} ${item.name} (${Math.round((Date.now() - startedAt) / 1000)}s) ${notes.join(" ").slice(0, 160)}`);
   } catch (error) {
     if (session) await session.screenshot(new URL(`${item.id}.png`, FAILURES).pathname).catch(() => {});
-    results.push({ id: item.id, name: item.name, status: "fail", live: Boolean(item.options.live), ms: Date.now() - startedAt, error: error.message });
-    writeFileSync(new URL(`${item.id}.txt`, FAILURES), `${error.message}\n`);
-    console.log(`FAIL ${item.id} ${item.name}: ${error.message.slice(0, 500)}`);
+    // Uncaught page errors often explain a failed assertion (a map or a script that broke), so they travel with it.
+    const pageErrors = session?.exceptions?.length ? ` [page errors: ${session.exceptions.slice(0, 3).join(" | ").slice(0, 600)}]` : "";
+    results.push({ id: item.id, name: item.name, status: "fail", live: Boolean(item.options.live), ms: Date.now() - startedAt, error: `${error.message}${pageErrors}` });
+    writeFileSync(new URL(`${item.id}.txt`, FAILURES), `${error.message}${pageErrors}\n`);
+    console.log(`FAIL ${item.id} ${item.name}: ${error.message.slice(0, 500)}${pageErrors}`);
   } finally {
     if (session) await session.close();
   }
