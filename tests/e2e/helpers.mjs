@@ -339,6 +339,43 @@ export async function freeMapShare(session) {
   })()`);
 }
 
+/**
+ * What takes the screen away from the map: the share of the same grid points answered by each
+ * element that is not the map, so a map-share failure names its cause instead of only a number.
+ */
+export async function mapCoverage(session) {
+  return session.evaluate(`(() => {
+    const columns = 26;
+    const rows = 40;
+    const taken = {};
+    for (let row = 0; row < rows; row += 1) {
+      for (let column = 0; column < columns; column += 1) {
+        const x = (column + .5) * window.innerWidth / columns;
+        const y = (row + .5) * window.innerHeight / rows;
+        const hit = document.elementFromPoint(x, y);
+        if (!hit || hit.closest(".maplibregl-canvas-container") || hit.classList.contains("maplibregl-canvas")) continue;
+        const owner = hit.closest("[data-testid], [class]") ?? hit;
+        const name = owner.dataset?.testid || String(owner.className || owner.tagName).split(" ")[0];
+        taken[name] = (taken[name] ?? 0) + 1;
+      }
+    }
+    for (const name of Object.keys(taken)) taken[name] = Math.round(taken[name] / (columns * rows) * 1000) / 10;
+    const box = (name, selector) => {
+      const rect = document.querySelector(selector)?.getBoundingClientRect();
+      return rect ? name + " y" + Math.round(rect.top) + " h" + Math.round(rect.height) + " w" + Math.round(rect.width) : name + " none";
+    };
+    const geometry = [
+      box("sheet", ".control-panel"), box("body", ".control-panel .sheet-body"), box("transport", ".control-panel .transport-selector"),
+      box("fields", ".control-panel .route-fields"), box("field", ".control-panel .route-field"), box("prefs", "[data-testid=preferences-toggle]"),
+      box("footer", ".control-panel .sheet-footer"), box("layers", ".road-layers-toggle"), box("zoom", ".maplibregl-ctrl-top-right"),
+      box("attribution", ".maplibregl-ctrl-attrib"),
+      "children " + [...(document.querySelector(".control-panel .sheet-body")?.children ?? [])]
+        .map((child) => (child.dataset?.testid || String(child.className).split(" ")[0] || child.tagName) + " " + Math.round(child.getBoundingClientRect().height)).join(", "),
+    ].join("; ");
+    return geometry + " | covered % of screen " + JSON.stringify(taken);
+  })()`);
+}
+
 /** WCAG contrast of text against the first opaque background behind it. */
 export async function contrastProblems(session, selectors, minimum = 4.5) {
   return session.evaluate(`(() => {
