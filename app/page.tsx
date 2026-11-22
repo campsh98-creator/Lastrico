@@ -1375,13 +1375,13 @@ export default function Home() {
     const activePaint = routePaint("active");
     const alternativePaint = routePaint("alternative");
     Object.entries(activePaint.line).forEach(([property, value]) =>
-      map.setPaintProperty(selectedLine, property as never, value));
+      map.setPaintProperty(selectedLine, property as never, value as never));
     Object.entries(activePaint.outline).forEach(([property, value]) =>
-      map.setPaintProperty(selectedOutline, property as never, value));
+      map.setPaintProperty(selectedOutline, property as never, value as never));
     Object.entries(alternativePaint.line).forEach(([property, value]) =>
-      map.setPaintProperty(secondaryLine, property as never, value));
+      map.setPaintProperty(secondaryLine, property as never, value as never));
     Object.entries(alternativePaint.outline).forEach(([property, value]) =>
-      map.setPaintProperty(secondaryOutline, property as never, value));
+      map.setPaintProperty(secondaryOutline, property as never, value as never));
     map.moveLayer(selectedOutline, "problem-line");
     map.moveLayer(selectedLine, "problem-line");
     if (!shouldBeginNavigation(journeyActiveRef.current)) return;
