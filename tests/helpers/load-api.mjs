@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import ts from "typescript";
 
 // Execute the actual handler with Node's Request/Response support. Only module resolution
@@ -6,10 +7,14 @@ import ts from "typescript";
 // `fresh: true` gives a new module instance (its own in-memory cache and breakers) per call.
 export async function loadApi(relativePath, { fresh = false } = {}) {
   const root = new URL("../../", import.meta.url);
+  let nodeModulesRoot = root;
+  while (!existsSync(new URL("node_modules/next/server.js", nodeModulesRoot)) && nodeModulesRoot.pathname !== "/" && nodeModulesRoot.pathname.length > 3) {
+    nodeModulesRoot = new URL("../", nodeModulesRoot);
+  }
   const file = new URL(relativePath, root);
   let source = await readFile(file, "utf8");
   source = source.replace(/from "([^"]+)"/g, (original, specifier) => {
-    if (specifier === "next/server") return `from "${new URL("node_modules/next/server.js", root).href}"`;
+    if (specifier === "next/server") return `from "${new URL("node_modules/next/server.js", nodeModulesRoot).href}"`;
     if (specifier.startsWith("@/")) {
       const target = new URL(specifier.slice(2), root);
       return specifier.endsWith(".json") ? `from "${target.href}" with { type: "json" }`

@@ -470,11 +470,15 @@ async function fetchValhallaRoutes(
   const remembered = memoRead(`valhalla\n${requestBody}`);
   if (remembered !== null) return normalizeValhallaResponse(JSON.parse(remembered), mode);
   if (meter && meter.requests >= meter.limit) return [];
+  // The 1.5 s kept back for the OSRM fallback only makes sense for a plain car request, which falls back to OSRM when Valhalla
+  // fails. A request with linear cost factors or exclusion rings cannot fall back (OSRM knows neither), so reserving the time
+  // only shortened its own provider timeout: after one paced slot (~1 s) a 3.5 s budget was left with a ~1 s timeout.
+  const osrmReserveMs = mode === "car" && !linearCostFactors?.length && !excludePolygons?.length ? 1_500 : 0;
   try {
     const response = await runValhallaLimited(
       deadline,
       signal,
-      mode === "car" ? 1_500 : 0,
+      osrmReserveMs,
       (timeoutMs) => withProviderTimeout(signal, timeoutMs, async (callSignal) => {
         if (!takeProviderRequest(meter)) return { status: 429 };
         const response = await fetch(VALHALLA_ENDPOINT, {

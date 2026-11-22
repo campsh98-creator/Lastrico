@@ -102,6 +102,27 @@ test("a v2 trace carries the route's objective, pavé exposure and rough section
   assert.equal(replayGpsTrace(trace).differences.length, 0, "replay reproduces every decision");
 });
 
+test("a route records what the journey asked for next to the kind shown, so 'safe, no alternative' is not read as 'fast chosen'", () => {
+  // 20 November, journeys A and C: the safe objective had no alternative, the fastest card was shown, and the trace said "fast" only.
+  const { trace, storage } = recordTrace();
+  assert.equal(trace.routes[0].journeyObjective, undefined, "traces recorded before this field have none, and still parse");
+  const withObjective = structuredClone(trace);
+  withObjective.routes[0] = { ...withObjective.routes[0], objective: "fast", journeyObjective: "safe" };
+  const parsed = parseGpsTrace(JSON.stringify(withObjective));
+  assert.equal(parsed.routes[0].objective, "fast", "the kind shown is unchanged");
+  assert.equal(parsed.routes[0].journeyObjective, "safe", "and the journey's objective is kept");
+  const invalid = structuredClone(trace);
+  invalid.routes[0].journeyObjective = "scenic";
+  assert.throws(() => parseGpsTrace(JSON.stringify(invalid)), /journeyObjective/);
+  // The recorder stores the field it is given, and the GPX label still follows the kind that was shown.
+  const recorder = createGpsTraceRecorder(storage);
+  recorder.start({ id: "trace-objective", startedAt: "2026-11-10T09:00:00.000Z", area: "milan", mode: "car" });
+  recorder.addRoute({ ...route, objective: "fast", journeyObjective: "safe" });
+  recorder.stop();
+  assert.equal(readGpsTrace(storage, "trace-objective").routes[0].journeyObjective, "safe");
+  assert.match(gpsTraceToGpx(readGpsTrace(storage, "trace-objective")), /più rapido/);
+});
+
 test("export and import round-trip; v1 traces still load; edited or foreign files are refused", async () => {
   const { trace } = recordTrace();
   assert.deepEqual(parseGpsTrace(JSON.stringify(trace)), trace);

@@ -2,29 +2,39 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  GAP_SECONDS, ImportError, addPoint, clearActiveRecording, createRecording, gapsOf, importTrack, markPageHidden, pauseRecording,
-  recordingToGeoJson, recordingToGpx, recoverActiveRecording, resumeRecording, saveActiveRecording, stopRecording, type Recording,
+  GAP_SECONDS, ImportError, STALL_SECONDS, addPoint, clearActiveRecording, createRecording, gapsOf, importBlockedMessage, importTrack,
+  markPageHidden, pauseRecording, recordingToGeoJson, recordingToGpx, recoverActiveRecording, resumeRecording, saveActiveRecording,
+  silenceSeconds, startBlocked, stopRecording, type Recording,
 } from "@/lib/free-recording";
+import { gpsWatchHub } from "@/lib/gps-watch-hub";
 
 /**
- * Independent GPS recording: it needs no destination and no navigation, and it keeps its own location watch. It records only
- * while the page is open and visible: iOS suspends a web page in the background, and the track then shows a gap instead of a
- * line drawn across missing data.
+ * Independent GPS recording: it needs no destination and no navigation. It listens to the page's single location watch (shared with
+ * navigation, see lib/gps-watch-hub.ts), so recording while navigating costs no second watch. It records only while the page is open
+ * and visible: iOS suspends a web page in the background, and the track then shows a gap instead of a line drawn across missing data.
  */
 type View = { state: Recording["state"]; points: number; gaps: number; gapSeconds: number; source: Recording["source"]; lastAccuracy: number | null };
 const SAVE_EVERY_MS = 10_000;
+const SILENCE_CHECK_MS = 5_000;
 
 export function useFreeRecording() {
   const recRef = useRef<Recording | null>(null);
-  const watchRef = useRef<number | null>(null);
+  /** Leaves the shared watch. */
+  const unsubscribeRef = useRef<(() => void) | null>(null);
+  /** When recording last asked for fixes (start or resume): silence is measured from there while no point exists yet. */
+  const armedAtRef = useRef(0);
   const lastSaveRef = useRef(0);
   const [view, setView] = useState<View | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [recoverable, setRecoverable] = useState(false);
+  /** Seconds without a usable fix, only once it is long enough to matter (STALL_SECONDS) and while the page is visible. */
+  const [silence, setSilence] = useState<number | null>(null);
 
   const storage = () => { try { return window.localStorage; } catch { return null; } };
   const refresh = useCallback((accuracy?: number | null) => {
     const rec = recRef.current;
+    // A fix has just arrived, or the state changed: whatever silence was reported is over. The timer says again if it is not.
+    setSilence(null);
     if (!rec) { setView(null); return; }
     const gaps = gapsOf(rec);
     setView((previous) => ({
@@ -41,20 +51,23 @@ export function useFreeRecording() {
     if (!saveActiveRecording(store, rec)) setMessage("Il telefono non ha spazio per salvare la registrazione: esportala appena puoi.");
   }, []);
   const disarm = useCallback(() => {
-    if (watchRef.current !== null) { navigator.geolocation.clearWatch(watchRef.current); watchRef.current = null; }
+    unsubscribeRef.current?.();
+    unsubscribeRef.current = null;
   }, []);
   const arm = useCallback(() => {
-    disarm();
-    if (!navigator.geolocation) { setMessage("Il GPS non è disponibile su questo dispositivo."); return; }
-    watchRef.current = navigator.geolocation.watchPosition(
-      ({ coords, timestamp }) => {
+    if (!gpsWatchHub.supported) { disarm(); setMessage("Il GPS non è disponibile su questo dispositivo."); return; }
+    armedAtRef.current = Date.now();
+    const previous = unsubscribeRef.current;
+    unsubscribeRef.current = gpsWatchHub.subscribe({
+      highAccuracy: true,
+      onFix: ({ coords, timestamp }) => {
         const rec = recRef.current;
         if (!rec) return;
         addPoint(rec, { at: timestamp, lon: coords.longitude, lat: coords.latitude, accuracy: coords.accuracy, heading: coords.heading, speed: coords.speed });
         refresh(coords.accuracy);
         save();
       },
-      (error) => {
+      onError: (error) => {
         if (error.code === error.PERMISSION_DENIED) {
           const rec = recRef.current;
           if (rec) pauseRecording(rec, Date.now());
@@ -64,11 +77,13 @@ export function useFreeRecording() {
           save(true);
         }
       },
-      { enableHighAccuracy: true, maximumAge: 1_000, timeout: 20_000 },
-    );
+    });
+    // Asked again (resume, page visible again): the shared watch is replaced once, since iOS can silently stall a long-lived one.
+    if (previous) { previous(); gpsWatchHub.renew(); }
   }, [disarm, refresh, save]);
 
   const start = useCallback(() => {
+    if (startBlocked(recRef.current)) return;
     const store = storage();
     if (store) clearActiveRecording(store);
     recRef.current = createRecording(crypto.randomUUID(), Date.now());
@@ -81,11 +96,11 @@ export function useFreeRecording() {
   }, [disarm, refresh, save]);
   const resume = useCallback(() => {
     const rec = recRef.current; if (!rec) return;
-    resumeRecording(rec); setMessage(null); arm(); refresh(); save(true);
+    resumeRecording(rec); setMessage(null); setRecoverable(false); arm(); refresh(); save(true);
   }, [arm, refresh, save]);
   const stop = useCallback(() => {
     const rec = recRef.current; if (!rec) return;
-    stopRecording(rec); disarm(); refresh(); save(true);
+    stopRecording(rec); disarm(); setRecoverable(false); refresh(); save(true);
   }, [disarm, refresh, save]);
   const discard = useCallback(() => {
     disarm(); recRef.current = null;
@@ -113,8 +128,12 @@ export function useFreeRecording() {
     URL.revokeObjectURL(url);
   }, []);
   const importFile = useCallback(async (file: File) => {
+    // Never replace a running or paused recording with a file: checked before reading and again before replacing (reading is async).
+    const blocked = () => importBlockedMessage(recRef.current);
+    if (blocked()) { setMessage(blocked()); return; }
     try {
       const imported = importTrack(await file.text(), crypto.randomUUID(), Date.now());
+      if (blocked()) { setMessage(blocked()); return; }
       disarm();
       recRef.current = imported;
       setMessage(`Traccia importata: ${imported.points.length} punti.`); setRecoverable(false);
@@ -149,11 +168,25 @@ export function useFreeRecording() {
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       document.removeEventListener("visibilitychange", onVisibility);
-      if (watchRef.current !== null) navigator.geolocation.clearWatch(watchRef.current);
+      unsubscribeRef.current?.();
+      unsubscribeRef.current = null;
     };
   }, [arm, refresh, save]);
 
-  return { view, message, recoverable, start, pause, resume, stop, discard, download, importFile };
+  // Recording, page visible, but no usable fix for a while: nothing is being recorded, and the person should know.
+  const recordingNow = view?.state === "recording" && view.source === "device";
+  useEffect(() => {
+    if (!recordingNow) return undefined;
+    const timer = window.setInterval(() => {
+      const rec = recRef.current;
+      if (!rec || document.visibilityState !== "visible") { setSilence(null); return; }
+      const seconds = silenceSeconds(rec, Date.now(), armedAtRef.current);
+      setSilence(seconds !== null && seconds >= STALL_SECONDS ? seconds : null);
+    }, SILENCE_CHECK_MS);
+    return () => window.clearInterval(timer);
+  }, [recordingNow]);
+
+  return { view, message, recoverable, silence, start, pause, resume, stop, discard, download, importFile };
 }
 
 export type FreeRecording = ReturnType<typeof useFreeRecording>;
@@ -161,18 +194,19 @@ export type FreeRecording = ReturnType<typeof useFreeRecording>;
 function minutes(seconds: number) { return seconds >= 120 ? `${Math.round(seconds / 60)} min` : `${seconds} s`; }
 
 export function RecordingPanel({ recording }: { recording: FreeRecording }) {
-  const { view, message, recoverable } = recording;
+  const { view, message, recoverable, silence } = recording;
   const label = !view ? "Nessuna registrazione"
     : view.source !== "device" ? "Traccia importata"
       : view.state === "recording" ? "Registrazione in corso" : view.state === "paused" ? "In pausa" : "Registrazione terminata";
   return (
     <div className="preference-group recording-panel" data-testid="recording-panel">
       <span className="preference-label">Registra un percorso</span>
-      <small>Registra la tua traccia GPS senza scegliere una destinazione. Funziona solo con la pagina aperta e lo schermo acceso: se iPhone sospende la pagina, il buco resta segnato e non viene unito con una linea.</small>
+      <small>Registra la tua traccia GPS senza scegliere una destinazione. Funziona solo con la pagina aperta e lo schermo acceso: se iPhone sospende la pagina, il buco resta segnato e non viene unito con una linea. Il buco compare dopo una pausa, con la pagina nascosta o con più di {GAP_SECONDS} s senza segnale.</small>
       <div className="recording-status" role="status" data-testid="recording-status">
         <b>{label}</b>
-        {view ? <span> · {view.points} punti{view.gaps > 0 ? ` · ${view.gaps} ${view.gaps === 1 ? "buco" : "buchi"} (${minutes(view.gapSeconds)} senza dati, oltre ${GAP_SECONDS} s)` : ""}{view.lastAccuracy !== null && view.state === "recording" ? ` · ±${Math.round(view.lastAccuracy)} m` : ""}</span> : null}
+        {view ? <span> · {view.points} punti{view.gaps > 0 ? ` · ${view.gaps} ${view.gaps === 1 ? "buco" : "buchi"} (${minutes(view.gapSeconds)} senza dati)` : ""}{view.lastAccuracy !== null && view.state === "recording" ? ` · ±${Math.round(view.lastAccuracy)} m` : ""}</span> : null}
       </div>
+      {silence !== null ? <small role="status" data-testid="recording-no-signal">Nessun segnale GPS utilizzabile da {silence} s: in questo momento non sto registrando punti. Controlla che la posizione precisa sia attiva e di avere il cielo libero.</small> : null}
       {recoverable ? <small data-testid="recording-recovered">Ho ritrovato una registrazione interrotta. Il tempo da quando l’app si è fermata è segnato come buco: riprendila o terminala.</small> : null}
       <div className="segmented recording-actions" role="group" aria-label="Registrazione GPS">
         {!view || view.source !== "device" || view.state === "stopped"

@@ -20,6 +20,7 @@ import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
 import { RecordingPanel, useFreeRecording } from "@/components/RecordingPanel";
+import { gpsWatchHub } from "@/lib/gps-watch-hub";
 import { TrafficNotice, trafficUnavailableText, useTrafficStatus, type RouteTrafficInfo, type TrafficInfo } from "@/components/TrafficPanel";
 import "@/components/phase43/phase43.css";
 import {
@@ -266,10 +267,13 @@ const mapStyle = "https://tiles.openfreemap.org/styles/liberty";
  * Phase 4.34: what a field trace records about a route besides its geometry: the objective it was
  * chosen for and the pavé it was expected to have, so a road test can be compared with them.
  * Phase 4.37: and, from the same response, how the routes were produced (omitted when unknown).
+ * Audit reconciliation: `objective` is the kind of route shown ("fast" when no cleaner route exists), `journeyObjective` is what
+ * the journey asked for; they differ exactly when the safe objective had no alternative to show (20 November, journeys A and C).
  */
-function traceRouteDetails(route: RouteResult, objective: "safe" | "fast", generation?: TraceGeneration) {
+function traceRouteDetails(route: RouteResult, objective: "safe" | "fast", journeyObjective: "safe" | "fast", generation?: TraceGeneration) {
   return {
     objective,
+    journeyObjective,
     pave: {
       confirmedMeters: Math.round(route.confirmedPaveMeters ?? 0),
       probableMeters: Math.round(route.probablePaveMeters ?? 0),
@@ -494,7 +498,8 @@ export default function Home() {
   const announcedPaveRef = useRef<AnnouncedSection[]>([]);
   const pickingRef = useRef<PickingMode | null>(null);
   const directionsTriggerRef = useRef<HTMLButtonElement>(null);
-  const journeyWatchRef = useRef<number | null>(null);
+  /** Leaves the shared geolocation watch (see armGpsWatch). */
+  const journeyWatchRef = useRef<(() => void) | null>(null);
   const simulationTimerRef = useRef<number | null>(null);
   const navigationSessionRef = useRef(0);
   const journeyModeRef = useRef<JourneyMode | null>(null);
@@ -806,7 +811,7 @@ export default function Home() {
       distanceKm: nextSelectedRoute.distance,
       coordinates: nextSelectedRoute.coordinates,
       instructions: nextSelectedRoute.instructions ?? [],
-      ...traceRouteDetails(nextSelectedRoute, routeKind, routeGenerationRef.current),
+      ...traceRouteDetails(nextSelectedRoute, routeKind, journeyObjectiveRef.current, routeGenerationRef.current),
     });
     setActiveRoute(routeKind);
   }
@@ -1584,7 +1589,7 @@ export default function Home() {
     document.addEventListener("visibilitychange", reacquireWakeLock);
     return () => {
       document.removeEventListener("visibilitychange", reacquireWakeLock);
-      if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
+      journeyWatchRef.current?.();
       if (simulationTimerRef.current !== null) window.clearInterval(simulationTimerRef.current);
       routeRequestRef.current?.controller.abort();
       addressRequestRef.current?.abort();
@@ -2395,7 +2400,7 @@ export default function Home() {
           coordinates: nextSelectedRoute.coordinates,
           instructions: nextSelectedRoute.instructions ?? [],
           // applyRouteData has just recorded how this reroute's response was produced.
-          ...traceRouteDetails(nextSelectedRoute, nextRoute, routeGenerationRef.current),
+          ...traceRouteDetails(nextSelectedRoute, nextRoute, options.preserveRoute ?? "safe", routeGenerationRef.current),
         });
       } else {
         storePlan({
@@ -2729,8 +2734,8 @@ export default function Home() {
     recalculatingRef.current = false;
     navigationSessionRef.current += 1;
     journeyModeRef.current = null;
-    if (journeyWatchRef.current !== null) {
-      navigator.geolocation.clearWatch(journeyWatchRef.current);
+    if (journeyWatchRef.current) {
+      journeyWatchRef.current();
       journeyWatchRef.current = null;
     }
     if (simulationTimerRef.current !== null) {
@@ -3014,7 +3019,7 @@ export default function Home() {
         distanceKm: routeForJourney.distance,
         coordinates: routeForJourney.coordinates,
         instructions: routeForJourney.instructions ?? [],
-        ...traceRouteDetails(routeForJourney, activeRouteRef.current, routeGenerationRef.current),
+        ...traceRouteDetails(routeForJourney, activeRouteRef.current, journeyObjectiveRef.current, routeGenerationRef.current),
       });
       traceRecorderRef.current = recorder;
       setTraceStatus(recorder.status);
@@ -3024,18 +3029,23 @@ export default function Home() {
     armGpsWatch(session);
   }
 
+  /**
+   * Navigation listens to the page's single geolocation watch (lib/gps-watch-hub.ts), shared with the independent recorder. A
+   * re-arm (iOS stalled the watch, or the person retried) replaces that one watch for everybody.
+   */
   function armGpsWatch(session: number) {
-    if (journeyWatchRef.current !== null) navigator.geolocation.clearWatch(journeyWatchRef.current);
     lastWatchArmedAtRef.current = Date.now();
-    journeyWatchRef.current = navigator.geolocation.watchPosition(
-      ({ coords, timestamp }) => handleGpsFix({
+    const previous = journeyWatchRef.current;
+    journeyWatchRef.current = gpsWatchHub.subscribe({
+      highAccuracy: true,
+      onFix: ({ coords, timestamp }) => handleGpsFix({
         coordinate: [coords.longitude, coords.latitude],
         accuracy: coords.accuracy,
         timestamp,
         heading: coords.heading,
         speed: coords.speed,
       }, session),
-      (error) => {
+      onError: (error) => {
         if (session !== navigationSessionRef.current) return;
         if (error.code === error.PERMISSION_DENIED) {
           finishNavigation();
@@ -3047,8 +3057,11 @@ export default function Home() {
         recordDiagnostic({ type: "signal-loss" });
         setGpsState("temporarily-unavailable");
       },
-      { enableHighAccuracy: true, maximumAge: 1500, timeout: 12000 },
-    );
+    });
+    if (previous) {
+      previous();
+      gpsWatchHub.renew();
+    }
   }
 
   function rearmGpsWatch(force = false) {

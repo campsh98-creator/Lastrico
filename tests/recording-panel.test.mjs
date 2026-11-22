@@ -21,7 +21,10 @@ test("the panel exposes every control the recorder promises, and says honestly w
   for (const id of ["recording-start", "recording-pause", "recording-resume", "recording-stop", "recording-export-gpx", "recording-export-geojson", "recording-import", "recording-discard", "recording-recovered"]) {
     assert.ok(source.includes(`data-testid="${id}"`), id);
   }
-  assert.match(source, /watchPosition/);
+  assert.match(source, /gpsWatchHub\.subscribe\(/, "fixes come from the page's single shared watch (lib/gps-watch-hub.ts), not a watch of its own");
+  assert.equal((source.match(/\.watchPosition\(/g) ?? []).length, 0);
+  assert.match(source, /data-testid="recording-no-signal"/, "a recording that gets no fix says so");
+  assert.match(source, /importBlockedMessage/, "an import cannot replace a running recording");
   assert.match(source, /recoverActiveRecording/);
   assert.match(source, /visibilitychange/);
   assert.match(source, /markPageHidden/);

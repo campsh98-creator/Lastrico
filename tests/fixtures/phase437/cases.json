@@ -20,6 +20,14 @@
         "stoneSlicesTargeted": 2,
         "fastConfirmedMeters": 195,
         "safeConfirmedMeters": 25
+      },
+      "afterReconciliation": {
+        "note": "21 November 2026 audit reconciliation: when the first penalised route only reproduces a base alternative that still keeps stone, one refinement also penalises the stone of the other routes seen (recorded FOSSGIS answer fa2910cc…). The new route is cleaner AND faster than the 25 m alternate, so the unchanged selection takes it. Planner only; a reroute keeps 1 request.",
+        "providerRequests": 3,
+        "fastConfirmedMeters": 195,
+        "safeConfirmedMeters": 0,
+        "safeSeconds": 574,
+        "duplicatedBaseSeconds": 595
       }
     },
     {

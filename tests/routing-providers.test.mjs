@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { setImmediate as nextTurn } from "node:timers/promises";
-import { fetchEngineRoutes, normalizeOsrmResponse, normalizeValhallaResponse } from "../lib/routing-providers.ts";
+import { fetchEngineRoutes, fetchValhallaCustomizedRoute, fetchValhallaRouteExcluding, normalizeOsrmResponse, normalizeValhallaResponse } from "../lib/routing-providers.ts";
 
 const coordinates = [[9.18, 45.46], [9.181, 45.461]];
 function encode(points) {
@@ -320,4 +320,34 @@ test("a caller's cancellation still reaches an in-flight provider call and clear
   assert.equal(reason?.name, "AbortError");
   assert.deepEqual(timers.created, [8_000]);
   assert.equal(timers.live.size, 0, "cleared on cancellation too");
+});
+
+test("a customised or excluding car request keeps its whole budget: the 1.5 s OSRM reserve is for plain car requests only", { timeout: 5000 }, async (t) => {
+  skipInterval(t);
+  const urls = [];
+  t.mock.method(globalThis, "fetch", async (url) => {
+    urls.push(String(url));
+    if (String(url).includes("osrm")) return json({ code: "Ok", routes: [osrmRoute()] });
+    return json({ trip: trip() });
+  });
+  // A plain car request takes a pacing slot, so the next Valhalla call starts about one interval later.
+  await fetchEngineRoutes(coordinates, "car", false, fakeNow + 18_000, new AbortController().signal);
+  // 2.5 s left and one slot (~1.05 s) to wait: with the reserve subtracted (1.5 s) the call was refused ("Budget routing esaurito") without any request.
+  const customised = await fetchValhallaCustomizedRoute(
+    coordinates, "car", [{ shape: encode(coordinates), factor: 15 }], fakeNow + 2_500, new AbortController().signal,
+  );
+  assert.ok(customised, "the penalised car search runs inside a 2.5 s budget");
+  assert.ok(urls[1].includes("valhalla"));
+  // The same for an exclusion search, right after another plain request (a fresh pacing slot).
+  fakeNow += 100_000;
+  await fetchEngineRoutes([[9.19, 45.47], [9.191, 45.471]], "car", false, fakeNow + 18_000, new AbortController().signal);
+  const excluding = await fetchValhallaRouteExcluding(
+    coordinates, "car", [[[9.1795, 45.4595], [9.1805, 45.4595], [9.1805, 45.4605], [9.1795, 45.4605], [9.1795, 45.4595]]],
+    fakeNow + 2_500, new AbortController().signal,
+  );
+  assert.ok(excluding, "the exclusion car search runs inside a 2.5 s budget");
+  // A plain car request still keeps the reserve and falls back to OSRM when the budget is too short for Valhalla.
+  const fallback = await fetchEngineRoutes(coordinates, "car", true, fakeNow + 1_900, new AbortController().signal);
+  assert.equal(fallback.length, 1);
+  assert.equal(fallback[0].provider, "osrm-public-fallback");
 });
