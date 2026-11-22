@@ -882,11 +882,15 @@ export default function Home() {
       map.once("load", collapseAttribution);
       map.once("idle", collapseAttribution);
       map.once("movestart", collapseAttribution);
-      map.on("styleimagemissing", ({ id }) => {
-        if (!map.hasImage(id)) {
-          map.addImage(id, { width: 1, height: 1, data: new Uint8Array([0, 0, 0, 0]) });
-        }
-      });
+      // A sprite image the style asks for and the sprite sheet lacks gets a transparent pixel instead of a console error.
+      // MapLibre 6 supplies missing images through a resolver (its `styleimagemissing` event only notifies); MapLibre 5 only has
+      // the event, so use whichever the installed version offers.
+      const addBlankImage = (id: string) => {
+        if (!map.hasImage(id)) map.addImage(id, { width: 1, height: 1, data: new Uint8Array([0, 0, 0, 0]) });
+      };
+      const resolverMap = map as unknown as { setMissingStyleImageResolver?: (resolver: (id: string) => void) => unknown };
+      if (typeof resolverMap.setMissingStyleImageResolver === "function") resolverMap.setMissingStyleImageResolver(addBlankImage);
+      else map.on("styleimagemissing", ({ id }) => addBlankImage(id));
       map.once("error", () => {
         if (!cancelled) setStatus("La mappa non è disponibile. Il percorso resta consultabile nei dettagli.");
       });
@@ -1371,13 +1375,13 @@ export default function Home() {
     const activePaint = routePaint("active");
     const alternativePaint = routePaint("alternative");
     Object.entries(activePaint.line).forEach(([property, value]) =>
-      map.setPaintProperty(selectedLine, property, value));
+      map.setPaintProperty(selectedLine, property as never, value));
     Object.entries(activePaint.outline).forEach(([property, value]) =>
-      map.setPaintProperty(selectedOutline, property, value));
+      map.setPaintProperty(selectedOutline, property as never, value));
     Object.entries(alternativePaint.line).forEach(([property, value]) =>
-      map.setPaintProperty(secondaryLine, property, value));
+      map.setPaintProperty(secondaryLine, property as never, value));
     Object.entries(alternativePaint.outline).forEach(([property, value]) =>
-      map.setPaintProperty(secondaryOutline, property, value));
+      map.setPaintProperty(secondaryOutline, property as never, value));
     map.moveLayer(selectedOutline, "problem-line");
     map.moveLayer(selectedLine, "problem-line");
     if (!shouldBeginNavigation(journeyActiveRef.current)) return;
