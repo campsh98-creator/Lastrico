@@ -3430,19 +3430,6 @@ export default function Home() {
       <section className="map-stage" id="map-stage" aria-label="Mappa dei percorsi">
         <div ref={mapContainer} className="map" />
         <RoadLayers map={mapReady ? mapRef.current : null} ready={mapReady} suspended={isJourneyActive || Boolean(picking)} />
-        {!isJourneyActive && !picking && (
-          <button
-            type="button"
-            className={`locate-me ${followCentered && followPosition ? "active" : ""}`}
-            onClick={locateMe}
-            aria-label="Centra la mappa su di me"
-            aria-pressed={followCentered && followPosition !== null}
-            title="Centra su di me"
-            data-testid="locate-me"
-          >
-            <Icon name="recenter" />
-          </button>
-        )}
         {mapLoadIssue && !isJourneyActive && (
           <p className="map-load-issue" role="status" data-testid="map-load-issue" data-map-overlay="top">
             La mappa non si carica: controlla la connessione. Percorsi e indicazioni funzionano lo stesso.
@@ -3499,6 +3486,18 @@ export default function Home() {
             </select>
             <Icon name="chevronDown" size={16} />
           </div>
+          {/* In the top bar, which no sheet can cover: "centre on me" resumes the follow and starts it from a tap when needed. */}
+          <button
+            type="button"
+            className={`icon-button ${followCentered && followPosition ? "active" : ""}`}
+            onClick={locateMe}
+            aria-label="Centra la mappa su di me"
+            aria-pressed={followCentered && followPosition !== null}
+            title="Centra su di me"
+            data-testid="locate-me"
+          >
+            <Icon name="recenter" />
+          </button>
           <button
             type="button"
             className="icon-button"

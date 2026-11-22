@@ -32,12 +32,11 @@ test('an open tall sheet hides "Strati strada" like the other map controls it wo
   assert.match(hidden, /\.sheet-expanded \.map-key\b/);
 });
 
-test('the "centre on me" control hides under an open tall sheet and moves up where the zoom buttons are hidden', () => {
-  const hidden = portraitPhone.match(/([^{}]*)\{\s*display:\s*none;\s*\}/)?.[1] ?? "";
-  assert.match(hidden, /\.sheet-expanded \.locate-me\b/);
-  const shortPhone = mediaBlock("(max-width: 767px) and (min-height: 501px) and (max-height: 700px)");
-  assert.match(shortPhone, /\.maplibregl-ctrl-top-right\s*\{\s*display:\s*none;\s*\}/);
-  assert.match(shortPhone, /\.locate-me\s*\{\s*top:\s*calc\(var\(--safe-top\) \+ 108px\);\s*\}/);
+test('the "centre on me" control lives in the top bar, which no sheet can cover (it was covered at 320x568 as a floating button)', async () => {
+  const page = (await readFile(new URL("../app/page.tsx", import.meta.url), "utf8")).replace(/\r\n/g, "\n");
+  const bar = page.slice(page.indexOf('<header className="top-bar"'), page.indexOf("</header>", page.indexOf('<header className="top-bar"')));
+  assert.match(bar, /data-testid="locate-me"/);
+  assert.doesNotMatch(css, /\.locate-me\b/, "no floating locate button style is left behind");
 });
 
 test("the address fields keep their 44 px buttons but are tight enough for the planner map share", () => {

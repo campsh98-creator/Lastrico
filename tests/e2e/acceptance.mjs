@@ -1987,19 +1987,25 @@ scenario("I2", "A prompt or unknown permission never starts geolocation by itsel
 scenario("I3", "A manual pan before or after the first fix suspends the follow until the locate control is tapped", async (session, note) => {
   await session.waitFor(`window.__gps?.active === 1`, 5_000, "the follow's watch");
   await dragMap(session, 140, 100);
+  await sleep(500);
+  await waitForMapIdle(session);
   const explored = await mapCenter(session);
   const firstFix = PLACES.cadorna.coordinate;
   await session.feedFix(firstFix, { accuracy: 10 });
-  await sleep(600);
-  assert.ok(distanceBetween(await mapCenter(session), explored) < 50, "exploring before the first fix is not overridden");
+  await sleep(800);
+  const movedBefore = distanceBetween(await mapCenter(session), explored);
+  assert.ok(movedBefore < 50, `exploring before the first fix is not overridden (moved ${Math.round(movedBefore)} m)`);
   await session.tap("[data-testid=locate-me]");
   assert.ok(await centerNear(session, firstFix) < 150, "the locate tap jumps back to the position");
 
   await dragMap(session, -140, -100);
+  await sleep(500);
+  await waitForMapIdle(session);
   const exploredAgain = await mapCenter(session);
   await session.feedFix([9.1815, 45.4712], { accuracy: 10 });
-  await sleep(600);
-  assert.ok(distanceBetween(await mapCenter(session), exploredAgain) < 50, "exploring after a fix is preserved");
+  await sleep(800);
+  const movedAfter = distanceBetween(await mapCenter(session), exploredAgain);
+  assert.ok(movedAfter < 50, `exploring after a fix is preserved (moved ${Math.round(movedAfter)} m)`);
   await session.tap("[data-testid=locate-me]");
   assert.ok(await centerNear(session, [9.1815, 45.4712]) < 150, "a second tap follows the latest position");
   note("a pan before and after the first fix suspended the follow; each locate tap resumed it");
