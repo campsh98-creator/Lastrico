@@ -1000,8 +1000,8 @@ for (const [width, height] of VIEWPORTS) {
       }
 
       if (size === "390x844") {
-        assert.ok(free.planner >= .55, `planner map share ${free.planner} (covered, % of screen: ${JSON.stringify(coverage.planner)})`);
-        assert.ok(free.routes >= .55, `routes map share ${free.routes} (covered, % of screen: ${JSON.stringify(coverage.routes)})`);
+        assert.ok(free.planner >= .55, `planner map share ${free.planner} (${coverage.planner})`);
+        assert.ok(free.routes >= .55, `routes map share ${free.routes} (${coverage.routes})`);
         assert.ok(free.navigation >= .70, `navigation map share ${free.navigation}`);
       }
       assert.deepEqual(problems, []);

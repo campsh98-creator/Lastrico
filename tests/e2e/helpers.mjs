@@ -360,18 +360,17 @@ export async function mapCoverage(session) {
       }
     }
     for (const name of Object.keys(taken)) taken[name] = Math.round(taken[name] / (columns * rows) * 1000) / 10;
-    const box = (selector) => {
+    const box = (name, selector) => {
       const rect = document.querySelector(selector)?.getBoundingClientRect();
-      return rect ? [Math.round(rect.left), Math.round(rect.top), Math.round(rect.width), Math.round(rect.height)] : null;
+      return rect ? name + " y" + Math.round(rect.top) + " h" + Math.round(rect.height) + " w" + Math.round(rect.width) : name + " none";
     };
-    taken["boxes [left, top, width, height]"] = {
-      sheet: box(".control-panel"),
-      layersToggle: box(".road-layers-toggle"),
-      zoom: box(".maplibregl-ctrl-top-right"),
-      attribution: box(".maplibregl-ctrl-attrib"),
-      topBar: box(".top-bar"),
-    };
-    return taken;
+    const geometry = [
+      box("sheet", ".control-panel"), box("body", ".control-panel .sheet-body"), box("transport", ".control-panel .transport-selector"),
+      box("fields", ".control-panel .route-fields"), box("field", ".control-panel .route-field"), box("prefs", "[data-testid=preferences-toggle]"),
+      box("footer", ".control-panel .sheet-footer"), box("layers", ".road-layers-toggle"), box("zoom", ".maplibregl-ctrl-top-right"),
+      box("attribution", ".maplibregl-ctrl-attrib"),
+    ].join("; ");
+    return geometry + " | covered % of screen " + JSON.stringify(taken);
   })()`);
 }
 
