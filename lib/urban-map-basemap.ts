@@ -22,10 +22,12 @@ export function libertyPoiCategory(properties: Record<string, unknown>) {
   return getCategory(bySubclass, properties.subclass) ?? getCategory(byClass, properties.class);
 }
 
-const category = [
-  "match", ["get", "subclass"], ...Object.entries(bySubclass).flat(),
-  ["match", ["get", "class"], ...Object.entries(byClass).flat(), ""],
-] as ExpressionSpecification;
+function matchCategory(property: string, table: Record<string, UrbanCategory>, otherwise: string | ExpressionSpecification): ExpressionSpecification {
+  const [[firstKey, firstValue], ...entries] = Object.entries(table);
+  return ["match", ["get", property], firstKey, firstValue, ...entries.flat(), otherwise];
+}
+
+const category = matchCategory("subclass", bySubclass, matchCategory("class", byClass, ""));
 
 const originals = new WeakMap<MapLibreMap, Map<string, FilterSpecification | undefined>>();
 
@@ -49,9 +51,9 @@ export function configureLibertyPoiLayers(
     if (layer["source-layer"] !== "poi") continue;
     if (!filters.has(layer.id)) filters.set(layer.id, layer.filter as FilterSpecification | undefined);
     const original = filters.get(layer.id);
-    const restriction: FilterSpecification = ["!", ["in", category, ["literal", excluded]]];
+    const restriction: ExpressionSpecification = ["!", ["in", category, ["literal", excluded]]];
     const filter: FilterSpecification | undefined = browsing
-      ? original ? ["all", original, restriction] : restriction
+      ? original === undefined ? restriction : ["all", original as boolean | ExpressionSpecification, restriction]
       : original;
     map.setFilter(layer.id, filter);
     map.setLayoutProperty(layer.id, "visibility", navigating ? "none" : "visible");
