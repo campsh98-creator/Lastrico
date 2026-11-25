@@ -5,7 +5,7 @@
  */
 import { foldText, type StreetSuggestion } from "./street-index.ts";
 
-export type SearchPurpose = "suggest" | "search";
+export type SearchPurpose = "suggest" | "search" | "poi";
 
 export type AddressResult = {
   id: string;
@@ -14,6 +14,7 @@ export type AddressResult = {
   secondary: string;
   coordinate: [number, number];
   type: string;
+  osmPoi?: { key: string; value: string; ref: string };
   /** Where it comes from; absent for provider answers. */
   source?: "street-index";
   /** "street": a point on the street, not a verified civic number. */

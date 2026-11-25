@@ -19,6 +19,9 @@ import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
 import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
+import { UrbanMap } from "@/components/UrbanMap";
+import { urbanPoiCategory } from "@/lib/urban-map-context";
+import { urbanLabels, type UrbanFeature } from "@/lib/urban-map-data";
 import { RecordingPanel, useFreeRecording } from "@/components/RecordingPanel";
 import { gpsWatchHub } from "@/lib/gps-watch-hub";
 import { FOLLOW_OFF_PREFERENCE, ForegroundFollow, type FollowStatus } from "@/lib/foreground-follow";
@@ -121,7 +124,6 @@ import {
   updateStoredPlanSelection,
 } from "@/lib/planner-support";
 import {
-  applyJourneyMapDetail,
   applyMapTheme,
   firstLabelLayerAboveMap,
   hideBuildingExtrusions,
@@ -138,6 +140,7 @@ import {
   searchPurposeFor,
   type InlineSearchStatus,
   type SearchPurpose,
+  type AddressResult,
 } from "@/lib/address-search";
 import {
   confidentStreet,
@@ -204,7 +207,7 @@ type LocationChoice = {
   coordinate: Coordinate;
 };
 
-type GeocodeResult = LocationChoice & {
+type GeocodeResult = LocationChoice & Pick<AddressResult, "osmPoi"> & {
   id: string;
   primary: string;
   secondary: string;
@@ -664,6 +667,7 @@ export default function Home() {
   const [reportsAvailable, setReportsAvailable] = useState(true);
   const [directionsOpen, setDirectionsOpen] = useState(false);
   const [mapReady, setMapReady] = useState(false);
+  const [urbanHud, setUrbanHud] = useState<HTMLDivElement | null>(null);
   const [mapLoadIssue, setMapLoadIssue] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [fieldFeedbackOpen, setFieldFeedbackOpen] = useState(false);
@@ -1650,11 +1654,6 @@ export default function Home() {
   }, [themeMode, mapReady]);
 
   useEffect(() => {
-    const map = mapRef.current;
-    if (mapReady && map) applyJourneyMapDetail(map, isJourneyActive);
-  }, [isJourneyActive, mapReady]);
-
-  useEffect(() => {
     if (!isJourneyActive || journeyMode !== "gps") return;
     const timer = window.setInterval(() => {
       const stall = evaluateGpsSignalStall({
@@ -2213,6 +2212,30 @@ export default function Home() {
     }
   }
 
+  function navigateToUrbanFeature(feature: UrbanFeature) {
+    if (journeyActiveRef.current) return;
+    const label = feature.name || urbanLabels[feature.category];
+    setActivePanel("plan");
+    chooseAddress("end", {
+      id: feature.id, primary: label, label, secondary: feature.detail ?? "",
+      coordinate: feature.coordinate, type: feature.category,
+    });
+  }
+
+  async function searchUrbanArea(query: string, signal: AbortSignal): Promise<UrbanFeature[]> {
+    const answers = await requestAddresses(query, signal, "poi");
+    return answers.flatMap((answer) => {
+      const tag = answer.osmPoi;
+      if (!tag) return [];
+      const category = urbanPoiCategory(tag.key, tag.value);
+      if (!category) return [];
+      return [{
+        id: tag.ref + ":" + category, osm: tag.ref, category, coordinate: answer.coordinate,
+        name: answer.primary, detail: answer.secondary,
+      }];
+    });
+  }
+
   function closeAddressPicker() {
     pendingCalculationRef.current = false;
     cancelAutocomplete();
@@ -2240,7 +2263,14 @@ export default function Home() {
     const answers = await readGeocodeAnswer(response);
     if (signal?.aborted || requestedArea !== areaIdRef.current) throw new DOMException("Ricerca superata", "AbortError");
     const results = answers.filter((result) => coordinateInArea(result.coordinate, PILOT_AREAS[requestedArea]));
-    if (results.length) geocodeCacheRef.current.set(cacheKey, { timestamp: Date.now(), results });
+    if (results.length) {
+      const cache = geocodeCacheRef.current;
+      if (cache.size >= 100 && !cache.has(cacheKey)) {
+        const oldest = cache.keys().next().value;
+        if (oldest) cache.delete(oldest);
+      }
+      cache.set(cacheKey, { timestamp: Date.now(), results });
+    }
     return results;
   }
 
@@ -3430,6 +3460,13 @@ export default function Home() {
       <section className="map-stage" id="map-stage" aria-label="Mappa dei percorsi">
         <div ref={mapContainer} className="map" />
         <RoadLayers map={mapReady ? mapRef.current : null} ready={mapReady} suspended={isJourneyActive || Boolean(picking)} />
+        <UrbanMap map={mapReady ? mapRef.current : null} picking={Boolean(picking)} navigating={isJourneyActive}
+          routeModel={selectedRouteModel} legacy={selectedRoute.roadFeatures} hud={urbanHud}
+          progress={isJourneyActive && isLiveResult && navigationPhase === "navigating" &&
+            navigationProgress.lateralOffRouteMeters <= 35 && (journeyMode !== "gps" || gpsState === "live")
+            ? Math.floor(navigationProgress.routeProgressMeters / 10) * 10 : null}
+          canNavigate={(coordinate) => coordinateInArea(coordinate, area)}
+          onNavigate={navigateToUrbanFeature} onSearch={searchUrbanArea} />
         {mapLoadIssue && !isJourneyActive && (
           <p className="map-load-issue" role="status" data-testid="map-load-issue" data-map-overlay="top">
             La mappa non si carica: controlla la connessione. Percorsi e indicazioni funzionano lo stesso.
@@ -4082,6 +4119,7 @@ export default function Home() {
                 </p>
               </div>
             )}
+            <div ref={setUrbanHud} />
             {startupNoticeVisible && !navigationStateDescription && navigationPhase !== "starting" && (
               <div className="hud-notice" role="note" data-testid="driving-safety"><p>{transportMeta[transportMode].safety}</p></div>
             )}

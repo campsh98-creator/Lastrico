@@ -155,6 +155,10 @@ export type NominatimResult = {
   name?: string;
   type?: string;
   addresstype?: string;
+  category?: string;
+  class?: string;
+  osm_type?: string;
+  osm_id?: number;
   address?: Record<string, string>;
 };
 
@@ -171,9 +175,10 @@ export function validAreaGeocodeResult(value: unknown, bounds: { west: number; s
   const latitude = Number(item.lat);
   if (!Number.isFinite(longitude) || !Number.isFinite(latitude)
     || longitude < bounds.west || longitude > bounds.east || latitude < bounds.south || latitude > bounds.north) return false;
-  for (const field of ["name", "type", "addresstype"]) {
+  for (const field of ["name", "type", "addresstype", "category", "class", "osm_type"]) {
     if (item[field] !== undefined && typeof item[field] !== "string") return false;
   }
+  if (item.osm_id !== undefined && (typeof item.osm_id !== "number" || !Number.isSafeInteger(item.osm_id))) return false;
   if (item.address !== undefined && (!item.address || typeof item.address !== "object"
     || Array.isArray(item.address) || !Object.values(item.address).every((part) => typeof part === "string"))) return false;
   return true;
