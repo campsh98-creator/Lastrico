@@ -1,7 +1,7 @@
 .urban-map {
   position: absolute;
   z-index: 5;
-  top: calc(var(--safe-top) + 133px);
+  top: calc(var(--safe-top) + 160px);
   left: calc(var(--safe-left) + 12px);
   max-width: calc(100vw - var(--safe-left) - var(--safe-right) - 24px);
   color: var(--ink);

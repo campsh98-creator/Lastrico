@@ -167,7 +167,8 @@ test("explicit POI search bypasses the address cache and keeps verified Photon r
   const hosts = [];
   t.mock.method(globalThis, "fetch", async (input) => {
     const host = hostOf(input);
-    hosts.push(host);
+    const text = new URL(input).searchParams.get("q") ?? "";
+    if (text.toLowerCase().includes("farmacia")) hosts.push(host);
     if (host === "nominatim.openstreetmap.org") return Response.json([nominatimRow(1, "Via della Farmacia")]);
     return Response.json({
       features: [photonFeature("Farmacia", [9.1696, 45.4487], {

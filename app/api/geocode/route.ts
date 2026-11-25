@@ -401,6 +401,7 @@ export async function GET(request: NextRequest) {
     results = await new Promise<GeocodeApiResponseItem[]>((resolve, reject) => {
       let nomDone = false;
       let phoDone = false;
+      let photonStarted = false;
       let nomResults: GeocodeApiResponseItem[] | null = null;
       let phoResults: GeocodeApiResponseItem[] | null = null;
       let photonTimer: ReturnType<typeof setTimeout> | null = null;
@@ -419,7 +420,8 @@ export async function GET(request: NextRequest) {
           clearTimeout(photonTimer);
           photonTimer = null;
         }
-        if (phoDone) return;
+        if (photonStarted) return;
+        photonStarted = true;
         runPhoton().then((res) => {
           phoDone = true;
           phoResults = res;

@@ -71,12 +71,40 @@ async function insideViewport(selector) {
 try {
   if (screenshots) mkdirSync(screenshots, { recursive: true });
   assert.deepEqual(await session.evaluate("[innerWidth, innerHeight]"), [390, 844]);
-  await session.evaluate(`${MAP_LOOKUP}.jumpTo({ center: [9.181, 45.464], zoom: 16.5 })`);
+  await session.evaluate(`void ${MAP_LOOKUP}.jumpTo({ center: [9.181, 45.464], zoom: 16.5 })`);
   await session.tap(label("urban-map-toggle"));
   await visible(panel);
   await insideViewport(panel);
   await visible(label("urban-map-coverage"));
 
+  await screenshot("urban-map-panel-390x844");
+  await session.tap(label("urban-map-toggle"));
+  async function tapMapFeature(layer) {
+    const rendered = `(() => {
+      const map = ${MAP_LOOKUP};
+      if (!map?.getLayer(${JSON.stringify(layer)})) return null;
+      for (const feature of map.queryRenderedFeatures({ layers: [${JSON.stringify(layer)}] })) {
+        const { x, y } = map.project(feature.geometry.coordinates);
+        if (x < 18 || x > 372 || y < 220 || y > 510 || document.elementFromPoint(x, y)?.tagName !== "CANVAS") continue;
+        return { x, y };
+      }
+      return null;
+    })()`;
+    await session.waitFor(`Boolean(${rendered})`, 15_000, layer + " in the visible map");
+    const point = await session.evaluate(rendered);
+    for (const type of ["mousePressed", "mouseReleased"]) {
+      await session.cdp("Input.dispatchMouseEvent", { type, ...point, button: "left", buttons: 1, clickCount: 1 });
+    }
+  }
+
+  await tapMapFeature("urban-map-clusters");
+  await session.waitFor(`${MAP_LOOKUP}.getZoom() >= 17 && !${MAP_LOOKUP}.isMoving()`, 8_000, "cluster opened");
+  await tapMapFeature("urban-map-pois");
+  await visible(detail);
+  assert.match(await session.evaluate(`${query(detail)}.textContent`), /OpenStreetMap/);
+  await session.tap(label("urban-map-toggle"));
+  await session.evaluate(`void ${MAP_LOOKUP}.jumpTo({ center: [9.181, 45.464], zoom: 16.5 })`);
+  await session.tap(label("urban-map-toggle"));
   await session.typeInto(search, "supermercati");
   await visible(result, 15_000);
   const first = await session.evaluate(`${query(result)}.textContent.trim()`);
@@ -86,7 +114,6 @@ try {
   assert.equal(await session.evaluate(`${query(pharmacy)}.checked`), true, "the pharmacy filter is independent");
   await session.tap(supermarket);
   await visible(result);
-  await screenshot("urban-map-panel-390x844");
   await session.tap(result);
   await visible(detail);
   await insideViewport(detail);
@@ -119,6 +146,8 @@ try {
   assert.equal((await appState(session)).gps.maxActive, 1, "urban data did not add a GPS watch");
   assert.equal(urbanRequests().length, requestsBeforeFixes, "GPS fixes did not request urban tiles in navigation");
   await screenshot("urban-map-navigation-390x844");
+  await session.feedError(2);
+  await session.waitFor(`!${query(upcoming)}`, 5_000, "stale road signs disappear when GPS drops");
   await session.tap(".stop-navigation");
   await waitForPhase(session, "route-ready", 5_000);
   assert.equal((await appState(session)).gps.active, 0, "stopping navigation released GPS");

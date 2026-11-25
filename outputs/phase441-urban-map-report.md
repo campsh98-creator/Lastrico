@@ -23,3 +23,7 @@ Le interrogazioni puntano a tile statiche, con cache LRU da 32 asset e fino a 16
 A 390×844, sul centro di Milano senza rotazione o inclinazione, i POI pesano circa 111 kB gzip a zoom 13,3 e 81 kB a zoom 14. A zoom 16 i due gruppi pesano circa 115 kB gzip complessivi. Il manifest pesa circa 3 kB gzip. Il parsing dei POI a zoom 13,3 ha richiesto 1,47 ms in mediana e 2,35 ms al 95° percentile su Node desktop. Questi tempi misurano il parsing JSON e non includono latenza di rete, WebGL o lavoro del GPS su un telefono.
 
 Fonti: [OpenStreetMap e licenza](https://www.openstreetmap.org/copyright), [tag traffic_sign](https://wiki.openstreetmap.org/wiki/Key:traffic_sign), [tag maxspeed](https://wiki.openstreetmap.org/wiki/Key:maxspeed), [stile Liberty](https://tiles.openfreemap.org/styles/liberty).
+
+## Verifica mobile
+
+Chromium headless a 390×844 con gli asset OSM del branch e risposte riproducibili per itinerario e geocodifica. Passano l’espansione del cluster, il tocco di un’icona, la ricerca locale, l’indipendenza delle categorie, la scheda di un POI e la selezione come destinazione. In navigazione il test osserva al massimo un watcher GPS, cinque richieste agli asset urbani nell’intero scenario, nessuna richiesta aggiuntiva durante la sequenza di fix nello stesso tratto e la scomparsa degli avvisi alla perdita del fix. Si tratta di un test browser con GPS simulato.
