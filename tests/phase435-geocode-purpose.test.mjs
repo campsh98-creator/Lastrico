@@ -175,7 +175,7 @@ test("explicit POI search bypasses the address cache and keeps verified Photon r
       })],
     });
   });
-  const q = "Farmacia navigli";
+  const q = "Farmacia, Navigli";
   const address = await GET(request({ q, purpose: "search" }));
   assert.equal((await address.json()).results[0].primary, "Via della Farmacia");
   const poi = await GET(request({ q, purpose: "poi" }));

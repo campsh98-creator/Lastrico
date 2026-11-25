@@ -3,7 +3,6 @@
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "maplibre-gl";
-import type { FeatureCollection, Point } from "geojson";
 import { loadUrbanViewport, urbanAttribution, urbanLabels, type UrbanCategory, type UrbanFeature } from "@/lib/urban-map-data";
 import { matchUpcomingUrbanFeatures, streetCategories, urbanRouteBounds, urbanRouteWindow, urbanSearchText } from "@/lib/urban-map-context";
 import { configureLibertyPoiLayers, libertyPoiCategory } from "@/lib/urban-map-basemap";
@@ -17,7 +16,7 @@ const COUNT = "urban-map-cluster-count";
 const STREET = "urban-map-street";
 const CATEGORIES = Object.keys(urbanLabels) as UrbanCategory[];
 const ALL_ENABLED = Object.fromEntries(CATEGORIES.map((key) => [key, true])) as Record<UrbanCategory, boolean>;
-const empty: FeatureCollection<Point> = { type: "FeatureCollection", features: [] };
+const empty = { type: "FeatureCollection" as const, features: [] };
 const nearbyLimit = 240;
 const mapZoom = 13.3;
 const streetZoom = 16;
