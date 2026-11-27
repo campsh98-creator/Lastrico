@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "maplibre-gl";
 import { loadUrbanViewport, urbanAttribution, urbanLabels, type UrbanCategory, type UrbanFeature } from "@/lib/urban-map-data";
-import { matchUpcomingUrbanFeatures, streetCategories, urbanRouteBounds, urbanRouteWindow, urbanSearchText } from "@/lib/urban-map-context";
+import { matchUpcomingUrbanFeatures, streetCategories, urbanRouteBounds, urbanRouteWindow, urbanSearchText, urbanDestination } from "@/lib/urban-map-context";
 import { configureLibertyPoiLayers, libertyPoiCategory } from "@/lib/urban-map-basemap";
 import type { ProgressInstruction, RouteProgressModel } from "@/lib/route-progress";
 import type { RouteRoadFeatures } from "@/lib/road-features";
@@ -28,10 +28,6 @@ const glyph: Record<UrbanCategory, string> = {
   shop: "S", supermarket: "M", pharmacy: "+", restaurant: "R", fuel: "F", parking: "P",
   charging: "↯", hospital: "H", airport: "✈", station: "T", school: "I", park: "♣", public_facility: "●",
 };
-
-const legacyCategories = {
-  traffic_signals: "signal", crossing_signals: "signal", stop: "stop", give_way: "give_way",
-} as const;
 
 function visibleFeatures(items: UrbanFeature[], map: MapLibreMap) {
   const bounds = map.getBounds();
@@ -122,7 +118,7 @@ function displayName(feature: UrbanFeature) {
   return feature.name || urbanLabels[feature.category];
 }
 
-export function UrbanMap({ map, picking, navigating, routeModel, progress, legacy, hud, canNavigate, onNavigate, onSearch }: {
+export function UrbanMap({ map, picking, navigating, routeModel, progress, legacy, hud, canNavigate, usesMotorAccess, onNavigate, onPickDestination, onSearch }: {
   map: MapLibreMap | null;
   picking: boolean;
   navigating: boolean;
@@ -130,8 +126,10 @@ export function UrbanMap({ map, picking, navigating, routeModel, progress, legac
   progress: number | null;
   legacy?: RouteRoadFeatures | null;
   hud: HTMLElement | null;
+  usesMotorAccess: boolean;
   canNavigate: (coordinate: [number, number]) => boolean;
   onNavigate: (feature: UrbanFeature) => void;
+  onPickDestination: () => void;
   onSearch: PoiSearch;
 }) {
   const [enabled, setEnabled] = useState(false);
@@ -150,15 +148,16 @@ export function UrbanMap({ map, picking, navigating, routeModel, progress, legac
   const detailTitle = useRef<HTMLHeadingElement>(null);
   const browsing = !navigating && !picking && enabled;
   const routeBucket = progress === null ? null : Math.floor(progress / 100) * 100;
-  const legacyItems = useMemo(() => legacy?.items ?? [], [legacy]);
+  const legacyItems = useMemo(() => (legacy?.items ?? []).filter((item) =>
+    item.type === "traffic_signals" || item.type === "crossing_signals"), [legacy]);
   const relevant = useMemo(() => {
     if (progress === null) return [];
     const data = ahead?.model === routeModel && ahead.bucket === routeBucket ? ahead : null;
     const known = legacyItems.filter((item) => !data?.basis.some((feature) =>
-      feature.category === legacyCategories[item.type] && (feature.bearing !== undefined || feature.directionUncertain)
+      feature.category === "signal" && (feature.bearing !== undefined || feature.directionUncertain)
         && Math.hypot((feature.coordinate[0] - item.coordinate[0]) * 0.72, feature.coordinate[1] - item.coordinate[1]) < 0.00012
     )).map((item, index) => ({
-      feature: { id: "route-" + index, category: legacyCategories[item.type], coordinate: item.coordinate, osm: "" },
+      feature: { id: "route-" + index, category: "signal" as const, coordinate: item.coordinate, osm: "" },
       meters: item.progressMeters,
     }));
     const available = [...(data?.matches ?? []), ...known].filter(({ feature, meters }) =>
@@ -340,6 +339,9 @@ export function UrbanMap({ map, picking, navigating, routeModel, progress, legac
   const speedDirections = selected?.category === "speed" ? mapFeatures.filter((item) =>
     item.category === "speed" && item.osm === selected.osm &&
     item.coordinate[0] === selected.coordinate[0] && item.coordinate[1] === selected.coordinate[1]) : [];
+  const destination = selected ? urbanDestination(selected) : null;
+  const destinationInArea = !!destination && canNavigate(destination);
+  const canUseEntrance = usesMotorAccess && destinationInArea;
   const snapshot = mapData?.snapshot;
   const coverage = mapError ? "Dati locali temporaneamente indisponibili."
     : !snapshot ? "Caricamento dati della mappa…"
@@ -377,13 +379,27 @@ export function UrbanMap({ map, picking, navigating, routeModel, progress, legac
               {selected.category === "signal" && <p>Posizione mappata del semaforo.</p>}
               {selected.bearing !== undefined && speedDirections.length < 2 && <p>Direzione mappata: {Math.round(selected.bearing)}°</p>}
               {selected.osm && <a className="urban-link" href={"https://www.openstreetmap.org/" + selected.osm} target="_blank" rel="noreferrer">Scheda OpenStreetMap</a>}
-              {!streetCategories.has(selected.category) && !canNavigate(selected.coordinate) && <p>Fuori dall’area di navigazione selezionata.</p>}
-              {!streetCategories.has(selected.category) && <button type="button" className="urban-primary" disabled={!canNavigate(selected.coordinate)}
-                data-testid="urban-map-navigate" onClick={() => {
-                  onNavigate(selected);
-                  setSelected(null);
-                  setOpen(false);
-                }}>Naviga qui</button>}
+              {!streetCategories.has(selected.category) && (
+                <>
+                  <p data-testid="urban-map-access">{!destination ? "Posizione indicativa. Accesso stradale non verificato."
+                    : !usesMotorAccess ? "Accesso in bici non verificato."
+                      : destinationInArea ? "Accesso stradale mappato in OpenStreetMap."
+                        : "L’accesso mappato è fuori dall’area di navigazione selezionata."}</p>
+                  <button type="button" className="urban-primary" disabled={!canUseEntrance}
+                    data-testid="urban-map-navigate" onClick={() => {
+                      onNavigate(selected);
+                      setSelected(null);
+                      setOpen(false);
+                    }}>Naviga qui</button>
+                  {!canUseEntrance && canNavigate(selected.coordinate) && (
+                    <button type="button" className="urban-link" onClick={() => {
+                      setSelected(null);
+                      setOpen(false);
+                      onPickDestination();
+                    }}>Scegli un punto sulla mappa</button>
+                  )}
+                </>
+              )}
             </div>
           ) : (
             <>

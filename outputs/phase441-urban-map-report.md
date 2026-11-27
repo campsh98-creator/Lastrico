@@ -27,3 +27,13 @@ Fonti: [OpenStreetMap e licenza](https://www.openstreetmap.org/copyright), [tag 
 ## Verifica mobile
 
 Chromium headless a 390×844 con gli asset OSM del branch e risposte riproducibili per itinerario e geocodifica. Passano l’espansione del cluster, il tocco di un’icona, la ricerca locale, l’indipendenza delle categorie, la scheda di un POI e la selezione come destinazione. In navigazione il test osserva al massimo un watcher GPS, cinque richieste agli asset urbani nell’intero scenario, nessuna richiesta aggiuntiva durante la sequenza di fix nello stesso tratto e la scomparsa degli avvisi alla perdita del fix. Si tratta di un test browser con GPS simulato.
+
+## Revisione sicurezza PR #64
+
+Il matcher distingue la posizione di un semaforo o attraversamento da un’indicazione che si applica a una strada. Uno stop, una precedenza, un segnale o un limite richiede lo stesso ID OSM nel dato sorgente e nel tratto restituito dal provider. Coordinate e verso rimangono controlli di posizionamento. I provider attuali restituiscono geometrie senza questo ID. Le indicazioni stradali interessate sono quindi consultabili come elementi di mappa e omesse in anteprima del percorso e in guida. L’API itinerari conserva le sole ubicazioni dei semafori nel riepilogo legacy.
+
+I POI mantengono una coordinata rappresentativa distinta dall’accesso. Il generatore verifica l’associazione OSM dell’ingresso al luogo, il nodo condiviso con una strada raggiungibile e il verso d’ingresso, applicando le restrizioni motoristiche presenti. Sui 3.598 POI attuali è emerso un solo accesso per auto e moto, al Policlinico di Milano. La scheda dichiara quando l’accesso manca o non è verificato per la bici. In questi casi il pianificatore richiede una scelta manuale. Il dato OSM descrive l’accesso mappato al momento dello snapshot.
+
+Confronto gzip livello 6 sul branch rispetto a `12e496c8`, a parità di tile. I 12 tile POI passano da 116.033 a 116.048 byte, **+15 B**. I 126 tile stradali passano da 948.823 a 951.040 byte, **+2.217 B**. Il tile stradale del centro campionato passa da 51.226 a 52.467 byte, **+1.241 B**. Le dimensioni di questi asset escludono i tempi di rete e il rendering.
+
+Fonti per l’interpretazione dei tag [entrance](https://wiki.openstreetmap.org/wiki/Key:entrance) e [access](https://wiki.openstreetmap.org/wiki/Key:access).

@@ -5,6 +5,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
+import { indexPoiAccessRoads, pointFor } from "./urban-poi-access.mjs";
 
 const sourceRoot = new URL("../data/sources/", import.meta.url);
 const output = new URL("../public/urban-map/v1/", import.meta.url);
@@ -54,20 +55,6 @@ function poiCategory(tags) {
   if (tags.shop && !/^(no|vacant|closed|disused|abandoned|empty|yes)$/.test(tags.shop)) return "shop";
 }
 
-/** Retain one representative point for a mapped area; it is not an entrance. */
-function pointFor(element, nodes, ways) {
-  if (element.type === "node") return coordinate(element);
-  const rings = element.type === "way" ? [element.nodes] : (element.members ?? [])
-    .filter((member) => member.type === "way" && member.role === "outer")
-    .map((member) => ways.get(member.ref)?.nodes);
-  const points = rings.flatMap((ring) => (ring ?? []).map((id) => nodes.get(id)).filter(Boolean).map(coordinate));
-  if (!points.length) return null;
-  const extent = points.reduce(([west, south, east, north], [lon, lat]) => [
-    Math.min(west, lon), Math.min(south, lat), Math.max(east, lon), Math.max(north, lat),
-  ], [Infinity, Infinity, -Infinity, -Infinity]);
-  return midpoint(extent.slice(0, 2), extent.slice(2));
-}
-
 function validSpeed(value) {
   // OSM uses km/h by default. Preserve an explicitly tagged mph value as mph.
   if (typeof value !== "string" || !/^[1-9]\d{0,2}(?: ?(?:km\/h|mph))?$/.test(value)) return null;
@@ -91,7 +78,7 @@ function speedValues(tags) {
   return [[forward, 1], [backward, -1]].filter(([value]) => value);
 }
 
-function directionalBearing(node, direction, links, nodes) {
+function directionalApproach(node, direction, links, nodes) {
   const incident = links.get(node.id);
   if (!incident || incident.length !== 1 || !["forward", "backward"].includes(direction)) return undefined;
   const way = incident[0];
@@ -100,7 +87,10 @@ function directionalBearing(node, direction, links, nodes) {
   const after = nodes.get(way.nodes[at + 1]);
   const [from, to] = direction === "forward" ? [before, node] : [after, node];
   // Incoming geometry establishes the approach. Terminal nodes on its opposite end are ambiguous.
-  return from && meters(coordinate(from), coordinate(to)) > 0 ? bearing(coordinate(from), coordinate(to)) : undefined;
+  if (!from) return undefined;
+  const segment = [coordinate(from), coordinate(to)];
+  if (meters(...segment) === 0) return undefined;
+  return { bearing: bearing(...segment), segment, approachWay: osmId(way) };
 }
 
 function explicitSign(value) {
@@ -112,9 +102,12 @@ function explicitSign(value) {
 function addRoadNode(add, element, tags, position, links, nodes) {
   const setDirection = (item, direction) => {
     if (!direction || direction === "both") return;
-    const degrees = directionalBearing(element, direction, links, nodes);
-    if (degrees === undefined) item.directionUncertain = true;
-    else item.bearing = degrees;
+    const approach = directionalApproach(element, direction, links, nodes);
+    if (!approach) item.directionUncertain = true;
+    else {
+      item.bearing = approach.bearing;
+      if (["speed", "sign", "stop", "give_way"].includes(item.category)) Object.assign(item, approach);
+    }
   };
   const type = Object.hasOwn(roadPoint, tags.highway) && roadPoint[tags.highway];
   if (type && !(type === "crossing" && tags.crossing === "no")) {
@@ -205,6 +198,8 @@ async function readArea(sets) {
 
 function dropDuplicatePois(features) {
   const indices = new Map();
+  // If the same place is mapped twice, keep the record with a traceable access.
+  features.sort((a, b) => Number(Boolean(b.access)) - Number(Boolean(a.access)));
   return features.filter((entry) => {
     const key = entry.name && `${entry.category}:${entry.name.toLocaleLowerCase("it")}`;
     if (!key) return true;
@@ -264,15 +259,17 @@ for (const [area, sets] of Object.entries(manifests)) {
     addRoadNode(add, element, element.tags, coordinate(element), links, nodes);
   }
   const pois = [];
+  const accessRoads = indexPoiAccessRoads(ways, nodes);
   for (const id of extract.pointElements) {
     const [type, number] = id.split("/");
     const element = ({ node: nodes, way: ways, relation: relations })[type].get(Number(number));
     const tags = element.tags;
     if (!tags) continue;
     const category = poiCategory(tags);
-    const position = category && pointFor(element, nodes, ways);
-    if (!position || !extract.pointBoxes.some((box) => within(position, box))) continue;
-    const next = feature(element, category, position);
+    const point = category && pointFor(element, nodes, ways, accessRoads);
+    if (!point || !extract.pointBoxes.some((box) => within(point.coordinate, box))) continue;
+    const next = feature(element, category, point.coordinate);
+    if (point.access) next.access = point.access;
     const name = text(tags["name:it"] ?? tags.name ?? tags.brand ?? tags.operator);
     const address = [text(tags["addr:street"]), text(tags["addr:housenumber"])].filter(Boolean).join(" ");
     if (name) next.name = name;

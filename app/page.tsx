@@ -20,7 +20,7 @@ import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
 import { UrbanMap } from "@/components/UrbanMap";
-import { urbanPoiCategory } from "@/lib/urban-map-context";
+import { urbanDestination, urbanPoiCategory } from "@/lib/urban-map-context";
 import { urbanLabels, type UrbanFeature } from "@/lib/urban-map-data";
 import { RecordingPanel, useFreeRecording } from "@/components/RecordingPanel";
 import { gpsWatchHub } from "@/lib/gps-watch-hub";
@@ -352,7 +352,9 @@ const ROAD_FEATURE_ICON: Record<string, string> = {
 function roadFeaturesGeoJSON(features: RouteRoadFeatures | null | undefined) {
   return {
     type: "FeatureCollection" as const,
-    features: (features?.items ?? []).map((item) => ({
+    features: (features?.items ?? [])
+      .filter(({ type }) => type === "traffic_signals" || type === "crossing_signals")
+      .map((item) => ({
       type: "Feature" as const,
       properties: { icon: ROAD_FEATURE_ICON[item.type], kind: item.type },
       geometry: { type: "Point" as const, coordinates: item.coordinate },
@@ -2213,12 +2215,14 @@ export default function Home() {
   }
 
   function navigateToUrbanFeature(feature: UrbanFeature) {
-    if (journeyActiveRef.current) return;
+    const coordinate = urbanDestination(feature);
+    if (journeyActiveRef.current || transportModeRef.current === "bicycle" || !coordinate ||
+      !coordinateInArea(coordinate, PILOT_AREAS[areaIdRef.current])) return;
     const label = feature.name || urbanLabels[feature.category];
     setActivePanel("plan");
     chooseAddress("end", {
       id: feature.id, primary: label, label, secondary: feature.detail ?? "",
-      coordinate: feature.coordinate, type: feature.category,
+      coordinate, type: feature.category,
     });
   }
 
@@ -3465,8 +3469,8 @@ export default function Home() {
           progress={isJourneyActive && isLiveResult && navigationPhase === "navigating" &&
             navigationProgress.lateralOffRouteMeters <= 35 && (journeyMode !== "gps" || gpsState === "live")
             ? Math.floor(navigationProgress.routeProgressMeters / 10) * 10 : null}
-          canNavigate={(coordinate) => coordinateInArea(coordinate, area)}
-          onNavigate={navigateToUrbanFeature} onSearch={searchUrbanArea} />
+          usesMotorAccess={transportMode !== "bicycle"} canNavigate={(coordinate) => coordinateInArea(coordinate, area)}
+          onNavigate={navigateToUrbanFeature} onPickDestination={() => setPickingMode("end")} onSearch={searchUrbanArea} />
         {mapLoadIssue && !isJourneyActive && (
           <p className="map-load-issue" role="status" data-testid="map-load-issue" data-map-overlay="top">
             La mappa non si carica: controlla la connessione. Percorsi e indicazioni funzionano lo stesso.

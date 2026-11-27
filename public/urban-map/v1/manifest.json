@@ -413,6 +413,7 @@
       "give_way": 206,
       "sign": 269,
       "stop": 38,
+      "hospital": 10,
       "shop": 2391,
       "restaurant": 617,
       "pharmacy": 70,
@@ -423,7 +424,6 @@
       "parking": 180,
       "park": 42,
       "supermarket": 21,
-      "hospital": 10,
       "fuel": 5
     },
     "roccella": {

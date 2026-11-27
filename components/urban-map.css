@@ -93,6 +93,7 @@
   border: 0;
   font-weight: 700;
 }
+.urban-primary:disabled { opacity: 0.55; }
 .urban-upcoming {
   display: flex;
   flex-wrap: wrap;

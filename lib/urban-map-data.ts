@@ -35,11 +35,15 @@ export type UrbanFeature = {
   name?: string;
   detail?: string;
   osm: string;
+  /** Entrance node and road explicitly linked in the OSM snapshot. */
+  access?: { coordinate: [number, number]; osm: string; road: string };
+  /** The OSM way supporting a directional sign mapped on a node. */
+  approachWay?: string;
   /** Bearing of travel, clockwise from north, only when the source establishes direction. */
   bearing?: number;
   /** A direction is tagged but cannot be tied to one incoming road segment. */
   directionUncertain?: true;
-  /** Representative segment of an OSM way with an explicit mapped sign or speed limit. */
+  /** OSM segment for display and placement after road identity has been established. */
   segment?: [[number, number], [number, number]];
 };
 

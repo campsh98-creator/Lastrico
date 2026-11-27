@@ -93,3 +93,16 @@ test("viewport queries coalesce requests and distinguish source scope, zoom and 
   const wide = await loadUrbanViewport([8, 40, 13, 47]);
   assert.equal(wide.coverage, "zoom");
 });
+
+test("Policlinico routing access is a real entrance node shared with a mapped road", async () => {
+  const tile = JSON.parse(await readFile(new URL("places_459_2272.json", assets), "utf8"));
+  const place = tile.find(({ osm }) => osm === "relation/8187983");
+  assert.deepEqual(place.access, { coordinate: [9.1949011, 45.4589944], osm: "node/13110609536", road: "way/429719349" });
+  assert.notDeepEqual(place.coordinate, place.access.coordinate);
+  const raw = gunzipSync(await readFile(new URL("milan-pilot-se.osm.json.gz", sources)));
+  const elements = JSON.parse(raw).elements;
+  const entrance = elements.find(({ type, id }) => type === "node" && id === 13110609536);
+  const road = elements.find(({ type, id }) => type === "way" && id === 429719349);
+  assert.equal(entrance.tags.entrance, "yes");
+  assert.ok(road.nodes.includes(entrance.id));
+});

@@ -409,7 +409,8 @@ function routePayload(
     roughSections: buildRoughSections(route.coordinates, surfaceScore.roughSegmentIndices, surfaceScore.confirmedRoughSegmentIndices,
       undefined, undefined, surfaceScore.roughSegmentFeatures),
     // Phase 4.31: OSM-mapped traffic signals and signs on this geometry, with their coverage.
-    roadFeatures: roadFeaturesAlongRoute(areaId, route.coordinates),
+    // The provider supplies geometry without OSM way identity for regulatory signs.
+    roadFeatures: roadFeaturesAlongRoute(areaId, route.coordinates, { locationsOnly: true }),
     // Phase 4.31: ZTL and time-window access met on this route, at the request's departure time.
     ...(surfaceScore.ztlMetersByArea ? { access: {
       ztl: Object.entries(surfaceScore.ztlMetersByArea).map(([id, meters]) => ({ id, name: ztlName(id), meters })),

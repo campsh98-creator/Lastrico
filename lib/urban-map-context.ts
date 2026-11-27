@@ -26,7 +26,22 @@ export function urbanPoiCategory(key: string, value: string): UrbanCategory | un
   }
 }
 
-export type AlongRoute = { coordinate: ProgressCoordinate; meters: number };
+export type AlongRoute = {
+  coordinate: ProgressCoordinate;
+  meters: number;
+  /** Provider-confirmed OSM way for the incoming segment. Geometry-only routes omit this. */
+  incomingWay?: `way/${number}`;
+};
+
+export const routeLocationCategories: ReadonlySet<UrbanCategory> = new Set(["signal", "crossing"]);
+
+export function urbanDestination(feature: UrbanFeature) {
+  const access = feature.access;
+  if (!access || !/^node\/\d+$/.test(access.osm) || !/^way\/\d+$/.test(access.road)) return null;
+  if (!Array.isArray(access.coordinate) || access.coordinate.length !== 2) return null;
+  const [lon, lat] = access.coordinate;
+  return Number.isFinite(lon) && Number.isFinite(lat) && Math.abs(lon) <= 180 && Math.abs(lat) <= 90 ? access.coordinate : null;
+}
 
 export function urbanRouteWindow(model: RouteProgressModel<ProgressInstruction>, start: number, end: number): AlongRoute[] {
   const first = pointAtProgress(model, start);
@@ -76,16 +91,20 @@ export function matchUpcomingUrbanFeatures(features: UrbanFeature[], points: Alo
     const length = Math.hypot(dx, dy);
     if (length < 1) return [];
     return [{ x, y, dx, dy, length, bearing: (Math.atan2(dx, dy) * 180 / Math.PI + 360) % 360,
-      start: points[index].meters, end: point.meters }];
+      start: points[index].meters, end: point.meters, way: point.incomingWay }];
   });
 
   for (const feature of features) {
     if (!streetCategories.has(feature.category) || feature.directionUncertain) continue;
-    if (feature.category === "speed" && !feature.segment) continue;
+    const requiresIdentity = !routeLocationCategories.has(feature.category);
+    const sourceWay = feature.approachWay ?? (feature.osm?.startsWith("way/") ? feature.osm : undefined);
+    if (requiresIdentity && (!sourceWay || !feature.segment)) continue;
     if (["sign", "stop", "give_way"].includes(feature.category) && feature.bearing === undefined) continue;
     const [x, y] = xy(feature.coordinate);
     let best: { distance: number; meters: number } | undefined;
     for (const segment of segments) {
+      // A close or similarly oriented way is insufficient, even when no competing limit is mapped.
+      if (requiresIdentity && segment.way !== sourceWay) continue;
       if (feature.bearing !== undefined && angleDifference(segment.bearing, feature.bearing) > 35) continue;
       if (feature.segment) {
         const [a, b] = feature.segment.map(xy);

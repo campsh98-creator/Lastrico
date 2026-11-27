@@ -1707,7 +1707,7 @@ scenario("G3", "OSM traffic signals appear on the selected route, with their dat
     const data = ${GEOJSON_OF}(map, "road-features");
     return { features: data.features.map((f) => f.properties.icon), note: document.querySelector("[data-testid=road-features-note]")?.innerText ?? null, layer: Boolean(map.getLayer("road-features")) };
   })()`);
-  assert.deepEqual(state.features, ["lastrico-signal", "lastrico-give-way"]);
+  assert.deepEqual(state.features, ["lastrico-signal"], "a legacy proximity match cannot confirm which way has the give-way sign");
   assert.equal(state.layer, true);
   assert.equal(state.note, "1 semaforo sul percorso (OSM) · dati solo per il centro");
   note(`${state.features.join(", ")} · "${state.note}"`);
