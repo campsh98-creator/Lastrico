@@ -853,7 +853,7 @@ export default function Home() {
     const restorable = plan !== null && isPilotAreaId(plan.areaId)
       && (!requested || requested === plan.areaId)
       && Object.hasOwn(transportMeta, plan.mode)
-      && !(plan.mode === "bicycle" && (plan.start.motorAccessOnly || plan.end.motorAccessOnly))
+      && !(plan.mode === "bicycle" && (plan.start?.motorAccessOnly || plan.end?.motorAccessOnly))
       && isNavigableRouteGeometry(plan.data?.fast?.coordinates)
       && isNavigableRouteGeometry(plan.data?.safe?.coordinates);
     if (restorable) window.queueMicrotask(() => {
