@@ -173,6 +173,11 @@ try {
   await session.tap(".stop-navigation");
   await waitForPhase(session, "route-ready", 5_000);
   assert.equal((await appState(session)).gps.active, 0, "stopping navigation released GPS");
+  const routesBeforeBicycle = routeRequests.length;
+  await session.tap(label("edit-route"));
+  await session.tap('[data-testid="transport-selector"] button[data-transport="bicycle"]');
+  await session.waitFor(`${query("#end-search")}?.value === ""`, 5_000, "changing to bicycle clears the confirmed motor entrance");
+  assert.equal(routeRequests.length, routesBeforeBicycle, "changing mode did not route to a motor-only entrance");
   assert.deepEqual(session.exceptions, []);
   console.log(JSON.stringify({ base: BASE, viewport: [390, 844], destination: verifiedPoi.name, hint, urbanRequests: urbanRequests().length, gpsMaxActive: 1 }));
 } finally {

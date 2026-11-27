@@ -205,6 +205,7 @@ type RouteResult = {
 type LocationChoice = {
   label: string;
   coordinate: Coordinate;
+  motorAccessOnly?: true;
 };
 
 type GeocodeResult = LocationChoice & Pick<AddressResult, "osmPoi"> & {
@@ -2077,14 +2078,14 @@ export default function Home() {
       startLocationRef.current = resetStart;
       resolvedStartRef.current = null;
       setStartText(nextValue);
-      setStartLocation((current) => ({ ...current, label: "" }));
+      setStartLocation(resetStart);
     } else {
       const currentEnd = endLocationRef.current ?? endLocation;
       const resetEnd: LocationChoice = { label: "", coordinate: currentEnd.coordinate };
       endTextRef.current = nextValue;
       endLocationRef.current = resetEnd;
       setEndText(nextValue);
-      setEndLocation((current) => ({ ...current, label: "" }));
+      setEndLocation(resetEnd);
     }
     const trimmed = nextValue.trim();
     if (trimmed.length < MIN_AUTOCOMPLETE_CHARS) {
@@ -2158,7 +2159,8 @@ export default function Home() {
       return;
     }
     const label = result.label;
-    const location = { label, coordinate: result.coordinate };
+    const location: LocationChoice = { label, coordinate: result.coordinate };
+    if (result.motorAccessOnly) location.motorAccessOnly = true;
     const shouldContinue = pendingCalculationRef.current;
     const resolvedStart = resolvedStartRef.current;
     pendingCalculationRef.current = false;
@@ -2222,7 +2224,7 @@ export default function Home() {
     setActivePanel("plan");
     chooseAddress("end", {
       id: feature.id, primary: label, label, secondary: feature.detail ?? "",
-      coordinate, type: feature.category,
+      coordinate, type: feature.category, motorAccessOnly: true,
     });
   }
 
@@ -2798,6 +2800,17 @@ export default function Home() {
       approximate: false,
       notice: "Da calcolare",
     });
+    if (nextMode === "bicycle") {
+      const startNeedsAccess = startLocationRef.current.motorAccessOnly === true;
+      const endNeedsAccess = endLocationRef.current?.motorAccessOnly === true;
+      if (startNeedsAccess || endNeedsAccess) {
+        if (startNeedsAccess) handleAddressInputChange("start", "");
+        if (endNeedsAccess) handleAddressInputChange("end", "");
+        setActivePanel("plan");
+        setPlanError("Accesso in bici non verificato. Scegli un punto adatto alla bici.");
+        return;
+      }
+    }
     if (shouldRecalculate) {
       setStatus(`Ricalcolo i percorsi per ${transportMeta[nextMode].article}…`);
       void calculateRoutes(undefined, {
