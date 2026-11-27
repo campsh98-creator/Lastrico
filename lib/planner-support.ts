@@ -36,7 +36,7 @@ export function pluralize(count: number, singular: string, plural: string) {
   return `${count} ${count === 1 ? singular : plural}`;
 }
 
-type PlanLocation = { label: string; coordinate: [number, number] };
+type PlanLocation = { label: string; coordinate: [number, number]; motorAccessOnly?: true };
 
 export type StoredPlan<Data> = {
   version: 1;

@@ -208,6 +208,8 @@ type LocationChoice = {
   motorAccessOnly?: true;
 };
 
+const bicycleAccessMessage = "Accesso in bici non verificato. Scegli un punto adatto alla bici.";
+
 type GeocodeResult = LocationChoice & Pick<AddressResult, "osmPoi"> & {
   id: string;
   primary: string;
@@ -850,9 +852,14 @@ export default function Home() {
     const plan = readStoredPlan<RouteApiResponse>();
     const restorable = plan !== null && isPilotAreaId(plan.areaId)
       && (!requested || requested === plan.areaId)
+      && Object.hasOwn(transportMeta, plan.mode)
+      && !(plan.mode === "bicycle" && (plan.start.motorAccessOnly || plan.end.motorAccessOnly))
       && isNavigableRouteGeometry(plan.data?.fast?.coordinates)
       && isNavigableRouteGeometry(plan.data?.safe?.coordinates);
-    if (restorable) window.queueMicrotask(() => restorePlan(plan));
+    if (restorable) window.queueMicrotask(() => {
+      restorePlan(plan);
+      transportReadyRef.current = true;
+    });
     else if (requested && isPilotAreaId(requested)) window.queueMicrotask(() => changeArea(requested));
     // Apply the initial URL and stored plan once; later changes use the explicit controls.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1604,15 +1611,14 @@ export default function Home() {
 
   useEffect(() => {
     const savedTransport = window.localStorage.getItem("lastrico-transport");
-    if (savedTransport === "car" || savedTransport === "motorcycle" || savedTransport === "bicycle") {
-      transportModeRef.current = savedTransport;
-      window.queueMicrotask(() => {
+    window.queueMicrotask(() => {
+      if (transportReadyRef.current) return;
+      if (savedTransport === "car" || savedTransport === "motorcycle" || savedTransport === "bicycle") {
+        transportModeRef.current = savedTransport;
         setTransportMode(savedTransport);
-        transportReadyRef.current = true;
-      });
-      return;
-    }
-    transportReadyRef.current = true;
+      }
+      transportReadyRef.current = true;
+    });
   }, []);
 
   useEffect(() => {
@@ -2437,7 +2443,7 @@ export default function Home() {
       responseRevision: requestedRevision,
     }) && requestedArea === areaIdRef.current && (isReroute || !journeyActiveRef.current);
     try {
-      const resolvedStart = startOverride
+      const resolvedStart: LocationChoice = startOverride
         ?? await geocode(currentStartText, currentStartLocation, "start", controller.signal);
       resolvedStartRef.current = resolvedStart;
       if (!isReroute && isCurrentRequest()) {
@@ -2455,11 +2461,14 @@ export default function Home() {
           }, { once: true });
         });
       }
-      const resolvedEnd = options.endOverride
+      const resolvedEnd: LocationChoice = options.endOverride
         ?? (options.journeySession !== undefined
           ? currentEndLocation
           : await geocode(currentEndText, currentEndLocation, "end", controller.signal));
       if (!isCurrentRequest()) return;
+      if (requestedMode === "bicycle" && (resolvedStart.motorAccessOnly || resolvedEnd.motorAccessOnly)) {
+        throw new PlannerMessage(bicycleAccessMessage);
+      }
       if (!isReroute) {
         startLocationRef.current = resolvedStart;
         endLocationRef.current = resolvedEnd;
@@ -2807,7 +2816,7 @@ export default function Home() {
         if (startNeedsAccess) handleAddressInputChange("start", "");
         if (endNeedsAccess) handleAddressInputChange("end", "");
         setActivePanel("plan");
-        setPlanError("Accesso in bici non verificato. Scegli un punto adatto alla bici.");
+        setPlanError(bicycleAccessMessage);
         return;
       }
     }
@@ -3085,6 +3094,12 @@ export default function Home() {
   }
 
   function startNavigation(mode: JourneyMode) {
+    if (transportModeRef.current === "bicycle" &&
+      (startLocationRef.current.motorAccessOnly || endLocationRef.current?.motorAccessOnly)) {
+      setActivePanel("plan");
+      setPlanError(bicycleAccessMessage);
+      return;
+    }
     const routeForJourney = selectedRouteRef.current ?? selectedRoute;
     const modelForJourney = selectedRouteModelRef.current ?? selectedRouteModel;
     if (!routeReady || !isLiveResult || !isNavigableRouteGeometry(routeForJourney.coordinates)) {

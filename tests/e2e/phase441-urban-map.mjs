@@ -179,7 +179,11 @@ try {
   await waitForPhase(session, "route-ready", 5_000);
   assert.equal((await appState(session)).gps.active, 0, "stopping navigation released GPS");
   const routesBeforeBicycle = routeRequests.length;
+  await session.evaluate('localStorage.setItem("lastrico-transport", "bicycle")');
+  await session.reload();
+  await waitForPhase(session, "route-ready");
   await session.tap(label("edit-route"));
+  assert.equal(await session.evaluate(`document.querySelector('[data-testid="transport-selector"] button[data-transport="car"]')?.getAttribute("aria-checked")`), "true", "a restored car plan keeps its original mode");
   await session.tap('[data-testid="transport-selector"] button[data-transport="bicycle"]');
   await session.waitFor(`${query("#end-search")}?.value === ""`, 5_000, "changing to bicycle clears the confirmed motor entrance");
   assert.equal(routeRequests.length, routesBeforeBicycle, "changing mode did not route to a motor-only entrance");
