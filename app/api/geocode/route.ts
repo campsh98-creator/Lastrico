@@ -9,6 +9,7 @@ import {
 } from "../../../lib/geocoding";
 
 import { PILOT_AREAS, isPilotAreaId, PilotArea } from "../../../lib/pilot-areas";
+import { urbanPoiCategory } from "../../../lib/urban-map-context";
 import { PROVIDER_USER_AGENT } from "../../../lib/provider-identity";
 const NOMINATIM_MIN_INTERVAL_MS = 1_050;
 const fetchNominatim = createGeocodeFetcher({ minimumIntervalMs: NOMINATIM_MIN_INTERVAL_MS, timeoutMs: 3_500 });
@@ -25,7 +26,7 @@ const photonBreaker = createProviderBreaker();
  *   the list): one Nominatim search, Photon as fallback.
  * - absent: the behaviour before Phase 4.35, kept for clients that do not send it (Roccella).
  */
-type SearchPurpose = "suggest" | "search" | "legacy";
+type SearchPurpose = "suggest" | "search" | "poi" | "legacy";
 
 /** Breaker state reported in an error answer, so the page can say why and when to retry. */
 class SearchUnavailable extends Error {
@@ -52,9 +53,18 @@ type GeocodeApiResponseItem = {
   secondary: string;
   coordinate: [number, number];
   type: string;
+  osmPoi?: { key: string; value: string; ref: string };
 };
 
 const geocodeCache = new Map<string, { timestamp: number; results: GeocodeApiResponseItem[] }>();
+function osmPoiTag(key: unknown, value: unknown, element: unknown, id: unknown) {
+  if (typeof key !== "string" || typeof value !== "string" || typeof element !== "string") return undefined;
+  if (!["amenity", "shop", "leisure", "railway", "aeroway", "healthcare"].includes(key)) return undefined;
+  const type = ({ N: "node", W: "way", R: "relation" } as Record<string, string>)[element] ?? element;
+  if (!["node", "way", "relation"].includes(type) || !Number.isSafeInteger(id) || Number(id) <= 0) return undefined;
+  return { key, value, ref: type + "/" + String(id) };
+}
+
 const CACHE_MAX_ENTRIES = 2_000;
 const CACHE_TTL_MS = 60_000;
 
@@ -173,6 +183,7 @@ async function fetchPhotonOnce(query: string, pilot: PilotArea, callerSignal: Ab
         primary,
         secondary,
         coordinate: [lon, lat],
+        osmPoi: osmPoiTag(props.osm_key, props.osm_value, props.osm_type, props.osm_id),
         type: typeof props.type === "string" ? props.type : (typeof props.osm_value === "string" ? props.osm_value : "place"),
       });
     }
@@ -214,18 +225,18 @@ export async function GET(request: NextRequest) {
     ? placeCandidate : null;
 
   const purposeParam = request.nextUrl.searchParams.get("purpose");
-  const purpose: SearchPurpose = purposeParam === "suggest" || purposeParam === "search" ? purposeParam : "legacy";
+  const purpose: SearchPurpose = purposeParam === "suggest" || purposeParam === "search" || purposeParam === "poi" ? purposeParam : "legacy";
   // Typing answers come from Photon only, so they never stand in for a Nominatim answer; a
   // suggestion may reuse a full search answer, which is at least as good.
   const searchKey = `${pilot.id}:${queryWithoutCity.toLowerCase().trim()}${cityHint ? `|${cityHint.toLowerCase()}` : ""}`;
   const suggestKey = `${searchKey}#suggest`;
-  const cached = freshCached(searchKey) ?? (purpose === "suggest" ? freshCached(suggestKey) : undefined);
+  const cacheKey = purpose === "poi" ? searchKey + "#poi" : purpose === "suggest" ? suggestKey : searchKey;
+  const cached = purpose === "suggest" ? freshCached(searchKey) ?? freshCached(suggestKey) : freshCached(cacheKey);
   if (cached) {
     return NextResponse.json({ results: cached.results }, {
       headers: { "Cache-Control": "public, max-age=3600, s-maxage=86400" },
     });
   }
-  const cacheKey = purpose === "suggest" ? suggestKey : searchKey;
 
   if (purpose === "suggest") {
     try {
@@ -245,7 +256,10 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const useStructuredStreet = isStructuredStreetNumberQuery(queryWithoutCity);
+  const filterForPurpose = (results: GeocodeApiResponseItem[]) => purpose === "poi"
+    ? results.filter(({ osmPoi }) => osmPoi && urbanPoiCategory(osmPoi.key, osmPoi.value))
+    : results;
+  const useStructuredStreet = purpose !== "poi" && isStructuredStreetNumberQuery(queryWithoutCity);
   if (useStructuredStreet) {
     url.searchParams.set("street", queryWithoutCity);
     if (pilot.id === "milan") {
@@ -313,6 +327,7 @@ export async function GET(request: NextRequest) {
         primary,
         secondary,
         coordinate: [Number(item.lon), Number(item.lat)] as [number, number],
+        osmPoi: osmPoiTag(item.category ?? item.class, item.type, item.osm_type, item.osm_id),
         type: item.addresstype ?? item.type ?? "place",
       }];
     }));
@@ -337,7 +352,7 @@ export async function GET(request: NextRequest) {
         if (nominatimBreaker.isOpen()) throw new SearchUnavailable("nominatim_cooling_down", nominatimBreaker.retryAfterMs());
         const data = await fetchNominatim(url, signalNominatim);
         if (!Array.isArray(data)) throw new Error("Risposta indirizzi non valida");
-        let mapped = mapResults(data);
+        let mapped = filterForPurpose(mapResults(data));
         if (mapped.length === 0 && useStructuredStreet && !signalNominatim.aborted) {
           const fallbackUrl = new URL(url.toString());
           fallbackUrl.searchParams.delete("street");
@@ -353,7 +368,7 @@ export async function GET(request: NextRequest) {
             mapped = mapResults(fallbackData);
           }
         }
-        if (mapped.length === 0 && pilot.id === "milan" && !cityHint && !useStructuredStreet && !signalNominatim.aborted) {
+        if (mapped.length === 0 && purpose !== "poi" && pilot.id === "milan" && !cityHint && !useStructuredStreet && !signalNominatim.aborted) {
           const plainUrl = new URL(url.toString());
           plainUrl.searchParams.set("q", queryWithoutCity);
           const plainData = await fetchNominatim(plainUrl, signalNominatim);
@@ -373,7 +388,7 @@ export async function GET(request: NextRequest) {
 
     const runPhoton = async (): Promise<GeocodeApiResponseItem[]> => {
       try {
-        return await fetchPhoton(cityHint ? `${queryWithoutCity} ${cityHint}` : queryWithoutCity, pilot, signalPhoton);
+        return filterForPurpose(await fetchPhoton(cityHint ? `${queryWithoutCity} ${cityHint}` : queryWithoutCity, pilot, signalPhoton));
       } catch (err) {
         photonFailed = true;
         if (!signalPhoton.aborted) {
@@ -386,6 +401,7 @@ export async function GET(request: NextRequest) {
     results = await new Promise<GeocodeApiResponseItem[]>((resolve, reject) => {
       let nomDone = false;
       let phoDone = false;
+      let photonStarted = false;
       let nomResults: GeocodeApiResponseItem[] | null = null;
       let phoResults: GeocodeApiResponseItem[] | null = null;
       let photonTimer: ReturnType<typeof setTimeout> | null = null;
@@ -404,7 +420,8 @@ export async function GET(request: NextRequest) {
           clearTimeout(photonTimer);
           photonTimer = null;
         }
-        if (phoDone) return;
+        if (photonStarted) return;
+        photonStarted = true;
         runPhoton().then((res) => {
           phoDone = true;
           phoResults = res;
@@ -444,7 +461,7 @@ export async function GET(request: NextRequest) {
       // the pre-4.35 race at 250 ms stays for clients that send no purpose.
       // An explicit place ("Via Roma, Como") is Nominatim's to answer; Photon, biased to Milan, would race it with
       // Milan streets. It still runs if Nominatim fails or finds nothing (the branches above).
-      if (!cityHint) photonTimer = setTimeout(startPhoton, purpose === "search" ? 1_200 : 250);
+      if (!cityHint) photonTimer = setTimeout(startPhoton, purpose !== "legacy" ? 1_200 : 250);
     });
 
     if (results.length === 0) {

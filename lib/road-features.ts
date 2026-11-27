@@ -50,7 +50,11 @@ function insideCoverage([lon, lat]: [number, number]) {
   return FEATURES.coverage.some(([west, south, east, north]) => lon >= west && lon <= east && lat >= south && lat <= north);
 }
 
-export function roadFeaturesAlongRoute(area: string, coordinates: [number, number][]): RouteRoadFeatures | null {
+export function roadFeaturesAlongRoute(
+  area: string,
+  coordinates: [number, number][],
+  { locationsOnly = false } = {},
+): RouteRoadFeatures | null {
   if (area !== "milan" || coordinates.length < 2) return null;
   const types = FEATURES.types as RoadFeatureType[];
   const cells = featureIndex();
@@ -79,6 +83,7 @@ export function roadFeaturesAlongRoute(area: string, coordinates: [number, numbe
           const distance = Math.hypot(px - t * dx, py - t * dy);
           const type = types[feature[2]];
           const sign = type === "stop" || type === "give_way";
+          if (locationsOnly && sign) continue;
           if (sign) {
             // Where the route passes the junction this sign guards.
             const jx = (feature[3] - a[0]) * scaleX;

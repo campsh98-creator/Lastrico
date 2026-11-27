@@ -161,3 +161,26 @@ test("after a cancelled search whose upstream never settles, the next explicit s
   assert.equal((await response.json()).results[0].primary, "Via Ripamonti");
   assert.ok(Date.now() - started < 2_000, `answered in ${Date.now() - started} ms, within one Nominatim interval`);
 });
+
+test("explicit POI search bypasses the address cache and keeps verified Photon results when Nominatim finds only a street", async (t) => {
+  const { GET } = await loadApi("app/api/geocode/route.ts", { fresh: true });
+  const hosts = [];
+  t.mock.method(globalThis, "fetch", async (input) => {
+    const host = hostOf(input);
+    const text = new URL(input).searchParams.get("q") ?? "";
+    if (text.toLowerCase().includes("farmacia")) hosts.push(host);
+    if (host === "nominatim.openstreetmap.org") return Response.json([nominatimRow(1, "Via della Farmacia")]);
+    return Response.json({
+      features: [photonFeature("Farmacia", [9.1696, 45.4487], {
+        osm_type: "N", osm_id: 123, osm_key: "amenity", osm_value: "pharmacy",
+      })],
+    });
+  });
+  const q = "Farmacia, Navigli";
+  const address = await GET(request({ q, purpose: "search" }));
+  assert.equal((await address.json()).results[0].primary, "Via della Farmacia");
+  const poi = await GET(request({ q, purpose: "poi" }));
+  const { results } = await poi.json();
+  assert.deepEqual(results.map(({ osmPoi }) => osmPoi), [{ key: "amenity", value: "pharmacy", ref: "node/123" }]);
+  assert.deepEqual(hosts, ["nominatim.openstreetmap.org", "nominatim.openstreetmap.org", "photon.komoot.io"]);
+});

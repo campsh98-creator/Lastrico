@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "cellSize": 0.02,
+  "attribution": "© OpenStreetMap contributors",
+  "copyright": "https://www.openstreetmap.org/copyright",
+  "license": "ODbL-1.0",
+  "licenseUrl": "https://opendatacommons.org/licenses/odbl/1.0/",
+  "tiles": {
+    "places": [
+      "458_2272",
+      "458_2273",
+      "459_2272",
+      "459_2273",
+      "460_2272",
+      "460_2273",
+      "818_1915",
+      "819_1915",
+      "819_1916",
+      "820_1915",
+      "820_1916",
+      "821_1916"
+    ],
+    "street": [
+      "456_2271",
+      "456_2272",
+      "456_2273",
+      "456_2274",
+      "456_2275",
+      "457_2271",
+      "457_2272",
+      "457_2273",
+      "457_2274",
+      "457_2275",
+      "458_2271",
+      "458_2272",
+      "458_2273",
+      "458_2274",
+      "458_2275",
+      "459_2271",
+      "459_2272",
+      "459_2273",
+      "459_2274",
+      "459_2275",
+      "460_2271",
+      "460_2272",
+      "460_2273",
+      "460_2274",
+      "460_2275",
+      "461_2271",
+      "461_2272",
+      "461_2273",
+      "461_2274",
+      "461_2275",
+      "620_2090",
+      "620_2091",
+      "620_2092",
+      "620_2093",
+      "620_2094",
+      "620_2095",
+      "620_2096",
+      "620_2097",
+      "620_2098",
+      "621_2090",
+      "621_2091",
+      "621_2092",
+      "621_2093",
+      "621_2094",
+      "621_2095",
+      "621_2096",
+      "621_2097",
+      "621_2098",
+      "622_2090",
+      "622_2091",
+      "622_2092",
+      "622_2093",
+      "622_2094",
+      "622_2095",
+      "622_2096",
+      "622_2097",
+      "622_2098",
+      "623_2090",
+      "623_2091",
+      "623_2092",
+      "623_2093",
+      "623_2094",
+      "623_2095",
+      "623_2096",
+      "623_2097",
+      "623_2098",
+      "624_2090",
+      "624_2091",
+      "624_2092",
+      "624_2093",
+      "624_2094",
+      "624_2095",
+      "624_2096",
+      "624_2097",
+      "624_2098",
+      "625_2090",
+      "625_2091",
+      "625_2092",
+      "625_2093",
+      "625_2094",
+      "625_2095",
+      "625_2096",
+      "625_2097",
+      "625_2098",
+      "626_2090",
+      "626_2091",
+      "626_2092",
+      "626_2093",
+      "626_2094",
+      "626_2095",
+      "626_2096",
+      "626_2097",
+      "626_2098",
+      "627_2090",
+      "627_2091",
+      "627_2092",
+      "627_2093",
+      "627_2094",
+      "627_2095",
+      "627_2096",
+      "627_2097",
+      "627_2098",
+      "628_2090",
+      "628_2091",
+      "628_2092",
+      "628_2093",
+      "628_2094",
+      "628_2095",
+      "628_2096",
+      "628_2097",
+      "628_2098",
+      "629_2090",
+      "629_2091",
+      "629_2092",
+      "629_2093",
+      "629_2094",
+      "629_2095",
+      "629_2096",
+      "629_2097",
+      "629_2098",
+      "818_1915",
+      "819_1915",
+      "819_1916",
+      "820_1915",
+      "820_1916",
+      "821_1916"
+    ]
+  },
+  "pointBoxes": [
+    [
+      9.18,
+      45.455,
+      9.19,
+      45.465
+    ],
+    [
+      9.19,
+      45.455,
+      9.2,
+      45.465
+    ],
+    [
+      9.18,
+      45.465,
+      9.19,
+      45.475
+    ],
+    [
+      9.19,
+      45.465,
+      9.2,
+      45.475
+    ],
+    [
+      9.169,
+      45.455,
+      9.18,
+      45.465
+    ],
+    [
+      9.169,
+      45.465,
+      9.18,
+      45.475
+    ],
+    [
+      9.18,
+      45.475,
+      9.19,
+      45.48
+    ],
+    [
+      9.19,
+      45.475,
+      9.2,
+      45.48
+    ],
+    [
+      9.2,
+      45.465,
+      9.206,
+      45.475
+    ],
+    [
+      9.175,
+      45.45,
+      9.185,
+      45.455
+    ],
+    [
+      9.195,
+      45.45,
+      9.205,
+      45.455
+    ],
+    [
+      16.36,
+      38.29,
+      16.4,
+      38.32
+    ],
+    [
+      16.4,
+      38.29,
+      16.44,
+      38.32
+    ],
+    [
+      16.36,
+      38.32,
+      16.4,
+      38.35
+    ],
+    [
+      16.4,
+      38.32,
+      16.44,
+      38.35
+    ]
+  ],
+  "roadBoxes": [
+    [
+      9.18,
+      45.455,
+      9.19,
+      45.465
+    ],
+    [
+      9.19,
+      45.455,
+      9.2,
+      45.465
+    ],
+    [
+      9.18,
+      45.465,
+      9.19,
+      45.475
+    ],
+    [
+      9.19,
+      45.465,
+      9.2,
+      45.475
+    ],
+    [
+      9.169,
+      45.455,
+      9.18,
+      45.465
+    ],
+    [
+      9.169,
+      45.465,
+      9.18,
+      45.475
+    ],
+    [
+      9.18,
+      45.475,
+      9.19,
+      45.48
+    ],
+    [
+      9.19,
+      45.475,
+      9.2,
+      45.48
+    ],
+    [
+      9.2,
+      45.465,
+      9.206,
+      45.475
+    ],
+    [
+      9.175,
+      45.45,
+      9.185,
+      45.455
+    ],
+    [
+      9.195,
+      45.45,
+      9.205,
+      45.455
+    ],
+    [
+      9.17,
+      45.425,
+      9.205,
+      45.455
+    ],
+    [
+      9.135,
+      45.425,
+      9.17,
+      45.455
+    ],
+    [
+      9.205,
+      45.425,
+      9.24,
+      45.455
+    ],
+    [
+      9.135,
+      45.45,
+      9.175,
+      45.48
+    ],
+    [
+      9.2,
+      45.45,
+      9.24,
+      45.48
+    ],
+    [
+      9.135,
+      45.475,
+      9.175,
+      45.502
+    ],
+    [
+      9.169,
+      45.475,
+      9.21,
+      45.502
+    ],
+    [
+      9.21,
+      45.48,
+      9.24,
+      45.502
+    ],
+    [
+      16.36,
+      38.29,
+      16.4,
+      38.32
+    ],
+    [
+      16.4,
+      38.29,
+      16.44,
+      38.32
+    ],
+    [
+      16.36,
+      38.32,
+      16.4,
+      38.35
+    ],
+    [
+      16.4,
+      38.32,
+      16.44,
+      38.35
+    ],
+    [
+      12.4,
+      41.8,
+      12.5,
+      41.885
+    ],
+    [
+      12.5,
+      41.8,
+      12.6,
+      41.885
+    ],
+    [
+      12.4,
+      41.885,
+      12.5,
+      41.97
+    ],
+    [
+      12.5,
+      41.885,
+      12.6,
+      41.97
+    ]
+  ],
+  "counts": {
+    "milan": {
+      "speed": 7809,
+      "signal": 302,
+      "crossing": 2045,
+      "give_way": 206,
+      "sign": 269,
+      "stop": 38,
+      "hospital": 10,
+      "shop": 2391,
+      "restaurant": 617,
+      "pharmacy": 70,
+      "charging": 51,
+      "public_facility": 62,
+      "school": 41,
+      "station": 26,
+      "parking": 180,
+      "park": 42,
+      "supermarket": 21,
+      "fuel": 5
+    },
+    "roccella": {
+      "speed": 33,
+      "crossing": 57,
+      "stop": 1,
+      "restaurant": 6,
+      "supermarket": 1,
+      "shop": 25,
+      "public_facility": 5,
+      "parking": 35,
+      "charging": 1,
+      "school": 3,
+      "fuel": 3,
+      "station": 1,
+      "park": 2
+    },
+    "rome": {
+      "speed": 16997
+    }
+  },
+  "provenance": [
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-sw.osm.json.gz",
+      "sha256": "2d7746ccd086573151a8d49202c445b4c1a84c27af9a3abee039dd78d4de3bdd",
+      "retrievedAt": "2026-10-26T00:44:35.823656+00:00",
+      "bbox": [
+        9.18,
+        45.455,
+        9.19,
+        45.465
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-se.osm.json.gz",
+      "sha256": "fbd49010e52500665ada059fda71364a26f1838fb21daeebe848bdc312e852c8",
+      "retrievedAt": "2026-10-26T00:44:38.031299+00:00",
+      "bbox": [
+        9.19,
+        45.455,
+        9.2,
+        45.465
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-nw.osm.json.gz",
+      "sha256": "7cc07a40d1f121f677d5dcc621a15171c20c4ec6f004298a45caad5973c79b79",
+      "retrievedAt": "2026-10-26T00:44:40.986242+00:00",
+      "bbox": [
+        9.18,
+        45.465,
+        9.19,
+        45.475
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-ne.osm.json.gz",
+      "sha256": "bc36bc582b9171a775ce5d63be05c793b5ab470cc7bf7262c1451e976725d4cb",
+      "retrievedAt": "2026-10-26T00:44:43.832077+00:00",
+      "bbox": [
+        9.19,
+        45.465,
+        9.2,
+        45.475
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-w-sw.osm.json.gz",
+      "sha256": "b86229d8085919a54d5e414b9000cb4f6114c445beb6e188a9b67c43a301f8e4",
+      "retrievedAt": "2026-10-28T23:03:09.249Z",
+      "bbox": [
+        9.169,
+        45.455,
+        9.18,
+        45.465
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-w-nw.osm.json.gz",
+      "sha256": "014895c3f4633fc0e684081d7dc1b2aa7dbf4920530a9e756bfba7a7a1df311f",
+      "retrievedAt": "2026-10-28T23:03:12.813Z",
+      "bbox": [
+        9.169,
+        45.465,
+        9.18,
+        45.475
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-n-nw.osm.json.gz",
+      "sha256": "aab161a494d1a8721b70147a0bf46822339dd894c25f3e078617276f15a3e198",
+      "retrievedAt": "2026-10-28T23:03:15.611Z",
+      "bbox": [
+        9.18,
+        45.475,
+        9.19,
+        45.48
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-n-ne.osm.json.gz",
+      "sha256": "315fce6ccf40340776abefc2eabec929536f7f30347a44c9649abfe4b33ea19b",
+      "retrievedAt": "2026-10-28T23:03:18.355Z",
+      "bbox": [
+        9.19,
+        45.475,
+        9.2,
+        45.48
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-e-nw.osm.json.gz",
+      "sha256": "4d5a4bb70e85fbef999c9d762839aaff7c53aa9b341afe497e59ea6eca85ead6",
+      "retrievedAt": "2026-10-28T23:03:21.196Z",
+      "bbox": [
+        9.2,
+        45.465,
+        9.206,
+        45.475
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-s-sw.osm.json.gz",
+      "sha256": "9d821815a8ba17d44516557d896f2b9ebea44f7c9990738c5a9b2de0191a845b",
+      "retrievedAt": "2026-10-28T23:03:24.001Z",
+      "bbox": [
+        9.175,
+        45.45,
+        9.185,
+        45.455
+      ]
+    },
+    {
+      "manifest": "milan-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "milan-pilot-s-se.osm.json.gz",
+      "sha256": "13ea707cac3cf553919ff3fdadf52581328c37e733319e0b93808b33e322438b",
+      "retrievedAt": "2026-10-28T23:03:26.733Z",
+      "bbox": [
+        9.195,
+        45.45,
+        9.205,
+        45.455
+      ]
+    },
+    {
+      "manifest": "milan-citywide-expansion.source.json",
+      "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+      "file": "milan-citywide-s-central.osm.json.gz",
+      "sha256": "fc3b002189c42cbd75eda188e98df4137e35aa1cf1bf790f89317292dd727cac",
+      "retrievedAt": "2026-11-04T11:40:01Z",
+      "bbox": [
+        9.17,
+        45.425,
+        9.205,
+        45.455
+      ]
+    },
+    {
+      "manifest": "milan-citywide-expansion.source.json",
+      "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+      "file": "milan-citywide-s-west.osm.json.gz",
+      "sha256": "a648183eb2206262e2916450ae6fcb41341165e05eb55318528a4fb77dcdefb8",
+      "retrievedAt": "2026-11-04T11:41:02Z",
+      "bbox": [
+        9.135,
+        45.425,
+        9.17,
+        45.455
+      ]
+    },
+    {
+      "manifest": "milan-citywide-expansion.source.json",
+      "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+      "file": "milan-citywide-s-east.osm.json.gz",
+      "sha256": "1a811938064c49edd7169318d2c04651ba680e18278f20a90f68a2afd67f15a0",
+      "retrievedAt": "2026-11-04T11:43:06Z",
+      "bbox": [
+        9.205,
+        45.425,
+        9.24,
+        45.455
+      ]
+    },
+    {
+      "manifest": "milan-citywide-expansion.source.json",
+      "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+      "file": "milan-citywide-west.osm.json.gz",
+      "sha256": "a3cc8543d96b20eb685589dffb2fb36c474773e0b11268c23cd0a444bcbae51a",
+      "retrievedAt": "2026-11-04T11:43:06Z",
+      "bbox": [
+        9.135,
+        45.45,
+        9.175,
+        45.48
+      ]
+    },
+    {
+      "manifest": "milan-citywide-expansion.source.json",
+      "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+      "file": "milan-citywide-east.osm.json.gz",
+      "sha256": "108ccd8be1464eeb0cfc0f652037552733c07919ce7ea9085a0f5a4063aaf8ad",
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "bbox": [
+        9.2,
+        45.45,
+        9.24,
+        45.48
+      ]
+    },
+    {
+      "manifest": "milan-citywide-expansion.source.json",
+      "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+      "file": "milan-citywide-n-west.osm.json.gz",
+      "sha256": "5dfb26f8d16fdd0ac680536a05c8cafed1ff3d2af0c3d8dcf87202a02606c7ba",
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "bbox": [
+        9.135,
+        45.475,
+        9.175,
+        45.502
+      ]
+    },
+    {
+      "manifest": "milan-citywide-expansion.source.json",
+      "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+      "file": "milan-citywide-n-central.osm.json.gz",
+      "sha256": "c0ec58095d90f19e55b0435ef571daaa75edf875c48cdbbe198910ff80ccd63d",
+      "retrievedAt": "2026-11-04T11:45:06Z",
+      "bbox": [
+        9.169,
+        45.475,
+        9.21,
+        45.502
+      ]
+    },
+    {
+      "manifest": "milan-citywide-expansion.source.json",
+      "provider": "OpenStreetMap (Overpass API 0.6 compatible)",
+      "file": "milan-citywide-n-east.osm.json.gz",
+      "sha256": "f8fb3a87d914bee248e953b5eea209cb4b15178c4dad0b129845dd08f4280ba5",
+      "retrievedAt": "2026-11-04T11:54:35.817Z",
+      "bbox": [
+        9.21,
+        45.48,
+        9.24,
+        45.502
+      ]
+    },
+    {
+      "manifest": "roccella-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "roccella-pilot-sw.osm.json.gz",
+      "sha256": "aba10e783a4f5ce291ea2a747f30fe9060c1329aaaf864d4ab494bbb87ebd4e9",
+      "retrievedAt": "2026-10-29T14:32:33.598Z",
+      "bbox": [
+        16.36,
+        38.29,
+        16.4,
+        38.32
+      ]
+    },
+    {
+      "manifest": "roccella-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "roccella-pilot-se.osm.json.gz",
+      "sha256": "43a95a78131b9e4ee8be510d58bb890caabadcd2f5e2a6eff3d4be6f561b3392",
+      "retrievedAt": "2026-10-29T14:32:33.804Z",
+      "bbox": [
+        16.4,
+        38.29,
+        16.44,
+        38.32
+      ]
+    },
+    {
+      "manifest": "roccella-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "roccella-pilot-nw.osm.json.gz",
+      "sha256": "50479840f057bbed1092b378610efa80d8b707840eb8a4a836ad234d28762d46",
+      "retrievedAt": "2026-10-29T14:32:34.361Z",
+      "bbox": [
+        16.36,
+        38.32,
+        16.4,
+        38.35
+      ]
+    },
+    {
+      "manifest": "roccella-pilot-osm.source.json",
+      "provider": "OpenStreetMap API 0.6",
+      "file": "roccella-pilot-ne.osm.json.gz",
+      "sha256": "67b19f94d7944fb261483b04b3021b76de1c023533edf5c2a83b2846d82f804c",
+      "retrievedAt": "2026-10-29T14:32:35.310Z",
+      "bbox": [
+        16.4,
+        38.32,
+        16.44,
+        38.35
+      ]
+    },
+    {
+      "manifest": "rome-osm.source.json",
+      "provider": "OpenStreetMap via public Overpass",
+      "file": "rome-sw.osm.json.gz",
+      "sha256": "fb02e28e4ce87224b426cfc1a6269318ba370ed236696a3860b9263328c5eae8",
+      "retrievedAt": "2026-11-06T20:07:21.719Z",
+      "bbox": [
+        12.4,
+        41.8,
+        12.5,
+        41.885
+      ],
+      "osmBaseTimestamp": "2026-11-06T20:05:51Z"
+    },
+    {
+      "manifest": "rome-osm.source.json",
+      "provider": "OpenStreetMap via public Overpass",
+      "file": "rome-se.osm.json.gz",
+      "sha256": "06d859b2cd9c0ff4f85534ec9c7510bba81f6e58cb4d87390cacd3e1d6f1d384",
+      "retrievedAt": "2026-11-06T20:08:59.018Z",
+      "bbox": [
+        12.5,
+        41.8,
+        12.6,
+        41.885
+      ],
+      "osmBaseTimestamp": "2026-11-06T20:07:51Z"
+    },
+    {
+      "manifest": "rome-osm.source.json",
+      "provider": "OpenStreetMap via public Overpass",
+      "file": "rome-nw.osm.json.gz",
+      "sha256": "ae38e122db552fe75adaae586aef818997383e12a1146bf8e1968ba24eb2cd8e",
+      "retrievedAt": "2026-11-06T20:09:43.785Z",
+      "bbox": [
+        12.4,
+        41.885,
+        12.5,
+        41.97
+      ],
+      "osmBaseTimestamp": "2026-11-06T20:07:51Z"
+    },
+    {
+      "manifest": "rome-osm.source.json",
+      "provider": "OpenStreetMap via public Overpass",
+      "file": "rome-ne.osm.json.gz",
+      "sha256": "1cd32a0d1b23a9881a9704c15acffc3413d5032446f0abfe30977f9cd40fac8d",
+      "retrievedAt": "2026-11-06T20:10:04.445Z",
+      "bbox": [
+        12.5,
+        41.885,
+        12.6,
+        41.97
+      ],
+      "osmBaseTimestamp": "2026-11-06T20:07:51Z"
+    }
+  ]
+}

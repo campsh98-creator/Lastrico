@@ -19,6 +19,9 @@ import { DirectionsSheet } from "@/components/navigation/DirectionsSheet";
 import { CommunityPanel } from "@/components/reports/CommunityPanel";
 import { SurfaceBreakdown } from "@/components/SurfaceBreakdown";
 import { RoadLayers, useRailsAvailable } from "@/components/RoadLayers";
+import { UrbanMap } from "@/components/UrbanMap";
+import { urbanDestination, urbanPoiCategory } from "@/lib/urban-map-context";
+import { urbanLabels, type UrbanFeature } from "@/lib/urban-map-data";
 import { RecordingPanel, useFreeRecording } from "@/components/RecordingPanel";
 import { gpsWatchHub } from "@/lib/gps-watch-hub";
 import { FOLLOW_OFF_PREFERENCE, ForegroundFollow, type FollowStatus } from "@/lib/foreground-follow";
@@ -121,7 +124,6 @@ import {
   updateStoredPlanSelection,
 } from "@/lib/planner-support";
 import {
-  applyJourneyMapDetail,
   applyMapTheme,
   firstLabelLayerAboveMap,
   hideBuildingExtrusions,
@@ -138,6 +140,7 @@ import {
   searchPurposeFor,
   type InlineSearchStatus,
   type SearchPurpose,
+  type AddressResult,
 } from "@/lib/address-search";
 import {
   confidentStreet,
@@ -202,9 +205,12 @@ type RouteResult = {
 type LocationChoice = {
   label: string;
   coordinate: Coordinate;
+  motorAccessOnly?: true;
 };
 
-type GeocodeResult = LocationChoice & {
+const bicycleAccessMessage = "Accesso in bici non verificato. Scegli un punto adatto alla bici.";
+
+type GeocodeResult = LocationChoice & Pick<AddressResult, "osmPoi"> & {
   id: string;
   primary: string;
   secondary: string;
@@ -349,7 +355,9 @@ const ROAD_FEATURE_ICON: Record<string, string> = {
 function roadFeaturesGeoJSON(features: RouteRoadFeatures | null | undefined) {
   return {
     type: "FeatureCollection" as const,
-    features: (features?.items ?? []).map((item) => ({
+    features: (features?.items ?? [])
+      .filter(({ type }) => type === "traffic_signals" || type === "crossing_signals")
+      .map((item) => ({
       type: "Feature" as const,
       properties: { icon: ROAD_FEATURE_ICON[item.type], kind: item.type },
       geometry: { type: "Point" as const, coordinates: item.coordinate },
@@ -664,6 +672,7 @@ export default function Home() {
   const [reportsAvailable, setReportsAvailable] = useState(true);
   const [directionsOpen, setDirectionsOpen] = useState(false);
   const [mapReady, setMapReady] = useState(false);
+  const [urbanHud, setUrbanHud] = useState<HTMLDivElement | null>(null);
   const [mapLoadIssue, setMapLoadIssue] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [fieldFeedbackOpen, setFieldFeedbackOpen] = useState(false);
@@ -843,9 +852,14 @@ export default function Home() {
     const plan = readStoredPlan<RouteApiResponse>();
     const restorable = plan !== null && isPilotAreaId(plan.areaId)
       && (!requested || requested === plan.areaId)
+      && Object.hasOwn(transportMeta, plan.mode)
+      && !(plan.mode === "bicycle" && (plan.start?.motorAccessOnly || plan.end?.motorAccessOnly))
       && isNavigableRouteGeometry(plan.data?.fast?.coordinates)
       && isNavigableRouteGeometry(plan.data?.safe?.coordinates);
-    if (restorable) window.queueMicrotask(() => restorePlan(plan));
+    if (restorable) window.queueMicrotask(() => {
+      restorePlan(plan);
+      transportReadyRef.current = true;
+    });
     else if (requested && isPilotAreaId(requested)) window.queueMicrotask(() => changeArea(requested));
     // Apply the initial URL and stored plan once; later changes use the explicit controls.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1597,15 +1611,14 @@ export default function Home() {
 
   useEffect(() => {
     const savedTransport = window.localStorage.getItem("lastrico-transport");
-    if (savedTransport === "car" || savedTransport === "motorcycle" || savedTransport === "bicycle") {
-      transportModeRef.current = savedTransport;
-      window.queueMicrotask(() => {
+    window.queueMicrotask(() => {
+      if (transportReadyRef.current) return;
+      if (savedTransport === "car" || savedTransport === "motorcycle" || savedTransport === "bicycle") {
+        transportModeRef.current = savedTransport;
         setTransportMode(savedTransport);
-        transportReadyRef.current = true;
-      });
-      return;
-    }
-    transportReadyRef.current = true;
+      }
+      transportReadyRef.current = true;
+    });
   }, []);
 
   useEffect(() => {
@@ -1648,11 +1661,6 @@ export default function Home() {
     const timer = window.setInterval(applyTheme, 60_000);
     return () => window.clearInterval(timer);
   }, [themeMode, mapReady]);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (mapReady && map) applyJourneyMapDetail(map, isJourneyActive);
-  }, [isJourneyActive, mapReady]);
 
   useEffect(() => {
     if (!isJourneyActive || journeyMode !== "gps") return;
@@ -2076,14 +2084,14 @@ export default function Home() {
       startLocationRef.current = resetStart;
       resolvedStartRef.current = null;
       setStartText(nextValue);
-      setStartLocation((current) => ({ ...current, label: "" }));
+      setStartLocation(resetStart);
     } else {
       const currentEnd = endLocationRef.current ?? endLocation;
       const resetEnd: LocationChoice = { label: "", coordinate: currentEnd.coordinate };
       endTextRef.current = nextValue;
       endLocationRef.current = resetEnd;
       setEndText(nextValue);
-      setEndLocation((current) => ({ ...current, label: "" }));
+      setEndLocation(resetEnd);
     }
     const trimmed = nextValue.trim();
     if (trimmed.length < MIN_AUTOCOMPLETE_CHARS) {
@@ -2157,7 +2165,8 @@ export default function Home() {
       return;
     }
     const label = result.label;
-    const location = { label, coordinate: result.coordinate };
+    const location: LocationChoice = { label, coordinate: result.coordinate };
+    if (result.motorAccessOnly) location.motorAccessOnly = true;
     const shouldContinue = pendingCalculationRef.current;
     const resolvedStart = resolvedStartRef.current;
     pendingCalculationRef.current = false;
@@ -2213,6 +2222,32 @@ export default function Home() {
     }
   }
 
+  function navigateToUrbanFeature(feature: UrbanFeature) {
+    const coordinate = urbanDestination(feature);
+    if (journeyActiveRef.current || transportModeRef.current === "bicycle" || !coordinate ||
+      !coordinateInArea(coordinate, PILOT_AREAS[areaIdRef.current])) return;
+    const label = feature.name || urbanLabels[feature.category];
+    setActivePanel("plan");
+    chooseAddress("end", {
+      id: feature.id, primary: label, label, secondary: feature.detail ?? "",
+      coordinate, type: feature.category, motorAccessOnly: true,
+    });
+  }
+
+  async function searchUrbanArea(query: string, signal: AbortSignal): Promise<UrbanFeature[]> {
+    const answers = await requestAddresses(query, signal, "poi");
+    return answers.flatMap((answer) => {
+      const tag = answer.osmPoi;
+      if (!tag) return [];
+      const category = urbanPoiCategory(tag.key, tag.value);
+      if (!category) return [];
+      return [{
+        id: tag.ref + ":" + category, osm: tag.ref, category, coordinate: answer.coordinate,
+        name: answer.primary, detail: answer.secondary,
+      }];
+    });
+  }
+
   function closeAddressPicker() {
     pendingCalculationRef.current = false;
     cancelAutocomplete();
@@ -2240,7 +2275,14 @@ export default function Home() {
     const answers = await readGeocodeAnswer(response);
     if (signal?.aborted || requestedArea !== areaIdRef.current) throw new DOMException("Ricerca superata", "AbortError");
     const results = answers.filter((result) => coordinateInArea(result.coordinate, PILOT_AREAS[requestedArea]));
-    if (results.length) geocodeCacheRef.current.set(cacheKey, { timestamp: Date.now(), results });
+    if (results.length) {
+      const cache = geocodeCacheRef.current;
+      if (cache.size >= 100 && !cache.has(cacheKey)) {
+        const oldest = cache.keys().next().value;
+        if (oldest) cache.delete(oldest);
+      }
+      cache.set(cacheKey, { timestamp: Date.now(), results });
+    }
     return results;
   }
 
@@ -2401,7 +2443,7 @@ export default function Home() {
       responseRevision: requestedRevision,
     }) && requestedArea === areaIdRef.current && (isReroute || !journeyActiveRef.current);
     try {
-      const resolvedStart = startOverride
+      const resolvedStart: LocationChoice = startOverride
         ?? await geocode(currentStartText, currentStartLocation, "start", controller.signal);
       resolvedStartRef.current = resolvedStart;
       if (!isReroute && isCurrentRequest()) {
@@ -2419,11 +2461,14 @@ export default function Home() {
           }, { once: true });
         });
       }
-      const resolvedEnd = options.endOverride
+      const resolvedEnd: LocationChoice = options.endOverride
         ?? (options.journeySession !== undefined
           ? currentEndLocation
           : await geocode(currentEndText, currentEndLocation, "end", controller.signal));
       if (!isCurrentRequest()) return;
+      if (requestedMode === "bicycle" && (resolvedStart.motorAccessOnly || resolvedEnd.motorAccessOnly)) {
+        throw new PlannerMessage(bicycleAccessMessage);
+      }
       if (!isReroute) {
         startLocationRef.current = resolvedStart;
         endLocationRef.current = resolvedEnd;
@@ -2764,6 +2809,17 @@ export default function Home() {
       approximate: false,
       notice: "Da calcolare",
     });
+    if (nextMode === "bicycle") {
+      const startNeedsAccess = startLocationRef.current.motorAccessOnly === true;
+      const endNeedsAccess = endLocationRef.current?.motorAccessOnly === true;
+      if (startNeedsAccess || endNeedsAccess) {
+        if (startNeedsAccess) handleAddressInputChange("start", "");
+        if (endNeedsAccess) handleAddressInputChange("end", "");
+        setActivePanel("plan");
+        setPlanError(bicycleAccessMessage);
+        return;
+      }
+    }
     if (shouldRecalculate) {
       setStatus(`Ricalcolo i percorsi per ${transportMeta[nextMode].article}…`);
       void calculateRoutes(undefined, {
@@ -3038,6 +3094,12 @@ export default function Home() {
   }
 
   function startNavigation(mode: JourneyMode) {
+    if (transportModeRef.current === "bicycle" &&
+      (startLocationRef.current.motorAccessOnly || endLocationRef.current?.motorAccessOnly)) {
+      setActivePanel("plan");
+      setPlanError(bicycleAccessMessage);
+      return;
+    }
     const routeForJourney = selectedRouteRef.current ?? selectedRoute;
     const modelForJourney = selectedRouteModelRef.current ?? selectedRouteModel;
     if (!routeReady || !isLiveResult || !isNavigableRouteGeometry(routeForJourney.coordinates)) {
@@ -3430,6 +3492,13 @@ export default function Home() {
       <section className="map-stage" id="map-stage" aria-label="Mappa dei percorsi">
         <div ref={mapContainer} className="map" />
         <RoadLayers map={mapReady ? mapRef.current : null} ready={mapReady} suspended={isJourneyActive || Boolean(picking)} />
+        <UrbanMap map={mapReady ? mapRef.current : null} picking={Boolean(picking)} navigating={isJourneyActive}
+          routeModel={selectedRouteModel} legacy={selectedRoute.roadFeatures} hud={urbanHud}
+          progress={isJourneyActive && isLiveResult && navigationPhase === "navigating" &&
+            navigationProgress.lateralOffRouteMeters <= 35 && (journeyMode !== "gps" || gpsState === "live")
+            ? Math.floor(navigationProgress.routeProgressMeters / 10) * 10 : null}
+          usesMotorAccess={transportMode !== "bicycle"} canNavigate={(coordinate) => coordinateInArea(coordinate, area)}
+          onNavigate={navigateToUrbanFeature} onPickDestination={() => setPickingMode("end")} onSearch={searchUrbanArea} />
         {mapLoadIssue && !isJourneyActive && (
           <p className="map-load-issue" role="status" data-testid="map-load-issue" data-map-overlay="top">
             La mappa non si carica: controlla la connessione. Percorsi e indicazioni funzionano lo stesso.
@@ -4082,6 +4151,7 @@ export default function Home() {
                 </p>
               </div>
             )}
+            <div ref={setUrbanHud} />
             {startupNoticeVisible && !navigationStateDescription && navigationPhase !== "starting" && (
               <div className="hud-notice" role="note" data-testid="driving-safety"><p>{transportMeta[transportMode].safety}</p></div>
             )}

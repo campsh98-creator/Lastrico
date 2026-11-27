@@ -155,7 +155,8 @@ test("provides real, persistent Auto Moto and Bici product modes", async () => {
   assert.match(page, /aria-label=\{`Percorso \$\{transportMeta\[transportMode\]\.label\}`\}/);
   assert.match(page, /data-transport=\{mode\}/);
   assert.match(page, /localStorage\.setItem\("lastrico-transport"/);
-  assert.match(page, /setTransportMode\(savedTransport\);\s+transportReadyRef\.current = true/);
+  assert.match(page, /restorePlan\(plan\);\s+transportReadyRef\.current = true/);
+  assert.match(page, /if \(transportReadyRef\.current\) return;[\s\S]{0,300}setTransportMode\(savedTransport\);\s+}\s+transportReadyRef\.current = true/);
   assert.match(page, /mode: requestedMode/);
   assert.match(page, /data\.transportMode !== requestedMode/);
   assert.match(page, /routeRequestRef\.current\?\.controller\.abort\(\)/);
