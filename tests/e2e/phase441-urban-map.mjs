@@ -90,6 +90,11 @@ try {
       for (const feature of map.queryRenderedFeatures({ layers: [${JSON.stringify(layer)}] })) {
         const { x, y } = map.project(feature.geometry.coordinates);
         if (x < 18 || x > 372 || y < 220 || y > 510 || document.elementFromPoint(x, y)?.tagName !== "CANVAS") continue;
+        const hitLayers = map.getStyle().layers.filter((entry) => ["urban-map-pois", "urban-map-clusters", "urban-map-street", "airport"].includes(entry.id)
+          || entry.type === "symbol" && entry["source-layer"] === "poi").map(({ id }) => id);
+        const hit = map.queryRenderedFeatures([[x - 10, y - 10], [x + 10, y + 10]], { layers: hitLayers })[0];
+        if (hit?.layer.id !== feature.layer.id) continue;
+        if (feature.layer.id === "urban-map-clusters" && hit.properties.cluster_id !== feature.properties.cluster_id) continue;
         return { x, y };
       }
       return null;
